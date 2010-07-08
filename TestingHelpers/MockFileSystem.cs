@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -7,10 +6,10 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         readonly IDictionary<string, MockFileData> files;
 
-        public MockFileSystem(params MockFileData[] files)
+        public MockFileSystem(IDictionary<string, MockFileData> files)
         {
             this.files = new Dictionary<string, MockFileData>(
-                files.ToDictionary(f => f.Path, f => f),
+                files,
                 StringComparer.InvariantCultureIgnoreCase);
         }
 

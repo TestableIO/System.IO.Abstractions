@@ -14,12 +14,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void AppendAllText(string path, string contents)
         {
-            throw new NotImplementedException();
+            mockFileDataAccessor
+                .GetFile(path)
+                .TextContents += contents;
         }
 
         public override void AppendAllText(string path, string contents, Encoding encoding)
         {
-            throw new NotImplementedException();
+            var file = mockFileDataAccessor.GetFile(path);
+            var originalText = encoding.GetString(file.Contents);
+            var newText = originalText + contents;
+            file.Contents = encoding.GetBytes(newText);
         }
 
         public override StreamWriter AppendText(string path)
@@ -79,7 +84,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists(string path)
         {
-            throw new NotImplementedException();
+            return mockFileDataAccessor.FileExists(path);
         }
 
         public override FileSecurity GetAccessControl(string path)
@@ -99,32 +104,32 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime GetCreationTime(string path)
         {
-            throw new NotImplementedException();
+            return mockFileDataAccessor.GetFile(path).CreationTime.LocalDateTime;
         }
 
         public override DateTime GetCreationTimeUtc(string path)
         {
-            throw new NotImplementedException();
+            return mockFileDataAccessor.GetFile(path).CreationTime.UtcDateTime;
         }
 
         public override DateTime GetLastAccessTime(string path)
         {
-            throw new NotImplementedException();
+            return mockFileDataAccessor.GetFile(path).LastAccessTime.LocalDateTime;
         }
 
         public override DateTime GetLastAccessTimeUtc(string path)
         {
-            throw new NotImplementedException();
+            return mockFileDataAccessor.GetFile(path).LastAccessTime.UtcDateTime;
         }
 
         public override DateTime GetLastWriteTime(string path)
         {
-            throw new NotImplementedException();
+            return mockFileDataAccessor.GetFile(path).LastWriteTime.LocalDateTime;
         }
 
         public override DateTime GetLastWriteTimeUtc(string path)
         {
-            throw new NotImplementedException();
+            return mockFileDataAccessor.GetFile(path).LastWriteTime.UtcDateTime;
         }
 
         public override void Move(string sourceFileName, string destFileName)
@@ -214,32 +219,32 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void SetCreationTime(string path, DateTime creationTime)
         {
-            throw new NotImplementedException();
+            mockFileDataAccessor.GetFile(path).CreationTime = new DateTimeOffset(creationTime);
         }
 
         public override void SetCreationTimeUtc(string path, DateTime creationTimeUtc)
         {
-            throw new NotImplementedException();
+            mockFileDataAccessor.GetFile(path).CreationTime = new DateTimeOffset(creationTimeUtc, TimeSpan.Zero);
         }
 
         public override void SetLastAccessTime(string path, DateTime lastAccessTime)
         {
-            throw new NotImplementedException();
+            mockFileDataAccessor.GetFile(path).LastAccessTime = new DateTimeOffset(lastAccessTime);
         }
 
         public override void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc)
         {
-            throw new NotImplementedException();
+            mockFileDataAccessor.GetFile(path).LastAccessTime = new DateTimeOffset(lastAccessTimeUtc, TimeSpan.Zero);
         }
 
         public override void SetLastWriteTime(string path, DateTime lastWriteTime)
         {
-            throw new NotImplementedException();
+            mockFileDataAccessor.GetFile(path).LastWriteTime = new DateTimeOffset(lastWriteTime);
         }
 
         public override void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc)
         {
-            throw new NotImplementedException();
+            mockFileDataAccessor.GetFile(path).LastWriteTime = new DateTimeOffset(lastWriteTimeUtc, TimeSpan.Zero);
         }
 
         public override void WriteAllBytes(string path, byte[] bytes)

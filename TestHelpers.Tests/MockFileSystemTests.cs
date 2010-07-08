@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -9,11 +10,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileSystem_GetFile_ShouldThrowFileNotFoundExceptionWhenFileIsNotRegistered()
         {
             // Arrange
-            var fileSystem = new MockFileSystem
-            (
-                new MockFileData(@"c:\something\demo.txt", "Demo\r\ntext\ncontent\rvalue"),
-                new MockFileData(@"c:\something\other.gif", new byte[] { 0x21, 0x58, 0x3f, 0xa9 })
-            );
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\something\demo.txt", new MockFileData("Demo\r\ntext\ncontent\rvalue") },
+                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+            });
 
             try
             {
@@ -37,12 +38,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileSystem_GetFile_ShouldReturnFileRegisteredInConstructor()
         {
             // Arrange
-            var file1 = new MockFileData(@"c:\something\demo.txt", "Demo\r\ntext\ncontent\rvalue");
-            var fileSystem = new MockFileSystem
-            (
-                file1,
-                new MockFileData(@"c:\something\other.gif", new byte[] { 0x21, 0x58, 0x3f, 0xa9 })
-            );
+            var file1 = new MockFileData("Demo\r\ntext\ncontent\rvalue");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\something\demo.txt", file1 },
+                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+            });
 
             // Act
             var result = fileSystem.GetFile(@"c:\something\demo.txt");
@@ -55,12 +56,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileSystem_GetFile_ShouldReturnFileRegisteredInConstructorWhenPathsDifferByCase()
         {
             // Arrange
-            var file1 = new MockFileData(@"c:\something\demo.txt", "Demo\r\ntext\ncontent\rvalue");
-            var fileSystem = new MockFileSystem
-            (
-                file1,
-                new MockFileData(@"c:\something\other.gif", new byte[] { 0x21, 0x58, 0x3f, 0xa9 })
-            );
+            var file1 = new MockFileData("Demo\r\ntext\ncontent\rvalue");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\something\demo.txt", file1 },
+                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+            });
 
             // Act
             var result = fileSystem.GetFile(@"c:\SomeThing\DEMO.txt");
