@@ -7,6 +7,172 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockDirectoryTests
     {
         [TestMethod]
+        public void MockDirectory_GetFiles_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.txt", new MockFileData("Demo text content") },
+                { @"c:\b.txt", new MockFileData("Demo text content") },
+                { @"c:\c.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a.txt", new MockFileData("Demo text content") },
+                { @"c:\a\b.txt", new MockFileData("Demo text content") },
+                { @"c:\a\c.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\a.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\b.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\c.txt", new MockFileData("Demo text content") },
+            });
+
+            // Act
+            var result = fileSystem.Directory.GetFiles(@"c:\a", "*", SearchOption.AllDirectories);
+
+            // Assert
+            CollectionAssert.AreEqual
+            (
+                new []
+                {
+                    @"c:\a\a.txt",
+                    @"c:\a\b.txt",
+                    @"c:\a\c.txt",
+                    @"c:\a\a\a.txt",
+                    @"c:\a\a\b.txt",
+                    @"c:\a\a\c.txt"
+                },
+                result
+            );
+        }
+
+        [TestMethod]
+        public void MockDirectory_GetFiles_ShouldReturnFilesDirectlyBelowPathWhenPatternIsWildcardAndSearchOptionIsTopDirectoryOnly()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.txt", new MockFileData("Demo text content") },
+                { @"c:\b.txt", new MockFileData("Demo text content") },
+                { @"c:\c.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a.txt", new MockFileData("Demo text content") },
+                { @"c:\a\b.txt", new MockFileData("Demo text content") },
+                { @"c:\a\c.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\a.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\b.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\c.txt", new MockFileData("Demo text content") },
+            });
+
+            // Act
+            var result = fileSystem.Directory.GetFiles(@"c:\a", "*", SearchOption.TopDirectoryOnly);
+
+            // Assert
+            CollectionAssert.AreEqual
+            (
+                new[]
+                {
+                    @"c:\a\a.txt",
+                    @"c:\a\b.txt",
+                    @"c:\a\c.txt",
+                },
+                result
+            );
+        }
+
+        [TestMethod]
+        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPattern()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.gif", new MockFileData("Demo text content") },
+                { @"c:\b.txt", new MockFileData("Demo text content") },
+                { @"c:\c.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a.txt", new MockFileData("Demo text content") },
+                { @"c:\a\b.gif", new MockFileData("Demo text content") },
+                { @"c:\a\c.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\a.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\b.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\c.gif", new MockFileData("Demo text content") },
+            });
+
+            // Act
+            var result = fileSystem.Directory.GetFiles(@"c:\", "*.gif", SearchOption.AllDirectories);
+
+            // Assert
+            CollectionAssert.AreEqual
+            (
+                new[]
+                {
+                    @"c:\a.gif",
+                    @"c:\a\b.gif",
+                    @"c:\a\a\c.gif",
+                },
+                result
+            );
+        }
+
+        [TestMethod]
+        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternWithDotsInFilenames()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.there.are.dots.in.this.filename.gif", new MockFileData("Demo text content") },
+                { @"c:\b.txt", new MockFileData("Demo text content") },
+                { @"c:\c.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a.txt", new MockFileData("Demo text content") },
+                { @"c:\a\b.gif", new MockFileData("Demo text content") },
+                { @"c:\a\c.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\a.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\b.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\c.gif", new MockFileData("Demo text content") },
+            });
+
+            // Act
+            var result = fileSystem.Directory.GetFiles(@"c:\", "*.gif", SearchOption.AllDirectories);
+
+            // Assert
+            CollectionAssert.AreEqual
+            (
+                new[]
+                {
+                    @"c:\a.there.are.dots.in.this.filename.gif",
+                    @"c:\a\b.gif",
+                    @"c:\a\a\c.gif",
+                },
+                result
+            );
+        }
+
+        [TestMethod]
+        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternAndSearchOptionTopDirectoryOnly()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.gif", new MockFileData("Demo text content") },
+                { @"c:\b.txt", new MockFileData("Demo text content") },
+                { @"c:\c.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a.txt", new MockFileData("Demo text content") },
+                { @"c:\a\b.gif", new MockFileData("Demo text content") },
+                { @"c:\a\c.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\a.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\b.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\c.gif", new MockFileData("Demo text content") },
+            });
+
+            // Act
+            var result = fileSystem.Directory.GetFiles(@"c:\", "*.gif", SearchOption.TopDirectoryOnly);
+
+            // Assert
+            CollectionAssert.AreEqual
+            (
+                new[]
+                {
+                    @"c:\a.gif",
+                },
+                result
+            );
+        }
+
+        [TestMethod]
         public void MockDirectory_GetCreationTime_ShouldReturnCreationTimeFromFile()
         {
             // Arrange

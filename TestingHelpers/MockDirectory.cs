@@ -1,13 +1,17 @@
-﻿using System.Security.AccessControl;
+﻿using System.Linq;
+using System.Security.AccessControl;
+using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
     public class MockDirectory : DirectoryBase
     {
         readonly FileBase fileBase;
+        readonly IMockFileDataAccessor mockFileDataAccessor;
 
-        public MockDirectory(FileBase fileBase)
+        public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase)
         {
+            this.mockFileDataAccessor = mockFileDataAccessor;
             this.fileBase = fileBase;
         }
 
@@ -83,17 +87,37 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFiles(string path)
         {
-            throw new NotImplementedException();
+            // Same as what the real framework does
+            return GetFiles(path, "*");
         }
 
         public override string[] GetFiles(string path, string searchPattern)
         {
-            throw new NotImplementedException();
+            // Same as what the real framework does
+            return GetFiles(path, searchPattern, SearchOption.TopDirectoryOnly);
         }
 
         public override string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
         {
-            throw new NotImplementedException();
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                path += Path.DirectorySeparatorChar;
+
+            const string allDirectoriesPattern = @"([\w\d\s-\.]*\\)*";
+            
+            var fileNamePattern = searchPattern == "*"
+                ? @"[\w\d\s-\.]*?\.[\w\d]+"
+                : Regex.Escape(searchPattern).Replace(@"\*", @"[\w\d\s-\.]*?");
+
+            var pathPattern = string.Format(
+                @"(?i:^{0}{1}{2}$)",
+                Regex.Escape(path),
+                searchOption == SearchOption.AllDirectories ? allDirectoriesPattern : string.Empty,
+                fileNamePattern);
+
+            return mockFileDataAccessor
+                .AllPaths
+                .Where(p => Regex.IsMatch(p, pathPattern))
+                .ToArray();
         }
 
         public override string[] GetFileSystemEntries(string path)

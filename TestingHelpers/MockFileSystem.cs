@@ -15,7 +15,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 StringComparer.InvariantCultureIgnoreCase);
 
             file = new MockFile(this);
-            directory = new MockDirectory(file);
+            directory = new MockDirectory(this, file);
         }
 
         public FileBase File
@@ -39,6 +39,11 @@ namespace System.IO.Abstractions.TestingHelpers
         public bool FileExists(string path)
         {
             return files.ContainsKey(path);
+        }
+
+        public IEnumerable<string> AllPaths
+        {
+            get { return files.Keys; }
         }
     }
 }
