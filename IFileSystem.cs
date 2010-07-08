@@ -3,5 +3,6 @@
     public interface IFileSystem
     {
         FileBase File { get; }
+        DirectoryBase Directory { get; }
     }
 }

@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DirectoryBase.cs" />
+    <Compile Include="DirectoryWrapper.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="FileWrapper.cs" />
     <Compile Include="FileBase.cs" />
