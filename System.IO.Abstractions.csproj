@@ -37,11 +37,19 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters.cs" />
     <Compile Include="DirectoryBase.cs" />
+    <Compile Include="DirectoryInfoBase.cs" />
+    <Compile Include="DirectoryInfoWrapper.cs" />
     <Compile Include="DirectoryWrapper.cs" />
+    <Compile Include="FileInfoBase.cs" />
+    <Compile Include="FileInfoWrapper.cs" />
     <Compile Include="FileSystem.cs" />
+    <Compile Include="FileSystemInfoBase.cs" />
     <Compile Include="FileWrapper.cs" />
     <Compile Include="FileBase.cs" />
     <Compile Include="IFileSystem.cs" />
