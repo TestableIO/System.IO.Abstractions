@@ -1,5 +1,6 @@
 _ReSharper.System.IO.Abstractions
 bin
 obj
+TestResults
 .user
 .suo
