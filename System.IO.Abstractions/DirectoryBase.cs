@@ -4,8 +4,8 @@ namespace System.IO.Abstractions
 {
     public abstract class DirectoryBase
     {
-        public abstract DirectoryInfo CreateDirectory(string path);
-        public abstract DirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity);
+        public abstract DirectoryInfoBase CreateDirectory(string path);
+        public abstract DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity);
         public abstract void Delete(string path);
         public abstract void Delete(string path, bool recursive);
         public abstract bool Exists(string path);
@@ -28,7 +28,7 @@ namespace System.IO.Abstractions
         public abstract DateTime GetLastWriteTime(string path);
         public abstract DateTime GetLastWriteTimeUtc(string path);
         public abstract string[] GetLogicalDrives();
-        public abstract DirectoryInfo GetParent(string path);
+        public abstract DirectoryInfoBase GetParent(string path);
         public abstract void Move(string sourceDirName, string destDirName);
         public abstract void SetAccessControl(string path, DirectorySecurity directorySecurity);
         public abstract void SetCreationTime(string path, DateTime creationTime);

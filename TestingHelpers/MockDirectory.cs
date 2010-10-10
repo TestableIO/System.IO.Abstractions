@@ -15,12 +15,12 @@ namespace System.IO.Abstractions.TestingHelpers
             this.fileBase = fileBase;
         }
 
-        public override DirectoryInfo CreateDirectory(string path)
+        public override DirectoryInfoBase CreateDirectory(string path)
         {
             throw new NotImplementedException();
         }
 
-        public override DirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity)
+        public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
             throw new NotImplementedException();
         }
@@ -155,7 +155,7 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException();
         }
 
-        public override DirectoryInfo GetParent(string path)
+        public override DirectoryInfoBase GetParent(string path)
         {
             throw new NotImplementedException();
         }

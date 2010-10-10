@@ -4,12 +4,12 @@ namespace System.IO.Abstractions
 {
     public class DirectoryWrapper : DirectoryBase
     {
-        public override DirectoryInfo CreateDirectory(string path)
+        public override DirectoryInfoBase CreateDirectory(string path)
         {
             return Directory.CreateDirectory(path);
         }
 
-        public override DirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity)
+        public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
             return Directory.CreateDirectory(path, directorySecurity);
         }
@@ -124,7 +124,7 @@ namespace System.IO.Abstractions
             return Directory.GetLogicalDrives();
         }
 
-        public override DirectoryInfo GetParent(string path)
+        public override DirectoryInfoBase GetParent(string path)
         {
             return Directory.GetParent(path);
         }
