@@ -37,7 +37,10 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists(string path)
         {
-            throw new NotImplementedException();
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                path += Path.DirectorySeparatorChar;
+
+            return mockFileDataAccessor.AllPaths.Any(p => p.StartsWith(path));
         }
 
         public override DirectorySecurity GetAccessControl(string path)

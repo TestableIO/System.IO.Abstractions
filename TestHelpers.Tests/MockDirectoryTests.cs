@@ -399,5 +399,86 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(time, result);
         }
+
+        [TestMethod]
+        public void MockDirectory_Exists_ShouldReturnTrueForDirectoryDefinedInMemoryFileSystemWithoutTrailingSlash()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\foo\bar.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            var result = fileSystem.Directory.Exists(@"c:\foo");
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void MockDirectory_Exists_ShouldReturnTrueForDirectoryDefinedInMemoryFileSystemWithTrailingSlash()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\foo\bar.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            var result = fileSystem.Directory.Exists(@"c:\foo\");
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void MockDirectory_Exists_ShouldReturnFalseForDirectoryNotDefinedInMemoryFileSystemWithoutTrailingSlash()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\foo\bar.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            var result = fileSystem.Directory.Exists(@"c:\baz");
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void MockDirectory_Exists_ShouldReturnFalseForDirectoryNotDefinedInMemoryFileSystemWithTrailingSlash()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\foo\bar.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            var result = fileSystem.Directory.Exists(@"c:\baz\");
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void MockDirectory_Exists_ShouldReturnFalseForDirectoryNotDefinedInMemoryFileSystemWithSimilarFileName()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\foo\bar.txt", new MockFileData("Demo text content") },
+                { @"c:\baz.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            var result = fileSystem.Directory.Exists(@"c:\baz");
+
+            // Assert
+            Assert.IsFalse(result);
+        }
     }
 }
