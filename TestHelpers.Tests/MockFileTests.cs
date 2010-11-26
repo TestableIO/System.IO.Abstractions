@@ -396,5 +396,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(text, result);
         }
+        
+        [TestMethod]
+        public void MockFile_ReadAllBytes_ShouldReturnDataSavedByWriteAllBytes()
+        {
+            // Arrange
+            const string path = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileContent = new byte[] { 1, 2, 3, 4 };
+            
+            // Act
+            fileSystem.File.WriteAllBytes(path, fileContent);
+
+            // Assert
+            Assert.AreEqual(
+                fileContent,
+                fileSystem.File.ReadAllBytes(path));
+        }
     }
 }

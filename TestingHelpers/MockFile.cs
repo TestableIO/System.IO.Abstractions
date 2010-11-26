@@ -249,7 +249,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void WriteAllBytes(string path, byte[] bytes)
         {
-            throw new NotImplementedException();
+            mockFileDataAccessor.AddFile(path, new MockFileData(bytes));
         }
 
         public override void WriteAllLines(string path, string[] contents)
