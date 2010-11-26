@@ -480,5 +480,54 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.IsFalse(result);
         }
+
+        [TestMethod]
+        public void MockDirectory_Exists_ShouldReturnTrueForDirectoryCreatedViaMocks()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\foo\bar.txt", new MockFileData("Demo text content") }
+            });
+            fileSystem.Directory.CreateDirectory(@"c:\bar");
+
+            // Act
+            var result = fileSystem.Directory.Exists(@"c:\bar");
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void MockDirectory_CreateDirectory_ShouldCreatePlaceholderFileInMemoryFileSystem()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\foo.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            fileSystem.Directory.CreateDirectory(@"c:\bar");
+
+            // Assert
+            Assert.IsTrue(fileSystem.FileExists(@"c:\bar\__PLACEHOLDER__.dir"));
+        }
+
+        [TestMethod]
+        public void MockDirectory_CreateDirectory_ShouldReturnDirectoryInfoBase()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\foo.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            var result = fileSystem.Directory.CreateDirectory(@"c:\bar");
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
     }
 }

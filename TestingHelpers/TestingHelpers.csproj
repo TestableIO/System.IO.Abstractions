@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="IMockFileDataAccessor.cs" />
     <Compile Include="MockDirectory.cs" />
+    <Compile Include="MockDirectoryInfo.cs" />
     <Compile Include="MockFile.cs" />
     <Compile Include="MockFileData.cs" />
     <Compile Include="MockFileInfo.cs" />

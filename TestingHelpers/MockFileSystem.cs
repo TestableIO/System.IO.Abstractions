@@ -40,6 +40,11 @@ namespace System.IO.Abstractions.TestingHelpers
             return FileExists(path) ? files[path] : null;
         }
 
+        public void AddFile(string path, MockFileData mockFile)
+        {
+            files.Add(path, mockFile);
+        }
+
         public bool FileExists(string path)
         {
             return files.ContainsKey(path);

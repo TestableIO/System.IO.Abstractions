@@ -17,12 +17,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase CreateDirectory(string path)
         {
-            throw new NotImplementedException();
+            return CreateDirectory(path, null);
         }
 
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
-            throw new NotImplementedException();
+            path = EnsurePathEndsWithDirectorySeparator(path);
+            mockFileDataAccessor.AddFile(path + "__PLACEHOLDER__.dir", new MockFileData(string.Empty));
+            return new MockDirectoryInfo(mockFileDataAccessor, path);
         }
 
         public override void Delete(string path)
@@ -37,9 +39,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists(string path)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
-                path += Path.DirectorySeparatorChar;
-
+            path = EnsurePathEndsWithDirectorySeparator(path);
             return mockFileDataAccessor.AllPaths.Any(p => p.StartsWith(path));
         }
 
@@ -206,6 +206,13 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc)
         {
             fileBase.SetLastWriteTimeUtc(path, lastWriteTimeUtc);
+        }
+
+        static string EnsurePathEndsWithDirectorySeparator(string path)
+        {
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                path += Path.DirectorySeparatorChar;
+            return path;
         }
     }
 }
