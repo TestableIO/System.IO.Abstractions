@@ -13,5 +13,11 @@
         {
             get { return file ?? (file = new FileWrapper()); }
         }
+
+        FileInfoFactory fileInfoFactory;
+        public IFileInfoFactory FileInfo
+        {
+            get { return fileInfoFactory ?? (fileInfoFactory = new FileInfoFactory()); }
+        }
     }
 }

@@ -7,6 +7,7 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly IDictionary<string, MockFileData> files;
         readonly FileBase file;
         readonly DirectoryBase directory;
+        readonly IFileInfoFactory fileInfoFactory;
 
         public MockFileSystem(IDictionary<string, MockFileData> files)
         {
@@ -16,6 +17,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             file = new MockFile(this);
             directory = new MockDirectory(this, file);
+            fileInfoFactory = new MockFileInfoFactory(this);
         }
 
         public FileBase File
@@ -28,12 +30,14 @@ namespace System.IO.Abstractions.TestingHelpers
             get { return directory; }
         }
 
+        public IFileInfoFactory FileInfo
+        {
+            get { return fileInfoFactory; }
+        }
+
         public MockFileData GetFile(string path)
         {
-            if (!FileExists(path))
-                throw new FileNotFoundException("File not found in mock file system.", path);
-
-            return files[path];
+            return FileExists(path) ? files[path] : null;
         }
 
         public bool FileExists(string path)

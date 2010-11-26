@@ -66,11 +66,13 @@
     <Compile Include="DirectoryInfoWrapper.cs" />
     <Compile Include="DirectoryWrapper.cs" />
     <Compile Include="FileInfoBase.cs" />
+    <Compile Include="FileInfoFactory.cs" />
     <Compile Include="FileInfoWrapper.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="FileSystemInfoBase.cs" />
     <Compile Include="FileWrapper.cs" />
     <Compile Include="FileBase.cs" />
+    <Compile Include="IFileInfoFactory.cs" />
     <Compile Include="IFileSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

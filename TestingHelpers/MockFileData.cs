@@ -7,9 +7,9 @@ namespace System.IO.Abstractions.TestingHelpers
         static readonly Encoding defaultEncoding = Encoding.UTF8;
 
         byte[] contents;
-        DateTimeOffset creationTime = new DateTimeOffset(2010, 01, 02, 00, 00, 00, TimeSpan.Zero);
-        DateTimeOffset lastAccessTime = new DateTimeOffset(2010, 02, 04, 00, 00, 00, TimeSpan.Zero);
-        DateTimeOffset lastWriteTime = new DateTimeOffset(2010, 01, 04, 00, 00, 00, TimeSpan.Zero);
+        DateTimeOffset creationTime = new DateTimeOffset(2010, 01, 02, 00, 00, 00, TimeSpan.FromHours(4));
+        DateTimeOffset lastAccessTime = new DateTimeOffset(2010, 02, 04, 00, 00, 00, TimeSpan.FromHours(4));
+        DateTimeOffset lastWriteTime = new DateTimeOffset(2010, 01, 04, 00, 00, 00, TimeSpan.FromHours(4));
 
         public MockFileData(string textContents)
             : this(defaultEncoding.GetBytes(textContents))
