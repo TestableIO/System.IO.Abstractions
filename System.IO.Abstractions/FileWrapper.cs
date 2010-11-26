@@ -30,22 +30,22 @@ namespace System.IO.Abstractions
             File.Copy(sourceFileName, destFileName, overwrite);
         }
 
-        public override FileStream Create(string path)
+        public override Stream Create(string path)
         {
             return File.Create(path);
         }
 
-        public override FileStream Create(string path, int bufferSize)
+        public override Stream Create(string path, int bufferSize)
         {
             return File.Create(path, bufferSize);
         }
 
-        public override FileStream Create(string path, int bufferSize, FileOptions options)
+        public override Stream Create(string path, int bufferSize, FileOptions options)
         {
             return File.Create(path, bufferSize, options);
         }
 
-        public override FileStream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
+        public override Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
         {
             return File.Create(path, bufferSize, options, fileSecurity);
         }
@@ -125,22 +125,22 @@ namespace System.IO.Abstractions
             File.Move(sourceFileName, destFileName);
         }
 
-        public override FileStream Open(string path, FileMode mode)
+        public override Stream Open(string path, FileMode mode)
         {
             return File.Open(path, mode);
         }
 
-        public override FileStream Open(string path, FileMode mode, FileAccess access)
+        public override Stream Open(string path, FileMode mode, FileAccess access)
         {
             return File.Open(path, mode, access);
         }
 
-        public override FileStream Open(string path, FileMode mode, FileAccess access, FileShare share)
+        public override Stream Open(string path, FileMode mode, FileAccess access, FileShare share)
         {
             return File.Open(path, mode, access, share);
         }
 
-        public override FileStream OpenRead(string path)
+        public override Stream OpenRead(string path)
         {
             return File.OpenRead(path);
         }
@@ -150,7 +150,7 @@ namespace System.IO.Abstractions
             return File.OpenText(path);
         }
 
-        public override FileStream OpenWrite(string path)
+        public override Stream OpenWrite(string path)
         {
             return File.OpenWrite(path);
         }

@@ -42,22 +42,22 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException();
         }
 
-        public override FileStream Create(string path)
+        public override Stream Create(string path)
         {
             throw new NotImplementedException();
         }
 
-        public override FileStream Create(string path, int bufferSize)
+        public override Stream Create(string path, int bufferSize)
         {
             throw new NotImplementedException();
         }
 
-        public override FileStream Create(string path, int bufferSize, FileOptions options)
+        public override Stream Create(string path, int bufferSize, FileOptions options)
         {
             throw new NotImplementedException();
         }
 
-        public override FileStream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
+        public override Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
         {
             throw new NotImplementedException();
         }
@@ -137,22 +137,22 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException();
         }
 
-        public override FileStream Open(string path, FileMode mode)
+        public override Stream Open(string path, FileMode mode)
         {
             throw new NotImplementedException();
         }
 
-        public override FileStream Open(string path, FileMode mode, FileAccess access)
+        public override Stream Open(string path, FileMode mode, FileAccess access)
         {
             throw new NotImplementedException();
         }
 
-        public override FileStream Open(string path, FileMode mode, FileAccess access, FileShare share)
+        public override Stream Open(string path, FileMode mode, FileAccess access, FileShare share)
         {
             throw new NotImplementedException();
         }
 
-        public override FileStream OpenRead(string path)
+        public override Stream OpenRead(string path)
         {
             throw new NotImplementedException();
         }
@@ -162,7 +162,7 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException();
         }
 
-        public override FileStream OpenWrite(string path)
+        public override Stream OpenWrite(string path)
         {
             throw new NotImplementedException();
         }

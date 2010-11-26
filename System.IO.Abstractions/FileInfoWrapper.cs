@@ -98,7 +98,7 @@ namespace System.IO.Abstractions
             return instance.CopyTo(destFileName, overwrite);
         }
 
-        public override FileStream Create()
+        public override Stream Create()
         {
             return instance.Create();
         }
@@ -133,22 +133,22 @@ namespace System.IO.Abstractions
             instance.MoveTo(destFileName);
         }
 
-        public override FileStream Open(FileMode mode)
+        public override Stream Open(FileMode mode)
         {
             return instance.Open(mode);
         }
 
-        public override FileStream Open(FileMode mode, FileAccess access)
+        public override Stream Open(FileMode mode, FileAccess access)
         {
             return instance.Open(mode, access);
         }
 
-        public override FileStream Open(FileMode mode, FileAccess access, FileShare share)
+        public override Stream Open(FileMode mode, FileAccess access, FileShare share)
         {
             return instance.Open(mode, access, share);
         }
 
-        public override FileStream OpenRead()
+        public override Stream OpenRead()
         {
             return instance.OpenRead();
         }
@@ -158,7 +158,7 @@ namespace System.IO.Abstractions
             return instance.OpenText();
         }
 
-        public override FileStream OpenWrite()
+        public override Stream OpenWrite()
         {
             return instance.OpenWrite();
         }
