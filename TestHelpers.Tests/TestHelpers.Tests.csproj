@@ -62,6 +62,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SolutionInfo.cs">
+      <Link>SolutionInfo.cs</Link>
+    </Compile>
     <Compile Include="MockDirectoryTests.cs" />
     <Compile Include="MockFileInfoFactoryTests.cs" />
     <Compile Include="MockFileInfoTests.cs" />
