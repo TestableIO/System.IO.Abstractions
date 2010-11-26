@@ -413,5 +413,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 fileContent,
                 fileSystem.File.ReadAllBytes(path));
         }
+
+        [TestMethod]
+        public void MockFile_WriteAllBytes_ShouldWriteDataToMemoryFileSystem()
+        {
+            // Arrange
+            const string path = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileContent = new byte[] { 1, 2, 3, 4 };
+
+            // Act
+            fileSystem.File.WriteAllBytes(path, fileContent);
+
+            // Assert
+            Assert.AreEqual(
+                fileContent,
+                fileSystem.GetFile(path).Contents);
+        }
     }
 }
