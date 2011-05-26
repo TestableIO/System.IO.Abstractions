@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>System.IO.Abstractions</id>
+    <version>1.2.0.0</version>
+    <authors>Tatham Oddie</authors>
+    <owners>Tatham Oddie</owners>
+    <licenseUrl>http://systemioabstractions.codeplex.com/license</licenseUrl>
+    <projectUrl>http://systemioabstractions.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Just like System.Web.Abstractions, but for System.IO. Yay for testable IO access!</description>
+    <tags>testing</tags>
+  </metadata>
+  <files>
+    <file src="bin\Release\*.dll" target="lib" />
+    <file src="bin\Release\*.pdb" target="lib" />
+  </files>
+</package>
