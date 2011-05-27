@@ -264,7 +264,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void WriteAllText(string path, string contents)
         {
-            throw new NotImplementedException();
+            mockFileDataAccessor.AddFile(path, new MockFileData(contents));
         }
 
         public override void WriteAllText(string path, string contents, Encoding encoding)
