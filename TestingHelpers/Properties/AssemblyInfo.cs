@@ -2,6 +2,9 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+[assembly: AssemblyVersion("0.0.0.1")]
+[assembly: AssemblyFileVersion("0.0.0.1")]
+
 [assembly: AssemblyTitle("System.IO.Abstractions.TestingHelpers")]
 [assembly: AssemblyDescription("A set of pre-built mocks to help when testing file system interactions.")]
 [assembly: AssemblyConfiguration("")]

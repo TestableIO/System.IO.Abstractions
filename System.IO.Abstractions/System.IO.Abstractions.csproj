@@ -60,9 +60,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\SolutionInfo.cs">
-      <Link>SolutionInfo.cs</Link>
-    </Compile>
     <Compile Include="Converters.cs" />
     <Compile Include="DirectoryBase.cs" />
     <Compile Include="DirectoryInfoBase.cs" />
