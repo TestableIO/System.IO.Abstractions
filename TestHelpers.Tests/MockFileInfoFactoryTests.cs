@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework; 
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class MockFileInfoFactoryTests
     {
-        [TestMethod]
+        [Test]
         public void MockFileInfoFactory_FromFileName_ShouldReturnFileInfoForExistingFile()
         {
             // Arrange
@@ -24,7 +24,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsNotNull(result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFileInfoFactory_FromFileName_ShouldReturnFileInfoForNonExistantFile()
         {
             // Arrange

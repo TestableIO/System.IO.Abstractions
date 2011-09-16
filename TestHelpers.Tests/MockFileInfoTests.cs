@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class MockFileInfoTests
     {
-        [TestMethod]
+        [Test]
         public void MockFileInfo_Exists_ShouldReturnTrueIfFileExistsInMemoryFileSystem()
         {
             // Arrange
@@ -24,7 +24,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFileInfo_Exists_ShouldReturnFalseIfFileDoesNotExistInMemoryFileSystem()
         {
             // Arrange
@@ -42,7 +42,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFileInfo_Length_ShouldReturnLengthOfFileInMemoryFileSystem()
         {
             // Arrange
@@ -61,7 +61,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(fileContent.Length, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFileInfo_Length_ShouldThrowFileNotFoundExcpetionIfFileDoesNotExistInMemoryFileSystem()
         {
             // Arrange
@@ -88,7 +88,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void MockFileInfo_CreationTimeUtc_ShouldReturnCreationTimeUtcOfFileInMemoryFileSystem()
         {
             // Arrange
@@ -107,7 +107,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(creationTime.ToUniversalTime(), result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFileInfo_LastAccessTimeUtc_ShouldReturnLastAccessTimeUtcOfFileInMemoryFileSystem()
         {
             // Arrange
@@ -126,7 +126,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(lastAccessTime.ToUniversalTime(), result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFileInfo_LastWriteTimeUtc_ShouldReturnLastWriteTimeUtcOfFileInMemoryFileSystem()
         {
             // Arrange

@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class MockFileTests
     {
-        [TestMethod]
+        [Test]
         public void MockFile_AppendAllText_ShouldPersistNewText()
         {
             // Arrange
@@ -28,7 +28,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 file.ReadAllText(path));
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_AppendAllText_ShouldPersistNewTextWithCustomEncoding()
         {
             // Arrange
@@ -55,7 +55,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 file.ReadAllBytes(path));
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_GetSetCreationTime_ShouldPersist()
         {
             // Arrange
@@ -75,7 +75,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(creationTime, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_SetCreationTimeUtc_ShouldAffectCreationTime()
         {
             // Arrange
@@ -95,7 +95,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(creationTime, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_SetCreationTime_ShouldAffectCreationTimeUtc()
         {
             // Arrange
@@ -115,7 +115,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(creationTime.ToUniversalTime(), result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_GetSetLastAccessTime_ShouldPersist()
         {
             // Arrange
@@ -135,7 +135,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(lastAccessTime, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_SetLastAccessTimeUtc_ShouldAffectLastAccessTime()
         {
             // Arrange
@@ -155,7 +155,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(lastAccessTime, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_SetLastAccessTime_ShouldAffectLastAccessTimeUtc()
         {
             // Arrange
@@ -175,7 +175,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(lastAccessTime.ToUniversalTime(), result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_GetSetLastWriteTime_ShouldPersist()
         {
             // Arrange
@@ -195,7 +195,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(lastWriteTime, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_SetLastWriteTimeUtc_ShouldAffectLastWriteTime()
         {
             // Arrange
@@ -215,7 +215,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(lastWriteTime, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_SetLastWriteTime_ShouldAffectLastWriteTimeUtc()
         {
             // Arrange
@@ -235,7 +235,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(lastWriteTime.ToUniversalTime(), result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_Exists_ShouldReturnTrueForSamePath()
         {
             // Arrange
@@ -254,7 +254,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_Exists_ShouldReturnTrueForPathVaryingByCase()
         {
             // Arrange
@@ -273,7 +273,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_Exists_ShouldReturnFalseForEntirelyDifferentPath()
         {
             // Arrange
@@ -292,7 +292,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_ReadAllBytes_ShouldReturnOriginalByteData()
         {
             // Arrange
@@ -313,7 +313,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_ReadAllLines_ShouldReturnOriginalTextData()
         {
             // Arrange
@@ -334,7 +334,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_ReadAllLines_ShouldReturnOriginalDataWithCustomEncoding()
         {
             // Arrange
@@ -356,7 +356,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_ReadAllText_ShouldReturnOriginalTextData()
         {
             // Arrange
@@ -377,7 +377,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_ReadAllText_ShouldReturnOriginalDataWithCustomEncoding()
         {
             // Arrange
@@ -397,7 +397,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(text, result);
         }
         
-        [TestMethod]
+        [Test]
         public void MockFile_ReadAllBytes_ShouldReturnDataSavedByWriteAllBytes()
         {
             // Arrange
@@ -414,7 +414,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 fileSystem.File.ReadAllBytes(path));
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_WriteAllBytes_ShouldWriteDataToMemoryFileSystem()
         {
             // Arrange
@@ -431,7 +431,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 fileSystem.GetFile(path).Contents);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFile_WriteAllText_ShouldWriteTextFileToMemoryFileSystem()
         {
             // Arrange

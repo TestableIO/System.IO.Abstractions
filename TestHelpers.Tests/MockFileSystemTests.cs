@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class MockFileSystemTests
     {
-        [TestMethod]
+        [Test]
         public void MockFileSystem_GetFile_ShouldReturnNullWhenFileIsNotRegistered()
         {
             // Arrange
@@ -23,7 +23,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsNull(result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFileSystem_GetFile_ShouldReturnFileRegisteredInConstructor()
         {
             // Arrange
@@ -41,7 +41,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(file1, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockFileSystem_GetFile_ShouldReturnFileRegisteredInConstructorWhenPathsDifferByCase()
         {
             // Arrange

@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    [TestClass]
+    [TestFixture]
     public class MockDirectoryTests
     {
-        [TestMethod]
+        [Test]
         public void MockDirectory_GetFiles_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
         {
             // Arrange
@@ -42,7 +42,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             );
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_GetFiles_ShouldReturnFilesDirectlyBelowPathWhenPatternIsWildcardAndSearchOptionIsTopDirectoryOnly()
         {
             // Arrange
@@ -75,7 +75,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             );
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPattern()
         {
             // Arrange
@@ -108,7 +108,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             );
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternWithDotsInFilenames()
         {
             // Arrange
@@ -141,7 +141,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             );
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternAndSearchOptionTopDirectoryOnly()
         {
             // Arrange
@@ -172,7 +172,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             );
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_GetCreationTime_ShouldReturnCreationTimeFromFile()
         {
             // Arrange
@@ -191,7 +191,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(time, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_GetCreationTimeUtc_ShouldReturnCreationTimeUtcFromFile()
         {
             // Arrange
@@ -210,7 +210,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(time, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_GetLastAccessTime_ShouldReturnLastAccessTimeFromFile()
         {
             // Arrange
@@ -229,7 +229,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(time, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_GetLastAccessTimeUtc_ShouldReturnLastAccessTimeUtcFromFile()
         {
             // Arrange
@@ -248,7 +248,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(time, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_GetLastWriteTime_ShouldReturnLastWriteTimeFromFile()
         {
             // Arrange
@@ -267,7 +267,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(time, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_GetLastWriteTimeUtc_ShouldReturnLastWriteTimeUtcFromFile()
         {
             // Arrange
@@ -286,7 +286,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(time, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_SetCreationTime_ShouldSetCreationTimeOnFile()
         {
             // Arrange
@@ -305,7 +305,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(time, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_SetCreationTimeUtc_ShouldSetCreationTimeUtcOnFile()
         {
             // Arrange
@@ -324,7 +324,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(time, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_SetLastAccessTime_ShouldSetLastAccessTimeOnFile()
         {
             // Arrange
@@ -343,7 +343,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(time, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_SetLastAccessTimeUtc_ShouldSetLastAccessTimeUtcOnFile()
         {
             // Arrange
@@ -362,7 +362,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(time, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_SetLastWriteTime_ShouldSetLastWriteTimeOnFile()
         {
             // Arrange
@@ -381,7 +381,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(time, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_SetLastWriteTimeUtc_ShouldSetLastWriteTimeUtcOnFile()
         {
             // Arrange
@@ -400,7 +400,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(time, result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_Exists_ShouldReturnTrueForDirectoryDefinedInMemoryFileSystemWithoutTrailingSlash()
         {
             // Arrange
@@ -416,7 +416,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_Exists_ShouldReturnTrueForDirectoryDefinedInMemoryFileSystemWithTrailingSlash()
         {
             // Arrange
@@ -432,7 +432,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_Exists_ShouldReturnFalseForDirectoryNotDefinedInMemoryFileSystemWithoutTrailingSlash()
         {
             // Arrange
@@ -448,7 +448,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_Exists_ShouldReturnFalseForDirectoryNotDefinedInMemoryFileSystemWithTrailingSlash()
         {
             // Arrange
@@ -464,7 +464,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_Exists_ShouldReturnFalseForDirectoryNotDefinedInMemoryFileSystemWithSimilarFileName()
         {
             // Arrange
@@ -481,7 +481,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_Exists_ShouldReturnTrueForDirectoryCreatedViaMocks()
         {
             // Arrange
@@ -498,7 +498,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(result);
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_CreateDirectory_ShouldCreatePlaceholderFileInMemoryFileSystem()
         {
             // Arrange
@@ -514,7 +514,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(fileSystem.FileExists(@"c:\bar\__PLACEHOLDER__.dir"));
         }
 
-        [TestMethod]
+        [Test]
         public void MockDirectory_CreateDirectory_ShouldReturnDirectoryInfoBase()
         {
             // Arrange
