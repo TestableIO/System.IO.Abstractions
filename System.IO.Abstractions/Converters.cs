@@ -34,12 +34,12 @@ namespace System.IO.Abstractions
 
         internal static DirectoryInfoBase[] Wrap(this DirectoryInfo[] input)
         {
-            return input.Cast<DirectoryInfoBase>().ToArray();
+            return input.Select(f => (DirectoryInfoBase)f).ToArray();
         }
 
         internal static FileInfoBase[] Wrap(this FileInfo[] input)
         {
-            return input.Cast<FileInfoBase>().ToArray();
+            return input.Select(f => (FileInfoBase)f).ToArray();
         }
     }
 }
