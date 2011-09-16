@@ -107,6 +107,7 @@
     <None Include="System.IO.Abstractions.TestingHelpers.nuspec">
       <SubType>Designer</SubType>
     </None>
+    <None Include="TestingHelpers.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
