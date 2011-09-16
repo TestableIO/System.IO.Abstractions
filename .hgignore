@@ -5,4 +5,5 @@ TestResults
 .user
 .suo
 Releases
-.nupkg
+System.IO.Abstractions.*.nupkg
+.ReSharper
