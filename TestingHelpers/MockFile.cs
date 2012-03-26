@@ -154,12 +154,16 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream OpenRead(string path)
         {
-            throw new NotImplementedException();
+            return new MemoryStream(
+                mockFileDataAccessor
+                    .GetFile(path)
+                    .Contents);
         }
 
         public override StreamReader OpenText(string path)
         {
-            throw new NotImplementedException();
+            return new StreamReader(
+                OpenRead(path));
         }
 
         public override Stream OpenWrite(string path)
