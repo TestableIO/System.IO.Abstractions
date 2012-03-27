@@ -447,5 +447,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 fileContent,
                 fileSystem.GetFile(path).TextContents);
         }
+
+        [Test]
+        public void MockFile_Move_ShouldMoveFileWithinMemoryFileSystem()
+        {
+            const string sourceFilePath = @"c:\something\demo.txt";
+            const string sourceFileContent = "this is some content";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
+                                                    {
+                                                        {sourceFilePath, new MockFileData(sourceFileContent)}
+                                                    });
+
+            const string destFilePath = @"c:\somethingelse\demo1.txt";
+
+            fileSystem.File.Move(sourceFilePath, destFilePath);
+
+            Assert.That(fileSystem.FileExists(destFilePath), Is.True);
+            Assert.That(fileSystem.GetFile(destFilePath).TextContents, Is.EqualTo(sourceFileContent));
+            Assert.That(fileSystem.FileExists(sourceFilePath), Is.False);
+        }
     }
 }

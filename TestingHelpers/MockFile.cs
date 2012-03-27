@@ -134,7 +134,10 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Move(string sourceFileName, string destFileName)
         {
-            throw new NotImplementedException();
+            var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
+
+            mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile.Contents));
+            mockFileDataAccessor.RemoveFile(sourceFileName);
         }
 
         public override Stream Open(string path, FileMode mode)

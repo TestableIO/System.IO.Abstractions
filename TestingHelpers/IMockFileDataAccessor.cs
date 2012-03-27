@@ -6,6 +6,7 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         MockFileData GetFile(string path);
         void AddFile(string path, MockFileData mockFile);
+        void RemoveFile(string path);
         bool FileExists(string path);
         IEnumerable<string> AllPaths { get; }
     }

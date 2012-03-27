@@ -45,6 +45,11 @@ namespace System.IO.Abstractions.TestingHelpers
             files.Add(path, mockFile);
         }
 
+        public void RemoveFile(string path)
+        {
+            files.Remove(path);
+        }
+
         public bool FileExists(string path)
         {
             return files.ContainsKey(path);
