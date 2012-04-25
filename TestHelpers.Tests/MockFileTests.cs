@@ -449,6 +449,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_WriteAllText_ShouldOverriteAnExistingFile()
+        {
+            // http://msdn.microsoft.com/en-us/library/ms143375.aspx
+
+            // Arrange
+            const string path = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            // Act
+            fileSystem.File.WriteAllText(path, "foo");
+            fileSystem.File.WriteAllText(path, "bar");
+
+            // Assert
+            Assert.AreEqual("bar", fileSystem.GetFile(path).TextContents);
+        }
+
+        [Test]
         public void MockFile_Move_ShouldMoveFileWithinMemoryFileSystem()
         {
             const string sourceFilePath = @"c:\something\demo.txt";

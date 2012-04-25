@@ -271,6 +271,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void WriteAllText(string path, string contents)
         {
+            if (mockFileDataAccessor.FileExists(path))
+                mockFileDataAccessor.RemoveFile(path);
             mockFileDataAccessor.AddFile(path, new MockFileData(contents));
         }
 
