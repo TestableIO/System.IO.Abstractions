@@ -99,7 +99,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="StrongName.pfx" />
     <None Include="System.IO.Abstractions.nuspec">
       <SubType>Designer</SubType>
     </None>

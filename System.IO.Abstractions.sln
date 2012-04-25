@@ -4,6 +4,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F3BDA62-8052-4C37-97A0-94354AA971B0}"
 	ProjectSection(SolutionItems) = preProject
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
+		StrongName.pfx = StrongName.pfx
 		System.IO.Abstractions.vsmdi = System.IO.Abstractions.vsmdi
 	EndProjectSection
 EndProject

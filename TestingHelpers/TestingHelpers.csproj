@@ -106,9 +106,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="System.IO.Abstractions.TestingHelpers.nuspec">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="TestingHelpers.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
