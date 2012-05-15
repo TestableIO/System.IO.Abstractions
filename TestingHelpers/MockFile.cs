@@ -29,57 +29,57 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override StreamWriter AppendText(string path)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override void Copy(string sourceFileName, string destFileName)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override void Copy(string sourceFileName, string destFileName, bool overwrite)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override Stream Create(string path)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override Stream Create(string path, int bufferSize)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override Stream Create(string path, int bufferSize, FileOptions options)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override StreamWriter CreateText(string path)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override void Decrypt(string path)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override void Delete(string path)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override void Encrypt(string path)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override bool Exists(string path)
@@ -89,17 +89,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileSecurity GetAccessControl(string path)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override FileSecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override FileAttributes GetAttributes(string path)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override DateTime GetCreationTime(string path)
@@ -142,17 +142,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream Open(string path, FileMode mode)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override Stream Open(string path, FileMode mode, FileAccess access)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override Stream Open(string path, FileMode mode, FileAccess access, FileShare share)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override Stream OpenRead(string path)
@@ -171,7 +171,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream OpenWrite(string path)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override byte[] ReadAllBytes(string path)
@@ -206,22 +206,22 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override void SetAttributes(string path, FileAttributes fileAttributes)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override void SetCreationTime(string path, DateTime creationTime)
@@ -261,12 +261,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void WriteAllLines(string path, string[] contents)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override void WriteAllLines(string path, string[] contents, Encoding encoding)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override void WriteAllText(string path, string contents)
@@ -278,7 +278,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void WriteAllText(string path, string contents, Encoding encoding)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
     }
 }

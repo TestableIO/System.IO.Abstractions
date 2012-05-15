@@ -29,12 +29,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Delete(string path)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override void Delete(string path, bool recursive)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override bool Exists(string path)
@@ -45,12 +45,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectorySecurity GetAccessControl(string path)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override DateTime GetCreationTime(string path)
@@ -65,27 +65,27 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string GetCurrentDirectory()
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override string[] GetDirectories(string path)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override string[] GetDirectories(string path, string searchPattern)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override string[] GetDirectories(string path, string searchPattern, SearchOption searchOption)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override string GetDirectoryRoot(string path)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override string[] GetFiles(string path)
@@ -125,12 +125,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFileSystemEntries(string path)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override string[] GetFileSystemEntries(string path, string searchPattern)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override DateTime GetLastAccessTime(string path)
@@ -155,22 +155,22 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetLogicalDrives()
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override DirectoryInfoBase GetParent(string path)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override void Move(string sourceDirName, string destDirName)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override void SetCreationTime(string path, DateTime creationTime)
@@ -185,7 +185,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void SetCurrentDirectory(string path)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
         }
 
         public override void SetLastAccessTime(string path, DateTime lastAccessTime)
