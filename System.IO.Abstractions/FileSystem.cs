@@ -19,5 +19,11 @@
         {
             get { return fileInfoFactory ?? (fileInfoFactory = new FileInfoFactory()); }
         }
+
+        PathBase path;
+        public PathBase Path
+        {
+            get { return path ?? (path = new PathWrapper()); }
+        }
     }
 }

@@ -79,6 +79,8 @@
     <Compile Include="FileBase.cs" />
     <Compile Include="IFileInfoFactory.cs" />
     <Compile Include="IFileSystem.cs" />
+    <Compile Include="PathBase.cs" />
+    <Compile Include="PathWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
