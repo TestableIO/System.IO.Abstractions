@@ -19,5 +19,11 @@
         {
             get { return fileInfoFactory ?? (fileInfoFactory = new FileInfoFactory()); }
         }
+
+        DirectoryInfoFactory directoryInfoFactory;
+        public IDirectoryInfoFactory DirectoryInfo
+        {
+            get { return directoryInfoFactory ?? (directoryInfoFactory = new DirectoryInfoFactory()); }
+        }
     }
 }

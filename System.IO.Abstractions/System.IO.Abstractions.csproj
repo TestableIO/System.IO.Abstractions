@@ -68,6 +68,7 @@
     <Compile Include="Converters.cs" />
     <Compile Include="DirectoryBase.cs" />
     <Compile Include="DirectoryInfoBase.cs" />
+    <Compile Include="DirectoryInfoFactory.cs" />
     <Compile Include="DirectoryInfoWrapper.cs" />
     <Compile Include="DirectoryWrapper.cs" />
     <Compile Include="FileInfoBase.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="FileSystemInfoBase.cs" />
     <Compile Include="FileWrapper.cs" />
     <Compile Include="FileBase.cs" />
+    <Compile Include="IDirectoryInfoFactory.cs" />
     <Compile Include="IFileInfoFactory.cs" />
     <Compile Include="IFileSystem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
