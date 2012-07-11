@@ -54,7 +54,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-      <AssemblyOriginatorKeyFile>..\StrongName.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\StrongName.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -74,6 +74,7 @@
     <Compile Include="IMockFileDataAccessor.cs" />
     <Compile Include="MockDirectory.cs" />
     <Compile Include="MockDirectoryInfo.cs" />
+    <Compile Include="MockDirectoryInfoFactory.cs" />
     <Compile Include="MockFile.cs" />
     <Compile Include="MockFileData.cs" />
     <Compile Include="MockFileInfo.cs" />
