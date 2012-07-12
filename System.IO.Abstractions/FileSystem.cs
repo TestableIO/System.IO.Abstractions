@@ -25,5 +25,11 @@
         {
             get { return path ?? (path = new PathWrapper()); }
         }
+
+        DirectoryInfoFactory directoryInfoFactory;
+        public IDirectoryInfoFactory DirectoryInfo
+        {
+            get { return directoryInfoFactory ?? (directoryInfoFactory = new DirectoryInfoFactory()); }
+        }
     }
 }

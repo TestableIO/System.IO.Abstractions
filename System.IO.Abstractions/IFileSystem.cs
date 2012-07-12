@@ -6,5 +6,6 @@
         DirectoryBase Directory { get; }
         IFileInfoFactory FileInfo { get; }
         PathBase Path { get; }
+        IDirectoryInfoFactory DirectoryInfo { get; }
     }
 }
