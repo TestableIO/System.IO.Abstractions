@@ -8,6 +8,7 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly FileBase file;
         readonly DirectoryBase directory;
         readonly IFileInfoFactory fileInfoFactory;
+        readonly IDirectoryInfoFactory directoryInfoFactory;
 
         public MockFileSystem(IDictionary<string, MockFileData> files)
         {
@@ -18,6 +19,7 @@ namespace System.IO.Abstractions.TestingHelpers
             file = new MockFile(this);
             directory = new MockDirectory(this, file);
             fileInfoFactory = new MockFileInfoFactory(this);
+            directoryInfoFactory = new MockDirectoryInfoFactory(this);
         }
 
         public FileBase File
@@ -33,6 +35,11 @@ namespace System.IO.Abstractions.TestingHelpers
         public IFileInfoFactory FileInfo
         {
             get { return fileInfoFactory; }
+        }
+
+        public IDirectoryInfoFactory DirectoryInfo
+        {
+            get { return directoryInfoFactory; }
         }
 
         public MockFileData GetFile(string path)

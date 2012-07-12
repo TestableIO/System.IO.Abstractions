@@ -5,5 +5,6 @@
         FileBase File { get; }
         DirectoryBase Directory { get; }
         IFileInfoFactory FileInfo { get; }
+        IDirectoryInfoFactory DirectoryInfo { get; }
     }
 }
