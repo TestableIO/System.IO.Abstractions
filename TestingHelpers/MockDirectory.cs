@@ -29,12 +29,19 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Delete(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
+            Delete(path, true);
         }
 
         public override void Delete(string path, bool recursive)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
+            if (!recursive)
+                throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at CodePlex. You know, because it's open source and all.");
+
+            path = EnsurePathEndsWithDirectorySeparator(path);
+
+            var paths = mockFileDataAccessor.AllPaths.Where(p => p.StartsWith(path)).ToList();
+            foreach (var fpath in paths)
+                mockFileDataAccessor.RemoveFile(fpath);
         }
 
         public override bool Exists(string path)
