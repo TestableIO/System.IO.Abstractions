@@ -2,8 +2,8 @@ _ReSharper.System.IO.Abstractions
 bin
 obj
 TestResults
-.user
-.suo
+*.user
+*.suo
 Releases
 System.IO.Abstractions.*.nupkg
-.ReSharper
+*.ReSharper
