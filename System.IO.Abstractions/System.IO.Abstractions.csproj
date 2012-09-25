@@ -65,6 +65,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AbstracionsStreamReader.cs" />
+    <Compile Include="AbstracionsStreamWriter.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="DirectoryBase.cs" />
     <Compile Include="DirectoryInfoBase.cs" />
@@ -81,6 +83,8 @@
     <Compile Include="IDirectoryInfoFactory.cs" />
     <Compile Include="IFileInfoFactory.cs" />
     <Compile Include="IFileSystem.cs" />
+    <Compile Include="IStreamReader.cs" />
+    <Compile Include="IStreamWriter.cs" />
     <Compile Include="PathBase.cs" />
     <Compile Include="PathWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
