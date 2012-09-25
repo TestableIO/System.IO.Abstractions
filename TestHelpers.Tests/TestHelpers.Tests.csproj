@@ -55,7 +55,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-      <AssemblyOriginatorKeyFile>..\StrongName.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\StrongName.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
@@ -80,6 +80,7 @@
     <Compile Include="MockFileInfoTests.cs" />
     <Compile Include="MockFileSystemTests.cs" />
     <Compile Include="MockFileTests.cs" />
+    <Compile Include="MockPathTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
