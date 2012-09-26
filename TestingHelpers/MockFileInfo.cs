@@ -1,4 +1,6 @@
-﻿using System.Security.AccessControl;
+﻿using System.Collections.Generic;
+using System.Security.AccessControl;
+using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -180,9 +182,26 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override IStreamReader OpenText()
         {
-            IStreamReader reader = writtenData != null
-                             ? new MockStreamReader() { PreviouslyWrittenData = writtenData.WrittenData }
-                             : new MockStreamReader();
+            var reader = new MockStreamReader();
+            if (writtenData != null && !string.IsNullOrEmpty(MockFileData.TextContents))
+            {
+                reader.PreviouslyWrittenData = writtenData.WrittenData;
+
+                var bytes = Encoding.Default.GetBytes(MockFileData.TextContents);
+                reader.PreviouslyWrittenData.Write(bytes, 0, bytes.Length);
+            }
+            else if (writtenData != null)
+            {
+                reader.PreviouslyWrittenData = writtenData.WrittenData;
+
+            }
+            else if (!string.IsNullOrEmpty(MockFileData.TextContents))
+            {
+                reader.PreviouslyWrittenData = new MemoryStream();
+                var bytes = Encoding.Default.GetBytes(MockFileData.TextContents);
+                reader.PreviouslyWrittenData.Write(bytes, 0, bytes.Length);
+            }
+
             return reader;
         }
 

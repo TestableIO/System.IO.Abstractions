@@ -149,13 +149,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void CreateText_DataSentIn_ShouldWriteToFile()
         {
             //Arrange
-            var fileData = new MockFileData("Demo text content");
+            var fileData = new MockFileData("");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", fileData }
+                { @"z:\a.txt", fileData }
             });
 
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, @"z:\a.txt");
 
             //Act
             var writer = fileInfo.CreateText();
@@ -167,6 +167,26 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             //Assert
             Assert.AreEqual("test",result);
+        }
+
+        [Test]
+        public void OpenText_MockFileDataopulated_ReturnsData()
+        {
+            //Arrange
+            var fileData = new MockFileData("Demo text content");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"z:\a.txt", fileData }
+            });
+
+            var fileInfo = new MockFileInfo(fileSystem, @"z:\a.txt");
+
+            //Act
+            var reader = fileInfo.OpenText();
+            var result = reader.ReadToEnd();
+
+            //Assert
+            Assert.AreEqual("Demo text content", result);
         }
     }
 }

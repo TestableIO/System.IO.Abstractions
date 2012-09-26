@@ -5,8 +5,7 @@ namespace System.IO.Abstractions.TestingHelpers
 {
     public class MockStreamWriter : IStreamWriter
     {
-        public List<string> WrittenData { get; set; }
-
+        public MemoryStream WrittenData { get; set; }
         public void Close()
         {
         }
@@ -39,9 +38,10 @@ namespace System.IO.Abstractions.TestingHelpers
         public void WriteLine(string value)
         {
             if (WrittenData == null)
-                WrittenData = new List<string>();
+                WrittenData = new MemoryStream();
 
-            WrittenData.Add(value);
+            var bytes = Encoding.Default.GetBytes(value);
+            WrittenData.Write(bytes, 0, bytes.Length);
         }
 
         public bool AutoFlush { get; set; }

@@ -3,7 +3,7 @@ using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
-    public  class MockStreamReader : IStreamReader
+    public class MockStreamReader : IStreamReader
     {
         public void Close()
         {
@@ -32,9 +32,10 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public string ReadToEnd()
         {
-            if (PreviouslyWrittenData != null && PreviouslyWrittenData.Count > 0)
+            if (PreviouslyWrittenData != null)
             {
-                return String.Join(Environment.NewLine, PreviouslyWrittenData.ToArray());
+                return Encoding.Default.GetString(PreviouslyWrittenData.ToArray());
+
             }
             else
             {
@@ -51,6 +52,6 @@ namespace System.IO.Abstractions.TestingHelpers
         public Stream BaseStream { get; private set; }
         public bool EndOfStream { get; private set; }
 
-        public List<string> PreviouslyWrittenData { get; set; }
+        public MemoryStream PreviouslyWrittenData { get; set; }
     }
 }
