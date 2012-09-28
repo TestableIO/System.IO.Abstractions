@@ -4,6 +4,7 @@
     {
         readonly IMockFileDataAccessor mockFileSystem;
         public FileInfoBase FileInfo { get; set; }
+
         public MockFileInfoFactory(IMockFileDataAccessor mockFileSystem)
         {
             this.mockFileSystem = mockFileSystem;

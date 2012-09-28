@@ -10,6 +10,9 @@ namespace System.IO.Abstractions.TestingHelpers
     /// </summary>
     public class MockPath : PathWrapper
     {
-        
+        public override string GetTempFileName()
+        {
+            return "Z:\\" + base.GetRandomFileName();
+        }
     }
 }

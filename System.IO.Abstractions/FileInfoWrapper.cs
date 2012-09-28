@@ -106,7 +106,7 @@ namespace System.IO.Abstractions
 
         public override IStreamWriter CreateText()
         {
-            return new AbstracionsStreamWriter(instance.FullName);
+            return new AbstractionsStreamWriter(instance.FullName);
         }
 
         public override void Decrypt()
@@ -156,7 +156,7 @@ namespace System.IO.Abstractions
 
         public override IStreamReader OpenText()
         {
-            return new AbstracionsStreamReader(instance.FullName);
+            return new AbstractionsStreamReader(instance.FullName);
         }
 
         public override Stream OpenWrite()

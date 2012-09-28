@@ -65,8 +65,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstracionsStreamReader.cs" />
-    <Compile Include="AbstracionsStreamWriter.cs" />
+    <Compile Include="AbstractionsStreamReader.cs" />
+    <Compile Include="AbstractionsStreamWriter.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="DirectoryBase.cs" />
     <Compile Include="DirectoryInfoBase.cs" />
