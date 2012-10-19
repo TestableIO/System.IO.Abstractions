@@ -483,5 +483,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(fileSystem.GetFile(destFilePath).TextContents, Is.EqualTo(sourceFileContent));
             Assert.That(fileSystem.FileExists(sourceFilePath), Is.False);
         }
+
+		[Test]
+		public void MockFile_Delete_ShouldDeleteFileFromTheFileSystem()
+		{
+			const string filePath = @"c:\something\demo.txt";
+			var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+			                                        {
+				                                        {filePath, new MockFileData("Some content")}
+			                                        });
+			fileSystem.File.Delete(filePath);
+
+			Assert.That(fileSystem.File.Exists(filePath), Is.False);
+		}
     }
 }
