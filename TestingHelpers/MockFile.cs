@@ -181,6 +181,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] ReadAllLines(string path)
         {
+            if (!mockFileDataAccessor.FileExists(path))
+                throw new FileNotFoundException(string.Format("Can't find {0}", path));
             return mockFileDataAccessor
                 .GetFile(path)
                 .TextContents
@@ -189,6 +191,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] ReadAllLines(string path, Encoding encoding)
         {
+            if (!mockFileDataAccessor.FileExists(path))
+                throw new FileNotFoundException(string.Format("Can't find {0}", path));
             return encoding
                 .GetString(mockFileDataAccessor.GetFile(path).Contents)
                 .SplitLines();
@@ -196,6 +200,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string ReadAllText(string path)
         {
+            if (!mockFileDataAccessor.FileExists(path))
+                throw new FileNotFoundException(string.Format("Can't find {0}", path));
             return mockFileDataAccessor.GetFile(path).TextContents;
         }
 
@@ -261,7 +267,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void WriteAllLines(string path, string[] contents)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            WriteAllText(path, string.Join("\n", contents));
         }
 
         public override void WriteAllLines(string path, string[] contents, Encoding encoding)
