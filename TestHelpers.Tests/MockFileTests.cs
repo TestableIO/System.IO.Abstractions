@@ -483,5 +483,40 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(fileSystem.GetFile(destFilePath).TextContents, Is.EqualTo(sourceFileContent));
             Assert.That(fileSystem.FileExists(sourceFilePath), Is.False);
         }
+
+        [Test]
+        public void MockFile_OpenWrite_ShouldCreateNewFiles() {
+            const string filePath = @"c:\something\demo.txt";
+            const string fileContent = "this is some content";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            var bytes = new UTF8Encoding(true).GetBytes(fileContent);
+            var stream = fileSystem.File.OpenWrite(filePath);
+            stream.Write(bytes, 0, bytes.Length);
+            stream.Close();
+
+            Assert.That(fileSystem.FileExists(filePath), Is.True);
+            Assert.That(fileSystem.GetFile(filePath).TextContents, Is.EqualTo(fileContent));
+        }
+
+        [Test]
+        public void MockFile_OpenWrite_ShouldOverwriteExistingFiles()
+        {
+            const string filePath = @"c:\something\demo.txt";
+            const string startFileContent = "this is some content";
+            const string endFileContent = "this is some other content";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
+                                                    {
+                                                        {filePath, new MockFileData(startFileContent)}
+                                                    });
+
+            var bytes = new UTF8Encoding(true).GetBytes(endFileContent);
+            var stream = fileSystem.File.OpenWrite(filePath);
+            stream.Write(bytes, 0, bytes.Length);
+            stream.Close();
+
+            Assert.That(fileSystem.FileExists(filePath), Is.True);
+            Assert.That(fileSystem.GetFile(filePath).TextContents, Is.EqualTo(endFileContent));
+        }
     }
 }
