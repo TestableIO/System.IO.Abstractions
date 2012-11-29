@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -72,6 +73,14 @@ namespace System.IO.Abstractions.TestingHelpers
         public IEnumerable<string> AllPaths
         {
             get { return files.Keys; }
+        }
+
+        public IEnumerable<string> AllFiles {
+            get { return files.Where(f => !f.Value.IsDirectory).Select(f => f.Key); }
+        }
+
+        public IEnumerable<string> AllDirectories {
+            get { return files.Where(f => f.Value.IsDirectory).Select(f => f.Key); }
         }
     }
 }

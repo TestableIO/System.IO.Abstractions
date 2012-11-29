@@ -23,7 +23,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
             path = EnsurePathEndsWithDirectorySeparator(path);
-            mockFileDataAccessor.AddFile(path + "__PLACEHOLDER__.dir", new MockFileData(string.Empty));
+            mockFileDataAccessor.AddFile(path, new MockDirectoryData());
             return new MockDirectoryInfo(mockFileDataAccessor, path);
         }
 
