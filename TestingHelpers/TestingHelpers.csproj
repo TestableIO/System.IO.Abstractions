@@ -79,6 +79,7 @@
     <Compile Include="MockFileData.cs" />
     <Compile Include="MockFileInfo.cs" />
     <Compile Include="MockFileInfoFactory.cs" />
+    <Compile Include="MockFileStream.cs" />
     <Compile Include="MockFileSystem.cs" />
     <Compile Include="MockPath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
