@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 
@@ -23,7 +24,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
             path = EnsurePathEndsWithDirectorySeparator(path);
-            mockFileDataAccessor.AddFile(path + "__PLACEHOLDER__.dir", new MockFileData(string.Empty));
+            mockFileDataAccessor.AddFile(path, new MockDirectoryData());
             return new MockDirectoryInfo(mockFileDataAccessor, path);
         }
 
@@ -70,17 +71,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetDirectories(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return GetDirectories(path, "*");
         }
 
         public override string[] GetDirectories(string path, string searchPattern)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return GetDirectories(path, searchPattern, SearchOption.TopDirectoryOnly);
         }
 
         public override string[] GetDirectories(string path, string searchPattern, SearchOption searchOption)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return getFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
         }
 
         public override string GetDirectoryRoot(string path)
@@ -102,6 +103,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
         {
+            return getFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
+        }
+
+        public string[] getFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
+        {
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
                 path += Path.DirectorySeparatorChar;
 
@@ -117,8 +123,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 searchOption == SearchOption.AllDirectories ? allDirectoriesPattern : string.Empty,
                 fileNamePattern);
 
-            return mockFileDataAccessor
-                .AllPaths
+            return files
                 .Where(p => Regex.IsMatch(p, pathPattern))
                 .ToArray();
         }

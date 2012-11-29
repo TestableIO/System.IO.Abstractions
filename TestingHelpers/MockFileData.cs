@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.IO.Abstractions.TestingHelpers;
+using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -11,6 +12,8 @@ namespace System.IO.Abstractions.TestingHelpers
         DateTimeOffset lastAccessTime = new DateTimeOffset(2010, 02, 04, 00, 00, 00, TimeSpan.FromHours(4));
         DateTimeOffset lastWriteTime = new DateTimeOffset(2010, 01, 04, 00, 00, 00, TimeSpan.FromHours(4));
 
+        public virtual bool IsDirectory { get { return false; } }
+        
         public MockFileData(string textContents)
             : this(defaultEncoding.GetBytes(textContents))
         {}
@@ -48,6 +51,18 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get { return lastWriteTime; }
             set { lastWriteTime = value; }
+        }
+
+        public static implicit operator MockFileData(string s)
+        {
+            return new MockFileData(s);
+        }
+    }
+
+    class MockDirectoryData : MockFileData {
+        public override bool IsDirectory { get { return true; } }
+
+        public MockDirectoryData() : base(string.Empty) {
         }
     }
 }
