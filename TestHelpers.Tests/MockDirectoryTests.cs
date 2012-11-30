@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
@@ -499,7 +500,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectory_CreateDirectory_ShouldCreatePlaceholderFileInMemoryFileSystem()
+        public void MockDirectory_CreateDirectory_ShouldCreateFolderInMemoryFileSystem()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -511,7 +512,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.CreateDirectory(@"c:\bar");
 
             // Assert
-            Assert.IsTrue(fileSystem.FileExists(@"c:\bar\__PLACEHOLDER__.dir"));
+            Assert.IsTrue(fileSystem.FileExists(@"c:\bar\"));
+            Assert.IsTrue(fileSystem.AllDirectories.Any(d => d == @"c:\bar\"));
         }
 
         [Test]
