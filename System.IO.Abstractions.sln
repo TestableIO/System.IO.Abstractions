@@ -7,6 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.IO.Abstractions", "System.IO.Abstractions\System.IO.Abstractions.csproj", "{4D398F3A-0784-4401-93CD-46CD2FBD6B92}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7964E5A3-666C-4ECA-A0E3-FD12062B416E} = {7964E5A3-666C-4ECA-A0E3-FD12062B416E}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingHelpers", "TestingHelpers\TestingHelpers.csproj", "{251BD5E5-8133-47A4-AB19-17CF0F43D6AE}"
 EndProject
@@ -18,6 +21,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7640A0
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.IO.Abstractions.Net40", "System.IO.Abstractions.Net40\System.IO.Abstractions.Net40.csproj", "{7964E5A3-666C-4ECA-A0E3-FD12062B416E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingHelpers.Net40", "TestingHelpers.Net40\TestingHelpers.Net40.csproj", "{DED3CE2A-7323-412D-BB6A-F55C0AC1F149}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +44,14 @@ Global
 		{20B02738-952A-40F5-9C10-E2F83013E9FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20B02738-952A-40F5-9C10-E2F83013E9FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20B02738-952A-40F5-9C10-E2F83013E9FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7964E5A3-666C-4ECA-A0E3-FD12062B416E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7964E5A3-666C-4ECA-A0E3-FD12062B416E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7964E5A3-666C-4ECA-A0E3-FD12062B416E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7964E5A3-666C-4ECA-A0E3-FD12062B416E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DED3CE2A-7323-412D-BB6A-F55C0AC1F149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DED3CE2A-7323-412D-BB6A-F55C0AC1F149}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DED3CE2A-7323-412D-BB6A-F55C0AC1F149}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DED3CE2A-7323-412D-BB6A-F55C0AC1F149}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

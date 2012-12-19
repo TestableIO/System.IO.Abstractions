@@ -14,4 +14,7 @@
       <dependency id="System.IO.Abstractions" />
     </dependencies>
   </metadata>
+  <files>
+    <file src="..\TestHelpers.Net40\bin\$configuration$\TestHelpers.dll" target="lib\net40" />
+  </files>
 </package>

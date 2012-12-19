@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 namespace System.IO.Abstractions.TestingHelpers
 {
     [Serializable]
-    public class MockDirectory : DirectoryBase
+    public partial class MockDirectory : DirectoryBase
     {
         readonly FileBase fileBase;
         readonly IMockFileDataAccessor mockFileDataAccessor;

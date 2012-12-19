@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DED3CE2A-7323-412D-BB6A-F55C0AC1F149}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>System.IO.Abstractions.TestingHelpers</RootNamespace>
+    <AssemblyName>System.IO.Abstractions.TestingHelpers</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\StrongName.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\TestingHelpers\IMockFileDataAccessor.cs" />
+    <Compile Include="..\TestingHelpers\MockDirectory.cs" />
+    <Compile Include="..\TestingHelpers\MockDirectoryData.cs" />
+    <Compile Include="..\TestingHelpers\MockDirectoryInfo.cs" />
+    <Compile Include="..\TestingHelpers\MockDirectoryInfoFactory.cs" />
+    <Compile Include="..\TestingHelpers\MockFile.cs" />
+    <Compile Include="..\TestingHelpers\MockFileData.cs" />
+    <Compile Include="..\TestingHelpers\MockFileInfo.cs" />
+    <Compile Include="..\TestingHelpers\MockFileInfoFactory.cs" />
+    <Compile Include="..\TestingHelpers\MockFileStream.cs" />
+    <Compile Include="..\TestingHelpers\MockFileSystem.cs" />
+    <Compile Include="..\TestingHelpers\MockPath.cs" />
+    <Compile Include="..\TestingHelpers\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\TestingHelpers\StringExtensions.cs" />
+    <Compile Include="MockDirectory.Net40.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\System.IO.Abstractions.Net40\System.IO.Abstractions.Net40.csproj">
+      <Project>{7964e5a3-666c-4eca-a0e3-fd12062b416e}</Project>
+      <Name>System.IO.Abstractions.Net40</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
