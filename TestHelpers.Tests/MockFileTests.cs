@@ -518,5 +518,55 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(fileSystem.FileExists(filePath), Is.True);
             Assert.That(fileSystem.GetFile(filePath).TextContents, Is.EqualTo(endFileContent));
         }
+
+        [Test]
+        public void MockFile_Copy_ShouldOverwriteFileWhenOverwriteFlagIsTrue()
+        {
+            string sourceFileName = @"c:\source\demo.txt";
+            MockFileData sourceContents = new MockFileData("Source content");
+            string destFileName = @"c:\destination\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {sourceFileName, sourceContents},
+                {destFileName, new MockFileData("Destination content")}
+            });
+
+            fileSystem.File.Copy(sourceFileName, destFileName, true);
+
+            var copyResult = fileSystem.GetFile(destFileName);
+            Assert.AreEqual(copyResult.Contents, sourceContents.Contents);
+        }
+
+        [Test]
+        public void MockFile_Copy_ShouldCreateFileAtNewDestination()
+        {
+            string sourceFileName = @"c:\source\demo.txt";
+            MockFileData sourceContents = new MockFileData("Source content");
+            string destFileName = @"c:\destination\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {sourceFileName, sourceContents}
+            });
+
+            fileSystem.File.Copy(sourceFileName, destFileName, false);
+
+            var copyResult = fileSystem.GetFile(destFileName);
+            Assert.AreEqual(copyResult.Contents, sourceContents.Contents);
+        }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowExceptionWhenFileExistsAtDestination()
+        {
+            string sourceFileName = @"c:\source\demo.txt";
+            MockFileData sourceContents = new MockFileData("Source content");
+            string destFileName = @"c:\destination\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {sourceFileName, sourceContents},
+                {destFileName, new MockFileData("Destination content")}
+            });
+
+            Assert.Throws<IOException>(() => fileSystem.File.Copy(sourceFileName, destFileName), @"The file c:\destination\demo.txt already exists.");
+        }
     }
 }

@@ -34,12 +34,26 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Copy(string sourceFileName, string destFileName)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            if (mockFileDataAccessor.FileExists(destFileName))
+                throw new IOException(string.Format("The file {0} already exists.", destFileName));
+
+            mockFileDataAccessor.AddFile(destFileName, mockFileDataAccessor.GetFile(sourceFileName));
         }
 
         public override void Copy(string sourceFileName, string destFileName, bool overwrite)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            if(overwrite)
+            {
+                if (mockFileDataAccessor.FileExists(destFileName))
+                {
+                    var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
+                    mockFileDataAccessor.RemoveFile(destFileName);
+                    mockFileDataAccessor.AddFile(destFileName, sourceFile);
+                    return;
+                }
+            }
+
+            Copy(sourceFileName, destFileName);
         }
 
         public override Stream Create(string path)
