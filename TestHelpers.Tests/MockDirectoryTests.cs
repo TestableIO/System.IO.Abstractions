@@ -531,5 +531,99 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.IsNotNull(result);
         }
+
+        [Test]
+        public void MockDirectory_Delete_ShouldDeleteDirectory()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\bar\foo.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            fileSystem.Directory.Delete(@"c:\bar");
+
+            // Assert
+            Assert.IsFalse(fileSystem.Directory.Exists(@"c:\bar"));
+        }
+
+        [Test]
+        public void MockDirectory_Delete_ShouldDeleteDirectoryCaseInsensitively()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\bar\foo.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            fileSystem.Directory.Delete(@"c:\BAR");
+
+            // Assert
+            Assert.IsFalse(fileSystem.Directory.Exists(@"c:\bar"));
+        }
+
+        [Test]
+        public void MockDirectory_Delete_ShouldThrowDirectoryNotFoundException()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\bar\foo.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            try
+            {
+                fileSystem.Directory.Delete(@"c:\baz");
+                Assert.Fail();
+            }
+            catch (DirectoryNotFoundException)
+            {
+            }
+        }
+
+        [Test]
+        public void MockDirectory_Delete_ShouldThrowIOException()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\bar\foo.txt", new MockFileData("Demo text content") },
+                { @"c:\bar\baz.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            try
+            {
+                fileSystem.Directory.Delete(@"c:\bar");
+                Assert.Fail();
+            }
+            catch (IOException ex)
+            {
+                Assert.AreEqual(
+                    @"The directory specified by c:\bar\ is read-only, or recursive is false and c:\bar\ is not an empty directory.",
+                    ex.Message);
+            }
+        }
+
+        [Test]
+        public void MockDirectory_Delete_ShouldDeleteDirectoryRecursively()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\bar\foo.txt", new MockFileData("Demo text content") },
+                { @"c:\bar\bar2\foo.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            fileSystem.Directory.Delete(@"c:\bar", true);
+
+            // Assert
+            Assert.IsFalse(fileSystem.Directory.Exists(@"c:\bar"));
+            Assert.IsFalse(fileSystem.Directory.Exists(@"c:\bar\bar2"));
+        }
     }
 }

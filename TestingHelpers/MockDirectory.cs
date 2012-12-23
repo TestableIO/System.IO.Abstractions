@@ -30,12 +30,26 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Delete(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            Delete(path, false);
         }
 
         public override void Delete(string path, bool recursive)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            path = EnsurePathEndsWithDirectorySeparator(path);
+            var affectedPaths = mockFileDataAccessor
+                .AllPaths
+                .Where(p => p.StartsWith(path, StringComparison.InvariantCultureIgnoreCase))
+                .ToList();
+
+            if (!affectedPaths.Any())
+                throw new DirectoryNotFoundException(path + " does not exist or could not be found.");
+
+            if (!recursive &&
+                affectedPaths.Count() > 1)
+                throw new IOException("The directory specified by " + path + " is read-only, or recursive is false and " + path + " is not an empty directory.");
+
+            foreach (var affectedPath in affectedPaths)
+                mockFileDataAccessor.RemoveFile(affectedPath);
         }
 
         public override bool Exists(string path)
