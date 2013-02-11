@@ -128,7 +128,7 @@ namespace System.IO.Abstractions.TestingHelpers
             const string allDirectoriesPattern = @"([\w\d\s-\.]*\\)*";
             
             var fileNamePattern = searchPattern == "*"
-                ? @"[\w\d\s-\.]*?\.[\w\d]+"
+                ? @"[^\\]*?"
                 : Regex.Escape(searchPattern).Replace(@"\*", @"[\w\d\s-\.]*?");
 
             var pathPattern = string.Format(
