@@ -585,5 +585,39 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(fileSystem.FileExists(fullPath), Is.False);
         }
-    }
+
+        [Test]
+        public void Mockfile_Create_ShouldCreateNewStream()
+        {
+            const string fullPath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            var sut = new MockFile(fileSystem);
+
+            Assert.That(fileSystem.FileExists(fullPath), Is.False);
+
+            sut.Create(fullPath).Close();
+
+            Assert.That(fileSystem.FileExists(fullPath), Is.True);
+        }
+
+        [Test]
+        public void Mockfile_Create_CanWriteToNewStream()
+        {
+            const string fullPath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var data = new UTF8Encoding(false).GetBytes("Test string");
+
+            var sut = new MockFile(fileSystem);
+            using (var stream = sut.Create(fullPath))
+            {
+                stream.Write(data, 0, data.Length);
+            }
+
+            var mockFileData = fileSystem.GetFile(fullPath);
+            var fileData = mockFileData.Contents;
+
+            Assert.That(fileData, Is.EqualTo(data));
+        }
+      }
 }
