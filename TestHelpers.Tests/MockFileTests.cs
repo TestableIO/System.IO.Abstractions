@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
+using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -567,6 +568,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             Assert.Throws<IOException>(() => fileSystem.File.Copy(sourceFileName, destFileName), @"The file c:\destination\demo.txt already exists.");
+        }
+
+        [Test]
+        public void MockFile_Delete_ShouldRemoveFileFromFileSystem()
+        {
+            const string fullPath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { fullPath, new MockFileData("Demo text content") }
+            });
+
+            var file = new MockFile(fileSystem);
+
+            file.Delete(fullPath);
+
+            Assert.That(fileSystem.FileExists(fullPath), Is.False);
         }
     }
 }
