@@ -53,7 +53,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string FullName
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get { return directoryPath; }
         }
 
         public override DateTime LastAccessTime
@@ -82,7 +82,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string Name
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get { return new MockPath().GetFileName(directoryPath); }
         }
 
         public override void Create()
