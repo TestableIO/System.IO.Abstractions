@@ -182,9 +182,23 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
 
-        public override void Move(string sourceDirName, string destDirName)
-        {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        public override void Move(string sourceDirName, string destDirName) {
+            var existingFiles =
+                this.GetFiles(sourceDirName, "*", SearchOption.AllDirectories)
+                    .Union(GetDirectories(sourceDirName, "*", SearchOption.AllDirectories))
+                    .ToList();
+            existingFiles.Add(sourceDirName);
+
+            var existingData = existingFiles.ToDictionary(k => k, k => mockFileDataAccessor.GetFile(k));
+
+            foreach (var file in existingFiles) {
+                mockFileDataAccessor.RemoveFile(file);
+            }
+
+            foreach (var file in existingFiles) {
+                var newFile = file.Replace(sourceDirName, destDirName);
+                mockFileDataAccessor.AddFile(newFile, existingData[file]);
+            }
         }
 
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
