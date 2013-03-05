@@ -129,7 +129,9 @@ namespace System.IO.Abstractions.TestingHelpers
             
             var fileNamePattern = searchPattern == "*"
                 ? @"[^\\]*?"
-                : Regex.Escape(searchPattern).Replace(@"\*", @"[\w\d\s-\.]*?");
+                : Regex.Escape(searchPattern)
+                    .Replace(@"\*", @"[\w\d\s-\.]*?")
+                    .Replace(@"\?", @"[\w\d\s-\.]?");
 
             var pathPattern = string.Format(
                 @"(?i:^{0}{1}{2}$)",
