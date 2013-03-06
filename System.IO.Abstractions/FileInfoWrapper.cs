@@ -1,4 +1,5 @@
 ﻿using System.Security.AccessControl;
+using System.Text;
 
 namespace System.IO.Abstractions
 {
@@ -103,9 +104,9 @@ namespace System.IO.Abstractions
             return instance.Create();
         }
 
-        public override StreamWriter CreateText()
+        public override IStreamWriter CreateText()
         {
-            return instance.CreateText();
+            return new AbstractionsStreamWriter(instance.FullName);
         }
 
         public override void Decrypt()
@@ -153,9 +154,9 @@ namespace System.IO.Abstractions
             return instance.OpenRead();
         }
 
-        public override StreamReader OpenText()
+        public override IStreamReader OpenText()
         {
-            return instance.OpenText();
+            return new AbstractionsStreamReader(instance.FullName);
         }
 
         public override Stream OpenWrite()

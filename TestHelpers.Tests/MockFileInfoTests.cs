@@ -144,5 +144,49 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(lastWriteTime.ToUniversalTime(), result);
         }
+
+        [Test]
+        public void CreateText_DataSentIn_ShouldWriteToFile()
+        {
+            //Arrange
+            var fileData = new MockFileData("");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"z:\a.txt", fileData }
+            });
+
+            var fileInfo = new MockFileInfo(fileSystem, @"z:\a.txt");
+
+            //Act
+            var writer = fileInfo.CreateText();
+            writer.WriteLine("test");
+            writer.Close();
+
+            var reader = fileInfo.OpenText();
+            var result = reader.ReadToEnd();
+
+            //Assert
+            Assert.AreEqual("test",result);
+        }
+
+        [Test]
+        public void OpenText_MockFileDataopulated_ReturnsData()
+        {
+            //Arrange
+            var fileData = new MockFileData("Demo text content");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"z:\a.txt", fileData }
+            });
+
+            var fileInfo = new MockFileInfo(fileSystem, @"z:\a.txt");
+
+            //Act
+            var reader = fileInfo.OpenText();
+            var result = reader.ReadToEnd();
+
+            //Assert
+            Assert.AreEqual("Demo text content", result);
+        }
     }
 }

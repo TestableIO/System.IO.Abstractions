@@ -3,6 +3,7 @@
     public class MockFileInfoFactory : IFileInfoFactory
     {
         readonly IMockFileDataAccessor mockFileSystem;
+        public FileInfoBase FileInfo { get; set; }
 
         public MockFileInfoFactory(IMockFileDataAccessor mockFileSystem)
         {
@@ -11,7 +12,8 @@
 
         public FileInfoBase FromFileName(string fileName)
         {
-            return new MockFileInfo(mockFileSystem, fileName);
+            FileInfo = new MockFileInfo(mockFileSystem, fileName);
+            return FileInfo;
         }
     }
 }

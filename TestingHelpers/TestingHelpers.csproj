@@ -82,6 +82,8 @@
     <Compile Include="MockFileStream.cs" />
     <Compile Include="MockFileSystem.cs" />
     <Compile Include="MockPath.cs" />
+    <Compile Include="MockStreamReader.cs" />
+    <Compile Include="MockStreamWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringExtensions.cs" />
   </ItemGroup>

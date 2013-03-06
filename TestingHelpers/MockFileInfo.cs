@@ -1,11 +1,14 @@
-﻿using System.Security.AccessControl;
+﻿using System.Collections.Generic;
+using System.Security.AccessControl;
+using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
-    internal class MockFileInfo : FileInfoBase
+    public class MockFileInfo : FileInfoBase
     {
         readonly IMockFileDataAccessor mockFileSystem;
         readonly string path;
+        MockStreamWriter writtenData;
 
         public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path)
         {
@@ -91,7 +94,7 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 if (MockFileData == null) throw new FileNotFoundException("File not found", path);
-                return MockFileData.LastWriteTime.UtcDateTime;    
+                return MockFileData.LastWriteTime.UtcDateTime;
             }
             set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
         }
@@ -120,9 +123,14 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
 
-        public override StreamWriter CreateText()
+        public override IStreamWriter CreateText()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            if (writtenData == null)
+            {
+                writtenData = new MockStreamWriter();
+            }
+
+            return writtenData;
         }
 
         public override void Decrypt()
@@ -170,9 +178,30 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
 
-        public override StreamReader OpenText()
+
+        public override IStreamReader OpenText()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            var reader = new MockStreamReader();
+            if (writtenData != null && !string.IsNullOrEmpty(MockFileData.TextContents))
+            {
+                reader.PreviouslyWrittenData = writtenData.WrittenData;
+
+                var bytes = Encoding.Default.GetBytes(MockFileData.TextContents);
+                reader.PreviouslyWrittenData.Write(bytes, 0, bytes.Length);
+            }
+            else if (writtenData != null)
+            {
+                reader.PreviouslyWrittenData = writtenData.WrittenData;
+
+            }
+            else if (!string.IsNullOrEmpty(MockFileData.TextContents))
+            {
+                reader.PreviouslyWrittenData = new MemoryStream();
+                var bytes = Encoding.Default.GetBytes(MockFileData.TextContents);
+                reader.PreviouslyWrittenData.Write(bytes, 0, bytes.Length);
+            }
+
+            return reader;
         }
 
         public override Stream OpenWrite()
