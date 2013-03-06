@@ -10,5 +10,7 @@ namespace System.IO.Abstractions.TestingHelpers
         IEnumerable<string> AllPaths { get; }
         IEnumerable<string> AllFiles { get; }
         IEnumerable<string> AllDirectories { get; }
+        DirectoryBase Directory { get; }
+        IFileInfoFactory FileInfo {get; }
     }
 }
