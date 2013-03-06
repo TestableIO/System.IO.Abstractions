@@ -128,8 +128,10 @@ namespace System.IO.Abstractions.TestingHelpers
             const string allDirectoriesPattern = @"([\w\d\s-\.]*\\)*";
             
             var fileNamePattern = searchPattern == "*"
-                ? @"[\w\d\s-\.]*?\.[\w\d]+"
-                : Regex.Escape(searchPattern).Replace(@"\*", @"[\w\d\s-\.]*?");
+                ? @"[^\\]*?"
+                : Regex.Escape(searchPattern)
+                    .Replace(@"\*", @"[\w\d\s-\.]*?")
+                    .Replace(@"\?", @"[\w\d\s-\.]?");
 
             var pathPattern = string.Format(
                 @"(?i:^{0}{1}{2}$)",
@@ -144,12 +146,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFileSystemEntries(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return GetFileSystemEntries(path, "*");
         }
 
         public override string[] GetFileSystemEntries(string path, string searchPattern)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return GetDirectories(path, searchPattern).Union(GetFiles(path, searchPattern)).ToArray();
         }
 
         public override DateTime GetLastAccessTime(string path)

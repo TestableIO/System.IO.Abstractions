@@ -625,5 +625,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(fileSystem.Directory.Exists(@"c:\bar"));
             Assert.IsFalse(fileSystem.Directory.Exists(@"c:\bar\bar2"));
         }
+
+        [Test]
+        public void MockDirectory_GetFileSystemEntries_Returns_Files_And_Directories()
+        {
+            const string testPath = @"c:\foo\bar.txt";
+            const string testDir =  @"c:\foo\bar";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { testPath, new MockFileData("Demo text content") },
+                { testDir,  new MockDirectoryData() }
+            });
+
+            var entries = fileSystem.Directory.GetFileSystemEntries(@"c:\foo").OrderBy(k => k);
+            Assert.AreEqual(2, entries.Count());
+            Assert.AreEqual(testDir, entries.First());
+            Assert.AreEqual(testPath, entries.Last());
+        }
     }
 }
