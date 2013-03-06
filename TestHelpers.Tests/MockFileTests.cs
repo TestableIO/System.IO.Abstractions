@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NUnit.Framework;
 
@@ -567,6 +568,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             Assert.Throws<IOException>(() => fileSystem.File.Copy(sourceFileName, destFileName), @"The file c:\destination\demo.txt already exists.");
+        }
+
+        [Test]
+        public void MockFile_Delete_Should_RemoveFiles()
+        {
+            const string filePath = @"c:\something\demo.txt";
+            const string fileContent = "this is some content";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>{{filePath, new MockFileData(fileContent) }});
+            Assert.AreEqual(1, fileSystem.AllFiles.Count());
+            fileSystem.File.Delete(filePath);
+            Assert.AreEqual(0, fileSystem.AllFiles.Count());
+        }
+
+        [Test]
+        public void MockFile_Delete_No_File_Does_Nothing() {
+            const string filePath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            fileSystem.File.Delete(filePath);
         }
     }
 }
