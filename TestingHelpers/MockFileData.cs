@@ -59,7 +59,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
     }
 
-    class MockDirectoryData : MockFileData {
+    public class MockDirectoryData : MockFileData {
         public override bool IsDirectory { get { return true; } }
 
         public MockDirectoryData() : base(string.Empty) {
