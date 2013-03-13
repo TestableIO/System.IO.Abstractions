@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    [Serializable]
     public class MockDirectory : DirectoryBase
     {
         readonly FileBase fileBase;

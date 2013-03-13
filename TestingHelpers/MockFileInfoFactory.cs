@@ -1,5 +1,6 @@
 ﻿namespace System.IO.Abstractions.TestingHelpers
 {
+    [Serializable]
     public class MockFileInfoFactory : IFileInfoFactory
     {
         readonly IMockFileDataAccessor mockFileSystem;

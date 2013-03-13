@@ -2,6 +2,7 @@
 
 namespace System.IO.Abstractions
 {
+    [Serializable]
     public class FileInfoWrapper : FileInfoBase
     {
         readonly FileInfo instance;

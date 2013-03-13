@@ -1,5 +1,6 @@
 ﻿namespace System.IO.Abstractions.TestingHelpers
 {
+    [Serializable]
     public class MockFileStream : MemoryStream
     {
         readonly IMockFileDataAccessor mockFileDataAccessor;

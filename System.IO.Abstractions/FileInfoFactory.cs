@@ -1,5 +1,6 @@
 ﻿namespace System.IO.Abstractions
 {
+    [Serializable]
     internal class FileInfoFactory : IFileInfoFactory
     {
         public FileInfoBase FromFileName(string fileName)

@@ -1,5 +1,6 @@
 ﻿namespace System.IO.Abstractions
 {
+    [Serializable]
     public abstract class PathBase
     {
         public abstract char AltDirectorySeparatorChar { get; }

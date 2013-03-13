@@ -1,5 +1,6 @@
 ﻿namespace System.IO.Abstractions
 {
+    [Serializable]
     public class PathWrapper : PathBase
     {
         public override char AltDirectorySeparatorChar

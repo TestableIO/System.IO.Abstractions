@@ -3,6 +3,7 @@ using System.Text;
 
 namespace System.IO.Abstractions
 {
+    [Serializable]
     public class FileWrapper : FileBase
     {
         public override void AppendAllText(string path, string contents)

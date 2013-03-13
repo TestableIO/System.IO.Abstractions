@@ -15,9 +15,16 @@ public class MyComponent
 {
     readonly IFileSystem fileSystem;
 
+    // <summary>Create MyComponent with the given fileSystem implementation</summary>
     public MyComponent(IFileSystem fileSystem)
     {
         this.fileSystem = fileSystem;
+    }
+    /// <summary>Create MyComponent</summary>
+    public MyComponent() : this( 
+        fileSystem: new FileSystem() //use default implementation which calls System.IO
+    ) 
+    {
     }
 
     public void Validate()

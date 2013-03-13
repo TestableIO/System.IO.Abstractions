@@ -2,6 +2,7 @@
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    [Serializable]
     internal class MockFileInfo : FileInfoBase
     {
         readonly IMockFileDataAccessor mockFileSystem;
