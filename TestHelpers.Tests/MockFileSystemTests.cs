@@ -58,5 +58,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(file1, result);
         }
+
+        [Test]
+        public void Is_Serializable()
+        {
+            var file1 = new MockFileData("Demo\r\ntext\ncontent\rvalue");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\something\demo.txt", file1 },
+                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+            });
+            var memoryStream = new System.IO.MemoryStream();
+
+            System.Runtime.Serialization.Formatters.Binary.BinaryFormatter serializer = new Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            serializer.Serialize(memoryStream, fileSystem);
+
+            Assert.That(memoryStream.Length > 0, "Length didnt increase after serialization task.");
+        }
     }
 }

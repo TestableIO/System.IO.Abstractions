@@ -2,6 +2,7 @@
 
 namespace System.IO.Abstractions
 {
+    [Serializable]
     public abstract class DirectoryInfoBase : FileSystemInfoBase
     {
         public abstract void Create();

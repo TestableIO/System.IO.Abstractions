@@ -3,6 +3,7 @@ using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    [Serializable]
     public class MockFileData
     {
         static readonly Encoding defaultEncoding = Encoding.UTF8;

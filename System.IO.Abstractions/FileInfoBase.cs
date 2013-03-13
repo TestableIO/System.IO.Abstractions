@@ -2,6 +2,7 @@
 
 namespace System.IO.Abstractions
 {
+    [Serializable]
     public abstract class FileInfoBase : FileSystemInfoBase
     {
         public abstract StreamWriter AppendText();

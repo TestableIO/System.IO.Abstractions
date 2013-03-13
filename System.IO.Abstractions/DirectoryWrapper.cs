@@ -2,6 +2,7 @@
 
 namespace System.IO.Abstractions
 {
+    [Serializable]
     public class DirectoryWrapper : DirectoryBase
     {
         public override DirectoryInfoBase CreateDirectory(string path)

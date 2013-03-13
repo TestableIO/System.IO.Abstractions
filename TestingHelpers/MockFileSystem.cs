@@ -3,6 +3,7 @@ using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    [Serializable]
     public class MockFileSystem : IFileSystem, IMockFileDataAccessor
     {
         readonly IDictionary<string, MockFileData> files;

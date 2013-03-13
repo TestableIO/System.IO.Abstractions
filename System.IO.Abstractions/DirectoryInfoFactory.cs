@@ -1,5 +1,6 @@
 namespace System.IO.Abstractions
 {
+    [Serializable]
     internal class DirectoryInfoFactory : IDirectoryInfoFactory
     {
         public DirectoryInfoBase FromDirectoryName(string directoryName)

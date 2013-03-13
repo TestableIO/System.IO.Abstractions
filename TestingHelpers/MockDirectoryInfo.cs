@@ -3,6 +3,7 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    [Serializable]
     public class MockDirectoryInfo : DirectoryInfoBase
     {
         readonly IMockFileDataAccessor mockFileDataAccessor;
