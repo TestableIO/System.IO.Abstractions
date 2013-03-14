@@ -2,9 +2,6 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyVersion("1.4.0.0")]
-[assembly: AssemblyFileVersion("1.4.1.15913")]
-
 [assembly: AssemblyTitle("System.IO.Abstractions.TestingHelpers.Tests")]
 [assembly: AssemblyDescription("The unit tests for our pre-built mocks.")]
 [assembly: AssemblyConfiguration("")]

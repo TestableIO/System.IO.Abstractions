@@ -214,21 +214,14 @@ function GetConstants($constants, $includeSigned)
   return "/p:DefineConstants=`"CODE_ANALYSIS;TRACE;$constants$signed`""
 }
 
-function GetVersion($majorVersion)
+function GetVersion($version)
 {
     $now = [DateTime]::Now
+	[TimeSpan]$span = $now - (new-object DateTime($now.Year,1,1))
     
-    $year = $now.Year - 2000
-    $month = $now.Month
-    $totalMonthsSince2000 = ($year * 12) + $month
-    $day = $now.Day
-    $minor = "{0}{1:00}" -f $totalMonthsSince2000, $day
+    $build = "{0:0000}" -f $span.TotalHours
     
-    $hour = $now.Hour
-    $minute = $now.Minute
-    $revision = "{0:00}{1:00}" -f $hour, $minute
-    
-    return $majorVersion + "." + $minor
+    return $version + "." + $build
 }
 
 function Update-AssemblyInfoFiles ([string] $sourceDir, [string] $assemblyVersionNumber, [string] $fileVersionNumber)
@@ -239,7 +232,17 @@ function Update-AssemblyInfoFiles ([string] $sourceDir, [string] $assemblyVersio
     $fileVersion = 'AssemblyFileVersion("' + $fileVersionNumber + '")';
     
     Get-ChildItem -Path $sourceDir -r -filter AssemblyInfo.cs | ForEach-Object {
-        
+        $filename = $_.Directory.ToString() + '\' + $_.Name
+        Write-Host $filename
+        $filename + ' -> ' + $version
+    
+        (Get-Content $filename) | ForEach-Object {
+            % {$_ -replace $assemblyVersionPattern, $assemblyVersion } |
+            % {$_ -replace $fileVersionPattern, $fileVersion }
+        } | Set-Content $filename
+    }
+	
+	Get-ChildItem -Path $sourceDir -filter AssemblyVersion_Master.cs | ForEach-Object {
         $filename = $_.Directory.ToString() + '\' + $_.Name
         Write-Host $filename
         $filename + ' -> ' + $version

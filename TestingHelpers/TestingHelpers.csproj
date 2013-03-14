@@ -66,6 +66,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyVersion_Master.cs">
+      <Link>Properties\AssemblyVersion_Master.cs</Link>
+    </Compile>
     <Compile Include="IMockFileDataAccessor.cs" />
     <Compile Include="MockDirectory.cs" />
     <Compile Include="MockDirectoryInfo.cs" />
