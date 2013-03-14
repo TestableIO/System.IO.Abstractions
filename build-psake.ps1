@@ -14,13 +14,14 @@ properties {
   $testsDir = "$baseDir\Build\Testing"
   $docDir = "$baseDir\Doc"
   $workingDir = "$baseDir\Build\Working"
+  $nugetBaseDir = "$baseDir\Build\NuGet"
   
   $nuspecFile = "System.IO.Abstractions.nuspec" #filename only
   $nuget_executible = ".\.nuget\NuGet.exe"
   
   $builds = @(
-	@{Project = "System.IO.Abstractions.csproj"; Tests = ""; Constants=""; FinalDir="Net"; NuGetDir = "net"; Framework="net-4.0"; Sign=$false}
-	@{Project = "TestingHelpers.csproj"; Tests = "TestHelpers.Tests.csproj"; Constants=""; FinalDir="Net"; NuGetDir = "net"; Framework="net-4.0"; Sign=$false}
+	@{Project = "System.IO.Abstractions.csproj";Tests = ""; 						Constants=""; FinalDir="Net"; NuGetDir = "net"; Framework="net-4.0"; Sign=$false}
+	@{Project = "TestingHelpers.csproj"; 		Tests = "TestHelpers.Tests.csproj"; Constants=""; FinalDir="Net"; NuGetDir = "net"; Framework="net-4.0"; Sign=$false}
     #@{Project = "Newtonsoft.Json"; TestsName = "Newtonsoft.Json.Tests"; Constants=""; FinalDir="Net40"; NuGetDir = "net40"; Framework="net-4.0"; Sign=$true},
     #@{Project = "Newtonsoft.Json.Portable"; TestsName = "Newtonsoft.Json.Tests.Portable"; Constants="PORTABLE"; FinalDir="Portable"; NuGetDir = "portable-net40+sl4+wp7+win8"; Framework="net-4.0"; Sign=$true},
     #@{Project = "Newtonsoft.Json.WinRT"; TestsName = $null; Constants="NETFX_CORE"; FinalDir="WinRT"; NuGetDir = "winrt45"; Framework="net-4.5"; Sign=$true},
@@ -51,33 +52,44 @@ task Clean {
 	del $testsDir -Recurse -Force
   }
   
+  if (Test-Path -path $nugetBaseDir)
+  {
+	Write-Output "Deleting NuGet base directory"
+	del $nugetBaseDir -Recurse -Force
+  }
+  
 }
 
 # Build each solution, optionally signed
 task Build -depends Clean,UpdateAssemblyInfoVersions { 
 
-  New-Item -Path $workingDir -ItemType Directory
+	New-Item -Path $workingDir -ItemType Directory | Out-Null
 
-  foreach ($build in $builds)
-  {
-    $nameInfo = new-object System.IO.FileInfo([string]$build.Project)
-	$name = $nameInfo.Name.Replace($nameInfo.Extension,"")  # chop off the extension
-	$name = (Join-Path $name $nameInfo.Name)                # gives [name]\[name.csproj]
-    $finalDir = $build.FinalDir
-    $sign = ($build.Sign -and $signAssemblies)
+	foreach ($build in $builds)
+	{
+		$nameInfo = new-object System.IO.FileInfo([string]$build.Project)
+		$projname = $nameInfo.Name.Replace($nameInfo.Extension,"")  # chop off the extension
+		$name = (Join-Path $projname $nameInfo.Name)                # gives [name]\[name.csproj]
+		$finalDir = $build.FinalDir
+		$sign = ($build.Sign -and $signAssemblies)
 
-	Write-Host 
-    Write-Host -ForegroundColor Green "Building " $name
-    Write-Host -ForegroundColor Green "Signed " $sign
-    Write-Host
-    exec { msbuild "/t:Clean;Rebuild" /p:Configuration=Release "/p:Platform=Any CPU" /p:OutputPath=$workingDir\bin\Release\$finalDir\ /p:AssemblyOriginatorKeyFile=$signKeyPath "/p:SignAssembly=$sign" "/p:TreatWarningsAsErrors=$treatWarningsAsErrors" (GetConstants $build.Constants $sign) "$sourceDir\$name" | Out-Default } "Error building $name"
-  }
+		Write-Host 
+		Write-Host -ForegroundColor Green "Building " $name
+		Write-Host -ForegroundColor Green "Signed " $sign
+		Write-Host
+		exec { msbuild "/t:Clean;Rebuild" /p:Configuration=Release "/p:Platform=Any CPU" /p:OutputPath=$workingDir\$projname\bin\Release\$finalDir\ /p:AssemblyOriginatorKeyFile=$signKeyPath "/p:SignAssembly=$sign" "/p:TreatWarningsAsErrors=$treatWarningsAsErrors" (GetConstants $build.Constants $sign) "$sourceDir\$name" | Out-Default } "Error building $name"
+	}
 }
 
 task UpdateAssemblyInfoVersions {
-  Write-Host -ForegroundColor Green "Updating assembly version"
-  Write-Host
-  Update-AssemblyInfoFiles $sourceDir ($majorVersion + '.0.0') $version
+
+	$assemblyVer = ($majorWithReleaseVersion + '.0')
+	$fileVer = $version
+
+	Write-Host -ForegroundColor Green "Updating assembly versions:"
+	Write-Host -ForegroundColor Green "	AssemblyVersion:     $assemblyVer"
+	Write-Host -ForegroundColor Green "	AssemblyFileVersion: $fileVer"
+	Update-AssemblyInfoFiles $sourceDir $assemblyVer $fileVer
 }
 
 # Run tests on deployed files
@@ -104,12 +116,12 @@ task Test -depends Build {
 			Write-Host
 			Write-Host -ForegroundColor Green "Building tests assembly $name"
 			Write-Host
-			exec { & msbuild /p:Configuration=Release /p:OutputPath=bin\Release\ "$sourceDir\$name" }
+			exec { & msbuild /p:Configuration=Release /p:OutputPath=$testsDir\$projname\bin\Release\ "$sourceDir\$name" }
 			
 			Write-Host
 			Write-Host -ForegroundColor Green "Copying test assembly $name to deployed directory"
 			Write-Host
-			& robocopy /mir "$sourceDir\$projname\bin\Release" "$testsDir\bin\$finalDir"
+			& robocopy /mir "$sourceDir\$projname\bin\Release" "$testsDir\$projname\bin\$finalDir"
 			
 			#robocopy ".\Src\Google.Maps\bin\Release\$finalDir" $workingDir\Deployed\Bin\$finalDir /MIR /NP /XO /XF LinqBridge.dll | Out-Default
 			
@@ -119,7 +131,7 @@ task Test -depends Build {
 			Write-Host -ForegroundColor Green "Running tests " $projname
 			Write-Host -ForegroundColor Green "  $workingDir\TestResult.xml"
 			Write-Host
-			exec { .\Tools\NUnit.Runners\tools\nunit-console.exe "$testsDir\Bin\$finalDir\$projname.dll" /labels /framework=$framework /xml:$workingDir\$projname.xml | Out-Default } "Error running $name tests"
+			exec { .\Tools\NUnit.Runners\tools\nunit-console.exe "$testsDir\$projname\bin\$finalDir\$projname.dll" /labels /framework=$framework /xml:$workingDir\$projname.xml | Out-Default } "Error running $name tests"
 		}
 	}
 }
@@ -163,46 +175,95 @@ task Deploy -depends Package {
   exec { .\Tools\7-zip\7za.exe x -y "-o$workingDir\Deployed" $workingDir\$zipFileName | Out-Default } "Error unzipping"
 }
 
-task UpdateNuspecVersion {
+task PrepareNuspecFiles {
 	
-	$versionNodePattern = "<version>[0-9]+(\.([0-9]+|\*)){1,3}</version>"
-	$versionOut = "<version>" + $majorWithReleaseVersion + "</version>"
+	New-Item -Path $nugetBaseDir -ItemType Directory -force | Out-Null
+
+	foreach ($build in $builds) {
 	
-	Get-ChildItem -Path $baseDir *.nuspec | ForEach-Object {
+		if($build.NuGetDir -ne $null) {
+			$nameInfo = new-object System.IO.FileInfo([string]$build.Project)
+			$projname = $nameInfo.Name.Replace($nameInfo.Extension,"")  # chop off the extension
+			$name = (Join-Path $projname $nameInfo.Name)                # gives [name]\[name.csproj]
+			
+			Get-ChildItem -Path (Join-Path $sourceDir $projname) -filter "*.nuspec" | Foreach-Object {
 		
-		$filename = $_.Directory.ToString() + '\' + $_.Name
-		Write-Host "$filename -> $majorWithReleaseVersion"
+				$nugetPackDir = Join-Path $nugetBaseDir $projname
+			
+				Write-Host "nugetpackdir: $nugetPackDir"
+				New-Item -Path $nugetPackDir -ItemType Directory -force | Out-Null
+
+				Copy-Item -Path (Join-Path ($_.Directory.ToString()) ($_.Name.ToString())) -Destination $nugetPackDir
 		
-		(Get-Content $filename) | Foreach-Object {
-			% {$_ -replace $versionNodePattern, $versionOut }
-		} | Set-Content $filename
-		
+				$versionStr = ($majorWithReleaseVersion + ".0")
+				#$versionNodePattern1 = "<version>[0-9]+(\.([0-9]+|\*)){1,3}</version>"
+				$versionNodePattern1 = '<version>$version$</version>'
+				$versionNodeOut = "<version>" + $versionStr + "</version>"
+				$versionAttrPattern1 = 'version="$version$"'
+				$versionAttrOut = 'version="' + $versionStr + '"'
+				
+				Get-ChildItem -Path $nugetPackDir -r -filter *.nuspec | ForEach-Object {
+					
+					$filename = Join-Path $_.Directory.ToString() $_.Name
+					Write-Host "$filename -> $versionStr"
+					
+					(Get-Content $filename) | Foreach-Object {
+						% { $_.Replace($versionNodePattern1, $versionNodeOut) } |
+						% { $_.Replace($versionAttrPattern1, $versionAttrOut) }
+					} | Set-Content $filename
+					
+				}
+			}
+			
+		}
 	}
-	
 }
 
-task NugetPackage -depends Test,UpdateNuspecVersion {
+task NugetPackage -depends Test,PrepareNuspecFiles {
     
-	New-Item -Path $workingDir\NuGet -ItemType Directory | Out-Null
-    Copy-Item -Path "$baseDir\$nuspecFile" -Destination "$workingDir\NuGet"
+	New-Item -Path $nugetBaseDir -ItemType Directory -force | Out-Null
     
     foreach ($build in $builds)
     {
       if ($build.NuGetDir -ne $null)
       {
-        $name = $build.TestsName
+	  	$nameInfo = new-object System.IO.FileInfo([string]$build.Project)
+		$projname = $nameInfo.Name.Replace($nameInfo.Extension,"")  # chop off the extension
+		$name = (Join-Path $projname $nameInfo.Name)                # gives [name]\[name.(csproj|sln)]
+			
         $finalDir = $build.FinalDir
         $frameworkDirs = $build.NuGetDir.Split(",")
+		
+		$nugetPackDir = "$nugetBaseDir\$projname"
         
         foreach ($frameworkDir in $frameworkDirs)
         {
-          robocopy "$workingDir\bin\Release\$finalDir" "$workingDir\NuGet\lib\$frameworkDir" /NP /XO /XF *.pri | Out-Default
+			Write-Host -ForegroundColor Green "Copy files into $nugetPackDir\lib\$frameworkDir"
+			robocopy "$workingDir\$projname\bin\Release\$finalDir" "$nugetPackDir\lib\$frameworkDir" /NP /XO /XF *.pri | Out-Null
         }
+		
+		Get-ChildItem -Path $nugetPackDir -Filter *.nuspec | Foreach-Object {
+			$nuspecFile = (Join-Path $nugetPackDir $_.Name)
+			Write-Host
+			Write-Host -ForegroundColor Green "NuGet pack $_"
+			exec { & $nuget_executible pack $nuspecFile -Symbols -OutputDirectory $nugetPackDir } "Failed during NuGet Pack phase."
+			Write-Host
+		}
+		
+		copy -Path $nugetPackDir\*.nupkg -Destination $nugetBaseDir
       }
     }
+	
+	Write-Host -ForegroundColor Green "Nuget Packages:"
+	Get-ChildItem -Path $nugetBaseDir -Filter *.nupkg | Foreach-Object {
+		$_.Name
+	}
   
-    exec { & $nuget_executible pack "$workingDir\NuGet\$nuspecFile" -Symbols }
-    move -Path .\*.nupkg -Destination $workingDir\NuGet
+}
+
+task NugetPackageDeploy -depends NugetPackage
+{
+	Write-Host "NotImplementedException"
 }
 
 
