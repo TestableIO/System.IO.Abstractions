@@ -1,0 +1,9 @@
+#gitignore for the Tools directory
+#ignore all nuget packages, NOTE:add non-nuget packages at the end of this file
+*
+
+#dont ignore these files
+!.gitignore
+!packages.config
+
+#non-Nuget packages here

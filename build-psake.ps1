@@ -1,30 +1,33 @@
 properties { 
-  $zipFileName = "GMapsApiNet.zip"
-  $majorVersion = "0.10"
-  $majorWithReleaseVersion = "0.10.1"
+  $majorVersion = "1.4"
+  $majorWithReleaseVersion = "1.4.1"
   $version = GetVersion $majorWithReleaseVersion
   $signAssemblies = $false
-  $signKeyPath = "D:\Development\Releases\newtonsoft.snk"
+  $signKeyPath = "D:\Development\Releases\newtonsoft.snk"  #path for whomever can sign the assemblies
   $buildDocumentation = $false
-  $buildNuGet = $true
   $treatWarningsAsErrors = $false
   
   $baseDir  = resolve-path "."
-  $buildDir = "$baseDir"
-  $sourceDir = "$baseDir\src"
-  $toolsDir = "$baseDir\_build-tools"
-  $testsDir = "$baseDir\_build_output\Testing"
+  $buildDir = "$baseDir\Build"
+  $sourceDir = "$baseDir"
+  $toolsDir = "$baseDir\Tools"
+  $testsDir = "$baseDir\Build\Testing"
   $docDir = "$baseDir\Doc"
-  $workingDir = "$baseDir\_build_output\Working"
+  $workingDir = "$baseDir\Build\Working"
+  
+  $nuspecFile = "System.IO.Abstractions.nuspec" #filename only
+  $nuget_executible = ".\.nuget\NuGet.exe"
+  
   $builds = @(
-	@{Name = "GoogleMapsForNET"; TestsName = "Google.Maps.Test"; Constants=""; FinalDir="Net"; NuGetDir = "net"; Framework="net-4.0"; Sign=$false}
-    #@{Name = "Newtonsoft.Json"; TestsName = "Newtonsoft.Json.Tests"; Constants=""; FinalDir="Net40"; NuGetDir = "net40"; Framework="net-4.0"; Sign=$true},
-    #@{Name = "Newtonsoft.Json.Portable"; TestsName = "Newtonsoft.Json.Tests.Portable"; Constants="PORTABLE"; FinalDir="Portable"; NuGetDir = "portable-net40+sl4+wp7+win8"; Framework="net-4.0"; Sign=$true},
-    #@{Name = "Newtonsoft.Json.WinRT"; TestsName = $null; Constants="NETFX_CORE"; FinalDir="WinRT"; NuGetDir = "winrt45"; Framework="net-4.5"; Sign=$true},
-    #@{Name = "Newtonsoft.Json.WindowsPhone"; TestsName = $null; Constants="SILVERLIGHT;WINDOWS_PHONE"; FinalDir="WindowsPhone"; NuGetDir = "sl3-wp,sl4-windowsphone71"; Framework="net-4.0"; Sign=$true},
-    #@{Name = "Newtonsoft.Json.Silverlight"; TestsName = "Newtonsoft.Json.Tests.Silverlight"; Constants="SILVERLIGHT"; FinalDir="Silverlight"; NuGetDir = "sl4"; Framework="net-4.0"; Sign=$true},
-    #@{Name = "Newtonsoft.Json.Net35"; TestsName = "Newtonsoft.Json.Tests.Net35"; Constants="NET35"; FinalDir="Net35"; NuGetDir = "net35"; Framework="net-2.0"; Sign=$true},
-    #@{Name = "Newtonsoft.Json.Net20"; TestsName = "Newtonsoft.Json.Tests.Net20"; Constants="NET20"; FinalDir="Net20"; NuGetDir = "net20"; Framework="net-2.0"; Sign=$true}
+	@{Project = "System.IO.Abstractions.csproj"; Tests = ""; Constants=""; FinalDir="Net"; NuGetDir = "net"; Framework="net-4.0"; Sign=$false}
+	@{Project = "TestingHelpers.csproj"; Tests = "TestHelpers.Tests.csproj"; Constants=""; FinalDir="Net"; NuGetDir = "net"; Framework="net-4.0"; Sign=$false}
+    #@{Project = "Newtonsoft.Json"; TestsName = "Newtonsoft.Json.Tests"; Constants=""; FinalDir="Net40"; NuGetDir = "net40"; Framework="net-4.0"; Sign=$true},
+    #@{Project = "Newtonsoft.Json.Portable"; TestsName = "Newtonsoft.Json.Tests.Portable"; Constants="PORTABLE"; FinalDir="Portable"; NuGetDir = "portable-net40+sl4+wp7+win8"; Framework="net-4.0"; Sign=$true},
+    #@{Project = "Newtonsoft.Json.WinRT"; TestsName = $null; Constants="NETFX_CORE"; FinalDir="WinRT"; NuGetDir = "winrt45"; Framework="net-4.5"; Sign=$true},
+    #@{Project = "Newtonsoft.Json.WindowsPhone"; TestsName = $null; Constants="SILVERLIGHT;WINDOWS_PHONE"; FinalDir="WindowsPhone"; NuGetDir = "sl3-wp,sl4-windowsphone71"; Framework="net-4.0"; Sign=$true},
+    #@{Project = "Newtonsoft.Json.Silverlight"; TestsName = "Newtonsoft.Json.Tests.Silverlight"; Constants="SILVERLIGHT"; FinalDir="Silverlight"; NuGetDir = "sl4"; Framework="net-4.0"; Sign=$true},
+    #@{Project = "Newtonsoft.Json.Net35"; TestsName = "Newtonsoft.Json.Tests.Net35"; Constants="NET35"; FinalDir="Net35"; NuGetDir = "net35"; Framework="net-2.0"; Sign=$true},
+    #@{Project = "Newtonsoft.Json.Net20"; TestsName = "Newtonsoft.Json.Tests.Net20"; Constants="NET20"; FinalDir="Net20"; NuGetDir = "net20"; Framework="net-2.0"; Sign=$true}
   )
 }
 
@@ -57,14 +60,17 @@ task Build -depends Clean,UpdateAssemblyInfoVersions {
 
   foreach ($build in $builds)
   {
-    $name = $build.Name
+    $nameInfo = new-object System.IO.FileInfo([string]$build.Project)
+	$name = $nameInfo.Name.Replace($nameInfo.Extension,"")  # chop off the extension
+	$name = (Join-Path $name $nameInfo.Name)                # gives [name]\[name.csproj]
     $finalDir = $build.FinalDir
     $sign = ($build.Sign -and $signAssemblies)
 
+	Write-Host 
     Write-Host -ForegroundColor Green "Building " $name
     Write-Host -ForegroundColor Green "Signed " $sign
     Write-Host
-    exec { msbuild "/t:Clean;Rebuild" /p:Configuration=Release "/p:Platform=Any CPU" /p:OutputPath=$workingDir\bin\Release\$finalDir\ /p:AssemblyOriginatorKeyFile=$signKeyPath "/p:SignAssembly=$sign" "/p:TreatWarningsAsErrors=$treatWarningsAsErrors" (GetConstants $build.Constants $sign) ".\Src\$name.sln" | Out-Default } "Error building $name"
+    exec { msbuild "/t:Clean;Rebuild" /p:Configuration=Release "/p:Platform=Any CPU" /p:OutputPath=$workingDir\bin\Release\$finalDir\ /p:AssemblyOriginatorKeyFile=$signKeyPath "/p:SignAssembly=$sign" "/p:TreatWarningsAsErrors=$treatWarningsAsErrors" (GetConstants $build.Constants $sign) "$sourceDir\$name" | Out-Default } "Error building $name"
   }
 }
 
@@ -72,6 +78,50 @@ task UpdateAssemblyInfoVersions {
   Write-Host -ForegroundColor Green "Updating assembly version"
   Write-Host
   Update-AssemblyInfoFiles $sourceDir ($majorVersion + '.0.0') $version
+}
+
+# Run tests on deployed files
+#task Test -depends Deploy {
+task Test -depends Build {
+
+	Write-Verbose "Ensuring $testsDir exists"
+	if ((Test-Path -path $testsDir) -eq $false)
+	{
+		New-Item -Path $testsDir -ItemType Directory | Out-Null
+	}
+
+	foreach ($build in $builds)
+	{
+		if ([System.String]::IsNullOrEmpty($build.Tests) -ne $true )
+		{
+			$nameInfo = new-object System.IO.FileInfo([string]$build.Tests)
+			$projname = $nameInfo.Name.Replace($nameInfo.Extension,"")  # chop off the extension
+			$name = (Join-Path $projname $nameInfo.Name)                # gives [name]\[name.csproj]
+		
+			$finalDir = $build.FinalDir
+			$framework = $build.Framework
+
+			Write-Host
+			Write-Host -ForegroundColor Green "Building tests assembly $name"
+			Write-Host
+			exec { & msbuild /p:Configuration=Release /p:OutputPath=bin\Release\ "$sourceDir\$name" }
+			
+			Write-Host
+			Write-Host -ForegroundColor Green "Copying test assembly $name to deployed directory"
+			Write-Host
+			& robocopy /mir "$sourceDir\$projname\bin\Release" "$testsDir\bin\$finalDir"
+			
+			#robocopy ".\Src\Google.Maps\bin\Release\$finalDir" $workingDir\Deployed\Bin\$finalDir /MIR /NP /XO /XF LinqBridge.dll | Out-Default
+			
+			#Copy-Item -Path "$testsDir\bin\$finalDir\*" -Destination $workingDir\Testing\Bin\$finalDir\
+
+			Write-Host
+			Write-Host -ForegroundColor Green "Running tests " $projname
+			Write-Host -ForegroundColor Green "  $workingDir\TestResult.xml"
+			Write-Host
+			exec { .\Tools\NUnit.Runners\tools\nunit-console.exe "$testsDir\Bin\$finalDir\$projname.dll" /labels /framework=$framework /xml:$workingDir\$projname.xml | Out-Default } "Error running $name tests"
+		}
+	}
 }
 
 # Optional build documentation, add files to final zip
@@ -132,8 +182,9 @@ task UpdateNuspecVersion {
 }
 
 task NugetPackage -depends Test,UpdateNuspecVersion {
-    New-Item -Path $workingDir\NuGet -ItemType Directory
-    Copy-Item -Path "$baseDir\GMaps-Api-Net.nuspec" -Destination "$workingDir\NuGet\GMaps-Api-Net.nuspec" -recurse
+    
+	New-Item -Path $workingDir\NuGet -ItemType Directory | Out-Null
+    Copy-Item -Path "$baseDir\$nuspecFile" -Destination "$workingDir\NuGet"
     
     foreach ($build in $builds)
     {
@@ -145,45 +196,16 @@ task NugetPackage -depends Test,UpdateNuspecVersion {
         
         foreach ($frameworkDir in $frameworkDirs)
         {
-          robocopy "$workingDir\bin\Release\$finalDir" $workingDir\NuGet\lib\$frameworkDir /NP /XO /XF *.pri | Out-Default
+          robocopy "$workingDir\bin\Release\$finalDir" "$workingDir\NuGet\lib\$frameworkDir" /NP /XO /XF *.pri | Out-Default
         }
       }
     }
   
-    exec { .\_build-tools\NuGet.exe pack "$workingDir\NuGet\GMaps-Api-Net.nuspec" -Symbols }
+    exec { & $nuget_executible pack "$workingDir\NuGet\$nuspecFile" -Symbols }
     move -Path .\*.nupkg -Destination $workingDir\NuGet
 }
 
-# Run tests on deployed files
-#task Test -depends Deploy {
-task Test -depends Build {
-  if ((Test-Path -path $testsDir) -eq $false)
-  {
-	New-Item -Path $testsDir -ItemType Directory
-  }
 
-  foreach ($build in $builds)
-  {
-    $name = $build.TestsName
-    if ($name -ne $null)
-    {
-        $finalDir = $build.FinalDir
-        $framework = $build.Framework
-        
-		exec { msbuild /p:Configuration=Release /p:OutDir=$testsDir\bin\$finalDir\ $sourceDir\$name\$name.csproj }
-		
-        Write-Host -ForegroundColor Green "Copying test assembly $name to deployed directory"
-        Write-Host
-        #robocopy ".\Src\Google.Maps\bin\Release\$finalDir" $workingDir\Deployed\Bin\$finalDir /MIR /NP /XO /XF LinqBridge.dll | Out-Default
-        
-        #Copy-Item -Path "$testsDir\bin\$finalDir\*" -Destination $workingDir\Testing\Bin\$finalDir\
-
-        Write-Host -ForegroundColor Green "Running tests " $name
-        Write-Host
-        exec { .\_build-tools\NUnit.Runners\tools\nunit-console.exe "$testsDir\Bin\$finalDir\$name.dll" /labels /framework=$framework /xml:$workingDir\$name.xml | Out-Default } "Error running $name tests"
-    }
-  }
-}
 
 function GetConstants($constants, $includeSigned)
 {
