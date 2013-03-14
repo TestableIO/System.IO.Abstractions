@@ -20,9 +20,14 @@ properties {
   $nuget_executible = ".\.nuget\NuGet.exe"
   
   $builds = @(
-	@{Project = "System.IO.Abstractions.csproj";Tests = ""; 						Constants=""; FinalDir="Net"; NuGetDir = "net"; Framework="net-4.0"; Sign=$false}
-	@{Project = "TestingHelpers.csproj"; 		Tests = "TestHelpers.Tests.csproj"; Constants=""; FinalDir="Net"; NuGetDir = "net"; Framework="net-4.0"; Sign=$false}
-    #@{Project = "Newtonsoft.Json"; TestsName = "Newtonsoft.Json.Tests"; Constants=""; FinalDir="Net40"; NuGetDir = "net40"; Framework="net-4.0"; Sign=$true},
+	@{Project = "System.IO.Abstractions.csproj";Tests = ""; 						Constants=""; FinalDir="Net"; NuGetDir = ""; Framework="net-4.0"; Sign=$false}
+	@{Project = "TestingHelpers.csproj"; 		Tests = "TestHelpers.Tests.csproj"; Constants=""; FinalDir="Net"; NuGetDir = ""; Framework="net-4.0"; Sign=$false}
+    
+	#when some 4.0 specific things come about:
+	#@{Project = "System.IO.Abstractions.net40.csproj"; Tests = "";					Constants=""; FinalDir="Net40"; NuGetDir = "net40"; Framework="net-4.0"; Sign=$false}
+	#@{Project = "TestingHelpers.net40.csproj"; 		Tests = "TestHelpers.Tests.csproj"; Constants=""; FinalDir="Net40"; NuGetDir = "net40"; Framework="net-4.0"; Sign=$false}
+	
+	#@{Project = "Newtonsoft.Json"; TestsName = "Newtonsoft.Json.Tests"; Constants=""; FinalDir="Net40"; NuGetDir = "net40"; Framework="net-4.0"; Sign=$true},
     #@{Project = "Newtonsoft.Json.Portable"; TestsName = "Newtonsoft.Json.Tests.Portable"; Constants="PORTABLE"; FinalDir="Portable"; NuGetDir = "portable-net40+sl4+wp7+win8"; Framework="net-4.0"; Sign=$true},
     #@{Project = "Newtonsoft.Json.WinRT"; TestsName = $null; Constants="NETFX_CORE"; FinalDir="WinRT"; NuGetDir = "winrt45"; Framework="net-4.5"; Sign=$true},
     #@{Project = "Newtonsoft.Json.WindowsPhone"; TestsName = $null; Constants="SILVERLIGHT;WINDOWS_PHONE"; FinalDir="WindowsPhone"; NuGetDir = "sl3-wp,sl4-windowsphone71"; Framework="net-4.0"; Sign=$true},

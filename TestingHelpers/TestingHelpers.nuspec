@@ -11,7 +11,7 @@
     <description>Testing helpers for the System.IO.Abstractions package to save having to manually mock everything.</description>
     <tags>testing</tags>
     <dependencies>
-      <dependency id="System.IO.Abstractions" />
+      <dependency id="System.IO.Abstractions" version="$version$" />
     </dependencies>
   </metadata>
 </package>
