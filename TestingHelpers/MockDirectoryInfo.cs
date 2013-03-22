@@ -26,7 +26,6 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Refresh()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
 
         public override FileAttributes Attributes
@@ -106,12 +105,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase CreateSubdirectory(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return mockFileDataAccessor.Directory.CreateDirectory(Path.Combine(FullName, path));
         }
 
         public override DirectoryInfoBase CreateSubdirectory(string path, DirectorySecurity directorySecurity)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return mockFileDataAccessor.Directory.CreateDirectory(Path.Combine(FullName, path), directorySecurity);
         }
 
         public override void Delete(bool recursive)
