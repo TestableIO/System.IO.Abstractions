@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Security.AccessControl;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -146,20 +147,26 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
 
-        public override FileInfoBase[] GetFiles() {
-            return
-                this.mockFileDataAccessor.Directory.GetFiles(directoryPath)
-                    .Select(this.mockFileDataAccessor.FileInfo.FromFileName).ToArray();
+        public override FileInfoBase[] GetFiles()
+        {
+            return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName));
         }
 
         public override FileInfoBase[] GetFiles(string searchPattern)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName, searchPattern));
         }
 
         public override FileInfoBase[] GetFiles(string searchPattern, SearchOption searchOption)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName, searchPattern, searchOption));
+        }
+
+        FileInfoBase[] ConvertStringsToFiles(IEnumerable<string> paths)
+        {
+            return paths
+                  .Select(mockFileDataAccessor.FileInfo.FromFileName)
+                  .ToArray();
         }
 
         public override FileSystemInfoBase[] GetFileSystemInfos()
