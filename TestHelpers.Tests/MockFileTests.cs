@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -571,18 +572,69 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_Delete_ShouldRemoveFileFromFileSystem()
+        {
+            const string fullPath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { fullPath, new MockFileData("Demo text content") }
+            });
+
+            var file = new MockFile(fileSystem);
+
+            file.Delete(fullPath);
+
+            Assert.That(fileSystem.FileExists(fullPath), Is.False);
+        }
+
+        [Test]
+        public void Mockfile_Create_ShouldCreateNewStream()
+        {
+            const string fullPath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            var sut = new MockFile(fileSystem);
+
+            Assert.That(fileSystem.FileExists(fullPath), Is.False);
+
+            sut.Create(fullPath).Close();
+
+            Assert.That(fileSystem.FileExists(fullPath), Is.True);
+        }
+
+        [Test]
+        public void Mockfile_Create_CanWriteToNewStream()
+        {
+            const string fullPath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var data = new UTF8Encoding(false).GetBytes("Test string");
+
+            var sut = new MockFile(fileSystem);
+            using (var stream = sut.Create(fullPath))
+            {
+                stream.Write(data, 0, data.Length);
+            }
+
+            var mockFileData = fileSystem.GetFile(fullPath);
+            var fileData = mockFileData.Contents;
+
+            Assert.That(fileData, Is.EqualTo(data));
+        }
+
+        [Test]
         public void MockFile_Delete_Should_RemoveFiles()
         {
             const string filePath = @"c:\something\demo.txt";
             const string fileContent = "this is some content";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>{{filePath, new MockFileData(fileContent) }});
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { { filePath, new MockFileData(fileContent) } });
             Assert.AreEqual(1, fileSystem.AllFiles.Count());
             fileSystem.File.Delete(filePath);
             Assert.AreEqual(0, fileSystem.AllFiles.Count());
         }
 
         [Test]
-        public void MockFile_Delete_No_File_Does_Nothing() {
+        public void MockFile_Delete_No_File_Does_Nothing()
+        {
             const string filePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
             fileSystem.File.Delete(filePath);
