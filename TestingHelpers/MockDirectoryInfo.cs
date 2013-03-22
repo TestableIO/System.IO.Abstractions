@@ -12,6 +12,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath)
         {
+            if (!directoryPath.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                directoryPath += Path.DirectorySeparatorChar;
+
             this.mockFileDataAccessor = mockFileDataAccessor;
             this.directoryPath = directoryPath;
         }

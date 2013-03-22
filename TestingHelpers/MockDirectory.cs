@@ -25,11 +25,12 @@ namespace System.IO.Abstractions.TestingHelpers
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
             path = EnsurePathEndsWithDirectorySeparator(path);
-            mockFileDataAccessor.AddFile(path, new MockDirectoryData());
+            if (!Exists(path))
+                mockFileDataAccessor.AddFile(path, new MockDirectoryData());
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
 
             var parent = GetParent(path);
-            if (parent != null && !parent.Exists)
+            if (parent != null)
                 CreateDirectory(GetParent(path).FullName, directorySecurity);
 
             return created;
