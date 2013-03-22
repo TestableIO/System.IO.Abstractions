@@ -27,22 +27,12 @@ namespace System.IO.Abstractions.TestingHelpers
             this.files = new Dictionary<string, MockFileData>(StringComparer.InvariantCultureIgnoreCase);
             foreach (var entry in files)
             {
-                this.files.Add(entry.Key, entry.Value);
+                var directoryPath = Path.GetDirectoryName(entry.Key);
+                if (!directory.Exists(directoryPath))
+                    directory.CreateDirectory(directoryPath);
 
-                var remainingPath = entry.Key;
-                do
-                {
-                    remainingPath = remainingPath.Substring(0, remainingPath.LastIndexOf(IO.Path.DirectorySeparatorChar));
-
-                    //Don't add the volume as a directory
-                    if (remainingPath.EndsWith(Path.VolumeSeparatorChar.ToString(CultureInfo.InvariantCulture)))
-                        break;
-
-                    //Don't create duplicate directories
-                    if (!this.files.ContainsKey(remainingPath))
-                        AddFile(remainingPath, new MockDirectoryData());
-
-                } while (remainingPath.LastIndexOf(IO.Path.DirectorySeparatorChar) != -1);
+                if (!file.Exists(entry.Key))
+                    this.files.Add(entry.Key, entry.Value);
             }
         }
 

@@ -26,7 +26,13 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             path = EnsurePathEndsWithDirectorySeparator(path);
             mockFileDataAccessor.AddFile(path, new MockDirectoryData());
-            return new MockDirectoryInfo(mockFileDataAccessor, path);
+            var created = new MockDirectoryInfo(mockFileDataAccessor, path);
+
+            var parent = GetParent(path);
+            if (parent != null && !parent.Exists)
+                CreateDirectory(GetParent(path).FullName, directorySecurity);
+
+            return created;
         }
 
         public override void Delete(string path)
@@ -55,8 +61,10 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists(string path)
         {
-            path = EnsurePathEndsWithDirectorySeparator(path);
-            return mockFileDataAccessor.AllPaths.Any(p => p.StartsWith(path));
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                path += Path.DirectorySeparatorChar;
+
+            return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public override DirectorySecurity GetAccessControl(string path)
@@ -96,7 +104,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetDirectories(string path, string searchPattern, SearchOption searchOption)
         {
-            return getFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                path += Path.DirectorySeparatorChar;
+
+            var dirs = getFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
+            return dirs.Where(p => p != path).ToArray();
         }
 
         public override string GetDirectoryRoot(string path)
@@ -129,7 +141,7 @@ namespace System.IO.Abstractions.TestingHelpers
             const string allDirectoriesPattern = @"([\w\d\s-\.]*\\)*";
             
             var fileNamePattern = searchPattern == "*"
-                ? @"[^\\]*?"
+                ? @"[^\\]*?\\?"
                 : Regex.Escape(searchPattern)
                     .Replace(@"\*", @"[\w\d\s-\.]*?")
                     .Replace(@"\?", @"[\w\d\s-\.]?");
@@ -152,7 +164,10 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFileSystemEntries(string path, string searchPattern)
         {
-            return GetDirectories(path, searchPattern).Union(GetFiles(path, searchPattern)).ToArray();
+            var dirs = GetDirectories(path, searchPattern);
+            var files = GetFiles(path, searchPattern);
+
+            return dirs.Union(files).ToArray();
         }
 
         public override DateTime GetLastAccessTime(string path)
