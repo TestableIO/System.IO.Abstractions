@@ -182,7 +182,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase GetParent(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            var parent = new DirectoryInfo(path).Parent;
+            if (parent == null)
+                return null;
+
+            return new MockDirectoryInfo(mockFileDataAccessor, parent.FullName);
         }
 
         public override void Move(string sourceDirName, string destDirName) {
