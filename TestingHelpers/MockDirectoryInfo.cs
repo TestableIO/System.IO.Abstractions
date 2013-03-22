@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Security.AccessControl;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -11,6 +12,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath)
         {
+            if (!directoryPath.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                directoryPath += Path.DirectorySeparatorChar;
+
             this.mockFileDataAccessor = mockFileDataAccessor;
             this.directoryPath = directoryPath;
         }
@@ -26,13 +30,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Refresh()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
 
         public override FileAttributes Attributes
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get { return MockFileData.Attributes; }
+            set { MockFileData.Attributes = value; }
         }
 
         public override DateTime CreationTime
@@ -49,7 +52,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get { return mockFileDataAccessor.Directory.Exists(FullName); }
         }
 
         public override string Extension
@@ -96,68 +99,82 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Create()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            mockFileDataAccessor.Directory.CreateDirectory(FullName);
         }
 
         public override void Create(DirectorySecurity directorySecurity)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            mockFileDataAccessor.Directory.CreateDirectory(FullName, directorySecurity);
         }
 
         public override DirectoryInfoBase CreateSubdirectory(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return mockFileDataAccessor.Directory.CreateDirectory(Path.Combine(FullName, path));
         }
 
         public override DirectoryInfoBase CreateSubdirectory(string path, DirectorySecurity directorySecurity)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return mockFileDataAccessor.Directory.CreateDirectory(Path.Combine(FullName, path), directorySecurity);
         }
 
         public override void Delete(bool recursive)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            mockFileDataAccessor.Directory.Delete(directoryPath, recursive);
         }
 
         public override DirectorySecurity GetAccessControl()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return mockFileDataAccessor.Directory.GetAccessControl(directoryPath);
         }
 
         public override DirectorySecurity GetAccessControl(AccessControlSections includeSections)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return mockFileDataAccessor.Directory.GetAccessControl(directoryPath, includeSections);
         }
 
         public override DirectoryInfoBase[] GetDirectories()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath));
         }
 
         public override DirectoryInfoBase[] GetDirectories(string searchPattern)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath, searchPattern));
         }
 
         public override DirectoryInfoBase[] GetDirectories(string searchPattern, SearchOption searchOption)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath, searchPattern, searchOption));
         }
 
-        public override FileInfoBase[] GetFiles() {
-            return
-                this.mockFileDataAccessor.Directory.GetFiles(directoryPath)
-                    .Select(this.mockFileDataAccessor.FileInfo.FromFileName).ToArray();
+        private DirectoryInfoBase[] ConvertStringsToDirectories(IEnumerable<string> paths)
+        {
+            return paths
+                .Select(path => new MockDirectoryInfo(mockFileDataAccessor, path))
+                .Cast<DirectoryInfoBase>()
+                .ToArray();
+        }
+
+        public override FileInfoBase[] GetFiles()
+        {
+            return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName));
         }
 
         public override FileInfoBase[] GetFiles(string searchPattern)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName, searchPattern));
         }
 
         public override FileInfoBase[] GetFiles(string searchPattern, SearchOption searchOption)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName, searchPattern, searchOption));
+        }
+
+        FileInfoBase[] ConvertStringsToFiles(IEnumerable<string> paths)
+        {
+            return paths
+                  .Select(mockFileDataAccessor.FileInfo.FromFileName)
+                  .ToArray();
         }
 
         public override FileSystemInfoBase[] GetFileSystemInfos()
@@ -172,17 +189,20 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void MoveTo(string destDirName)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
         }
 
         public override void SetAccessControl(DirectorySecurity directorySecurity)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            mockFileDataAccessor.Directory.SetAccessControl(directoryPath, directorySecurity);
         }
 
         public override DirectoryInfoBase Parent
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get
+            {
+                return mockFileDataAccessor.Directory.GetParent(directoryPath);
+            }
         }
 
         public override DirectoryInfoBase Root
