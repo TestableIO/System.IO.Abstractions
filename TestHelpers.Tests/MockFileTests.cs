@@ -620,21 +620,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(fileData, Is.EqualTo(data));
         }
-      }
 
         [Test]
         public void MockFile_Delete_Should_RemoveFiles()
         {
             const string filePath = @"c:\something\demo.txt";
             const string fileContent = "this is some content";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>{{filePath, new MockFileData(fileContent) }});
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { { filePath, new MockFileData(fileContent) } });
             Assert.AreEqual(1, fileSystem.AllFiles.Count());
             fileSystem.File.Delete(filePath);
             Assert.AreEqual(0, fileSystem.AllFiles.Count());
         }
 
         [Test]
-        public void MockFile_Delete_No_File_Does_Nothing() {
+        public void MockFile_Delete_No_File_Does_Nothing()
+        {
             const string filePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
             fileSystem.File.Delete(filePath);
