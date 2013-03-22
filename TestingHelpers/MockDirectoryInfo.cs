@@ -131,20 +131,25 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase[] GetDirectories()
         {
-            return mockFileDataAccessor.Directory.GetDirectories(directoryPath)
-                                       .Select(path => new MockDirectoryInfo(mockFileDataAccessor, path))
-                                       .Cast<DirectoryInfoBase>()
-                                       .ToArray();
+            return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath));
         }
 
         public override DirectoryInfoBase[] GetDirectories(string searchPattern)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath, searchPattern));
         }
 
         public override DirectoryInfoBase[] GetDirectories(string searchPattern, SearchOption searchOption)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath, searchPattern, searchOption));
+        }
+
+        private DirectoryInfoBase[] ConvertStringsToDirectories(IEnumerable<string> paths)
+        {
+            return paths
+                .Select(path => new MockDirectoryInfo(mockFileDataAccessor, path))
+                .Cast<DirectoryInfoBase>()
+                .ToArray();
         }
 
         public override FileInfoBase[] GetFiles()
