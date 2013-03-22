@@ -31,8 +31,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileAttributes Attributes
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get { return MockFileData.Attributes; }
+            set { MockFileData.Attributes = value; }
         }
 
         public override DateTime CreationTime
@@ -131,7 +131,10 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase[] GetDirectories()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return mockFileDataAccessor.Directory.GetDirectories(directoryPath)
+                                       .Select(path => new MockDirectoryInfo(mockFileDataAccessor, path))
+                                       .Cast<DirectoryInfoBase>()
+                                       .ToArray();
         }
 
         public override DirectoryInfoBase[] GetDirectories(string searchPattern)

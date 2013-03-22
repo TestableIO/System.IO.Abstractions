@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -15,15 +16,34 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockFileSystem(IDictionary<string, MockFileData> files)
         {
-            this.files = new Dictionary<string, MockFileData>(
-                files,
-                StringComparer.InvariantCultureIgnoreCase);
-
             file = new MockFile(this);
             directory = new MockDirectory(this, file);
             fileInfoFactory = new MockFileInfoFactory(this);
             path = new MockPath();
             directoryInfoFactory = new MockDirectoryInfoFactory(this);
+
+            //For each mock file add a file to the files dictionary
+            //Also add a file entry for all directories leading up to this file
+            this.files = new Dictionary<string, MockFileData>(StringComparer.InvariantCultureIgnoreCase);
+            foreach (var entry in files)
+            {
+                this.files.Add(entry.Key, entry.Value);
+
+                var remainingPath = entry.Key;
+                do
+                {
+                    remainingPath = remainingPath.Substring(0, remainingPath.LastIndexOf(IO.Path.DirectorySeparatorChar));
+
+                    //Don't add the volume as a directory
+                    if (remainingPath.EndsWith(Path.VolumeSeparatorChar.ToString(CultureInfo.InvariantCulture)))
+                        break;
+
+                    //Don't create duplicate directories
+                    if (!this.files.ContainsKey(remainingPath))
+                        AddFile(remainingPath, new MockDirectoryData());
+
+                } while (remainingPath.LastIndexOf(IO.Path.DirectorySeparatorChar) != -1);
+            }
         }
 
         public FileBase File
