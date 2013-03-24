@@ -619,7 +619,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            fileSystem.Directory.Delete(@"c:\bar", true);
+            fileSystem.DirectoryInfo.FromDirectoryName(@"c:\bar").Delete(true);
 
             // Assert
             Assert.IsFalse(fileSystem.Directory.Exists(@"c:\bar"));
@@ -644,6 +644,51 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_GetFiles_Returns_Files()
+        {
+            const string testPath = @"c:\foo\bar.txt";
+            const string testDir = @"c:\foo\bar\";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { testPath, new MockFileData("Demo text content") },
+                { testDir,  new MockDirectoryData() }
+            });
+
+            var entries = fileSystem.Directory.GetFiles(@"c:\foo").OrderBy(k => k);
+            Assert.AreEqual(1, entries.Count());
+            Assert.AreEqual(testPath, entries.First());
+        }
+
+        [Test]
+        public void MockDirectory_GetRoot_Returns_Root()
+        {
+            const string testDir = @"c:\foo\bar\";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { testDir,  new MockDirectoryData() }
+            });
+
+            Assert.AreEqual("C:\\", fileSystem.Directory.GetDirectoryRoot(@"C:\foo\bar"));
+        }
+
+        [Test]
+        public void MockDirectory_GetLogicalDrives_Returns_LogicalDrives()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+                {
+                    {@"c:\foo\bar\", new MockDirectoryData()},
+                    {@"c:\foo\baz\", new MockDirectoryData()},
+                    {@"d:\bash\", new MockDirectoryData()},
+                });
+
+            var drives = fileSystem.Directory.GetLogicalDrives();
+
+            Assert.AreEqual(2, drives.Length);
+            Assert.IsTrue(drives.Contains("c:\\"));
+            Assert.IsTrue(drives.Contains("d:\\"));
+        }
+
+        [Test]
         public void MockDirectory_GetDirectories_Returns_Child_Directories()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -661,6 +706,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(2, directories.Count());
             Assert.IsTrue(directories.Contains(@"A:\folder1\folder2\"));
             Assert.IsTrue(directories.Contains(@"A:\folder1\folder4\"));
+        }
+
+        [Test]
+        public void MockDirectory_Move_ShouldMove()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"A:\folder1\file.txt", new MockFileData("aaa") },
+                { @"A:\folder1\folder2\file2.txt", new MockFileData("bbb") },
+            });
+
+            fileSystem.DirectoryInfo.FromDirectoryName(@"A:\folder1").MoveTo(@"B:\folder1");
+
+            Assert.IsFalse(fileSystem.Directory.Exists(@"A:\folder1"));
+            Assert.IsTrue(fileSystem.Directory.Exists(@"B:\folder1"));
+            Assert.IsTrue(fileSystem.Directory.Exists(@"B:\folder1\folder2"));
+            Assert.IsTrue(fileSystem.File.Exists(@"B:\folder1\file.txt"));
+            Assert.IsTrue(fileSystem.File.Exists(@"B:\folder1\folder2\file2.txt"));
         }
     }
 }
