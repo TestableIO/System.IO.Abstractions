@@ -67,12 +67,4 @@ namespace System.IO.Abstractions.TestingHelpers
             set { attributes = value; }
         }
     }
-
-    [Serializable]
-    public class MockDirectoryData : MockFileData {
-        public override bool IsDirectory { get { return true; } }
-
-        public MockDirectoryData() : base(string.Empty) {
-        }
-    }
 }
