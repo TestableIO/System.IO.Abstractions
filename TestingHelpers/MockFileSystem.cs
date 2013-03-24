@@ -61,23 +61,32 @@ namespace System.IO.Abstractions.TestingHelpers
             get { return directoryInfoFactory; }
         }
 
+        private string FixPath(string path)
+        {
+            return path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+        }
+
         public MockFileData GetFile(string path)
         {
+            path = FixPath(path);
             return FileExists(path) ? files[path] : null;
         }
 
         public void AddFile(string path, MockFileData mockFile)
         {
+            path = FixPath(path);
             files.Add(path, mockFile);
         }
 
         public void RemoveFile(string path)
         {
+            path = FixPath(path);
             files.Remove(path);
         }
 
         public bool FileExists(string path)
         {
+            path = FixPath(path);
             return files.ContainsKey(path);
         }
 

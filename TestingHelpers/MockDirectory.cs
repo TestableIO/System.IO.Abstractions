@@ -114,7 +114,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string GetDirectoryRoot(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return Path.GetPathRoot(path);
         }
 
         public override string[] GetFiles(string path)
@@ -193,7 +193,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetLogicalDrives()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return mockFileDataAccessor
+                .AllDirectories
+                .Select(d => new MockDirectoryInfo(mockFileDataAccessor, d).Root.FullName)
+                .Select(r => r.ToLowerInvariant())
+                .Distinct()
+                .ToArray();
         }
 
         public override DirectoryInfoBase GetParent(string path)
@@ -206,22 +211,27 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         public override void Move(string sourceDirName, string destDirName) {
-            var existingFiles =
-                this.GetFiles(sourceDirName, "*", SearchOption.AllDirectories)
-                    .Union(GetDirectories(sourceDirName, "*", SearchOption.AllDirectories))
-                    .ToList();
-            existingFiles.Add(sourceDirName);
+            //Make sure that the destination exists
+            mockFileDataAccessor.Directory.CreateDirectory(destDirName);
 
-            var existingData = existingFiles.ToDictionary(k => k, k => mockFileDataAccessor.GetFile(k));
-
-            foreach (var file in existingFiles) {
-                mockFileDataAccessor.RemoveFile(file);
+            //Recursively move all the subdirectories
+            var subdirectories = GetDirectories(sourceDirName);
+            foreach (var subdirectory in subdirectories)
+            {
+                var newSubdirPath = subdirectory.Replace(sourceDirName, destDirName);
+                Move(subdirectory, newSubdirPath);
             }
 
-            foreach (var file in existingFiles) {
-                var newFile = file.Replace(sourceDirName, destDirName);
-                mockFileDataAccessor.AddFile(newFile, existingData[file]);
+            //Move the files in this directory
+            var files = GetFiles(sourceDirName);
+            foreach (var file in files)
+            {
+                var newFilePath = file.Replace(sourceDirName, destDirName);
+                mockFileDataAccessor.FileInfo.FromFileName(file).MoveTo(newFilePath);
             }
+
+            //Delete this directory
+            Delete(sourceDirName);
         }
 
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
