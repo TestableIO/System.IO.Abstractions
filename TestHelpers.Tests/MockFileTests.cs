@@ -471,10 +471,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             const string sourceFilePath = @"c:\something\demo.txt";
             const string sourceFileContent = "this is some content";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
-                                                    {
-                                                        {sourceFilePath, new MockFileData(sourceFileContent)}
-                                                    });
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {sourceFilePath, new MockFileData(sourceFileContent)}
+            });
 
             const string destFilePath = @"c:\somethingelse\demo1.txt";
 
@@ -506,10 +506,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             const string filePath = @"c:\something\demo.txt";
             const string startFileContent = "this is some content";
             const string endFileContent = "this is some other content";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
-                                                    {
-                                                        {filePath, new MockFileData(startFileContent)}
-                                                    });
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {filePath, new MockFileData(startFileContent)}
+            });
 
             var bytes = new UTF8Encoding(true).GetBytes(endFileContent);
             var stream = fileSystem.File.OpenWrite(filePath);
@@ -523,9 +523,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Copy_ShouldOverwriteFileWhenOverwriteFlagIsTrue()
         {
-            string sourceFileName = @"c:\source\demo.txt";
-            MockFileData sourceContents = new MockFileData("Source content");
-            string destFileName = @"c:\destination\demo.txt";
+            const string sourceFileName = @"c:\source\demo.txt";
+            var sourceContents = new MockFileData("Source content");
+            const string destFileName = @"c:\destination\demo.txt";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 {sourceFileName, sourceContents},
@@ -541,9 +541,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Copy_ShouldCreateFileAtNewDestination()
         {
-            string sourceFileName = @"c:\source\demo.txt";
-            MockFileData sourceContents = new MockFileData("Source content");
-            string destFileName = @"c:\destination\demo.txt";
+            const string sourceFileName = @"c:\source\demo.txt";
+            var sourceContents = new MockFileData("Source content");
+            const string destFileName = @"c:\destination\demo.txt";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 {sourceFileName, sourceContents}
@@ -558,9 +558,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Copy_ShouldThrowExceptionWhenFileExistsAtDestination()
         {
-            string sourceFileName = @"c:\source\demo.txt";
-            MockFileData sourceContents = new MockFileData("Source content");
-            string destFileName = @"c:\destination\demo.txt";
+            const string sourceFileName = @"c:\source\demo.txt";
+            var sourceContents = new MockFileData("Source content");
+            const string destFileName = @"c:\destination\demo.txt";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 {sourceFileName, sourceContents},
