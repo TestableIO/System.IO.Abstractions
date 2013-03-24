@@ -25,7 +25,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Delete()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            mockFileDataAccessor.Directory.Delete(directoryPath);
         }
 
         public override void Refresh()
@@ -94,7 +94,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string Name
         {
-            get { return new MockPath().GetFileName(directoryPath); }
+            get { return new MockPath().GetFileName(directoryPath.TrimEnd('\\')); }
         }
 
         public override void Create()
@@ -189,6 +189,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void MoveTo(string destDirName)
         {
+            if (!destDirName.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                destDirName += Path.DirectorySeparatorChar;
+
             mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
         }
 
@@ -207,7 +210,10 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase Root
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get
+            {
+                return new MockDirectoryInfo(mockFileDataAccessor, mockFileDataAccessor.Directory.GetDirectoryRoot(FullName));
+            }
         }
     }
 }

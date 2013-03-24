@@ -155,7 +155,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void MoveTo(string destFileName)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            CopyTo(destFileName);
+            Delete();
         }
 
         public override Stream Open(FileMode mode)
@@ -175,7 +176,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream OpenRead()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return new MockFileStream(mockFileSystem, path);
         }
 
         public override StreamReader OpenText()
