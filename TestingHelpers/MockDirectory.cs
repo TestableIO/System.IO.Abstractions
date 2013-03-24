@@ -25,8 +25,15 @@ namespace System.IO.Abstractions.TestingHelpers
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
             path = EnsurePathEndsWithDirectorySeparator(path);
-            mockFileDataAccessor.AddFile(path, new MockDirectoryData());
-            return new MockDirectoryInfo(mockFileDataAccessor, path);
+            if (!Exists(path))
+                mockFileDataAccessor.AddFile(path, new MockDirectoryData());
+            var created = new MockDirectoryInfo(mockFileDataAccessor, path);
+
+            var parent = GetParent(path);
+            if (parent != null)
+                CreateDirectory(GetParent(path).FullName, directorySecurity);
+
+            return created;
         }
 
         public override void Delete(string path)
@@ -55,8 +62,10 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists(string path)
         {
-            path = EnsurePathEndsWithDirectorySeparator(path);
-            return mockFileDataAccessor.AllPaths.Any(p => p.StartsWith(path));
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                path += Path.DirectorySeparatorChar;
+
+            return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public override DirectorySecurity GetAccessControl(string path)
@@ -96,7 +105,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetDirectories(string path, string searchPattern, SearchOption searchOption)
         {
-            return getFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                path += Path.DirectorySeparatorChar;
+
+            var dirs = getFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
+            return dirs.Where(p => p != path).ToArray();
         }
 
         public override string GetDirectoryRoot(string path)
@@ -129,7 +142,7 @@ namespace System.IO.Abstractions.TestingHelpers
             const string allDirectoriesPattern = @"([\w\d\s-\.]*\\)*";
             
             var fileNamePattern = searchPattern == "*"
-                ? @"[^\\]*?"
+                ? @"[^\\]*?\\?"
                 : Regex.Escape(searchPattern)
                     .Replace(@"\*", @"[\w\d\s-\.]*?")
                     .Replace(@"\?", @"[\w\d\s-\.]?");
@@ -152,7 +165,10 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFileSystemEntries(string path, string searchPattern)
         {
-            return GetDirectories(path, searchPattern).Union(GetFiles(path, searchPattern)).ToArray();
+            var dirs = GetDirectories(path, searchPattern);
+            var files = GetFiles(path, searchPattern);
+
+            return dirs.Union(files).ToArray();
         }
 
         public override DateTime GetLastAccessTime(string path)
@@ -182,7 +198,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase GetParent(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            var parent = new DirectoryInfo(path).Parent;
+            if (parent == null)
+                return null;
+
+            return new MockDirectoryInfo(mockFileDataAccessor, parent.FullName);
         }
 
         public override void Move(string sourceDirName, string destDirName) {

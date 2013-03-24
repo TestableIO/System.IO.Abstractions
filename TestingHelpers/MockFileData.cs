@@ -13,6 +13,8 @@ namespace System.IO.Abstractions.TestingHelpers
         DateTimeOffset lastAccessTime = new DateTimeOffset(2010, 02, 04, 00, 00, 00, TimeSpan.FromHours(4));
         DateTimeOffset lastWriteTime = new DateTimeOffset(2010, 01, 04, 00, 00, 00, TimeSpan.FromHours(4));
 
+        private FileAttributes attributes = FileAttributes.Normal;
+
         public virtual bool IsDirectory { get { return false; } }
         
         public MockFileData(string textContents)
@@ -58,8 +60,15 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             return new MockFileData(s);
         }
+
+        public FileAttributes Attributes
+        {
+            get { return attributes; }
+            set { attributes = value; }
+        }
     }
 
+    [Serializable]
     public class MockDirectoryData : MockFileData {
         public override bool IsDirectory { get { return true; } }
 

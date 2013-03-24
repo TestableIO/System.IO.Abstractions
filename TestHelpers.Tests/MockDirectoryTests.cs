@@ -542,7 +542,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            fileSystem.Directory.Delete(@"c:\bar");
+            fileSystem.Directory.Delete(@"c:\bar", true);
 
             // Assert
             Assert.IsFalse(fileSystem.Directory.Exists(@"c:\bar"));
@@ -558,7 +558,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            fileSystem.Directory.Delete(@"c:\BAR");
+            fileSystem.Directory.Delete(@"c:\BAR", true);
 
             // Assert
             Assert.IsFalse(fileSystem.Directory.Exists(@"c:\bar"));
@@ -630,7 +630,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_GetFileSystemEntries_Returns_Files_And_Directories()
         {
             const string testPath = @"c:\foo\bar.txt";
-            const string testDir =  @"c:\foo\bar";
+            const string testDir =  @"c:\foo\bar\";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { testPath, new MockFileData("Demo text content") },
@@ -639,8 +639,28 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var entries = fileSystem.Directory.GetFileSystemEntries(@"c:\foo").OrderBy(k => k);
             Assert.AreEqual(2, entries.Count());
-            Assert.AreEqual(testDir, entries.First());
-            Assert.AreEqual(testPath, entries.Last());
+            Assert.AreEqual(testDir, entries.Last());
+            Assert.AreEqual(testPath, entries.First());
+        }
+
+        [Test]
+        public void MockDirectory_GetDirectories_Returns_Child_Directories()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"A:\folder1\folder2\folder3\file.txt", new MockFileData("Demo text content") },
+                { @"A:\folder1\folder4\file2.txt", new MockFileData("Demo text content 2") },
+            });
+
+            var directories = fileSystem.Directory.GetDirectories(@"A:\folder1").ToArray();
+
+            //Check that it does not returns itself
+            Assert.IsFalse(directories.Contains(@"A:\folder1\"));
+
+            //Check that it correctly returns all child directories
+            Assert.AreEqual(2, directories.Count());
+            Assert.IsTrue(directories.Contains(@"A:\folder1\folder2\"));
+            Assert.IsTrue(directories.Contains(@"A:\folder1\folder4\"));
         }
     }
 }

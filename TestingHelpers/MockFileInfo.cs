@@ -21,7 +21,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Delete()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            mockFileSystem.RemoveFile(path);
         }
 
         public override void Refresh()
@@ -30,8 +30,13 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileAttributes Attributes
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get
+            {
+                if (MockFileData == null)
+                    throw new FileNotFoundException("File not found", path);
+                return MockFileData.Attributes;
+            }
+            set { MockFileData.Attributes = value; }
         }
 
         public override DateTime CreationTime
@@ -108,12 +113,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileInfoBase CopyTo(string destFileName)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            new MockFile(mockFileSystem).Copy(FullName, destFileName);
+            return mockFileSystem.FileInfo.FromFileName(destFileName);
         }
-
+        
         public override FileInfoBase CopyTo(string destFileName, bool overwrite)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            new MockFile(mockFileSystem).Copy(FullName, destFileName, overwrite);
+            return mockFileSystem.FileInfo.FromFileName(destFileName);
         }
 
         public override Stream Create()
