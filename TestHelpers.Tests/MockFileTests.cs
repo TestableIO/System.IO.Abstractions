@@ -638,5 +638,176 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
             fileSystem.File.Delete(filePath);
         }
+
+        [Test]
+        public void MockFile_Open_ThrowsOnCreateNewWithExistingFile()
+        {
+            const string filepath = @"c:\something\already\exists.txt";
+            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData> 
+            {
+                { filepath, new MockFileData("I'm here") }
+            });
+
+            Assert.Throws<IOException>(() => filesystem.File.Open(filepath, FileMode.CreateNew));
+        }
+
+        [Test]
+        public void MockFile_Open_ThrowsOnOpenWithMissingFile()
+        {
+            const string filepath = @"c:\something\doesnt\exist.txt";
+            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            Assert.Throws<FileNotFoundException>(() => filesystem.File.Open(filepath, FileMode.Open));
+        }
+
+        [Test]
+        public void MockFile_Open_ThrowsOnTruncateWithMissingFile()
+        {
+            const string filepath = @"c:\something\doesnt\exist.txt";
+            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            Assert.Throws<FileNotFoundException>(() => filesystem.File.Open(filepath, FileMode.Truncate));
+        }
+
+        [Test]
+        public void MockFile_Open_CreatesNewFileFileOnCreate()
+        {
+            const string filepath = @"c:\something\doesnt\exist.txt";
+            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            var stream = filesystem.File.Open(filepath, FileMode.Create);
+
+            Assert.That(filesystem.File.Exists(filepath), Is.True);
+            Assert.That(stream.Position, Is.EqualTo(0));
+            Assert.That(stream.Length, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void MockFile_Open_CreatesNewFileFileOnCreateNew()
+        {
+            const string filepath = @"c:\something\doesnt\exist.txt";
+            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            var stream = filesystem.File.Open(filepath, FileMode.CreateNew);
+
+            Assert.That(filesystem.File.Exists(filepath), Is.True);
+            Assert.That(stream.Position, Is.EqualTo(0));
+            Assert.That(stream.Length, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void MockFile_Open_OpensExistingFileOnAppend()
+        {
+            const string filepath = @"c:\something\does\exist.txt";
+            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { filepath, new MockFileData("I'm here") }
+            });
+
+            var stream = filesystem.File.Open(filepath, FileMode.Append);
+            var file = filesystem.GetFile(filepath);
+            
+            Assert.That(stream.Position, Is.EqualTo(file.Contents.Length));
+            Assert.That(stream.Length, Is.EqualTo(file.Contents.Length));
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            byte[] data;
+            using (var br = new BinaryReader(stream))
+                data = br.ReadBytes((int)stream.Length);
+
+            CollectionAssert.AreEqual(file.Contents, data);
+        }
+
+        [Test]
+        public void MockFile_Open_OpensExistingFileOnTruncate()
+        {
+            const string filepath = @"c:\something\does\exist.txt";
+            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { filepath, new MockFileData("I'm here") }
+            });
+
+            var stream = filesystem.File.Open(filepath, FileMode.Truncate);
+            var file = filesystem.GetFile(filepath);
+
+            Assert.That(stream.Position, Is.EqualTo(0));
+            Assert.That(stream.Length, Is.EqualTo(0));
+            Assert.That(file.Contents.Length, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void MockFile_Open_OpensExistingFileOnOpen()
+        {
+            const string filepath = @"c:\something\does\exist.txt";
+            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { filepath, new MockFileData("I'm here") }
+            });
+
+            var stream = filesystem.File.Open(filepath, FileMode.Open);
+            var file = filesystem.GetFile(filepath);
+
+            Assert.That(stream.Position, Is.EqualTo(0));
+            Assert.That(stream.Length, Is.EqualTo(file.Contents.Length));
+
+            byte[] data;
+            using (var br = new BinaryReader(stream))
+                data = br.ReadBytes((int)stream.Length);
+
+            CollectionAssert.AreEqual(file.Contents, data);
+        }
+
+        [Test]
+        public void MockFile_Open_OpensExistingFileOnOpenOrCreate()
+        {
+            const string filepath = @"c:\something\does\exist.txt";
+            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { filepath, new MockFileData("I'm here") }
+            });
+
+            var stream = filesystem.File.Open(filepath, FileMode.OpenOrCreate);
+            var file = filesystem.GetFile(filepath);
+
+            Assert.That(stream.Position, Is.EqualTo(0));
+            Assert.That(stream.Length, Is.EqualTo(file.Contents.Length));
+
+            byte[] data;
+            using (var br = new BinaryReader(stream))
+                data = br.ReadBytes((int)stream.Length);
+
+            CollectionAssert.AreEqual(file.Contents, data);
+        }
+
+        [Test]
+        public void MockFile_Open_CreatesNewFileOnOpenOrCreate()
+        {
+            const string filepath = @"c:\something\doesnt\exist.txt";
+            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            var stream = filesystem.File.Open(filepath, FileMode.OpenOrCreate);
+
+            Assert.That(filesystem.File.Exists(filepath), Is.True);
+            Assert.That(stream.Position, Is.EqualTo(0));
+            Assert.That(stream.Length, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void MockFile_Open_OverwritesExistingFileOnCreate()
+        {
+            const string filepath = @"c:\something\doesnt\exist.txt";
+            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { filepath, new MockFileData("I'm here") }
+            });
+
+            var stream = filesystem.File.Open(filepath, FileMode.Create);
+            var file = filesystem.GetFile(filepath);
+
+            Assert.That(stream.Position, Is.EqualTo(0));
+            Assert.That(stream.Length, Is.EqualTo(0));
+            Assert.That(file.Contents.Length, Is.EqualTo(0));
+        }
     }
 }
