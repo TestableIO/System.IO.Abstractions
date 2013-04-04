@@ -9,7 +9,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         private MockPath SetupMockPath()
         {
-            return new MockPath();
+            return new MockPath(null);
         }
 
         [Test]

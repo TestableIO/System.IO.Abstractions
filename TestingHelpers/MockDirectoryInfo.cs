@@ -94,7 +94,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string Name
         {
-            get { return new MockPath().GetFileName(directoryPath.TrimEnd('\\')); }
+            get { return new MockPath(mockFileDataAccessor).GetFileName(directoryPath.TrimEnd('\\')); }
         }
 
         public override void Create()

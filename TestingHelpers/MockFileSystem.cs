@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -13,27 +14,39 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly IFileInfoFactory fileInfoFactory;
         readonly PathBase path;
         readonly IDirectoryInfoFactory directoryInfoFactory;
+        readonly string workingDirectory;
 
-        public MockFileSystem(IDictionary<string, MockFileData> files)
+        public MockFileSystem(IEnumerable<KeyValuePair<string, MockFileData>> files = null, string workingDirectory = @"C:\")
         {
             file = new MockFile(this);
             directory = new MockDirectory(this, file);
             fileInfoFactory = new MockFileInfoFactory(this);
-            path = new MockPath();
+            path = new MockPath(this);
             directoryInfoFactory = new MockDirectoryInfoFactory(this);
+            this.workingDirectory = FixPath(workingDirectory);
 
             //For each mock file add a file to the files dictionary
             //Also add a file entry for all directories leading up to this file
             this.files = new Dictionary<string, MockFileData>(StringComparer.InvariantCultureIgnoreCase);
-            foreach (var entry in files)
+            if (files != null)
             {
-                var directoryPath = Path.GetDirectoryName(entry.Key);
-                if (!directory.Exists(directoryPath))
-                    directory.CreateDirectory(directoryPath);
+                foreach (var entry in files)
+                {
+                    var absolutePath = Path.GetFullPath(entry.Key);
 
-                if (!file.Exists(entry.Key))
-                    this.files.Add(entry.Key, entry.Value);
+                    var directoryPath = Path.GetDirectoryName(absolutePath);
+                    if (!directory.Exists(directoryPath))
+                        directory.CreateDirectory(directoryPath);
+
+                    if (!file.Exists(absolutePath))
+                        this.files.Add(absolutePath, entry.Value);
+                }
             }
+        }
+
+        public string WorkingDirectory 
+        {
+            get { return workingDirectory; }
         }
 
         public FileBase File
@@ -68,25 +81,25 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockFileData GetFile(string path)
         {
-            path = FixPath(path);
+            path = Path.GetFullPath(path);
             return FileExists(path) ? files[path] : null;
         }
 
         public void AddFile(string path, MockFileData mockFile)
         {
-            path = FixPath(path);
+            path = Path.GetFullPath(path);
             files.Add(path, mockFile);
         }
 
         public void RemoveFile(string path)
         {
-            path = FixPath(path);
+            path = Path.GetFullPath(path);
             files.Remove(path);
         }
 
         public bool FileExists(string path)
         {
-            path = FixPath(path);
+            path = Path.GetFullPath(path);
             return files.ContainsKey(path);
         }
 

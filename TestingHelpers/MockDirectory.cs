@@ -24,7 +24,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
-            path = EnsurePathEndsWithDirectorySeparator(path);
+            path = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(path));
             if (!Exists(path))
                 mockFileDataAccessor.AddFile(path, new MockDirectoryData());
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
@@ -43,7 +43,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Delete(string path, bool recursive)
         {
-            path = EnsurePathEndsWithDirectorySeparator(path);
+            path = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(path));
             var affectedPaths = mockFileDataAccessor
                 .AllPaths
                 .Where(p => p.StartsWith(path, StringComparison.InvariantCultureIgnoreCase))
@@ -65,6 +65,7 @@ namespace System.IO.Abstractions.TestingHelpers
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
                 path += Path.DirectorySeparatorChar;
 
+            path = mockFileDataAccessor.Path.GetFullPath(path);
             return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.InvariantCultureIgnoreCase));
         }
 
@@ -90,7 +91,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string GetCurrentDirectory()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return mockFileDataAccessor.WorkingDirectory;
         }
 
         public override string[] GetDirectories(string path)
@@ -138,6 +139,8 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
                 path += Path.DirectorySeparatorChar;
+
+            path = mockFileDataAccessor.Path.GetFullPath(path);
 
             const string allDirectoriesPattern = @"([\w\d\s-\.]*\\)*";
             

@@ -103,7 +103,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         public override string Name {
-            get { return new MockPath().GetFileName(path); }
+            get { return new MockPath(mockFileSystem).GetFileName(path); }
         }
 
         public override StreamWriter AppendText()
