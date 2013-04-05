@@ -71,6 +71,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MockDirectoryInfoTests.cs" />
     <Compile Include="FileSystemTests.cs" />
     <Compile Include="MockDirectoryTests.cs" />
     <Compile Include="MockFileInfoFactoryTests.cs" />
