@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -88,32 +86,49 @@ namespace System.IO.Abstractions.TestingHelpers
         public void AddFile(string path, MockFileData mockFile)
         {
             path = Path.GetFullPath(path);
-            files.Add(path, mockFile);
+            lock (files)
+                files.Add(path, mockFile);
         }
 
         public void RemoveFile(string path)
         {
             path = Path.GetFullPath(path);
-            files.Remove(path);
+            lock (files)
+                files.Remove(path);
         }
 
         public bool FileExists(string path)
         {
             path = Path.GetFullPath(path);
-            return files.ContainsKey(path);
+            lock (files)
+                return files.ContainsKey(path);
         }
 
         public IEnumerable<string> AllPaths
         {
-            get { return files.Keys; }
+            get
+            {
+                lock (files)
+                    return files.Keys.ToArray();
+            }
         }
 
-        public IEnumerable<string> AllFiles {
-            get { return files.Where(f => !f.Value.IsDirectory).Select(f => f.Key); }
+        public IEnumerable<string> AllFiles
+        {
+            get
+            {
+                lock (file)
+                    return files.Where(f => !f.Value.IsDirectory).Select(f => f.Key).ToArray();
+            }
         }
 
-        public IEnumerable<string> AllDirectories {
-            get { return files.Where(f => f.Value.IsDirectory).Select(f => f.Key); }
+        public IEnumerable<string> AllDirectories
+        {
+            get
+            {
+                lock (files)
+                    return files.Where(f => f.Value.IsDirectory).Select(f => f.Key).ToArray();
+            }
         }
     }
 }
