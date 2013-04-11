@@ -15,15 +15,15 @@
 
         public override string GetFullPath(string path)
         {
-            path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            path = path.Replace(AltDirectorySeparatorChar, DirectorySeparatorChar);
 
-            string root = Path.GetPathRoot(path);
+            string root = GetPathRoot(path);
 
             if (root == "")
-                path = Path.Combine(mockFileDataAccessor.WorkingDirectory, path);
+                path = Combine(mockFileDataAccessor.WorkingDirectory, path);
 
             if (root == "/")
-                path = Path.Combine(Path.GetPathRoot(mockFileDataAccessor.WorkingDirectory), path);
+                path = Combine(GetPathRoot(mockFileDataAccessor.WorkingDirectory), path);
 
             return path;
         }
