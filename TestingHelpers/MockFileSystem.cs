@@ -14,10 +14,12 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly PathBase path;
         readonly IDirectoryInfoFactory directoryInfoFactory;
 
-        public MockFileSystem(IDictionary<string, MockFileData> files)
+        public MockFileSystem(IDictionary<string, MockFileData> files) : this(files, @"C:\Foo\Bar") { }
+
+        public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory)
         {
             file = new MockFile(this);
-            directory = new MockDirectory(this, file);
+            directory = new MockDirectory(this, file, currentDirectory);
             fileInfoFactory = new MockFileInfoFactory(this);
             path = new MockPath();
             directoryInfoFactory = new MockDirectoryInfoFactory(this);
