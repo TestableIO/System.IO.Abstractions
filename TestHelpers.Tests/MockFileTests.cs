@@ -293,6 +293,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(result);
         }
 
+        public void MockFile_Exists_ShouldReturnFalseForNullPath()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\something\demo.txt", new MockFileData("Demo text content") },
+                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+            });
+
+            var file = new MockFile(fileSystem);
+
+            // Act
+            var result = file.Exists(null);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
         [Test]
         public void MockFile_ReadAllBytes_ShouldReturnOriginalByteData()
         {
@@ -618,6 +636,34 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileData = mockFileData.Contents;
 
             Assert.That(fileData, Is.EqualTo(data));
+        }
+
+        [Test]
+        public void Mockfile_Create_OverwritesExistingFile()
+        {
+            const string fullPath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            var sut = new MockFile(fileSystem);
+
+            // Create a file
+            using (var stream = sut.Create(fullPath))
+            {
+                var oldData = new UTF8Encoding(false).GetBytes("Test 1");
+                stream.Write(oldData, 0, oldData.Length);
+            }
+
+            // Create new file that should overwrite existing file
+            var newData = new UTF8Encoding(false).GetBytes("Test 2");
+            using (var stream = sut.Create(fullPath))
+            {
+                stream.Write(newData, 0, newData.Length);
+            }
+            
+            var mockFileData = fileSystem.GetFile(fullPath);
+            var fileData = mockFileData.Contents;
+
+            Assert.That(fileData, Is.EqualTo(newData));
         }
 
         [Test]
