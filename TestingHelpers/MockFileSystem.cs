@@ -75,7 +75,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public void AddFile(string path, MockFileData mockFile)
         {
             path = FixPath(path);
-            files.Add(path, mockFile);
+            files[path] = mockFile;
         }
 
         public void RemoveFile(string path)
@@ -86,6 +86,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public bool FileExists(string path)
         {
+            if (string.IsNullOrEmpty(path))
+                return false;
+
             path = FixPath(path);
             return files.ContainsKey(path);
         }
