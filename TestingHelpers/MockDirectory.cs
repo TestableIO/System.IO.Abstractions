@@ -11,7 +11,7 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly FileBase fileBase;
         readonly IMockFileDataAccessor mockFileDataAccessor;
 
-        private readonly string currentDirectory;
+        private string currentDirectory;
 
         public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory) {
             this.currentDirectory = currentDirectory;
@@ -253,7 +253,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void SetCurrentDirectory(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+          currentDirectory = path;
         }
 
         public override void SetLastAccessTime(string path, DateTime lastAccessTime)
