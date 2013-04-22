@@ -725,5 +725,26 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(fileSystem.File.Exists(@"B:\folder1\file.txt"));
             Assert.IsTrue(fileSystem.File.Exists(@"B:\folder1\folder2\file2.txt"));
         }
+
+        [Test]
+        public void MockDirectory_GetCurrentDirectory_ShouldReturnValueFromFileSystemConstructor() {
+            string directory = @"D:\folder1\folder2";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>(), directory);
+            
+            var actual = fileSystem.Directory.GetCurrentDirectory();
+
+            Assert.AreEqual(directory, actual);
+        }
+
+      
+        [Test]
+        public void MockDirectory_GetCurrentDirectory_ShouldReturnDefaultPathWhenNotSet() {
+            string directory = @"C:\Foo\Bar";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            
+            var actual = fileSystem.Directory.GetCurrentDirectory();
+
+            Assert.AreEqual(directory, actual);
+        }
     }
 }
