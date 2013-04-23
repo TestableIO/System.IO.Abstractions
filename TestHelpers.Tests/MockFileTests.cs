@@ -529,6 +529,72 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_Move_ShouldThrowIOExceptionWhenTargetAlreadyExists() {
+            const string SourceFilePath = @"c:\something\demo.txt";
+            const string SourceFileContent = "this is some content";
+            const string DestFilePath = @"c:\somethingelse\demo1.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+              {
+                  {SourceFilePath, new MockFileData(SourceFileContent)},
+                  {DestFilePath, new MockFileData(SourceFileContent)}
+              });
+
+            try 
+            {
+                fileSystem.File.Move(SourceFilePath, DestFilePath);
+                Assert.Fail();
+            } catch (IOException) {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
+        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenSourceIsEmpty() {
+            const string DestFilePath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { });
+
+            try 
+            {
+                fileSystem.File.Move(null, DestFilePath);
+                Assert.Fail();
+            } catch (ArgumentNullException) 
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
+        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenTargetIsEmpty() {
+            const string SourceFilePath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { });
+
+            try 
+            {
+                fileSystem.File.Move(SourceFilePath, null);
+                Assert.Fail();
+            } catch (ArgumentNullException) 
+            {
+                Assert.Pass();
+            }
+        }
+      
+       [Test]
+        public void MockFile_Move_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist() {
+            const string SourceFilePath = @"c:\something\demo.txt";
+            const string DestFilePath = @"c:\something\demo1.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { });
+
+            try 
+            {
+                fileSystem.File.Move(SourceFilePath, DestFilePath);
+                Assert.Fail();
+            } catch (FileNotFoundException) 
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
         public void MockFile_OpenWrite_ShouldCreateNewFiles() {
             const string filePath = @"c:\something\demo.txt";
             const string fileContent = "this is some content";

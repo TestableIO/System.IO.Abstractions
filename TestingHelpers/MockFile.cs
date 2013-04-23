@@ -150,7 +150,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Move(string sourceFileName, string destFileName)
         {
+            if (string.IsNullOrEmpty(sourceFileName))
+                throw new ArgumentNullException("sourceFileName");
+            if (string.IsNullOrEmpty(destFileName))
+                throw new ArgumentNullException("destFileName");
+            if (mockFileDataAccessor.GetFile(destFileName) != null)
+                throw new IOException();
+
             var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
+
+            if (sourceFile == null)
+                throw new FileNotFoundException();
 
             mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile.Contents));
             mockFileDataAccessor.RemoveFile(sourceFileName);
