@@ -121,32 +121,31 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime GetCreationTime(string path)
         {
-            return mockFileDataAccessor.GetFile(path).CreationTime.LocalDateTime;
+            return mockFileDataAccessor.GetFile(path, true).CreationTime.LocalDateTime;
         }
 
         public override DateTime GetCreationTimeUtc(string path)
         {
-            return mockFileDataAccessor.GetFile(path).CreationTime.UtcDateTime;
+            return mockFileDataAccessor.GetFile(path, true).CreationTime.UtcDateTime;
         }
 
         public override DateTime GetLastAccessTime(string path)
         {
-            return mockFileDataAccessor.GetFile(path).LastAccessTime.LocalDateTime;
+            return mockFileDataAccessor.GetFile(path, true).LastAccessTime.LocalDateTime;
         }
 
         public override DateTime GetLastAccessTimeUtc(string path)
         {
-            return mockFileDataAccessor.GetFile(path).LastAccessTime.UtcDateTime;
+            return mockFileDataAccessor.GetFile(path, true).LastAccessTime.UtcDateTime;
         }
 
-        public override DateTime GetLastWriteTime(string path)
-        {
-            return mockFileDataAccessor.GetFile(path).LastWriteTime.LocalDateTime;
+        public override DateTime GetLastWriteTime(string path) {
+            return mockFileDataAccessor.GetFile(path, true).LastWriteTime.LocalDateTime;
         }
 
         public override DateTime GetLastWriteTimeUtc(string path)
         {
-            return mockFileDataAccessor.GetFile(path).LastWriteTime.UtcDateTime;
+            return mockFileDataAccessor.GetFile(path, true).LastWriteTime.UtcDateTime;
         }
 
         public override void Move(string sourceFileName, string destFileName)

@@ -196,6 +196,49 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(lastWriteTime, result);
         }
 
+        private void ExecuteDefaultValueTest(Func<MockFile, string, DateTime> getDateValue) 
+        {
+            var expected = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc);
+            const string Path = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var file = new MockFile(fileSystem);
+
+            var actual = getDateValue(file, Path);
+
+            Assert.That(actual.ToUniversalTime(), Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void MockFile_GetLastWriteTimeOfNonExistantFile_ShouldReturnDefaultValue() 
+        {
+            ExecuteDefaultValueTest((f, p) => f.GetLastWriteTime(p));  
+        }
+
+        [Test]
+        public void MockFile_GetLastWriteTimeUtcOfNonExistantFile_ShouldReturnDefaultValue() {
+            ExecuteDefaultValueTest((f, p) => f.GetLastWriteTimeUtc(p));
+        }
+
+        [Test]
+        public void MockFile_GetLastAccessTimeUtcOfNonExistantFile_ShouldReturnDefaultValue() {
+            ExecuteDefaultValueTest((f, p) => f.GetLastAccessTimeUtc(p));
+        }
+
+        [Test]
+        public void MockFile_GetLastAccessTimeOfNonExistantFile_ShouldReturnDefaultValue() {
+            ExecuteDefaultValueTest((f, p) => f.GetLastAccessTime(p));
+        }
+
+        [Test]
+        public void MockFile_GetCreationTimeOfNonExistantFile_ShouldReturnDefaultValue() {
+            ExecuteDefaultValueTest((f, p) => f.GetCreationTime(p));
+        }
+
+        [Test]
+        public void MockFile_GetCreationTimeUtcOfNonExistantFile_ShouldReturnDefaultValue() {
+            ExecuteDefaultValueTest((f, p) => f.GetCreationTimeUtc(p));
+        }
+        
         [Test]
         public void MockFile_SetLastWriteTimeUtc_ShouldAffectLastWriteTime()
         {
