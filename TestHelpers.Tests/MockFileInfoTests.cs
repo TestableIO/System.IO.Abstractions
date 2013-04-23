@@ -144,5 +144,33 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(lastWriteTime.ToUniversalTime(), result);
         }
-    }
+ 
+        [Test]
+        public void MockFileInfo_GetExtension_ShouldReturnExtension()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+
+            // Act
+            var result = fileInfo.Extension;
+
+            // Assert
+            Assert.AreEqual(".txt", result);
+        }
+
+        [Test]
+        public void MockFileInfo_GetExtensionWithoutExtension_ShouldReturnEmptyString()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\a");
+
+            // Act
+            var result = fileInfo.Extension;
+
+            // Assert
+            Assert.AreEqual(string.Empty, result);
+        }
+   }
 }
