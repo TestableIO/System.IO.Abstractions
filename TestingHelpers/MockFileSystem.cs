@@ -76,8 +76,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public void AddFile(string path, MockFileData mockFile)
         {
-            path = FixPath(path);
-            files[path] = mockFile;
+            var fixedPath = FixPath(path);
+            if (FileExists(path) && (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                throw new UnauthorizedAccessException(string.Format("Access to the path '{0}' is denied.", path));
+
+            files[fixedPath] = mockFile;
         }
 
         public void RemoveFile(string path)

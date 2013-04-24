@@ -654,6 +654,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(actualContents, Is.EqualTo(expectedContents));
         }
 
+        [Test]
+        public void Mockfile_Create_ThrowsWhenPathIsReadOnly()
+        {
+            const string path = @"c:\something\read-only.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { { path, new MockFileData("Content") } });
+            var mockFile = new MockFile(fileSystem);
+            
+            mockFile.SetAttributes(path, FileAttributes.ReadOnly);
+         
+            var exception =  Assert.Throws<UnauthorizedAccessException>(() => mockFile.Create(path).Close());
+            Assert.That(exception.Message, Is.EqualTo(string.Format("Access to the path '{0}' is denied.", path)));
+        }
+
+        [Test]
         public void MockFile_Delete_Should_RemoveFiles()
         {
             const string filePath = @"c:\something\demo.txt";
