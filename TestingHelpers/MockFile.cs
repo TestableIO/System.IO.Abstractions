@@ -8,10 +8,12 @@ namespace System.IO.Abstractions.TestingHelpers
     public class MockFile : FileBase
     {
         readonly IMockFileDataAccessor mockFileDataAccessor;
+        readonly MockPath mockPath;
 
         public MockFile(IMockFileDataAccessor mockFileDataAccessor)
         {
             this.mockFileDataAccessor = mockFileDataAccessor;
+            this.mockPath = new MockPath();
         }
 
         public override void AppendAllText(string path, string contents)
@@ -170,6 +172,8 @@ namespace System.IO.Abstractions.TestingHelpers
             if (value == null)
                 throw new ArgumentNullException(paramName);
             if (value.Trim() == "")
+                throw new ArgumentException();
+            if (value.IndexOfAny(mockPath.GetInvalidPathChars()) > -1)
                 throw new ArgumentException();
         }
 

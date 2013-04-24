@@ -565,6 +565,44 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
+        [TestCase('>')]
+        [TestCase('<')]
+        [TestCase('"')]
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceContainsInvalidChars(char invalidChar) 
+        {
+            var sourceFilePath = @"c:\something\demo.txt" + invalidChar;
+            const string DestFilePath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { });
+
+            try 
+            {
+                fileSystem.File.Move(sourceFilePath, DestFilePath);
+                Assert.Fail();
+            } catch (ArgumentException) 
+            {
+                Assert.Pass();
+            }
+        }
+
+        [TestCase('>')]
+        [TestCase('<')]
+        [TestCase('"')]
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetContainsInvalidChars(char invalidChar) 
+        {
+            const string SourceFilePath = @"c:\something\demo.txt";
+            var destFilePath = @"c:\something\demo.txt" + invalidChar;
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { });
+
+            try 
+            {
+                fileSystem.File.Move(SourceFilePath, destFilePath);
+                Assert.Fail();
+            } catch (ArgumentException) 
+            {
+                Assert.Pass();
+            }
+        }
+
         [Test]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsEmpty() 
         {
