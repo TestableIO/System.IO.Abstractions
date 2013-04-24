@@ -746,5 +746,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.AreEqual(directory, actual);
         }
+
+        [Test]
+        public void MockDirectory_SetCurrentDirectory_ShouldChangeCurrentDirectory() {
+          string directory = @"D:\folder1\folder2";
+          var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+          
+          // Precondition
+          Assert.AreNotEqual(directory, fileSystem.Directory.GetCurrentDirectory());
+
+          fileSystem.Directory.SetCurrentDirectory(directory);
+
+          Assert.AreEqual(directory, fileSystem.Directory.GetCurrentDirectory());
+        }
     }
 }
