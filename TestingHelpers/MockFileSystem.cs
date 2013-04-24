@@ -88,6 +88,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public bool FileExists(string path)
         {
+            if (string.IsNullOrEmpty(path))
+                return false;
+
             path = FixPath(path);
             return files.ContainsKey(path);
         }
