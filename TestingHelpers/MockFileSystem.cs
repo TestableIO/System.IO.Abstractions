@@ -77,7 +77,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public void AddFile(string path, MockFileData mockFile)
         {
             path = FixPath(path);
-            files.Add(path, mockFile);
+            files[path] = mockFile;
         }
 
         public void RemoveFile(string path)

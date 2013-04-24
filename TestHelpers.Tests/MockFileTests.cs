@@ -628,6 +628,32 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void Mockfile_Create_OverwritesExistingFile()
+        {
+            const string path = @"c:\some\file.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            var mockFile = new MockFile(fileSystem);
+
+            // Create a file
+            using (var stream = mockFile.Create(path))
+            {
+                var contents = new UTF8Encoding(false).GetBytes("Test 1");
+                stream.Write(contents, 0, contents.Length);
+            }
+
+            // Create new file that should overwrite existing file
+            var expectedContents = new UTF8Encoding(false).GetBytes("Test 2");
+            using (var stream = mockFile.Create(path))
+            {
+                stream.Write(expectedContents, 0, expectedContents.Length);
+            }
+
+            var actualContents = fileSystem.GetFile(path).Contents;
+
+            Assert.That(actualContents, Is.EqualTo(expectedContents));
+        }
+
         public void MockFile_Delete_Should_RemoveFiles()
         {
             const string filePath = @"c:\something\demo.txt";
