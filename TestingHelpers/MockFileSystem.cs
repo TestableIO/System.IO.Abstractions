@@ -68,9 +68,10 @@ namespace System.IO.Abstractions.TestingHelpers
             return path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
         }
 
-        public MockFileData GetFile(string path, bool returnNullObject = false) {
+        public MockFileData GetFile(string path, bool returnNullObject = false) 
+        {
             path = FixPath(path);
-            return FileExists(path) ? files[path] : returnNullObject ? MockFileData.NullObject: null;
+            return FileExists(path) ? files[path] : returnNullObject ? MockFileData.NullObject : null;
         }
   
         public void AddFile(string path, MockFileData mockFile)
