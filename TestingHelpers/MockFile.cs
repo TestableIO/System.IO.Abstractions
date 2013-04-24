@@ -1,4 +1,5 @@
-﻿using System.Security.AccessControl;
+﻿using System.Diagnostics;
+using System.Security.AccessControl;
 using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -148,12 +149,10 @@ namespace System.IO.Abstractions.TestingHelpers
             return mockFileDataAccessor.GetFile(path, true).LastWriteTime.UtcDateTime;
         }
 
-        public override void Move(string sourceFileName, string destFileName)
-        {
-            if (string.IsNullOrEmpty(sourceFileName))
-                throw new ArgumentNullException("sourceFileName");
-            if (string.IsNullOrEmpty(destFileName))
-                throw new ArgumentNullException("destFileName");
+        public override void Move(string sourceFileName, string destFileName) {
+            ValidateParameter(sourceFileName, "sourceFileName");
+            ValidateParameter(destFileName, "destFileName");
+
             if (mockFileDataAccessor.GetFile(destFileName) != null)
                 throw new IOException();
 
@@ -164,6 +163,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
             mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile.Contents));
             mockFileDataAccessor.RemoveFile(sourceFileName);
+        }
+        
+        [DebuggerNonUserCode]
+        private void ValidateParameter(string value, string paramName) {
+            if (value == null)
+                throw new ArgumentNullException(paramName);
+            if (value.Trim() == "")
+                throw new ArgumentException();
         }
 
         public override Stream Open(string path, FileMode mode)

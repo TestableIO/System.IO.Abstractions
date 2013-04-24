@@ -529,7 +529,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowIOExceptionWhenTargetAlreadyExists() {
+        public void MockFile_Move_ShouldThrowIOExceptionWhenTargetAlreadyExists() 
+        {
             const string SourceFilePath = @"c:\something\demo.txt";
             const string SourceFileContent = "this is some content";
             const string DestFilePath = @"c:\somethingelse\demo1.txt";
@@ -549,7 +550,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenSourceIsEmpty() {
+        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenSourceIsNull() 
+        {
             const string DestFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { });
 
@@ -564,7 +566,46 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenTargetIsEmpty() {
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsEmpty() 
+        {
+            const string DestFilePath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { });
+
+            try 
+            {
+                fileSystem.File.Move(string.Empty, DestFilePath);
+                Assert.Fail();
+            } catch (ArgumentNullException) 
+            {
+                Assert.Fail("Caught an ArgumentNullException; expected was ArgumentExeption");
+            } catch (ArgumentException) 
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsStringOfBlanks() 
+        {
+            const string SourceFilePath = "   ";
+            const string DestFilePath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { });
+
+            try 
+            {
+                fileSystem.File.Move(SourceFilePath, DestFilePath);
+                Assert.Fail();
+            } catch (ArgumentNullException) 
+            {
+                Assert.Fail("Caught an ArgumentNullException; expected was ArgumentExeption");
+            } catch (ArgumentException) 
+            {
+                Assert.Pass();
+            }
+        }
+        [Test]
+        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenTargetIsNull() 
+        {
             const string SourceFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { });
 
@@ -577,9 +618,48 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 Assert.Pass();
             }
         }
-      
-       [Test]
-        public void MockFile_Move_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist() {
+
+        [Test]
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsStringOfBlanks() 
+        {
+            const string SourceFilePath = @"c:\something\demo.txt";
+            const string DestFilePath = "   ";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { });
+
+            try 
+            {
+                fileSystem.File.Move(SourceFilePath, DestFilePath);
+                Assert.Fail();
+            } catch (ArgumentNullException) 
+            {
+                Assert.Fail("Caught an ArgumentNullException; expected was ArgumentExeption");
+            } catch (ArgumentException) 
+            {
+                Assert.Pass();
+            }
+        }
+        [Test]
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsEmpty() 
+        {
+            const string SourceFilePath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { });
+
+            try 
+            {
+                fileSystem.File.Move(SourceFilePath, string.Empty);
+                Assert.Fail();
+            } catch (ArgumentNullException) 
+            {
+                Assert.Fail("Caught an ArgumentNullException; expected was ArgumentExeption");
+            } catch (ArgumentException) 
+            {
+                Assert.Pass();
+            }
+        }
+
+        [Test]
+        public void MockFile_Move_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist() 
+        {
             const string SourceFilePath = @"c:\something\demo.txt";
             const string DestFilePath = @"c:\something\demo1.txt";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { });
