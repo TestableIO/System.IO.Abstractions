@@ -156,12 +156,12 @@ namespace System.IO.Abstractions.TestingHelpers
             ValidateParameter(destFileName, "destFileName");
 
             if (mockFileDataAccessor.GetFile(destFileName) != null)
-                throw new IOException();
+                throw new IOException("A file can not be created if it already exists.");
 
             var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
 
             if (sourceFile == null)
-                throw new FileNotFoundException();
+                throw new FileNotFoundException(string.Format("The file \"{0}\" could not be found.", sourceFileName));
 
             mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile.Contents));
             mockFileDataAccessor.RemoveFile(sourceFileName);
@@ -170,11 +170,13 @@ namespace System.IO.Abstractions.TestingHelpers
         [DebuggerNonUserCode]
         private void ValidateParameter(string value, string paramName) {
             if (value == null)
-                throw new ArgumentNullException(paramName);
+                throw new ArgumentNullException(paramName, "Value can not be null.");
+            if (value == string.Empty)
+                throw new ArgumentException("An empty file name is invalid.", paramName);
             if (value.Trim() == "")
-                throw new ArgumentException();
+                throw new ArgumentException("The path has an invalid format.");
             if (value.IndexOfAny(mockPath.GetInvalidPathChars()) > -1)
-                throw new ArgumentException();
+                throw new ArgumentException("Illegal characters in path.", paramName);
         }
 
         public override Stream Open(string path, FileMode mode)
