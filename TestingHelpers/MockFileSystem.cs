@@ -10,41 +10,25 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly FileBase file;
         readonly DirectoryBase directory;
         readonly IFileInfoFactory fileInfoFactory;
-        readonly PathBase path;
+        readonly PathBase pathField;
         readonly IDirectoryInfoFactory directoryInfoFactory;
-        readonly string workingDirectory;
 
-        public MockFileSystem(IEnumerable<KeyValuePair<string, MockFileData>> files = null, string workingDirectory = @"C:\")
+        public MockFileSystem() : this(new Dictionary<string, MockFileData>()) { }
+
+        public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = @"C:\Foo\Bar")
         {
-            file = new MockFile(this);
-            directory = new MockDirectory(this, file);
-            fileInfoFactory = new MockFileInfoFactory(this);
-            path = new MockPath(this);
-            directoryInfoFactory = new MockDirectoryInfoFactory(this);
-            this.workingDirectory = FixPath(workingDirectory);
-
-            //For each mock file add a file to the files dictionary
-            //Also add a file entry for all directories leading up to this file
             this.files = new Dictionary<string, MockFileData>(StringComparer.InvariantCultureIgnoreCase);
+            pathField = new MockPath(this);
+            file = new MockFile(this);
+            directory = new MockDirectory(this, file, FixPath(currentDirectory));
+            fileInfoFactory = new MockFileInfoFactory(this);
+            directoryInfoFactory = new MockDirectoryInfoFactory(this);
+
             if (files != null)
             {
                 foreach (var entry in files)
-                {
-                    var absolutePath = Path.GetFullPath(entry.Key);
-
-                    var directoryPath = Path.GetDirectoryName(absolutePath);
-                    if (!directory.Exists(directoryPath))
-                        directory.CreateDirectory(directoryPath);
-
-                    if (!file.Exists(absolutePath))
-                        this.files.Add(absolutePath, entry.Value);
-                }
+                    AddFile(entry.Key, entry.Value);
             }
-        }
-
-        public string WorkingDirectory 
-        {
-            get { return workingDirectory; }
         }
 
         public FileBase File
@@ -64,7 +48,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public PathBase Path
         {
-            get { return path; }
+            get { return pathField; }
         }
 
         public IDirectoryInfoFactory DirectoryInfo
@@ -74,32 +58,64 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string FixPath(string path)
         {
-            return path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            var pathSeparatorFixed = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            return pathField.GetFullPath(pathSeparatorFixed);
         }
 
-        public MockFileData GetFile(string path)
+        public MockFileData GetFile(string path, bool returnNullObject = false) 
         {
-            path = Path.GetFullPath(path);
-            return FileExists(path) ? files[path] : null;
-        }
+            path = FixPath(path);
 
+            lock (files)
+                return FileExists(path) ? files[path] : returnNullObject ? MockFileData.NullObject : null;
+        }
+  
         public void AddFile(string path, MockFileData mockFile)
         {
-            path = Path.GetFullPath(path);
+            var fixedPath = FixPath(path);
+            if (FileExists(fixedPath) && (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                throw new UnauthorizedAccessException(string.Format("Access to the path '{0}' is denied.", path));
+
+            var directoryPath = Path.GetDirectoryName(fixedPath);
+
             lock (files)
-                files.Add(path, mockFile);
+            {
+                if (!directory.Exists(directoryPath))// && !string.IsNullOrEmpty(directoryPath))
+                    directory.CreateDirectory(directoryPath);
+
+                files[fixedPath] = mockFile;
+            }
+        }
+
+        public void AddDirectory(string path)
+        {
+            var fixedPath = FixPath(path);
+
+            lock (files)
+            {
+                if (FileExists(path) &&
+                    (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                    throw new UnauthorizedAccessException(string.Format("Access to the path '{0}' is denied.", path));
+
+                files[fixedPath] = new MockDirectoryData();
+            }
         }
 
         public void RemoveFile(string path)
         {
-            path = Path.GetFullPath(path);
+            path = FixPath(path);
+
             lock (files)
                 files.Remove(path);
         }
 
         public bool FileExists(string path)
         {
-            path = Path.GetFullPath(path);
+            if (string.IsNullOrEmpty(path))
+                return false;
+
+            path = FixPath(path);
+
             lock (files)
                 return files.ContainsKey(path);
         }

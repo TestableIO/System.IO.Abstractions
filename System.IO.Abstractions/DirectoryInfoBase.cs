@@ -27,6 +27,8 @@ namespace System.IO.Abstractions
         
         public static implicit operator DirectoryInfoBase(DirectoryInfo directoryInfo)
         {
+            if (directoryInfo == null)
+                return null;
             return new DirectoryInfoWrapper(directoryInfo);
         }
     }

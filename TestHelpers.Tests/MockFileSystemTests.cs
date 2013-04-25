@@ -60,6 +60,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileSystem_AddFile_ShouldRepaceExistingFile()
+        {
+            const string path = @"c:\some\file.txt";
+            const string existingContent = "Existing content";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, new MockFileData(existingContent) }
+            });
+            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(existingContent));
+
+            const string newContent = "New content";
+            fileSystem.AddFile(path, new MockFileData(newContent));
+
+            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(newContent));
+        }
+
+        [Test]
         public void Is_Serializable()
         {
             var file1 = new MockFileData("Demo\r\ntext\ncontent\rvalue");
@@ -68,9 +85,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { @"c:\something\demo.txt", file1 },
                 { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
             });
-            var memoryStream = new System.IO.MemoryStream();
+            var memoryStream = new MemoryStream();
 
-            System.Runtime.Serialization.Formatters.Binary.BinaryFormatter serializer = new Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            var serializer = new Runtime.Serialization.Formatters.Binary.BinaryFormatter();
             serializer.Serialize(memoryStream, fileSystem);
 
             Assert.That(memoryStream.Length > 0, "Length didnt increase after serialization task.");

@@ -5,39 +5,31 @@ namespace System.IO.Abstractions
 {
     internal static class Converters
     {
-        internal static FileSystemInfoBase[] Wrap(this FileSystemInfo[] input)
+        internal static FileSystemInfoBase[] WrapFileSystemInfos(this IEnumerable<FileSystemInfo> input)
         {
-            var results = new List<FileSystemInfoBase>();
-
-            foreach (var item in input)
-            {
-                if (item is FileInfo)
+            return input
+                .Select<FileSystemInfo, FileSystemInfoBase>(item =>
                 {
-                    results.Add((FileInfoBase)item);
-                    continue;
-                }
+                    if (item is FileInfo)
+                        return (FileInfoBase) item;
 
-                if (item is DirectoryInfo)
-                {
-                    results.Add((DirectoryInfoBase)item);
-                    continue;
-                }
+                    if (item is DirectoryInfo)
+                        return (DirectoryInfoBase) item;
 
-                throw new NotImplementedException(string.Format(
-                    "The type {0} is not recognized by the System.IO.Abstractions library.",
-                    item.GetType().AssemblyQualifiedName
-                ));
-            }
-
-            return results.ToArray();
+                    throw new NotImplementedException(string.Format(
+                        "The type {0} is not recognized by the System.IO.Abstractions library.",
+                        item.GetType().AssemblyQualifiedName
+                    ));
+                })
+                .ToArray();
         }
 
-        internal static DirectoryInfoBase[] Wrap(this DirectoryInfo[] input)
+        internal static DirectoryInfoBase[] WrapDirectories(this IEnumerable<DirectoryInfo> input)
         {
             return input.Select(f => (DirectoryInfoBase)f).ToArray();
         }
 
-        internal static FileInfoBase[] Wrap(this FileInfo[] input)
+        internal static FileInfoBase[] WrapFiles(this IEnumerable<FileInfo> input)
         {
             return input.Select(f => (FileInfoBase)f).ToArray();
         }

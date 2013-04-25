@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
@@ -62,7 +63,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileInfo_Length_ShouldThrowFileNotFoundExcpetionIfFileDoesNotExistInMemoryFileSystem()
+        public void MockFileInfo_Length_ShouldThrowFileNotFoundExceptionIfFileDoesNotExistInMemoryFileSystem()
         {
             // Arrange
             const string fileContent = "Demo text content";
@@ -73,19 +74,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
             var fileInfo = new MockFileInfo(fileSystem, @"c:\foo.txt");
 
-            try
-            {
-                // Act
-                fileInfo.Length.ToString();
-
-                // Assert
-                Assert.Fail("Expected exception was not thrown");
-            }
-            catch (FileNotFoundException ex)
-            {
-                // Assert
-                Assert.AreEqual(@"c:\foo.txt", ex.FileName);
-            }
+// ReSharper disable ReturnValueOfPureMethodIsNotUsed
+            var ex = Assert.Throws<FileNotFoundException>(() => fileInfo.Length.ToString(CultureInfo.InvariantCulture));
+// ReSharper restore ReturnValueOfPureMethodIsNotUsed
+            Assert.AreEqual(@"c:\foo.txt", ex.FileName);
         }
 
         [Test]
@@ -144,5 +136,33 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(lastWriteTime.ToUniversalTime(), result);
         }
-    }
+ 
+        [Test]
+        public void MockFileInfo_GetExtension_ShouldReturnExtension()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+
+            // Act
+            var result = fileInfo.Extension;
+
+            // Assert
+            Assert.AreEqual(".txt", result);
+        }
+
+        [Test]
+        public void MockFileInfo_GetExtensionWithoutExtension_ShouldReturnEmptyString()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\a");
+
+            // Act
+            var result = fileInfo.Extension;
+
+            // Assert
+            Assert.AreEqual(string.Empty, result);
+        }
+   }
 }

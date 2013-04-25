@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Text.RegularExpressions;
@@ -11,8 +12,11 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly FileBase fileBase;
         readonly IMockFileDataAccessor mockFileDataAccessor;
 
-        public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase)
+        private string currentDirectory;
+
+        public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory) 
         {
+            this.currentDirectory = currentDirectory;
             this.mockFileDataAccessor = mockFileDataAccessor;
             this.fileBase = fileBase;
         }
@@ -26,7 +30,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             path = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(path));
             if (!Exists(path))
-                mockFileDataAccessor.AddFile(path, new MockDirectoryData());
+                mockFileDataAccessor.AddDirectory(path);
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
 
             var parent = GetParent(path);
@@ -62,7 +66,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists(string path)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 path += Path.DirectorySeparatorChar;
 
             path = mockFileDataAccessor.Path.GetFullPath(path);
@@ -91,7 +95,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string GetCurrentDirectory()
         {
-            return mockFileDataAccessor.WorkingDirectory;
+            return currentDirectory;
         }
 
         public override string[] GetDirectories(string path)
@@ -106,10 +110,10 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetDirectories(string path, string searchPattern, SearchOption searchOption)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 path += Path.DirectorySeparatorChar;
 
-            var dirs = getFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
+            var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
             return dirs.Where(p => p != path).ToArray();
         }
 
@@ -132,12 +136,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
         {
-            return getFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
+            return GetFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
         }
 
-        public string[] getFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
+        private string[] GetFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 path += Path.DirectorySeparatorChar;
 
             path = mockFileDataAccessor.Path.GetFullPath(path);
@@ -254,7 +258,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void SetCurrentDirectory(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+          currentDirectory = path;
         }
 
         public override void SetLastAccessTime(string path, DateTime lastAccessTime)
@@ -279,7 +283,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         static string EnsurePathEndsWithDirectorySeparator(string path)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 path += Path.DirectorySeparatorChar;
             return path;
         }

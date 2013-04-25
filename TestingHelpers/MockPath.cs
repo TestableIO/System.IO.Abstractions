@@ -20,10 +20,10 @@
             string root = GetPathRoot(path);
 
             if (root == "")
-                path = Combine(mockFileDataAccessor.WorkingDirectory, path);
+                path = Combine(mockFileDataAccessor.Directory.GetCurrentDirectory(), path);
 
             if (root == "/")
-                path = Combine(GetPathRoot(mockFileDataAccessor.WorkingDirectory), path);
+                path = Combine(GetPathRoot(mockFileDataAccessor.Directory.GetCurrentDirectory()), path);
 
             return path;
         }

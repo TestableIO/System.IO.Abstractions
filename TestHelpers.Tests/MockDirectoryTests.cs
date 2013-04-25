@@ -70,7 +70,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 {
                     @"c:\a\a.txt",
                     @"c:\a\b.txt",
-                    @"c:\a\c.txt",
+                    @"c:\a\c.txt"
                 },
                 result
             );
@@ -103,7 +103,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 {
                     @"c:\a.gif",
                     @"c:\a\b.gif",
-                    @"c:\a\a\c.gif",
+                    @"c:\a\a\c.gif"
                 },
                 result
             );
@@ -136,7 +136,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 {
                     @"c:\a.there.are.dots.in.this.filename.gif",
                     @"c:\a\b.gif",
-                    @"c:\a\a\c.gif",
+                    @"c:\a\a\c.gif"
                 },
                 result
             );
@@ -163,14 +163,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(@"c:\", "*.gif", SearchOption.TopDirectoryOnly);
 
             // Assert
-            CollectionAssert.AreEqual
-            (
-                new[]
-                {
-                    @"c:\a.gif",
-                },
-                result
-            );
+            CollectionAssert.AreEqual(new[] { @"c:\a.gif" }, result);
         }
 
         [Test]
@@ -500,6 +493,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_Exists_ShouldReturnTrueForFolderContainingFileAddedToMockFileSystem()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(@"c:\foo\bar.txt", new MockFileData("Demo text content"));
+
+            // Act
+            var result = fileSystem.Directory.Exists(@"c:\foo\");
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
         public void MockDirectory_CreateDirectory_ShouldCreateFolderInMemoryFileSystem()
         {
             // Arrange
@@ -724,6 +731,40 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(fileSystem.Directory.Exists(@"B:\folder1\folder2"));
             Assert.IsTrue(fileSystem.File.Exists(@"B:\folder1\file.txt"));
             Assert.IsTrue(fileSystem.File.Exists(@"B:\folder1\folder2\file2.txt"));
+        }
+
+        [Test]
+        public void MockDirectory_GetCurrentDirectory_ShouldReturnValueFromFileSystemConstructor() {
+            const string directory = @"D:\folder1\folder2";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>(), directory);
+            
+            var actual = fileSystem.Directory.GetCurrentDirectory();
+
+            Assert.AreEqual(directory, actual);
+        }
+
+      
+        [Test]
+        public void MockDirectory_GetCurrentDirectory_ShouldReturnDefaultPathWhenNotSet() {
+            const string directory = @"C:\Foo\Bar";
+            var fileSystem = new MockFileSystem();
+            
+            var actual = fileSystem.Directory.GetCurrentDirectory();
+
+            Assert.AreEqual(directory, actual);
+        }
+
+        [Test]
+        public void MockDirectory_SetCurrentDirectory_ShouldChangeCurrentDirectory() {
+          const string directory = @"D:\folder1\folder2";
+          var fileSystem = new MockFileSystem();
+          
+          // Precondition
+          Assert.AreNotEqual(directory, fileSystem.Directory.GetCurrentDirectory());
+
+          fileSystem.Directory.SetCurrentDirectory(directory);
+
+          Assert.AreEqual(directory, fileSystem.Directory.GetCurrentDirectory());
         }
     }
 }

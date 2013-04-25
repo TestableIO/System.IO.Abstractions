@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.AccessControl;
 
@@ -12,7 +13,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath)
         {
-            if (!directoryPath.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!directoryPath.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 directoryPath += Path.DirectorySeparatorChar;
 
             this.mockFileDataAccessor = mockFileDataAccessor;
@@ -57,7 +58,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string Extension
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get
+            {
+                // System.IO.Path.GetExtension does only string manipulation,
+                // so it's safe to delegate.
+                return Path.GetExtension(this.directoryPath);
+            }
         }
 
         public override string FullName
@@ -189,7 +195,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void MoveTo(string destDirName)
         {
-            if (!destDirName.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!destDirName.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 destDirName += Path.DirectorySeparatorChar;
 
             mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
