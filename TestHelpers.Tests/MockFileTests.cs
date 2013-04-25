@@ -554,20 +554,30 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenSourceIsNull() 
+        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenSourceIsNull_Message() 
         {
             const string destFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentNullException>(()=>fileSystem.File.Move(null, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("Value can not be null.\r\nParameter name: sourceFileName"));
+            Assert.That(exception.Message, Is.StringStarting("Value can not be null."));
+        }
+
+        [Test]
+        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenSourceIsNull_ParamName() {
+            const string destFilePath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(null, destFilePath));
+
+            Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
         }
 
         [TestCase('>')]
         [TestCase('<')]
         [TestCase('"')]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceContainsInvalidChars(char invalidChar) 
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceContainsInvalidChars_Message(char invalidChar) 
         {
             var sourceFilePath = @"c:\something\demo.txt" + invalidChar;
             const string destFilePath = @"c:\something\demo.txt";
@@ -575,13 +585,26 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("Illegal characters in path.\r\nParameter name: sourceFileName"));
+            Assert.That(exception.Message, Is.StringStarting("Illegal characters in path."));
         }
 
         [TestCase('>')]
         [TestCase('<')]
         [TestCase('"')]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetContainsInvalidChars(char invalidChar) 
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceContainsInvalidChars_ParamName(char invalidChar) {
+            var sourceFilePath = @"c:\something\demo.txt" + invalidChar;
+            const string destFilePath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+
+            Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
+        }
+
+        [TestCase('>')]
+        [TestCase('<')]
+        [TestCase('"')]
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetContainsInvalidChars_Message(char invalidChar) 
         {
             const string sourceFilePath = @"c:\something\demo.txt";
             var destFilePath = @"c:\something\demo.txt" + invalidChar;
@@ -589,20 +612,42 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("Illegal characters in path.\r\nParameter name: destFileName"));
+            Assert.That(exception.Message, Is.StringStarting("Illegal characters in path."));
+        }
+
+        [TestCase('>')]
+        [TestCase('<')]
+        [TestCase('"')]
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetContainsInvalidChars_ParamName(char invalidChar) {
+            const string sourceFilePath = @"c:\something\demo.txt";
+            var destFilePath = @"c:\something\demo.txt" + invalidChar;
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+
+            Assert.That(exception.ParamName, Is.EqualTo("destFileName"));
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsEmpty() 
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsEmpty_Message() 
         {
             const string destFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(string.Empty, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("An empty file name is invalid.\r\nParameter name: sourceFileName"));
+            Assert.That(exception.Message, Is.StringStarting("An empty file name is invalid."));
         }
 
+        [Test]
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsEmpty_ParamName() {
+            const string destFilePath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(string.Empty, destFilePath));
+
+            Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
+        }
         [Test]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsStringOfBlanks() 
         {
@@ -616,14 +661,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenTargetIsNull() 
+        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenTargetIsNull_Message() 
         {
             const string sourceFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(sourceFilePath, null));
 
-            Assert.That(exception.Message, Is.EqualTo("Value can not be null.\r\nParameter name: destFileName"));
+            Assert.That(exception.Message, Is.StringStarting("Value can not be null."));
+        }
+
+        [Test]
+        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenTargetIsNull_ParamName() {
+            const string sourceFilePath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(sourceFilePath, null));
+
+            Assert.That(exception.ParamName, Is.EqualTo("destFileName"));
         }
 
         [Test]
@@ -639,18 +694,27 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsEmpty() 
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsEmpty_Message() 
         {
             const string sourceFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, string.Empty));
 
-            Assert.That(exception.Message, Is.EqualTo("An empty file name is invalid.\r\nParameter name: destFileName"));
+            Assert.That(exception.Message, Is.StringStarting("An empty file name is invalid."));
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist() 
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsEmpty_ParamName() {
+            const string sourceFilePath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, string.Empty));
+
+            Assert.That(exception.ParamName, Is.EqualTo("destFileName"));
+        }
+        [Test]
+        public void MockFile_Move_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist_Message() 
         {
             const string sourceFilePath = @"c:\something\demo.txt";
             const string destFilePath = @"c:\something\demo1.txt";
@@ -659,6 +723,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var exception = Assert.Throws<FileNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
             Assert.That(exception.Message, Is.EqualTo("The file \"c:\\something\\demo.txt\" could not be found."));
+        }
+
+        [Test]
+        public void MockFile_Move_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist_FileName() {
+            const string sourceFilePath = @"c:\something\demo.txt";
+            const string destFilePath = @"c:\something\demo1.txt";
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<FileNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+
+            Assert.That(exception.FileName, Is.EqualTo(@"c:\something\demo.txt"));
         }
 
         [Test]
