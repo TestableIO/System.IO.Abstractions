@@ -740,7 +740,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_GetCurrentDirectory_ShouldReturnDefaultPathWhenNotSet() {
             string directory = @"C:\Foo\Bar";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
             
             var actual = fileSystem.Directory.GetCurrentDirectory();
 
@@ -750,7 +750,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_SetCurrentDirectory_ShouldChangeCurrentDirectory() {
           string directory = @"D:\folder1\folder2";
-          var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+          var fileSystem = new MockFileSystem();
           
           // Precondition
           Assert.AreNotEqual(directory, fileSystem.Directory.GetCurrentDirectory());

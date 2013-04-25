@@ -200,7 +200,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var expected = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc);
             const string path = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
             var file = new MockFile(fileSystem);
 
             var actual = getDateValue(file, path);
@@ -339,7 +339,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Exists_ShouldReturnFalseForNullPath()
         {
-            var file = new MockFile(new MockFileSystem(new Dictionary<string, MockFileData>()));
+            var file = new MockFile(new MockFileSystem());
 
             Assert.That(file.Exists(null), Is.False);
         }
@@ -454,7 +454,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             const string path = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
             var fileContent = new byte[] { 1, 2, 3, 4 };
             
             // Act
@@ -471,7 +471,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             const string path = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
             var fileContent = new byte[] { 1, 2, 3, 4 };
 
             // Act
@@ -489,7 +489,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             const string path = @"c:\something\demo.txt";
             const string fileContent = "Hello there!";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
 
             // Act
             fileSystem.File.WriteAllText(path, fileContent);
@@ -507,7 +507,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Arrange
             const string path = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
 
             // Act
             fileSystem.File.WriteAllText(path, "foo");
@@ -557,7 +557,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenSourceIsNull() 
         {
             const string destFilePath = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentNullException>(()=>fileSystem.File.Move(null, destFilePath));
 
@@ -571,7 +571,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var sourceFilePath = @"c:\something\demo.txt" + invalidChar;
             const string destFilePath = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
@@ -585,7 +585,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             const string sourceFilePath = @"c:\something\demo.txt";
             var destFilePath = @"c:\something\demo.txt" + invalidChar;
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
@@ -596,7 +596,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsEmpty() 
         {
             const string destFilePath = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(string.Empty, destFilePath));
 
@@ -608,7 +608,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             const string sourceFilePath = "   ";
             const string destFilePath = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
@@ -619,7 +619,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenTargetIsNull() 
         {
             const string sourceFilePath = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(sourceFilePath, null));
 
@@ -631,7 +631,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             const string sourceFilePath = @"c:\something\demo.txt";
             const string destFilePath = "   ";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
@@ -642,7 +642,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsEmpty() 
         {
             const string sourceFilePath = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, string.Empty));
 
@@ -654,7 +654,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             const string sourceFilePath = @"c:\something\demo.txt";
             const string destFilePath = @"c:\something\demo1.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<FileNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
@@ -665,7 +665,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_OpenWrite_ShouldCreateNewFiles() {
             const string filePath = @"c:\something\demo.txt";
             const string fileContent = "this is some content";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
 
             var bytes = new UTF8Encoding(true).GetBytes(fileContent);
             var stream = fileSystem.File.OpenWrite(filePath);
@@ -766,7 +766,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void Mockfile_Create_ShouldCreateNewStream()
         {
             const string fullPath = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
 
             var sut = new MockFile(fileSystem);
 
@@ -781,7 +781,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void Mockfile_Create_CanWriteToNewStream()
         {
             const string fullPath = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
             var data = new UTF8Encoding(false).GetBytes("Test string");
 
             var sut = new MockFile(fileSystem);
@@ -800,7 +800,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void Mockfile_Create_OverwritesExistingFile()
         {
             const string path = @"c:\some\file.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
 
             var mockFile = new MockFile(fileSystem);
 
@@ -851,7 +851,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_Delete_No_File_Does_Nothing()
         {
             const string filePath = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
             fileSystem.File.Delete(filePath);
         }
     }

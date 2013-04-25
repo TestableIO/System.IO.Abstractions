@@ -14,6 +14,8 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly PathBase path;
         readonly IDirectoryInfoFactory directoryInfoFactory;
 
+        public MockFileSystem() : this(new Dictionary<string, MockFileData>(), @"C:\Foo\Bar") { }
+
         public MockFileSystem(IDictionary<string, MockFileData> files) : this(files, @"C:\Foo\Bar") { }
 
         public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory)
