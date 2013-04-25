@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileSystemTests.cs" />
+    <Compile Include="MockDirectoryInfoTests.cs" />
     <Compile Include="MockDirectoryTests.cs" />
     <Compile Include="MockFileInfoFactoryTests.cs" />
     <Compile Include="MockFileInfoTests.cs" />
