@@ -161,7 +161,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
 
             if (sourceFile == null)
-                throw new FileNotFoundException(string.Format("The file \"{0}\" could not be found.", sourceFileName));
+                throw new FileNotFoundException(string.Format("The file \"{0}\" could not be found.", sourceFileName), sourceFileName);
 
             mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile.Contents));
             mockFileDataAccessor.RemoveFile(sourceFileName);
