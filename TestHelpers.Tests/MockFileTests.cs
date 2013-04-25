@@ -560,7 +560,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentNullException>(()=>fileSystem.File.Move(null, DestFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("Value can not be null.\r\nParametername: sourceFileName"));
+            Assert.That(exception.Message, Is.EqualTo("Value can not be null.\r\nParameter name: sourceFileName"));
         }
 
         [TestCase('>')]
@@ -574,7 +574,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, DestFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("Illegal characters in path.\r\nParametername: sourceFileName"));
+            Assert.That(exception.Message, Is.EqualTo("Illegal characters in path.\r\nParameter name: sourceFileName"));
         }
 
         [TestCase('>')]
@@ -588,7 +588,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(SourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("Illegal characters in path.\r\nParametername: destFileName"));
+            Assert.That(exception.Message, Is.EqualTo("Illegal characters in path.\r\nParameter name: destFileName"));
         }
 
         [Test]
@@ -599,7 +599,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(string.Empty, DestFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("An empty file name is invalid.\r\nParametername: sourceFileName"));
+            Assert.That(exception.Message, Is.EqualTo("An empty file name is invalid.\r\nParameter name: sourceFileName"));
         }
 
         [Test]
@@ -622,7 +622,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(SourceFilePath, null));
 
-            Assert.That(exception.Message, Is.EqualTo("Value can not be null.\r\nParametername: destFileName"));
+            Assert.That(exception.Message, Is.EqualTo("Value can not be null.\r\nParameter name: destFileName"));
         }
 
         [Test]
@@ -645,7 +645,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(SourceFilePath, string.Empty));
 
-            Assert.That(exception.Message, Is.EqualTo("An empty file name is invalid.\r\nParametername: destFileName"));
+            Assert.That(exception.Message, Is.EqualTo("An empty file name is invalid.\r\nParameter name: destFileName"));
         }
 
         [Test]
