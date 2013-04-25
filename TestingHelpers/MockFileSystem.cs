@@ -17,24 +17,15 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = @"C:\Foo\Bar")
         {
+            this.files = new Dictionary<string, MockFileData>(StringComparer.InvariantCultureIgnoreCase);
             file = new MockFile(this);
             directory = new MockDirectory(this, file, currentDirectory);
             fileInfoFactory = new MockFileInfoFactory(this);
             pathField = new MockPath();
             directoryInfoFactory = new MockDirectoryInfoFactory(this);
 
-            //For each mock file add a file to the files dictionary
-            //Also add a file entry for all directories leading up to this file
-            this.files = new Dictionary<string, MockFileData>(StringComparer.InvariantCultureIgnoreCase);
             foreach (var entry in files)
-            {
-                var directoryPath = Path.GetDirectoryName(entry.Key);
-                if (!directory.Exists(directoryPath))
-                    directory.CreateDirectory(directoryPath);
-
-                if (!file.Exists(entry.Key))
-                    this.files.Add(entry.Key, entry.Value);
-            }
+                AddFile(entry.Key, entry.Value);
         }
 
         public FileBase File
@@ -79,7 +70,20 @@ namespace System.IO.Abstractions.TestingHelpers
             if (FileExists(path) && (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
                 throw new UnauthorizedAccessException(string.Format("Access to the path '{0}' is denied.", path));
 
+            var directoryPath = Path.GetDirectoryName(path);
+            if (!directory.Exists(directoryPath))
+                directory.CreateDirectory(directoryPath);
+
             files[fixedPath] = mockFile;
+        }
+
+        public void AddDirectory(string path)
+        {
+            var fixedPath = FixPath(path);
+            if (FileExists(path) && (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                throw new UnauthorizedAccessException(string.Format("Access to the path '{0}' is denied.", path));
+
+            files[fixedPath] = new MockDirectoryData();
         }
 
         public void RemoveFile(string path)

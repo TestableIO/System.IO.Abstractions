@@ -29,7 +29,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             path = EnsurePathEndsWithDirectorySeparator(path);
             if (!Exists(path))
-                mockFileDataAccessor.AddFile(path, new MockDirectoryData());
+                mockFileDataAccessor.AddDirectory(path);
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
 
             var parent = GetParent(path);

@@ -5,6 +5,7 @@ namespace System.IO.Abstractions.TestingHelpers
     public interface IMockFileDataAccessor {
         MockFileData GetFile(string path, bool returnNullObject = false);
         void AddFile(string path, MockFileData mockFile);
+        void AddDirectory(string path);
         void RemoveFile(string path);
         bool FileExists(string path);
         IEnumerable<string> AllPaths { get; }

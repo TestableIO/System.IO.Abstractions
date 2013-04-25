@@ -493,6 +493,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_Exists_ShouldReturnTrueForFolderContainingFileAddedToMockFileSystem()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(@"c:\foo\bar.txt", new MockFileData("Demo text content"));
+
+            // Act
+            var result = fileSystem.Directory.Exists(@"c:\foo\");
+
+            // Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
         public void MockDirectory_CreateDirectory_ShouldCreateFolderInMemoryFileSystem()
         {
             // Arrange
