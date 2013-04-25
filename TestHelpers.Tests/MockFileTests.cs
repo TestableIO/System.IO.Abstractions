@@ -336,6 +336,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(result);
         }
 
+        [Test]
         public void MockFile_Exists_ShouldReturnFalseForNullPath()
         {
             var file = new MockFile(new MockFileSystem(new Dictionary<string, MockFileData>()));
