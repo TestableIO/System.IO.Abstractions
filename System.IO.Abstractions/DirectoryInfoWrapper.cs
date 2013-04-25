@@ -121,42 +121,42 @@ namespace System.IO.Abstractions
 
         public override DirectoryInfoBase[] GetDirectories()
         {
-            return instance.GetDirectories().Wrap();
+            return instance.GetDirectories().WrapDirectories();
         }
 
         public override DirectoryInfoBase[] GetDirectories(string searchPattern)
         {
-            return instance.GetDirectories(searchPattern).Wrap();
+            return instance.GetDirectories(searchPattern).WrapDirectories();
         }
 
         public override DirectoryInfoBase[] GetDirectories(string searchPattern, SearchOption searchOption)
         {
-            return instance.GetDirectories(searchPattern, searchOption).Wrap();
+            return instance.GetDirectories(searchPattern, searchOption).WrapDirectories();
         }
 
         public override FileInfoBase[] GetFiles()
         {
-            return instance.GetFiles().Wrap();
+            return instance.GetFiles().WrapFiles();
         }
 
         public override FileInfoBase[] GetFiles(string searchPattern)
         {
-            return instance.GetFiles(searchPattern).Wrap();
+            return instance.GetFiles(searchPattern).WrapFiles();
         }
 
         public override FileInfoBase[] GetFiles(string searchPattern, SearchOption searchOption)
         {
-            return instance.GetFiles(searchPattern, searchOption).Wrap();
+            return instance.GetFiles(searchPattern, searchOption).WrapFiles();
         }
 
         public override FileSystemInfoBase[] GetFileSystemInfos()
         {
-            return instance.GetFileSystemInfos().Wrap();
+            return instance.GetFileSystemInfos().WrapFileSystemInfos();
         }
 
         public override FileSystemInfoBase[] GetFileSystemInfos(string searchPattern)
         {
-            return instance.GetFileSystemInfos(searchPattern).Wrap();
+            return instance.GetFileSystemInfos(searchPattern).WrapFileSystemInfos();
         }
 
         public override void MoveTo(string destDirName)

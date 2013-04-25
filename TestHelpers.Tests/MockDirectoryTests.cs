@@ -70,7 +70,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 {
                     @"c:\a\a.txt",
                     @"c:\a\b.txt",
-                    @"c:\a\c.txt",
+                    @"c:\a\c.txt"
                 },
                 result
             );
@@ -103,7 +103,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 {
                     @"c:\a.gif",
                     @"c:\a\b.gif",
-                    @"c:\a\a\c.gif",
+                    @"c:\a\a\c.gif"
                 },
                 result
             );
@@ -136,7 +136,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 {
                     @"c:\a.there.are.dots.in.this.filename.gif",
                     @"c:\a\b.gif",
-                    @"c:\a\a\c.gif",
+                    @"c:\a\a\c.gif"
                 },
                 result
             );
@@ -163,14 +163,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(@"c:\", "*.gif", SearchOption.TopDirectoryOnly);
 
             // Assert
-            CollectionAssert.AreEqual
-            (
-                new[]
-                {
-                    @"c:\a.gif",
-                },
-                result
-            );
+            CollectionAssert.AreEqual(new[] { @"c:\a.gif" }, result);
         }
 
         [Test]
@@ -728,7 +721,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         public void MockDirectory_GetCurrentDirectory_ShouldReturnValueFromFileSystemConstructor() {
-            string directory = @"D:\folder1\folder2";
+            const string directory = @"D:\folder1\folder2";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>(), directory);
             
             var actual = fileSystem.Directory.GetCurrentDirectory();
@@ -739,7 +732,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
       
         [Test]
         public void MockDirectory_GetCurrentDirectory_ShouldReturnDefaultPathWhenNotSet() {
-            string directory = @"C:\Foo\Bar";
+            const string directory = @"C:\Foo\Bar";
             var fileSystem = new MockFileSystem();
             
             var actual = fileSystem.Directory.GetCurrentDirectory();
@@ -749,7 +742,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         public void MockDirectory_SetCurrentDirectory_ShouldChangeCurrentDirectory() {
-          string directory = @"D:\folder1\folder2";
+          const string directory = @"D:\folder1\folder2";
           var fileSystem = new MockFileSystem();
           
           // Precondition

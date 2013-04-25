@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -11,19 +10,17 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly FileBase file;
         readonly DirectoryBase directory;
         readonly IFileInfoFactory fileInfoFactory;
-        readonly PathBase path;
+        readonly PathBase pathField;
         readonly IDirectoryInfoFactory directoryInfoFactory;
 
-        public MockFileSystem() : this(new Dictionary<string, MockFileData>(), @"C:\Foo\Bar") { }
+        public MockFileSystem() : this(new Dictionary<string, MockFileData>()) { }
 
-        public MockFileSystem(IDictionary<string, MockFileData> files) : this(files, @"C:\Foo\Bar") { }
-
-        public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory)
+        public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = @"C:\Foo\Bar")
         {
             file = new MockFile(this);
             directory = new MockDirectory(this, file, currentDirectory);
             fileInfoFactory = new MockFileInfoFactory(this);
-            path = new MockPath();
+            pathField = new MockPath();
             directoryInfoFactory = new MockDirectoryInfoFactory(this);
 
             //For each mock file add a file to the files dictionary
@@ -57,7 +54,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public PathBase Path
         {
-            get { return path; }
+            get { return pathField; }
         }
 
         public IDirectoryInfoFactory DirectoryInfo

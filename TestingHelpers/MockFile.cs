@@ -13,7 +13,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockFile(IMockFileDataAccessor mockFileDataAccessor)
         {
             this.mockFileDataAccessor = mockFileDataAccessor;
-            this.mockPath = new MockPath();
+            mockPath = new MockPath();
         }
 
         public override void AppendAllText(string path, string contents)

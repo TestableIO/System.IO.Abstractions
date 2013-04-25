@@ -111,7 +111,7 @@ namespace System.IO.Abstractions.TestingHelpers
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 path += Path.DirectorySeparatorChar;
 
-            var dirs = getFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
+            var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
             return dirs.Where(p => p != path).ToArray();
         }
 
@@ -134,10 +134,10 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
         {
-            return getFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
+            return GetFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
         }
 
-        public string[] getFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
+        static string[] GetFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
         {
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 path += Path.DirectorySeparatorChar;

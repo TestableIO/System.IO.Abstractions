@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -7,16 +6,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     {
         const string TestPath = "C:\\test\\test.bmp";
 
-        private MockPath SetupMockPath()
-        {
-            return new MockPath();
-        }
-
         [Test]
         public void ChangeExtension_ExtensionNoPeriod_PeriodAdded()
         {
             //Arrange
-            var mockPath = SetupMockPath();
+            var mockPath = new MockPath();
 
             //Act
             var result = mockPath.ChangeExtension(TestPath, "doc");
@@ -29,7 +23,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void Combine_SentTwoPaths_Combines()
         {
             //Arrange
-            var mockPath = SetupMockPath();
+            var mockPath = new MockPath();
 
             //Act
             var result = mockPath.Combine("C:\\test", "test.bmp");
@@ -42,7 +36,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void GetDirectoryName_SentPath_ReturnsDirectory()
         {
             //Arrange
-            var mockPath = SetupMockPath();
+            var mockPath = new MockPath();
 
             //Act
             var result = mockPath.GetDirectoryName(TestPath);
@@ -55,7 +49,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void GetExtension_SendInPath_ReturnsExtension()
         {
             //Arrange
-            var mockPath = SetupMockPath();
+            var mockPath = new MockPath();
 
             //Act
             var result = mockPath.GetExtension(TestPath);
@@ -68,7 +62,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void GetFileName_SendInPath_ReturnsFilename()
         {
             //Arrange
-            var mockPath = SetupMockPath();
+            var mockPath = new MockPath();
 
             //Act
             var result = mockPath.GetFileName(TestPath);
@@ -81,7 +75,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void GetFileNameWithoutExtension_SendInPath_ReturnsFileNameNoExt()
         {
             //Arrange
-            var mockPath = SetupMockPath();
+            var mockPath = new MockPath();
 
             //Act
             var result = mockPath.GetFileNameWithoutExtension(TestPath);
@@ -94,7 +88,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void GetFullPath_SendInPath_ReturnsFullPath()
         {
             //Arrange
-            var mockPath = SetupMockPath();
+            var mockPath = new MockPath();
 
             //Act
             var result = mockPath.GetFullPath(TestPath);
@@ -107,7 +101,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void GetInvalidFileNameChars_Called_ReturnsChars()
         {
             //Arrange
-            var mockPath = SetupMockPath();
+            var mockPath = new MockPath();
 
             //Act
             var result = mockPath.GetInvalidFileNameChars();
@@ -120,7 +114,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void GetInvalidPathChars_Called_ReturnsChars()
         {
             //Arrange
-            var mockPath = SetupMockPath();
+            var mockPath = new MockPath();
 
             //Act
             var result = mockPath.GetInvalidPathChars();
@@ -133,7 +127,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void GetPathRoot_SendInPath_ReturnsRoot()
         {
             //Arrange
-            var mockPath = SetupMockPath();
+            var mockPath = new MockPath();
 
             //Act
             var result = mockPath.GetPathRoot(TestPath);
@@ -146,7 +140,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void GetRandomFileName_Called_ReturnsStringLengthGreaterThanZero()
         {
             //Arrange
-            var mockPath = SetupMockPath();
+            var mockPath = new MockPath();
 
             //Act
             var result = mockPath.GetRandomFileName();
@@ -159,7 +153,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void GetTempFileName_Called_ReturnsStringLengthGreaterThanZero()
         {
             //Arrange
-            var mockPath = SetupMockPath();
+            var mockPath = new MockPath();
 
             //Act
             var result = mockPath.GetTempFileName();
@@ -172,7 +166,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void GetTempPath_Called_ReturnsStringLengthGreaterThanZero()
         {
             //Arrange
-            var mockPath = SetupMockPath();
+            var mockPath = new MockPath();
 
             //Act
             var result = mockPath.GetTempPath();
@@ -185,7 +179,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void HasExtension_PathSentIn_DeterminesExtension()
         {
             //Arrange
-            var mockPath = SetupMockPath();
+            var mockPath = new MockPath();
 
             //Act
             var result = mockPath.HasExtension(TestPath);
@@ -198,7 +192,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void IsPathRooted_PathSentIn_DeterminesPathExists()
         {
             //Arrange
-            var mockPath = SetupMockPath();
+            var mockPath = new MockPath();
 
             //Act
             var result = mockPath.IsPathRooted(TestPath);
