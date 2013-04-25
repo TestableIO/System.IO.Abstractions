@@ -13,7 +13,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockFile(IMockFileDataAccessor mockFileDataAccessor)
         {
             this.mockFileDataAccessor = mockFileDataAccessor;
-            mockPath = new MockPath();
+            mockPath = new MockPath(mockFileDataAccessor);
         }
 
         public override void AppendAllText(string path, string contents)
@@ -62,9 +62,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream Create(string path)
         {
-	        mockFileDataAccessor.AddFile(path, new MockFileData(new byte[0]));
-	        var stream = OpenWrite(path);
-	        return stream;
+            mockFileDataAccessor.AddFile(path, new MockFileData(new byte[0]));
+            var stream = OpenWrite(path);
+            return stream;
         }
 
         public override Stream Create(string path, int bufferSize)
@@ -94,7 +94,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Delete(string path)
         {
-	        mockFileDataAccessor.RemoveFile(path);
+            mockFileDataAccessor.RemoveFile(path);
         }
 
         public override void Encrypt(string path)
@@ -181,7 +181,30 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream Open(string path, FileMode mode)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            bool exists = mockFileDataAccessor.FileExists(path);
+
+            if (mode == FileMode.CreateNew && exists)
+                throw new IOException(string.Format("The file '{0}' already exists.", path));
+
+            if ((mode == FileMode.Open || mode == FileMode.Truncate) && !exists)
+                throw new FileNotFoundException(path);
+
+            if (!exists || mode == FileMode.CreateNew)
+                return Create(path);
+
+            if (mode == FileMode.Create || mode == FileMode.Truncate)
+            {
+                Delete(path);
+                return Create(path);
+            }
+
+            var length = mockFileDataAccessor.GetFile(path).Contents.Length;
+            var stream = OpenWrite(path);
+
+            if (mode == FileMode.Append)
+                stream.Seek(length, SeekOrigin.Begin);
+
+            return stream;
         }
 
         public override Stream Open(string path, FileMode mode, FileAccess access)

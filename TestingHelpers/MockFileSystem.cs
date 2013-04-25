@@ -18,14 +18,17 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = @"C:\Foo\Bar")
         {
             this.files = new Dictionary<string, MockFileData>(StringComparer.InvariantCultureIgnoreCase);
+            pathField = new MockPath(this);
             file = new MockFile(this);
-            directory = new MockDirectory(this, file, currentDirectory);
+            directory = new MockDirectory(this, file, FixPath(currentDirectory));
             fileInfoFactory = new MockFileInfoFactory(this);
-            pathField = new MockPath();
             directoryInfoFactory = new MockDirectoryInfoFactory(this);
 
-            foreach (var entry in files)
-                AddFile(entry.Key, entry.Value);
+            if (files != null)
+            {
+                foreach (var entry in files)
+                    AddFile(entry.Key, entry.Value);
+            }
         }
 
         public FileBase File
@@ -55,41 +58,55 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string FixPath(string path)
         {
-            return path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            var pathSeparatorFixed = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            return pathField.GetFullPath(pathSeparatorFixed);
         }
 
         public MockFileData GetFile(string path, bool returnNullObject = false) 
         {
             path = FixPath(path);
-            return FileExists(path) ? files[path] : returnNullObject ? MockFileData.NullObject : null;
+
+            lock (files)
+                return FileExists(path) ? files[path] : returnNullObject ? MockFileData.NullObject : null;
         }
   
         public void AddFile(string path, MockFileData mockFile)
         {
             var fixedPath = FixPath(path);
-            if (FileExists(path) && (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+            if (FileExists(fixedPath) && (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
                 throw new UnauthorizedAccessException(string.Format("Access to the path '{0}' is denied.", path));
 
-            var directoryPath = Path.GetDirectoryName(path);
-            if (!directory.Exists(directoryPath))
-                directory.CreateDirectory(directoryPath);
+            var directoryPath = Path.GetDirectoryName(fixedPath);
 
-            files[fixedPath] = mockFile;
+            lock (files)
+            {
+                if (!directory.Exists(directoryPath))// && !string.IsNullOrEmpty(directoryPath))
+                    directory.CreateDirectory(directoryPath);
+
+                files[fixedPath] = mockFile;
+            }
         }
 
         public void AddDirectory(string path)
         {
             var fixedPath = FixPath(path);
-            if (FileExists(path) && (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-                throw new UnauthorizedAccessException(string.Format("Access to the path '{0}' is denied.", path));
 
-            files[fixedPath] = new MockDirectoryData();
+            lock (files)
+            {
+                if (FileExists(path) &&
+                    (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                    throw new UnauthorizedAccessException(string.Format("Access to the path '{0}' is denied.", path));
+
+                files[fixedPath] = new MockDirectoryData();
+            }
         }
 
         public void RemoveFile(string path)
         {
             path = FixPath(path);
-            files.Remove(path);
+
+            lock (files)
+                files.Remove(path);
         }
 
         public bool FileExists(string path)
@@ -98,20 +115,36 @@ namespace System.IO.Abstractions.TestingHelpers
                 return false;
 
             path = FixPath(path);
-            return files.ContainsKey(path);
+
+            lock (files)
+                return files.ContainsKey(path);
         }
 
         public IEnumerable<string> AllPaths
         {
-            get { return files.Keys; }
+            get
+            {
+                lock (files)
+                    return files.Keys.ToArray();
+            }
         }
 
-        public IEnumerable<string> AllFiles {
-            get { return files.Where(f => !f.Value.IsDirectory).Select(f => f.Key); }
+        public IEnumerable<string> AllFiles
+        {
+            get
+            {
+                lock (file)
+                    return files.Where(f => !f.Value.IsDirectory).Select(f => f.Key).ToArray();
+            }
         }
 
-        public IEnumerable<string> AllDirectories {
-            get { return files.Where(f => f.Value.IsDirectory).Select(f => f.Key); }
+        public IEnumerable<string> AllDirectories
+        {
+            get
+            {
+                lock (files)
+                    return files.Where(f => f.Value.IsDirectory).Select(f => f.Key).ToArray();
+            }
         }
     }
 }

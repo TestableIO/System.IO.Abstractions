@@ -14,7 +14,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string currentDirectory;
 
-        public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory) {
+        public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory) 
+        {
             this.currentDirectory = currentDirectory;
             this.mockFileDataAccessor = mockFileDataAccessor;
             this.fileBase = fileBase;
@@ -27,7 +28,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
-            path = EnsurePathEndsWithDirectorySeparator(path);
+            path = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(path));
             if (!Exists(path))
                 mockFileDataAccessor.AddDirectory(path);
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
@@ -46,7 +47,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Delete(string path, bool recursive)
         {
-            path = EnsurePathEndsWithDirectorySeparator(path);
+            path = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(path));
             var affectedPaths = mockFileDataAccessor
                 .AllPaths
                 .Where(p => p.StartsWith(path, StringComparison.InvariantCultureIgnoreCase))
@@ -68,6 +69,7 @@ namespace System.IO.Abstractions.TestingHelpers
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 path += Path.DirectorySeparatorChar;
 
+            path = mockFileDataAccessor.Path.GetFullPath(path);
             return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.InvariantCultureIgnoreCase));
         }
 
@@ -137,10 +139,12 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
         }
 
-        static string[] GetFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
+        private string[] GetFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
         {
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 path += Path.DirectorySeparatorChar;
+
+            path = mockFileDataAccessor.Path.GetFullPath(path);
 
             const string allDirectoriesPattern = @"([\w\d\s-\.]*\\)*";
             
