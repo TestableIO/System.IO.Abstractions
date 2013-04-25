@@ -3,7 +3,7 @@
 namespace System.IO.Abstractions.TestingHelpers
 {
     public interface IMockFileDataAccessor {
-        MockFileData GetFile(string path);
+        MockFileData GetFile(string path, bool returnNullObject = false);
         void AddFile(string path, MockFileData mockFile);
         void RemoveFile(string path);
         bool FileExists(string path);

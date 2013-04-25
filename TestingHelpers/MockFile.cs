@@ -1,4 +1,5 @@
-﻿using System.Security.AccessControl;
+﻿using System.Diagnostics;
+using System.Security.AccessControl;
 using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -7,10 +8,12 @@ namespace System.IO.Abstractions.TestingHelpers
     public class MockFile : FileBase
     {
         readonly IMockFileDataAccessor mockFileDataAccessor;
+        readonly MockPath mockPath;
 
         public MockFile(IMockFileDataAccessor mockFileDataAccessor)
         {
             this.mockFileDataAccessor = mockFileDataAccessor;
+            this.mockPath = new MockPath();
         }
 
         public override void AppendAllText(string path, string contents)
@@ -121,40 +124,59 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime GetCreationTime(string path)
         {
-            return mockFileDataAccessor.GetFile(path).CreationTime.LocalDateTime;
+            return mockFileDataAccessor.GetFile(path, true).CreationTime.LocalDateTime;
         }
 
         public override DateTime GetCreationTimeUtc(string path)
         {
-            return mockFileDataAccessor.GetFile(path).CreationTime.UtcDateTime;
+            return mockFileDataAccessor.GetFile(path, true).CreationTime.UtcDateTime;
         }
 
         public override DateTime GetLastAccessTime(string path)
         {
-            return mockFileDataAccessor.GetFile(path).LastAccessTime.LocalDateTime;
+            return mockFileDataAccessor.GetFile(path, true).LastAccessTime.LocalDateTime;
         }
 
         public override DateTime GetLastAccessTimeUtc(string path)
         {
-            return mockFileDataAccessor.GetFile(path).LastAccessTime.UtcDateTime;
+            return mockFileDataAccessor.GetFile(path, true).LastAccessTime.UtcDateTime;
         }
 
-        public override DateTime GetLastWriteTime(string path)
-        {
-            return mockFileDataAccessor.GetFile(path).LastWriteTime.LocalDateTime;
+        public override DateTime GetLastWriteTime(string path) {
+            return mockFileDataAccessor.GetFile(path, true).LastWriteTime.LocalDateTime;
         }
 
         public override DateTime GetLastWriteTimeUtc(string path)
         {
-            return mockFileDataAccessor.GetFile(path).LastWriteTime.UtcDateTime;
+            return mockFileDataAccessor.GetFile(path, true).LastWriteTime.UtcDateTime;
         }
 
-        public override void Move(string sourceFileName, string destFileName)
-        {
+        public override void Move(string sourceFileName, string destFileName) {
+            ValidateParameter(sourceFileName, "sourceFileName");
+            ValidateParameter(destFileName, "destFileName");
+
+            if (mockFileDataAccessor.GetFile(destFileName) != null)
+                throw new IOException("A file can not be created if it already exists.");
+
             var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
+
+            if (sourceFile == null)
+                throw new FileNotFoundException(string.Format("The file \"{0}\" could not be found.", sourceFileName));
 
             mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile.Contents));
             mockFileDataAccessor.RemoveFile(sourceFileName);
+        }
+        
+        [DebuggerNonUserCode]
+        private void ValidateParameter(string value, string paramName) {
+            if (value == null)
+                throw new ArgumentNullException(paramName, "Value can not be null.");
+            if (value == string.Empty)
+                throw new ArgumentException("An empty file name is invalid.", paramName);
+            if (value.Trim() == "")
+                throw new ArgumentException("The path has an invalid format.");
+            if (value.IndexOfAny(mockPath.GetInvalidPathChars()) > -1)
+                throw new ArgumentException("Illegal characters in path.", paramName);
         }
 
         public override Stream Open(string path, FileMode mode)
