@@ -60,6 +60,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileSystem_AddFile_ShouldRepaceExistingFile()
+        {
+            const string path = @"c:\some\file.txt";
+            const string existingContent = "Existing content";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, new MockFileData(existingContent) }
+            });
+            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(existingContent));
+
+            const string newContent = "New content";
+            fileSystem.AddFile(path, new MockFileData(newContent));
+
+            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(newContent));
+        }
+
+        [Test]
         public void Is_Serializable()
         {
             var file1 = new MockFileData("Demo\r\ntext\ncontent\rvalue");
