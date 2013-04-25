@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.AccessControl;
 
@@ -12,7 +13,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath)
         {
-            if (!directoryPath.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!directoryPath.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 directoryPath += Path.DirectorySeparatorChar;
 
             this.mockFileDataAccessor = mockFileDataAccessor;
@@ -189,7 +190,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void MoveTo(string destDirName)
         {
-            if (!destDirName.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!destDirName.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 destDirName += Path.DirectorySeparatorChar;
 
             mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
