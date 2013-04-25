@@ -416,15 +416,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { @"c:\bar\foo.txt", new MockFileData("Demo text content") }
             });
 
-            // Act
-            try
-            {
-                fileSystem.Directory.Delete(@"c:\baz");
-                Assert.Fail();
-            }
-            catch (DirectoryNotFoundException)
-            {
-            }
+            var ex = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.Directory.Delete(@"c:\baz"));
+
+            Assert.That(ex.Message, Is.EqualTo("c:\\baz\\ does not exist or could not be found."));
         }
 
         [Test]
@@ -437,18 +431,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { @"c:\bar\baz.txt", new MockFileData("Demo text content") }
             });
 
-            // Act
-            try
-            {
-                fileSystem.Directory.Delete(@"c:\bar");
-                Assert.Fail();
-            }
-            catch (IOException ex)
-            {
-                Assert.AreEqual(
-                    @"The directory specified by c:\bar\ is read-only, or recursive is false and c:\bar\ is not an empty directory.",
-                    ex.Message);
-            }
+            var ex = Assert.Throws<IOException>(() => fileSystem.Directory.Delete(@"c:\bar"));
+
+            Assert.That(ex.Message, Is.EqualTo(@"The directory specified by c:\bar\ is read-only, or recursive is false and c:\bar\ is not an empty directory."));
         }
 
         [Test]
