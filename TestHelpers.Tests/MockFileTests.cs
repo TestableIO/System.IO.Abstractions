@@ -336,6 +336,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(result);
         }
 
+        public void MockFile_Exists_ShouldReturnFalseForNullPath()
+        {
+            var file = new MockFile(new MockFileSystem(new Dictionary<string, MockFileData>()));
+            
+            Assert.That(file.Exists(null), Is.False);
+        }
+
         [Test]
         public void MockFile_ReadAllBytes_ShouldReturnOriginalByteData()
         {
@@ -786,6 +793,46 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileData = mockFileData.Contents;
 
             Assert.That(fileData, Is.EqualTo(data));
+        }
+
+        [Test]
+        public void Mockfile_Create_OverwritesExistingFile()
+        {
+            const string path = @"c:\some\file.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            var mockFile = new MockFile(fileSystem);
+
+            // Create a file
+            using (var stream = mockFile.Create(path))
+            {
+                var contents = new UTF8Encoding(false).GetBytes("Test 1");
+                stream.Write(contents, 0, contents.Length);
+            }
+
+            // Create new file that should overwrite existing file
+            var expectedContents = new UTF8Encoding(false).GetBytes("Test 2");
+            using (var stream = mockFile.Create(path))
+            {
+                stream.Write(expectedContents, 0, expectedContents.Length);
+            }
+
+            var actualContents = fileSystem.GetFile(path).Contents;
+
+            Assert.That(actualContents, Is.EqualTo(expectedContents));
+        }
+
+        [Test]
+        public void Mockfile_Create_ThrowsWhenPathIsReadOnly()
+        {
+            const string path = @"c:\something\read-only.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { { path, new MockFileData("Content") } });
+            var mockFile = new MockFile(fileSystem);
+            
+            mockFile.SetAttributes(path, FileAttributes.ReadOnly);
+         
+            var exception =  Assert.Throws<UnauthorizedAccessException>(() => mockFile.Create(path).Close());
+            Assert.That(exception.Message, Is.EqualTo(string.Format("Access to the path '{0}' is denied.", path)));
         }
 
         [Test]
