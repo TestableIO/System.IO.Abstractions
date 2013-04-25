@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Text.RegularExpressions;
@@ -64,7 +65,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists(string path)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 path += Path.DirectorySeparatorChar;
 
             return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.InvariantCultureIgnoreCase));
@@ -107,7 +108,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetDirectories(string path, string searchPattern, SearchOption searchOption)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 path += Path.DirectorySeparatorChar;
 
             var dirs = getFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
@@ -138,7 +139,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public string[] getFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 path += Path.DirectorySeparatorChar;
 
             const string allDirectoriesPattern = @"([\w\d\s-\.]*\\)*";
@@ -278,7 +279,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         static string EnsurePathEndsWithDirectorySeparator(string path)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 path += Path.DirectorySeparatorChar;
             return path;
         }
