@@ -80,7 +80,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             lock (files)
             {
-                if (!directory.Exists(directoryPath))// && !string.IsNullOrEmpty(directoryPath))
+                if (!directory.Exists(directoryPath))
                     directory.CreateDirectory(directoryPath);
 
                 files[fixedPath] = mockFile;
