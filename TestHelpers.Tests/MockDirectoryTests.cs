@@ -11,76 +11,27 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_GetFiles_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
         {
             // Arrange
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            var fileSystem = SetupFileSystem();
+            var expected = new[]
             {
-                { @"c:\a.txt", new MockFileData("Demo text content") },
-                { @"c:\b.txt", new MockFileData("Demo text content") },
-                { @"c:\c.txt", new MockFileData("Demo text content") },
-                { @"c:\a\a.txt", new MockFileData("Demo text content") },
-                { @"c:\a\b.txt", new MockFileData("Demo text content") },
-                { @"c:\a\c.txt", new MockFileData("Demo text content") },
-                { @"c:\a\a\a.txt", new MockFileData("Demo text content") },
-                { @"c:\a\a\b.txt", new MockFileData("Demo text content") },
-                { @"c:\a\a\c.txt", new MockFileData("Demo text content") },
-            });
+                @"c:\a\a.txt",
+                @"c:\a\b.gif",
+                @"c:\a\c.txt",
+                @"c:\a\a\a.txt",
+                @"c:\a\a\b.txt",
+                @"c:\a\a\c.gif"
+            };
 
             // Act
             var result = fileSystem.Directory.GetFiles(@"c:\a", "*", SearchOption.AllDirectories);
 
             // Assert
-            CollectionAssert.AreEqual
-            (
-                new []
-                {
-                    @"c:\a\a.txt",
-                    @"c:\a\b.txt",
-                    @"c:\a\c.txt",
-                    @"c:\a\a\a.txt",
-                    @"c:\a\a\b.txt",
-                    @"c:\a\a\c.txt"
-                },
-                result
-            );
+            Assert.That(result, Is.EquivalentTo(expected));
         }
-
-        [Test]
-        public void MockDirectory_GetFiles_ShouldReturnFilesDirectlyBelowPathWhenPatternIsWildcardAndSearchOptionIsTopDirectoryOnly()
+  
+        private MockFileSystem SetupFileSystem()
         {
-            // Arrange
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { @"c:\a.txt", new MockFileData("Demo text content") },
-                { @"c:\b.txt", new MockFileData("Demo text content") },
-                { @"c:\c.txt", new MockFileData("Demo text content") },
-                { @"c:\a\a.txt", new MockFileData("Demo text content") },
-                { @"c:\a\b.txt", new MockFileData("Demo text content") },
-                { @"c:\a\c.txt", new MockFileData("Demo text content") },
-                { @"c:\a\a\a.txt", new MockFileData("Demo text content") },
-                { @"c:\a\a\b.txt", new MockFileData("Demo text content") },
-                { @"c:\a\a\c.txt", new MockFileData("Demo text content") },
-            });
-
-            // Act
-            var result = fileSystem.Directory.GetFiles(@"c:\a", "*", SearchOption.TopDirectoryOnly);
-
-            // Assert
-            CollectionAssert.AreEqual
-            (
-                new[]
-                {
-                    @"c:\a\a.txt",
-                    @"c:\a\b.txt",
-                    @"c:\a\c.txt"
-                },
-                result
-            );
-        }
-
-        [Test]
-        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPattern()
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            return new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { @"c:\a.gif", new MockFileData("Demo text content") },
                 { @"c:\b.txt", new MockFileData("Demo text content") },
@@ -92,21 +43,45 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { @"c:\a\a\b.txt", new MockFileData("Demo text content") },
                 { @"c:\a\a\c.gif", new MockFileData("Demo text content") },
             });
+            
+        }
+
+        [Test]
+        public void MockDirectory_GetFiles_ShouldReturnFilesDirectlyBelowPathWhenPatternIsWildcardAndSearchOptionIsTopDirectoryOnly()
+        {
+            // Arrange
+            var fileSystem = SetupFileSystem();
+            var expected = new[]
+            {
+                @"c:\a\a.txt",
+                @"c:\a\b.gif",
+                @"c:\a\c.txt"
+            };
+
+            // Act
+            var result = fileSystem.Directory.GetFiles(@"c:\a", "*", SearchOption.TopDirectoryOnly);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        [Test]
+        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPattern()
+        {
+            // Arrange
+            var fileSystem = SetupFileSystem();
+            var expected = new[]
+            {
+                @"c:\a.gif",
+                @"c:\a\b.gif",
+                @"c:\a\a\c.gif"
+            };
 
             // Act
             var result = fileSystem.Directory.GetFiles(@"c:\", "*.gif", SearchOption.AllDirectories);
 
             // Assert
-            CollectionAssert.AreEqual
-            (
-                new[]
-                {
-                    @"c:\a.gif",
-                    @"c:\a\b.gif",
-                    @"c:\a\a\c.gif"
-                },
-                result
-            );
+            Assert.That(result, Is.EquivalentTo(expected));
         }
 
         [Test]
@@ -125,273 +100,134 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { @"c:\a\a\b.txt", new MockFileData("Demo text content") },
                 { @"c:\a\a\c.gif", new MockFileData("Demo text content") },
             });
+            var expected = new[]
+            {
+                @"c:\a.there.are.dots.in.this.filename.gif",
+                @"c:\a\b.gif",
+                @"c:\a\a\c.gif"
+            };
 
             // Act
             var result = fileSystem.Directory.GetFiles(@"c:\", "*.gif", SearchOption.AllDirectories);
 
             // Assert
-            CollectionAssert.AreEqual
-            (
-                new[]
-                {
-                    @"c:\a.there.are.dots.in.this.filename.gif",
-                    @"c:\a\b.gif",
-                    @"c:\a\a\c.gif"
-                },
-                result
-            );
+
+            Assert.That(result, Is.EquivalentTo( expected));
         }
 
         [Test]
         public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternAndSearchOptionTopDirectoryOnly()
         {
             // Arrange
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { @"c:\a.gif", new MockFileData("Demo text content") },
-                { @"c:\b.txt", new MockFileData("Demo text content") },
-                { @"c:\c.txt", new MockFileData("Demo text content") },
-                { @"c:\a\a.txt", new MockFileData("Demo text content") },
-                { @"c:\a\b.gif", new MockFileData("Demo text content") },
-                { @"c:\a\c.txt", new MockFileData("Demo text content") },
-                { @"c:\a\a\a.txt", new MockFileData("Demo text content") },
-                { @"c:\a\a\b.txt", new MockFileData("Demo text content") },
-                { @"c:\a\a\c.gif", new MockFileData("Demo text content") },
-            });
+            var fileSystem = SetupFileSystem();
+            var expected = new[] { @"c:\a.gif" };
 
             // Act
             var result = fileSystem.Directory.GetFiles(@"c:\", "*.gif", SearchOption.TopDirectoryOnly);
 
             // Assert
-            CollectionAssert.AreEqual(new[] { @"c:\a.gif" }, result);
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        private void ExecuteTimeAttributeTest(Action<IFileSystem, string, DateTime> setter, Func<IFileSystem, string, DateTime> getter) 
+        {
+            const string path = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, new MockFileData("Demo text content") }
+            });
+
+            // Act
+            var time = new DateTime(2010, 6, 4, 13, 26, 42);
+            setter(fileSystem, path, time);
+            var result = getter(fileSystem, path);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(time));
         }
 
         [Test]
         public void MockDirectory_GetCreationTime_ShouldReturnCreationTimeFromFile()
         {
-            // Arrange
-            const string path = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { path, new MockFileData("Demo text content") }
-            });
-            
-            // Act
-            var time = new DateTime(2010, 6, 4, 13, 26, 42);
-            fileSystem.File.SetCreationTime(path, time);
-            var result = fileSystem.Directory.GetCreationTime(path);
-
-            // Assert
-            Assert.AreEqual(time, result);
+            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.File.SetCreationTime(p, d), 
+                                     getter: (fs, p) => fs.Directory.GetCreationTime(p));
         }
 
         [Test]
         public void MockDirectory_GetCreationTimeUtc_ShouldReturnCreationTimeUtcFromFile()
         {
-            // Arrange
-            const string path = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { path, new MockFileData("Demo text content") }
-            });
-
-            // Act
-            var time = new DateTime(2010, 6, 4, 13, 26, 42);
-            fileSystem.File.SetCreationTimeUtc(path, time);
-            var result = fileSystem.Directory.GetCreationTimeUtc(path);
-
-            // Assert
-            Assert.AreEqual(time, result);
+            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.File.SetCreationTimeUtc(p, d),
+                                     getter: (fs, p) => fs.Directory.GetCreationTimeUtc(p));
         }
 
         [Test]
         public void MockDirectory_GetLastAccessTime_ShouldReturnLastAccessTimeFromFile()
         {
-            // Arrange
-            const string path = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { path, new MockFileData("Demo text content") }
-            });
-
-            // Act
-            var time = new DateTime(2010, 6, 4, 13, 26, 42);
-            fileSystem.File.SetLastAccessTime(path, time);
-            var result = fileSystem.Directory.GetLastAccessTime(path);
-
-            // Assert
-            Assert.AreEqual(time, result);
+            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.File.SetLastAccessTime(p, d),
+                                     getter: (fs, p) => fs.Directory.GetLastAccessTime(p));
         }
 
         [Test]
         public void MockDirectory_GetLastAccessTimeUtc_ShouldReturnLastAccessTimeUtcFromFile()
         {
-            // Arrange
-            const string path = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { path, new MockFileData("Demo text content") }
-            });
-
-            // Act
-            var time = new DateTime(2010, 6, 4, 13, 26, 42);
-            fileSystem.File.SetLastAccessTimeUtc(path, time);
-            var result = fileSystem.Directory.GetLastAccessTimeUtc(path);
-
-            // Assert
-            Assert.AreEqual(time, result);
+            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.File.SetLastAccessTimeUtc(p, d),
+                                     getter: (fs, p) => fs.Directory.GetLastAccessTimeUtc(p));
         }
 
         [Test]
         public void MockDirectory_GetLastWriteTime_ShouldReturnLastWriteTimeFromFile()
         {
-            // Arrange
-            const string path = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { path, new MockFileData("Demo text content") }
-            });
-
-            // Act
-            var time = new DateTime(2010, 6, 4, 13, 26, 42);
-            fileSystem.File.SetLastWriteTime(path, time);
-            var result = fileSystem.Directory.GetLastWriteTime(path);
-
-            // Assert
-            Assert.AreEqual(time, result);
+            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.File.SetLastWriteTime(p, d),
+                                     getter: (fs, p) => fs.Directory.GetLastWriteTime(p));
         }
 
         [Test]
         public void MockDirectory_GetLastWriteTimeUtc_ShouldReturnLastWriteTimeUtcFromFile()
         {
-            // Arrange
-            const string path = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { path, new MockFileData("Demo text content") }
-            });
-
-            // Act
-            var time = new DateTime(2010, 6, 4, 13, 26, 42);
-            fileSystem.File.SetLastWriteTimeUtc(path, time);
-            var result = fileSystem.Directory.GetLastWriteTimeUtc(path);
-
-            // Assert
-            Assert.AreEqual(time, result);
+            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.File.SetLastWriteTimeUtc(p, d),
+                                     getter: (fs, p) => fs.Directory.GetLastWriteTimeUtc(p));
         }
 
         [Test]
         public void MockDirectory_SetCreationTime_ShouldSetCreationTimeOnFile()
         {
-            // Arrange
-            const string path = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { path, new MockFileData("Demo text content") }
-            });
-
-            // Act
-            var time = new DateTime(2010, 6, 4, 13, 26, 42);
-            fileSystem.Directory.SetCreationTime(path, time);
-            var result = fileSystem.File.GetCreationTime(path);
-
-            // Assert
-            Assert.AreEqual(time, result);
+            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.Directory.SetCreationTime(p, d),
+                                     getter: (fs, p) => fs.File.GetCreationTime(p));
         }
 
         [Test]
         public void MockDirectory_SetCreationTimeUtc_ShouldSetCreationTimeUtcOnFile()
         {
-            // Arrange
-            const string path = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { path, new MockFileData("Demo text content") }
-            });
-
-            // Act
-            var time = new DateTime(2010, 6, 4, 13, 26, 42);
-            fileSystem.Directory.SetCreationTimeUtc(path, time);
-            var result = fileSystem.File.GetCreationTimeUtc(path);
-
-            // Assert
-            Assert.AreEqual(time, result);
+            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.Directory.SetCreationTimeUtc(p, d),
+                                     getter: (fs, p) => fs.File.GetCreationTimeUtc(p));
         }
 
         [Test]
         public void MockDirectory_SetLastAccessTime_ShouldSetLastAccessTimeOnFile()
         {
-            // Arrange
-            const string path = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { path, new MockFileData("Demo text content") }
-            });
-
-            // Act
-            var time = new DateTime(2010, 6, 4, 13, 26, 42);
-            fileSystem.Directory.SetLastAccessTime(path, time);
-            var result = fileSystem.File.GetLastAccessTime(path);
-
-            // Assert
-            Assert.AreEqual(time, result);
+            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.Directory.SetLastAccessTime(p, d),
+                                     getter: (fs, p) => fs.File.GetLastAccessTime(p));
         }
 
         [Test]
         public void MockDirectory_SetLastAccessTimeUtc_ShouldSetLastAccessTimeUtcOnFile()
         {
-            // Arrange
-            const string path = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { path, new MockFileData("Demo text content") }
-            });
-
-            // Act
-            var time = new DateTime(2010, 6, 4, 13, 26, 42);
-            fileSystem.Directory.SetLastAccessTimeUtc(path, time);
-            var result = fileSystem.File.GetLastAccessTimeUtc(path);
-
-            // Assert
-            Assert.AreEqual(time, result);
+            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.Directory.SetLastAccessTimeUtc(p, d),
+                                     getter: (fs, p) => fs.File.GetLastAccessTimeUtc(p));
         }
 
         [Test]
         public void MockDirectory_SetLastWriteTime_ShouldSetLastWriteTimeOnFile()
         {
-            // Arrange
-            const string path = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { path, new MockFileData("Demo text content") }
-            });
-
-            // Act
-            var time = new DateTime(2010, 6, 4, 13, 26, 42);
-            fileSystem.Directory.SetLastWriteTime(path, time);
-            var result = fileSystem.File.GetLastWriteTime(path);
-
-            // Assert
-            Assert.AreEqual(time, result);
+            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.Directory.SetLastWriteTime(p, d),
+                                     getter: (fs, p) => fs.File.GetLastWriteTime(p));
         }
 
         [Test]
         public void MockDirectory_SetLastWriteTimeUtc_ShouldSetLastWriteTimeUtcOnFile()
         {
-            // Arrange
-            const string path = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { path, new MockFileData("Demo text content") }
-            });
-
-            // Act
-            var time = new DateTime(2010, 6, 4, 13, 26, 42);
-            fileSystem.Directory.SetLastWriteTimeUtc(path, time);
-            var result = fileSystem.File.GetLastWriteTimeUtc(path);
-
-            // Assert
-            Assert.AreEqual(time, result);
+            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.Directory.SetLastWriteTimeUtc(p, d),
+                                     getter: (fs, p) => fs.File.GetLastWriteTimeUtc(p));
         }
 
         [Test]
@@ -580,15 +416,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { @"c:\bar\foo.txt", new MockFileData("Demo text content") }
             });
 
-            // Act
-            try
-            {
-                fileSystem.Directory.Delete(@"c:\baz");
-                Assert.Fail();
-            }
-            catch (DirectoryNotFoundException)
-            {
-            }
+            var ex = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.Directory.Delete(@"c:\baz"));
+
+            Assert.That(ex.Message, Is.EqualTo("c:\\baz\\ does not exist or could not be found."));
         }
 
         [Test]
@@ -601,18 +431,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { @"c:\bar\baz.txt", new MockFileData("Demo text content") }
             });
 
-            // Act
-            try
-            {
-                fileSystem.Directory.Delete(@"c:\bar");
-                Assert.Fail();
-            }
-            catch (IOException ex)
-            {
-                Assert.AreEqual(
-                    @"The directory specified by c:\bar\ is read-only, or recursive is false and c:\bar\ is not an empty directory.",
-                    ex.Message);
-            }
+            var ex = Assert.Throws<IOException>(() => fileSystem.Directory.Delete(@"c:\bar"));
+
+            Assert.That(ex.Message, Is.EqualTo(@"The directory specified by c:\bar\ is read-only, or recursive is false and c:\bar\ is not an empty directory."));
         }
 
         [Test]

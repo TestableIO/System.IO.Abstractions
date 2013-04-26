@@ -66,8 +66,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists(string path)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
-                path += Path.DirectorySeparatorChar;
+            path = EnsurePathEndsWithDirectorySeparator(path);
 
             path = mockFileDataAccessor.Path.GetFullPath(path);
             return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.InvariantCultureIgnoreCase));
@@ -110,8 +109,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetDirectories(string path, string searchPattern, SearchOption searchOption)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
-                path += Path.DirectorySeparatorChar;
+            path = EnsurePathEndsWithDirectorySeparator(path);
 
             var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
             return dirs.Where(p => p != path).ToArray();
@@ -141,8 +139,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string[] GetFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
-                path += Path.DirectorySeparatorChar;
+            path = EnsurePathEndsWithDirectorySeparator(path);
 
             path = mockFileDataAccessor.Path.GetFullPath(path);
 
