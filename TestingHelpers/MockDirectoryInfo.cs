@@ -11,16 +11,20 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly IMockFileDataAccessor mockFileDataAccessor;
         readonly string directoryPath;
 
-        public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath)
-        {
+        private string EnsurePathEndsWithDirectorySeparator(string directoryPath) {
             if (!directoryPath.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 directoryPath += Path.DirectorySeparatorChar;
-
-            this.mockFileDataAccessor = mockFileDataAccessor;
-            this.directoryPath = directoryPath;
+            return directoryPath;
         }
 
-        MockFileData MockFileData {
+        public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath)
+        {
+            this.mockFileDataAccessor = mockFileDataAccessor;
+            this.directoryPath = EnsurePathEndsWithDirectorySeparator(directoryPath);
+        }
+
+        MockFileData MockFileData
+        {
             get { return mockFileDataAccessor.GetFile(directoryPath); }
         }
 
@@ -195,8 +199,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void MoveTo(string destDirName)
         {
-            if (!destDirName.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
-                destDirName += Path.DirectorySeparatorChar;
+            destDirName = EnsurePathEndsWithDirectorySeparator(destDirName);
 
             mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
         }
