@@ -13,7 +13,7 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly PathBase pathField;
         readonly IDirectoryInfoFactory directoryInfoFactory;
 
-        public MockFileSystem() : this(new Dictionary<string, MockFileData>()) { }
+        public MockFileSystem() : this(null) { }
 
         public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = @"C:\Foo\Bar")
         {
@@ -24,11 +24,9 @@ namespace System.IO.Abstractions.TestingHelpers
             fileInfoFactory = new MockFileInfoFactory(this);
             directoryInfoFactory = new MockDirectoryInfoFactory(this);
 
-            if (files != null)
-            {
-                foreach (var entry in files)
-                    AddFile(entry.Key, entry.Value);
-            }
+            if (files == null) return;
+            foreach (var entry in files)
+                AddFile(entry.Key, entry.Value);
         }
 
         public FileBase File
