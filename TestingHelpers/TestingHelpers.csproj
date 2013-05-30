@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>System.IO.Abstractions.TestingHelpers</RootNamespace>
     <AssemblyName>System.IO.Abstractions.TestingHelpers</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -33,6 +33,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -110,7 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\System.IO.Abstractions\System.IO.Abstractions.csproj">
-      <Project>{4D398F3A-0784-4401-93CD-46CD2FBD6B92}</Project>
+      <Project>{4d398f3a-0784-4401-93cd-46cd2fbd6b92}</Project>
       <Name>System.IO.Abstractions</Name>
     </ProjectReference>
   </ItemGroup>

@@ -21,8 +21,45 @@ namespace System.IO.Abstractions.TestingHelpers
             this.fileBase = fileBase;
         }
 
-        public override DirectoryInfoBase CreateDirectory(string path)
-        {
+    public override IEnumerable<string> EnumerateFiles(string path)
+    {
+      return EnumerateFiles(path, "*", SearchOption.AllDirectories);
+    }
+
+    public override IEnumerable<string> EnumerateFiles(string path, string searchPattern)
+    {
+      return EnumerateFiles(path, searchPattern, SearchOption.AllDirectories);
+    }
+
+    public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption)
+    {
+      return EnumerateFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
+    }
+
+    private IEnumerable<string> EnumerateFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption) {
+      path = EnsurePathEndsWithDirectorySeparator(path);
+
+      path = mockFileDataAccessor.Path.GetFullPath(path);
+
+      const string allDirectoriesPattern = @"([\w\d\s-\.]*\\)*";
+
+      var fileNamePattern = searchPattern == "*"
+          ? @"[^\\]*?\\?"
+          : Regex.Escape(searchPattern)
+              .Replace(@"\*", @"[\w\d\s-\.]*?")
+              .Replace(@"\?", @"[\w\d\s-\.]?");
+
+      var pathPattern = string.Format(
+          @"(?i:^{0}{1}{2}$)",
+          Regex.Escape(path),
+          searchOption == SearchOption.AllDirectories ? allDirectoriesPattern : string.Empty,
+          fileNamePattern);
+
+      return files
+          .Where(p => Regex.IsMatch(p, pathPattern));
+    }
+    public override DirectoryInfoBase CreateDirectory(string path)
+    {
             return CreateDirectory(path, null);
         }
 

@@ -1,10 +1,23 @@
-﻿using System.Security.AccessControl;
+﻿using System.Collections.Generic;
+using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
     [Serializable]
     public class DirectoryWrapper : DirectoryBase
     {
+        public override IEnumerable<string> EnumerateFiles(string path) {
+            return Directory.EnumerateFiles(path);
+        }
+
+        public override IEnumerable<string> EnumerateFiles(string path, string searchPattern) {
+            return Directory.EnumerateFiles(path, searchPattern);
+        }
+
+        public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption) {
+            return Directory.EnumerateFiles(path, searchPattern, searchOption);
+        }
+
         public override DirectoryInfoBase CreateDirectory(string path)
         {
             return Directory.CreateDirectory(path);
