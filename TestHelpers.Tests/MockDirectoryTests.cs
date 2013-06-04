@@ -455,6 +455,105 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_DirectoryInfo_Name()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+                                                    {
+                                                        {
+                                                            @"c:\folder1\folder2\folder3\file.txt",
+                                                            new MockFileData("Demo text content")
+                                                            },
+                                                        {
+                                                            @"c:\folder1\folder4\file2.txt",
+                                                            new MockFileData("Demo text content 2")
+                                                            },
+                                                    });
+
+
+            var dirInfo = fileSystem.DirectoryInfo.FromDirectoryName(@"c:\folder1\");
+            Assert.AreEqual("folder1", dirInfo.Name);
+        }
+
+        [Test]
+        public void MockDirectory_DirectoryInfo_GetDirectories_TestPatterns()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\folder1\folder2\folder3\file.txt", new MockFileData("Demo text content") },
+                { @"c:\folder1\folder4\file2.txt", new MockFileData("Demo text content 2") },
+            });
+
+            var dirInfo = fileSystem.DirectoryInfo.FromDirectoryName(@"c:\folder1\");
+
+            var directories = dirInfo.GetDirectories(@"folder*").ToLookup(p => p.FullName);
+
+            //Check that it does not returns itself
+            Assert.IsFalse(directories.Contains(@"c:\folder1\"));
+
+            //Check that it correctly returns all child directories
+            Assert.AreEqual(2, directories.Count());
+            Assert.IsTrue(directories.Contains(@"c:\folder1\folder2\"));
+            Assert.IsTrue(directories.Contains(@"c:\folder1\folder4\"));
+
+            directories = dirInfo.GetDirectories(@"*").ToLookup(p => p.FullName);
+            //Check that it does not returns itself
+            Assert.IsFalse(directories.Contains(@"c:\folder1\"));
+
+            //Check that it correctly returns all child directories
+            Assert.AreEqual(2, directories.Count());
+            Assert.IsTrue(directories.Contains(@"c:\folder1\folder2\"));
+            Assert.IsTrue(directories.Contains(@"c:\folder1\folder4\"));
+
+            directories = dirInfo.GetDirectories(@"*.*").ToLookup(p => p.FullName);
+            //Check that it does not returns itself
+            Assert.IsFalse(directories.Contains(@"c:\folder1\"));
+
+            //Check that it correctly returns all child directories
+            Assert.AreEqual(2, directories.Count());
+            Assert.IsTrue(directories.Contains(@"c:\folder1\folder2\"));
+            Assert.IsTrue(directories.Contains(@"c:\folder1\folder4\"));
+        }
+
+        [Test]
+        public void MockDirectory_Directory_GetDirectories_TestPatterns()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\folder1\folder2\folder3\file.txt", new MockFileData("Demo text content") },
+                { @"c:\folder1\folder4\file2.txt", new MockFileData("Demo text content 2") },
+            });
+
+            var directories = fileSystem.Directory.GetDirectories(@"c:\folder1\", @"folder*").ToList();
+
+            //Check that it does not returns itself
+            Assert.IsFalse(directories.Contains(@"c:\folder1\"));
+
+            //Check that it correctly returns all child directories
+            Assert.AreEqual(2, directories.Count());
+            Assert.IsTrue(directories.Contains(@"c:\folder1\folder2\"));
+            Assert.IsTrue(directories.Contains(@"c:\folder1\folder4\"));
+
+            directories = fileSystem.Directory.GetDirectories(@"c:\folder1\", @"*").ToList();
+            //Check that it does not returns itself
+            Assert.IsFalse(directories.Contains(@"c:\folder1\"));
+
+            //Check that it correctly returns all child directories
+            Assert.AreEqual(2, directories.Count());
+            Assert.IsTrue(directories.Contains(@"c:\folder1\folder2\"));
+            Assert.IsTrue(directories.Contains(@"c:\folder1\folder4\"));
+
+            directories = fileSystem.Directory.GetDirectories(@"c:\folder1\", @"*.*").ToList();
+            //Check that it does not returns itself
+            Assert.IsFalse(directories.Contains(@"c:\folder1\"));
+
+            //Check that it correctly returns all child directories
+            Assert.AreEqual(2, directories.Count());
+            Assert.IsTrue(directories.Contains(@"c:\folder1\folder2\"));
+            Assert.IsTrue(directories.Contains(@"c:\folder1\folder4\"));
+        }
+
+
+        [Test]
         public void MockDirectory_GetFileSystemEntries_Returns_Files_And_Directories()
         {
             const string testPath = @"c:\foo\bar.txt";
