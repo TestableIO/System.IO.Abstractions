@@ -821,21 +821,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<IOException>(() => fileSystem.File.Copy(sourceFileName, destFileName), @"The file c:\destination\demo.txt already exists.");
         }
 
-        [Test]
-        public void MockFile_Delete_ShouldRemoveFileFromFileSystem()
-        {
-            const string fullPath = @"c:\something\demo.txt";
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { fullPath, new MockFileData("Demo text content") }
-            });
-
-            var file = new MockFile(fileSystem);
-
-            file.Delete(fullPath);
-
-            Assert.That(fileSystem.FileExists(fullPath), Is.False);
-        }
 
         [Test]
         public void Mockfile_Create_ShouldCreateNewStream()
@@ -912,6 +897,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_Delete_ThrowsWhenFileIsReadOnly()
+        {
+            const string path = @"c:\something\read-only.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { { path, new MockFileData("Content") } });
+            var mockFile = new MockFile(fileSystem);
+
+            mockFile.SetAttributes(path, FileAttributes.ReadOnly);
+
+            var exception = Assert.Throws<UnauthorizedAccessException>(() => mockFile.Delete(path));
+            Assert.That(exception.Message, Is.EqualTo(string.Format("Access to the path '{0}' is denied.", path)));
+        }
+
+
+        [Test]
         public void MockFile_Delete_Should_RemoveFiles()
         {
             const string filePath = @"c:\something\demo.txt";
@@ -920,6 +919,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(1, fileSystem.AllFiles.Count());
             fileSystem.File.Delete(filePath);
             Assert.AreEqual(0, fileSystem.AllFiles.Count());
+        }
+
+
+
+        [Test]
+        public void MockFile_Delete_ShouldRemoveFileFromFileSystem()
+        {
+            const string fullPath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { fullPath, new MockFileData("Demo text content") }
+            });
+
+            var file = new MockFile(fileSystem);
+
+            file.Delete(fullPath);
+
+            Assert.That(fileSystem.FileExists(fullPath), Is.False);
         }
 
         [Test]
