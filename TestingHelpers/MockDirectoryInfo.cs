@@ -11,10 +11,63 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly IMockFileDataAccessor mockFileDataAccessor;
         readonly string directoryPath;
 
-        private string EnsurePathEndsWithDirectorySeparator(string directoryPath) {
+#if NET40 || NET45
+        public override IEnumerable<DirectoryInfoBase> EnumerateDirectories()
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
+        public override IEnumerable<DirectoryInfoBase> EnumerateDirectories(string searchPattern)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
+        public override IEnumerable<DirectoryInfoBase> EnumerateDirectories(string searchPattern, SearchOption searchOption)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
+        public override IEnumerable<FileInfoBase> EnumerateFiles()
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
+        public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
+        public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern, SearchOption searchOption)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
+        public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos()
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
+        public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
+        public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern, SearchOption searchOption)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
+        public override FileSystemInfoBase[] GetFileSystemInfos(string searchPattern, SearchOption searchOption)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+#endif
+
+        private string EnsurePathEndsWithDirectorySeparator(string directoryPath)
+        {
             if (!directoryPath.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
                 directoryPath += Path.DirectorySeparatorChar;
-            return directoryPath;
+                return directoryPath;
         }
 
         public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath)

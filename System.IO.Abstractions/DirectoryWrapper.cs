@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#if NET40 || NET45
+using System.Collections.Generic;
+#endif
 using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
@@ -7,8 +9,44 @@ namespace System.IO.Abstractions
     public class DirectoryWrapper : DirectoryBase
     {
 #if NET40 || NET45
-      public override IEnumerable<string> EnumerateFiles(string path) {
-            return Directory.EnumerateFiles(path);
+        public override IEnumerable<string> EnumerateDirectories(string path)
+        {
+          return Directory.EnumerateDirectories(path);
+        }
+
+        public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern)
+        {
+          return Directory.EnumerateDirectories(path, searchPattern);
+        }
+
+        public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
+        {
+          return Directory.EnumerateDirectories(path, searchPattern, searchOption);
+        }
+
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path)
+        {
+          return Directory.EnumerateFileSystemEntries(path);
+        }
+
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern)
+        {
+          return Directory.EnumerateFileSystemEntries(path, searchPattern);
+        }
+
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
+        {
+          return Directory.EnumerateFileSystemEntries(path, searchPattern, searchOption);
+        }
+
+        public override string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
+        {
+          return Directory.GetFileSystemEntries(path, searchPattern, searchOption);
+        }
+
+        public override IEnumerable<string> EnumerateFiles(string path)
+        {
+          return Directory.EnumerateFiles(path);
         }
 
         public override IEnumerable<string> EnumerateFiles(string path, string searchPattern) {
@@ -20,7 +58,7 @@ namespace System.IO.Abstractions
         }
 #endif
 
-      public override DirectoryInfoBase CreateDirectory(string path)
+        public override DirectoryInfoBase CreateDirectory(string path)
         {
             return Directory.CreateDirectory(path);
         }

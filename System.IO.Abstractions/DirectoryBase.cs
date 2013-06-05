@@ -14,6 +14,13 @@ namespace System.IO.Abstractions
         public abstract IEnumerable<string> EnumerateFiles(string path);
         public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern);
         public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
+        public abstract IEnumerable<string> EnumerateDirectories(string path);
+        public abstract IEnumerable<string> EnumerateDirectories(string path, string searchPattern);
+        public abstract IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
+        public abstract IEnumerable<string> EnumerateFileSystemEntries(string path);
+        public abstract IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern);
+        public abstract IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
+        public abstract string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
 #endif
         public abstract bool Exists(string path);
         public abstract DirectorySecurity GetAccessControl(string path);
