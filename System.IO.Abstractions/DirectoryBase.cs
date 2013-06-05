@@ -10,9 +10,11 @@ namespace System.IO.Abstractions
         public abstract DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity);
         public abstract void Delete(string path);
         public abstract void Delete(string path, bool recursive);
+#if NET40 || NET45
         public abstract IEnumerable<string> EnumerateFiles(string path);
         public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern);
         public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
+#endif
         public abstract bool Exists(string path);
         public abstract DirectorySecurity GetAccessControl(string path);
         public abstract DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections);

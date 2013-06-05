@@ -6,7 +6,8 @@ namespace System.IO.Abstractions
     [Serializable]
     public class DirectoryWrapper : DirectoryBase
     {
-        public override IEnumerable<string> EnumerateFiles(string path) {
+#if NET40 || NET45
+      public override IEnumerable<string> EnumerateFiles(string path) {
             return Directory.EnumerateFiles(path);
         }
 
@@ -17,8 +18,9 @@ namespace System.IO.Abstractions
         public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption) {
             return Directory.EnumerateFiles(path, searchPattern, searchOption);
         }
+#endif
 
-        public override DirectoryInfoBase CreateDirectory(string path)
+      public override DirectoryInfoBase CreateDirectory(string path)
         {
             return Directory.CreateDirectory(path);
         }

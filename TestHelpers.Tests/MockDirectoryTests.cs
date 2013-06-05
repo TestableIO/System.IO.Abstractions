@@ -28,7 +28,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.That(result, Is.EquivalentTo(expected));
         }
-
+#if NET40 || NET45 
         [Test]
         public void MockDirectory_EnumerateFiles_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories() {
           // Arrange
@@ -49,6 +49,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
           // Assert
           Assert.That(result, Is.EquivalentTo(expected));
         }
+#endif
 
         private MockFileSystem SetupFileSystem()
         {

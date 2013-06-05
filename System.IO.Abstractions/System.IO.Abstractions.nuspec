@@ -11,4 +11,9 @@
     <description>Just like System.Web.Abstractions, but for System.IO. Yay for testable IO access! Be sure to check out the System.IO.Abstractions.TestingHelpers package too.</description>
     <tags>testing</tags>
   </metadata>
+  <files>
+   <file src="bin\Release\v3.5\*.dll" target="lib\net35" />
+   <file src="bin\Release\v4.0\*.dll" target="lib\net40" />
+   <file src="bin\Release\v4.5\*.dll" target="lib\net45" />
+  </files>
 </package>

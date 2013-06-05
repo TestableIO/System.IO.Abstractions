@@ -21,7 +21,8 @@ namespace System.IO.Abstractions.TestingHelpers
             this.fileBase = fileBase;
         }
 
-    public override IEnumerable<string> EnumerateFiles(string path)
+#if NET40 || NET45 
+      public override IEnumerable<string> EnumerateFiles(string path)
     {
       return EnumerateFiles(path, "*", SearchOption.AllDirectories);
     }
@@ -58,7 +59,8 @@ namespace System.IO.Abstractions.TestingHelpers
       return files
           .Where(p => Regex.IsMatch(p, pathPattern));
     }
-    public override DirectoryInfoBase CreateDirectory(string path)
+#endif
+        public override DirectoryInfoBase CreateDirectory(string path)
     {
             return CreateDirectory(path, null);
         }
