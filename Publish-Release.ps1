@@ -55,7 +55,7 @@ if (-not $?)
 	throw "The NuGet process returned an error code."
 }
 
- Upload the NuGet package
+# Upload the NuGet package
 if ($Push)
 {
 	$NuPkgPath = Join-Path -Path $SolutionRoot -ChildPath "System.IO.Abstractions.$ReleaseVersionNumber.nupkg"
