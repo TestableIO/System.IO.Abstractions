@@ -334,19 +334,24 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void WriteAllLines(string path, string[] contents, Encoding encoding)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            WriteAllText(path, string.Join("\n", contents), encoding);
         }
 
         public override void WriteAllText(string path, string contents)
         {
-            if (mockFileDataAccessor.FileExists(path))
-                mockFileDataAccessor.RemoveFile(path);
-            mockFileDataAccessor.AddFile(path, new MockFileData(contents));
+            WriteAllText(path, new MockFileData(contents));
         }
 
         public override void WriteAllText(string path, string contents, Encoding encoding)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            WriteAllText(path, new MockFileData(contents, encoding));
+        }
+
+        private void WriteAllText(string path, MockFileData mockFileData)
+        {
+            if (mockFileDataAccessor.FileExists(path))
+                mockFileDataAccessor.RemoveFile(path);
+            mockFileDataAccessor.AddFile(path, mockFileData);
         }
     }
 }

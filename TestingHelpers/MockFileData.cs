@@ -13,6 +13,7 @@ namespace System.IO.Abstractions.TestingHelpers
         };
 
         byte[] contents;
+        Encoding encoding;
         DateTimeOffset creationTime = new DateTimeOffset(2010, 01, 02, 00, 00, 00, TimeSpan.FromHours(4));
         DateTimeOffset lastAccessTime = new DateTimeOffset(2010, 02, 04, 00, 00, 00, TimeSpan.FromHours(4));
         DateTimeOffset lastWriteTime = new DateTimeOffset(2010, 01, 04, 00, 00, 00, TimeSpan.FromHours(4));
@@ -25,8 +26,17 @@ namespace System.IO.Abstractions.TestingHelpers
             : this(defaultEncoding.GetBytes(textContents))
         {}
 
+        public MockFileData(string textContents, Encoding encoding)
+            : this(encoding.GetBytes(textContents), encoding)
+        { }
+
         public MockFileData(byte[] contents)
+            : this(contents, defaultEncoding)
+        { }
+
+        public MockFileData(byte[] contents, Encoding encoding)
         {
+            this.encoding = encoding;
             this.contents = contents;
         }
 
@@ -38,8 +48,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public string TextContents
         {
-            get { return defaultEncoding.GetString(contents); }
-            set { contents = defaultEncoding.GetBytes(value); }
+            get { return encoding.GetString(contents); }
+            set { contents = encoding.GetBytes(value); }
         }
 
         public DateTimeOffset CreationTime
