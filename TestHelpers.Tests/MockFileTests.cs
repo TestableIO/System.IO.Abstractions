@@ -517,6 +517,37 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual("bar", fileSystem.GetFile(path).TextContents);
         }
 
+        private IEnumerable<Encoding> GetEncodings()
+        {
+            return new List<Encoding>()
+                {
+                    Encoding.ASCII,
+                    Encoding.BigEndianUnicode,
+                    Encoding.Default,
+                    Encoding.UTF32,
+                    Encoding.UTF7,
+                    Encoding.UTF8,
+                    Encoding.Unicode
+                };
+        }
+
+        [TestCaseSource("GetEncodings")]
+        public void MockFile_WriteAllText_Encoding_ShouldWriteTextFileToMemoryFileSystem(Encoding encoding)
+        {
+            // Arrange
+            const string path = @"c:\something\demo.txt";
+            const string fileContent = "Hello there! Dzięki.";
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            fileSystem.File.WriteAllText(path, fileContent, encoding);
+
+            // Assert
+            Assert.AreEqual(
+                encoding.GetString(encoding.GetBytes(fileContent)),
+                fileSystem.GetFile(path).TextContents);
+        }
+
         [Test]
         public void MockFile_Move_ShouldMoveFileWithinMemoryFileSystem()
         {
