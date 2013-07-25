@@ -111,7 +111,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             path = EnsurePathEndsWithDirectorySeparator(path);
 
-            var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
+            var dirs = getDirectoriesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
             return dirs.Where(p => p != path).ToArray();
         }
 
@@ -135,6 +135,30 @@ namespace System.IO.Abstractions.TestingHelpers
         public override string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
         {
             return GetFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
+        }
+
+
+        public string[] getDirectoriesInternal(IEnumerable<string> dirs, string path, string searchPattern, SearchOption searchOption)
+        {
+            path = EnsurePathEndsWithDirectorySeparator(path);
+
+            const string allDirectoriesPattern = @"([\w\d\s-\.]*\\)*";
+
+            var directoryNamePattern = Regex.Escape(searchPattern)
+                    .Replace(@"\*\.\*", @"\*")
+                    .Replace(@"\*\*", @"\*")
+                    .Replace(@"\*", @"[\w\d\s-\.]*?\\")
+                    .Replace(@"\?", @"[\w\d\s-\.]?\\");
+
+            var pathPattern = string.Format(
+                @"(?i:^{0}{1}{2}$)",
+                Regex.Escape(path),
+                searchOption == SearchOption.AllDirectories ? allDirectoriesPattern : string.Empty,
+                directoryNamePattern);
+
+            return dirs
+                .Where(p => Regex.IsMatch(p, pathPattern))
+                .ToArray();
         }
 
         private string[] GetFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)

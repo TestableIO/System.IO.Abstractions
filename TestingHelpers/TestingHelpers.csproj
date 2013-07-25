@@ -63,6 +63,11 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.IO.Abstractions, Version=1.4.0.64, Culture=neutral, PublicKeyToken=d480b5b72fb413da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files\Common Files\Sage Software Shared\ReferenceAssemblies\Gora50\System.IO.Abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -107,12 +112,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="TestingHelpers.nuspec" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\System.IO.Abstractions\System.IO.Abstractions.csproj">
-      <Project>{4D398F3A-0784-4401-93CD-46CD2FBD6B92}</Project>
-      <Name>System.IO.Abstractions</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

@@ -71,8 +71,8 @@ namespace System.IO.Abstractions.TestingHelpers
         public void AddFile(string path, MockFileData mockFile)
         {
             var fixedPath = FixPath(path);
-            if (FileExists(fixedPath) && (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-                throw new UnauthorizedAccessException(string.Format("Access to the path '{0}' is denied.", path));
+
+            throwExceptionWhenReadonly(path, fixedPath);
 
             var directoryPath = Path.GetDirectoryName(fixedPath);
 
@@ -91,20 +91,30 @@ namespace System.IO.Abstractions.TestingHelpers
 
             lock (files)
             {
-                if (FileExists(path) &&
-                    (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-                    throw new UnauthorizedAccessException(string.Format("Access to the path '{0}' is denied.", path));
-
+                throwExceptionWhenReadonly(path, fixedPath);
                 files[fixedPath] = new MockDirectoryData();
             }
         }
 
+        private void throwExceptionWhenReadonly(string path, string fixedPath)
+        {
+            if (FileExists(path) &&
+                (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                throw new UnauthorizedAccessException(string.Format("Access to the path '{0}' is denied.", path));
+        }
+
         public void RemoveFile(string path)
         {
-            path = FixPath(path);
+            var fixedPath = FixPath(path);
 
             lock (files)
-                files.Remove(path);
+            {
+                throwExceptionWhenReadonly(path, fixedPath);
+                if (!AllDirectories.Contains(Path.GetDirectoryName(path)))
+                    throw new DirectoryNotFoundException();
+
+                files.Remove(fixedPath);
+            }
         }
 
         public bool FileExists(string path)
