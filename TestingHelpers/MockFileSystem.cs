@@ -110,6 +110,9 @@ namespace System.IO.Abstractions.TestingHelpers
             lock (files)
             {
                 throwExceptionWhenReadonly(path, fixedPath);
+                if (!AllDirectories.Contains(Path.GetDirectoryName(path)))
+                    throw new DirectoryNotFoundException();
+
                 files.Remove(fixedPath);
             }
         }

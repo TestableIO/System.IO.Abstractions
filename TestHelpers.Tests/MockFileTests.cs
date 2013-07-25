@@ -975,7 +975,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             const string filePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(fileSystem.Path.GetDirectoryName(filePath));
             fileSystem.File.Delete(filePath);
+        }
+
+        [Test]
+        public void MockFile_Delete_No_Directory_ShouldThrowDirectoryNotFoundException()
+        {
+            const string filePath = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem();
+            Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Delete(filePath));
         }
 
         [Test]
