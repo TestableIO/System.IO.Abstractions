@@ -220,12 +220,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string DirectoryName
         {
-          get
-          {
-            // System.IO.Path.GetDirectoryName does only string manipulation,
-            // so it's safe to delegate.
-            return Path.GetDirectoryName(this.path);
-          }
+            get
+            {
+                // System.IO.Path.GetDirectoryName does only string manipulation,
+                // so it's safe to delegate.
+                return Path.GetDirectoryName(this.path);
+            }
         }
 
         public override bool IsReadOnly
