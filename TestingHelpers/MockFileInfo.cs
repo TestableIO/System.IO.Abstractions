@@ -220,7 +220,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string DirectoryName
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get
+            {
+                // System.IO.Path.GetDirectoryName does only string manipulation,
+                // so it's safe to delegate.
+                return Path.GetDirectoryName(this.path);
+            }
         }
 
         public override bool IsReadOnly
