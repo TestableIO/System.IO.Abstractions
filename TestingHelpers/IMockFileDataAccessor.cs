@@ -14,5 +14,6 @@ namespace System.IO.Abstractions.TestingHelpers
         DirectoryBase Directory { get; }
         IFileInfoFactory FileInfo {get; }
         PathBase Path { get; }
+        IDirectoryInfoFactory DirectoryInfo { get; }
     }
 }
