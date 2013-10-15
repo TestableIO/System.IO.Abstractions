@@ -2,12 +2,12 @@
 
 namespace System.IO.Abstractions.TestingHelpers
 {
-
+    [Serializable]
     public class MockStreamWriter : StreamWriter
     {
-        readonly IMockFileDataAccessor mockFileDataAccessor;
+        readonly IMockFileDataAccessor _mockFileDataAccessor;
         readonly string _path;
-        public MockStreamWriter(Stream stream) : base(stream)
+        public MockStreamWriter(Stream stream): base(stream)
         {
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
@@ -37,18 +37,15 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
 
-
-
-        public MockStreamWriter(string path, IMockFileDataAccessor mockFileDataAccessor) :base(mockFileDataAccessor.FileInfo.FromFileName(path).OpenWrite())
+        public MockStreamWriter(string path, IMockFileDataAccessor mockFileDataAccessor): base(mockFileDataAccessor.FileInfo.FromFileName(path).OpenWrite())
         {
-           
-            this.mockFileDataAccessor = mockFileDataAccessor;
+            this._mockFileDataAccessor = mockFileDataAccessor;
             this._path = path;
 
-            if (mockFileDataAccessor.FileExists(_path))
+            if (_mockFileDataAccessor.FileExists(_path))
             {
                 /* only way to make an expandable MemoryStream that starts with a particular content */
-                var data = mockFileDataAccessor.GetFile(_path).TextContents;
+                var data = _mockFileDataAccessor.GetFile(_path).TextContents;
                 base.Write(data);
             }
         }
@@ -67,9 +64,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             base.Close();
         }
-
-       
     }
 
-   
+
 }
