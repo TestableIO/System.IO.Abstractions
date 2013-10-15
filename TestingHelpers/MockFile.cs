@@ -84,7 +84,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override StreamWriter CreateText(string path)
         {
-            return new StreamWriter(Create(path));
+            return new StreamWriter(OpenWrite(path));
         }
 
         public override void Decrypt(string path)
@@ -227,12 +227,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override StreamReader OpenText(string path)
         {
+           
             return new StreamReader(
                 OpenRead(path));
         }
 
         public override Stream OpenWrite(string path)
         {
+            
             return new MockFileStream(mockFileDataAccessor, path);
         }
 

@@ -21,6 +21,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
 		public override void Delete()
 		{
+            
 			mockFileSystem.RemoveFile(path);
 		}
 
@@ -137,15 +138,15 @@ namespace System.IO.Abstractions.TestingHelpers
 			throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
 		}
 
-	    public override StreamWriter CreateText()
-	    {
-	        if (!string.IsNullOrEmpty(path))
-	            return new StreamWriter(path);
+        public override StreamWriter CreateText()
+        {
+            if (!string.IsNullOrEmpty(path))
+                return new MockStreamWriter(path, mockFileSystem);
 
-	        throw new InvalidOperationException("Path must not be empty");
-	    }
+            throw new InvalidOperationException("Path must not be empty");
+        }
 
-	    public override void Decrypt()
+		public override void Decrypt()
 		{
 			throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
 		}
@@ -198,7 +199,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
 		public override Stream OpenWrite()
 		{
-			throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+		    return new MockFileStream(mockFileSystem, path);
+
+		    //throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
 		}
 
 		public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)

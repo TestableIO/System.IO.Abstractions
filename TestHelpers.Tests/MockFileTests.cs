@@ -34,7 +34,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_CreateText()
         {
             // Arrange
-            const string path = @"c:\something\demo.txt";
+            const string path = @"q:\something-fake\foo.txt";
             var fileSystem = new MockFileSystem();
        
 
