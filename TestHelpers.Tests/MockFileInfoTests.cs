@@ -176,5 +176,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.AreEqual(@"c:\temp\level1\level2", result);
         }
-   }
+
+        [Test]
+        public void MockFileInfo_GetDirectory_ShouldReturnDirectoryInfoWithCorrectPath()
+        {
+            // Arrange
+            var fileInfo = new MockFileInfo(new MockFileSystem(), @"c:\temp\level1\level2\file.txt");
+
+            // Act
+            var result = fileInfo.Directory;
+
+            Assert.AreEqual(@"c:\temp\level1\level2\", result.FullName);
+        }
+    }
 }
