@@ -230,6 +230,29 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_GetAttributeOfNonExistantFile_ShouldReturnDefaultValue() {
+            var fileSystem = new MockFileSystem();
+            var attributes = fileSystem.File.GetAttributes(@"c:\something\demo.txt");
+            Assert.That(attributes, Is.EqualTo(FileAttributes.Normal));
+        }
+
+        [Test]
+        public void MockFile_GetAttributeOfExistingFile_ShouldReturnCorrectValue()
+        {
+            var filedata = new MockFileData("test")
+            {
+                Attributes = FileAttributes.Hidden
+            };
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\something\demo.txt",  filedata},
+            });
+
+            var attributes = fileSystem.File.GetAttributes(@"c:\something\demo.txt");
+            Assert.That(attributes, Is.EqualTo(FileAttributes.Hidden));
+        }
+
+        [Test]
         public void MockFile_GetCreationTimeOfNonExistantFile_ShouldReturnDefaultValue() {
             ExecuteDefaultValueTest((f, p) => f.GetCreationTime(p));
         }
