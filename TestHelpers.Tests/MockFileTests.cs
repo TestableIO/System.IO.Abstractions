@@ -29,6 +29,29 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 file.ReadAllText(path));
         }
 
+
+        [Test]
+        public void MockFile_CreateText()
+        {
+            // Arrange
+            const string path = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem();
+       
+
+            var file = new MockFile(fileSystem);
+
+            // Act
+            var sw = file.CreateText(path);
+
+            sw.Write("This is a test");
+            sw.Close();
+
+            // Assert
+            Assert.AreEqual(
+                "This is a test",
+                file.ReadAllText(path));
+        }
+
         [Test]
         public void MockFile_AppendAllText_ShouldPersistNewTextWithCustomEncoding()
         {
