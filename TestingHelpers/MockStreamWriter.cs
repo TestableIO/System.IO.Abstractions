@@ -22,7 +22,7 @@ namespace System.IO.Abstractions.TestingHelpers
             if (mockFileDataAccessor.FileExists(path))
             {
                 /* only way to make an expandable MemoryStream that starts with a particular content */
-                var data = mockFileDataAccessor.GetFile(path).Contents;
+                var data = mockFileDataAccessor.GetFile(path).TextContents;
                 base.Write(data);
                 
             }
@@ -35,6 +35,14 @@ namespace System.IO.Abstractions.TestingHelpers
             base.Write(value);
 
             
+        }
+
+        public override void WriteLine(string value)
+        {
+            //Inspect the value and do something
+            base.WriteLine(value);
+
+
         }
    
 
