@@ -35,13 +35,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             const string path = @"q:\something-fake\foo.txt";
-            var fileSystem = new MockFileSystem();
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, new MockFileData("") }
+            });
        
 
             var file = new MockFile(fileSystem);
 
             // Act
-            var sw = file.CreateText(path);
+            var sw = fileSystem.FileInfo.FromFileName(path).CreateText();
 
             sw.Write("This is a test");
             sw.Close();
@@ -50,6 +53,32 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(
                 "This is a test",
                 file.ReadAllText(path));
+        }
+
+        [Test]
+        public void MockFile_CreateText_WithExistingData()
+        {
+            // Arrange
+            const string path = @"q:\something-fake\foo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, new MockFileData("Existing Data+") }
+            });
+
+            var file = new MockFile(fileSystem);
+
+            // Act
+            var sw = fileSystem.FileInfo.FromFileName(path).CreateText();
+
+            sw.Write("This is a test");
+            sw.Close();
+
+            var result = file.ReadAllText(path);
+
+            // Assert
+            Assert.AreEqual(
+                "Existing Data+This is a test",
+                result);
         }
 
         [Test]
