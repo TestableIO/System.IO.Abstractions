@@ -33,7 +33,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override StreamWriter AppendText(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            if (mockFileDataAccessor.FileExists(path))
+            {
+                StreamWriter sw = new StreamWriter(OpenWrite(path));
+                sw.BaseStream.Seek(0, SeekOrigin.End); //push the stream pointer at the end for append.
+                return sw;
+
+            }
+            else
+            {
+                return new StreamWriter(Create(path));
+            }
         }
 
         public override void Copy(string sourceFileName, string destFileName)

@@ -1154,5 +1154,40 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(stream.Length, Is.EqualTo(0));
             Assert.That(file.Contents.Length, Is.EqualTo(0));
         }
+        [Test]
+        public void MockFile_AppendText_AppendTextToanExistingFile()
+        {
+            const string filepath = @"c:\something\does\exist.txt";
+            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { filepath, new MockFileData("I'm here. ") }
+            });
+
+            var stream = filesystem.File.AppendText(filepath);
+
+            stream.Write("Me too!");
+            stream.Flush();
+            stream.Close();
+
+            var file = filesystem.GetFile(filepath);
+            Assert.That(file.TextContents, Is.EqualTo("I'm here. Me too!"));
+        }
+
+        [Test]
+        public void MockFile_AppendText_CreatesNewFileForAppendToNonExistingFile()
+        {
+            const string filepath = @"c:\something\doesnt\exist.txt";
+            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            var stream = filesystem.File.AppendText(filepath);
+
+            stream.Write("New too!");
+            stream.Flush();
+            stream.Close();
+
+            var file = filesystem.GetFile(filepath);
+            Assert.That(file.TextContents, Is.EqualTo("New too!"));
+            Assert.That(filesystem.FileExists(filepath));
+        }
     }
 }
