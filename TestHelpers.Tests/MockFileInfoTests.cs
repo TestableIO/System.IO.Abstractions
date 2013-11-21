@@ -188,5 +188,41 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.AreEqual(@"c:\temp\level1\level2\", result.FullName);
         }
+
+        [Test]
+        public void MockFileInfo_OpenRead_ShouldReturnByteContentOfFile()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(@"c:\temp\file.txt", new MockFileData(new byte[] { 1, 2 }));
+            var fileInfo = fileSystem.FileInfo.FromFileName(@"c:\temp\file.txt");
+
+            // Act
+            byte[] result = new byte[2];
+            using (var stream = fileInfo.OpenRead())
+            {
+                stream.Read(result, 0, 2);
+            }
+
+            Assert.AreEqual(new byte[] { 1, 2 }, result);
+        }
+
+        [Test]
+        public void MockFileInfo_OpenText_ShouldReturnStringContentOfFile()
+        {
+          // Arrange
+          var fileSystem = new MockFileSystem();
+          fileSystem.AddFile(@"c:\temp\file.txt", new MockFileData(@"line 1\r\nline 2"));
+          var fileInfo = fileSystem.FileInfo.FromFileName(@"c:\temp\file.txt");
+
+          // Act
+          string result;
+          using (var streamReader = fileInfo.OpenText())
+          {
+            result = streamReader.ReadToEnd();
+          }
+
+          Assert.AreEqual(@"line 1\r\nline 2", result);
+        }
     }
 }
