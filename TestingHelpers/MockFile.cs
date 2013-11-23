@@ -18,17 +18,41 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void AppendAllText(string path, string contents)
         {
-            mockFileDataAccessor
-                .GetFile(path)
-                .TextContents += contents;
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                var dir = mockFileDataAccessor.Path.GetDirectoryName(path);
+                if (!mockFileDataAccessor.Directory.Exists(dir))
+                {
+                    throw new DirectoryNotFoundException(String.Format("Could not find a part of the path '{0}'.", path));
+                }
+                mockFileDataAccessor.AddFile(path, new MockFileData(contents));
+            }
+            else
+            {
+                mockFileDataAccessor
+                    .GetFile(path)
+                    .TextContents += contents;
+            }
         }
 
         public override void AppendAllText(string path, string contents, Encoding encoding)
         {
-            var file = mockFileDataAccessor.GetFile(path);
-            var originalText = encoding.GetString(file.Contents);
-            var newText = originalText + contents;
-            file.Contents = encoding.GetBytes(newText);
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                var dir = mockFileDataAccessor.Path.GetDirectoryName(path);
+                if (!mockFileDataAccessor.Directory.Exists(dir))
+                {
+                    throw new DirectoryNotFoundException(String.Format("Could not find a part of the path '{0}'.", path));
+                }
+                mockFileDataAccessor.AddFile(path, new MockFileData(encoding.GetBytes(contents)));
+            }
+            else
+            {
+                var file = mockFileDataAccessor.GetFile(path);
+                var originalText = encoding.GetString(file.Contents);
+                var newText = originalText + contents;
+                file.Contents = encoding.GetBytes(newText);
+            }
         }
 
         public override StreamWriter AppendText(string path)
