@@ -65,5 +65,36 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(result, Is.EqualTo(@"c:\temp\folder\"));
         }
+
+        [Test]
+        public void MockDirectoryInfo_GetFileSystemInfos_ShouldReturnBothDirectoriesAndFiles()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\temp\folder\file.txt", new MockFileData("Hello World") },
+                { @"c:\temp\folder\folder", new MockDirectoryData() }
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, @"c:\temp\folder");
+            var result = directoryInfo.GetFileSystemInfos();
+
+            Assert.That(result.Length, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void MockDirectoryInfo_GetFileSystemInfos_ShouldReturnDirectoriesAndNamesWithSearchPattern()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\temp\folder\file.txt", new MockFileData("Hello World") },
+                { @"c:\temp\folder\folder", new MockDirectoryData() },
+                { @"c:\temp\folder\older", new MockDirectoryData() }
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, @"c:\temp\folder");
+            var result = directoryInfo.GetFileSystemInfos("f*");
+
+            Assert.That(result.Length, Is.EqualTo(2));
+        }
     }
 }

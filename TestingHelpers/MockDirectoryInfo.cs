@@ -189,12 +189,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileSystemInfoBase[] GetFileSystemInfos()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return GetFileSystemInfos("*");
         }
 
         public override FileSystemInfoBase[] GetFileSystemInfos(string searchPattern)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return GetFileSystemInfos(searchPattern, SearchOption.TopDirectoryOnly);
+        }
+
+        internal FileSystemInfoBase[] GetFileSystemInfos(string searchPattern, SearchOption searchOption)
+        {
+            return this.GetDirectories(searchPattern, searchOption).OfType<FileSystemInfoBase>().Concat(this.GetFiles(searchPattern, searchOption)).ToArray();
         }
 
         public override void MoveTo(string destDirName)
