@@ -30,6 +30,56 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_AppendAllText_ShouldCreateIfNotExist()
+        {
+            // Arrange
+            string path = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, new MockFileData("Demo text content") }
+            });
+
+            // Act
+            var path2 = @"c:\something\demo2.txt";
+            fileSystem.File.AppendAllText(path2, "some text");
+            var path3 = @"c:\something\demo3.txt";
+            fileSystem.File.AppendAllText(path3, "some text", Encoding.Unicode);
+
+            // Assert
+            Assert.AreEqual(
+                "some text",
+                fileSystem.File.ReadAllText(path2));
+            Assert.AreEqual(
+                "some text",
+                fileSystem.File.ReadAllText(path3, Encoding.Unicode));
+        }
+
+        [Test]
+        public void MockFile_AppendAllText_ShouldFailIfNotExistButDirectoryAlsoNotExist()
+        {
+            // Arrange
+            string path = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, new MockFileData("Demo text content") }
+            });
+
+            var file = new MockFile(fileSystem);
+
+
+            // Act
+            path = @"c:\something2\demo.txt";
+
+            // Assert
+            Exception ex;
+            ex = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.AppendAllText(path, "some text"));
+            Assert.That(ex.Message, Is.EqualTo(String.Format("Could not find a part of the path '{0}'.", path)));
+
+            ex = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.AppendAllText(path, "some text", Encoding.Unicode));
+            Assert.That(ex.Message, Is.EqualTo(String.Format("Could not find a part of the path '{0}'.", path)));
+        }
+
+        [Test]
         public void MockFile_AppendAllText_ShouldPersistNewTextWithCustomEncoding()
         {
             // Arrange
