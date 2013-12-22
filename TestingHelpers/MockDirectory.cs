@@ -143,13 +143,13 @@ namespace System.IO.Abstractions.TestingHelpers
 
             path = mockFileDataAccessor.Path.GetFullPath(path);
 
-            const string allDirectoriesPattern = @"([\w\d\s-\.]*\\)*";
+            const string allDirectoriesPattern = @"([^<>:""/\\|?*]*\\)*";
             
             var fileNamePattern = searchPattern == "*"
                 ? @"[^\\]*?\\?"
                 : Regex.Escape(searchPattern)
-                    .Replace(@"\*", @"[\w\d\s-\.]*?")
-                    .Replace(@"\?", @"[\w\d\s-\.]?");
+                    .Replace(@"\*", @"[^<>:""/\\|?*]*?")
+                    .Replace(@"\?", @"[^<>:""/\\|?*]?");
 
             var pathPattern = string.Format(
                 @"(?i:^{0}{1}{2}$)",
