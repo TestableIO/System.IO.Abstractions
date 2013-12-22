@@ -111,8 +111,29 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(@"c:\", "*.gif", SearchOption.AllDirectories);
 
             // Assert
-
             Assert.That(result, Is.EquivalentTo( expected));
+        }
+
+        [Test]
+        public void MockDirectory_GetFiles_FilterShouldFindFilesWithSpecialChars()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.1#.pdf", new MockFileData("Demo text content") },
+                { @"c:\b\b #1.txt", new MockFileData("Demo text content") }
+            });
+            var expected = new[]
+            {
+                @"c:\a.1#.pdf",
+                @"c:\b\b #1.txt",
+            };
+
+            // Act
+            var result = fileSystem.Directory.GetFiles(@"c:\", "*.*", SearchOption.AllDirectories);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
         }
 
         [Test]
