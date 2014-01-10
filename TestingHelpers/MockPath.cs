@@ -27,5 +27,17 @@
 
             return path;
         }
+
+        public override string GetTempFileName()
+        {
+            string fileName = mockFileDataAccessor.Path.GetRandomFileName();
+            string tempDir = mockFileDataAccessor.Path.GetTempPath();
+
+            string fullPath = mockFileDataAccessor.Path.Combine(tempDir, fileName);
+
+            mockFileDataAccessor.AddFile(fullPath, new MockFileData(String.Empty));
+
+            return fullPath;
+        }
     }
 }
