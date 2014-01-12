@@ -168,6 +168,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void GetTempFileName_Called_CreatesEmptyFileInTempDirectory()
+        {
+            //Arrange
+            var fileSystem = new MockFileSystem();
+            var mockPath = new MockPath(fileSystem);
+
+            //Act
+            var result = mockPath.GetTempFileName();
+
+            Assert.True(fileSystem.FileExists(result));
+            Assert.AreEqual(0, fileSystem.FileInfo.FromFileName(result).Length);
+        }
+
+        [Test]
         public void GetTempPath_Called_ReturnsStringLengthGreaterThanZero()
         {
             //Arrange
