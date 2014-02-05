@@ -1,4 +1,6 @@
-﻿using System.Security.AccessControl;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
@@ -11,6 +13,59 @@ namespace System.IO.Abstractions
         {
             this.instance = instance;
         }
+
+#if NET40 || NET45
+        public override IEnumerable<DirectoryInfoBase> EnumerateDirectories()
+        {
+            return instance.EnumerateDirectories().WrapDirectories();
+        }
+
+        public override IEnumerable<DirectoryInfoBase> EnumerateDirectories(string searchPattern)
+        {
+            return instance.EnumerateDirectories(searchPattern).WrapDirectories();
+        }
+
+        public override IEnumerable<DirectoryInfoBase> EnumerateDirectories(string searchPattern, SearchOption searchOption)
+        {
+            return instance.EnumerateDirectories(searchPattern, searchOption).WrapDirectories();
+        }
+
+        public override IEnumerable<FileInfoBase> EnumerateFiles()
+        {
+            return instance.EnumerateFiles().WrapFiles();
+        }
+
+        public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern)
+        {
+            return instance.EnumerateFiles(searchPattern).WrapFiles();
+        }
+
+        public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern, SearchOption searchOption)
+        {
+            return instance.EnumerateFiles(searchPattern, searchOption).WrapFiles();
+        }
+
+        public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos()
+        {
+            return instance.EnumerateFileSystemInfos().WrapFileSystemInfos();
+        }
+
+        public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern)
+        {
+            return instance.EnumerateFileSystemInfos(searchPattern).WrapFileSystemInfos();
+        }
+
+        public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern, SearchOption searchOption)
+        {
+            return instance.EnumerateFileSystemInfos(searchPattern, searchOption).WrapFileSystemInfos();
+        }
+
+        public override FileSystemInfoBase[] GetFileSystemInfos(string searchPattern, SearchOption searchOption)
+        {
+            var data = instance.GetFileSystemInfos(searchPattern, searchOption);
+            return data.WrapFileSystemInfos();
+        }
+#endif
 
         public override void Delete()
         {

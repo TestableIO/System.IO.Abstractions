@@ -14,4 +14,9 @@
       <dependency id="System.IO.Abstractions" />
     </dependencies>
   </metadata>
+  <files>
+   <file src="bin\Release\v3.5\*.dll" target="lib\net35" />
+   <file src="bin\Release\v4.0\*.dll" target="lib\net40" />
+   <file src="bin\Release\v4.5\*.dll" target="lib\net45" />
+  </files>  
 </package>

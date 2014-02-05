@@ -1,4 +1,5 @@
-﻿using System.Security.AccessControl;
+﻿using System.Collections.Generic;
+using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
@@ -9,6 +10,18 @@ namespace System.IO.Abstractions
         public abstract DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity);
         public abstract void Delete(string path);
         public abstract void Delete(string path, bool recursive);
+#if NET40 || NET45
+        public abstract IEnumerable<string> EnumerateFiles(string path);
+        public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern);
+        public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
+        public abstract IEnumerable<string> EnumerateDirectories(string path);
+        public abstract IEnumerable<string> EnumerateDirectories(string path, string searchPattern);
+        public abstract IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
+        public abstract IEnumerable<string> EnumerateFileSystemEntries(string path);
+        public abstract IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern);
+        public abstract IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
+        public abstract string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
+#endif
         public abstract bool Exists(string path);
         public abstract DirectorySecurity GetAccessControl(string path);
         public abstract DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections);

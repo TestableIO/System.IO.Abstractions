@@ -28,7 +28,29 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.That(result, Is.EquivalentTo(expected));
         }
-  
+#if NET40 || NET45 
+        [Test]
+        public void MockDirectory_EnumerateFiles_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories() {
+          // Arrange
+          var fileSystem = SetupFileSystem();
+          var expected = new[]
+            {
+                @"c:\a\a.txt",
+                @"c:\a\b.gif",
+                @"c:\a\c.txt",
+                @"c:\a\a\a.txt",
+                @"c:\a\a\b.txt",
+                @"c:\a\a\c.gif"
+            };
+
+          // Act
+          var result = fileSystem.Directory.EnumerateFiles(@"c:\a", "*", SearchOption.AllDirectories);
+
+          // Assert
+          Assert.That(result, Is.EquivalentTo(expected));
+        }
+#endif
+
         private MockFileSystem SetupFileSystem()
         {
             return new MockFileSystem(new Dictionary<string, MockFileData>
