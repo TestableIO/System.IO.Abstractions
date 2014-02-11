@@ -558,6 +558,35 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_GetDirectories_ShouldThrowWhenPathIsNotMocked()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.gif", new MockFileData("Demo text content") },
+                { @"c:\b.txt", new MockFileData("Demo text content") },
+                { @"c:\c.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a.txt", new MockFileData("Demo text content") },
+                { @"c:\a\b.gif", new MockFileData("Demo text content") },
+                { @"c:\a\c.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\a.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\b.txt", new MockFileData("Demo text content") },
+                { @"c:\a\a\c.gif", new MockFileData("Demo text content") },
+            });
+
+            // Act
+            try
+            {
+                var result = fileSystem.Directory.GetDirectories(@"c:\d").ToArray();
+                // Assert
+                Assert.Fail();
+            }
+            catch (DirectoryNotFoundException)
+            {
+            }
+        }
+
+        [Test]
         public void MockDirectory_Move_ShouldMove()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
