@@ -111,6 +111,11 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             path = EnsurePathEndsWithDirectorySeparator(path);
 
+            if (!Exists(path))
+            {
+                throw new DirectoryNotFoundException(string.Format("Could not find a part of the path '{0}'.", path));
+            }
+
             var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
             return dirs.Where(p => p != path).ToArray();
         }
@@ -134,6 +139,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
         {
+            if (!Exists(path))
+            {
+                throw new DirectoryNotFoundException(string.Format("Could not find a part of the path '{0}'.", path));
+            }
+
             return GetFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
         }
 
