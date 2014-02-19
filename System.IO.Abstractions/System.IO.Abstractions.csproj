@@ -76,6 +76,8 @@
     <Compile Include="FileInfoWrapper.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="FileSystemInfoBase.cs" />
+    <Compile Include="FileSystemWatcherBase.cs" />
+    <Compile Include="FileSystemWatcherWrapper.cs" />
     <Compile Include="FileWrapper.cs" />
     <Compile Include="FileBase.cs" />
     <Compile Include="IDirectoryInfoFactory.cs" />
