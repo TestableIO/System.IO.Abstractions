@@ -126,7 +126,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var expected = new[]
             {
                 @"c:\a.1#.pdf",
-                @"c:\b\b #1.txt",
+                @"c:\b\b #1.txt"
             };
 
             // Act
@@ -170,85 +170,97 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_GetCreationTime_ShouldReturnCreationTimeFromFile()
         {
-            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.File.SetCreationTime(p, d), 
-                                     getter: (fs, p) => fs.Directory.GetCreationTime(p));
+            ExecuteTimeAttributeTest(
+                (fs, p, d) => fs.File.SetCreationTime(p, d),
+                (fs, p) => fs.Directory.GetCreationTime(p));
         }
 
         [Test]
         public void MockDirectory_GetCreationTimeUtc_ShouldReturnCreationTimeUtcFromFile()
         {
-            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.File.SetCreationTimeUtc(p, d),
-                                     getter: (fs, p) => fs.Directory.GetCreationTimeUtc(p));
+            ExecuteTimeAttributeTest(
+                (fs, p, d) => fs.File.SetCreationTimeUtc(p, d),
+                (fs, p) => fs.Directory.GetCreationTimeUtc(p));
         }
 
         [Test]
         public void MockDirectory_GetLastAccessTime_ShouldReturnLastAccessTimeFromFile()
         {
-            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.File.SetLastAccessTime(p, d),
-                                     getter: (fs, p) => fs.Directory.GetLastAccessTime(p));
+            ExecuteTimeAttributeTest(
+                (fs, p, d) => fs.File.SetLastAccessTime(p, d),
+                (fs, p) => fs.Directory.GetLastAccessTime(p));
         }
 
         [Test]
         public void MockDirectory_GetLastAccessTimeUtc_ShouldReturnLastAccessTimeUtcFromFile()
         {
-            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.File.SetLastAccessTimeUtc(p, d),
-                                     getter: (fs, p) => fs.Directory.GetLastAccessTimeUtc(p));
+            ExecuteTimeAttributeTest(
+                (fs, p, d) => fs.File.SetLastAccessTimeUtc(p, d),
+                (fs, p) => fs.Directory.GetLastAccessTimeUtc(p));
         }
 
         [Test]
         public void MockDirectory_GetLastWriteTime_ShouldReturnLastWriteTimeFromFile()
         {
-            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.File.SetLastWriteTime(p, d),
-                                     getter: (fs, p) => fs.Directory.GetLastWriteTime(p));
+            ExecuteTimeAttributeTest(
+                (fs, p, d) => fs.File.SetLastWriteTime(p, d),
+                (fs, p) => fs.Directory.GetLastWriteTime(p));
         }
 
         [Test]
         public void MockDirectory_GetLastWriteTimeUtc_ShouldReturnLastWriteTimeUtcFromFile()
         {
-            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.File.SetLastWriteTimeUtc(p, d),
-                                     getter: (fs, p) => fs.Directory.GetLastWriteTimeUtc(p));
+            ExecuteTimeAttributeTest(
+                (fs, p, d) => fs.File.SetLastWriteTimeUtc(p, d),
+                (fs, p) => fs.Directory.GetLastWriteTimeUtc(p));
         }
 
         [Test]
         public void MockDirectory_SetCreationTime_ShouldSetCreationTimeOnFile()
         {
-            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.Directory.SetCreationTime(p, d),
-                                     getter: (fs, p) => fs.File.GetCreationTime(p));
+            ExecuteTimeAttributeTest(
+                (fs, p, d) => fs.Directory.SetCreationTime(p, d),
+                (fs, p) => fs.File.GetCreationTime(p));
         }
 
         [Test]
         public void MockDirectory_SetCreationTimeUtc_ShouldSetCreationTimeUtcOnFile()
         {
-            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.Directory.SetCreationTimeUtc(p, d),
-                                     getter: (fs, p) => fs.File.GetCreationTimeUtc(p));
+            ExecuteTimeAttributeTest(
+                (fs, p, d) => fs.Directory.SetCreationTimeUtc(p, d),
+                (fs, p) => fs.File.GetCreationTimeUtc(p));
         }
 
         [Test]
         public void MockDirectory_SetLastAccessTime_ShouldSetLastAccessTimeOnFile()
         {
-            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.Directory.SetLastAccessTime(p, d),
-                                     getter: (fs, p) => fs.File.GetLastAccessTime(p));
+            ExecuteTimeAttributeTest(
+                (fs, p, d) => fs.Directory.SetLastAccessTime(p, d),
+                (fs, p) => fs.File.GetLastAccessTime(p));
         }
 
         [Test]
         public void MockDirectory_SetLastAccessTimeUtc_ShouldSetLastAccessTimeUtcOnFile()
         {
-            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.Directory.SetLastAccessTimeUtc(p, d),
-                                     getter: (fs, p) => fs.File.GetLastAccessTimeUtc(p));
+            ExecuteTimeAttributeTest(
+                (fs, p, d) => fs.Directory.SetLastAccessTimeUtc(p, d),
+                (fs, p) => fs.File.GetLastAccessTimeUtc(p));
         }
 
         [Test]
         public void MockDirectory_SetLastWriteTime_ShouldSetLastWriteTimeOnFile()
         {
-            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.Directory.SetLastWriteTime(p, d),
-                                     getter: (fs, p) => fs.File.GetLastWriteTime(p));
+            ExecuteTimeAttributeTest(
+                (fs, p, d) => fs.Directory.SetLastWriteTime(p, d),
+                (fs, p) => fs.File.GetLastWriteTime(p));
         }
 
         [Test]
         public void MockDirectory_SetLastWriteTimeUtc_ShouldSetLastWriteTimeUtcOnFile()
         {
-            ExecuteTimeAttributeTest(setter: (fs, p, d) => fs.Directory.SetLastWriteTimeUtc(p, d),
-                                     getter: (fs, p) => fs.File.GetLastWriteTimeUtc(p));
+            ExecuteTimeAttributeTest(
+                (fs, p, d) => fs.Directory.SetLastWriteTimeUtc(p, d),
+                (fs, p) => fs.File.GetLastWriteTimeUtc(p));
         }
 
         [Test]
@@ -577,7 +589,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Act
             try
             {
-                var result = fileSystem.Directory.GetDirectories(@"c:\d").ToArray();
+                fileSystem.Directory.GetDirectories(@"c:\d");
                 // Assert
                 Assert.Fail();
             }
