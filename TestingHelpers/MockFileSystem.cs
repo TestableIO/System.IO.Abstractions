@@ -96,6 +96,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     throw new UnauthorizedAccessException(string.Format("Access to the path '{0}' is denied.", path));
 
                 files[fixedPath] = new MockDirectoryData();
+                directory.CreateDirectory(fixedPath);
             }
         }
 

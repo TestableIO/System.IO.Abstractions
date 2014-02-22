@@ -92,5 +92,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(memoryStream.Length > 0, "Length didnt increase after serialization task.");
         }
+
+        [Test]
+        public void MockFileSystem_AddDirectory_ShouldCreateDirectory()
+        {
+            // Arrange
+            const string baseDirectory = @"C:\Test";
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            fileSystem.AddDirectory(baseDirectory);
+
+            // Assert
+            Assert.IsTrue(fileSystem.Directory.Exists(baseDirectory));
+        }
     }
 }
