@@ -16,11 +16,11 @@ namespace System.IO.Abstractions
         public abstract string Path { get; set; }
         public abstract ISite Site { get; set; }
         public abstract ISynchronizeInvoke SynchronizingObject { get; set; }
-        public event FileSystemEventHandler Changed;
-        public event FileSystemEventHandler Created;
-        public event FileSystemEventHandler Deleted;
-        public event ErrorEventHandler Error;
-        public event RenamedEventHandler Renamed;
+        public virtual event FileSystemEventHandler Changed;
+        public virtual event FileSystemEventHandler Created;
+        public virtual event FileSystemEventHandler Deleted;
+        public virtual event ErrorEventHandler Error;
+        public virtual event RenamedEventHandler Renamed;
         public abstract void BeginInit();
         public abstract void Dispose();
         public abstract void EndInit();
