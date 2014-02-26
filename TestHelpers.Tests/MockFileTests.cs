@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
@@ -73,10 +74,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Exception ex;
             ex = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.AppendAllText(path, "some text"));
-            Assert.That(ex.Message, Is.EqualTo(String.Format("Could not find a part of the path '{0}'.", path)));
+            Assert.That(ex.Message, Is.EqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path)));
 
             ex = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.AppendAllText(path, "some text", Encoding.Unicode));
-            Assert.That(ex.Message, Is.EqualTo(String.Format("Could not find a part of the path '{0}'.", path)));
+            Assert.That(ex.Message, Is.EqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path)));
         }
 
         [Test]
@@ -1012,7 +1013,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             mockFile.SetAttributes(path, FileAttributes.ReadOnly);
          
             var exception =  Assert.Throws<UnauthorizedAccessException>(() => mockFile.Create(path).Close());
-            Assert.That(exception.Message, Is.EqualTo(string.Format("Access to the path '{0}' is denied.", path)));
+            Assert.That(exception.Message, Is.EqualTo(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path)));
         }
 
         [Test]

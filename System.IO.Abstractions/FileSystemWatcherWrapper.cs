@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel;
 
 namespace System.IO.Abstractions
 {
     [Serializable]
     public class FileSystemWatcherWrapper : FileSystemWatcherBase
     {
+        [NonSerialized]
         private readonly FileSystemWatcher watcher;
 
         public FileSystemWatcherWrapper()

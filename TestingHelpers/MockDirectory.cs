@@ -50,7 +50,7 @@ namespace System.IO.Abstractions.TestingHelpers
             path = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(path));
             var affectedPaths = mockFileDataAccessor
                 .AllPaths
-                .Where(p => p.StartsWith(path, StringComparison.InvariantCultureIgnoreCase))
+                .Where(p => p.StartsWith(path, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
             if (!affectedPaths.Any())
@@ -69,7 +69,7 @@ namespace System.IO.Abstractions.TestingHelpers
             path = EnsurePathEndsWithDirectorySeparator(path);
 
             path = mockFileDataAccessor.Path.GetFullPath(path);
-            return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.InvariantCultureIgnoreCase));
+            return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.OrdinalIgnoreCase));
         }
 
         public override DirectorySecurity GetAccessControl(string path)
@@ -113,7 +113,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!Exists(path))
             {
-                throw new DirectoryNotFoundException(string.Format("Could not find a part of the path '{0}'.", path));
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
             }
 
             var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
@@ -141,7 +141,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (!Exists(path))
             {
-                throw new DirectoryNotFoundException(string.Format("Could not find a part of the path '{0}'.", path));
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
             }
 
             return GetFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
@@ -162,6 +162,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     .Replace(@"\?", @"[^<>:""/\\|?*]?");
 
             var pathPattern = string.Format(
+                CultureInfo.InvariantCulture,
                 @"(?i:^{0}{1}{2}$)",
                 Regex.Escape(path),
                 searchOption == SearchOption.AllDirectories ? allDirectoriesPattern : string.Empty,
@@ -290,7 +291,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         static string EnsurePathEndsWithDirectorySeparator(string path)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
                 path += Path.DirectorySeparatorChar;
             return path;
         }
