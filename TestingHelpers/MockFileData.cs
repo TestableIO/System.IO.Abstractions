@@ -1,29 +1,29 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
     [Serializable]
     public class MockFileData
     {
-        static readonly Encoding defaultEncoding = Encoding.UTF8;
+        internal static readonly Encoding DefaultEncoding = new UTF8Encoding(false, true);
         public static readonly MockFileData NullObject = new MockFileData("") {
           LastWriteTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
           LastAccessTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
           CreationTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
         };
 
-        byte[] contents;
-        Encoding encoding;
-        DateTimeOffset creationTime = new DateTimeOffset(2010, 01, 02, 00, 00, 00, TimeSpan.FromHours(4));
-        DateTimeOffset lastAccessTime = new DateTimeOffset(2010, 02, 04, 00, 00, 00, TimeSpan.FromHours(4));
-        DateTimeOffset lastWriteTime = new DateTimeOffset(2010, 01, 04, 00, 00, 00, TimeSpan.FromHours(4));
+        private byte[] contents;
+        private DateTimeOffset creationTime = new DateTimeOffset(2010, 01, 02, 00, 00, 00, TimeSpan.FromHours(4));
+        private DateTimeOffset lastAccessTime = new DateTimeOffset(2010, 02, 04, 00, 00, 00, TimeSpan.FromHours(4));
+        private DateTimeOffset lastWriteTime = new DateTimeOffset(2010, 01, 04, 00, 00, 00, TimeSpan.FromHours(4));
 
         private FileAttributes attributes = FileAttributes.Normal;
 
         public virtual bool IsDirectory { get { return false; } }
         
         public MockFileData(string textContents)
-            : this(defaultEncoding.GetBytes(textContents))
+            : this(DefaultEncoding.GetBytes(textContents))
         {}
 
         public MockFileData(string textContents, Encoding encoding)
@@ -31,13 +31,12 @@ namespace System.IO.Abstractions.TestingHelpers
         { }
 
         public MockFileData(byte[] contents)
-            : this(contents, defaultEncoding)
+            : this(contents, DefaultEncoding)
         { }
 
         public MockFileData(byte[] contents, Encoding encoding)
         {
-            this.encoding = encoding;
-            this.contents = contents;
+          this.contents = encoding.GetPreamble().Concat(contents).ToArray();
         }
 
         public byte[] Contents
@@ -48,8 +47,16 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public string TextContents
         {
-            get { return encoding.GetString(contents); }
-            set { contents = encoding.GetBytes(value); }
+            get
+            {
+              using (var contentStream = new MemoryStream(contents))
+              using (var streamReader = new StreamReader(contentStream, true))
+              {
+                string stringContent = streamReader.ReadToEnd();
+                return stringContent;
+              }
+            }
+            set { contents = DefaultEncoding.GetBytes(value); }
         }
 
         public DateTimeOffset CreationTime

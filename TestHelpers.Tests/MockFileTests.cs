@@ -621,6 +621,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 fileSystem.GetFile(path).TextContents);
         }
 
+        [TestCaseSource("GetEncodings")]
+        public void MockFile_WriteAllText_Encoding_ShouldWriteTextFileWithCorrectBOM(Encoding encoding)
+        {
+            // Arrange
+            const string path = @"c:\something\demo.txt";
+            const string fileContent = "Hello there! Dzięki.";
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            fileSystem.File.WriteAllText(path, fileContent, encoding);
+
+            // Assert
+            Assert.AreEqual(
+                encoding.GetPreamble().Concat(encoding.GetBytes(fileContent)),
+                fileSystem.GetFile(path).Contents);
+        }
+
         [Test]
         public void MockFile_Move_ShouldMoveFileWithinMemoryFileSystem()
         {
