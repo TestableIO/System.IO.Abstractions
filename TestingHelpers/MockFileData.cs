@@ -21,7 +21,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private FileAttributes attributes = FileAttributes.Normal;
 
         public virtual bool IsDirectory { get { return false; } }
-        
+
         public MockFileData(string textContents)
             : this(DefaultEncoding.GetBytes(textContents))
         {}
@@ -31,11 +31,27 @@ namespace System.IO.Abstractions.TestingHelpers
         { }
 
         public MockFileData(byte[] contents)
-            : this(contents, DefaultEncoding)
-        { }
+        {
+          if (contents == null)
+          {
+            throw new ArgumentNullException("contents");
+          }
+
+          this.contents = contents;
+        }
 
         public MockFileData(byte[] contents, Encoding encoding)
         {
+          if (contents == null)
+          {
+            throw new ArgumentNullException("contents");
+          }
+
+          if (encoding == null)
+          {
+            throw new ArgumentNullException("encoding");
+          }
+
           this.contents = encoding.GetPreamble().Concat(contents).ToArray();
         }
 

@@ -64,10 +64,8 @@ namespace System.IO.Abstractions.TestingHelpers
                 return sw;
 
             }
-            else
-            {
-                return new StreamWriter(Create(path));
-            }
+
+            return new StreamWriter(Create(path));
         }
 
         public override void Copy(string sourceFileName, string destFileName)
