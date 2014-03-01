@@ -20,7 +20,18 @@
             }
         }
 
-        public override void Close() {
+        public override void Close() 
+        {
+            InternalFlush();
+        }
+
+        public override void Flush()
+        {
+            InternalFlush();
+        }
+
+        private void InternalFlush()
+        {
             if (mockFileDataAccessor.FileExists(path))
                 mockFileDataAccessor.RemoveFile(path);
 
