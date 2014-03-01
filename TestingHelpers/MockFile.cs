@@ -1,10 +1,11 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
-    [Serializable]
+  [Serializable]
     public class MockFile : FileBase
     {
         readonly IMockFileDataAccessor mockFileDataAccessor;
@@ -49,9 +50,8 @@ namespace System.IO.Abstractions.TestingHelpers
             else
             {
                 var file = mockFileDataAccessor.GetFile(path);
-                var originalText = encoding.GetString(file.Contents);
-                var newText = originalText + contents;
-                file.Contents = encoding.GetBytes(newText);
+                var bytesToAppend = encoding.GetBytes(contents);
+                file.Contents = file.Contents.Concat(bytesToAppend).ToArray();
             }
         }
 
@@ -62,7 +62,6 @@ namespace System.IO.Abstractions.TestingHelpers
                 StreamWriter sw = new StreamWriter(OpenWrite(path));
                 sw.BaseStream.Seek(0, SeekOrigin.End); //push the stream pointer at the end for append.
                 return sw;
-
             }
 
             return new StreamWriter(Create(path));

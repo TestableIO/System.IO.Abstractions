@@ -30,6 +30,27 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_AppendAllText_ShouldPersistNewTextWithDifferentEncoding()
+        {
+            // Arrange
+            const string path = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+              {
+                  { path, new MockFileData("AA", Encoding.UTF32) }
+              });
+
+            var file = new MockFile(fileSystem);
+
+            // Act
+            file.AppendAllText(path, "BB", Encoding.UTF8);
+
+            // Assert
+            CollectionAssert.AreEqual(
+              new byte[]{255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66},
+              fileSystem.GetFile(path).Contents);
+        }
+
+        [Test]
         public void MockFile_AppendAllText_ShouldCreateIfNotExist()
         {
             // Arrange
@@ -80,7 +101,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_AppendAllText_ShouldPersistNewTextWithCustomEncoding()
+        public void MockFile_AppendAllText_ShouldNotPersistNewTextWithCustomEncoding()
         {
             // Arrange
             const string path = @"c:\something\demo.txt";
@@ -97,9 +118,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             var expected = new byte[]
             {
+                // there should be
+                //  no BOM
+                //  'Demo text content' in UTF-8
                 68, 101, 109, 111, 32, 116, 101, 120, 116, 32, 99, 111, 110, 116,
-                101, 110, 255, 253, 0, 43, 0, 32, 0, 115, 0, 111, 0, 109, 0, 101,
-                0, 32, 0, 116, 0, 101, 0, 120, 0, 116
+                //  no BOM
+                //  '+ some text' in BigEndianUnicode
+                101, 110, 116, 0, 43, 0, 32, 0, 115, 0, 111, 0, 109, 0, 101, 0, 32, 0, 116, 0, 101, 0, 120, 0, 116
             };
             CollectionAssert.AreEqual(
                 expected,
@@ -574,7 +599,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_WriteAllText_ShouldOverriteAnExistingFile()
+        public void MockFile_WriteAllText_ShouldOverrideAnExistingFile()
         {
             // http://msdn.microsoft.com/en-us/library/ms143375.aspx
 
@@ -592,7 +617,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         private IEnumerable<Encoding> GetEncodings()
         {
-            return new List<Encoding>()
+            return new List<Encoding>
                 {
                     Encoding.ASCII,
                     Encoding.BigEndianUnicode,
@@ -616,9 +641,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.WriteAllText(path, fileContent, encoding);
 
             // Assert
-            Assert.AreEqual(
-                encoding.GetString(encoding.GetBytes(fileContent)),
-                fileSystem.GetFile(path).TextContents);
+            CollectionAssert.AreEqual(
+                encoding.GetPreamble().Concat(encoding.GetBytes(fileContent)),
+                fileSystem.GetFile(path).Contents);
         }
 
         [TestCaseSource("GetEncodings")]
@@ -1222,7 +1247,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(file.Contents.Length, Is.EqualTo(0));
         }
         [Test]
-        public void MockFile_AppendText_AppendTextToanExistingFile()
+        public void MockFile_AppendText_AppendTextToAnExistingFile()
         {
             const string filepath = @"c:\something\does\exist.txt";
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
