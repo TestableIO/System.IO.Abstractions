@@ -14,7 +14,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var serializer = new Runtime.Serialization.Formatters.Binary.BinaryFormatter();
             serializer.Serialize(memoryStream, fileSystem);
 
-            Assert.That(memoryStream.Length > 0, "Length didnt increase after serialization task.");
+            Assert.That(memoryStream.Length > 0, "Length didn't increase after serialization task.");
         }
     }
 }

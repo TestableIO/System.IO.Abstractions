@@ -6,7 +6,8 @@ namespace System.IO.Abstractions.TestingHelpers
     public class MockFileData
     {
         static readonly Encoding defaultEncoding = Encoding.UTF8;
-        public static readonly MockFileData NullObject = new MockFileData("") {
+
+        public static readonly MockFileData NullObject = new MockFileData(string.Empty) {
           LastWriteTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
           LastAccessTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
           CreationTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),

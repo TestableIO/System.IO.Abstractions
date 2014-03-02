@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using System.Security.AccessControl;
 using System.Text;
 
@@ -23,7 +24,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 var dir = mockFileDataAccessor.Path.GetDirectoryName(path);
                 if (!mockFileDataAccessor.Directory.Exists(dir))
                 {
-                    throw new DirectoryNotFoundException(String.Format("Could not find a part of the path '{0}'.", path));
+                    throw new DirectoryNotFoundException(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
                 }
                 mockFileDataAccessor.AddFile(path, new MockFileData(contents));
             }
@@ -42,7 +43,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 var dir = mockFileDataAccessor.Path.GetDirectoryName(path);
                 if (!mockFileDataAccessor.Directory.Exists(dir))
                 {
-                    throw new DirectoryNotFoundException(String.Format("Could not find a part of the path '{0}'.", path));
+                    throw new DirectoryNotFoundException(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
                 }
                 mockFileDataAccessor.AddFile(path, new MockFileData(encoding.GetBytes(contents)));
             }
@@ -73,7 +74,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void Copy(string sourceFileName, string destFileName)
         {
             if (mockFileDataAccessor.FileExists(destFileName))
-                throw new IOException(string.Format("The file {0} already exists.", destFileName));
+                throw new IOException(string.Format(CultureInfo.InvariantCulture, "The file {0} already exists.", destFileName));
 
             mockFileDataAccessor.AddFile(destFileName, mockFileDataAccessor.GetFile(sourceFileName));
         }
@@ -195,7 +196,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
 
             if (sourceFile == null)
-                throw new FileNotFoundException(string.Format("The file \"{0}\" could not be found.", sourceFileName), sourceFileName);
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "The file \"{0}\" could not be found.", sourceFileName), sourceFileName);
 
             mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile.Contents));
             mockFileDataAccessor.RemoveFile(sourceFileName);
@@ -218,7 +219,7 @@ namespace System.IO.Abstractions.TestingHelpers
             bool exists = mockFileDataAccessor.FileExists(path);
 
             if (mode == FileMode.CreateNew && exists)
-                throw new IOException(string.Format("The file '{0}' already exists.", path));
+                throw new IOException(string.Format(CultureInfo.InvariantCulture, "The file '{0}' already exists.", path));
 
             if ((mode == FileMode.Open || mode == FileMode.Truncate) && !exists)
                 throw new FileNotFoundException(path);
@@ -278,7 +279,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override string[] ReadAllLines(string path)
         {
             if (!mockFileDataAccessor.FileExists(path))
-                throw new FileNotFoundException(string.Format("Can't find {0}", path));
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", path));
             return mockFileDataAccessor
                 .GetFile(path)
                 .TextContents
@@ -288,7 +289,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override string[] ReadAllLines(string path, Encoding encoding)
         {
             if (!mockFileDataAccessor.FileExists(path))
-                throw new FileNotFoundException(string.Format("Can't find {0}", path));
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", path));
             return encoding
                 .GetString(mockFileDataAccessor.GetFile(path).Contents)
                 .SplitLines();
@@ -297,7 +298,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override string ReadAllText(string path)
         {
             if (!mockFileDataAccessor.FileExists(path))
-                throw new FileNotFoundException(string.Format("Can't find {0}", path));
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", path));
             return mockFileDataAccessor.GetFile(path).TextContents;
         }
 

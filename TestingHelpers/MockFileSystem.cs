@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -17,7 +18,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = @"C:\Foo\Bar")
         {
-            this.files = new Dictionary<string, MockFileData>(StringComparer.InvariantCultureIgnoreCase);
+            this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
             pathField = new MockPath(this);
             file = new MockFile(this);
             directory = new MockDirectory(this, file, FixPath(currentDirectory));
@@ -72,7 +73,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             var fixedPath = FixPath(path);
             if (FileExists(fixedPath) && (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-                throw new UnauthorizedAccessException(string.Format("Access to the path '{0}' is denied.", path));
+                throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path));
 
             var directoryPath = Path.GetDirectoryName(fixedPath);
 
@@ -93,7 +94,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 if (FileExists(path) &&
                     (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-                    throw new UnauthorizedAccessException(string.Format("Access to the path '{0}' is denied.", path));
+                    throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path));
 
                 files[fixedPath] = new MockDirectoryData();
             }

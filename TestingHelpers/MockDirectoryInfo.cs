@@ -11,8 +11,8 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly IMockFileDataAccessor mockFileDataAccessor;
         readonly string directoryPath;
 
-        private string EnsurePathEndsWithDirectorySeparator(string directoryPath) {
-            if (!directoryPath.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture)))
+        private static string EnsurePathEndsWithDirectorySeparator(string directoryPath) {
+            if (!directoryPath.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
                 directoryPath += Path.DirectorySeparatorChar;
             return directoryPath;
         }
