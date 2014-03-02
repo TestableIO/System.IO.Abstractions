@@ -97,6 +97,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path));
 
                 files[fixedPath] = new MockDirectoryData();
+                directory.CreateDirectory(fixedPath);
             }
         }
 
