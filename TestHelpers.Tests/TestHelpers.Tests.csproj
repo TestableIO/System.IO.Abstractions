@@ -74,6 +74,7 @@
     <Compile Include="MockDirectoryTests.cs" />
     <Compile Include="MockFileInfoFactoryTests.cs" />
     <Compile Include="MockFileInfoTests.cs" />
+    <Compile Include="MockFileStreamTests.cs" />
     <Compile Include="MockFileSystemTests.cs" />
     <Compile Include="MockFileTests.cs" />
     <Compile Include="MockPathTests.cs" />
