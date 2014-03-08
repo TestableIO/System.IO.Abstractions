@@ -72,7 +72,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 fileSystem.File.ReadAllText(path2));
             Assert.AreEqual(
                 "some text",
-                fileSystem.File.ReadAllText(path3, Encoding.Unicode));
+                fileSystem.File.ReadAllText(path3));
+        }
+
+        [Test]
+        public void MockFile_AppendAllText_ShouldCreateIfNotExistWithBom()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var path = @"c:\something\demo3.txt";
+            fileSystem.AddDirectory(@"c:\something\");
+
+            // Act
+            fileSystem.File.AppendAllText(path, "AA", Encoding.UTF32);
+
+            // Assert
+            CollectionAssert.AreEqual(
+              new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0},
+              fileSystem.GetFile(path).Contents);
         }
 
         [Test]

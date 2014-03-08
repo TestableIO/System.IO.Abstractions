@@ -5,7 +5,7 @@ using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
-  [Serializable]
+    [Serializable]
     public class MockFile : FileBase
     {
         readonly IMockFileDataAccessor mockFileDataAccessor;
@@ -19,21 +19,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void AppendAllText(string path, string contents)
         {
-            if (!mockFileDataAccessor.FileExists(path))
-            {
-                var dir = mockFileDataAccessor.Path.GetDirectoryName(path);
-                if (!mockFileDataAccessor.Directory.Exists(dir))
-                {
-                    throw new DirectoryNotFoundException(String.Format("Could not find a part of the path '{0}'.", path));
-                }
-                mockFileDataAccessor.AddFile(path, new MockFileData(contents));
-            }
-            else
-            {
-                mockFileDataAccessor
-                    .GetFile(path)
-                    .TextContents += contents;
-            }
+            AppendAllText(path, contents, MockFileData.DefaultEncoding);
         }
 
         public override void AppendAllText(string path, string contents, Encoding encoding)
@@ -45,7 +31,10 @@ namespace System.IO.Abstractions.TestingHelpers
                 {
                     throw new DirectoryNotFoundException(String.Format("Could not find a part of the path '{0}'.", path));
                 }
-                mockFileDataAccessor.AddFile(path, new MockFileData(encoding.GetBytes(contents)));
+
+                // write contents with BOM
+                var content = encoding.GetPreamble().Concat(encoding.GetBytes(contents)).ToArray();
+                mockFileDataAccessor.AddFile(path, new MockFileData(content));
             }
             else
             {
