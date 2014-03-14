@@ -1240,5 +1240,43 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(file.TextContents, Is.EqualTo("New too!"));
             Assert.That(filesystem.FileExists(filepath));
         }
+
+        [Test]
+        public void Serializable_works()
+        {
+            //Arrange
+            MockFileData data = new MockFileData("Text Contents");
+
+            //Act
+            System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            Stream stream = new MemoryStream();
+            formatter.Serialize(stream, data);
+
+            //Assert
+            Assert.Pass();
+        }
+
+        [Test]
+        public void Serializable_can_deserialize()
+        {
+            //Arrange
+            string textContentStr = "Text Contents";
+
+            //Act
+            MockFileData data = new MockFileData(textContentStr);
+
+            System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            Stream stream = new MemoryStream();
+            formatter.Serialize(stream, data);
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            MockFileData deserialized = (MockFileData)formatter.Deserialize(stream);
+
+            //Assert
+            Assert.That(deserialized.TextContents, Is.EqualTo(textContentStr));
+        }
+
+
     }
 }
