@@ -226,7 +226,6 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream Open(string path, FileMode mode, FileAccess access, FileShare share)
         {
-            //return new MockFileStream(path, mode, access, share);
             bool exists = mockFileDataAccessor.FileExists(path);
 
             if (mode == FileMode.CreateNew && exists)
@@ -267,7 +266,6 @@ namespace System.IO.Abstractions.TestingHelpers
         public override Stream OpenWrite(string path)
         {
             return new MockFileStream(mockFileDataAccessor, path);
-            //return Open(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
         }
 
         public override byte[] ReadAllBytes(string path)
