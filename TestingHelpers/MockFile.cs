@@ -216,6 +216,16 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream Open(string path, FileMode mode)
         {
+            return Open(path, mode, (mode == FileMode.Append ? FileAccess.Write : FileAccess.ReadWrite), FileShare.None);
+        }
+
+        public override Stream Open(string path, FileMode mode, FileAccess access)
+        {
+            return Open(path, mode, access, FileShare.None);
+        }
+
+        public override Stream Open(string path, FileMode mode, FileAccess access, FileShare share)
+        {
             bool exists = mockFileDataAccessor.FileExists(path);
 
             if (mode == FileMode.CreateNew && exists)
@@ -242,22 +252,9 @@ namespace System.IO.Abstractions.TestingHelpers
             return stream;
         }
 
-        public override Stream Open(string path, FileMode mode, FileAccess access)
-        {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
-        }
-
-        public override Stream Open(string path, FileMode mode, FileAccess access, FileShare share)
-        {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
-        }
-
         public override Stream OpenRead(string path)
         {
-            return new MemoryStream(
-                mockFileDataAccessor
-                    .GetFile(path)
-                    .Contents);
+            return Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
         }
 
         public override StreamReader OpenText(string path)
