@@ -95,9 +95,9 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-							if (MockFileData == null) throw new FileNotFoundException("File not found", path);
-							return MockFileData.LastWriteTime.DateTime;
-						}
+                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                return MockFileData.LastWriteTime.DateTime;
+            }
             set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
         }
 
