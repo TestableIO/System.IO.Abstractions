@@ -186,7 +186,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Act
             var result = fileInfo.Directory;
 
-            Assert.AreEqual(@"c:\temp\level1\level2\", result.FullName);
+            Assert.AreEqual(@"c:\temp\level1\level2", result.FullName);
         }
 
         [Test]

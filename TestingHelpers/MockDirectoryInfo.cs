@@ -11,10 +11,11 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly IMockFileDataAccessor mockFileDataAccessor;
         readonly string directoryPath;
 
-        private static string EnsurePathEndsWithDirectorySeparator(string directoryPath) {
-            if (!directoryPath.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
-                directoryPath += Path.DirectorySeparatorChar;
-            return directoryPath;
+        private static string EnsurePathEndsWithDirectorySeparator(string path)
+        {
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
+                path += Path.DirectorySeparatorChar;
+            return path;
         }
 
         public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath)
@@ -72,7 +73,18 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string FullName
         {
-            get { return directoryPath; }
+            get
+            {
+                var root = mockFileDataAccessor.Path.GetPathRoot(directoryPath);
+                if (string.Equals(directoryPath, root, StringComparison.OrdinalIgnoreCase))
+                {
+                    // drives have the trailing slash
+                    return directoryPath;
+                }
+
+                // directories do not have a trailing slash
+                return directoryPath.TrimEnd('\\');
+            }
         }
 
         public override DateTime LastAccessTime

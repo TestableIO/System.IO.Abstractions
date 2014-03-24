@@ -80,7 +80,9 @@ namespace System.IO.Abstractions.TestingHelpers
             lock (files)
             {
                 if (!directory.Exists(directoryPath))
-                    directory.CreateDirectory(directoryPath);
+                {
+                    AddDirectory(directoryPath);
+                }
 
                 files[fixedPath] = mockFile;
             }
@@ -96,8 +98,18 @@ namespace System.IO.Abstractions.TestingHelpers
                     (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
                     throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path));
 
-                files[fixedPath] = new MockDirectoryData();
-                directory.CreateDirectory(fixedPath);
+                var lastIndex = 0;
+                while ((lastIndex = path.IndexOf('\\', lastIndex + 1)) > -1)
+                {
+                    var segment = path.Substring(0, lastIndex + 1);
+                    if (!directory.Exists(segment))
+                    {
+                        files[segment] = new MockDirectoryData();
+                    }
+                }
+
+                var s = path.EndsWith("\\", StringComparison.OrdinalIgnoreCase) ? path : path + "\\";
+                files[s] = new MockDirectoryData();
             }
         }
 
