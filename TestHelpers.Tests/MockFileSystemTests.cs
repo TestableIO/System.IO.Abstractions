@@ -106,5 +106,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.IsTrue(fileSystem.Directory.Exists(baseDirectory));
         }
+
+        [Test]
+        public void MockFileSystem_AddDirectory_ShouldThrowExceptionIfDirectoryIsReadOnly()
+        {
+            // Arrange
+            const string baseDirectory = @"C:\Test";
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(baseDirectory, new MockFileData(string.Empty));
+            fileSystem.File.SetAttributes(baseDirectory, FileAttributes.ReadOnly);
+
+            // Act
+            TestDelegate act = () => fileSystem.AddDirectory(baseDirectory);
+
+            // Assert
+            Assert.Throws<UnauthorizedAccessException>(act);
+        }
     }
 }
