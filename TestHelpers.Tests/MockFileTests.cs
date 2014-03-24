@@ -629,7 +629,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             const string sourceFileContent = "this is some content";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                {sourceFilePath, new MockFileData(sourceFileContent)}
+                {sourceFilePath, new MockFileData(sourceFileContent)},
+                {@"c:\somethingelse\dummy.txt", new MockFileData(new byte[] {0})}
             });
 
             const string destFilePath = @"c:\somethingelse\demo1.txt";
@@ -839,6 +840,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var exception = Assert.Throws<FileNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
             Assert.That(exception.FileName, Is.EqualTo(@"c:\something\demo.txt"));
+        }
+
+        [Test]
+        public void MockFile_Move_ShouldThrowDirectoryNotFoundExceptionWhenSourcePathDoesNotExist_Message()
+        {
+            const string sourceFilePath = @"c:\something\demo.txt";
+            const string destFilePath = @"c:\somethingelse\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+              {
+                  {sourceFilePath, new MockFileData(new byte[] {0})}
+              });
+
+            //var exists = fileSystem.Directory.Exists(@"c:\something");
+            //exists = fileSystem.Directory.Exists(@"c:\something22");
+
+            var exception = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+            //Message = "Could not find a part of the path."
+            Assert.That(exception.Message, Is.EqualTo(@"Could not find a part of the path."));
         }
 
         [Test]

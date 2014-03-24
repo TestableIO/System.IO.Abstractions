@@ -198,6 +198,12 @@ namespace System.IO.Abstractions.TestingHelpers
             if (sourceFile == null)
                 throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "The file \"{0}\" could not be found.", sourceFileName), sourceFileName);
 
+            var destDir = mockFileDataAccessor.Directory.GetParent(destFileName);
+            if (!destDir.Exists)
+            {
+                throw new DirectoryNotFoundException("Could not find a part of the path.");
+            }
+
             mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile.Contents));
             mockFileDataAccessor.RemoveFile(sourceFileName);
         }
