@@ -102,6 +102,111 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(TestPath, result);
         }
 
+        [TestCase(@"c:\a", @"b", @"c:\a\b")]
+        [TestCase(@"c:\a\b", @"c", @"c:\a\b\c")]
+        [TestCase(@"c:\a\b", @"c\", @"c:\a\b\c\")]
+        [TestCase(@"c:\a\b", @".\c\", @"c:\a\b\c\")]
+        [TestCase(@"c:\a\b", @"..\c", @"c:\a\c")]
+        [TestCase(@"c:\a\b\c", @"..\c\..\", @"c:\a\b\")]
+        [TestCase(@"c:\a\b\c", @"..\..\..\..\..\d", @"c:\d")]
+        [TestCase(@"c:\a\b\c\", @"..\..\..\..\..\d\", @"c:\d\")]
+        public void GetFullPath_RelativePaths_ShouldReturnTheAbsolutePathWithCurrentDirectory(string currentDir, string relativePath, string expectedResult)
+        {
+            //Arrange
+            var mockFileSystem = new MockFileSystem();
+            mockFileSystem.Directory.SetCurrentDirectory(currentDir);
+            var mockPath = new MockPath(mockFileSystem);
+
+            //Act
+            var actualResult = mockPath.GetFullPath(relativePath);
+
+            //Assert
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestCase(@"c:\a\b\..\c", @"c:\a\c")]
+        [TestCase(@"c:\a\b\.\.\..\.\c", @"c:\a\c")]
+        [TestCase(@"c:\a\b\.\c", @"c:\a\b\c")]
+        [TestCase(@"c:\a\b\.\.\.\.\c", @"c:\a\b\c")]
+        [TestCase(@"c:\a\..\..\c", @"c:\c")]
+        public void GetFullPath_RootedPathWithRelativeSegments_ShouldReturnAnRootedAbsolutePath(string rootedPath, string expectedResult)
+        {
+            //Arrange
+            var mockFileSystem = new MockFileSystem();
+            var mockPath = new MockPath(mockFileSystem);
+
+            //Act
+            var actualResult = mockPath.GetFullPath(rootedPath);
+
+            //Assert
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestCase(@"c:\a", @"/b", @"c:\b")]
+        [TestCase(@"c:\a", @"/b\", @"c:\b\")]
+        [TestCase(@"c:\a", @"\b", @"c:\b")]
+        [TestCase(@"c:\a", @"\b\..\c", @"c:\c")]
+        [TestCase(@"z:\a", @"\b\..\c", @"z:\c")]
+        [TestCase(@"z:\a", @"\b\..\c", @"z:\c")]
+        [TestCase(@"z:\a", @"\\computer\share\c", @"\\computer\share\c")]
+        [TestCase(@"z:\a", @"\\computer\share\c\..\d", @"\\computer\share\d")]
+        [TestCase(@"z:\a", @"\\computer\share\c\..\..\d", @"\\computer\share\d")]
+        public void GetFullPath_AbsolutePaths_ShouldReturnThePathWithTheRoot_Or_Unc(string currentDir, string absolutePath, string expectedResult)
+        {
+            //Arrange
+            var mockFileSystem = new MockFileSystem();
+            mockFileSystem.Directory.SetCurrentDirectory(currentDir);
+            var mockPath = new MockPath(mockFileSystem);
+
+            //Act
+            var actualResult = mockPath.GetFullPath(absolutePath);
+
+            //Assert
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [Test]
+        public void GetFullPath_InvalidUNCPaths_ShouldThrowArgumentException()
+        {
+            //Arrange
+            var mockFileSystem = new MockFileSystem();
+            var mockPath = new MockPath(mockFileSystem);
+
+            //Act
+            TestDelegate action = () => mockPath.GetFullPath(@"\\shareZ");
+
+            //Assert
+            Assert.Throws<ArgumentException>(action);
+        }
+
+        [Test]
+        public void GetFullPath_NullValue_ShouldThrowArgumentNullException()
+        {
+            //Arrange
+            var mockFileSystem = new MockFileSystem();
+            var mockPath = new MockPath(mockFileSystem);
+
+            //Act
+            TestDelegate action = () => mockPath.GetFullPath(null);
+
+            //Assert
+            Assert.Throws<ArgumentNullException>(action);
+        }
+
+        [Test]
+        public void GetFullPath_EmptyValue_ShouldThrowArgumentException()
+        {
+            //Arrange
+            var mockFileSystem = new MockFileSystem();
+            var mockPath = new MockPath(mockFileSystem);
+
+            //Act
+            TestDelegate action = () => mockPath.GetFullPath(string.Empty);
+
+            //Assert
+            Assert.Throws<ArgumentException>(action);
+        }
+
         [Test]
         public void GetInvalidFileNameChars_Called_ReturnsChars()
         {
@@ -151,7 +256,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetRandomFileName();
 
             //Assert
-            Assert.IsTrue(result.Length>0);
+            Assert.IsTrue(result.Length > 0);
         }
 
         [Test]
