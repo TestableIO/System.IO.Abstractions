@@ -505,6 +505,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_GetFiles_ShouldThrowDirectoryNotFoundException_IfPathDoesNotExists()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.Directory.GetFiles(@"c:\Foo", "*a.txt");
+
+            // Assert
+            Assert.Throws<DirectoryNotFoundException>(action);
+        }
+
+        [Test]
         public void MockDirectory_GetFiles_Returns_Files()
         {
             const string testPath = @"c:\foo\bar.txt";
@@ -570,6 +583,42 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_GetDirectories_WithTopDirectories_ShouldOnlyReturnTopDirectories()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(@"C:\Folder\.foo\");
+            fileSystem.AddDirectory(@"C:\Folder\foo");
+            fileSystem.AddDirectory(@"C:\Folder\foo.foo");
+            fileSystem.AddDirectory(@"C:\Folder\.foo\.foo");
+            fileSystem.AddFile(@"C:\Folder\.foo\bar", new MockFileData(string.Empty));
+
+            // Act
+            var actualResult = fileSystem.Directory.GetDirectories(@"c:\Folder\", "*.foo");
+
+            // Assert
+            Assert.That(actualResult, Is.EquivalentTo(new []{@"C:\Folder\.foo\", @"C:\Folder\foo.foo\"}));
+        }
+
+        [Test]
+        public void MockDirectory_GetDirectories_WithAllDirectories_ShouldReturnsAllMatchingSubFolders()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(@"C:\Folder\.foo\");
+            fileSystem.AddDirectory(@"C:\Folder\foo");
+            fileSystem.AddDirectory(@"C:\Folder\foo.foo");
+            fileSystem.AddDirectory(@"C:\Folder\.foo\.foo");
+            fileSystem.AddFile(@"C:\Folder\.foo\bar", new MockFileData(string.Empty));
+
+            // Act
+            var actualResult = fileSystem.Directory.GetDirectories(@"c:\Folder\", "*.foo", SearchOption.AllDirectories);
+
+            // Assert
+            Assert.That(actualResult, Is.EquivalentTo(new[] { @"C:\Folder\.foo\", @"C:\Folder\foo.foo\", @"C:\Folder\.foo\.foo\" }));
+        }
+
+        [Test]
         public void MockDirectory_GetDirectories_ShouldThrowWhenPathIsNotMocked()
         {
             // Arrange
@@ -587,15 +636,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            try
-            {
-                fileSystem.Directory.GetDirectories(@"c:\d");
-                // Assert
-                Assert.Fail();
-            }
-            catch (DirectoryNotFoundException)
-            {
-            }
+            TestDelegate action = () => fileSystem.Directory.GetDirectories(@"c:\d");
+
+            // Assert
+            Assert.Throws<DirectoryNotFoundException>(action);
         }
 
         [Test]
