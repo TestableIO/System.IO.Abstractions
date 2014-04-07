@@ -180,7 +180,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             var pathPattern = string.Format(
                 CultureInfo.InvariantCulture,
-                @"(?i:^{0}{1}{2}$)",
+                @"(?i:^{0}{1}{2}(?:\\?)$)",
                 Regex.Escape(path),
                 searchOption == SearchOption.AllDirectories ? allDirectoriesPattern : string.Empty,
                 fileNamePattern);
