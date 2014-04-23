@@ -134,12 +134,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream Create()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return new MockFile(mockFileSystem).Create(FullName);
         }
 
         public override StreamWriter CreateText()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return new MockFile(mockFileSystem).CreateText(FullName);
         }
 
         public override void Decrypt()
@@ -170,17 +170,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream Open(FileMode mode)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return new MockFile(mockFileSystem).Open(FullName, mode);
         }
 
         public override Stream Open(FileMode mode, FileAccess access)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return new MockFile(mockFileSystem).Open(FullName, mode, access);
         }
 
         public override Stream Open(FileMode mode, FileAccess access, FileShare share)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return new MockFile(mockFileSystem).Open(FullName, mode, access, share);
         }
 
         public override Stream OpenRead()
