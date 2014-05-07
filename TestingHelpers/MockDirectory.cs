@@ -156,6 +156,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
         {
+            if(path == null)
+                throw new ArgumentNullException();
+
             if (!Exists(path))
             {
                 throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));

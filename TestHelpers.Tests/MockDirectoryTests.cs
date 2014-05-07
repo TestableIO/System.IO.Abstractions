@@ -505,6 +505,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_GetFiles_ShouldThrowArgumentNullException_IfPathParamIsNull()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            TestDelegate action = () => fileSystem.Directory.GetFiles(null);
+            Assert.Throws<ArgumentNullException>(action);
+        }
+
+        [Test]
         public void MockDirectory_GetFiles_ShouldThrowDirectoryNotFoundException_IfPathDoesNotExists()
         {
             // Arrange
