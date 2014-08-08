@@ -85,10 +85,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists(string path)
         {
-            path = EnsurePathEndsWithDirectorySeparator(path);
+            try
+            {
+                path = EnsurePathEndsWithDirectorySeparator(path);
 
-            path = mockFileDataAccessor.Path.GetFullPath(path);
-            return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.OrdinalIgnoreCase));
+                path = mockFileDataAccessor.Path.GetFullPath(path);
+                return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.OrdinalIgnoreCase));
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public override DirectorySecurity GetAccessControl(string path)

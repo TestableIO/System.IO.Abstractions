@@ -377,6 +377,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(result);
         }
 
+        [TestCase(@"\\s")]
+        [TestCase(@"<")]
+        [TestCase("\t")]
+        public void MockDirectory_Exists_ShouldReturnFalseForIllegalPath(string path)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\foo\bar.txt", new MockFileData("Demo text content") },
+                { @"c:\baz.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            var result = fileSystem.Directory.Exists(path);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
         [Test]
         public void MockDirectory_CreateDirectory_ShouldCreateFolderInMemoryFileSystem()
         {
