@@ -100,6 +100,198 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileInfo_CreationTimeUtc_ShouldSetCreationTimeUtcOfFileInMemoryFileSystem()
+        {
+            // Arrange
+            var creationTime = DateTime.Now.AddHours(-4);
+            var fileData = new MockFileData("Demo text content") { CreationTime = creationTime };
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.txt", fileData }
+            });
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+
+            // Act
+            var newUtcTime = DateTime.UtcNow;
+            fileInfo.CreationTimeUtc = newUtcTime;
+
+            // Assert
+            Assert.AreEqual(newUtcTime, fileInfo.CreationTimeUtc);
+        }
+
+
+        [Test]
+        public void MockFileInfo_CreationTime_ShouldReturnCreationTimeOfFileInMemoryFileSystem()
+        {
+            // Arrange
+            var creationTime = DateTime.Now.AddHours(-4);
+            var fileData = new MockFileData("Demo text content") { CreationTime = creationTime };
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.txt", fileData }
+            });
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+
+            // Act
+            var result = fileInfo.CreationTime;
+
+            // Assert
+            Assert.AreEqual(creationTime, result);
+        }
+
+        [Test]
+        public void MockFileInfo_CreationTime_ShouldSetCreationTimeOfFileInMemoryFileSystem()
+        {
+            // Arrange
+            var creationTime = DateTime.Now.AddHours(-4);
+            var fileData = new MockFileData("Demo text content") { CreationTime = creationTime };
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.txt", fileData }
+            });
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+
+            // Act
+            var newTime = DateTime.Now;
+            fileInfo.CreationTime = newTime;
+
+            // Assert
+            Assert.AreEqual(newTime, fileInfo.CreationTime);
+        }
+
+        [Test]
+        public void MockFileInfo_IsReadOnly_ShouldSetReadOnlyAttributeOfFileInMemoryFileSystem()
+        {
+            // Arrange
+            var fileData = new MockFileData("Demo text content");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.txt", fileData }
+            });
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+
+            // Act
+            fileInfo.IsReadOnly = true;
+
+            // Assert
+            Assert.AreEqual(FileAttributes.ReadOnly, fileData.Attributes & FileAttributes.ReadOnly);
+        }
+
+        [Test]
+        public void MockFileInfo_IsReadOnly_ShouldSetNotReadOnlyAttributeOfFileInMemoryFileSystem()
+        {
+            // Arrange
+            var fileData = new MockFileData("Demo text content") {Attributes = FileAttributes.ReadOnly};
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.txt", fileData }
+            });
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+
+            // Act
+            fileInfo.IsReadOnly = false;
+
+            // Assert
+            Assert.AreNotEqual(FileAttributes.ReadOnly, fileData.Attributes & FileAttributes.ReadOnly);
+        }
+
+        [Test]
+        public void MockFileInfo_AppendText_ShouldAddTextToFileInMemoryFileSystem()
+        {
+            // Arrange
+            var fileData = new MockFileData("Demo text content");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.txt", fileData }
+            });
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+
+            // Act
+            using (var file = fileInfo.AppendText())
+                file.WriteLine("This should be at the end");
+
+            string newcontents;
+            using (var newfile = fileInfo.OpenText())
+                newcontents = newfile.ReadToEnd();
+
+            // Assert
+            Assert.AreEqual("Demo text contentThis should be at the end\r\n", newcontents);
+        }
+
+        [Test]
+        public void MockFileInfo_OpenWrite_ShouldAddDataToFileInMemoryFileSystem()
+        {
+            // Arrange
+            var fileData = new MockFileData("Demo text content");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.txt", fileData }
+            });
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var bytesToAdd = new byte[] {65, 66, 67, 68, 69};
+
+            // Act
+            using (var file = fileInfo.OpenWrite())
+                file.Write(bytesToAdd, 0, bytesToAdd.Length);
+
+            string newcontents;
+            using (var newfile = fileInfo.OpenText())
+                newcontents = newfile.ReadToEnd();
+
+            // Assert
+            Assert.AreEqual("ABCDEtext content", newcontents);
+        }
+
+        [Test]
+        public void MockFileInfo_Encrypt_ShouldReturnXorOfFileInMemoryFileSystem()
+        {
+            // Arrange
+            var fileData = new MockFileData("Demo text content");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.txt", fileData }
+            });
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+
+            // Act
+            fileInfo.Encrypt();
+
+            string newcontents;
+            using (var newfile = fileInfo.OpenText())
+            {
+                newcontents = newfile.ReadToEnd();
+            }
+
+            // Assert
+            Assert.AreNotEqual("Demo text content", newcontents);
+        }
+
+        [Test]
+        public void MockFileInfo_Decrypt_ShouldReturnCorrectContentsFileInMemoryFileSystem()
+        {
+            // Arrange
+            var fileData = new MockFileData("Demo text content");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.txt", fileData }
+            });
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            fileInfo.Encrypt();
+
+            // Act
+            fileInfo.Decrypt();
+
+            string newcontents;
+            using (var newfile = fileInfo.OpenText())
+            {
+                newcontents = newfile.ReadToEnd();
+            }
+
+            // Assert
+            Assert.AreEqual("Demo text content", newcontents);
+        }
+
+        [Test]
         public void MockFileInfo_LastAccessTimeUtc_ShouldReturnLastAccessTimeUtcOfFileInMemoryFileSystem()
         {
             // Arrange
@@ -116,6 +308,26 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.AreEqual(lastAccessTime.ToUniversalTime(), result);
+        }
+
+        [Test]
+        public void MockFileInfo_LastAccessTimeUtc_ShouldSetCreationTimeUtcOfFileInMemoryFileSystem()
+        {
+            // Arrange
+            var lastAccessTime = DateTime.Now.AddHours(-4);
+            var fileData = new MockFileData("Demo text content") { LastAccessTime = lastAccessTime };
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.txt", fileData }
+            });
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+
+            // Act
+            var newUtcTime = DateTime.UtcNow;
+            fileInfo.LastAccessTimeUtc = newUtcTime;
+
+            // Assert
+            Assert.AreEqual(newUtcTime, fileInfo.LastAccessTimeUtc);
         }
 
         [Test]
@@ -136,7 +348,27 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(lastWriteTime.ToUniversalTime(), result);
         }
- 
+
+        [Test]
+        public void MockFileInfo_LastWriteTimeUtc_ShouldSetLastWriteTimeUtcOfFileInMemoryFileSystem()
+        {
+            // Arrange
+            var lastWriteTime = DateTime.Now.AddHours(-4);
+            var fileData = new MockFileData("Demo text content") { LastWriteTime = lastWriteTime };
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\a.txt", fileData }
+            });
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+
+            // Act
+            var newUtcTime = DateTime.UtcNow;
+            fileInfo.LastWriteTime = newUtcTime;
+
+            // Assert
+            Assert.AreEqual(newUtcTime, fileInfo.LastWriteTime);
+        }
+
         [Test]
         public void MockFileInfo_GetExtension_ShouldReturnExtension()
         {
