@@ -1,4 +1,6 @@
-﻿using System.Security.AccessControl;
+﻿using System.IO.Pipes;
+using System.Linq;
+using System.Security.AccessControl;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -41,8 +43,16 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime CreationTime
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get
+            {
+                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                return MockFileData.CreationTime.DateTime;
+            }
+            set
+            {
+                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                MockFileData.CreationTime = value;
+            }
         }
 
         public override DateTime CreationTimeUtc
@@ -52,7 +62,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 if (MockFileData == null) throw new FileNotFoundException("File not found", path);
                 return MockFileData.CreationTime.UtcDateTime;
             }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            set
+            {
+                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                MockFileData.CreationTime = value.ToLocalTime();
+            }
         }
 
         public override bool Exists
@@ -77,8 +91,16 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime LastAccessTime
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get
+            {
+                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                return MockFileData.LastAccessTime.DateTime;
+            }
+            set
+            {
+                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                MockFileData.LastAccessTime = value;
+            }
         }
 
         public override DateTime LastAccessTimeUtc
@@ -88,7 +110,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 if (MockFileData == null) throw new FileNotFoundException("File not found", path);
                 return MockFileData.LastAccessTime.UtcDateTime;
             }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            set
+            {
+                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                MockFileData.LastAccessTime = value;
+            }
         }
 
         public override DateTime LastWriteTime
@@ -98,7 +124,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 if (MockFileData == null) throw new FileNotFoundException("File not found", path);
                 return MockFileData.LastWriteTime.DateTime;
             }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            set
+            {
+                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                MockFileData.LastWriteTime = value;
+            }
         }
 
         public override DateTime LastWriteTimeUtc
@@ -108,7 +138,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 if (MockFileData == null) throw new FileNotFoundException("File not found", path);
                 return MockFileData.LastWriteTime.UtcDateTime;    
             }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            set
+            {
+                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                MockFileData.LastWriteTime = value.ToLocalTime();
+            }
         }
 
         public override string Name {
@@ -117,7 +151,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override StreamWriter AppendText()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+            return new StreamWriter(new MockFileStream(mockFileSystem, FullName, true));
+            //return ((MockFileDataModifier) MockFileData).AppendText();
         }
 
         public override FileInfoBase CopyTo(string destFileName)
@@ -144,12 +180,18 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Decrypt()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+            var contents = MockFileData.Contents;
+            for (var i = 0; i < contents.Length; i++)
+                contents[i] ^= (byte)(i % 256);
         }
 
         public override void Encrypt()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+            var contents = MockFileData.Contents;
+            for(var i = 0; i < contents.Length; i++)
+                contents[i] ^= (byte) (i % 256);
         }
 
         public override FileSecurity GetAccessControl()
@@ -195,7 +237,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream OpenWrite()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return new MockFileStream(mockFileSystem, path);
         }
 
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)
@@ -233,8 +275,19 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool IsReadOnly
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get
+            {
+                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                return (MockFileData.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
+            }
+            set
+            {
+                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if(value)
+                    MockFileData.Attributes |= FileAttributes.ReadOnly;
+                else 
+                    MockFileData.Attributes &= ~FileAttributes.ReadOnly;
+            }
         }
 
         public override long Length
