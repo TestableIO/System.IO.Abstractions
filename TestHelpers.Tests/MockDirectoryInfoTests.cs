@@ -50,7 +50,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
   
         [Test]
-        public void MockDirectoryInfo_FullName_ShouldReturnFullNameIncludingTrailingPathDelimiter() 
+        public void MockDirectoryInfo_FullName_ShouldReturnFullNameWithoutIncludingTrailingPathDelimiter() 
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
@@ -63,7 +63,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = directoryInfo.FullName;
 
-            Assert.That(result, Is.EqualTo(@"c:\temp\folder\"));
+            Assert.That(result, Is.EqualTo(@"c:\temp\folder"));
         }
 
         [Test]
@@ -95,6 +95,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = directoryInfo.GetFileSystemInfos("f*");
 
             Assert.That(result.Length, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void MockDirectoryInfo_GetParent_ShouldReturnDirectoriesAndNamesWithSearchPattern()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(@"c:\a\b\c");
+            var directoryInfo = new MockDirectoryInfo(fileSystem, @"c:\a\b\c");
+
+            // Act
+            var result = directoryInfo.Parent;
+
+            // Assert
+            Assert.AreEqual(@"c:\a\b", result.FullName);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.That(result, Is.EquivalentTo(expected));
         }
-  
+
         private MockFileSystem SetupFileSystem()
         {
             return new MockFileSystem(new Dictionary<string, MockFileData>
@@ -505,6 +505,28 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_GetFiles_ShouldThrowArgumentNullException_IfPathParamIsNull()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            TestDelegate action = () => fileSystem.Directory.GetFiles(null);
+            Assert.Throws<ArgumentNullException>(action);
+        }
+
+        [Test]
+        public void MockDirectory_GetFiles_ShouldThrowDirectoryNotFoundException_IfPathDoesNotExists()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.Directory.GetFiles(@"c:\Foo", "*a.txt");
+
+            // Assert
+            Assert.Throws<DirectoryNotFoundException>(action);
+        }
+
+        [Test]
         public void MockDirectory_GetFiles_Returns_Files()
         {
             const string testPath = @"c:\foo\bar.txt";
@@ -570,6 +592,42 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_GetDirectories_WithTopDirectories_ShouldOnlyReturnTopDirectories()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(@"C:\Folder\.foo\");
+            fileSystem.AddDirectory(@"C:\Folder\foo");
+            fileSystem.AddDirectory(@"C:\Folder\foo.foo");
+            fileSystem.AddDirectory(@"C:\Folder\.foo\.foo");
+            fileSystem.AddFile(@"C:\Folder\.foo\bar", new MockFileData(string.Empty));
+
+            // Act
+            var actualResult = fileSystem.Directory.GetDirectories(@"c:\Folder\", "*.foo");
+
+            // Assert
+            Assert.That(actualResult, Is.EquivalentTo(new []{@"C:\Folder\.foo\", @"C:\Folder\foo.foo\"}));
+        }
+
+        [Test]
+        public void MockDirectory_GetDirectories_WithAllDirectories_ShouldReturnsAllMatchingSubFolders()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(@"C:\Folder\.foo\");
+            fileSystem.AddDirectory(@"C:\Folder\foo");
+            fileSystem.AddDirectory(@"C:\Folder\foo.foo");
+            fileSystem.AddDirectory(@"C:\Folder\.foo\.foo");
+            fileSystem.AddFile(@"C:\Folder\.foo\bar", new MockFileData(string.Empty));
+
+            // Act
+            var actualResult = fileSystem.Directory.GetDirectories(@"c:\Folder\", "*.foo", SearchOption.AllDirectories);
+
+            // Assert
+            Assert.That(actualResult, Is.EquivalentTo(new[] { @"C:\Folder\.foo\", @"C:\Folder\foo.foo\", @"C:\Folder\.foo\.foo\" }));
+        }
+
+        [Test]
         public void MockDirectory_GetDirectories_ShouldThrowWhenPathIsNotMocked()
         {
             // Arrange
@@ -587,15 +645,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            try
-            {
-                fileSystem.Directory.GetDirectories(@"c:\d");
-                // Assert
-                Assert.Fail();
-            }
-            catch (DirectoryNotFoundException)
-            {
-            }
+            TestDelegate action = () => fileSystem.Directory.GetDirectories(@"c:\d");
+
+            // Assert
+            Assert.Throws<DirectoryNotFoundException>(action);
         }
 
         [Test]
@@ -648,6 +701,88 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
           fileSystem.Directory.SetCurrentDirectory(directory);
 
           Assert.AreEqual(directory, fileSystem.Directory.GetCurrentDirectory());
+        }
+
+        [Test]
+        public void MockDirectory_GetParent_ShouldThrowArgumentNullExceptionIfPathIsNull()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate act = () => fileSystem.Directory.GetParent(null);
+
+            // Assert
+            Assert.Throws<ArgumentNullException>(act);
+        }
+
+        [Test]
+        public void MockDirectory_GetParent_ShouldThrowArgumentExceptionIfPathIsEmpty()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate act = () => fileSystem.Directory.GetParent(string.Empty);
+
+            // Assert
+            Assert.Throws<ArgumentException>(act);
+        }
+
+        [Test]
+        public void MockDirectory_GetParent_ShouldReturnADirectoryInfoIfPathDoesNotExist()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            var actualResult =  fileSystem.Directory.GetParent(@"c:\directory\does\not\exist");
+
+            // Assert
+            Assert.IsNotNull(actualResult);
+        }
+
+        [Test]
+        public void MockDirectory_GetParent_ShouldThrowArgumentExceptionIfPathHasIllegalCharacters()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate act = () => fileSystem.Directory.GetParent("c:\\director\ty\\has\\illegal\\character");
+
+            // Assert
+            Assert.Throws<ArgumentException>(act);
+        }
+
+        [Test]
+        public void MockDirectory_GetParent_ShouldReturnNullIfPathIsRoot()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(@"c:\");
+
+            // Act
+           var actualResult = fileSystem.Directory.GetParent(@"c:\");
+
+            // Assert
+            Assert.IsNull(actualResult);
+        }
+
+        [TestCase(@"c:\a", @"c:\")]
+        [TestCase(@"c:\a\b\c\d", @"c:\a\b\c")]
+        [TestCase(@"c:\a\b\c\d\", @"c:\a\b\c")]
+        public void MockDirectory_GetParent_ShouldReturnTheParentWithoutTrailingDirectorySeparatorChar(string path, string expectedResult)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(path);
+
+            // Act
+            var actualResult = fileSystem.Directory.GetParent(path);
+
+            // Assert
+            Assert.AreEqual(expectedResult, actualResult.FullName);
         }
     }
 }

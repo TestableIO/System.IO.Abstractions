@@ -629,7 +629,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             const string sourceFileContent = "this is some content";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                {sourceFilePath, new MockFileData(sourceFileContent)}
+                {sourceFilePath, new MockFileData(sourceFileContent)},
+                {@"c:\somethingelse\dummy.txt", new MockFileData(new byte[] {0})}
             });
 
             const string destFilePath = @"c:\somethingelse\demo1.txt";
@@ -839,6 +840,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var exception = Assert.Throws<FileNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
             Assert.That(exception.FileName, Is.EqualTo(@"c:\something\demo.txt"));
+        }
+
+        [Test]
+        public void MockFile_Move_ShouldThrowDirectoryNotFoundExceptionWhenSourcePathDoesNotExist_Message()
+        {
+            const string sourceFilePath = @"c:\something\demo.txt";
+            const string destFilePath = @"c:\somethingelse\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+              {
+                  {sourceFilePath, new MockFileData(new byte[] {0})}
+              });
+
+            //var exists = fileSystem.Directory.Exists(@"c:\something");
+            //exists = fileSystem.Directory.Exists(@"c:\something22");
+
+            var exception = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+            //Message = "Could not find a part of the path."
+            Assert.That(exception.Message, Is.EqualTo(@"Could not find a part of the path."));
         }
 
         [Test]
@@ -1240,5 +1259,43 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(file.TextContents, Is.EqualTo("New too!"));
             Assert.That(filesystem.FileExists(filepath));
         }
+
+        [Test]
+        public void Serializable_works()
+        {
+            //Arrange
+            MockFileData data = new MockFileData("Text Contents");
+
+            //Act
+            System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            Stream stream = new MemoryStream();
+            formatter.Serialize(stream, data);
+
+            //Assert
+            Assert.Pass();
+        }
+
+        [Test]
+        public void Serializable_can_deserialize()
+        {
+            //Arrange
+            string textContentStr = "Text Contents";
+
+            //Act
+            MockFileData data = new MockFileData(textContentStr);
+
+            System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            Stream stream = new MemoryStream();
+            formatter.Serialize(stream, data);
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            MockFileData deserialized = (MockFileData)formatter.Deserialize(stream);
+
+            //Assert
+            Assert.That(deserialized.TextContents, Is.EqualTo(textContentStr));
+        }
+
+
     }
 }

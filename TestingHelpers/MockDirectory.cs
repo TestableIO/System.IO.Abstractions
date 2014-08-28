@@ -28,15 +28,32 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
+            if (path == null)
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            if (path.Length == 0)
+            {
+                throw new ArgumentException("Path cannot be the empty string or all whitespace.", "path");
+            }
+
+            if (mockFileDataAccessor.FileExists(path))
+            {
+                var message = string.Format(CultureInfo.InvariantCulture, @"Cannot create ""{0}"" because a file or directory with the same name already exists.", path);
+                var ex = new IOException(message);
+                ex.Data.Add("Path", path);
+                throw ex;
+            }
+
             path = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(path));
+
             if (!Exists(path))
+            {
                 mockFileDataAccessor.AddDirectory(path);
+            }
+
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
-
-            var parent = GetParent(path);
-            if (parent != null)
-                CreateDirectory(GetParent(path).FullName, directorySecurity);
-
             return created;
         }
 
@@ -57,7 +74,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new DirectoryNotFoundException(path + " does not exist or could not be found.");
 
             if (!recursive &&
-                affectedPaths.Count() > 1)
+                affectedPaths.Count > 1)
                 throw new IOException("The directory specified by " + path + " is read-only, or recursive is false and " + path + " is not an empty directory.");
 
             foreach (var affectedPath in affectedPaths)
@@ -139,6 +156,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
         {
+            if(path == null)
+                throw new ArgumentNullException();
+
             if (!Exists(path))
             {
                 throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
@@ -163,7 +183,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             var pathPattern = string.Format(
                 CultureInfo.InvariantCulture,
-                @"(?i:^{0}{1}{2}$)",
+                @"(?i:^{0}{1}{2}(?:\\?)$)",
                 Regex.Escape(path),
                 searchOption == SearchOption.AllDirectories ? allDirectoriesPattern : string.Empty,
                 fileNamePattern);
@@ -218,11 +238,38 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase GetParent(string path)
         {
-            var parent = new DirectoryInfo(path).Parent;
-            if (parent == null)
-                return null;
+            if (path == null)
+            {
+                throw new ArgumentNullException("path");
+            }
 
-            return new MockDirectoryInfo(mockFileDataAccessor, parent.FullName);
+            if (path.Length == 0)
+            {
+                throw new ArgumentException("Path cannot be the empty string or all whitespace.", "path");
+            }
+
+            if (path.IndexOfAny(mockFileDataAccessor.Path.GetInvalidPathChars()) > -1)
+            {
+                throw new ArgumentException("Path contains invalid path characters.", "path");
+            }
+
+            var absolutePath = mockFileDataAccessor.Path.GetFullPath(path);
+            var sepAsString = mockFileDataAccessor.Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture);
+            var startIndex = absolutePath.EndsWith(sepAsString, StringComparison.OrdinalIgnoreCase) ? absolutePath.Length - 1 : absolutePath.Length;
+            var lastIndex = absolutePath.LastIndexOf(mockFileDataAccessor.Path.DirectorySeparatorChar, startIndex - 1);
+            if (lastIndex < 0)
+            {
+                return null;
+            }
+
+            var parentPath = absolutePath.Substring(0, lastIndex);
+            if (string.IsNullOrEmpty(parentPath))
+            {
+                return null;
+            }
+
+            var parent = new MockDirectoryInfo(mockFileDataAccessor, parentPath);
+            return parent;
         }
 
         public override void Move(string sourceDirName, string destDirName) {
