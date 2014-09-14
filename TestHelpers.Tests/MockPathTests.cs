@@ -1,10 +1,13 @@
 ﻿using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     public class MockPathTests
     {
-        const string TestPath = "C:\\test\\test.bmp";
+        static readonly string TestPath = XFS
+            .ForWin("C:\\test\\test.bmp")
+            .ForUnix("/test/test.bmp");
 
         private MockPath SetupMockPath()
         {
@@ -21,7 +24,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.ChangeExtension(TestPath, "doc");
 
             //Assert
-            Assert.AreEqual("C:\\test\\test.doc", result);
+            Assert.AreEqual(XFS
+                .ForWin("C:\\test\\test.doc")
+                .ForUnix("/test/test.doc")
+                , result);
         }
 
         [Test]
@@ -31,10 +37,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockPath = new MockPath(new MockFileSystem());
 
             //Act
-            var result = mockPath.Combine("C:\\test", "test.bmp");
+            var result = mockPath.Combine(XFS
+                .ForWin("C:\\test")
+                .ForUnix("/test")
+                , "test.bmp");
 
             //Assert
-            Assert.AreEqual("C:\\test\\test.bmp", result);
+            Assert.AreEqual(XFS
+                .ForWin("C:\\test\\test.bmp")
+                .ForUnix("/test/test.bmp")
+                , result);
         }
 
         [Test]
@@ -47,7 +59,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetDirectoryName(TestPath);
 
             //Assert
-            Assert.AreEqual("C:\\test", result);
+            Assert.AreEqual(XFS
+                .ForWin("C:\\test")
+                .ForUnix("/test")
+                , result);
         }
 
         [Test]
@@ -102,14 +117,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(TestPath, result);
         }
 
-        [TestCase(@"c:\a", @"b", @"c:\a\b")]
-        [TestCase(@"c:\a\b", @"c", @"c:\a\b\c")]
-        [TestCase(@"c:\a\b", @"c\", @"c:\a\b\c\")]
-        [TestCase(@"c:\a\b", @".\c\", @"c:\a\b\c\")]
-        [TestCase(@"c:\a\b", @"..\c", @"c:\a\c")]
-        [TestCase(@"c:\a\b\c", @"..\c\..\", @"c:\a\b\")]
-        [TestCase(@"c:\a\b\c", @"..\..\..\..\..\d", @"c:\d")]
-        [TestCase(@"c:\a\b\c\", @"..\..\..\..\..\d\", @"c:\d\")]
+        public static IEnumerable<string[]> GetFullPath_RelativePaths_Cases
+        {
+            get
+            {
+                yield return new [] { XFS.ForWin(@"c:\a").ForUnix("/a"), "b", XFS.ForWin(@"c:\a\b").ForUnix("/a/b") };
+                yield return new [] { XFS.ForWin(@"c:\a\b").ForUnix("/a/b"), "c", XFS.ForWin(@"c:\a\b\c").ForUnix("/a/b/c") };
+                yield return new [] { XFS.ForWin(@"c:\a\b").ForUnix("/a/b"), XFS.ForWin(@"c\").ForUnix("c/"), XFS.ForWin(@"c:\a\b\c\").ForUnix("/a/b/c/") };
+                yield return new [] { XFS.ForWin(@"c:\a\b").ForUnix("/a/b"), XFS.ForWin(@"..\c").ForUnix("../c"), XFS.ForWin(@"c:\a\c").ForUnix("/a/c") };
+                yield return new [] { XFS.ForWin(@"c:\a\b\c").ForUnix("/a/b/c"), XFS.ForWin(@"..\c\..\").ForUnix("../c/../"), XFS.ForWin(@"c:\a\b\").ForUnix("/a/b/") };
+                yield return new [] { XFS.ForWin(@"c:\a\b\c").ForUnix("/a/b/c"), XFS.ForWin(@"..\..\..\..\..\d").ForUnix("../../../../../d"), XFS.ForWin(@"c:\d").ForUnix("/d") };
+                yield return new [] { XFS.ForWin(@"c:\a\b\c").ForUnix("/a/b/c"), XFS.ForWin(@"..\..\..\..\..\d\").ForUnix("../../../../../d/"), XFS.ForWin(@"c:\d\").ForUnix("/d/") };
+            }
+        }
+
+        [TestCaseSource("GetFullPath_RelativePaths_Cases")]
         public void GetFullPath_RelativePaths_ShouldReturnTheAbsolutePathWithCurrentDirectory(string currentDir, string relativePath, string expectedResult)
         {
             //Arrange
@@ -124,11 +146,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [TestCase(@"c:\a\b\..\c", @"c:\a\c")]
-        [TestCase(@"c:\a\b\.\.\..\.\c", @"c:\a\c")]
-        [TestCase(@"c:\a\b\.\c", @"c:\a\b\c")]
-        [TestCase(@"c:\a\b\.\.\.\.\c", @"c:\a\b\c")]
-        [TestCase(@"c:\a\..\..\c", @"c:\c")]
+        public static IEnumerable<string[]> GetFullPath_RootedPathWithRelativeSegments_Cases
+        {
+            get
+            {
+                yield return new [] { XFS.ForWin(@"c:\a\b\..\c").ForUnix("/a/b/../c"), XFS.ForWin(@"c:\a\c").ForUnix("/a/c") };
+                yield return new [] { XFS.ForWin(@"c:\a\b\.\.\..\.\c").ForUnix("/a/b/././.././c"), XFS.ForWin(@"c:\a\c").ForUnix("/a/c") };
+                yield return new [] { XFS.ForWin(@"c:\a\b\.\c").ForUnix("/a/b/./c"), XFS.ForWin(@"c:\a\b\c").ForUnix("/a/b/c") };
+                yield return new [] { XFS.ForWin(@"c:\a\b\.\.\.\.\c").ForUnix("/a/b/././././c"), XFS.ForWin(@"c:\a\b\c").ForUnix("/a/b/c") };
+                yield return new [] { XFS.ForWin(@"c:\a\..\..\c").ForUnix("/a/../../c"), XFS.ForWin(@"c:\c").ForUnix("/c") };
+            }
+        }
+
+        [TestCaseSource("GetFullPath_RootedPathWithRelativeSegments_Cases")]
         public void GetFullPath_RootedPathWithRelativeSegments_ShouldReturnAnRootedAbsolutePath(string rootedPath, string expectedResult)
         {
             //Arrange
@@ -142,15 +172,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [TestCase(@"c:\a", @"/b", @"c:\b")]
-        [TestCase(@"c:\a", @"/b\", @"c:\b\")]
-        [TestCase(@"c:\a", @"\b", @"c:\b")]
-        [TestCase(@"c:\a", @"\b\..\c", @"c:\c")]
-        [TestCase(@"z:\a", @"\b\..\c", @"z:\c")]
-        [TestCase(@"z:\a", @"\b\..\c", @"z:\c")]
-        [TestCase(@"z:\a", @"\\computer\share\c", @"\\computer\share\c")]
-        [TestCase(@"z:\a", @"\\computer\share\c\..\d", @"\\computer\share\d")]
-        [TestCase(@"z:\a", @"\\computer\share\c\..\..\d", @"\\computer\share\d")]
+        public static IEnumerable<string[]> GetFullPath_AbsolutePaths_Cases
+        {
+            get
+            {
+                yield return new [] { XFS.ForWin(@"c:\a").ForUnix("/a"), XFS.ForWin(@"/b").ForUnix(@"/b"), XFS.ForWin(@"c:\b").ForUnix("/b") };
+                yield return new [] { XFS.ForWin(@"c:\a").ForUnix("/a"), XFS.ForWin(@"/b\").ForUnix(@"/b/"), XFS.ForWin(@"c:\b\").ForUnix("/b/") };
+                yield return new [] { XFS.ForWin(@"c:\a").ForUnix("/a"), XFS.ForWin(@"\b").ForUnix(@"/b"), XFS.ForWin(@"c:\b").ForUnix("/b") };
+                yield return new [] { XFS.ForWin(@"c:\a").ForUnix("/a"), XFS.ForWin(@"\b\..c").ForUnix(@"/b/../c"), XFS.ForWin(@"c:\c").ForUnix("/c") };
+                yield return new [] { XFS.ForWin(@"z:\a").ForUnix("/a"), XFS.ForWin(@"\b\..c").ForUnix(@"/b/../c"), XFS.ForWin(@"z:\c").ForUnix("/c") };
+                yield return new [] { XFS.ForWin(@"z:\a").ForUnix("/a"), XFS.ForWin(@"\\computer\share\c").ForUnix(@"//computer/share/c"), XFS.ForWin(@"\\computer\share\c").ForUnix("//computer/share/c") };
+                yield return new [] { XFS.ForWin(@"z:\a").ForUnix("/a"), XFS.ForWin(@"\\computer\share\c\..\d").ForUnix(@"//computer/share/c/../d"), XFS.ForWin(@"\\computer\share\d").ForUnix("//computer/share/d") };
+                yield return new [] { XFS.ForWin(@"z:\a").ForUnix("/a"), XFS.ForWin(@"\\computer\share\c\..\..\d").ForUnix(@"//computer/share/c/../../d"), XFS.ForWin(@"\\computer\share\d").ForUnix("//computer/share/d") };
+            }
+        }
+
+        [TestCaseSource("GetFullPath_AbsolutePaths_Cases")]
         public void GetFullPath_AbsolutePaths_ShouldReturnThePathWithTheRoot_Or_Unc(string currentDir, string absolutePath, string expectedResult)
         {
             //Arrange
@@ -173,7 +210,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockPath = new MockPath(mockFileSystem);
 
             //Act
-            TestDelegate action = () => mockPath.GetFullPath(@"\\shareZ");
+            TestDelegate action = () => mockPath.GetFullPath(XFS.ForWin(@"\\shareZ").ForUnix(@"//shareZ"));
 
             //Assert
             Assert.Throws<ArgumentException>(action);
@@ -243,7 +280,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetPathRoot(TestPath);
 
             //Assert
-            Assert.AreEqual("C:\\", result);
+            Assert.AreEqual(XFS
+                .ForWin("C:\\")
+                .ForUnix("/")
+                , result);
         }
 
         [Test]
