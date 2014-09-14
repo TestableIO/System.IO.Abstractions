@@ -83,7 +83,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 }
 
                 // directories do not have a trailing slash
-                return directoryPath.TrimEnd('\\');
+                return directoryPath.TrimEnd('\\').TrimEnd('/');
             }
         }
 

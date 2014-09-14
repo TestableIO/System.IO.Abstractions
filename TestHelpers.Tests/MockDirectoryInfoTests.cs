@@ -11,7 +11,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            var directoryInfo = new MockDirectoryInfo(fileSystem, @"c:\temp");
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.ForWin(@"c:\temp").ForUnix("/temp"));
 
             // Act
             var result = directoryInfo.Extension;
@@ -25,7 +25,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            var directoryInfo = new MockDirectoryInfo(fileSystem, @"c:\temp\");
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.ForWin(@"c:\temp\").ForUnix("/temp/"));
 
             // Act
             var result = directoryInfo.Extension;
@@ -34,13 +34,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(string.Empty, result);
         }
 
-        [TestCase(@"c:\temp\folder", true)]
-        [TestCase(@"c:\temp\folder\notExistant", false)]
+        public static IEnumerable<object[]> MockDirectoryInfo_Exists_Cases
+        {
+            get
+            {
+                yield return new object[]{ XFS.ForWin(@"c:\temp\folder").ForUnix("/temp/folder"), true };
+                yield return new object[]{ XFS.ForWin(@"c:\temp\folder\notExistant").ForUnix("/temp/folder/notExistant"), false };
+            }
+        }
+
+        [TestCaseSource("MockDirectoryInfo_Exists_Cases")]
         public void MockDirectoryInfo_Exists(string path, bool expected) 
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> 
             {
-                {@"c:\temp\folder\file.txt", new MockFileData("Hello World")}
+                {XFS.ForWin(@"c:\temp\folder\file.txt").ForUnix("/temp/folder/file.txt"), new MockFileData("Hello World")}
             });
             var directoryInfo = new MockDirectoryInfo(fileSystem, path);
 
@@ -55,15 +63,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 {
-                        @"c:\temp\folder\file.txt",
+                    XFS.ForWin(@"c:\temp\folder\file.txt").ForUnix("/temp/folder/file.txt"),
                         new MockFileData("Hello World")
                 }
             });
-            var directoryInfo = new MockDirectoryInfo(fileSystem, @"c:\temp\folder");
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.ForWin(@"c:\temp\folder").ForUnix("/temp/folder"));
 
             var result = directoryInfo.FullName;
 
-            Assert.That(result, Is.EqualTo(@"c:\temp\folder"));
+            Assert.That(result, Is.EqualTo(XFS.ForWin(@"c:\temp\folder").ForUnix("/temp/folder")));
         }
 
         [Test]
@@ -71,11 +79,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\temp\folder\file.txt", new MockFileData("Hello World") },
-                { @"c:\temp\folder\folder", new MockDirectoryData() }
+                { XFS.ForWin(@"c:\temp\folder\file.txt").ForUnix("/temp/folder/file.txt"), new MockFileData("Hello World") },
+                { XFS.ForWin(@"c:\temp\folder\folder").ForUnix("/temp/folder/folder"), new MockDirectoryData() }
             });
 
-            var directoryInfo = new MockDirectoryInfo(fileSystem, @"c:\temp\folder");
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.ForWin(@"c:\temp\folder").ForUnix("/temp/folder"));
             var result = directoryInfo.GetFileSystemInfos();
 
             Assert.That(result.Length, Is.EqualTo(2));
@@ -86,12 +94,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\temp\folder\file.txt", new MockFileData("Hello World") },
-                { @"c:\temp\folder\folder", new MockDirectoryData() },
-                { @"c:\temp\folder\older", new MockDirectoryData() }
+                { XFS.ForWin(@"c:\temp\folder\file.txt").ForUnix("/temp/folder/file.txt"), new MockFileData("Hello World") },
+                { XFS.ForWin(@"c:\temp\folder\folder").ForUnix("/temp/folder/folder"), new MockDirectoryData() },
+                { XFS.ForWin(@"c:\temp\folder\older").ForUnix("/temp/folder/older"), new MockDirectoryData() }
             });
 
-            var directoryInfo = new MockDirectoryInfo(fileSystem, @"c:\temp\folder");
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.ForWin(@"c:\temp\folder").ForUnix("/temp/folder"));
             var result = directoryInfo.GetFileSystemInfos("f*");
 
             Assert.That(result.Length, Is.EqualTo(2));
@@ -102,14 +110,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(@"c:\a\b\c");
-            var directoryInfo = new MockDirectoryInfo(fileSystem, @"c:\a\b\c");
+            fileSystem.AddDirectory(XFS.ForWin(@"c:\a\b\c").ForUnix("/a/b/c"));
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.ForWin(@"c:\a\b\c").ForUnix("/a/b/c"));
 
             // Act
             var result = directoryInfo.Parent;
 
             // Assert
-            Assert.AreEqual(@"c:\a\b", result.FullName);
+            Assert.AreEqual(XFS.ForWin(@"c:\a\b").ForUnix("/a/b"), result.FullName);
         }
     }
 }
