@@ -16,12 +16,16 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockFileSystem() : this(null) { }
 
-        public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = @"C:\Foo\Bar")
+        public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = "")
         {
+            if (String.IsNullOrEmpty(currentDirectory))
+                currentDirectory = System.IO.Path.GetTempPath();
+
+
             this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
             pathField = new MockPath(this);
             file = new MockFile(this);
-            directory = new MockDirectory(this, file, FixPath(currentDirectory));
+            directory = new MockDirectory(this, file, currentDirectory);
             fileInfoFactory = new MockFileInfoFactory(this);
             directoryInfoFactory = new MockDirectoryInfoFactory(this);
 
