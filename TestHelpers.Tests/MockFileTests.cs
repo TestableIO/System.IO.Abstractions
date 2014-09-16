@@ -13,7 +13,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_AppendAllText_ShouldPersistNewText()
         {
             // Arrange
-            const string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { path, new MockFileData("Demo text content") }
@@ -34,16 +34,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_AppendAllText_ShouldCreateIfNotExist()
         {
             // Arrange
-            string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { path, new MockFileData("Demo text content") }
             });
 
             // Act
-            var path2 = @"c:\something\demo2.txt";
+            var path2 = XFS.Path(@"c:\something\demo2.txt");
             fileSystem.File.AppendAllText(path2, "some text");
-            var path3 = @"c:\something\demo3.txt";
+            var path3 = XFS.Path(@"c:\something\demo3.txt");
             fileSystem.File.AppendAllText(path3, "some text", Encoding.Unicode);
 
             // Assert
@@ -59,17 +59,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_AppendAllText_ShouldFailIfNotExistButDirectoryAlsoNotExist()
         {
             // Arrange
-            string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { path, new MockFileData("Demo text content") }
             });
 
-            var file = new MockFile(fileSystem);
-
-
             // Act
-            path = @"c:\something2\demo.txt";
+            path = XFS.Path(@"c:\something2\demo.txt");
 
             // Assert
             Exception ex;
@@ -84,7 +81,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_AppendAllText_ShouldPersistNewTextWithCustomEncoding()
         {
             // Arrange
-            const string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { path, new MockFileData("Demo text content") }
@@ -102,6 +99,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 101, 110, 255, 253, 0, 43, 0, 32, 0, 115, 0, 111, 0, 109, 0, 101,
                 0, 32, 0, 116, 0, 101, 0, 120, 0, 116
             };
+
+            if (XFS.IsUnixPlatform())
+            {
+                // Remove EOF on mono
+                expected = new byte[]
+                {
+                    68, 101, 109, 111, 32, 116, 101, 120, 116, 32, 99, 111, 110, 116,
+                    101, 110, 0, 43, 0, 32, 0, 115, 0, 111, 0, 109, 0, 101,
+                    0, 32, 0, 116, 0, 101, 0, 120, 0, 116
+                };
+            }
+
             CollectionAssert.AreEqual(
                 expected,
                 file.ReadAllBytes(path));
@@ -111,7 +120,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_GetSetCreationTime_ShouldPersist()
         {
             // Arrange
-            const string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { path, new MockFileData("Demo text content") }
@@ -131,7 +140,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_SetCreationTimeUtc_ShouldAffectCreationTime()
         {
             // Arrange
-            const string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { path, new MockFileData("Demo text content") }
@@ -151,7 +160,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_SetCreationTime_ShouldAffectCreationTimeUtc()
         {
             // Arrange
-            const string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { path, new MockFileData("Demo text content") }
@@ -171,7 +180,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_GetSetLastAccessTime_ShouldPersist()
         {
             // Arrange
-            const string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { path, new MockFileData("Demo text content") }
@@ -191,7 +200,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_SetLastAccessTimeUtc_ShouldAffectLastAccessTime()
         {
             // Arrange
-            const string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { path, new MockFileData("Demo text content") }
@@ -211,7 +220,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_SetLastAccessTime_ShouldAffectLastAccessTimeUtc()
         {
             // Arrange
-            const string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { path, new MockFileData("Demo text content") }
@@ -231,7 +240,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_GetSetLastWriteTime_ShouldPersist()
         {
             // Arrange
-            const string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { path, new MockFileData("Demo text content") }
@@ -250,7 +259,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         static void ExecuteDefaultValueTest(Func<MockFile, string, DateTime> getDateValue) 
         {
             var expected = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc);
-            const string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
             var file = new MockFile(fileSystem);
 
@@ -283,7 +292,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_GetAttributeOfNonExistantFile_ShouldReturnDefaultValue() {
             var fileSystem = new MockFileSystem();
-            var attributes = fileSystem.File.GetAttributes(@"c:\something\demo.txt");
+            var attributes = fileSystem.File.GetAttributes(XFS.Path(@"c:\something\demo.txt"));
             Assert.That(attributes, Is.EqualTo(FileAttributes.Normal));
         }
 
@@ -296,10 +305,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             };
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\something\demo.txt",  filedata},
+                { XFS.Path(@"c:\something\demo.txt"),  filedata},
             });
 
-            var attributes = fileSystem.File.GetAttributes(@"c:\something\demo.txt");
+            var attributes = fileSystem.File.GetAttributes(XFS.Path(@"c:\something\demo.txt"));
             Assert.That(attributes, Is.EqualTo(FileAttributes.Hidden));
         }
 
@@ -317,7 +326,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_SetLastWriteTimeUtc_ShouldAffectLastWriteTime()
         {
             // Arrange
-            const string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { path, new MockFileData("Demo text content") }
@@ -337,7 +346,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_SetLastWriteTime_ShouldAffectLastWriteTimeUtc()
         {
             // Arrange
-            const string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { path, new MockFileData("Demo text content") }
@@ -359,14 +368,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\something\demo.txt", new MockFileData("Demo text content") },
-                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { XFS.Path(@"c:\something\demo.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\something\other.gif"), new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
             });
 
             var file = new MockFile(fileSystem);
 
             // Act
-            var result = file.Exists(@"c:\something\other.gif");
+            var result = file.Exists(XFS.Path(@"c:\something\other.gif"));
 
             // Assert
             Assert.IsTrue(result);
@@ -378,14 +387,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\something\demo.txt", new MockFileData("Demo text content") },
-                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { XFS.Path(@"c:\something\demo.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\something\other.gif"), new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
             });
 
             var file = new MockFile(fileSystem);
 
             // Act
-            var result = file.Exists(@"c:\SomeThing\Other.gif");
+            var result = file.Exists(XFS.Path(@"c:\SomeThing\Other.gif"));
 
             // Assert
             Assert.IsTrue(result);
@@ -397,14 +406,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\something\demo.txt", new MockFileData("Demo text content") },
-                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { XFS.Path(@"c:\something\demo.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\something\other.gif"), new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
             });
 
             var file = new MockFile(fileSystem);
 
             // Act
-            var result = file.Exists(@"c:\SomeThing\DoesNotExist.gif");
+            var result = file.Exists(XFS.Path(@"c:\SomeThing\DoesNotExist.gif"));
 
             // Assert
             Assert.IsFalse(result);
@@ -424,14 +433,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\something\demo.txt", new MockFileData("Demo text content") },
-                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { XFS.Path(@"c:\something\demo.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\something\other.gif"), new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
             });
 
             var file = new MockFile(fileSystem);
 
             // Act
-            var result = file.ReadAllBytes(@"c:\something\other.gif");
+            var result = file.ReadAllBytes(XFS.Path(@"c:\something\other.gif"));
 
             // Assert
             CollectionAssert.AreEqual(
@@ -445,14 +454,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\something\demo.txt", new MockFileData("Demo\r\ntext\ncontent\rvalue") },
-                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { XFS.Path(@"c:\something\demo.txt"), new MockFileData("Demo\r\ntext\ncontent\rvalue") },
+                { XFS.Path(@"c:\something\other.gif"), new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
             });
 
             var file = new MockFile(fileSystem);
 
             // Act
-            var result = file.ReadAllLines(@"c:\something\demo.txt");
+            var result = file.ReadAllLines(XFS.Path(@"c:\something\demo.txt"));
 
             // Assert
             CollectionAssert.AreEqual(
@@ -464,17 +473,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_ReadAllLines_ShouldReturnOriginalDataWithCustomEncoding()
         {
             // Arrange
-            const string text = "Hello\r\nthere\rBob\nBob!";
+            string text = "Hello\r\nthere\rBob\nBob!";
             var encodedText = Encoding.BigEndianUnicode.GetBytes(text);
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\something\demo.txt", new MockFileData(encodedText) }
+                { XFS.Path(@"c:\something\demo.txt"), new MockFileData(encodedText) }
             });
 
             var file = new MockFile(fileSystem);
 
             // Act
-            var result = file.ReadAllLines(@"c:\something\demo.txt", Encoding.BigEndianUnicode);
+            var result = file.ReadAllLines(XFS.Path(@"c:\something\demo.txt"), Encoding.BigEndianUnicode);
 
             // Assert
             CollectionAssert.AreEqual(
@@ -488,14 +497,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\something\demo.txt", new MockFileData("Demo text content") },
-                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { XFS.Path(@"c:\something\demo.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\something\other.gif"), new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
             });
 
             var file = new MockFile(fileSystem);
 
             // Act
-            var result = file.ReadAllText(@"c:\something\demo.txt");
+            var result = file.ReadAllText(XFS.Path(@"c:\something\demo.txt"));
 
             // Assert
             Assert.AreEqual(
@@ -507,17 +516,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_ReadAllText_ShouldReturnOriginalDataWithCustomEncoding()
         {
             // Arrange
-            const string text = "Hello there!";
+            string text = "Hello there!";
             var encodedText = Encoding.BigEndianUnicode.GetBytes(text);
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\something\demo.txt", new MockFileData(encodedText) }
+                { XFS.Path(@"c:\something\demo.txt"), new MockFileData(encodedText) }
             });
 
             var file = new MockFile(fileSystem);
 
             // Act
-            var result = file.ReadAllText(@"c:\something\demo.txt", Encoding.BigEndianUnicode);
+            var result = file.ReadAllText(XFS.Path(@"c:\something\demo.txt"), Encoding.BigEndianUnicode);
 
             // Assert
             Assert.AreEqual(text, result);
@@ -527,7 +536,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_ReadAllBytes_ShouldReturnDataSavedByWriteAllBytes()
         {
             // Arrange
-            const string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
             var fileContent = new byte[] { 1, 2, 3, 4 };
             
@@ -544,7 +553,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_WriteAllBytes_ShouldWriteDataToMemoryFileSystem()
         {
             // Arrange
-            const string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
             var fileContent = new byte[] { 1, 2, 3, 4 };
 
@@ -561,8 +570,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_WriteAllText_ShouldWriteTextFileToMemoryFileSystem()
         {
             // Arrange
-            const string path = @"c:\something\demo.txt";
-            const string fileContent = "Hello there!";
+            string path = XFS.Path(@"c:\something\demo.txt");
+            string fileContent = "Hello there!";
             var fileSystem = new MockFileSystem();
 
             // Act
@@ -580,7 +589,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // http://msdn.microsoft.com/en-us/library/ms143375.aspx
 
             // Arrange
-            const string path = @"c:\something\demo.txt";
+            string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
             // Act
@@ -609,8 +618,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_WriteAllText_Encoding_ShouldWriteTextFileToMemoryFileSystem(Encoding encoding)
         {
             // Arrange
-            const string path = @"c:\something\demo.txt";
-            const string fileContent = "Hello there! Dzięki.";
+            string path = XFS.Path(@"c:\something\demo.txt");
+            string fileContent = "Hello there! Dzięki.";
             var fileSystem = new MockFileSystem();
 
             // Act
@@ -625,15 +634,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Move_ShouldMoveFileWithinMemoryFileSystem()
         {
-            const string sourceFilePath = @"c:\something\demo.txt";
-            const string sourceFileContent = "this is some content";
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            string sourceFileContent = "this is some content";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 {sourceFilePath, new MockFileData(sourceFileContent)},
-                {@"c:\somethingelse\dummy.txt", new MockFileData(new byte[] {0})}
+                {XFS.Path(@"c:\somethingelse\dummy.txt"), new MockFileData(new byte[] {0})}
             });
 
-            const string destFilePath = @"c:\somethingelse\demo1.txt";
+            string destFilePath = XFS.Path(@"c:\somethingelse\demo1.txt");
 
             fileSystem.File.Move(sourceFilePath, destFilePath);
 
@@ -645,9 +654,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Move_ShouldThrowIOExceptionWhenTargetAlreadyExists() 
         {
-            const string sourceFilePath = @"c:\something\demo.txt";
-            const string sourceFileContent = "this is some content";
-            const string destFilePath = @"c:\somethingelse\demo1.txt";
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            string sourceFileContent = "this is some content";
+            string destFilePath = XFS.Path(@"c:\somethingelse\demo1.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
               {
                   {sourceFilePath, new MockFileData(sourceFileContent)},
@@ -662,7 +671,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenSourceIsNull_Message() 
         {
-            const string destFilePath = @"c:\something\demo.txt";
+            string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentNullException>(()=>fileSystem.File.Move(null, destFilePath));
@@ -672,7 +681,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenSourceIsNull_ParamName() {
-            const string destFilePath = @"c:\something\demo.txt";
+            string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(null, destFilePath));
@@ -685,8 +694,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase('"')]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceContainsInvalidChars_Message(char invalidChar) 
         {
-            var sourceFilePath = @"c:\something\demo.txt" + invalidChar;
-            const string destFilePath = @"c:\something\demo.txt";
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
+                return;
+            }
+
+            var sourceFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
+            string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
@@ -698,8 +713,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase('<')]
         [TestCase('"')]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceContainsInvalidChars_ParamName(char invalidChar) {
-            var sourceFilePath = @"c:\something\demo.txt" + invalidChar;
-            const string destFilePath = @"c:\something\demo.txt";
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
+                return;
+            }
+
+            var sourceFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
+            string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
@@ -712,8 +733,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase('"')]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetContainsInvalidChars_Message(char invalidChar) 
         {
-            const string sourceFilePath = @"c:\something\demo.txt";
-            var destFilePath = @"c:\something\demo.txt" + invalidChar;
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
+                return;
+            }
+
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var destFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
@@ -725,8 +752,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase('<')]
         [TestCase('"')]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetContainsInvalidChars_ParamName(char invalidChar) {
-            const string sourceFilePath = @"c:\something\demo.txt";
-            var destFilePath = @"c:\something\demo.txt" + invalidChar;
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
+                return;
+            }
+
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var destFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
@@ -737,7 +770,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsEmpty_Message() 
         {
-            const string destFilePath = @"c:\something\demo.txt";
+            string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(string.Empty, destFilePath));
@@ -747,7 +780,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsEmpty_ParamName() {
-            const string destFilePath = @"c:\something\demo.txt";
+            string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(string.Empty, destFilePath));
@@ -757,8 +790,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsStringOfBlanks() 
         {
-            const string sourceFilePath = "   ";
-            const string destFilePath = @"c:\something\demo.txt";
+            string sourceFilePath = "   ";
+            string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
@@ -769,7 +802,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenTargetIsNull_Message() 
         {
-            const string sourceFilePath = @"c:\something\demo.txt";
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(sourceFilePath, null));
@@ -779,7 +812,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenTargetIsNull_ParamName() {
-            const string sourceFilePath = @"c:\something\demo.txt";
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(sourceFilePath, null));
@@ -790,8 +823,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsStringOfBlanks() 
         {
-            const string sourceFilePath = @"c:\something\demo.txt";
-            const string destFilePath = "   ";
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            string destFilePath = "   ";
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
@@ -802,7 +835,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsEmpty_Message() 
         {
-            const string sourceFilePath = @"c:\something\demo.txt";
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, string.Empty));
@@ -812,7 +845,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsEmpty_ParamName() {
-            const string sourceFilePath = @"c:\something\demo.txt";
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, string.Empty));
@@ -822,48 +855,48 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Move_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist_Message() 
         {
-            const string sourceFilePath = @"c:\something\demo.txt";
-            const string destFilePath = @"c:\something\demo1.txt";
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            string destFilePath = XFS.Path(@"c:\something\demo1.txt");
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<FileNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("The file \"c:\\something\\demo.txt\" could not be found."));
+            Assert.That(exception.Message, Is.EqualTo("The file \"" + XFS.Path("c:\\something\\demo.txt") + "\" could not be found."));
         }
 
         [Test]
         public void MockFile_Move_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist_FileName() {
-            const string sourceFilePath = @"c:\something\demo.txt";
-            const string destFilePath = @"c:\something\demo1.txt";
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            string destFilePath = XFS.Path(@"c:\something\demo1.txt");
             var fileSystem = new MockFileSystem();
 
             var exception = Assert.Throws<FileNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
-            Assert.That(exception.FileName, Is.EqualTo(@"c:\something\demo.txt"));
+            Assert.That(exception.FileName, Is.EqualTo(XFS.Path(@"c:\something\demo.txt")));
         }
 
         [Test]
         public void MockFile_Move_ShouldThrowDirectoryNotFoundExceptionWhenSourcePathDoesNotExist_Message()
         {
-            const string sourceFilePath = @"c:\something\demo.txt";
-            const string destFilePath = @"c:\somethingelse\demo.txt";
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            string destFilePath = XFS.Path(@"c:\somethingelse\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
               {
                   {sourceFilePath, new MockFileData(new byte[] {0})}
               });
 
-            //var exists = fileSystem.Directory.Exists(@"c:\something");
-            //exists = fileSystem.Directory.Exists(@"c:\something22");
+            //var exists = fileSystem.Directory.Exists(XFS.Path(@"c:\something"));
+            //exists = fileSystem.Directory.Exists(XFS.Path(@"c:\something22"));
 
             var exception = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
             //Message = "Could not find a part of the path."
-            Assert.That(exception.Message, Is.EqualTo(@"Could not find a part of the path."));
+            Assert.That(exception.Message, Is.EqualTo(XFS.Path(@"Could not find a part of the path.")));
         }
 
         [Test]
         public void MockFile_OpenWrite_ShouldCreateNewFiles() {
-            const string filePath = @"c:\something\demo.txt";
-            const string fileContent = "this is some content";
+            string filePath = XFS.Path(@"c:\something\demo.txt");
+            string fileContent = "this is some content";
             var fileSystem = new MockFileSystem();
 
             var bytes = new UTF8Encoding(true).GetBytes(fileContent);
@@ -878,9 +911,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_OpenWrite_ShouldOverwriteExistingFiles()
         {
-            const string filePath = @"c:\something\demo.txt";
-            const string startFileContent = "this is some content";
-            const string endFileContent = "this is some other content";
+            string filePath = XFS.Path(@"c:\something\demo.txt");
+            string startFileContent = "this is some content";
+            string endFileContent = "this is some other content";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 {filePath, new MockFileData(startFileContent)}
@@ -898,9 +931,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Copy_ShouldOverwriteFileWhenOverwriteFlagIsTrue()
         {
-            const string sourceFileName = @"c:\source\demo.txt";
+            string sourceFileName = XFS.Path(@"c:\source\demo.txt");
             var sourceContents = new MockFileData("Source content");
-            const string destFileName = @"c:\destination\demo.txt";
+            string destFileName = XFS.Path(@"c:\destination\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 {sourceFileName, sourceContents},
@@ -916,9 +949,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Copy_ShouldCreateFileAtNewDestination()
         {
-            const string sourceFileName = @"c:\source\demo.txt";
+            string sourceFileName = XFS.Path(@"c:\source\demo.txt");
             var sourceContents = new MockFileData("Source content");
-            const string destFileName = @"c:\destination\demo.txt";
+            string destFileName = XFS.Path(@"c:\destination\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 {sourceFileName, sourceContents}
@@ -933,22 +966,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Copy_ShouldThrowExceptionWhenFileExistsAtDestination()
         {
-            const string sourceFileName = @"c:\source\demo.txt";
+            string sourceFileName = XFS.Path(@"c:\source\demo.txt");
             var sourceContents = new MockFileData("Source content");
-            const string destFileName = @"c:\destination\demo.txt";
+            string destFileName = XFS.Path(@"c:\destination\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 {sourceFileName, sourceContents},
                 {destFileName, new MockFileData("Destination content")}
             });
 
-            Assert.Throws<IOException>(() => fileSystem.File.Copy(sourceFileName, destFileName), @"The file c:\destination\demo.txt already exists.");
+            Assert.Throws<IOException>(() => fileSystem.File.Copy(sourceFileName, destFileName), XFS.Path(@"The file c:\destination\demo.txt already exists."));
         }
 
         [Test]
         public void MockFile_Delete_ShouldRemoveFileFromFileSystem()
         {
-            const string fullPath = @"c:\something\demo.txt";
+            string fullPath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { fullPath, new MockFileData("Demo text content") }
@@ -964,7 +997,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void Mockfile_Create_ShouldCreateNewStream()
         {
-            const string fullPath = @"c:\something\demo.txt";
+            string fullPath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
             var sut = new MockFile(fileSystem);
@@ -979,7 +1012,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void Mockfile_Create_CanWriteToNewStream()
         {
-            const string fullPath = @"c:\something\demo.txt";
+            string fullPath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
             var data = new UTF8Encoding(false).GetBytes("Test string");
 
@@ -998,7 +1031,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void Mockfile_Create_OverwritesExistingFile()
         {
-            const string path = @"c:\some\file.txt";
+            string path = XFS.Path(@"c:\some\file.txt");
             var fileSystem = new MockFileSystem();
 
             var mockFile = new MockFile(fileSystem);
@@ -1025,7 +1058,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void Mockfile_Create_ThrowsWhenPathIsReadOnly()
         {
-            const string path = @"c:\something\read-only.txt";
+            string path = XFS.Path(@"c:\something\read-only.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { { path, new MockFileData("Content") } });
             var mockFile = new MockFile(fileSystem);
             
@@ -1038,8 +1071,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Delete_Should_RemoveFiles()
         {
-            const string filePath = @"c:\something\demo.txt";
-            const string fileContent = "this is some content";
+            string filePath = XFS.Path(@"c:\something\demo.txt");
+            string fileContent = "this is some content";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { { filePath, new MockFileData(fileContent) } });
             Assert.AreEqual(1, fileSystem.AllFiles.Count());
             fileSystem.File.Delete(filePath);
@@ -1049,7 +1082,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Delete_No_File_Does_Nothing()
         {
-            const string filePath = @"c:\something\demo.txt";
+            string filePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
             fileSystem.File.Delete(filePath);
         }
@@ -1057,7 +1090,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Open_ThrowsOnCreateNewWithExistingFile()
         {
-            const string filepath = @"c:\something\already\exists.txt";
+            string filepath = XFS.Path(@"c:\something\already\exists.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData> 
             {
                 { filepath, new MockFileData("I'm here") }
@@ -1069,7 +1102,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Open_ThrowsOnOpenWithMissingFile()
         {
-            const string filepath = @"c:\something\doesnt\exist.txt";
+            string filepath = XFS.Path(@"c:\something\doesnt\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
 
             Assert.Throws<FileNotFoundException>(() => filesystem.File.Open(filepath, FileMode.Open));
@@ -1078,7 +1111,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Open_ThrowsOnTruncateWithMissingFile()
         {
-            const string filepath = @"c:\something\doesnt\exist.txt";
+            string filepath = XFS.Path(@"c:\something\doesnt\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
 
             Assert.Throws<FileNotFoundException>(() => filesystem.File.Open(filepath, FileMode.Truncate));
@@ -1087,7 +1120,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Open_CreatesNewFileFileOnCreate()
         {
-            const string filepath = @"c:\something\doesnt\exist.txt";
+            string filepath = XFS.Path(@"c:\something\doesnt\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
 
             var stream = filesystem.File.Open(filepath, FileMode.Create);
@@ -1100,7 +1133,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Open_CreatesNewFileFileOnCreateNew()
         {
-            const string filepath = @"c:\something\doesnt\exist.txt";
+            string filepath = XFS.Path(@"c:\something\doesnt\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
 
             var stream = filesystem.File.Open(filepath, FileMode.CreateNew);
@@ -1113,7 +1146,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Open_OpensExistingFileOnAppend()
         {
-            const string filepath = @"c:\something\does\exist.txt";
+            string filepath = XFS.Path(@"c:\something\does\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { filepath, new MockFileData("I'm here") }
@@ -1137,7 +1170,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Open_OpensExistingFileOnTruncate()
         {
-            const string filepath = @"c:\something\does\exist.txt";
+            string filepath = XFS.Path(@"c:\something\does\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { filepath, new MockFileData("I'm here") }
@@ -1154,7 +1187,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Open_OpensExistingFileOnOpen()
         {
-            const string filepath = @"c:\something\does\exist.txt";
+            string filepath = XFS.Path(@"c:\something\does\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { filepath, new MockFileData("I'm here") }
@@ -1176,7 +1209,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Open_OpensExistingFileOnOpenOrCreate()
         {
-            const string filepath = @"c:\something\does\exist.txt";
+            string filepath = XFS.Path(@"c:\something\does\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { filepath, new MockFileData("I'm here") }
@@ -1198,7 +1231,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Open_CreatesNewFileOnOpenOrCreate()
         {
-            const string filepath = @"c:\something\doesnt\exist.txt";
+            string filepath = XFS.Path(@"c:\something\doesnt\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
 
             var stream = filesystem.File.Open(filepath, FileMode.OpenOrCreate);
@@ -1211,7 +1244,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Open_OverwritesExistingFileOnCreate()
         {
-            const string filepath = @"c:\something\doesnt\exist.txt";
+            string filepath = XFS.Path(@"c:\something\doesnt\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { filepath, new MockFileData("I'm here") }
@@ -1227,7 +1260,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_AppendText_AppendTextToanExistingFile()
         {
-            const string filepath = @"c:\something\does\exist.txt";
+            string filepath = XFS.Path(@"c:\something\does\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { filepath, new MockFileData("I'm here. ") }
@@ -1246,7 +1279,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_AppendText_CreatesNewFileForAppendToNonExistingFile()
         {
-            const string filepath = @"c:\something\doesnt\exist.txt";
+            string filepath = XFS.Path(@"c:\something\doesnt\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
 
             var stream = filesystem.File.AppendText(filepath);
