@@ -38,7 +38,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
             string root = GetPathRoot(path);
 
-            bool hasTrailingSlash = path[path.Length - 1] == DirectorySeparatorChar;
+            bool hasTrailingSlash = path.Length > 1 && path[path.Length - 1] == DirectorySeparatorChar;
+
             string[] pathSegments;
 
             if (root.Length == 0)
