@@ -5,9 +5,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     public class MockPathTests
     {
-        static readonly string TestPath = XFS
-            .ForWin("C:\\test\\test.bmp")
-            .ForUnix("/test/test.bmp");
+        static readonly string TestPath = XFS.Path("C:\\test\\test.bmp");
 
         private MockPath SetupMockPath()
         {
@@ -24,10 +22,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.ChangeExtension(TestPath, "doc");
 
             //Assert
-            Assert.AreEqual(XFS
-                .ForWin("C:\\test\\test.doc")
-                .ForUnix("/test/test.doc")
-                , result);
+            Assert.AreEqual(XFS.Path("C:\\test\\test.doc"), result);
         }
 
         [Test]
@@ -37,16 +32,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockPath = new MockPath(new MockFileSystem());
 
             //Act
-            var result = mockPath.Combine(XFS
-                .ForWin("C:\\test")
-                .ForUnix("/test")
-                , "test.bmp");
+            var result = mockPath.Combine(XFS.Path("C:\\test"), "test.bmp");
 
             //Assert
-            Assert.AreEqual(XFS
-                .ForWin("C:\\test\\test.bmp")
-                .ForUnix("/test/test.bmp")
-                , result);
+            Assert.AreEqual(XFS.Path("C:\\test\\test.bmp"), result);
         }
 
         [Test]
@@ -59,10 +48,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetDirectoryName(TestPath);
 
             //Assert
-            Assert.AreEqual(XFS
-                .ForWin("C:\\test")
-                .ForUnix("/test")
-                , result);
+            Assert.AreEqual(XFS.Path("C:\\test"), result);
         }
 
         [Test]
@@ -121,13 +107,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             get
             {
-                yield return new [] { XFS.ForWin(@"c:\a").ForUnix("/a"), "b", XFS.ForWin(@"c:\a\b").ForUnix("/a/b") };
-                yield return new [] { XFS.ForWin(@"c:\a\b").ForUnix("/a/b"), "c", XFS.ForWin(@"c:\a\b\c").ForUnix("/a/b/c") };
-                yield return new [] { XFS.ForWin(@"c:\a\b").ForUnix("/a/b"), XFS.ForWin(@"c\").ForUnix("c/"), XFS.ForWin(@"c:\a\b\c\").ForUnix("/a/b/c/") };
-                yield return new [] { XFS.ForWin(@"c:\a\b").ForUnix("/a/b"), XFS.ForWin(@"..\c").ForUnix("../c"), XFS.ForWin(@"c:\a\c").ForUnix("/a/c") };
-                yield return new [] { XFS.ForWin(@"c:\a\b\c").ForUnix("/a/b/c"), XFS.ForWin(@"..\c\..\").ForUnix("../c/../"), XFS.ForWin(@"c:\a\b\").ForUnix("/a/b/") };
-                yield return new [] { XFS.ForWin(@"c:\a\b\c").ForUnix("/a/b/c"), XFS.ForWin(@"..\..\..\..\..\d").ForUnix("../../../../../d"), XFS.ForWin(@"c:\d").ForUnix("/d") };
-                yield return new [] { XFS.ForWin(@"c:\a\b\c").ForUnix("/a/b/c"), XFS.ForWin(@"..\..\..\..\..\d\").ForUnix("../../../../../d/"), XFS.ForWin(@"c:\d\").ForUnix("/d/") };
+                yield return new [] { XFS.Path(@"c:\a"), "b", XFS.Path(@"c:\a\b") };
+                yield return new [] { XFS.Path(@"c:\a\b"), "c", XFS.Path(@"c:\a\b\c") };
+                yield return new [] { XFS.Path(@"c:\a\b"), XFS.Path(@"c\"), XFS.Path(@"c:\a\b\c\") };
+                yield return new [] { XFS.Path(@"c:\a\b"), XFS.Path(@"..\c"), XFS.Path(@"c:\a\c") };
+                yield return new [] { XFS.Path(@"c:\a\b\c"), XFS.Path(@"..\c\..\"), XFS.Path(@"c:\a\b\") };
+                yield return new [] { XFS.Path(@"c:\a\b\c"), XFS.Path(@"..\..\..\..\..\d"), XFS.Path(@"c:\d") };
+                yield return new [] { XFS.Path(@"c:\a\b\c"), XFS.Path(@"..\..\..\..\..\d\"), XFS.Path(@"c:\d\") };
             }
         }
 
@@ -150,11 +136,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             get
             {
-                yield return new [] { XFS.ForWin(@"c:\a\b\..\c").ForUnix("/a/b/../c"), XFS.ForWin(@"c:\a\c").ForUnix("/a/c") };
-                yield return new [] { XFS.ForWin(@"c:\a\b\.\.\..\.\c").ForUnix("/a/b/././.././c"), XFS.ForWin(@"c:\a\c").ForUnix("/a/c") };
-                yield return new [] { XFS.ForWin(@"c:\a\b\.\c").ForUnix("/a/b/./c"), XFS.ForWin(@"c:\a\b\c").ForUnix("/a/b/c") };
-                yield return new [] { XFS.ForWin(@"c:\a\b\.\.\.\.\c").ForUnix("/a/b/././././c"), XFS.ForWin(@"c:\a\b\c").ForUnix("/a/b/c") };
-                yield return new [] { XFS.ForWin(@"c:\a\..\..\c").ForUnix("/a/../../c"), XFS.ForWin(@"c:\c").ForUnix("/c") };
+                yield return new [] { XFS.Path(@"c:\a\b\..\c"), XFS.Path(@"c:\a\c") };
+                yield return new [] { XFS.Path(@"c:\a\b\.\.\..\.\c"), XFS.Path(@"c:\a\c") };
+                yield return new [] { XFS.Path(@"c:\a\b\.\c"), XFS.Path(@"c:\a\b\c") };
+                yield return new [] { XFS.Path(@"c:\a\b\.\.\.\.\c"), XFS.Path(@"c:\a\b\c") };
+                yield return new [] { XFS.Path(@"c:\a\..\..\c"), XFS.Path(@"c:\c") };
             }
         }
 
@@ -176,14 +162,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             get
             {
-                yield return new [] { XFS.ForWin(@"c:\a").ForUnix("/a"), XFS.ForWin(@"/b").ForUnix(@"/b"), XFS.ForWin(@"c:\b").ForUnix("/b") };
-                yield return new [] { XFS.ForWin(@"c:\a").ForUnix("/a"), XFS.ForWin(@"/b\").ForUnix(@"/b/"), XFS.ForWin(@"c:\b\").ForUnix("/b/") };
-                yield return new [] { XFS.ForWin(@"c:\a").ForUnix("/a"), XFS.ForWin(@"\b").ForUnix(@"/b"), XFS.ForWin(@"c:\b").ForUnix("/b") };
-                yield return new [] { XFS.ForWin(@"c:\a").ForUnix("/a"), XFS.ForWin(@"\b\..c").ForUnix(@"/b/../c"), XFS.ForWin(@"c:\c").ForUnix("/c") };
-                yield return new [] { XFS.ForWin(@"z:\a").ForUnix("/a"), XFS.ForWin(@"\b\..c").ForUnix(@"/b/../c"), XFS.ForWin(@"z:\c").ForUnix("/c") };
-                yield return new [] { XFS.ForWin(@"z:\a").ForUnix("/a"), XFS.ForWin(@"\\computer\share\c").ForUnix(@"//computer/share/c"), XFS.ForWin(@"\\computer\share\c").ForUnix("//computer/share/c") };
-                yield return new [] { XFS.ForWin(@"z:\a").ForUnix("/a"), XFS.ForWin(@"\\computer\share\c\..\d").ForUnix(@"//computer/share/c/../d"), XFS.ForWin(@"\\computer\share\d").ForUnix("//computer/share/d") };
-                yield return new [] { XFS.ForWin(@"z:\a").ForUnix("/a"), XFS.ForWin(@"\\computer\share\c\..\..\d").ForUnix(@"//computer/share/c/../../d"), XFS.ForWin(@"\\computer\share\d").ForUnix("//computer/share/d") };
+                yield return new [] { XFS.Path(@"c:\a"), XFS.Path(@"/b"), XFS.Path(@"c:\b") };
+                yield return new [] { XFS.Path(@"c:\a"), XFS.Path(@"/b\"), XFS.Path(@"c:\b\") };
+                yield return new [] { XFS.Path(@"c:\a"), XFS.Path(@"\b"), XFS.Path(@"c:\b") };
+                yield return new [] { XFS.Path(@"c:\a"), XFS.Path(@"\b\..\c"), XFS.Path(@"c:\c") };
+                yield return new [] { XFS.Path(@"z:\a"), XFS.Path(@"\b\..\c"), XFS.Path(@"z:\c") };
+                yield return new [] { XFS.Path(@"z:\a"), XFS.Path(@"\\computer\share\c"), XFS.Path(@"\\computer\share\c") };
+                yield return new [] { XFS.Path(@"z:\a"), XFS.Path(@"\\computer\share\c\..\d"), XFS.Path(@"\\computer\share\d") };
+                yield return new [] { XFS.Path(@"z:\a"), XFS.Path(@"\\computer\share\c\..\..\d"), XFS.Path(@"\\computer\share\d") };
             }
         }
 
@@ -210,7 +196,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockPath = new MockPath(mockFileSystem);
 
             //Act
-            TestDelegate action = () => mockPath.GetFullPath(XFS.ForWin(@"\\shareZ").ForUnix(@"//shareZ"));
+            TestDelegate action = () => mockPath.GetFullPath(XFS.Path(@"\\shareZ"));
 
             //Assert
             Assert.Throws<ArgumentException>(action);
@@ -280,10 +266,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetPathRoot(TestPath);
 
             //Assert
-            Assert.AreEqual(XFS
-                .ForWin("C:\\")
-                .ForUnix("/")
-                , result);
+            Assert.AreEqual(XFS.Path("C:\\"), result);
         }
 
         [Test]
