@@ -4,6 +4,8 @@ using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using XFS = MockUnixSupport;
+
     [Serializable]
     public class MockFileSystem : IFileSystem, IMockFileDataAccessor
     {
@@ -20,7 +22,6 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (String.IsNullOrEmpty(currentDirectory))
                 currentDirectory = System.IO.Path.GetTempPath();
-
 
             this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
             pathField = new MockPath(this);

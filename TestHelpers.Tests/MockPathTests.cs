@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
+    using XFS = MockUnixSupport;
+
     public class MockPathTests
     {
         static readonly string TestPath = XFS.Path("C:\\test\\test.bmp");

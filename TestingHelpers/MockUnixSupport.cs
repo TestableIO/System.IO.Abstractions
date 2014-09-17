@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
-    public static class XFS
+    internal static class MockUnixSupport
     {
-        public static string Path(string path, Func<bool> isUnixF = null)
+        internal static string Path(string path, Func<bool> isUnixF = null)
         {
             var isUnix = isUnixF ?? IsUnixPlatform;
 
@@ -18,13 +18,13 @@ namespace System.IO.Abstractions.TestingHelpers
             return path;
         }
 
-        public static string Separator(Func<bool> isUnixF = null)
+        internal static string Separator(Func<bool> isUnixF = null)
         {
             var isUnix = isUnixF ?? IsUnixPlatform;
             return isUnix() ? "/" : @"\";
         }
 
-        public static bool IsUnixPlatform()
+        internal static bool IsUnixPlatform()
         {
             int p = (int)Environment.OSVersion.Platform;
             return (p == 4) || (p == 6) || (p == 128);

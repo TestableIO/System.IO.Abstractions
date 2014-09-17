@@ -97,7 +97,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileSystem_AddDirectory_ShouldCreateDirectory()
         {
             // Arrange
-            string baseDirectory = XFS.Path(@"C:\Test");
+            string baseDirectory = MockUnixSupport.Path(@"C:\Test");
             var fileSystem = new MockFileSystem();
 
             // Act

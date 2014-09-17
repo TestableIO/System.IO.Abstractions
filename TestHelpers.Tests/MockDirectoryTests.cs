@@ -4,6 +4,8 @@ using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
+    using XFS = MockUnixSupport;
+
     [TestFixture]
     public class MockDirectoryTests
     {
@@ -755,7 +757,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             if (XFS.IsUnixPlatform())
             {
-                Assert.Pass();
+                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
                 return;
             }
 

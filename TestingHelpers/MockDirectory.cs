@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using XFS = MockUnixSupport;
+
     [Serializable]
     public class MockDirectory : DirectoryBase
     {
@@ -172,19 +174,21 @@ namespace System.IO.Abstractions.TestingHelpers
             path = EnsurePathEndsWithDirectorySeparator(path);
             path = mockFileDataAccessor.Path.GetFullPath(path);
 
-            string allDirectoriesPattern = XFS.IsUnixPlatform()
+            bool isUnix = XFS.IsUnixPlatform();
+
+            string allDirectoriesPattern = isUnix
                 ? @"([^<>:""/|?*]*/)*"
                 : @"([^<>:""/\\|?*]*\\)*";
 
             var fileNamePattern = searchPattern == "*"
-                ? XFS.IsUnixPlatform() ? @"[^/]*?/?" : @"[^\\]*?\\?"
+                ? isUnix ? @"[^/]*?/?" : @"[^\\]*?\\?"
                 : Regex.Escape(searchPattern)
-                .Replace(@"\*", XFS.IsUnixPlatform() ? @"[^<>:""/|?*]*?" : @"[^<>:""/\\|?*]*?")
-                .Replace(@"\?", XFS.IsUnixPlatform() ? @"[^<>:""/|?*]?" : @"[^<>:""/\\|?*]?");
+                    .Replace(@"\*", isUnix ? @"[^<>:""/|?*]*?" : @"[^<>:""/\\|?*]*?")
+                    .Replace(@"\?", isUnix ? @"[^<>:""/|?*]?" : @"[^<>:""/\\|?*]?");
 
             var pathPattern = string.Format(
                 CultureInfo.InvariantCulture,
-                XFS.IsUnixPlatform() ? @"(?i:^{0}{1}{2}(?:/?)$)" : @"(?i:^{0}{1}{2}(?:\\?)$)",
+                isUnix ? @"(?i:^{0}{1}{2}(?:/?)$)" : @"(?i:^{0}{1}{2}(?:\\?)$)",
                 Regex.Escape(path),
                 searchOption == SearchOption.AllDirectories ? allDirectoriesPattern : string.Empty,
                 fileNamePattern);
