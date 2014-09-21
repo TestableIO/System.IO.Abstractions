@@ -32,11 +32,15 @@ namespace System.IO.Abstractions.TestingHelpers
 
             path = path.Replace(AltDirectorySeparatorChar, DirectorySeparatorChar);
 
+            bool isUnc =
+                path.StartsWith(@"\\", StringComparison.OrdinalIgnoreCase) ||
+                path.StartsWith(@"//", StringComparison.OrdinalIgnoreCase);
+
             string root = GetPathRoot(path);
 
-            bool hasTrailingSlash = path[path.Length - 1] == DirectorySeparatorChar;
+            bool hasTrailingSlash = path.Length > 1 && path[path.Length - 1] == DirectorySeparatorChar;
+
             string[] pathSegments;
-            bool isUnc = false;
 
             if (root.Length == 0)
             {
@@ -44,12 +48,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 path = mockFileDataAccessor.Directory.GetCurrentDirectory() + DirectorySeparatorChar + path;
                 pathSegments = GetSegments(path);
             }
-            else if (@"\".Equals(root, StringComparison.OrdinalIgnoreCase) || @"/".Equals(root, StringComparison.OrdinalIgnoreCase))
-            {
-                // absolute path on the current drive or volume
-                pathSegments = GetSegments(GetPathRoot(mockFileDataAccessor.Directory.GetCurrentDirectory()), path);
-            }
-            else if (root.StartsWith(@"\\", StringComparison.OrdinalIgnoreCase))
+            else if (isUnc)
             {
                 // unc path
                 pathSegments = GetSegments(path);
@@ -57,16 +56,26 @@ namespace System.IO.Abstractions.TestingHelpers
                 {
                     throw new ArgumentException(@"The UNC path should be of the form \\server\share.", "path");
                 }
-
-                isUnc = true;
             }
-            else
+            else if (@"\".Equals(root, StringComparison.OrdinalIgnoreCase) || @"/".Equals(root, StringComparison.OrdinalIgnoreCase))
+            {
+                // absolute path on the current drive or volume
+                pathSegments = GetSegments(GetPathRoot(mockFileDataAccessor.Directory.GetCurrentDirectory()), path);
+            }
+                        else
             {
                 pathSegments = GetSegments(path);
             }
 
             // unc paths need at least two segments, the others need one segment
-            var minPathSegments = isUnc ? 2 : 1;
+            bool isUnixRooted =
+                mockFileDataAccessor.Directory.GetCurrentDirectory()
+                    .StartsWith(DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture));
+
+            var minPathSegments = isUnc
+                ? 2
+                : isUnixRooted ? 0 : 1;
+
             var stack = new Stack<string>();
             foreach (var segment in pathSegments)
             {
@@ -88,12 +97,24 @@ namespace System.IO.Abstractions.TestingHelpers
                 }
             }
 
-            var fullPath = isUnc ? @"\\" : string.Empty;
-            fullPath += string.Join(DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), stack.Reverse().ToArray());
+            var fullPath = string.Join(DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), stack.Reverse().ToArray());
 
             if (hasTrailingSlash)
             {
                 fullPath += DirectorySeparatorChar;
+            }
+
+            if (isUnixRooted && !isUnc)
+            {
+                fullPath = DirectorySeparatorChar + fullPath;
+            }
+            else if (isUnixRooted && isUnc)
+            {
+                fullPath = @"//" + fullPath;
+            }
+            else if (!isUnixRooted && isUnc)
+            {
+                fullPath = @"\\" + fullPath;
             }
 
             return fullPath;

@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using XFS = MockUnixSupport;
+
     [Serializable]
     public class MockDirectory : DirectoryBase
     {
@@ -170,20 +172,23 @@ namespace System.IO.Abstractions.TestingHelpers
         private string[] GetFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
         {
             path = EnsurePathEndsWithDirectorySeparator(path);
-
             path = mockFileDataAccessor.Path.GetFullPath(path);
 
-            const string allDirectoriesPattern = @"([^<>:""/\\|?*]*\\)*";
-            
+            bool isUnix = XFS.IsUnixPlatform();
+
+            string allDirectoriesPattern = isUnix
+                ? @"([^<>:""/|?*]*/)*"
+                : @"([^<>:""/\\|?*]*\\)*";
+
             var fileNamePattern = searchPattern == "*"
-                ? @"[^\\]*?\\?"
+                ? isUnix ? @"[^/]*?/?" : @"[^\\]*?\\?"
                 : Regex.Escape(searchPattern)
-                    .Replace(@"\*", @"[^<>:""/\\|?*]*?")
-                    .Replace(@"\?", @"[^<>:""/\\|?*]?");
+                    .Replace(@"\*", isUnix ? @"[^<>:""/|?*]*?" : @"[^<>:""/\\|?*]*?")
+                    .Replace(@"\?", isUnix ? @"[^<>:""/|?*]?" : @"[^<>:""/\\|?*]?");
 
             var pathPattern = string.Format(
                 CultureInfo.InvariantCulture,
-                @"(?i:^{0}{1}{2}(?:\\?)$)",
+                isUnix ? @"(?i:^{0}{1}{2}(?:/?)$)" : @"(?i:^{0}{1}{2}(?:\\?)$)",
                 Regex.Escape(path),
                 searchOption == SearchOption.AllDirectories ? allDirectoriesPattern : string.Empty,
                 fileNamePattern);
@@ -248,18 +253,24 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentException("Path cannot be the empty string or all whitespace.", "path");
             }
 
-            if (path.IndexOfAny(mockFileDataAccessor.Path.GetInvalidPathChars()) > -1)
+            var invalidChars = mockFileDataAccessor.Path.GetInvalidPathChars();
+            if (path.IndexOfAny(invalidChars) > -1)
             {
                 throw new ArgumentException("Path contains invalid path characters.", "path");
             }
 
             var absolutePath = mockFileDataAccessor.Path.GetFullPath(path);
             var sepAsString = mockFileDataAccessor.Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture);
-            var startIndex = absolutePath.EndsWith(sepAsString, StringComparison.OrdinalIgnoreCase) ? absolutePath.Length - 1 : absolutePath.Length;
-            var lastIndex = absolutePath.LastIndexOf(mockFileDataAccessor.Path.DirectorySeparatorChar, startIndex - 1);
-            if (lastIndex < 0)
+
+            var lastIndex = 0;
+            if (absolutePath != sepAsString)
             {
-                return null;
+                var startIndex = absolutePath.EndsWith(sepAsString, StringComparison.OrdinalIgnoreCase) ? absolutePath.Length - 1 : absolutePath.Length;
+                lastIndex = absolutePath.LastIndexOf(mockFileDataAccessor.Path.DirectorySeparatorChar, startIndex - 1);
+                if (lastIndex < 0)
+                {
+                    return null;
+                }
             }
 
             var parentPath = absolutePath.Substring(0, lastIndex);

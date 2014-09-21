@@ -4,6 +4,8 @@ using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
+    using XFS = MockUnixSupport;
+
     [TestFixture]
     public class MockFileInfoTests
     {
@@ -13,10 +15,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", new MockFileData("Demo text content") },
-                { @"c:\a\b\c.txt", new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\b\c.txt"), new MockFileData("Demo text content") },
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             // Act
             var result = fileInfo.Exists;
@@ -31,10 +33,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", new MockFileData("Demo text content") },
-                { @"c:\a\b\c.txt", new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\b\c.txt"), new MockFileData("Demo text content") },
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\foo.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\foo.txt"));
 
             // Act
             var result = fileInfo.Exists;
@@ -50,10 +52,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             const string fileContent = "Demo text content";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", new MockFileData(fileContent) },
-                { @"c:\a\b\c.txt", new MockFileData(fileContent) },
+                { XFS.Path(@"c:\a.txt"), new MockFileData(fileContent) },
+                { XFS.Path(@"c:\a\b\c.txt"), new MockFileData(fileContent) },
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             // Act
             var result = fileInfo.Length;
@@ -69,15 +71,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             const string fileContent = "Demo text content";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", new MockFileData(fileContent) },
-                { @"c:\a\b\c.txt", new MockFileData(fileContent) },
+                { XFS.Path(@"c:\a.txt"), new MockFileData(fileContent) },
+                { XFS.Path(@"c:\a\b\c.txt"), new MockFileData(fileContent) },
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\foo.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\foo.txt"));
 
 // ReSharper disable ReturnValueOfPureMethodIsNotUsed
             var ex = Assert.Throws<FileNotFoundException>(() => fileInfo.Length.ToString(CultureInfo.InvariantCulture));
 // ReSharper restore ReturnValueOfPureMethodIsNotUsed
-            Assert.AreEqual(@"c:\foo.txt", ex.FileName);
+            Assert.AreEqual(XFS.Path(@"c:\foo.txt"), ex.FileName);
         }
 
         [Test]
@@ -88,9 +90,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileData = new MockFileData("Demo text content") { CreationTime = creationTime };
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", fileData }
+                { XFS.Path(@"c:\a.txt"), fileData }
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             // Act
             var result = fileInfo.CreationTimeUtc;
@@ -107,9 +109,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileData = new MockFileData("Demo text content") { LastAccessTime = lastAccessTime };
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", fileData }
+                { XFS.Path(@"c:\a.txt"), fileData }
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             // Act
             var result = fileInfo.LastAccessTimeUtc;
@@ -126,9 +128,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileData = new MockFileData("Demo text content") { LastWriteTime = lastWriteTime };
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", fileData }
+                { XFS.Path(@"c:\a.txt"), fileData }
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             // Act
             var result = fileInfo.LastWriteTimeUtc;
@@ -142,7 +144,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             // Act
             var result = fileInfo.Extension;
@@ -156,7 +158,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a"));
 
             // Act
             var result = fileInfo.Extension;
@@ -169,24 +171,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileInfo_GetDirectoryName_ShouldReturnCompleteDirectoryPath()
         {
             // Arrange
-            var fileInfo = new MockFileInfo(new MockFileSystem(), @"c:\temp\level1\level2\file.txt");
+            var fileInfo = new MockFileInfo(new MockFileSystem(), XFS.Path(@"c:\temp\level1\level2\file.txt"));
 
             // Act
             var result = fileInfo.DirectoryName;
 
-            Assert.AreEqual(@"c:\temp\level1\level2", result);
+            Assert.AreEqual(XFS.Path(@"c:\temp\level1\level2"), result);
         }
 
         [Test]
         public void MockFileInfo_GetDirectory_ShouldReturnDirectoryInfoWithCorrectPath()
         {
             // Arrange
-            var fileInfo = new MockFileInfo(new MockFileSystem(), @"c:\temp\level1\level2\file.txt");
+            var fileInfo = new MockFileInfo(new MockFileSystem(), XFS.Path(@"c:\temp\level1\level2\file.txt"));
 
             // Act
             var result = fileInfo.Directory;
 
-            Assert.AreEqual(@"c:\temp\level1\level2", result.FullName);
+            Assert.AreEqual(XFS.Path(@"c:\temp\level1\level2"), result.FullName);
         }
 
         [Test]
@@ -194,8 +196,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(@"c:\temp\file.txt", new MockFileData(new byte[] { 1, 2 }));
-            var fileInfo = fileSystem.FileInfo.FromFileName(@"c:\temp\file.txt");
+            fileSystem.AddFile(XFS.Path(@"c:\temp\file.txt"), new MockFileData(new byte[] { 1, 2 }));
+            var fileInfo = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file.txt"));
 
             // Act
             byte[] result = new byte[2];
@@ -210,19 +212,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFileInfo_OpenText_ShouldReturnStringContentOfFile()
         {
-          // Arrange
-          var fileSystem = new MockFileSystem();
-          fileSystem.AddFile(@"c:\temp\file.txt", new MockFileData(@"line 1\r\nline 2"));
-          var fileInfo = fileSystem.FileInfo.FromFileName(@"c:\temp\file.txt");
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(XFS.Path(@"c:\temp\file.txt"), new MockFileData(@"line 1\r\nline 2"));
+            var fileInfo = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file.txt"));
 
-          // Act
-          string result;
-          using (var streamReader = fileInfo.OpenText())
-          {
-            result = streamReader.ReadToEnd();
-          }
+            // Act
+            string result;
+            using (var streamReader = fileInfo.OpenText())
+            {
+                result = streamReader.ReadToEnd();
+            }
 
-          Assert.AreEqual(@"line 1\r\nline 2", result);
+            Assert.AreEqual(@"line 1\r\nline 2", result);
         }
     }
 }

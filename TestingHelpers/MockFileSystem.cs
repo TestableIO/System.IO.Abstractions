@@ -4,6 +4,8 @@ using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using XFS = MockUnixSupport;
+
     [Serializable]
     public class MockFileSystem : IFileSystem, IMockFileDataAccessor
     {
@@ -16,12 +18,15 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockFileSystem() : this(null) { }
 
-        public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = @"C:\Foo\Bar")
+        public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = "")
         {
+            if (String.IsNullOrEmpty(currentDirectory))
+                currentDirectory = System.IO.Path.GetTempPath();
+
             this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
             pathField = new MockPath(this);
             file = new MockFile(this);
-            directory = new MockDirectory(this, file, FixPath(currentDirectory));
+            directory = new MockDirectory(this, file, currentDirectory);
             fileInfoFactory = new MockFileInfoFactory(this);
             directoryInfoFactory = new MockDirectoryInfoFactory(this);
 
@@ -91,6 +96,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public void AddDirectory(string path)
         {
             var fixedPath = FixPath(path);
+            var separator = XFS.Separator();
 
             lock (files)
             {
@@ -99,7 +105,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path));
 
                 var lastIndex = 0;
-                while ((lastIndex = path.IndexOf('\\', lastIndex + 1)) > -1)
+                while ((lastIndex = path.IndexOf(separator, lastIndex + 1)) > -1)
                 {
                     var segment = path.Substring(0, lastIndex + 1);
                     if (!directory.Exists(segment))
@@ -108,7 +114,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     }
                 }
 
-                var s = path.EndsWith("\\", StringComparison.OrdinalIgnoreCase) ? path : path + "\\";
+                var s = path.EndsWith(separator, StringComparison.OrdinalIgnoreCase) ? path : path + separator;
                 files[s] = new MockDirectoryData();
             }
         }
