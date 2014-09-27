@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7964E5A3-666C-4ECA-A0E3-FD12062B416E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>System.IO.Abstractions</RootNamespace>
+    <AssemblyName>System.IO.Abstractions</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\StrongName.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\System.IO.Abstractions\Converters.cs" />
+    <Compile Include="..\System.IO.Abstractions\DirectoryBase.cs" />
+    <Compile Include="..\System.IO.Abstractions\DirectoryInfoBase.cs" />
+    <Compile Include="..\System.IO.Abstractions\DirectoryInfoFactory.cs" />
+    <Compile Include="..\System.IO.Abstractions\DirectoryInfoWrapper.cs" />
+    <Compile Include="..\System.IO.Abstractions\DirectoryWrapper.cs" />
+    <Compile Include="..\System.IO.Abstractions\FileInfoBase.cs" />
+    <Compile Include="..\System.IO.Abstractions\FileInfoFactory.cs" />
+    <Compile Include="..\System.IO.Abstractions\FileInfoWrapper.cs" />
+    <Compile Include="..\System.IO.Abstractions\FileSystem.cs" />
+    <Compile Include="..\System.IO.Abstractions\FileSystemInfoBase.cs" />
+    <Compile Include="..\System.IO.Abstractions\FileWrapper.cs" />
+    <Compile Include="..\System.IO.Abstractions\FileBase.cs" />
+    <Compile Include="..\System.IO.Abstractions\IDirectoryInfoFactory.cs" />
+    <Compile Include="..\System.IO.Abstractions\IFileInfoFactory.cs" />
+    <Compile Include="..\System.IO.Abstractions\IFileSystem.cs" />
+    <Compile Include="..\System.IO.Abstractions\PathBase.cs" />
+    <Compile Include="..\System.IO.Abstractions\PathWrapper.cs" />
+    <Compile Include="..\System.IO.Abstractions\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo</Link>
+    </Compile>
+    <Compile Include="DirectoryBase.Net40.cs" />
+    <Compile Include="DirectoryWrapper.Net40.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -9,7 +9,7 @@ namespace System.IO.Abstractions.TestingHelpers
     using XFS = MockUnixSupport;
 
     [Serializable]
-    public class MockDirectory : DirectoryBase
+    public partial class MockDirectory : DirectoryBase
     {
         readonly FileBase fileBase;
         readonly IMockFileDataAccessor mockFileDataAccessor;
