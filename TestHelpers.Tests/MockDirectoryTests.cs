@@ -418,13 +418,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             {
                 { XFS.Path(@"c:\foo.txt"), new MockFileData("Demo text content") }
             });
-
+            
             // Act
             fileSystem.Directory.CreateDirectory(XFS.Path(@"\\server\share\path\to\create", () => false));
 
             // Assert
-            Assert.IsTrue(fileSystem.FileExists(XFS.Path(@"\\server\share\path\to\create", () => false)));
-            Assert.IsTrue(fileSystem.AllDirectories.Any(d => d == XFS.Path(@"\\server\share\path\to\create", () => false)));
+            Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"\\server\share\path\to\create\", () => false)));
+            Assert.IsTrue(fileSystem.AllDirectories.Any(d => d == XFS.Path(@"\\server\share\path\to\create\", () => false)));
         }
 
         [Test]
@@ -449,6 +449,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             var ex = Assert.Throws<ArgumentException>(() => fileSystem.Directory.CreateDirectory(XFS.Path(@"\\server\share", () => false)));
+        }
+        [Test]
+        public void MockDirectory_CreateDirectory_ShouldSucceedIfTryingToCreateUNCPathFolderDirectlyUnderShare()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\foo.txt"), new MockFileData("Demo text content") }
+            });
+
+            // Act
+            fileSystem.Directory.CreateDirectory(XFS.Path(@"\\server\share\folder", () => false));
+
+            // Assert
+            Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"\\server\share\folder\", () => false)));
+            Assert.IsTrue(fileSystem.AllDirectories.Any(d => d == XFS.Path(@"\\server\share\folder\", () => false)));
         }
 
         [Test]
