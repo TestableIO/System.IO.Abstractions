@@ -411,6 +411,42 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_CreateDirectory_ShouldWorkWithUNCPath()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            
+            // Act
+            fileSystem.Directory.CreateDirectory(XFS.Path(@"\\server\share\path\to\create", () => false));
+
+            // Assert
+            Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"\\server\share\path\to\create\", () => false)));
+        }
+
+        [Test]
+        public void MockDirectory_CreateDirectory_ShouldFailIfTryingToCreateUNCPathOnlyServer()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            var ex = Assert.Throws<ArgumentException>(() => fileSystem.Directory.CreateDirectory(XFS.Path(@"\\server", () => false)));
+            Assert.That(ex.Message, Is.EqualTo("The UNC path should be of the form \\\\server\\share.\r\nParameter name: path"));
+        }
+
+        [Test]
+        public void MockDirectory_CreateDirectory_ShouldSucceedIfTryingToCreateUNCPathShare()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            fileSystem.Directory.CreateDirectory(XFS.Path(@"\\server\share", () => false));
+
+            // Assert
+            Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"\\server\share\", () => false)));
+        }
+
+        [Test]
         public void MockDirectory_Delete_ShouldDeleteDirectory()
         {
             // Arrange

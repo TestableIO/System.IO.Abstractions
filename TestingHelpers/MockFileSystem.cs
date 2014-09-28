@@ -105,6 +105,25 @@ namespace System.IO.Abstractions.TestingHelpers
                     throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path));
 
                 var lastIndex = 0;
+
+                bool isUnc =
+                    path.StartsWith(@"\\", StringComparison.OrdinalIgnoreCase) ||
+                    path.StartsWith(@"//", StringComparison.OrdinalIgnoreCase);
+
+                if (isUnc)
+                {
+
+                    //First, confirm they aren't trying to create '\\server\'
+                    lastIndex = path.IndexOf(separator, 2);
+                    if (lastIndex < 0)
+                        throw new ArgumentException(@"The UNC path should be of the form \\server\share.", "path");
+
+                    /* 
+                     * Although CreateDirectory(@"\\server\share\") is not going to work in real code, we allow it here for the purposes of setting up test doubles.
+                     * See PR https://github.com/tathamoddie/System.IO.Abstractions/pull/90 for conversation
+                     */
+                }
+
                 while ((lastIndex = path.IndexOf(separator, lastIndex + 1)) > -1)
                 {
                     var segment = path.Substring(0, lastIndex + 1);
