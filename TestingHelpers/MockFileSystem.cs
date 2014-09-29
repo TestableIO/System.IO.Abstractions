@@ -110,25 +110,18 @@ namespace System.IO.Abstractions.TestingHelpers
                     path.StartsWith(@"\\", StringComparison.OrdinalIgnoreCase) ||
                     path.StartsWith(@"//", StringComparison.OrdinalIgnoreCase);
 
-
                 if (isUnc)
                 {
-                    if (path.Length <= 2)
-                        throw new ArgumentException("'" + path + @"' is an invlid path.  The UNC path should be of the form \\server\share.", "path");
 
+                    //First, confirm they aren't trying to create '\\server\'
                     lastIndex = path.IndexOf(separator, 2);
                     if (lastIndex < 0)
-                        throw new ArgumentException("'" + path + @"' is an invlid path.  The server portion of a UNC path cannot be created.", "path");
+                        throw new ArgumentException(@"The UNC path should be of the form \\server\share.", "path");
 
-                    /* Note that we don't set 'lastIndex' here.  Even though in a real filesystem the share name must already
-                     * exist (thus this potential error), in the Mock object, we do want to treat the share folder as a regular 
-                     * folder that will need to exist if they're creating some sub-folder beneath it.
+                    /* 
+                     * Although CreateDirectory(@"\\server\share\") is not going to work in real code, we allow it here for the purposes of setting up test doubles.
+                     * See PR https://github.com/tathamoddie/System.IO.Abstractions/pull/90 for conversation
                      */
-                    var shareEndSlashIndex = path.IndexOf(separator, lastIndex + 1);
-
-                    if (shareEndSlashIndex + 1 == path.Length)
-                        throw new ArgumentException("'" + path + @"' is an invlid path.  The share name of a UNC path cannot be created.", "path");
-
                 }
 
                 while ((lastIndex = path.IndexOf(separator, lastIndex + 1)) > -1)
