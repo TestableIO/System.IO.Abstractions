@@ -109,9 +109,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileData = new MockFileData("Demo text content") { CreationTime = creationTime };
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", fileData }
+                { XFS.Path(@"c:\a.txt"), fileData }
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             // Act
             var newUtcTime = DateTime.UtcNow;
@@ -130,9 +130,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileData = new MockFileData("Demo text content") { CreationTime = creationTime };
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", fileData }
+                { XFS.Path(@"c:\a.txt"), fileData }
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             // Act
             var result = fileInfo.CreationTime;
@@ -149,9 +149,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileData = new MockFileData("Demo text content") { CreationTime = creationTime };
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", fileData }
+                { XFS.Path(@"c:\a.txt"), fileData }
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             // Act
             var newTime = DateTime.Now;
@@ -168,9 +168,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileData = new MockFileData("Demo text content");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", fileData }
+                { XFS.Path(@"c:\a.txt"), fileData }
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             // Act
             fileInfo.IsReadOnly = true;
@@ -186,9 +186,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileData = new MockFileData("Demo text content") {Attributes = FileAttributes.ReadOnly};
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", fileData }
+                { XFS.Path(@"c:\a.txt"), fileData }
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             // Act
             fileInfo.IsReadOnly = false;
@@ -204,9 +204,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileData = new MockFileData("Demo text content");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", fileData }
+                { XFS.Path(@"c:\a.txt"), fileData }
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             // Act
             using (var file = fileInfo.AppendText())
@@ -227,9 +227,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileData = new MockFileData("Demo text content");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", fileData }
+                { XFS.Path(@"c:\a.txt"), fileData }
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
             var bytesToAdd = new byte[] {65, 66, 67, 68, 69};
 
             // Act
@@ -251,9 +251,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileData = new MockFileData("Demo text content");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", fileData }
+                { XFS.Path(@"c:\a.txt"), fileData }
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             // Act
             fileInfo.Encrypt();
@@ -275,9 +275,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileData = new MockFileData("Demo text content");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", fileData }
+                { XFS.Path(@"c:\a.txt"), fileData }
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
             fileInfo.Encrypt();
 
             // Act
@@ -320,9 +320,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileData = new MockFileData("Demo text content") { LastAccessTime = lastAccessTime };
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", fileData }
+                { XFS.Path(@"c:\a.txt"), fileData }
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             // Act
             var newUtcTime = DateTime.UtcNow;
@@ -359,9 +359,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileData = new MockFileData("Demo text content") { LastWriteTime = lastWriteTime };
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", fileData }
+                { XFS.Path(@"c:\a.txt"), fileData }
             });
-            var fileInfo = new MockFileInfo(fileSystem, @"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             // Act
             var newUtcTime = DateTime.UtcNow;
