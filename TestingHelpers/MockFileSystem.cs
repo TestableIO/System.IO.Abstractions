@@ -21,7 +21,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = "")
         {
             if (String.IsNullOrEmpty(currentDirectory))
-                currentDirectory = System.IO.Path.GetTempPath();
+                currentDirectory = IO.Path.GetTempPath();
 
             this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
             pathField = new MockPath(this);
@@ -73,17 +73,25 @@ namespace System.IO.Abstractions.TestingHelpers
             lock (files)
                 return FileExists(path) ? files[path] : returnNullObject ? MockFileData.NullObject : null;
         }
-  
+
         public void AddFile(string path, MockFileData mockFile)
         {
             var fixedPath = FixPath(path);
-            if (FileExists(fixedPath) && (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-                throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path));
-
-            var directoryPath = Path.GetDirectoryName(fixedPath);
-
             lock (files)
             {
+                if (FileExists(fixedPath))
+                {
+                    var isReadOnly = (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
+                    var isHidden = (files[fixedPath].Attributes & FileAttributes.Hidden) == FileAttributes.Hidden;
+
+                    if (isReadOnly || isHidden)
+                    {
+                        throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path));
+                    }
+                }
+
+                var directoryPath = Path.GetDirectoryName(fixedPath);
+
                 if (!directory.Exists(directoryPath))
                 {
                     AddDirectory(directoryPath);
