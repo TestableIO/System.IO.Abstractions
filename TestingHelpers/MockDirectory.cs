@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using System.Security.Cryptography;
+
     using XFS = MockUnixSupport;
 
     [Serializable]
@@ -290,7 +292,16 @@ namespace System.IO.Abstractions.TestingHelpers
             return parent;
         }
 
-        public override void Move(string sourceDirName, string destDirName) {
+        public override void Move(string sourceDirName, string destDirName)
+        {
+            var fullSourcePath = mockFileDataAccessor.Path.GetFullPath(sourceDirName);
+            var fullDestPath = mockFileDataAccessor.Path.GetFullPath(destDirName);
+
+            if (string.Equals(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new IOException("Source and destination path must be different.");
+            }
+
             //Make sure that the destination exists
             mockFileDataAccessor.Directory.CreateDirectory(destDirName);
 

@@ -4,6 +4,8 @@ using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
+    using System.Security.Cryptography;
+
     using XFS = MockUnixSupport;
 
     [TestFixture]
@@ -857,6 +859,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.AreEqual(expectedResult, actualResult.FullName);
+        }
+
+        [Test]
+        public void MockDirectory_Move_ShouldThrowAnIOExceptionIfBothPathAreIdentical()
+        {
+            // Arrange
+            string path = XFS.Path(@"c:\a");
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(path);
+
+            // Act
+            TestDelegate action = () => fileSystem.Directory.Move(path, path);
+
+            // Assert
+            Assert.Throws<IOException>(action, "Source and destination path must be different.");
         }
     }
 }
