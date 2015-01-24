@@ -723,13 +723,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { XFS.Path(@"A:\folder1\folder2\file2.txt"), new MockFileData("bbb") },
             });
 
-            fileSystem.DirectoryInfo.FromDirectoryName(XFS.Path(@"A:\folder1")).MoveTo(XFS.Path(@"B:\folder3"));
+            fileSystem.DirectoryInfo.FromDirectoryName(XFS.Path(@"A:\folder1")).MoveTo(XFS.Path(@"A:\folder3"));
 
             Assert.IsFalse(fileSystem.Directory.Exists(XFS.Path(@"A:\folder1")));
-            Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"B:\folder3")));
-            Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"B:\folder3\folder2")));
-            Assert.IsTrue(fileSystem.File.Exists(XFS.Path(@"B:\folder3\file.txt")));
-            Assert.IsTrue(fileSystem.File.Exists(XFS.Path(@"B:\folder3\folder2\file2.txt")));
+            Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"A:\folder3")));
+            Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"A:\folder3\folder2")));
+            Assert.IsTrue(fileSystem.File.Exists(XFS.Path(@"A:\folder3\file.txt")));
+            Assert.IsTrue(fileSystem.File.Exists(XFS.Path(@"A:\folder3\folder2\file2.txt")));
         }
 
         [Test]
@@ -874,6 +874,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.Throws<IOException>(action, "Source and destination path must be different.");
+        }
+
+        [Test]
+        public void MockDirectory_Move_ShouldThrowAnIOExceptionIfDirectoriesAreOnDifferentVolumes()
+        {
+            // Arrange
+            string sourcePath = XFS.Path(@"c:\a");
+            string destPath = XFS.Path(@"d:\v");
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(sourcePath);
+
+            // Act
+            TestDelegate action = () => fileSystem.Directory.Move(sourcePath, destPath);
+
+            // Assert
+            Assert.Throws<IOException>(action, "Source and destination path must have identical roots. Move will not work across volumes.");
         }
     }
 }
