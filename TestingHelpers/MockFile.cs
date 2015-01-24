@@ -291,6 +291,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] ReadAllLines(string path, Encoding encoding)
         {
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding");
+            }
+
             if (!mockFileDataAccessor.FileExists(path))
                 throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", path));
             return encoding
@@ -307,6 +312,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string ReadAllText(string path, Encoding encoding)
         {
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding");
+            }
+
             return encoding.GetString(mockFileDataAccessor.GetFile(path).Contents);
         }
 
