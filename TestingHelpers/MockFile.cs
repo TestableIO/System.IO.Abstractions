@@ -73,26 +73,30 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Copy(string sourceFileName, string destFileName)
         {
-            if (mockFileDataAccessor.FileExists(destFileName))
-                throw new IOException(string.Format(CultureInfo.InvariantCulture, "The file {0} already exists.", destFileName));
-
-            mockFileDataAccessor.AddFile(destFileName, mockFileDataAccessor.GetFile(sourceFileName));
+            Copy(sourceFileName, destFileName, false);
         }
 
         public override void Copy(string sourceFileName, string destFileName, bool overwrite)
         {
-            if(overwrite)
+            var directoryNameOfDestination = mockPath.GetDirectoryName(destFileName);
+            if (!mockFileDataAccessor.Directory.Exists(directoryNameOfDestination))
             {
-                if (mockFileDataAccessor.FileExists(destFileName))
-                {
-                    var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
-                    mockFileDataAccessor.RemoveFile(destFileName);
-                    mockFileDataAccessor.AddFile(destFileName, sourceFile);
-                    return;
-                }
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", destFileName));
             }
 
-            Copy(sourceFileName, destFileName);
+            var fileExists = mockFileDataAccessor.FileExists(destFileName);
+            if (fileExists)
+            {
+                if (!overwrite)
+                {
+                    throw new IOException(string.Format(CultureInfo.InvariantCulture, "The file {0} already exists.", destFileName));
+                }
+
+                mockFileDataAccessor.RemoveFile(destFileName);
+            }
+
+            var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
+            mockFileDataAccessor.AddFile(destFileName, sourceFile);
         }
 
         public override Stream Create(string path)
