@@ -385,6 +385,27 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetFiles(path, searchPattern, searchOption);
         }
 
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path)
+        {
+            var fileSystemEntries = new List<string>(GetFiles(path));
+            fileSystemEntries.AddRange(GetDirectories(path));
+            return fileSystemEntries;
+        }
+
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern)
+        {
+            var fileSystemEntries = new List<string>(GetFiles(path, searchPattern));
+            fileSystemEntries.AddRange(GetDirectories(path, searchPattern));
+            return fileSystemEntries;
+        }
+
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
+        {
+            var fileSystemEntries = new List<string>(GetFiles(path, searchPattern, searchOption));
+            fileSystemEntries.AddRange(GetDirectories(path, searchPattern, searchOption));
+            return fileSystemEntries;
+        }
+
         static string EnsurePathEndsWithDirectorySeparator(string path)
         {
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))

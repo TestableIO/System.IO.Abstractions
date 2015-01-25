@@ -43,5 +43,8 @@ namespace System.IO.Abstractions
         public abstract IEnumerable<string> EnumerateFiles(string path);
         public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern);
         public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
+        public abstract IEnumerable<string> EnumerateFileSystemEntries(string path);
+        public abstract IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern);
+        public abstract IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
     }
 }
