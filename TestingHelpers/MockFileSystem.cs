@@ -114,7 +114,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 {
 
                     //First, confirm they aren't trying to create '\\server\'
-                    lastIndex = path.IndexOf(separator, 2);
+                    lastIndex = path.IndexOf(separator, 2, StringComparison.OrdinalIgnoreCase);
                     if (lastIndex < 0)
                         throw new ArgumentException(@"The UNC path should be of the form \\server\share.", "path");
 
@@ -124,7 +124,7 @@ namespace System.IO.Abstractions.TestingHelpers
                      */
                 }
 
-                while ((lastIndex = path.IndexOf(separator, lastIndex + 1)) > -1)
+                while ((lastIndex = path.IndexOf(separator, lastIndex + 1, StringComparison.OrdinalIgnoreCase)) > -1)
                 {
                     var segment = path.Substring(0, lastIndex + 1);
                     if (!directory.Exists(segment))

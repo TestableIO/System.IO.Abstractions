@@ -37,6 +37,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockFileData(byte[] contents, Encoding encoding)
         {
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding");
+            }
+
             this.encoding = encoding;
             this.contents = contents;
         }
