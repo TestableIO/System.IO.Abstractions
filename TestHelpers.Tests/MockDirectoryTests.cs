@@ -895,5 +895,88 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.Throws<IOException>(action, "Source and destination path must have identical roots. Move will not work across volumes.");
         }
+
+        [Test]
+        public void MockDirectory_EnumerateFiles_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
+        {
+            // Arrange
+            var fileSystem = SetupFileSystem();
+            IEnumerable<string> expected = new[]
+            {
+                XFS.Path(@"c:\a\a.txt"),
+                XFS.Path(@"c:\a\b.gif"),
+                XFS.Path(@"c:\a\c.txt"),
+                XFS.Path(@"c:\a\a\a.txt"),
+                XFS.Path(@"c:\a\a\b.txt"),
+                XFS.Path(@"c:\a\a\c.gif")
+            };
+
+            // Act
+            var result = fileSystem.Directory.EnumerateFiles(XFS.Path(@"c:\a"), "*", SearchOption.AllDirectories);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        [Test]
+        public void MockDirectory_EnumerateFiles_ShouldFilterByExtensionBasedSearchPattern()
+        {
+            // Arrange
+            var fileSystem = SetupFileSystem();
+            var expected = new[]
+            {
+                XFS.Path(@"c:\a.gif"),
+                XFS.Path(@"c:\a\b.gif"),
+                XFS.Path(@"c:\a\a\c.gif")
+            };
+
+            // Act
+            var result = fileSystem.Directory.EnumerateFiles(XFS.Path(@"c:\"), "*.gif", SearchOption.AllDirectories);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        [Test]
+        public void MockDirectory_EnumerateFileSystemEntries_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
+        {
+            // Arrange
+            var fileSystem = SetupFileSystem();
+            IEnumerable<string> expected = new[]
+            {
+                XFS.Path(@"c:\a\a.txt"),
+                XFS.Path(@"c:\a\b.gif"),
+                XFS.Path(@"c:\a\c.txt"),
+                XFS.Path(@"c:\a\a\a.txt"),
+                XFS.Path(@"c:\a\a\b.txt"),
+                XFS.Path(@"c:\a\a\c.gif"),
+                XFS.Path(@"c:\a\a\")
+            };
+
+            // Act
+            var result = fileSystem.Directory.EnumerateFileSystemEntries(XFS.Path(@"c:\a"), "*", SearchOption.AllDirectories);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        [Test]
+        public void MockDirectory_EnumerateFileSystemEntries_ShouldFilterByExtensionBasedSearchPattern()
+        {
+            // Arrange
+            var fileSystem = SetupFileSystem();
+            var expected = new[]
+            {
+                XFS.Path(@"c:\a.gif"),
+                XFS.Path(@"c:\a\b.gif"),
+                XFS.Path(@"c:\a\a\c.gif")
+            };
+
+            // Act
+            var result = fileSystem.Directory.EnumerateFileSystemEntries(XFS.Path(@"c:\"), "*.gif", SearchOption.AllDirectories);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
     }
 }

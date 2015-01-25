@@ -190,5 +190,20 @@ namespace System.IO.Abstractions
         {
             return Directory.EnumerateFiles(path, searchPattern, searchOption);
         }
+
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path)
+        {
+            return Directory.EnumerateFileSystemEntries(path);
+        }
+
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern)
+        {
+            return Directory.EnumerateFileSystemEntries(path, searchPattern);
+        }
+
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
+        {
+            return Directory.EnumerateFileSystemEntries(path, searchPattern, searchOption);
+        }
     }
 }
