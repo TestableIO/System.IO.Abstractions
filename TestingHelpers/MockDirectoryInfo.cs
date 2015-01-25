@@ -216,8 +216,6 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void MoveTo(string destDirName)
         {
-            destDirName = EnsurePathEndsWithDirectorySeparator(destDirName);
-
             mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
         }
 

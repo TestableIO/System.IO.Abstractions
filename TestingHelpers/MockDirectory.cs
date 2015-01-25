@@ -290,28 +290,44 @@ namespace System.IO.Abstractions.TestingHelpers
             return parent;
         }
 
-        public override void Move(string sourceDirName, string destDirName) {
-            //Make sure that the destination exists
-            mockFileDataAccessor.Directory.CreateDirectory(destDirName);
+        public override void Move(string sourceDirName, string destDirName)
+        {
+            var fullSourcePath = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(sourceDirName));
+            var fullDestPath = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(destDirName));
 
-            //Recursively move all the subdirectories
-            var subdirectories = GetDirectories(sourceDirName);
+            if (string.Equals(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new IOException("Source and destination path must be different.");
+            }
+
+            var sourceRoot = mockFileDataAccessor.Path.GetPathRoot(fullSourcePath);
+            var destinationRoot = mockFileDataAccessor.Path.GetPathRoot(fullDestPath);
+            if (!string.Equals(sourceRoot, destinationRoot, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new IOException("Source and destination path must have identical roots. Move will not work across volumes.");
+            }
+
+            //Make sure that the destination exists
+            mockFileDataAccessor.Directory.CreateDirectory(fullDestPath);
+
+            //Recursively move all the subdirectories from the source into the destination directory
+            var subdirectories = GetDirectories(fullSourcePath);
             foreach (var subdirectory in subdirectories)
             {
-                var newSubdirPath = subdirectory.Replace(sourceDirName, destDirName);
+                var newSubdirPath = subdirectory.Replace(fullSourcePath, fullDestPath);
                 Move(subdirectory, newSubdirPath);
             }
 
-            //Move the files in this directory
-            var files = GetFiles(sourceDirName);
+            //Move the files in destination directory
+            var files = GetFiles(fullSourcePath);
             foreach (var file in files)
             {
-                var newFilePath = file.Replace(sourceDirName, destDirName);
+                var newFilePath = file.Replace(fullSourcePath, fullDestPath);
                 mockFileDataAccessor.FileInfo.FromFileName(file).MoveTo(newFilePath);
             }
 
-            //Delete this directory
-            Delete(sourceDirName);
+            //Delete the source directory
+            Delete(fullSourcePath);
         }
 
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
