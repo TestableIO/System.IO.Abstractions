@@ -354,6 +354,21 @@ namespace System.IO.Abstractions.TestingHelpers
             fileBase.SetLastWriteTimeUtc(path, lastWriteTimeUtc);
         }
 
+        public override IEnumerable<string> EnumerateFiles(string path)
+        {
+            return GetFiles(path);
+        }
+
+        public override IEnumerable<string> EnumerateFiles(string path, string searchPattern)
+        {
+            return GetFiles(path, searchPattern);
+        }
+
+        public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption)
+        {
+            return GetFiles(path, searchPattern, searchOption);
+        }
+
         static string EnsurePathEndsWithDirectorySeparator(string path)
         {
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))

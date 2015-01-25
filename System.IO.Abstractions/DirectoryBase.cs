@@ -1,4 +1,5 @@
-﻿using System.Security.AccessControl;
+﻿using System.Collections.Generic;
+using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
@@ -39,5 +40,8 @@ namespace System.IO.Abstractions
         public abstract void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc);
         public abstract void SetLastWriteTime(string path, DateTime lastWriteTime);
         public abstract void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc);
+        public abstract IEnumerable<string> EnumerateFiles(string path);
+        public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern);
+        public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
     }
 }
