@@ -135,7 +135,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Encrypt(string path)
         {
-           new MockFileInfo(mockFileDataAccessor, path).Encrypt();
+            new MockFileInfo(mockFileDataAccessor, path).Encrypt();
         }
 
         public override bool Exists(string path)
