@@ -953,7 +953,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             string sourceFileName = XFS.Path(@"c:\source\demo.txt");
             var sourceContents = new MockFileData("Source content");
-            string destFileName = XFS.Path(@"c:\destination\demo.txt");
+            string destFileName = XFS.Path(@"c:\source\demo_copy.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 {sourceFileName, sourceContents}
@@ -978,6 +978,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             Assert.Throws<IOException>(() => fileSystem.File.Copy(sourceFileName, destFileName), XFS.Path(@"The file c:\destination\demo.txt already exists."));
+        }
+
+        [TestCase(@"c:\source\demo.txt", @"c:\source\doesnotexist\demo.txt")]
+        [TestCase(@"c:\source\demo.txt", @"c:\doesnotexist\demo.txt")]
+        public void MockFile_Copy_ShouldThrowExceptionWhenFolderInDestinationDoesNotExist(string sourceFilePath, string destFilePath)
+        {
+            string sourceFileName = XFS.Path(sourceFilePath);
+            string destFileName = XFS.Path(destFilePath);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {sourceFileName, MockFileData.NullObject}
+            });
+
+            Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Copy(sourceFileName, destFileName), string.Format(CultureInfo.InvariantCulture, @"Could not find a part of the path '{0}'.", destFilePath));
         }
 
         [Test]
