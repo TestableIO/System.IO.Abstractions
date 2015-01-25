@@ -2,10 +2,12 @@
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using System.Linq;
+
     [Serializable]
     public class MockFileData
     {
-        static readonly Encoding defaultEncoding = Encoding.UTF8;
+        public static readonly Encoding DefaultEncoding = new UTF8Encoding(false, true);
 
         public static readonly MockFileData NullObject = new MockFileData(string.Empty) {
           LastWriteTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
@@ -14,7 +16,6 @@ namespace System.IO.Abstractions.TestingHelpers
         };
 
         byte[] contents;
-        Encoding encoding;
         DateTimeOffset creationTime = new DateTimeOffset(2010, 01, 02, 00, 00, 00, TimeSpan.FromHours(4));
         DateTimeOffset lastAccessTime = new DateTimeOffset(2010, 02, 04, 00, 00, 00, TimeSpan.FromHours(4));
         DateTimeOffset lastWriteTime = new DateTimeOffset(2010, 01, 04, 00, 00, 00, TimeSpan.FromHours(4));
@@ -22,27 +23,29 @@ namespace System.IO.Abstractions.TestingHelpers
         private FileAttributes attributes = FileAttributes.Normal;
 
         public virtual bool IsDirectory { get { return false; } }
-        
+
+        private MockFileData()
+        {
+            // empty
+        }
+
         public MockFileData(string textContents)
-            : this(defaultEncoding.GetBytes(textContents))
+            : this(DefaultEncoding.GetBytes(textContents))
         {}
 
         public MockFileData(string textContents, Encoding encoding)
-            : this(encoding.GetBytes(textContents), encoding)
-        { }
+            : this()
+        {
+            contents = encoding.GetPreamble().Concat(encoding.GetBytes(textContents)).ToArray();
+        }
 
         public MockFileData(byte[] contents)
-            : this(contents, defaultEncoding)
-        { }
-
-        public MockFileData(byte[] contents, Encoding encoding)
         {
-            if (encoding == null)
+            if (contents == null)
             {
-                throw new ArgumentNullException("encoding");
+                throw new ArgumentNullException("contents");
             }
 
-            this.encoding = encoding;
             this.contents = contents;
         }
 
@@ -54,8 +57,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public string TextContents
         {
-            get { return encoding.GetString(contents); }
-            set { contents = encoding.GetBytes(value); }
+            get { return DefaultEncoding.GetString(contents); }
+            set { contents = DefaultEncoding.GetBytes(value); }
         }
 
         public DateTimeOffset CreationTime
