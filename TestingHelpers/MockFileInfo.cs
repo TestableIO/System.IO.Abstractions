@@ -1,6 +1,4 @@
-﻿using System.IO.Pipes;
-using System.Linq;
-using System.Security.AccessControl;
+﻿using System.Security.AccessControl;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
