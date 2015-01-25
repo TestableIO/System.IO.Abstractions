@@ -5,6 +5,7 @@ namespace System.IO.Abstractions
     [Serializable]
     public abstract class FileSystemWatcherBase : IDisposable
     {
+        public abstract bool IncludeSubdirectories { get; set; }
         public abstract bool EnableRaisingEvents { get; set; }
         public abstract string Filter { get; set; }
         public abstract int InternalBufferSize { get; set; }
