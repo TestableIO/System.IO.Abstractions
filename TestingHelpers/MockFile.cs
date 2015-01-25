@@ -398,8 +398,6 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private void WriteAllText(string path, MockFileData mockFileData)
         {
-            if (mockFileDataAccessor.FileExists(path))
-                mockFileDataAccessor.RemoveFile(path);
             mockFileDataAccessor.AddFile(path, mockFileData);
         }
     }

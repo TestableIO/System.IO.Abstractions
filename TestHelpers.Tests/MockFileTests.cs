@@ -569,6 +569,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_WriteAllBytes_ShouldThrowAnUnauthorizedAccessExceptionIfFileIsHidden()
+        {
+            // Arrange
+            string path = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, new MockFileData("this is hidden") },
+            });
+            fileSystem.File.SetAttributes(path, FileAttributes.Hidden);
+
+            // Act
+            TestDelegate action = () => fileSystem.File.WriteAllBytes(path, new byte[] { 123 });
+
+            // Assert
+            Assert.Throws<UnauthorizedAccessException>(action, "Access to the path '{0}' is denied.", path);
+        }
+
+        [Test]
         public void MockFile_WriteAllText_ShouldWriteTextFileToMemoryFileSystem()
         {
             // Arrange
@@ -600,6 +618,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.AreEqual("bar", fileSystem.GetFile(path).TextContents);
+        }
+
+        [Test]
+        public void MockFile_WriteAllText_ShouldThrowAnUnauthorizedAccessExceptionIfFileIsHidden()
+        {
+            // Arrange
+            string path = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, new MockFileData("this is hidden") },
+            });
+            fileSystem.File.SetAttributes(path, FileAttributes.Hidden);
+
+            // Act
+            TestDelegate action = () => fileSystem.File.WriteAllText(path, "hello world");
+
+            // Assert
+            Assert.Throws<UnauthorizedAccessException>(action, "Access to the path '{0}' is denied.", path);
         }
 
         private IEnumerable<Encoding> GetEncodings()
