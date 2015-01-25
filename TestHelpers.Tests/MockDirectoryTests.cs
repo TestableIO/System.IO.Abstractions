@@ -444,8 +444,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem();
 
+            // Act
             var ex = Assert.Throws<ArgumentException>(() => fileSystem.Directory.CreateDirectory(XFS.Path(@"\\server", () => false)));
-            Assert.That(ex.Message, Is.EqualTo("The UNC path should be of the form \\\\server\\share.\r\nParameter name: path"));
+
+            // Assert
+            StringAssert.StartsWith("The UNC path should be of the form \\\\server\\share.", ex.Message);
+            Assert.That(ex.ParamName, Is.EqualTo("path"));
         }
 
         [Test]
