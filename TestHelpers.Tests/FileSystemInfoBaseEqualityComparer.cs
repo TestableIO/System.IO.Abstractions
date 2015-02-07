@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace System.IO.Abstractions.TestingHelpers
+namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     public class FileSystemInfoBaseEqualityComparer : IEqualityComparer<FileSystemInfoBase>
     {
