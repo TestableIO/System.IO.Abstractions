@@ -4,8 +4,6 @@ using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    using System.Security.Cryptography;
-
     using XFS = MockUnixSupport;
 
     [TestFixture]
@@ -569,9 +567,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_GetFiles_ShouldThrowArgumentNullException_IfPathParamIsNull()
         {
+            // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
 
+            // Act
             TestDelegate action = () => fileSystem.Directory.GetFiles(null);
+
+            // Assert
             Assert.Throws<ArgumentNullException>(action);
         }
 
@@ -591,17 +593,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_GetFiles_Returns_Files()
         {
-            string testPath = XFS.Path(@"c:\foo\bar.txt");
-            string testDir = XFS.Path(@"c:\foo\bar\");
+            // Arrange
+            string filePath = XFS.Path(@"c:\foo\bar.txt");
+            string directoryPath = XFS.Path(@"c:\foo\bar\");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { testPath, new MockFileData("Demo text content") },
-                { testDir,  new MockDirectoryData() }
+                { filePath, new MockFileData("Demo text content") },
+                { directoryPath,  new MockDirectoryData() }
             });
 
-            var entries = fileSystem.Directory.GetFiles(XFS.Path(@"c:\foo")).OrderBy(k => k);
-            Assert.AreEqual(1, entries.Count());
-            Assert.AreEqual(testPath, entries.First());
+            // Act
+            var actualEntries = fileSystem.Directory.GetFiles(XFS.Path(@"c:\foo")).OrderBy(k => k);
+
+            // Assert
+            var expectedEntries = new[] { filePath };
+            Assert.That(actualEntries, Is.EquivalentTo(expectedEntries));
         }
 
         [Test]
@@ -752,36 +758,48 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectory_GetCurrentDirectory_ShouldReturnValueFromFileSystemConstructor() {
+        public void MockDirectory_GetCurrentDirectory_ShouldReturnValueFromFileSystemConstructor()
+        {
+            // Arrange
             string directory = XFS.Path(@"D:\folder1\folder2");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>(), directory);
-            
+
+            // Act
             var actual = fileSystem.Directory.GetCurrentDirectory();
 
+            // Assert
             Assert.AreEqual(directory, actual);
         }
 
       
         [Test]
-        public void MockDirectory_GetCurrentDirectory_ShouldReturnDefaultPathWhenNotSet() {
-            string directory = System.IO.Path.GetTempPath();
+        public void MockDirectory_GetCurrentDirectory_ShouldReturnDefaultPathWhenNotSet()
+        {
+            // Arrange
+            string directory = Path.GetTempPath();
             var fileSystem = new MockFileSystem();
-            
+
+            // Act
             var actual = fileSystem.Directory.GetCurrentDirectory();
 
+            // Assert
             Assert.AreEqual(directory, actual);
         }
 
         [Test]
-        public void MockDirectory_SetCurrentDirectory_ShouldChangeCurrentDirectory() {
+        public void MockDirectory_SetCurrentDirectory_ShouldChangeCurrentDirectory()
+        {
+            // Arrange
             string directory = XFS.Path(@"D:\folder1\folder2");
             var fileSystem = new MockFileSystem();
-          
+
+            // Act
             // Precondition
             Assert.AreNotEqual(directory, fileSystem.Directory.GetCurrentDirectory());
 
             fileSystem.Directory.SetCurrentDirectory(directory);
 
+            // Assert
             Assert.AreEqual(directory, fileSystem.Directory.GetCurrentDirectory());
         }
 
