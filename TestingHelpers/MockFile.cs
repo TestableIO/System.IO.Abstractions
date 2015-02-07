@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+
     [Serializable]
     public class MockFile : FileBase
     {
@@ -19,25 +21,18 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void AppendAllText(string path, string contents)
         {
-            if (!mockFileDataAccessor.FileExists(path))
-            {
-                var dir = mockFileDataAccessor.Path.GetDirectoryName(path);
-                if (!mockFileDataAccessor.Directory.Exists(dir))
-                {
-                    throw new DirectoryNotFoundException(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
-                }
-                mockFileDataAccessor.AddFile(path, new MockFileData(contents));
-            }
-            else
-            {
-                mockFileDataAccessor
-                    .GetFile(path)
-                    .TextContents += contents;
-            }
+            AppendAllText(path, contents, MockFileData.DefaultEncoding);
         }
 
         public override void AppendAllText(string path, string contents, Encoding encoding)
         {
+            ValidateParameter(path, "path");
+
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding");
+            }
+
             if (!mockFileDataAccessor.FileExists(path))
             {
                 var dir = mockFileDataAccessor.Path.GetDirectoryName(path);
@@ -45,14 +40,14 @@ namespace System.IO.Abstractions.TestingHelpers
                 {
                     throw new DirectoryNotFoundException(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
                 }
-                mockFileDataAccessor.AddFile(path, new MockFileData(encoding.GetBytes(contents)));
+
+                mockFileDataAccessor.AddFile(path, new MockFileData(contents, encoding));
             }
             else
             {
                 var file = mockFileDataAccessor.GetFile(path);
-                var originalText = encoding.GetString(file.Contents);
-                var newText = originalText + contents;
-                file.Contents = encoding.GetBytes(newText);
+                var bytesToAppend = encoding.GetBytes(contents);
+                file.Contents = file.Contents.Concat(bytesToAppend).ToArray();
             }
         }
 

@@ -33,6 +33,27 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_AppendAllText_ShouldPersistNewTextWithDifferentEncoding()
+        {
+            // Arrange
+            const string Path = @"c:\something\demo.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+              {
+                  { Path, new MockFileData("AA", Encoding.UTF32) }
+              });
+
+            var file = new MockFile(fileSystem);
+
+            // Act
+            file.AppendAllText(Path, "BB", Encoding.UTF8);
+
+            // Assert
+            CollectionAssert.AreEqual(
+              new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66 },
+              fileSystem.GetFile(Path).Contents);
+        }
+
+        [Test]
         public void MockFile_AppendAllText_ShouldCreateIfNotExist()
         {
             // Arrange
@@ -43,18 +64,29 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            var path2 = XFS.Path(@"c:\something\demo2.txt");
-            fileSystem.File.AppendAllText(path2, "some text");
-            var path3 = XFS.Path(@"c:\something\demo3.txt");
-            fileSystem.File.AppendAllText(path3, "some text", Encoding.Unicode);
+            fileSystem.File.AppendAllText(path, " some text");
 
             // Assert
             Assert.AreEqual(
-                "some text",
-                fileSystem.File.ReadAllText(path2));
-            Assert.AreEqual(
-                "some text",
-                fileSystem.File.ReadAllText(path3, Encoding.Unicode));
+                "Demo text content some text",
+                fileSystem.File.ReadAllText(path));
+        }
+
+        [Test]
+        public void MockFile_AppendAllText_ShouldCreateIfNotExistWithBom()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            const string path = @"c:\something\demo3.txt";
+            fileSystem.AddDirectory(@"c:\something\");
+
+            // Act
+            fileSystem.File.AppendAllText(path, "AA", Encoding.UTF32);
+
+            // Assert
+            CollectionAssert.AreEqual(
+                new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0 },
+                fileSystem.GetFile(path).Contents);
         }
 
         [Test]
@@ -98,7 +130,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var expected = new byte[]
             {
                 68, 101, 109, 111, 32, 116, 101, 120, 116, 32, 99, 111, 110, 116,
-                101, 110, 255, 253, 0, 43, 0, 32, 0, 115, 0, 111, 0, 109, 0, 101,
+                101, 110, 116, 0, 43, 0, 32, 0, 115, 0, 111, 0, 109, 0, 101,
                 0, 32, 0, 116, 0, 101, 0, 120, 0, 116
             };
 
@@ -638,35 +670,64 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<UnauthorizedAccessException>(action, "Access to the path '{0}' is denied.", path);
         }
 
-        private IEnumerable<Encoding> GetEncodings()
+        private IEnumerable<KeyValuePair<Encoding, byte[]>> GetEncodingsWithExpectedBytes()
         {
-            return new List<Encoding>()
+            Encoding utf8WithoutBom = new UTF8Encoding(false, true);
+            return new Dictionary<Encoding, byte[]>
                 {
-                    Encoding.ASCII,
-                    Encoding.BigEndianUnicode,
-                    Encoding.Default,
-                    Encoding.UTF32,
-                    Encoding.UTF7,
-                    Encoding.UTF8,
-                    Encoding.Unicode
+                    // ASCII does not need a BOM
+                    { Encoding.ASCII, new byte[] { 72, 101, 108, 108, 111, 32, 116,
+                        104, 101, 114, 101, 33, 32, 68, 122, 105, 63, 107, 105, 46 } },
+
+                    // BigEndianUnicode needs a BOM, the BOM is the first two bytes
+                    { Encoding.BigEndianUnicode, new byte [] { 254, 255, 0, 72, 0, 101,
+                        0, 108, 0, 108, 0, 111, 0, 32, 0, 116, 0, 104, 0, 101, 0, 114,
+                        0, 101, 0, 33, 0, 32, 0, 68, 0, 122, 0, 105, 1, 25, 0, 107, 0, 105, 0, 46 } },
+
+                    // Default encoding does not need a BOM
+                    { Encoding.Default, new byte [] { 72, 101, 108, 108, 111, 32, 116,
+                        104, 101, 114, 101, 33, 32, 68, 122, 105, 101, 107, 105, 46 } },
+
+                    // UTF-32 needs a BOM, the BOM is the first four bytes
+                    { Encoding.UTF32, new byte [] {255, 254, 0, 0, 72, 0, 0, 0, 101,
+                        0, 0, 0, 108, 0, 0, 0, 108, 0, 0, 0, 111, 0, 0, 0, 32, 0, 0,
+                        0, 116, 0, 0, 0, 104, 0, 0, 0, 101, 0, 0, 0, 114, 0, 0, 0,
+                        101, 0, 0, 0, 33, 0, 0, 0, 32, 0, 0, 0, 68, 0, 0, 0, 122, 0,
+                        0, 0, 105, 0, 0, 0, 25, 1, 0, 0, 107, 0, 0, 0, 105, 0, 0, 0, 46, 0, 0, 0 } },
+
+                    // UTF-7 does not need a BOM
+                    { Encoding.UTF7, new byte [] {72, 101, 108, 108, 111, 32, 116,
+                        104, 101, 114, 101, 43, 65, 67, 69, 45, 32, 68, 122, 105,
+                        43, 65, 82, 107, 45, 107, 105, 46 } },
+
+                    // The default encoding does not need a BOM
+                    { utf8WithoutBom, new byte [] { 72, 101, 108, 108, 111, 32, 116,
+                        104, 101, 114, 101, 33, 32, 68, 122, 105, 196, 153, 107, 105, 46 } },
+
+                    // Unicode needs a BOM, the BOM is the first two bytes
+                    { Encoding.Unicode, new byte [] { 255, 254, 72, 0, 101, 0, 108,
+                        0, 108, 0, 111, 0, 32, 0, 116, 0, 104, 0, 101, 0, 114, 0,
+                        101, 0, 33, 0, 32, 0, 68, 0, 122, 0, 105, 0, 25, 1, 107, 0,
+                        105, 0, 46, 0 } }
                 };
         }
 
-        [TestCaseSource("GetEncodings")]
-        public void MockFile_WriteAllText_Encoding_ShouldWriteTextFileToMemoryFileSystem(Encoding encoding)
+        [TestCaseSource("GetEncodingsWithExpectedBytes")]
+        public void MockFile_WriteAllText_Encoding_ShouldWriteTextFileToMemoryFileSystem(KeyValuePair<Encoding, byte[]> encodingsWithContents)
         {
             // Arrange
+            const string FileContent = "Hello there! Dzięki.";
             string path = XFS.Path(@"c:\something\demo.txt");
-            string fileContent = "Hello there! Dzięki.";
+            byte[] expectedBytes = encodingsWithContents.Value;
+            Encoding encoding = encodingsWithContents.Key;
             var fileSystem = new MockFileSystem();
 
             // Act
-            fileSystem.File.WriteAllText(path, fileContent, encoding);
+            fileSystem.File.WriteAllText(path, FileContent, encoding);
 
             // Assert
-            Assert.AreEqual(
-                encoding.GetString(encoding.GetBytes(fileContent)),
-                fileSystem.GetFile(path).TextContents);
+            var actualBytes = fileSystem.GetFile(path).Contents;
+            Assert.AreEqual(expectedBytes, actualBytes);
         }
 
         [Test]
