@@ -94,6 +94,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectoryInfo_GetFileSystemInfos_ShouldReturnDirectoriesAndNamesWithSearchPattern()
         {
+            // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { XFS.Path(@"c:\temp\folder\file.txt"), new MockFileData("Hello World") },
@@ -101,10 +102,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { XFS.Path(@"c:\temp\folder\older"), new MockDirectoryData() }
             });
 
+            // Act
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
             var result = directoryInfo.GetFileSystemInfos("f*");
 
-            Assert.That(result.Length, Is.EqualTo(2));
+            // Assert
+            var expectedResult = new FileSystemInfoBase[]
+                                 {
+                                     new MockFileInfo(fileSystem, XFS.Path(@"c:\temp\folder\file.txt")),
+                                     new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder\folder"))
+                                 };
+            Assert.That(result, Is.EquivalentTo(expectedResult).Using(new FileSystemInfoBaseEqualityComparer()));
         }
 
         [Test]
