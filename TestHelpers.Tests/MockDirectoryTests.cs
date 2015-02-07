@@ -549,18 +549,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_GetFileSystemEntries_Returns_Files_And_Directories()
         {
-            string testPath = XFS.Path(@"c:\foo\bar.txt");
-            string testDir =  XFS.Path(@"c:\foo\bar\");
+            // Arrange
+            string filePath = XFS.Path(@"c:\foo\bar.txt");
+            string directoryPath =  XFS.Path(@"c:\foo\bar\");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { testPath, new MockFileData("Demo text content") },
-                { testDir,  new MockDirectoryData() }
+                { filePath, new MockFileData("Demo text content") },
+                { directoryPath,  new MockDirectoryData() }
             });
 
-            var entries = fileSystem.Directory.GetFileSystemEntries(XFS.Path(@"c:\foo")).OrderBy(k => k);
-            Assert.AreEqual(2, entries.Count());
-            Assert.AreEqual(testDir, entries.Last());
-            Assert.AreEqual(testPath, entries.First());
+            // Act
+            var actualEntries = fileSystem.Directory.GetFileSystemEntries(XFS.Path(@"c:\foo"));
+
+            // Assert
+            var expectedEntries = new[] { filePath, directoryPath };
+            Assert.That(actualEntries, Is.EquivalentTo(expectedEntries));
         }
 
         [Test]
@@ -641,21 +644,33 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_GetDirectories_Returns_Child_Directories()
         {
+            // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { XFS.Path(@"A:\folder1\folder2\folder3\file.txt"), new MockFileData("Demo text content") },
                 { XFS.Path(@"A:\folder1\folder4\file2.txt"), new MockFileData("Demo text content 2") },
             });
 
-            var directories = fileSystem.Directory.GetDirectories(XFS.Path(@"A:\folder1")).ToArray();
+            // Act
+            var actualDirectories = fileSystem.Directory.GetDirectories(XFS.Path(@"A:\folder1")).ToArray();
 
-            //Check that it does not returns itself
-            Assert.IsFalse(directories.Contains(XFS.Path(@"A:\folder1\")));
+            // Assert
+            var expectedDirectories = new[] { XFS.Path(@"A:\folder1\folder2\"), XFS.Path(@"A:\folder1\folder4\") };
+            Assert.That(actualDirectories, Is.EquivalentTo(expectedDirectories));
+        }
 
-            //Check that it correctly returns all child directories
-            Assert.AreEqual(2, directories.Count());
-            Assert.IsTrue(directories.Contains(XFS.Path(@"A:\folder1\folder2\")));
-            Assert.IsTrue(directories.Contains(XFS.Path(@"A:\folder1\folder4\")));
+        [Test]
+        public void MockDirectory_GetDirectories_Returns_EmptyResultIfThereAreNotAnySubDirectories()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(XFS.Path(@"A:\folder1"));
+
+            // Act
+            var directories = fileSystem.Directory.GetDirectories(XFS.Path(@"a:\folder1")).ToArray();
+
+            // Assert
+            Assert.AreEqual(0, directories.Length);
         }
 
         [Test]

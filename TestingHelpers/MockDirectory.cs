@@ -143,7 +143,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
-            return dirs.Where(p => p != path).ToArray();
+            return dirs.Where(p => !string.Equals(p, path, StringComparison.OrdinalIgnoreCase)).ToArray();
         }
 
         public override string GetDirectoryRoot(string path)

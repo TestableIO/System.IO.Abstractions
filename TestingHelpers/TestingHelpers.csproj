@@ -63,6 +63,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileSystemInfoBaseEqualityComparer.cs" />
     <Compile Include="IMockFileDataAccessor.cs" />
     <Compile Include="MockDirectory.cs" />
     <Compile Include="MockDirectoryData.cs" />
