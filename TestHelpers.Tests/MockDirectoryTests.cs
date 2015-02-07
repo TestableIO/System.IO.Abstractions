@@ -4,8 +4,6 @@ using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    using System.Security.Cryptography;
-
     using XFS = MockUnixSupport;
 
     [TestFixture]
@@ -718,22 +716,34 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<DirectoryNotFoundException>(action);
         }
 
-        [Test]
-        public void MockDirectory_Move_ShouldMove()
+        public static IEnumerable<object[]> GetPathsForMoving()
         {
+            yield return new object[] { @"a:\folder1\", @"A:\folder3\", "file.txt", @"folder2\file2.txt" };
+            yield return new object[] { @"A:\folder1\", @"A:\folder3\", "file.txt", @"folder2\file2.txt" };
+            yield return new object[] { @"a:\folder1\", @"a:\folder3\", "file.txt", @"folder2\file2.txt" };
+            yield return new object[] { @"A:\folder1\", @"a:\folder3\", "file.txt", @"folder2\file2.txt" };
+            yield return new object[] { @"A:\folder1\", @"a:\folder3\", "file.txt", @"Folder2\file2.txt" };
+            yield return new object[] { @"A:\folder1\", @"a:\folder3\", "file.txt", @"Folder2\fiLe2.txt" };
+            yield return new object[] { @"A:\folder1\", @"a:\folder3\", "folder444\\file.txt", @"Folder2\fiLe2.txt" };
+        }
+
+        [TestCaseSource("GetPathsForMoving")]
+        public void MockDirectory_Move_ShouldMove(string sourceDirName, string destDirName, string filePathOne, string filePathTwo)
+        {
+            // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { XFS.Path(@"A:\folder1\file.txt"), new MockFileData("aaa") },
-                { XFS.Path(@"A:\folder1\folder2\file2.txt"), new MockFileData("bbb") },
+                { XFS.Path(sourceDirName + filePathOne) , new MockFileData("aaa") },
+                { XFS.Path(sourceDirName + filePathTwo) , new MockFileData("bbb") },
             });
 
-            fileSystem.DirectoryInfo.FromDirectoryName(XFS.Path(@"A:\folder1")).MoveTo(XFS.Path(@"A:\folder3"));
+            // Act
+            fileSystem.DirectoryInfo.FromDirectoryName(sourceDirName).MoveTo(destDirName);
 
-            Assert.IsFalse(fileSystem.Directory.Exists(XFS.Path(@"A:\folder1")));
-            Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"A:\folder3")));
-            Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"A:\folder3\folder2")));
-            Assert.IsTrue(fileSystem.File.Exists(XFS.Path(@"A:\folder3\file.txt")));
-            Assert.IsTrue(fileSystem.File.Exists(XFS.Path(@"A:\folder3\folder2\file2.txt")));
+            // Assert
+            Assert.IsFalse(fileSystem.Directory.Exists(sourceDirName));
+            Assert.IsTrue(fileSystem.File.Exists(XFS.Path(destDirName + filePathOne)));
+            Assert.IsTrue(fileSystem.File.Exists(XFS.Path(destDirName + filePathTwo)));
         }
 
         [Test]

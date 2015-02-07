@@ -314,7 +314,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var subdirectories = GetDirectories(fullSourcePath);
             foreach (var subdirectory in subdirectories)
             {
-                var newSubdirPath = subdirectory.Replace(fullSourcePath, fullDestPath);
+                var newSubdirPath = subdirectory.Replace(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase);
                 Move(subdirectory, newSubdirPath);
             }
 
@@ -322,7 +322,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var files = GetFiles(fullSourcePath);
             foreach (var file in files)
             {
-                var newFilePath = file.Replace(fullSourcePath, fullDestPath);
+                var newFilePath = file.Replace(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase);
                 mockFileDataAccessor.FileInfo.FromFileName(file).MoveTo(newFilePath);
             }
 
