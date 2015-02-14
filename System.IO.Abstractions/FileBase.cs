@@ -1,4 +1,5 @@
-﻿using System.Security.AccessControl;
+﻿using System.Collections.Generic;
+using System.Security.AccessControl;
 using System.Text;
 
 namespace System.IO.Abstractions
@@ -6,6 +7,8 @@ namespace System.IO.Abstractions
     [Serializable]
     public abstract class FileBase
     {
+        public abstract void AppendAllLines(String path, IEnumerable<String> contents);
+        public abstract void AppendAllLines(String path, IEnumerable<String> contents, Encoding encoding);
         public abstract void AppendAllText(string path, string contents);
         public abstract void AppendAllText(string path, string contents, Encoding encoding);
         public abstract StreamWriter AppendText(string path);
@@ -41,6 +44,8 @@ namespace System.IO.Abstractions
         public abstract string[] ReadAllLines(string path, Encoding encoding);
         public abstract string ReadAllText(string path);
         public abstract string ReadAllText(string path, Encoding encoding);
+        public abstract IEnumerable<String> ReadLines(String path);
+        public abstract IEnumerable<String> ReadLines(String path, Encoding encoding);
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName);
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
         public abstract void SetAccessControl(string path, FileSecurity fileSecurity);
@@ -52,6 +57,8 @@ namespace System.IO.Abstractions
         public abstract void SetLastWriteTime(string path, DateTime lastWriteTime);
         public abstract void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc);
         public abstract void WriteAllBytes(string path, byte[] bytes);
+        public abstract void WriteAllLines(String path, IEnumerable<String> contents);
+        public abstract void WriteAllLines(String path, IEnumerable<String> contents, Encoding encoding);
         public abstract void WriteAllLines(string path, string[] contents);
         public abstract void WriteAllLines(string path, string[] contents, Encoding encoding);
         public abstract void WriteAllText(string path, string contents);
