@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.AccessControl;
@@ -6,7 +7,6 @@ using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
-
     [Serializable]
     public class MockFile : FileBase
     {
@@ -17,6 +17,16 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             this.mockFileDataAccessor = mockFileDataAccessor;
             mockPath = new MockPath(mockFileDataAccessor);
+        }
+
+        public override void AppendAllLines(string path, IEnumerable<string> contents)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
+        public override void AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
 
         public override void AppendAllText(string path, string contents)
@@ -316,6 +326,16 @@ namespace System.IO.Abstractions.TestingHelpers
             return encoding.GetString(mockFileDataAccessor.GetFile(path).Contents);
         }
 
+        public override IEnumerable<string> ReadLines(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IEnumerable<string> ReadLines(string path, Encoding encoding)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
         {
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
@@ -369,6 +389,16 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void WriteAllBytes(string path, byte[] bytes)
         {
             mockFileDataAccessor.AddFile(path, new MockFileData(bytes));
+        }
+
+        public override void WriteAllLines(string path, IEnumerable<string> contents)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
+        public override void WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
 
         public override void WriteAllLines(string path, string[] contents)
