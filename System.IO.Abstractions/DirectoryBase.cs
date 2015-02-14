@@ -40,6 +40,9 @@ namespace System.IO.Abstractions
         public abstract void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc);
         public abstract void SetLastWriteTime(string path, DateTime lastWriteTime);
         public abstract void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc);
+        public abstract IEnumerable<String> EnumerateDirectories(String path);
+        public abstract IEnumerable<String> EnumerateDirectories(String path, String searchPattern);
+        public abstract IEnumerable<String> EnumerateDirectories(String path, String searchPattern, SearchOption searchOption);
         public abstract IEnumerable<string> EnumerateFiles(string path);
         public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern);
         public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);

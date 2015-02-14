@@ -370,6 +370,21 @@ namespace System.IO.Abstractions.TestingHelpers
             fileBase.SetLastWriteTimeUtc(path, lastWriteTimeUtc);
         }
 
+        public override IEnumerable<string> EnumerateDirectories(string path)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
+        public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
+        public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
         public override IEnumerable<string> EnumerateFiles(string path)
         {
             return GetFiles(path);
