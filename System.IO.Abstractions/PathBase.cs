@@ -11,7 +11,10 @@
         public abstract char VolumeSeparatorChar { get; }
 
         public abstract string ChangeExtension(string path, string extension);
+        public abstract string Combine(params string[] paths);
         public abstract string Combine(string path1, string path2);
+        public abstract string Combine(string path1, string path2, string path3);
+        public abstract string Combine(string path1, string path2, string path3, string path4);
         public abstract string GetDirectoryName(string path);
         public abstract string GetExtension(string path);
         public abstract string GetFileName(string path);
