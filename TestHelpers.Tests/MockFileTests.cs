@@ -811,25 +811,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase('>')]
         [TestCase('<')]
         [TestCase('"')]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceContainsInvalidChars_ParamName(char invalidChar) {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
-                return;
-            }
-
-            var sourceFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
-            string destFilePath = XFS.Path(@"c:\something\demo.txt");
-            var fileSystem = new MockFileSystem();
-
-            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
-
-            Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
-        }
-
-        [TestCase('>')]
-        [TestCase('<')]
-        [TestCase('"')]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetContainsInvalidChars_Message(char invalidChar) 
         {
             if (XFS.IsUnixPlatform())
@@ -845,25 +826,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
             Assert.That(exception.Message, Is.StringStarting("Illegal characters in path."));
-        }
-
-        [TestCase('>')]
-        [TestCase('<')]
-        [TestCase('"')]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetContainsInvalidChars_ParamName(char invalidChar) {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
-                return;
-            }
-
-            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
-            var destFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
-            var fileSystem = new MockFileSystem();
-
-            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
-
-            Assert.That(exception.ParamName, Is.EqualTo("destFileName"));
         }
 
         [Test]
