@@ -41,6 +41,45 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void Combine_SentThreePaths_Combines()
+        {
+            //Arrange
+            var mockPath = new MockPath(new MockFileSystem());
+
+            //Act
+            var result = mockPath.Combine(XFS.Path("C:\\test"), "subdir1", "test.bmp");
+
+            //Assert
+            Assert.AreEqual(XFS.Path("C:\\test\\subdir1\\test.bmp"), result);
+        }
+
+        [Test]
+        public void Combine_SentFourPaths_Combines()
+        {
+            //Arrange
+            var mockPath = new MockPath(new MockFileSystem());
+
+            //Act
+            var result = mockPath.Combine(XFS.Path("C:\\test"), "subdir1", "subdir2", "test.bmp");
+
+            //Assert
+            Assert.AreEqual(XFS.Path("C:\\test\\subdir1\\subdir2\\test.bmp"), result);
+        }
+
+        [Test]
+        public void Combine_SentFivePaths_Combines()
+        {
+            //Arrange
+            var mockPath = new MockPath(new MockFileSystem());
+
+            //Act
+            var result = mockPath.Combine(XFS.Path("C:\\test"), "subdir1", "subdir2", "subdir3", "test.bmp");
+
+            //Assert
+            Assert.AreEqual(XFS.Path("C:\\test\\subdir1\\subdir2\\subdir3\\test.bmp"), result);
+        }
+
+        [Test]
         public void GetDirectoryName_SentPath_ReturnsDirectory()
         {
             //Arrange
