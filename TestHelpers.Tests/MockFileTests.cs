@@ -775,7 +775,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentNullException>(()=>fileSystem.File.Move(null, destFilePath));
 
-            Assert.That(exception.Message, Is.StringStarting("Value can not be null."));
+            Assert.That(exception.Message, Is.StringStarting("File name cannot be null."));
         }
 
         [Test]
@@ -788,10 +788,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
         }
 
-        [TestCase('>')]
-        [TestCase('<')]
-        [TestCase('"')]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceContainsInvalidChars_Message(char invalidChar) 
+        [Test]
+        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenSourceFileNameContainsInvalidChars_Message() 
         {
             if (XFS.IsUnixPlatform())
             {
@@ -799,19 +797,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 return;
             }
 
-            var sourceFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
-            string destFilePath = XFS.Path(@"c:\something\demo.txt");
+            var destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+            foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars().Where(x => x != fileSystem.Path.DirectorySeparatorChar))
+            {
+                var sourceFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
 
-            Assert.That(exception.Message, Is.StringStarting("Illegal characters in path."));
+                var exception =
+                    Assert.Throws<NotSupportedException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+
+                Assert.That(exception.Message, Is.EqualTo("The given path's format is not supported."),
+                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+            }
         }
 
-        [TestCase('>')]
-        [TestCase('<')]
-        [TestCase('"')]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetContainsInvalidChars_Message(char invalidChar) 
+        [Test]
+        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidChars_Message()
         {
             if (XFS.IsUnixPlatform())
             {
@@ -819,13 +821,66 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 return;
             }
 
-            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
-            var destFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
+            var destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+            foreach (var invalidChar in fileSystem.Path.GetInvalidPathChars())
+            {
+                var sourceFilePath = XFS.Path(@"c:\some" + invalidChar + @"thing\demo.txt");
 
-            Assert.That(exception.Message, Is.StringStarting("Illegal characters in path."));
+                var exception =
+                    Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+
+                Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
+                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+            }
+        }
+
+        [Test]
+        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenTargetPathContainsInvalidChars_Message()
+        {
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
+                return;
+            }
+
+            var sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            foreach (var invalidChar in fileSystem.Path.GetInvalidPathChars())
+            {
+                var destFilePath = XFS.Path(@"c:\some" + invalidChar + @"thing\demo.txt");
+
+                var exception =
+                    Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+
+                Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
+                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+            }
+        }
+        [Test]
+        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenTargetFileNameContainsInvalidChars_Message() 
+        {
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
+                return;
+            }
+
+            var sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars().Where(x => x != fileSystem.Path.DirectorySeparatorChar))
+            {
+                var destFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
+
+                var exception =
+                    Assert.Throws<NotSupportedException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+
+                Assert.That(exception.Message, Is.EqualTo("The given path's format is not supported."),
+                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+            }
         }
 
         [Test]
@@ -836,7 +891,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(string.Empty, destFilePath));
 
-            Assert.That(exception.Message, Is.StringStarting("An empty file name is invalid."));
+            Assert.That(exception.Message, Is.StringStarting("Empty file name is not legal."));
         }
 
         [Test]
@@ -857,7 +912,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("The path has an invalid format."));
+            Assert.That(exception.Message, Is.EqualTo("The path is not of a legal form."));
         }
 
         [Test]
@@ -868,7 +923,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(sourceFilePath, null));
 
-            Assert.That(exception.Message, Is.StringStarting("Value can not be null."));
+            Assert.That(exception.Message, Is.StringStarting("File name cannot be null."));
         }
 
         [Test]
@@ -890,7 +945,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("The path has an invalid format."));
+            Assert.That(exception.Message, Is.EqualTo("The path is not of a legal form."));
         }
 
         [Test]
@@ -901,7 +956,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, string.Empty));
 
-            Assert.That(exception.Message, Is.StringStarting("An empty file name is invalid."));
+            Assert.That(exception.Message, Is.StringStarting("Empty file name is not legal."));
         }
 
         [Test]
