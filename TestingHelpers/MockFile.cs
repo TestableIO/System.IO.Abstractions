@@ -80,6 +80,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Copy(string sourceFileName, string destFileName, bool overwrite)
         {
+            ValidateParameter(sourceFileName, "sourceFileName");
+            ValidateParameter(destFileName, "destFileName");
+
             var directoryNameOfDestination = mockPath.GetDirectoryName(destFileName);
             if (!mockFileDataAccessor.Directory.Exists(directoryNameOfDestination))
             {
@@ -217,13 +220,26 @@ namespace System.IO.Abstractions.TestingHelpers
         [DebuggerNonUserCode]
         private void ValidateParameter(string value, string paramName) {
             if (value == null)
-                throw new ArgumentNullException(paramName, "Value can not be null.");
+                throw new ArgumentNullException(paramName, "File name cannot be null.");
             if (value == string.Empty)
-                throw new ArgumentException("An empty file name is invalid.", paramName);
+                throw new ArgumentException("Empty file name is not legal.", paramName);
             if (value.Trim() == "")
-                throw new ArgumentException("The path has an invalid format.");
-            if (value.IndexOfAny(mockPath.GetInvalidPathChars()) > -1)
-                throw new ArgumentException("Illegal characters in path.", paramName);
+                throw new ArgumentException("The path is not of a legal form.");
+            if (ExtractFileName(value).IndexOfAny(mockPath.GetInvalidFileNameChars()) > -1)
+                throw new NotSupportedException("The given path's format is not supported.");
+            if (ExtractFilePath(value).IndexOfAny(mockPath.GetInvalidPathChars()) > -1)
+                throw new ArgumentException("Illegal characters in path.");
+        }
+
+        private string ExtractFilePath(string fullFileName)
+        {
+            var extractFilePath = fullFileName.Split(mockPath.DirectorySeparatorChar);
+            return string.Join(mockPath.DirectorySeparatorChar.ToString(), extractFilePath.Take(extractFilePath.Length - 1));
+        }
+
+        private string ExtractFileName(string fullFileName)
+        {
+            return fullFileName.Split(mockPath.DirectorySeparatorChar).Last();
         }
 
         public override Stream Open(string path, FileMode mode)
