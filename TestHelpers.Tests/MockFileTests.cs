@@ -1109,6 +1109,201 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_Copy_ShouldThrowArgumentNullExceptionWhenSourceIsNull_Message()
+        {
+            string destFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Copy(null, destFilePath));
+
+            Assert.That(exception.Message, Is.StringStarting("File name cannot be null."));
+        }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowArgumentNullExceptionWhenSourceIsNull_ParamName()
+        {
+            string destFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Copy(null, destFilePath));
+
+            Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
+        }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenSourceFileNameContainsInvalidChars_Message()
+        {
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
+                return;
+            }
+
+            var destFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars().Where(x => x != fileSystem.Path.DirectorySeparatorChar))
+            {
+                var sourceFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
+
+                var exception =
+                    Assert.Throws<NotSupportedException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
+
+                Assert.That(exception.Message, Is.EqualTo("The given path's format is not supported."),
+                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+            }
+        }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidChars_Message()
+        {
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
+                return;
+            }
+
+            var destFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            foreach (var invalidChar in fileSystem.Path.GetInvalidPathChars())
+            {
+                var sourceFilePath = XFS.Path(@"c:\some" + invalidChar + @"thing\demo.txt");
+
+                var exception =
+                    Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
+
+                Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
+                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+            }
+        }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenTargetPathContainsInvalidChars_Message()
+        {
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
+                return;
+            }
+
+            var sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            foreach (var invalidChar in fileSystem.Path.GetInvalidPathChars())
+            {
+                var destFilePath = XFS.Path(@"c:\some" + invalidChar + @"thing\demo.txt");
+
+                var exception =
+                    Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
+
+                Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
+                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+            }
+        }
+        [Test]
+        public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenTargetFileNameContainsInvalidChars_Message()
+        {
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
+                return;
+            }
+
+            var sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars().Where(x => x != fileSystem.Path.DirectorySeparatorChar))
+            {
+                var destFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
+
+                var exception =
+                    Assert.Throws<NotSupportedException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
+
+                Assert.That(exception.Message, Is.EqualTo("The given path's format is not supported."),
+                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+            }
+        }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceIsEmpty_Message()
+        {
+            string destFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(string.Empty, destFilePath));
+
+            Assert.That(exception.Message, Is.StringStarting("Empty file name is not legal."));
+        }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceIsEmpty_ParamName()
+        {
+            string destFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(string.Empty, destFilePath));
+
+            Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
+        }
+        [Test]
+        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceIsStringOfBlanks()
+        {
+            string sourceFilePath = "   ";
+            string destFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
+
+            Assert.That(exception.Message, Is.EqualTo("The path is not of a legal form."));
+        }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowArgumentNullExceptionWhenTargetIsNull_Message()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Copy(sourceFilePath, null));
+
+            Assert.That(exception.Message, Is.StringStarting("File name cannot be null."));
+        }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowArgumentNullExceptionWhenTargetIsNull_ParamName()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Copy(sourceFilePath, null));
+
+            Assert.That(exception.ParamName, Is.EqualTo("destFileName"));
+        }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetIsStringOfBlanks()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            string destFilePath = "   ";
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
+
+            Assert.That(exception.Message, Is.EqualTo("The path is not of a legal form."));
+        }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetIsEmpty_Message()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, string.Empty));
+
+            Assert.That(exception.Message, Is.StringStarting("Empty file name is not legal."));
+        }
+
+        [Test]
         public void MockFile_Delete_ShouldRemoveFileFromFileSystem()
         {
             string fullPath = XFS.Path(@"c:\something\demo.txt");

@@ -80,6 +80,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Copy(string sourceFileName, string destFileName, bool overwrite)
         {
+            ValidateParameter(sourceFileName, "sourceFileName");
+            ValidateParameter(destFileName, "destFileName");
+
             var directoryNameOfDestination = mockPath.GetDirectoryName(destFileName);
             if (!mockFileDataAccessor.Directory.Exists(directoryNameOfDestination))
             {
