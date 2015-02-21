@@ -135,15 +135,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetDirectories(string path, string searchPattern, SearchOption searchOption)
         {
-            path = EnsurePathEndsWithDirectorySeparator(path);
-
-            if (!Exists(path))
-            {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
-            }
-
-            var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
-            return dirs.Where(p => p != path).ToArray();
+            return EnumerateDirectories(path, searchPattern, searchOption).ToArray();
         }
 
         public override string GetDirectoryRoot(string path)
@@ -372,17 +364,25 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override IEnumerable<string> EnumerateDirectories(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return EnumerateDirectories(path, "*");
         }
 
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return EnumerateDirectories(path, searchPattern, SearchOption.TopDirectoryOnly);
         }
 
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            path = EnsurePathEndsWithDirectorySeparator(path);
+
+            if (!Exists(path))
+            {
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
+            }
+
+            var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
+            return dirs.Where(p => p != path);
         }
 
         public override IEnumerable<string> EnumerateFiles(string path)
