@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
@@ -120,6 +121,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.AreEqual(XFS.Path(@"c:\a\b"), result.FullName);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_EnumerateFiles_ShouldReturnAllFiles()
+        {
+          // Arrange
+          var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\a.txt"), "" },
+                { XFS.Path(@"c:\temp\folder\b.txt"), "" }
+            });
+
+          // Act
+          var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
+
+          // Assert
+          Assert.AreEqual(new[]{"a.txt", "b.txt"}, directoryInfo.EnumerateFiles().ToList().Select(x => x.Name).ToArray());
         }
     }
 }
