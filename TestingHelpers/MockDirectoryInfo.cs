@@ -161,7 +161,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override IEnumerable<FileInfoBase> EnumerateFiles()
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            return mockFileDataAccessor.AllFiles.Select(x => new MockFileInfo(mockFileDataAccessor, x));
         }
 
         public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern)
