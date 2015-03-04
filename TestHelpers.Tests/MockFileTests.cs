@@ -347,6 +347,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_GetAttributeOfExistingUncDirectory_ShouldReturnCorrectValue()
+        {
+            var filedata = new MockFileData("test");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"\\share\folder\demo.txt"), filedata},
+            });
+
+            var attributes = fileSystem.File.GetAttributes(XFS.Path(@"\\share\folder"));
+            Assert.That(attributes, Is.EqualTo(FileAttributes.Directory));
+        }
+
+        [Test]
         public void MockFile_GetCreationTimeOfNonExistantFile_ShouldReturnDefaultValue() {
             ExecuteDefaultValueTest((f, p) => f.GetCreationTime(p));
         }

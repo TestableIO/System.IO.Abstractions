@@ -163,7 +163,22 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileAttributes GetAttributes(string path)
         {
-            return mockFileDataAccessor.GetFile(path, true).Attributes;
+            var possibleFileData = mockFileDataAccessor.GetFile(path);
+            FileAttributes result = FileAttributes.Normal;
+            if (possibleFileData == null)
+            {
+                var directoryInfo = mockFileDataAccessor.DirectoryInfo.FromDirectoryName(path);
+                if (directoryInfo.Exists)
+                {
+                    result = directoryInfo.Attributes;
+                }
+            }
+            else
+            {
+                result = possibleFileData.Attributes;
+            }
+
+            return result;
         }
 
         public override DateTime GetCreationTime(string path)
