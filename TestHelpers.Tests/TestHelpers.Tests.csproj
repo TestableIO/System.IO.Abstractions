@@ -83,6 +83,7 @@
     <Compile Include="FileSystemTests.cs" />
     <Compile Include="MockDirectoryInfoTests.cs" />
     <Compile Include="MockDirectoryTests.cs" />
+    <Compile Include="MockFileAppendAllLines.cs" />
     <Compile Include="MockFileAppendAllTextTests.cs" />
     <Compile Include="MockFileCopyTests.cs" />
     <Compile Include="MockFileCreateTests.cs" />
