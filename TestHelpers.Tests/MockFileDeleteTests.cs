@@ -2,13 +2,15 @@
 {
     using NUnit.Framework;
 
+    using XFS = MockUnixSupport;
+
     public class MockFileDeleteTests
     {
         [Test]
         public void MockFile_Delete_ShouldDeleteFile()
         {
             var fileSystem = new MockFileSystem();
-            var path = "C:\\test";
+            var path = XFS.Path("C:\\test");
             var directory = fileSystem.Path.GetDirectoryName(path);
             fileSystem.AddFile(path, new MockFileData("Bla"));
 

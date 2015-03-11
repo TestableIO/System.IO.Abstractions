@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
-
-using NUnit.Framework;
-
-namespace System.IO.Abstractions.TestingHelpers.Tests
+﻿namespace System.IO.Abstractions.TestingHelpers.Tests
 {
+    using System.Collections.Generic;
+
+    using NUnit.Framework;
+
+    using XFS = MockUnixSupport;
+
     [TestFixture]
     public class MockFileStreamTests
     {
@@ -11,7 +13,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileStream_Flush_WritesByteToFile()
         {
             // Arrange
-            const string filepath = @"c:\something\foo.txt";
+            var filepath = XFS.Path(@"c:\something\foo.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
             var cut = new MockFileStream(filesystem, filepath);
 
@@ -27,7 +29,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileStream_Dispose_ShouldNotResurrectFile()
         {
             var fileSystem = new MockFileSystem();
-            var path = "C:\\test";
+            var path = XFS.Path("C:\\test");
             var directory = fileSystem.Path.GetDirectoryName(path);
             fileSystem.AddFile(path, new MockFileData("Bla"));
             var stream = fileSystem.File.Open(path, FileMode.Open, FileAccess.ReadWrite, FileShare.Delete);
