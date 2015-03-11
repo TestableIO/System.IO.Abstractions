@@ -30,7 +30,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.AreEqual(
-                "Demo text content\r\nline 1\r\nlline 2\r\nlline 3",
+                "Demo text content\r\nline 1\r\nline 2\r\nline 3",
                 file.ReadAllText(path));
         }
 
