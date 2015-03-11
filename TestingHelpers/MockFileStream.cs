@@ -23,6 +23,10 @@
                         : SeekOrigin.Begin);
                 }
             }
+            else
+            {
+                mockFileDataAccessor.AddFile(path, new MockFileData(""));
+            }
         }
 
         public override void Close() 
@@ -38,15 +42,17 @@
         private void InternalFlush()
         {
             if (mockFileDataAccessor.FileExists(path))
+            {
                 mockFileDataAccessor.RemoveFile(path);
 
-            /* reset back to the beginning .. */
-            base.Seek(0, SeekOrigin.Begin);
-            /* .. read everything out */
-            var data = new byte[base.Length];
-            base.Read(data, 0, (int)base.Length);
-            /* .. put it in the mock system */
-            mockFileDataAccessor.AddFile(path, new MockFileData(data));
+                /* reset back to the beginning .. */
+                base.Seek(0, SeekOrigin.Begin);
+                /* .. read everything out */
+                var data = new byte[base.Length];
+                base.Read(data, 0, (int)base.Length);
+                /* .. put it in the mock system */
+                mockFileDataAccessor.AddFile(path, new MockFileData(data));
+            }
         }
     }
 }
