@@ -120,5 +120,26 @@
             var actualBytes = fileSystem.GetFile(path).Contents;
             Assert.AreEqual(expectedBytes, actualBytes);
         }
+
+        [Test]
+        public void MockFile_WriteAllTextMultipleLines_ShouldWriteTextFileToMemoryFileSystem()
+        {
+            // Arrange
+            string path = XFS.Path(@"c:\something\demo.txt");
+
+            var fileContent = new List<string> {"Hello there!", "Second line!"};
+            var expected = "Hello there!" + Environment.NewLine + "Second line!" + Environment.NewLine;
+
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            fileSystem.File.WriteAllLines(path, fileContent);
+
+            // Assert
+            Assert.AreEqual(
+                expected,
+                fileSystem.GetFile(path).TextContents);
+        }
+
     }
 }
