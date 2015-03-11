@@ -24,7 +24,14 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void AppendAllLines(string path, IEnumerable<string> contents)
         {
             ValidateParameter(path, "path");
-            var concatContents = contents.Aggregate(string.Empty, (current, content) => current + content);
+
+            var concatContents = string.Empty;
+
+            foreach (var content in contents)
+            {
+                concatContents += "\r\n" + content;
+            }
+            //var concatContents = contents.Aggregate(string.Empty, (current, content) => current + content);
 
             if (!mockFileDataAccessor.FileExists(path))
             {
