@@ -716,6 +716,86 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<DirectoryNotFoundException>(action);
         }
 
+        [Test]
+        public void MockDirectory_EnumerateDirectories_Returns_Child_Directories()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"A:\folder1\folder2\folder3\file.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"A:\folder1\folder4\file2.txt"), new MockFileData("Demo text content 2") },
+            });
+
+            var directories = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"A:\folder1")).ToArray();
+
+            //Check that it does not returns itself
+            Assert.IsFalse(directories.Contains(XFS.Path(@"A:\folder1\")));
+
+            //Check that it correctly returns all child directories
+            Assert.AreEqual(2, directories.Count());
+            Assert.IsTrue(directories.Contains(XFS.Path(@"A:\folder1\folder2\")));
+            Assert.IsTrue(directories.Contains(XFS.Path(@"A:\folder1\folder4\")));
+        }
+
+        [Test]
+        public void MockDirectory_EnumerateDirectories_WithTopDirectories_ShouldOnlyReturnTopDirectories()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(XFS.Path(@"C:\Folder\.foo\"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\Folder\foo"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\Folder\foo.foo"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\Folder\.foo\.foo"));
+            fileSystem.AddFile(XFS.Path(@"C:\Folder\.foo\bar"), new MockFileData(string.Empty));
+
+            // Act
+            var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"c:\Folder\"), "*.foo");
+
+            // Assert
+            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo\"), XFS.Path(@"C:\Folder\foo.foo\") }));
+        }
+
+        [Test]
+        public void MockDirectory_EnumerateDirectories_WithAllDirectories_ShouldReturnsAllMatchingSubFolders()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(XFS.Path(@"C:\Folder\.foo\"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\Folder\foo"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\Folder\foo.foo"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\Folder\.foo\.foo"));
+            fileSystem.AddFile(XFS.Path(@"C:\Folder\.foo\bar"), new MockFileData(string.Empty));
+
+            // Act
+            var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"c:\Folder\"), "*.foo", SearchOption.AllDirectories);
+
+            // Assert
+            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo\"), XFS.Path(@"C:\Folder\foo.foo\"), XFS.Path(@"C:\Folder\.foo\.foo\") }));
+        }
+
+        [Test]
+        public void MockDirectory_EnumerateDirectories_ShouldThrowWhenPathIsNotMocked()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\a.gif"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\b.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\c.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\a.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\b.gif"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\c.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\a\a.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\a\b.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\a\c.gif"), new MockFileData("Demo text content") },
+            });
+
+            // Act
+            TestDelegate action = () => fileSystem.Directory.EnumerateDirectories(XFS.Path(@"c:\d"));
+
+            // Assert
+            Assert.Throws<DirectoryNotFoundException>(action);
+        }
+
         public static IEnumerable<object[]> GetPathsForMoving()
         {
             yield return new object[] { @"a:\folder1\", @"A:\folder3\", "file.txt", @"folder2\file2.txt" };
