@@ -8,6 +8,11 @@
 
         public MockFileStream(IMockFileDataAccessor mockFileDataAccessor, string path, bool forAppend = false)
         {
+            if (mockFileDataAccessor == null)
+            {
+                throw new ArgumentNullException("mockFileDataAccessor");
+            }
+
             this.mockFileDataAccessor = mockFileDataAccessor;
             this.path = path;
 
@@ -17,19 +22,19 @@
                 var data = mockFileDataAccessor.GetFile(path).Contents;
                 if (data != null && data.Length > 0)
                 {
-                    base.Write(data, 0, data.Length);
-                    base.Seek(0, forAppend
+                    Write(data, 0, data.Length);
+                    Seek(0, forAppend
                         ? SeekOrigin.End
                         : SeekOrigin.Begin);
                 }
             }
             else
             {
-                mockFileDataAccessor.AddFile(path, new MockFileData(""));
+                mockFileDataAccessor.AddFile(path, new MockFileData(new byte[] { }));
             }
         }
 
-        public override void Close() 
+        public override void Close()
         {
             InternalFlush();
         }
@@ -43,15 +48,14 @@
         {
             if (mockFileDataAccessor.FileExists(path))
             {
-                mockFileDataAccessor.RemoveFile(path);
-
+                var mockFileData = mockFileDataAccessor.GetFile(path);
                 /* reset back to the beginning .. */
-                base.Seek(0, SeekOrigin.Begin);
+                Seek(0, SeekOrigin.Begin);
                 /* .. read everything out */
-                var data = new byte[base.Length];
-                base.Read(data, 0, (int)base.Length);
+                var data = new byte[Length];
+                Read(data, 0, (int)Length);
                 /* .. put it in the mock system */
-                mockFileDataAccessor.AddFile(path, new MockFileData(data));
+                mockFileData.Contents = data;
             }
         }
     }
