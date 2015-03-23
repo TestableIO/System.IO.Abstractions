@@ -93,6 +93,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectoryInfo_EnumerateFileSystemInfos_ShouldReturnBothDirectoriesAndFiles()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\file.txt"), new MockFileData("Hello World") },
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() }
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
+            var result = directoryInfo.EnumerateFileSystemInfos().ToArray();
+
+            Assert.That(result.Length, Is.EqualTo(2));
+        }
+
+        [Test]
         public void MockDirectoryInfo_GetFileSystemInfos_ShouldReturnDirectoriesAndNamesWithSearchPattern()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -104,6 +119,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
             var result = directoryInfo.GetFileSystemInfos("f*");
+
+            Assert.That(result.Length, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void MockDirectoryInfo_EnumerateFileSystemInfos_ShouldReturnDirectoriesAndNamesWithSearchPattern()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\file.txt"), new MockFileData("Hello World") },
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
+                { XFS.Path(@"c:\temp\folder\older"), new MockDirectoryData() }
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
+            var result = directoryInfo.EnumerateFileSystemInfos("f*").ToArray();
 
             Assert.That(result.Length, Is.EqualTo(2));
         }
@@ -129,15 +160,44 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
           // Arrange
           var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { XFS.Path(@"c:\temp\folder\a.txt"), "" },
-                { XFS.Path(@"c:\temp\folder\b.txt"), "" }
+                //Files "above" in folder we're querying
+                { XFS.Path(@"c:\temp\a.txt"), "" },
+
+                //Files in the folder we're querying
+                { XFS.Path(@"c:\temp\folder\b.txt"), "" },
+                { XFS.Path(@"c:\temp\folder\c.txt"), "" },
+
+                //Files "below" the folder we're querying
+                { XFS.Path(@"c:\temp\folder\deeper\d.txt"), "" }
             });
 
           // Act
           var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
 
           // Assert
-          Assert.AreEqual(new[]{"a.txt", "b.txt"}, directoryInfo.EnumerateFiles().ToList().Select(x => x.Name).ToArray());
+          Assert.AreEqual(new[]{"b.txt", "c.txt"}, directoryInfo.EnumerateFiles().ToList().Select(x => x.Name).ToArray());
+        }
+
+        [Test]
+        public void MockDirectoryInfo_EnumerateDirectories_ShouldReturnAllDirectories()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                //A file we want to ignore entirely
+                { XFS.Path(@"c:\temp\folder\a.txt"), "" },
+
+                //Some files in sub folders (which we also want to ignore entirely)
+                { XFS.Path(@"c:\temp\folder\b\file.txt"), "" },
+                { XFS.Path(@"c:\temp\folder\c\other.txt"), "" },
+            });
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
+
+            // Act
+            var directories = directoryInfo.EnumerateDirectories().Select(a => a.Name).ToArray();
+
+            // Assert
+            Assert.AreEqual(new[] { "b", "c" }, directories);
         }
     }
 }
