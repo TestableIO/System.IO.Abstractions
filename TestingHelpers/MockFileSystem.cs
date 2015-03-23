@@ -4,6 +4,8 @@ using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using XFS = MockUnixSupport;
+
     [Serializable]
     public class MockFileSystem : IFileSystem, IMockFileDataAccessor
     {
@@ -16,12 +18,15 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockFileSystem() : this(null) { }
 
-        public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = @"C:\Foo\Bar")
+        public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = "")
         {
+            if (String.IsNullOrEmpty(currentDirectory))
+                currentDirectory = IO.Path.GetTempPath();
+
             this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
             pathField = new MockPath(this);
             file = new MockFile(this);
-            directory = new MockDirectory(this, file, FixPath(currentDirectory));
+            directory = new MockDirectory(this, file, currentDirectory);
             fileInfoFactory = new MockFileInfoFactory(this);
             directoryInfoFactory = new MockDirectoryInfoFactory(this);
 
@@ -68,19 +73,29 @@ namespace System.IO.Abstractions.TestingHelpers
             lock (files)
                 return FileExists(path) ? files[path] : returnNullObject ? MockFileData.NullObject : null;
         }
-  
+
         public void AddFile(string path, MockFileData mockFile)
         {
             var fixedPath = FixPath(path);
-            if (FileExists(fixedPath) && (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-                throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path));
-
-            var directoryPath = Path.GetDirectoryName(fixedPath);
-
             lock (files)
             {
+                if (FileExists(fixedPath))
+                {
+                    var isReadOnly = (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
+                    var isHidden = (files[fixedPath].Attributes & FileAttributes.Hidden) == FileAttributes.Hidden;
+
+                    if (isReadOnly || isHidden)
+                    {
+                        throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path));
+                    }
+                }
+
+                var directoryPath = Path.GetDirectoryName(fixedPath);
+
                 if (!directory.Exists(directoryPath))
-                    directory.CreateDirectory(directoryPath);
+                {
+                    AddDirectory(directoryPath);
+                }
 
                 files[fixedPath] = mockFile;
             }
@@ -89,6 +104,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public void AddDirectory(string path)
         {
             var fixedPath = FixPath(path);
+            var separator = XFS.Separator();
 
             lock (files)
             {
@@ -96,8 +112,37 @@ namespace System.IO.Abstractions.TestingHelpers
                     (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
                     throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path));
 
-                files[fixedPath] = new MockDirectoryData();
-                directory.CreateDirectory(fixedPath);
+                var lastIndex = 0;
+
+                bool isUnc =
+                    path.StartsWith(@"\\", StringComparison.OrdinalIgnoreCase) ||
+                    path.StartsWith(@"//", StringComparison.OrdinalIgnoreCase);
+
+                if (isUnc)
+                {
+
+                    //First, confirm they aren't trying to create '\\server\'
+                    lastIndex = path.IndexOf(separator, 2, StringComparison.OrdinalIgnoreCase);
+                    if (lastIndex < 0)
+                        throw new ArgumentException(@"The UNC path should be of the form \\server\share.", "path");
+
+                    /* 
+                     * Although CreateDirectory(@"\\server\share\") is not going to work in real code, we allow it here for the purposes of setting up test doubles.
+                     * See PR https://github.com/tathamoddie/System.IO.Abstractions/pull/90 for conversation
+                     */
+                }
+
+                while ((lastIndex = path.IndexOf(separator, lastIndex + 1, StringComparison.OrdinalIgnoreCase)) > -1)
+                {
+                    var segment = path.Substring(0, lastIndex + 1);
+                    if (!directory.Exists(segment))
+                    {
+                        files[segment] = new MockDirectoryData();
+                    }
+                }
+
+                var s = path.EndsWith(separator, StringComparison.OrdinalIgnoreCase) ? path : path + separator;
+                files[s] = new MockDirectoryData();
             }
         }
 

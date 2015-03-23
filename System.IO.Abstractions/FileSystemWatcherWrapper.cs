@@ -31,6 +31,12 @@ namespace System.IO.Abstractions
             this.watcher = watcher;
         }
 
+        public override bool IncludeSubdirectories
+        {
+            get { return watcher.IncludeSubdirectories; }
+            set { watcher.IncludeSubdirectories = value; }
+        }
+
         public override bool EnableRaisingEvents
         {
             get { return watcher.EnableRaisingEvents; }

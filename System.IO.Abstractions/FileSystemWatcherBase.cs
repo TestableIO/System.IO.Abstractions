@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel;
 
 namespace System.IO.Abstractions
 {
     [Serializable]
     public abstract class FileSystemWatcherBase : IDisposable
     {
+        public abstract bool IncludeSubdirectories { get; set; }
         public abstract bool EnableRaisingEvents { get; set; }
         public abstract string Filter { get; set; }
         public abstract int InternalBufferSize { get; set; }
@@ -34,32 +31,47 @@ namespace System.IO.Abstractions
 
         protected void OnCreated(object sender, FileSystemEventArgs args)
         {
-            if (Created != null)
-                Created(sender, args);
+            var onCreated = Created;
+            if (onCreated != null)
+            {
+                onCreated(sender, args);
+            }
         }
 
         protected void OnChanged(object sender, FileSystemEventArgs args)
         {
-            if (Changed != null)
-                Changed(sender, args);
+            var onChanged = Changed;
+            if (onChanged != null)
+            {
+                onChanged(sender, args);
+            }
         }
 
         protected void OnDeleted(object sender, FileSystemEventArgs args)
         {
-            if (Deleted != null)
-                Deleted(sender, args);
+            var onDeleted = Deleted;
+            if (onDeleted != null)
+            {
+                onDeleted(sender, args);
+            }
         }
 
         protected void OnRenamed(object sender, RenamedEventArgs args)
         {
-            if (Renamed != null)
-                Renamed(sender, args);
+            var onRenamed = Renamed;
+            if (onRenamed != null)
+            {
+                onRenamed(sender, args);
+            }
         }
 
         protected void OnError(object sender, ErrorEventArgs args)
         {
-            if (Error != null)
-                Error(sender, args);
+            var onError = Error;
+            if (onError != null)
+            {
+                onError(sender, args);
+            }
         }
     }
 }

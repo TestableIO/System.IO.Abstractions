@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using XFS = MockUnixSupport;
+
     [Serializable]
     public class MockDirectory : DirectoryBase
     {
@@ -28,15 +30,32 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
+            if (path == null)
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            if (path.Length == 0)
+            {
+                throw new ArgumentException("Path cannot be the empty string or all whitespace.", "path");
+            }
+
+            if (mockFileDataAccessor.FileExists(path))
+            {
+                var message = string.Format(CultureInfo.InvariantCulture, @"Cannot create ""{0}"" because a file or directory with the same name already exists.", path);
+                var ex = new IOException(message);
+                ex.Data.Add("Path", path);
+                throw ex;
+            }
+
             path = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(path));
+
             if (!Exists(path))
+            {
                 mockFileDataAccessor.AddDirectory(path);
+            }
+
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
-
-            var parent = GetParent(path);
-            if (parent != null)
-                CreateDirectory(GetParent(path).FullName, directorySecurity);
-
             return created;
         }
 
@@ -57,7 +76,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new DirectoryNotFoundException(path + " does not exist or could not be found.");
 
             if (!recursive &&
-                affectedPaths.Count() > 1)
+                affectedPaths.Count > 1)
                 throw new IOException("The directory specified by " + path + " is read-only, or recursive is false and " + path + " is not an empty directory.");
 
             foreach (var affectedPath in affectedPaths)
@@ -66,10 +85,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists(string path)
         {
-            path = EnsurePathEndsWithDirectorySeparator(path);
+            try
+            {
+                path = EnsurePathEndsWithDirectorySeparator(path);
 
-            path = mockFileDataAccessor.Path.GetFullPath(path);
-            return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.OrdinalIgnoreCase));
+                path = mockFileDataAccessor.Path.GetFullPath(path);
+                return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.OrdinalIgnoreCase));
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public override DirectorySecurity GetAccessControl(string path)
@@ -109,15 +135,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetDirectories(string path, string searchPattern, SearchOption searchOption)
         {
-            path = EnsurePathEndsWithDirectorySeparator(path);
-
-            if (!Exists(path))
-            {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
-            }
-
-            var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
-            return dirs.Where(p => p != path).ToArray();
+            return EnumerateDirectories(path, searchPattern, searchOption).ToArray();
         }
 
         public override string GetDirectoryRoot(string path)
@@ -139,6 +157,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
         {
+            if(path == null)
+                throw new ArgumentNullException();
+
             if (!Exists(path))
             {
                 throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
@@ -150,20 +171,23 @@ namespace System.IO.Abstractions.TestingHelpers
         private string[] GetFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
         {
             path = EnsurePathEndsWithDirectorySeparator(path);
-
             path = mockFileDataAccessor.Path.GetFullPath(path);
 
-            const string allDirectoriesPattern = @"([^<>:""/\\|?*]*\\)*";
-            
+            bool isUnix = XFS.IsUnixPlatform();
+
+            string allDirectoriesPattern = isUnix
+                ? @"([^<>:""/|?*]*/)*"
+                : @"([^<>:""/\\|?*]*\\)*";
+
             var fileNamePattern = searchPattern == "*"
-                ? @"[^\\]*?\\?"
+                ? isUnix ? @"[^/]*?/?" : @"[^\\]*?\\?"
                 : Regex.Escape(searchPattern)
-                    .Replace(@"\*", @"[^<>:""/\\|?*]*?")
-                    .Replace(@"\?", @"[^<>:""/\\|?*]?");
+                    .Replace(@"\*", isUnix ? @"[^<>:""/|?*]*?" : @"[^<>:""/\\|?*]*?")
+                    .Replace(@"\?", isUnix ? @"[^<>:""/|?*]?" : @"[^<>:""/\\|?*]?");
 
             var pathPattern = string.Format(
                 CultureInfo.InvariantCulture,
-                @"(?i:^{0}{1}{2}$)",
+                isUnix ? @"(?i:^{0}{1}{2}(?:/?)$)" : @"(?i:^{0}{1}{2}(?:\\?)$)",
                 Regex.Escape(path),
                 searchOption == SearchOption.AllDirectories ? allDirectoriesPattern : string.Empty,
                 fileNamePattern);
@@ -223,35 +247,84 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase GetParent(string path)
         {
-            var parent = new DirectoryInfo(path).Parent;
-            if (parent == null)
-                return null;
+            if (path == null)
+            {
+                throw new ArgumentNullException("path");
+            }
 
-            return new MockDirectoryInfo(mockFileDataAccessor, parent.FullName);
+            if (path.Length == 0)
+            {
+                throw new ArgumentException("Path cannot be the empty string or all whitespace.", "path");
+            }
+
+            var invalidChars = mockFileDataAccessor.Path.GetInvalidPathChars();
+            if (path.IndexOfAny(invalidChars) > -1)
+            {
+                throw new ArgumentException("Path contains invalid path characters.", "path");
+            }
+
+            var absolutePath = mockFileDataAccessor.Path.GetFullPath(path);
+            var sepAsString = mockFileDataAccessor.Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture);
+
+            var lastIndex = 0;
+            if (absolutePath != sepAsString)
+            {
+                var startIndex = absolutePath.EndsWith(sepAsString, StringComparison.OrdinalIgnoreCase) ? absolutePath.Length - 1 : absolutePath.Length;
+                lastIndex = absolutePath.LastIndexOf(mockFileDataAccessor.Path.DirectorySeparatorChar, startIndex - 1);
+                if (lastIndex < 0)
+                {
+                    return null;
+                }
+            }
+
+            var parentPath = absolutePath.Substring(0, lastIndex);
+            if (string.IsNullOrEmpty(parentPath))
+            {
+                return null;
+            }
+
+            var parent = new MockDirectoryInfo(mockFileDataAccessor, parentPath);
+            return parent;
         }
 
-        public override void Move(string sourceDirName, string destDirName) {
-            //Make sure that the destination exists
-            mockFileDataAccessor.Directory.CreateDirectory(destDirName);
+        public override void Move(string sourceDirName, string destDirName)
+        {
+            var fullSourcePath = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(sourceDirName));
+            var fullDestPath = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(destDirName));
 
-            //Recursively move all the subdirectories
-            var subdirectories = GetDirectories(sourceDirName);
+            if (string.Equals(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new IOException("Source and destination path must be different.");
+            }
+
+            var sourceRoot = mockFileDataAccessor.Path.GetPathRoot(fullSourcePath);
+            var destinationRoot = mockFileDataAccessor.Path.GetPathRoot(fullDestPath);
+            if (!string.Equals(sourceRoot, destinationRoot, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new IOException("Source and destination path must have identical roots. Move will not work across volumes.");
+            }
+
+            //Make sure that the destination exists
+            mockFileDataAccessor.Directory.CreateDirectory(fullDestPath);
+
+            //Recursively move all the subdirectories from the source into the destination directory
+            var subdirectories = GetDirectories(fullSourcePath);
             foreach (var subdirectory in subdirectories)
             {
-                var newSubdirPath = subdirectory.Replace(sourceDirName, destDirName);
+                var newSubdirPath = subdirectory.Replace(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase);
                 Move(subdirectory, newSubdirPath);
             }
 
-            //Move the files in this directory
-            var files = GetFiles(sourceDirName);
+            //Move the files in destination directory
+            var files = GetFiles(fullSourcePath);
             foreach (var file in files)
             {
-                var newFilePath = file.Replace(sourceDirName, destDirName);
+                var newFilePath = file.Replace(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase);
                 mockFileDataAccessor.FileInfo.FromFileName(file).MoveTo(newFilePath);
             }
 
-            //Delete this directory
-            Delete(sourceDirName);
+            //Delete the source directory
+            Delete(fullSourcePath);
         }
 
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
@@ -292,6 +365,65 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc)
         {
             fileBase.SetLastWriteTimeUtc(path, lastWriteTimeUtc);
+        }
+
+        public override IEnumerable<string> EnumerateDirectories(string path)
+        {
+            return EnumerateDirectories(path, "*");
+        }
+
+        public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern)
+        {
+            return EnumerateDirectories(path, searchPattern, SearchOption.TopDirectoryOnly);
+        }
+
+        public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
+        {
+            path = EnsurePathEndsWithDirectorySeparator(path);
+
+            if (!Exists(path))
+            {
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
+            }
+
+            var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
+            return dirs.Where(p => p != path);
+        }
+
+        public override IEnumerable<string> EnumerateFiles(string path)
+        {
+            return GetFiles(path);
+        }
+
+        public override IEnumerable<string> EnumerateFiles(string path, string searchPattern)
+        {
+            return GetFiles(path, searchPattern);
+        }
+
+        public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption)
+        {
+            return GetFiles(path, searchPattern, searchOption);
+        }
+
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path)
+        {
+            var fileSystemEntries = new List<string>(GetFiles(path));
+            fileSystemEntries.AddRange(GetDirectories(path));
+            return fileSystemEntries;
+        }
+
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern)
+        {
+            var fileSystemEntries = new List<string>(GetFiles(path, searchPattern));
+            fileSystemEntries.AddRange(GetDirectories(path, searchPattern));
+            return fileSystemEntries;
+        }
+
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
+        {
+            var fileSystemEntries = new List<string>(GetFiles(path, searchPattern, searchOption));
+            fileSystemEntries.AddRange(GetDirectories(path, searchPattern, searchOption));
+            return fileSystemEntries;
         }
 
         static string EnsurePathEndsWithDirectorySeparator(string path)

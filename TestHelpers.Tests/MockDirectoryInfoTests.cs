@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
+    using XFS = MockUnixSupport;
+
     [TestFixture]
     public class MockDirectoryInfoTests
     {
@@ -11,7 +14,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            var directoryInfo = new MockDirectoryInfo(fileSystem, @"c:\temp");
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp"));
 
             // Act
             var result = directoryInfo.Extension;
@@ -25,7 +28,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            var directoryInfo = new MockDirectoryInfo(fileSystem, @"c:\temp\");
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\"));
 
             // Act
             var result = directoryInfo.Extension;
@@ -34,13 +37,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(string.Empty, result);
         }
 
-        [TestCase(@"c:\temp\folder", true)]
-        [TestCase(@"c:\temp\folder\notExistant", false)]
+        public static IEnumerable<object[]> MockDirectoryInfo_Exists_Cases
+        {
+            get
+            {
+                yield return new object[]{ XFS.Path(@"c:\temp\folder"), true };
+                yield return new object[]{ XFS.Path(@"c:\temp\folder\notExistant"), false };
+            }
+        }
+
+        [TestCaseSource("MockDirectoryInfo_Exists_Cases")]
         public void MockDirectoryInfo_Exists(string path, bool expected) 
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> 
             {
-                {@"c:\temp\folder\file.txt", new MockFileData("Hello World")}
+                {XFS.Path(@"c:\temp\folder\file.txt"), new MockFileData("Hello World")}
             });
             var directoryInfo = new MockDirectoryInfo(fileSystem, path);
 
@@ -50,20 +61,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
   
         [Test]
-        public void MockDirectoryInfo_FullName_ShouldReturnFullNameIncludingTrailingPathDelimiter() 
+        public void MockDirectoryInfo_FullName_ShouldReturnFullNameWithoutIncludingTrailingPathDelimiter() 
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 {
-                        @"c:\temp\folder\file.txt",
+                    XFS.Path(@"c:\temp\folder\file.txt"),
                         new MockFileData("Hello World")
                 }
             });
-            var directoryInfo = new MockDirectoryInfo(fileSystem, @"c:\temp\folder");
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
 
             var result = directoryInfo.FullName;
 
-            Assert.That(result, Is.EqualTo(@"c:\temp\folder\"));
+            Assert.That(result, Is.EqualTo(XFS.Path(@"c:\temp\folder")));
         }
 
         [Test]
@@ -71,11 +82,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\temp\folder\file.txt", new MockFileData("Hello World") },
-                { @"c:\temp\folder\folder", new MockDirectoryData() }
+                { XFS.Path(@"c:\temp\folder\file.txt"), new MockFileData("Hello World") },
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() }
             });
 
-            var directoryInfo = new MockDirectoryInfo(fileSystem, @"c:\temp\folder");
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
             var result = directoryInfo.GetFileSystemInfos();
 
             Assert.That(result.Length, Is.EqualTo(2));
@@ -86,15 +97,47 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\temp\folder\file.txt", new MockFileData("Hello World") },
-                { @"c:\temp\folder\folder", new MockDirectoryData() },
-                { @"c:\temp\folder\older", new MockDirectoryData() }
+                { XFS.Path(@"c:\temp\folder\file.txt"), new MockFileData("Hello World") },
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
+                { XFS.Path(@"c:\temp\folder\older"), new MockDirectoryData() }
             });
 
-            var directoryInfo = new MockDirectoryInfo(fileSystem, @"c:\temp\folder");
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
             var result = directoryInfo.GetFileSystemInfos("f*");
 
             Assert.That(result.Length, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void MockDirectoryInfo_GetParent_ShouldReturnDirectoriesAndNamesWithSearchPattern()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(XFS.Path(@"c:\a\b\c"));
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\a\b\c"));
+
+            // Act
+            var result = directoryInfo.Parent;
+
+            // Assert
+            Assert.AreEqual(XFS.Path(@"c:\a\b"), result.FullName);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_EnumerateFiles_ShouldReturnAllFiles()
+        {
+          // Arrange
+          var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\a.txt"), "" },
+                { XFS.Path(@"c:\temp\folder\b.txt"), "" }
+            });
+
+          // Act
+          var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
+
+          // Assert
+          Assert.AreEqual(new[]{"a.txt", "b.txt"}, directoryInfo.EnumerateFiles().ToList().Select(x => x.Name).ToArray());
         }
     }
 }

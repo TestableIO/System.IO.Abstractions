@@ -8,7 +8,7 @@ and/or:
 
     Install-Package System.IO.Abstractions.TestingHelpers
 
-At the core of the library is IFileSystem and FileSystem. Instead of calling methods like File.ReadAllText directly, use IFileSystem.File.ReadAllText. We have exactly the same API, except that ours is injectable and testable.
+At the core of the library is IFileSystem and FileSystem. Instead of calling methods like `File.ReadAllText` directly, use `IFileSystem.File.ReadAllText`. We have exactly the same API, except that ours is injectable and testable.
 
 ```csharp
 public class MyComponent
@@ -39,7 +39,7 @@ public class MyComponent
 }
 ```
 
-The library also ships with a series of test helpers to save you from having to mock out every call:
+The library also ships with a series of test helpers to save you from having to mock out every call, for basic scenarios. They are not a complete copy of a real-life file system, but they'll get you most of the way there.
 
 ```csharp
 [Test]

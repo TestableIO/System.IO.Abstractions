@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
 
@@ -17,27 +19,30 @@ namespace System.IO.Abstractions.TestingHelpers
             mockPath = new MockPath(mockFileDataAccessor);
         }
 
+        public override void AppendAllLines(string path, IEnumerable<string> contents)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
+        public override void AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
         public override void AppendAllText(string path, string contents)
         {
-            if (!mockFileDataAccessor.FileExists(path))
-            {
-                var dir = mockFileDataAccessor.Path.GetDirectoryName(path);
-                if (!mockFileDataAccessor.Directory.Exists(dir))
-                {
-                    throw new DirectoryNotFoundException(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
-                }
-                mockFileDataAccessor.AddFile(path, new MockFileData(contents));
-            }
-            else
-            {
-                mockFileDataAccessor
-                    .GetFile(path)
-                    .TextContents += contents;
-            }
+            AppendAllText(path, contents, MockFileData.DefaultEncoding);
         }
 
         public override void AppendAllText(string path, string contents, Encoding encoding)
         {
+            ValidateParameter(path, "path");
+
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding");
+            }
+
             if (!mockFileDataAccessor.FileExists(path))
             {
                 var dir = mockFileDataAccessor.Path.GetDirectoryName(path);
@@ -45,14 +50,14 @@ namespace System.IO.Abstractions.TestingHelpers
                 {
                     throw new DirectoryNotFoundException(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
                 }
-                mockFileDataAccessor.AddFile(path, new MockFileData(encoding.GetBytes(contents)));
+
+                mockFileDataAccessor.AddFile(path, new MockFileData(contents, encoding));
             }
             else
             {
                 var file = mockFileDataAccessor.GetFile(path);
-                var originalText = encoding.GetString(file.Contents);
-                var newText = originalText + contents;
-                file.Contents = encoding.GetBytes(newText);
+                var bytesToAppend = encoding.GetBytes(contents);
+                file.Contents = file.Contents.Concat(bytesToAppend).ToArray();
             }
         }
 
@@ -63,36 +68,40 @@ namespace System.IO.Abstractions.TestingHelpers
                 StreamWriter sw = new StreamWriter(OpenWrite(path));
                 sw.BaseStream.Seek(0, SeekOrigin.End); //push the stream pointer at the end for append.
                 return sw;
+            }
 
-            }
-            else
-            {
-                return new StreamWriter(Create(path));
-            }
+            return new StreamWriter(this.Create(path));
         }
 
         public override void Copy(string sourceFileName, string destFileName)
         {
-            if (mockFileDataAccessor.FileExists(destFileName))
-                throw new IOException(string.Format(CultureInfo.InvariantCulture, "The file {0} already exists.", destFileName));
-
-            mockFileDataAccessor.AddFile(destFileName, mockFileDataAccessor.GetFile(sourceFileName));
+            Copy(sourceFileName, destFileName, false);
         }
 
         public override void Copy(string sourceFileName, string destFileName, bool overwrite)
         {
-            if(overwrite)
+            ValidateParameter(sourceFileName, "sourceFileName");
+            ValidateParameter(destFileName, "destFileName");
+
+            var directoryNameOfDestination = mockPath.GetDirectoryName(destFileName);
+            if (!mockFileDataAccessor.Directory.Exists(directoryNameOfDestination))
             {
-                if (mockFileDataAccessor.FileExists(destFileName))
-                {
-                    var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
-                    mockFileDataAccessor.RemoveFile(destFileName);
-                    mockFileDataAccessor.AddFile(destFileName, sourceFile);
-                    return;
-                }
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", destFileName));
             }
 
-            Copy(sourceFileName, destFileName);
+            var fileExists = mockFileDataAccessor.FileExists(destFileName);
+            if (fileExists)
+            {
+                if (!overwrite)
+                {
+                    throw new IOException(string.Format(CultureInfo.InvariantCulture, "The file {0} already exists.", destFileName));
+                }
+
+                mockFileDataAccessor.RemoveFile(destFileName);
+            }
+
+            var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
+            mockFileDataAccessor.AddFile(destFileName, sourceFile);
         }
 
         public override Stream Create(string path)
@@ -124,7 +133,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Decrypt(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            new MockFileInfo(mockFileDataAccessor, path).Decrypt();
         }
 
         public override void Delete(string path)
@@ -134,7 +143,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Encrypt(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            new MockFileInfo(mockFileDataAccessor, path).Encrypt();
         }
 
         public override bool Exists(string path)
@@ -154,7 +163,22 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileAttributes GetAttributes(string path)
         {
-            return mockFileDataAccessor.GetFile(path, true).Attributes;
+            var possibleFileData = mockFileDataAccessor.GetFile(path);
+            FileAttributes result = FileAttributes.Normal;
+            if (possibleFileData == null)
+            {
+                var directoryInfo = mockFileDataAccessor.DirectoryInfo.FromDirectoryName(path);
+                if (directoryInfo.Exists)
+                {
+                    result = directoryInfo.Attributes;
+                }
+            }
+            else
+            {
+                result = possibleFileData.Attributes;
+            }
+
+            return result;
         }
 
         public override DateTime GetCreationTime(string path)
@@ -198,6 +222,12 @@ namespace System.IO.Abstractions.TestingHelpers
             if (sourceFile == null)
                 throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "The file \"{0}\" could not be found.", sourceFileName), sourceFileName);
 
+            var destDir = mockFileDataAccessor.Directory.GetParent(destFileName);
+            if (!destDir.Exists)
+            {
+                throw new DirectoryNotFoundException("Could not find a part of the path.");
+            }
+
             mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile.Contents));
             mockFileDataAccessor.RemoveFile(sourceFileName);
         }
@@ -205,16 +235,39 @@ namespace System.IO.Abstractions.TestingHelpers
         [DebuggerNonUserCode]
         private void ValidateParameter(string value, string paramName) {
             if (value == null)
-                throw new ArgumentNullException(paramName, "Value can not be null.");
+                throw new ArgumentNullException(paramName, "File name cannot be null.");
             if (value == string.Empty)
-                throw new ArgumentException("An empty file name is invalid.", paramName);
+                throw new ArgumentException("Empty file name is not legal.", paramName);
             if (value.Trim() == "")
-                throw new ArgumentException("The path has an invalid format.");
-            if (value.IndexOfAny(mockPath.GetInvalidPathChars()) > -1)
-                throw new ArgumentException("Illegal characters in path.", paramName);
+                throw new ArgumentException("The path is not of a legal form.");
+            if (ExtractFileName(value).IndexOfAny(mockPath.GetInvalidFileNameChars()) > -1)
+                throw new NotSupportedException("The given path's format is not supported.");
+            if (ExtractFilePath(value).IndexOfAny(mockPath.GetInvalidPathChars()) > -1)
+                throw new ArgumentException("Illegal characters in path.");
+        }
+
+        private string ExtractFilePath(string fullFileName)
+        {
+            var extractFilePath = fullFileName.Split(mockPath.DirectorySeparatorChar);
+            return string.Join(mockPath.DirectorySeparatorChar.ToString(), extractFilePath.Take(extractFilePath.Length - 1));
+        }
+
+        private string ExtractFileName(string fullFileName)
+        {
+            return fullFileName.Split(mockPath.DirectorySeparatorChar).Last();
         }
 
         public override Stream Open(string path, FileMode mode)
+        {
+            return Open(path, mode, (mode == FileMode.Append ? FileAccess.Write : FileAccess.ReadWrite), FileShare.None);
+        }
+
+        public override Stream Open(string path, FileMode mode, FileAccess access)
+        {
+            return Open(path, mode, access, FileShare.None);
+        }
+
+        public override Stream Open(string path, FileMode mode, FileAccess access, FileShare share)
         {
             bool exists = mockFileDataAccessor.FileExists(path);
 
@@ -242,22 +295,9 @@ namespace System.IO.Abstractions.TestingHelpers
             return stream;
         }
 
-        public override Stream Open(string path, FileMode mode, FileAccess access)
-        {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
-        }
-
-        public override Stream Open(string path, FileMode mode, FileAccess access, FileShare share)
-        {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
-        }
-
         public override Stream OpenRead(string path)
         {
-            return new MemoryStream(
-                mockFileDataAccessor
-                    .GetFile(path)
-                    .Contents);
+            return Open(path, FileMode.Open, FileAccess.Read, FileShare.Read);
         }
 
         public override StreamReader OpenText(string path)
@@ -288,6 +328,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] ReadAllLines(string path, Encoding encoding)
         {
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding");
+            }
+
             if (!mockFileDataAccessor.FileExists(path))
                 throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", path));
             return encoding
@@ -304,7 +349,22 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string ReadAllText(string path, Encoding encoding)
         {
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding");
+            }
+
             return encoding.GetString(mockFileDataAccessor.GetFile(path).Contents);
+        }
+
+        public override IEnumerable<string> ReadLines(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IEnumerable<string> ReadLines(string path, Encoding encoding)
+        {
+            throw new NotImplementedException();
         }
 
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
@@ -362,6 +422,21 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.AddFile(path, new MockFileData(bytes));
         }
 
+        public override void WriteAllLines(string path, IEnumerable<string> contents)
+        {
+            var sb = new StringBuilder();
+            foreach (var line in contents)
+            {
+                sb.AppendLine(line);
+            }
+            WriteAllText(path, sb.ToString()); 
+        }
+
+        public override void WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding)
+        {
+            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+        }
+
         public override void WriteAllLines(string path, string[] contents)
         {
             WriteAllText(path, string.Join("\n", contents));
@@ -384,8 +459,6 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private void WriteAllText(string path, MockFileData mockFileData)
         {
-            if (mockFileDataAccessor.FileExists(path))
-                mockFileDataAccessor.RemoveFile(path);
             mockFileDataAccessor.AddFile(path, mockFileData);
         }
     }

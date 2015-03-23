@@ -11,10 +11,11 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly IMockFileDataAccessor mockFileDataAccessor;
         readonly string directoryPath;
 
-        private static string EnsurePathEndsWithDirectorySeparator(string directoryPath) {
-            if (!directoryPath.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
-                directoryPath += Path.DirectorySeparatorChar;
-            return directoryPath;
+        private static string EnsurePathEndsWithDirectorySeparator(string path)
+        {
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
+                path += Path.DirectorySeparatorChar;
+            return path;
         }
 
         public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath)
@@ -72,7 +73,18 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string FullName
         {
-            get { return directoryPath; }
+            get
+            {
+                var root = mockFileDataAccessor.Path.GetPathRoot(directoryPath);
+                if (string.Equals(directoryPath, root, StringComparison.OrdinalIgnoreCase))
+                {
+                    // drives have the trailing slash
+                    return directoryPath;
+                }
+
+                // directories do not have a trailing slash
+                return directoryPath.TrimEnd('\\').TrimEnd('/');
+            }
         }
 
         public override DateTime LastAccessTime
@@ -130,6 +142,51 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void Delete(bool recursive)
         {
             mockFileDataAccessor.Directory.Delete(directoryPath, recursive);
+        }
+
+        public override IEnumerable<DirectoryInfoBase> EnumerateDirectories()
+        {
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+        }
+
+        public override IEnumerable<DirectoryInfoBase> EnumerateDirectories(string searchPattern)
+        {
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+        }
+
+        public override IEnumerable<DirectoryInfoBase> EnumerateDirectories(string searchPattern, SearchOption searchOption)
+        {
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+        }
+
+        public override IEnumerable<FileInfoBase> EnumerateFiles()
+        {
+            return mockFileDataAccessor.AllFiles.Select(x => new MockFileInfo(mockFileDataAccessor, x));
+        }
+
+        public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern)
+        {
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+        }
+
+        public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern, SearchOption searchOption)
+        {
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+        }
+
+        public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos()
+        {
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+        }
+
+        public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern)
+        {
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+        }
+
+        public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern, SearchOption searchOption)
+        {
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override DirectorySecurity GetAccessControl()
@@ -197,15 +254,13 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetFileSystemInfos(searchPattern, SearchOption.TopDirectoryOnly);
         }
 
-        internal FileSystemInfoBase[] GetFileSystemInfos(string searchPattern, SearchOption searchOption)
+        public override FileSystemInfoBase[] GetFileSystemInfos(string searchPattern, SearchOption searchOption)
         {
-            return this.GetDirectories(searchPattern, searchOption).OfType<FileSystemInfoBase>().Concat(this.GetFiles(searchPattern, searchOption)).ToArray();
+            return GetDirectories(searchPattern, searchOption).OfType<FileSystemInfoBase>().Concat(this.GetFiles(searchPattern, searchOption)).ToArray();
         }
 
         public override void MoveTo(string destDirName)
         {
-            destDirName = EnsurePathEndsWithDirectorySeparator(destDirName);
-
             mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
         }
 

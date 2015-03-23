@@ -1,4 +1,5 @@
-﻿using System.Security.AccessControl;
+﻿using System.Collections.Generic;
+using System.Security.AccessControl;
 using System.Text;
 
 namespace System.IO.Abstractions
@@ -6,6 +7,16 @@ namespace System.IO.Abstractions
     [Serializable]
     public class FileWrapper : FileBase
     {
+        public override void AppendAllLines(string path, IEnumerable<string> contents)
+        {
+            File.AppendAllLines(path, contents);
+        }
+
+        public override void AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding)
+        {
+            File.AppendAllLines(path, contents, encoding);
+        }
+
         public override void AppendAllText(string path, string contents)
         {
             File.AppendAllText(path, contents);
@@ -181,6 +192,16 @@ namespace System.IO.Abstractions
             return File.ReadAllText(path, encoding);
         }
 
+        public override IEnumerable<string> ReadLines(string path)
+        {
+            return File.ReadLines(path);
+        }
+
+        public override IEnumerable<string> ReadLines(string path, Encoding encoding)
+        {
+            return File.ReadLines(path, encoding);
+        }
+
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
         {
             File.Replace(sourceFileName, destinationFileName, destinationBackupFileName);
@@ -234,6 +255,16 @@ namespace System.IO.Abstractions
         public override void WriteAllBytes(string path, byte[] bytes)
         {
             File.WriteAllBytes(path, bytes);
+        }
+
+        public override void WriteAllLines(string path, IEnumerable<string> contents)
+        {
+            File.WriteAllLines(path, contents);
+        }
+
+        public override void WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding)
+        {
+            File.WriteAllLines(path, contents, encoding);
         }
 
         public override void WriteAllLines(string path, string[] contents)
