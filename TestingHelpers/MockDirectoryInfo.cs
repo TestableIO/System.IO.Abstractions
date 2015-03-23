@@ -146,47 +146,47 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override IEnumerable<DirectoryInfoBase> EnumerateDirectories()
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            return GetDirectories();
         }
 
         public override IEnumerable<DirectoryInfoBase> EnumerateDirectories(string searchPattern)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            return GetDirectories(searchPattern);
         }
 
         public override IEnumerable<DirectoryInfoBase> EnumerateDirectories(string searchPattern, SearchOption searchOption)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            return GetDirectories(searchPattern, searchOption);
         }
 
         public override IEnumerable<FileInfoBase> EnumerateFiles()
         {
-            return mockFileDataAccessor.AllFiles.Select(x => new MockFileInfo(mockFileDataAccessor, x));
+            return GetFiles();
         }
 
         public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            return GetFiles(searchPattern);
         }
 
         public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern, SearchOption searchOption)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            return GetFiles(searchPattern, searchOption);
         }
 
         public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos()
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            return GetFileSystemInfos();
         }
 
         public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            return GetFileSystemInfos(searchPattern);
         }
 
         public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern, SearchOption searchOption)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            return GetDirectories(searchPattern, searchOption);
         }
 
         public override DirectorySecurity GetAccessControl()
