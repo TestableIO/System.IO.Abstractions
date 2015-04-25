@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.AccessControl;
+using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -161,17 +163,38 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override IEnumerable<FileInfoBase> EnumerateFiles()
         {
-            return mockFileDataAccessor.AllFiles.Select(x => new MockFileInfo(mockFileDataAccessor, x));
+            return EnumerateFiles("*");
         }
 
         public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            return EnumerateFiles(searchPattern, SearchOption.TopDirectoryOnly);
         }
 
         public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern, SearchOption searchOption)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            Expression<Func<string, bool>> inCorrectDirectory;
+            if (searchOption == SearchOption.TopDirectoryOnly)
+            {
+                inCorrectDirectory = fullpath =>
+                    Path.GetDirectoryName(fullpath) == Path.GetDirectoryName(directoryPath);
+            }
+            else
+            {
+                inCorrectDirectory = fullpath =>
+                    Path.GetDirectoryName(fullpath).StartsWith(Path.GetDirectoryName(directoryPath));
+            }
+
+            var searchPatternRegex = new Regex(searchPattern.WildcardToRegex(), RegexOptions.IgnoreCase);
+
+            Expression<Func<string, bool>> filenameMatchesPattern = fullpath =>
+                searchPatternRegex.IsMatch(Path.GetFileName(fullpath));
+
+            return mockFileDataAccessor.AllFiles
+                .AsQueryable()
+                .Where(inCorrectDirectory)
+                .Where(filenameMatchesPattern)
+                .Select(x => mockFileDataAccessor.FileInfo.FromFileName(x));
         }
 
         public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos()
