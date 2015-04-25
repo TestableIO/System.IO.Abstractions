@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -19,6 +20,30 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             return list.ToArray();
+        }
+
+        // from http://www.codeproject.com/Articles/11556/Converting-Wildcards-to-Regexes
+        // with some adaptions to match the rules on
+        // https://msdn.microsoft.com/en-us/library/ms143327%28v=vs.110%29.aspx
+        internal static string WildcardToRegex(this string pattern)
+        {
+            var appendExtensionWildcard = false;
+
+            if (pattern.Contains("*"))
+            {
+                // bla.txt => .txt
+                var extension = Path.GetExtension(pattern);
+                if (extension.Length == 4)
+                {
+                    appendExtensionWildcard = true;
+                }
+            }
+
+            return "^" + Regex.Escape(pattern)
+                              .Replace(@"\*", ".*")
+                              .Replace(@"\?", ".")
+                       + (appendExtensionWildcard ? ".*" : "") 
+                       + "$";
         }
 
         [Pure]

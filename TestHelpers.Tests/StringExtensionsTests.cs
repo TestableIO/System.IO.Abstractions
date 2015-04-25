@@ -58,5 +58,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(result, Is.EquivalentTo(expected));
         }
 
+        [TestCase("*", Result = @"^.*$")]
+        [TestCase("nowildcard.txt", Result = @"^nowildcard\.txt$")]
+        [TestCase("*.txt", Result = @"^.*\.txt.*$")]
+        [TestCase("test?.txt", Result = @"^test.\.txt$")]
+        [TestCase("*.so", Result = @"^.*\.so$")]
+        [TestCase("*.abcd", Result = @"^.*\.abcd$")]
+        public string WildcardToRegex(string wildcard)
+        {
+            return wildcard.WildcardToRegex();
+        }
+
     }
 }
