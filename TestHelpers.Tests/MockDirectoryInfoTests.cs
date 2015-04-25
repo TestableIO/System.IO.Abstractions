@@ -111,33 +111,62 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectoryInfo_GetParent_ShouldReturnDirectoriesAndNamesWithSearchPattern()
         {
-            // Arrange
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(@"c:\a\b\c"));
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\a\b\c"));
 
-            // Act
             var result = directoryInfo.Parent;
 
-            // Assert
             Assert.AreEqual(XFS.Path(@"c:\a\b"), result.FullName);
         }
 
         [Test]
-        public void MockDirectoryInfo_EnumerateFiles_ShouldReturnAllFiles()
+        public void MockDirectoryInfo_EnumerateFiles_ShouldReturnCorrectFiles()
         {
-          // Arrange
-          var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { XFS.Path(@"c:\temp\folder\a.txt"), "" },
-                { XFS.Path(@"c:\temp\folder\b.txt"), "" }
+                { XFS.Path(@"c:\temp\folder\test1.txt"), "" },
+                { XFS.Path(@"c:\temp\folder\test2.txt"), "" },
+                { XFS.Path(@"c:\temp\folder\test1.so"), "" },
+                { XFS.Path(@"c:\temp\folder\test1.so1"), "" },
+                { XFS.Path(@"c:\temp\folder\subdir\test2.so"), "" },
+                { XFS.Path(@"c:\temp\folder\subdir\test2a.so"), "" },
+                { XFS.Path(@"c:\temp\folder\subdir\test3.txt"), ""},
+                { XFS.Path(@"c:\temp\folder\subdir\test3.txtold"), ""},
+                { XFS.Path(@"c:\temp\folder\emptysub\"), new MockDirectoryData()},
+                { XFS.Path(@"c:\temp\test4.txt"), ""}
             });
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
+            
+            // Assertions for the defaults:
+            var allFilesInCurrentDir = new[] { "test1.txt", "test2.txt", "test1.so", "test1.so1" };
+            Assert.That(directoryInfo.EnumerateFiles().Select(x => x.Name).ToArray(), Is.EquivalentTo(allFilesInCurrentDir));
+            Assert.That(directoryInfo.EnumerateFiles("*").Select(x => x.Name).ToArray(), Is.EquivalentTo(allFilesInCurrentDir));
+            Assert.That(directoryInfo.EnumerateFiles("*", SearchOption.TopDirectoryOnly).Select(x => x.Name).ToArray(), Is.EquivalentTo(allFilesInCurrentDir));
 
-          // Act
-          var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
+            // Assertions for search patterns with wildcards
+            var allFilesUnderCurrentDir = allFilesInCurrentDir.Concat(new[] { "test2.so", "test2a.so", "test3.txt", "test3.txtold" }).ToArray();
+            AssertThatEnumerateFilesIs(directoryInfo, "*", SearchOption.AllDirectories, allFilesUnderCurrentDir);
+            AssertThatEnumerateFilesIs(directoryInfo, "te*.so", SearchOption.AllDirectories, "test1.so", "test2.so", "test2a.so");
+            AssertThatEnumerateFilesIs(directoryInfo, "test?.so", SearchOption.AllDirectories, "test1.so", "test2.so");
 
-          // Assert
-          Assert.AreEqual(new[]{"a.txt", "b.txt"}, directoryInfo.EnumerateFiles().ToList().Select(x => x.Name).ToArray());
+            // Assertions for search patterns with a 3-letter file extension
+            AssertThatEnumerateFilesIs(directoryInfo, "test?.txt", SearchOption.AllDirectories, "test1.txt", "test2.txt", "test3.txt");
+            AssertThatEnumerateFilesIs(directoryInfo, "test*.txt", SearchOption.AllDirectories, "test1.txt", "test2.txt", "test3.txt", "test3.txtold");
+        }
+
+        private void AssertThatEnumerateFilesIs(MockDirectoryInfo directoryInfo, string searchPattern, SearchOption searchOption, params string[] files)
+        {
+            var enumeratedFiles = directoryInfo.EnumerateFiles(searchPattern, searchOption);
+            var arrayOfFilenames = enumeratedFiles.Select(x => x.Name).ToArray();
+
+            Assert.That(arrayOfFilenames, Is.EquivalentTo(files));
+        }
+
+        [Test]
+        public void MockDirectoryInfo_EnumerateFiles_Blub()
+        {
+            //var fileSystem = new MockFileSystem(new Directory<string, MockFileData>)
         }
     }
 }
