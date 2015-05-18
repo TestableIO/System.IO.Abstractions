@@ -13,6 +13,8 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly IMockFileDataAccessor mockFileDataAccessor;
         readonly MockPath mockPath;
 
+        public static readonly Encoding DefaultEncoding = new UTF8Encoding(false, true);
+
         public MockFile(IMockFileDataAccessor mockFileDataAccessor)
         {
             this.mockFileDataAccessor = mockFileDataAccessor;
@@ -21,7 +23,31 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void AppendAllLines(string path, IEnumerable<string> contents)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            ValidateParameter(path, "path");
+
+            var concatContents = string.Empty;
+
+            foreach (var content in contents)
+            {
+                concatContents += "\r\n" + content;
+            }
+            //var concatContents = contents.Aggregate(string.Empty, (current, content) => current + content);
+
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                var dir = mockFileDataAccessor.Path.GetDirectoryName(path);
+                if (!mockFileDataAccessor.Directory.Exists(dir))
+                {
+                    throw new DirectoryNotFoundException(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
+                }
+
+                mockFileDataAccessor.AddFile(path, new MockFileData(concatContents));
+            }
+            else
+            {
+                var file = mockFileDataAccessor.GetFile(path);
+                file.TextContents = file.TextContents + concatContents;
+            }
         }
 
         public override void AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding)
