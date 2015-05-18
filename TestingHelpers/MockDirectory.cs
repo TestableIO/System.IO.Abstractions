@@ -204,8 +204,13 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFileSystemEntries(string path, string searchPattern)
         {
-            var dirs = GetDirectories(path, searchPattern);
-            var files = GetFiles(path, searchPattern);
+            return GetFileSystemEntries(path, searchPattern, SearchOption.TopDirectoryOnly);
+        }
+
+        public override string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
+        {
+            var dirs = GetDirectories(path, searchPattern, searchOption);
+            var files = GetFiles(path, searchPattern, searchOption);
 
             return dirs.Union(files).ToArray();
         }

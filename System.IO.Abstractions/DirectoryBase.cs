@@ -25,6 +25,7 @@ namespace System.IO.Abstractions
         public abstract string[] GetFiles(string path, string searchPattern, SearchOption searchOption);
         public abstract string[] GetFileSystemEntries(string path);
         public abstract string[] GetFileSystemEntries(string path, string searchPattern);
+        public abstract string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
         public abstract DateTime GetLastAccessTime(string path);
         public abstract DateTime GetLastAccessTimeUtc(string path);
         public abstract DateTime GetLastWriteTime(string path);

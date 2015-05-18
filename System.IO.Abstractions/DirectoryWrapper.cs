@@ -101,6 +101,11 @@ namespace System.IO.Abstractions
             return Directory.GetFileSystemEntries(path, searchPattern);
         }
 
+        public override string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
+        {
+            return Directory.GetFileSystemEntries(path, searchPattern, searchOption);
+        }
+
         public override DateTime GetLastAccessTime(string path)
         {
             return Directory.GetLastAccessTime(path);
