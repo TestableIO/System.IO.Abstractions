@@ -21,12 +21,13 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void AppendAllLines(string path, IEnumerable<string> contents)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            AppendAllLines(path, contents, MockFileData.DefaultEncoding);
         }
 
         public override void AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            var concatContents = contents.Aggregate("", (a, b) => a + b + Environment.NewLine);
+            AppendAllText(path, concatContents, encoding);
         }
 
         public override void AppendAllText(string path, string contents)
