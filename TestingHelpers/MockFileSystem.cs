@@ -162,7 +162,7 @@ namespace System.IO.Abstractions.TestingHelpers
             path = FixPath(path);
 
             lock (files)
-                return files.ContainsKey(path);
+                return files.ContainsKey(path) && !files[path].IsDirectory;
         }
 
         public IEnumerable<string> AllPaths
