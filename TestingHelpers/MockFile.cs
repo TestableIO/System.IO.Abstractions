@@ -149,7 +149,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists(string path)
         {
-            return mockFileDataAccessor.FileExists(path);
+            return mockFileDataAccessor.FileExists(path) && !mockFileDataAccessor.AllDirectories.Any(d => d.Equals(path, StringComparison.OrdinalIgnoreCase));
         }
 
         public override FileSecurity GetAccessControl(string path)
