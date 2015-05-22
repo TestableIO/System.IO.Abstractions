@@ -16,12 +16,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = SetupFileSystem();
             var expected = new[]
             {
-                XFS.Path(@"c:\a\a.txt"),
-                XFS.Path(@"c:\a\b.gif"),
-                XFS.Path(@"c:\a\c.txt"),
-                XFS.Path(@"c:\a\a\a.txt"),
-                XFS.Path(@"c:\a\a\b.txt"),
-                XFS.Path(@"c:\a\a\c.gif")
+                XFS.Path(@"c:\a\testA.so"),
+                XFS.Path(@"c:\a\testB.gif"),
+                XFS.Path(@"c:\a\testC.txt"),
+                XFS.Path(@"c:\a\a\testA.so"),
+                XFS.Path(@"c:\a\a\testA.so1"),
+                XFS.Path(@"c:\a\a\testB.txt"),
+                XFS.Path(@"c:\a\a\testB.txtold"),
+                XFS.Path(@"c:\a\a\testC.gif")
             };
 
             // Act
@@ -35,15 +37,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             return new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { XFS.Path(@"c:\a.gif"), new MockFileData("Demo text content") },
-                { XFS.Path(@"c:\b.txt"), new MockFileData("Demo text content") },
-                { XFS.Path(@"c:\c.txt"), new MockFileData("Demo text content") },
-                { XFS.Path(@"c:\a\a.txt"), new MockFileData("Demo text content") },
-                { XFS.Path(@"c:\a\b.gif"), new MockFileData("Demo text content") },
-                { XFS.Path(@"c:\a\c.txt"), new MockFileData("Demo text content") },
-                { XFS.Path(@"c:\a\a\a.txt"), new MockFileData("Demo text content") },
-                { XFS.Path(@"c:\a\a\b.txt"), new MockFileData("Demo text content") },
-                { XFS.Path(@"c:\a\a\c.gif"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\testA.gif"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\testB.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\testC.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\testA.so"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\testB.gif"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\testC.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\a\testA.so"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\a\testA.so1"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\a\testB.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\a\testB.txtold"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\a\testC.gif"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\emptysub\"), new MockDirectoryData() },
             });
             
         }
@@ -55,9 +60,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = SetupFileSystem();
             var expected = new[]
             {
-                XFS.Path(@"c:\a\a.txt"),
-                XFS.Path(@"c:\a\b.gif"),
-                XFS.Path(@"c:\a\c.txt")
+                XFS.Path(@"c:\a\testA.so"),
+                XFS.Path(@"c:\a\testB.gif"),
+                XFS.Path(@"c:\a\testC.txt")
             };
 
             // Act
@@ -74,9 +79,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = SetupFileSystem();
             var expected = new[]
             {
-                XFS.Path(@"c:\a.gif"),
-                XFS.Path(@"c:\a\b.gif"),
-                XFS.Path(@"c:\a\a\c.gif")
+                XFS.Path(@"c:\testA.gif"),
+                XFS.Path(@"c:\a\testB.gif"),
+                XFS.Path(@"c:\a\a\testC.gif")
             };
 
             // Act
@@ -143,7 +148,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = SetupFileSystem();
-            var expected = new[] { XFS.Path(@"c:\a.gif") };
+            var expected = new[] { XFS.Path(@"c:\testA.gif") };
 
             // Act
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), "*.gif", SearchOption.TopDirectoryOnly);
@@ -993,12 +998,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = SetupFileSystem();
             IEnumerable<string> expected = new[]
             {
-                XFS.Path(@"c:\a\a.txt"),
-                XFS.Path(@"c:\a\b.gif"),
-                XFS.Path(@"c:\a\c.txt"),
-                XFS.Path(@"c:\a\a\a.txt"),
-                XFS.Path(@"c:\a\a\b.txt"),
-                XFS.Path(@"c:\a\a\c.gif")
+                XFS.Path(@"c:\a\testA.so"),
+                XFS.Path(@"c:\a\testB.gif"),
+                XFS.Path(@"c:\a\testC.txt"),
+                XFS.Path(@"c:\a\a\testA.so"),
+                XFS.Path(@"c:\a\a\testA.so1"),
+                XFS.Path(@"c:\a\a\testB.txt"),
+                XFS.Path(@"c:\a\a\testB.txtold"),
+                XFS.Path(@"c:\a\a\testC.gif")
             };
 
             // Act
@@ -1015,9 +1022,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = SetupFileSystem();
             var expected = new[]
             {
-                XFS.Path(@"c:\a.gif"),
-                XFS.Path(@"c:\a\b.gif"),
-                XFS.Path(@"c:\a\a\c.gif")
+                XFS.Path(@"c:\testA.gif"),
+                XFS.Path(@"c:\a\testB.gif"),
+                XFS.Path(@"c:\a\a\testC.gif")
             };
 
             // Act
@@ -1028,19 +1035,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectory_EnumerateFileSystemEntries_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
+        public void MockDirectory_EnumerateFileSystemEntries_ShouldReturnAllFilesAndDirectoriesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
             IEnumerable<string> expected = new[]
             {
-                XFS.Path(@"c:\a\a.txt"),
-                XFS.Path(@"c:\a\b.gif"),
-                XFS.Path(@"c:\a\c.txt"),
-                XFS.Path(@"c:\a\a\a.txt"),
-                XFS.Path(@"c:\a\a\b.txt"),
-                XFS.Path(@"c:\a\a\c.gif"),
-                XFS.Path(@"c:\a\a\")
+                XFS.Path(@"c:\a\testA.so"),
+                XFS.Path(@"c:\a\testB.gif"),
+                XFS.Path(@"c:\a\testC.txt"),
+                XFS.Path(@"c:\a\a\testA.so"),
+                XFS.Path(@"c:\a\a\testA.so1"),
+                XFS.Path(@"c:\a\a\testB.txt"),
+                XFS.Path(@"c:\a\a\testB.txtold"),
+                XFS.Path(@"c:\a\a\testC.gif"),
+                XFS.Path(@"c:\a\a\"),
+                XFS.Path(@"c:\a\emptysub\")
             };
 
             // Act
@@ -1057,9 +1067,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = SetupFileSystem();
             var expected = new[]
             {
-                XFS.Path(@"c:\a.gif"),
-                XFS.Path(@"c:\a\b.gif"),
-                XFS.Path(@"c:\a\a\c.gif")
+                XFS.Path(@"c:\testA.gif"),
+                XFS.Path(@"c:\a\testB.gif"),
+                XFS.Path(@"c:\a\a\testC.gif")
             };
 
             // Act
