@@ -978,27 +978,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsNull(actualResult);
         }
 
-        public static IEnumerable<string[]> MockDirectory_GetParent_Cases
+        [Test]
+        public void MockDirectory_GetParent_ShouldReturnTheParentWithoutTrailingDirectorySeparatorChar()
         {
-            get
-            {
-                yield return new [] { XFS.Path(@"c:\a"), XFS.Path(@"c:\") };
-                yield return new [] { XFS.Path(@"c:\a\b\c\d"), XFS.Path(@"c:\a\b\c") };
-                yield return new [] { XFS.Path(@"c:\a\b\c\d\"), XFS.Path(@"c:\a\b\c") };
-            }
-        }
-
-        public void MockDirectory_GetParent_ShouldReturnTheParentWithoutTrailingDirectorySeparatorChar(string path, string expectedResult)
-        {
-            // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(path);
+            fileSystem.AddDirectory(XFS.Path(@"c:\a\b\c\d"));
 
-            // Act
-            var actualResult = fileSystem.Directory.GetParent(path);
-
-            // Assert
-            Assert.AreEqual(expectedResult, actualResult.FullName);
+            Assert.That(fileSystem.Directory.GetParent(XFS.Path(@"c:\a")).FullName, Is.EqualTo(XFS.Path(@"c:\")));
+            Assert.That(fileSystem.Directory.GetParent(XFS.Path(@"c:\a\b\c\d")).FullName, Is.EqualTo(XFS.Path(@"c:\a\b\c")));
+            Assert.That(fileSystem.Directory.GetParent(XFS.Path(@"c:\a\b\c\d\")).FullName, Is.EqualTo(XFS.Path(@"c:\a\b\c")));
         }
 
         [Test]
