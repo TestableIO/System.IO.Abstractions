@@ -54,6 +54,49 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_GetFiles_ShouldFilterByTwoLetterExtensionBasedSearchPattern()
+        {
+            var fileSystem = SetupFileSystem();
+
+            var expected = new[]
+            {
+                XFS.Path(@"c:\a\testA.so"),
+                XFS.Path(@"c:\a\a\testA.so")
+            };
+
+            var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\a"), "te*.so", SearchOption.AllDirectories);
+            Assert.That(result, Is.EquivalentTo(expected));
+
+            result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\a"), "test?.so", SearchOption.AllDirectories);
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        [Test]
+        public void MockDirectory_GetFiles_ShouldFilterByThreeLetterExtensionBasedSearchPattern()
+        {
+            var fileSystem = SetupFileSystem();
+
+            var expectedForAsteriskWildcard = new[]
+            {
+                XFS.Path(@"c:\a\testC.txt"),
+                XFS.Path(@"c:\a\a\testB.txt"),
+                XFS.Path(@"c:\a\a\testB.txtold")
+            };
+
+            var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\a"), "te*.txt", SearchOption.AllDirectories);
+            Assert.That(result, Is.EquivalentTo(expectedForAsteriskWildcard));
+
+            var expectedForQuestionmarkWildcard = new[]
+            {
+                XFS.Path(@"c:\a\testC.txt"),
+                XFS.Path(@"c:\a\a\testB.txt"),
+            };
+
+            result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\a"), "test?.txt", SearchOption.AllDirectories);
+            Assert.That(result, Is.EquivalentTo(expectedForQuestionmarkWildcard));
+        }
+
+        [Test]
         public void MockDirectory_GetFiles_ShouldReturnFilesDirectlyBelowPathWhenPatternIsWildcardAndSearchOptionIsTopDirectoryOnly()
         {
             // Arrange
@@ -67,25 +110,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Act
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\a"), "*", SearchOption.TopDirectoryOnly);
-
-            // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
-        }
-
-        [Test]
-        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPattern()
-        {
-            // Arrange
-            var fileSystem = SetupFileSystem();
-            var expected = new[]
-            {
-                XFS.Path(@"c:\testA.gif"),
-                XFS.Path(@"c:\a\testB.gif"),
-                XFS.Path(@"c:\a\a\testC.gif")
-            };
-
-            // Act
-            var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), "*.gif", SearchOption.AllDirectories);
 
             // Assert
             Assert.That(result, Is.EquivalentTo(expected));
@@ -115,7 +139,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             };
 
             // Act
-            var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), "*.gif", SearchOption.AllDirectories);
+            var result = fileSystem.Directory.GetFiles(XFS.Path(@"C:\"), "*.gif", SearchOption.AllDirectories);
 
             // Assert
             Assert.That(result, Is.EquivalentTo( expected));
@@ -546,7 +570,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.IsFalse(fileSystem.Directory.Exists(XFS.Path(@"c:\bar")));
-            Assert.IsFalse(fileSystem.Directory.Exists(XFS.Path(@"c:\bar\bar2")));
+            Assert.IsFalse(fileSystem.Directory.Exists(XFS.Path(@"C:\bar\bar2")));
         }
 
         [Test]
@@ -669,6 +693,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(XFS.Path(@"C:\Folder\.foo\"));
             fileSystem.AddDirectory(XFS.Path(@"C:\Folder\foo"));
             fileSystem.AddDirectory(XFS.Path(@"C:\Folder\foo.foo"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\Folder\foo.foobar"));
             fileSystem.AddDirectory(XFS.Path(@"C:\Folder\.foo\.foo"));
             fileSystem.AddFile(XFS.Path(@"C:\Folder\.foo\bar"), new MockFileData(string.Empty));
 
@@ -687,6 +712,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(XFS.Path(@"C:\Folder\.foo\"));
             fileSystem.AddDirectory(XFS.Path(@"C:\Folder\foo"));
             fileSystem.AddDirectory(XFS.Path(@"C:\Folder\foo.foo"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\Folder\foo.foobar"));
             fileSystem.AddDirectory(XFS.Path(@"C:\Folder\.foo\.foo"));
             fileSystem.AddFile(XFS.Path(@"C:\Folder\.foo\bar"), new MockFileData(string.Empty));
 

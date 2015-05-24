@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using System.Linq.Expressions;
     using XFS = MockUnixSupport;
 
     [Serializable]
@@ -165,36 +166,79 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
             }
 
-            return GetFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
+            return GetFilesInternal(path, searchPattern, searchOption);
         }
 
-        private string[] GetFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
+        private string[] GetFilesInternal(string path, string searchPattern, SearchOption searchOption)
         {
             path = EnsurePathEndsWithDirectorySeparator(path);
             path = mockFileDataAccessor.Path.GetFullPath(path);
 
-            bool isUnix = XFS.IsUnixPlatform();
+            var isInCorrectDirectory = GetExpression_IsFileOrDirInCorrectDirectory(searchOption, path);
+            var isFilenameMatching = GetExpression_IsFilenameMatching(searchPattern);
 
-            string allDirectoriesPattern = isUnix
-                ? @"([^<>:""/|?*]*/)*"
-                : @"([^<>:""/\\|?*]*\\)*";
-
-            var fileNamePattern = searchPattern == "*"
-                ? isUnix ? @"[^/]*?/?" : @"[^\\]*?\\?"
-                : Regex.Escape(searchPattern)
-                    .Replace(@"\*", isUnix ? @"[^<>:""/|?*]*?" : @"[^<>:""/\\|?*]*?")
-                    .Replace(@"\?", isUnix ? @"[^<>:""/|?*]?" : @"[^<>:""/\\|?*]?");
-
-            var pathPattern = string.Format(
-                CultureInfo.InvariantCulture,
-                isUnix ? @"(?i:^{0}{1}{2}(?:/?)$)" : @"(?i:^{0}{1}{2}(?:\\?)$)",
-                Regex.Escape(path),
-                searchOption == SearchOption.AllDirectories ? allDirectoriesPattern : string.Empty,
-                fileNamePattern);
-
-            return files
-                .Where(p => Regex.IsMatch(p, pathPattern))
+            return mockFileDataAccessor.AllFiles
+                .AsQueryable()
+                .Where(isInCorrectDirectory)
+                .Where(isFilenameMatching)
                 .ToArray();
+        }
+
+        private string[] GetDirectoriesInternal(string path, string searchPattern, SearchOption searchOption)
+        {
+            path = EnsurePathEndsWithDirectorySeparator(path);
+            path = mockFileDataAccessor.Path.GetFullPath(path);
+
+            var isInCorrectDirectory = GetExpression_IsFileOrDirInCorrectDirectory(searchOption, path);
+            var isDirnameMatching = GetExpression_IsDirnameMatching(searchPattern);
+
+            return mockFileDataAccessor.AllDirectories
+                .AsQueryable()
+                .Where(isInCorrectDirectory)
+                .Where(isDirnameMatching)
+                .ToArray();
+        }
+
+        private Expression<Func<string, bool>> GetExpression_IsFileOrDirInCorrectDirectory(SearchOption searchOption, string pathForComparison)
+        {
+            Expression<Func<string, bool>> isInCorrectDirectory;
+            if (searchOption == SearchOption.TopDirectoryOnly)
+            {
+                isInCorrectDirectory = file => ParentDirIfPossible(file).Equals(pathForComparison, StringComparison.OrdinalIgnoreCase);
+            }
+            else
+            {
+                isInCorrectDirectory = file => ParentDirIfPossible(file).StartsWith(pathForComparison, StringComparison.OrdinalIgnoreCase);
+            }
+            return isInCorrectDirectory;
+        }
+
+        private string ParentDirIfPossible(string path)
+        {
+            var parentDir = mockFileDataAccessor.Path.GetDirectoryName(EnsurePathDoesNotEndWithDirectorySeparator(path));
+            return parentDir != null
+                ? EnsurePathEndsWithDirectorySeparator(parentDir)
+                : path;
+        }
+
+        private Expression<Func<string, bool>> GetExpression_IsFilenameMatching(string searchPattern)
+        {
+            var searchPatternRegex = new Regex(searchPattern.WildcardToRegex(forFilename: true), RegexOptions.IgnoreCase);
+
+            Expression<Func<string, bool>> filenameMatchesPattern = file =>
+                searchPatternRegex.IsMatch(mockFileDataAccessor.Path.GetFileName(file));
+
+            return filenameMatchesPattern;
+        }
+
+        private Expression<Func<string, bool>> GetExpression_IsDirnameMatching(string searchPattern)
+        {
+            var searchPatternRegex = new Regex(searchPattern.WildcardToRegex(), RegexOptions.IgnoreCase);
+
+            Expression<Func<string, bool>> dirnameMatchesPattern = dir =>
+                searchPatternRegex.IsMatch(mockFileDataAccessor.Path.GetFileName(EnsurePathDoesNotEndWithDirectorySeparator(dir)));
+
+            return dirnameMatchesPattern;
         }
 
         public override string[] GetFileSystemEntries(string path)
@@ -339,7 +383,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void SetCurrentDirectory(string path)
         {
-          currentDirectory = path;
+            currentDirectory = path;
         }
 
         public override void SetLastAccessTime(string path, DateTime lastAccessTime)
@@ -381,7 +425,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
             }
 
-            var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
+            var dirs = GetDirectoriesInternal(path, searchPattern, searchOption);
             return dirs.Where(p => p != path);
         }
 
@@ -425,6 +469,13 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
                 path += Path.DirectorySeparatorChar;
+            return path;
+        }
+
+        static string EnsurePathDoesNotEndWithDirectorySeparator(string path)
+        {
+            if (path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
+                path = path.Substring(0, path.Length - 1);
             return path;
         }
     }
