@@ -347,13 +347,13 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
         {
+            ThrowExceptionIfNull(path, "path");
+            ThrowExceptionIfNull(searchPattern, "searchPattern");
+            ThrowExceptionIfPathContainsInvalidChars(path);
+            ThrowExceptionIfFileExists(path, "The directory name is invalid.");
+            ThrowExceptionIfDirectoryDoesNotExist(path, string.Format("Could not find a part of the path '{0}'.", path));
+
             path = EnsurePathEndsWithDirectorySeparator(path);
-
-            if (!Exists(path))
-            {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
-            }
-
             var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
             return dirs.Where(p => p != path);
         }

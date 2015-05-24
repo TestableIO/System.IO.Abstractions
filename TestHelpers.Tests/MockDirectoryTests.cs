@@ -871,6 +871,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<DirectoryNotFoundException>(action);
         }
 
+        [Test]
+        [ExpectedException(typeof(IOException),
+            ExpectedMessage = "The directory name is invalid.")]
+        public void MockDirectory_EnumerateDirectories_ShouldThrowDirectoryNotFoundException_IfPathIsAnExistentFile()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\foo\bar.txt"),  new MockDirectoryData() }
+            });
+
+            fileSystem.Directory.EnumerateDirectories(XFS.Path(@"c:\foo\bar.txt"));
+        }
+
         public static IEnumerable<object[]> GetPathsForMoving()
         {
             yield return new object[] { @"a:\folder1\", @"A:\folder3\", "file.txt", @"folder2\file2.txt" };
