@@ -30,23 +30,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
-            if (path == null)
-            {
-                throw new ArgumentNullException("path");
-            }
-
-            if (path.Length == 0)
-            {
-                throw new ArgumentException("Path cannot be the empty string or all whitespace.", "path");
-            }
-
-            if (mockFileDataAccessor.FileExists(path))
-            {
-                var message = string.Format(CultureInfo.InvariantCulture, @"Cannot create ""{0}"" because a file or directory with the same name already exists.", path);
-                var ex = new IOException(message);
-                ex.Data.Add("Path", path);
-                throw ex;
-            }
+            ThrowExceptionIfNull(path, paramName: "path");
+            ThrowExceptionIfPathIsEmptyOrContainsWhitespacesOnly(path);
+            ThrowExceptionIfFileExists(path, message: string.Format(@"Cannot create ""{0}"" because a file or directory with the same name already exists.", path));
 
             path = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(path));
 
@@ -421,10 +407,46 @@ namespace System.IO.Abstractions.TestingHelpers
             return fileSystemEntries;
         }
 
+        #region Exception helper methods
+        private void ThrowExceptionIfNull(string value, string paramName)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(paramName);
+            }
+        }
+
+        private void ThrowExceptionIfPathIsEmptyOrContainsWhitespacesOnly(string value)
+        {
+            if (value != null && string.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentException("Path cannot be the empty string or all whitespace.");
+            }
+        }
+
+        private void ThrowExceptionIfFileExists(string path, string message)
+        {
+            path = EnsurePathDoesNotEndWithDirectorySeparator(path);
+
+            if (mockFileDataAccessor.FileExists(path))
+            {
+                throw new IOException(message);
+            }
+        }
+
+        #endregion
+
         static string EnsurePathEndsWithDirectorySeparator(string path)
         {
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
                 path += Path.DirectorySeparatorChar;
+            return path;
+        }
+
+        static string EnsurePathDoesNotEndWithDirectorySeparator(string path)
+        {
+            if (path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
+                path = path.Substring(0, path.Length - 1);
             return path;
         }
     }

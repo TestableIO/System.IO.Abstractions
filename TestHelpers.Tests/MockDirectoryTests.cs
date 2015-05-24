@@ -7,6 +7,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using XFS = MockUnixSupport;
 
     [TestFixture]
+    [SetUICulture("en-US")]
     public class MockDirectoryTests
     {
         [Test]
@@ -436,6 +437,51 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"\\server\share\path\to\create\", () => false)));
+        }
+
+        [Test]
+        [TestCase(null,
+            ExpectedException = typeof(ArgumentNullException))]
+        [TestCase("",
+            ExpectedException = typeof(ArgumentException),
+            ExpectedMessage = "Path cannot be the empty string or all whitespace.")]
+        [TestCase(":",
+            ExpectedException = typeof(ArgumentException),
+            ExpectedMessage = "The path is not of a legal form.")]
+        public void MockDirectory_CreateDirectory_ShouldFailForInvalidPath(string path)
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\foo\exists.txt"), new MockFileData("Demo text content") }
+            });
+
+            fileSystem.Directory.CreateDirectory(path);
+        }
+
+        [Test]
+        [ExpectedException(typeof(IOException),
+            ExpectedMessage = @"Cannot create ""c:\foo\exists.txt"" because a file or directory with the same name already exists.")]
+        public void MockDirectory_CreateDirectory_ShouldFailIfFileAlreadyExists()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\foo\exists.txt"), new MockFileData("Demo text content") }
+            });
+
+            fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo\exists.txt"));
+        }
+
+        [Test]
+        public void MockDirectory_CreateDirecotry_ShouldSucceedIfDirectoryAlreadyExists()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\foo.txt"), new MockFileData("Demo text content") }
+            });
+
+            var result = fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo"));
+
+            Assert.IsNotNull(result);
         }
 
         [Test]
