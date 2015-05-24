@@ -630,6 +630,35 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [ExpectedException(typeof(IOException),
+            ExpectedMessage="The directory name is invalid.")]
+        public void MockDirectory_GetFiles_ShouldThrowDirectoryNotFoundException_IfPathIsAnExistentFile()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\foo\bar.txt"),  new MockDirectoryData() }
+            });
+
+            fileSystem.Directory.GetFiles(XFS.Path(@"c:\foo\bar.txt"));
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException),
+            ExpectedMessage = "Illegal characters in path.")]
+        public void MockDirectory_GetFiles_ShouldThrowArgumentExceptionIfPathHasIllegalCharacters()
+        {
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Pass("Path.GetInvalidPathChars() does not return anything on Mono if not running on Windows");
+                return;
+            }
+
+            var fileSystem = new MockFileSystem();
+
+            fileSystem.Directory.GetFiles(XFS.Path(@"c:\foo\bar<|foo"));
+        }
+
+        [Test]
         public void MockDirectory_GetFiles_Returns_Files()
         {
             string testPath = XFS.Path(@"c:\foo\bar.txt");

@@ -143,16 +143,15 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
         {
-            if(path == null)
-                throw new ArgumentNullException();
-
-            if (!Exists(path))
-            {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
-            }
+            ThrowExceptionIfNull(path, "path");
+            ThrowExceptionIfNull(searchPattern, "searchPattern");
+            ThrowExceptionIfPathContainsInvalidChars(path);
+            ThrowExceptionIfFileExists(path, "The directory name is invalid.");
+            ThrowExceptionIfDirectoryDoesNotExist(path, string.Format("Could not find a part of the path '{0}'.", path));
 
             return GetFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
         }
+
 
         private string[] GetFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
         {
@@ -419,6 +418,14 @@ namespace System.IO.Abstractions.TestingHelpers
             if (mockFileDataAccessor.FileExists(path))
             {
                 throw new IOException(message);
+            }
+        }
+
+        private void ThrowExceptionIfDirectoryDoesNotExist(string path, string message)
+        {
+            if (!Exists(path))
+            {
+                throw new DirectoryNotFoundException(message);
             }
         }
 
