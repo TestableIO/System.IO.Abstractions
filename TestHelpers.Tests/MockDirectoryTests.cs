@@ -907,29 +907,35 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectory_GetParent_ShouldThrowArgumentNullExceptionIfPathIsNull()
-        {
-            // Arrange
+        [TestCase(null,
+            ExpectedException = typeof(ArgumentNullException))]
+        [TestCase("",
+            ExpectedException = typeof(ArgumentException),
+            ExpectedMessage = "Path cannot be the empty string or all whitespace.")]
+        [TestCase(":",
+            ExpectedException = typeof(ArgumentException),
+            ExpectedMessage = "The path is not of a legal form.")]
+        public void MockDirectory_GetParent_ShouldFailForInvalidPath(string path){
             var fileSystem = new MockFileSystem();
 
-            // Act
-            TestDelegate act = () => fileSystem.Directory.GetParent(null);
-
-            // Assert
-            Assert.Throws<ArgumentNullException>(act);
+            fileSystem.Directory.GetParent(path);
         }
 
+
         [Test]
-        public void MockDirectory_GetParent_ShouldThrowArgumentExceptionIfPathIsEmpty()
+        [ExpectedException(typeof(ArgumentException),
+            ExpectedMessage = "Illegal characters in path.")]
+        public void MockDirectory_GetParent_ShouldThrowArgumentExceptionIfPathHasIllegalCharacters()
         {
-            // Arrange
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Pass("Path.GetInvalidPathChars() does not return anything on Mono if not running on Windows");
+                return;
+            }
+
             var fileSystem = new MockFileSystem();
 
-            // Act
-            TestDelegate act = () => fileSystem.Directory.GetParent(string.Empty);
-
-            // Assert
-            Assert.Throws<ArgumentException>(act);
+            fileSystem.Directory.GetParent(XFS.Path(@"c:\foo\bar<|foo"));
         }
 
         [Test]
@@ -945,24 +951,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsNotNull(actualResult);
         }
 
-        [Test]
-        public void MockDirectory_GetParent_ShouldThrowArgumentExceptionIfPathHasIllegalCharacters()
-        {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
-                return;
-            }
-
-            // Arrange
-            var fileSystem = new MockFileSystem();
-
-            // Act
-            TestDelegate act = () => fileSystem.Directory.GetParent(XFS.Path("c:\\director\ty\\has\\illegal\\character"));
-
-            // Assert
-            Assert.Throws<ArgumentException>(act);
-        }
 
         [Test]
         public void MockDirectory_GetParent_ShouldReturnNullIfPathIsRoot()

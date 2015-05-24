@@ -228,21 +228,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase GetParent(string path)
         {
-            if (path == null)
-            {
-                throw new ArgumentNullException("path");
-            }
-
-            if (path.Length == 0)
-            {
-                throw new ArgumentException("Path cannot be the empty string or all whitespace.", "path");
-            }
-
-            var invalidChars = mockFileDataAccessor.Path.GetInvalidPathChars();
-            if (path.IndexOfAny(invalidChars) > -1)
-            {
-                throw new ArgumentException("Path contains invalid path characters.", "path");
-            }
+            ThrowExceptionIfNull(path, "path");
+            ThrowExceptionIfPathIsEmptyOrContainsWhitespacesOnly(path);
+            ThrowExceptionIfPathContainsInvalidChars(path);
 
             var absolutePath = mockFileDataAccessor.Path.GetFullPath(path);
             var sepAsString = mockFileDataAccessor.Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture);
@@ -434,6 +422,14 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        private void ThrowExceptionIfPathContainsInvalidChars(string path)
+        {
+            var invalidChars = mockFileDataAccessor.Path.GetInvalidPathChars();
+            if (path.IndexOfAny(invalidChars) > -1)
+            {
+                throw new ArgumentException("Illegal characters in path.");
+            }
+        }
         #endregion
 
         static string EnsurePathEndsWithDirectorySeparator(string path)
