@@ -807,6 +807,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return new object[] { @"A:\folder1\", @"a:\folder3\", "folder444\\file.txt", @"Folder2\fiLe2.txt" };
         }
 
+        [Test]
+        public void Move_DirectoryExistsWithDifferentCase_DirectorySuccessfullyMoved()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(@"\\builds\Builds\Suites\6.2.3.309 [6.2.3 135907]\TestShellHotFix\Data"); // HotFix with capital F
+            fileSystem.AddFile(@"\\builds\Builds\Suites\6.2.3.309 [6.2.3 135907]\TestShellHotfix\Data\Content\DriverBuilder\ActiproSoftware.Navigation.Wpf.dll", new MockFileData("abc"));
+
+            // Act
+            fileSystem.Directory.Move(@"\\builds\Builds\Suites\6.2.3.309 [6.2.3 135907]\TestShellHotfix", // HotFix with lower f
+                    @"\\builds\Builds\Suites\6.2.3.309 [6.2.3 135907]\Hotfix1 for CloudShell 6.2.3 GA [6.2.3.187]");
+
+            // Assert
+            Assert.IsTrue(
+                fileSystem.File.Exists(@"\\builds\Builds\Suites\6.2.3.309 [6.2.3 135907]\Hotfix1 for CloudShell 6.2.3 GA [6.2.3.187]\Data\Content\DriverBuilder\ActiproSoftware.Navigation.Wpf.dll"));
+        }
+
         [TestCaseSource("GetPathsForMoving")]
         public void MockDirectory_Move_ShouldMove(string sourceDirName, string destDirName, string filePathOne, string filePathTwo)
         {

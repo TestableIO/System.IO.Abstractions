@@ -382,7 +382,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
-            return dirs.Where(p => p != path);
+            return dirs.Where(p => string.Compare(p, path, StringComparison.OrdinalIgnoreCase) != 0);
         }
 
         public override IEnumerable<string> EnumerateFiles(string path)
