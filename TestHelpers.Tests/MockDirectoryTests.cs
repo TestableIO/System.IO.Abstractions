@@ -812,16 +812,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(@"\\builds\Builds\Suites\6.2.3.309 [6.2.3 135907]\TestShellHotFix\Data"); // HotFix with capital F
-            fileSystem.AddFile(@"\\builds\Builds\Suites\6.2.3.309 [6.2.3 135907]\TestShellHotfix\Data\Content\DriverBuilder\ActiproSoftware.Navigation.Wpf.dll", new MockFileData("abc"));
+            fileSystem.AddDirectory(@"C:\OLD_LOCATION\Data"); 
+            fileSystem.AddFile(@"C:\old_location\Data\someFile.txt", new MockFileData("abc"));
 
             // Act
-            fileSystem.Directory.Move(@"\\builds\Builds\Suites\6.2.3.309 [6.2.3 135907]\TestShellHotfix", // HotFix with lower f
-                    @"\\builds\Builds\Suites\6.2.3.309 [6.2.3 135907]\Hotfix1 for CloudShell 6.2.3 GA [6.2.3.187]");
+            fileSystem.Directory.Move(@"C:\old_location", @"C:\NewLocation\");
 
             // Assert
-            Assert.IsTrue(
-                fileSystem.File.Exists(@"\\builds\Builds\Suites\6.2.3.309 [6.2.3 135907]\Hotfix1 for CloudShell 6.2.3 GA [6.2.3.187]\Data\Content\DriverBuilder\ActiproSoftware.Navigation.Wpf.dll"));
+            Assert.IsTrue(fileSystem.File.Exists(@"C:\NewLocation\Data\someFile.txt"));
         }
 
         [TestCaseSource("GetPathsForMoving")]
