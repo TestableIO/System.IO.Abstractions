@@ -807,6 +807,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return new object[] { @"A:\folder1\", @"a:\folder3\", "folder444\\file.txt", @"Folder2\fiLe2.txt" };
         }
 
+        [Test]
+        public void Move_DirectoryExistsWithDifferentCase_DirectorySuccessfullyMoved()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(@"C:\OLD_LOCATION\Data"); 
+            fileSystem.AddFile(@"C:\old_location\Data\someFile.txt", new MockFileData("abc"));
+
+            // Act
+            fileSystem.Directory.Move(@"C:\old_location", @"C:\NewLocation\");
+
+            // Assert
+            Assert.IsTrue(fileSystem.File.Exists(@"C:\NewLocation\Data\someFile.txt"));
+        }
+
         [TestCaseSource("GetPathsForMoving")]
         public void MockDirectory_Move_ShouldMove(string sourceDirName, string destDirName, string filePathOne, string filePathTwo)
         {
