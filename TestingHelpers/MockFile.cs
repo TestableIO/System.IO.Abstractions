@@ -360,12 +360,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override IEnumerable<string> ReadLines(string path)
         {
-            throw new NotImplementedException();
+            return ReadAllLines(path);
         }
 
         public override IEnumerable<string> ReadLines(string path, Encoding encoding)
         {
-            throw new NotImplementedException();
+            return ReadAllLines(path, encoding);
         }
 
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
