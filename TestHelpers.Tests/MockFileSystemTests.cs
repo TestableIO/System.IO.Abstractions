@@ -113,7 +113,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             const string baseDirectory = @"C:\Test";
             var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(baseDirectory, new MockFileData(string.Empty));
+            fileSystem.AddFileWithCreate(baseDirectory, new MockFileData(string.Empty));
             fileSystem.File.SetAttributes(baseDirectory, FileAttributes.ReadOnly);
 
             // Act

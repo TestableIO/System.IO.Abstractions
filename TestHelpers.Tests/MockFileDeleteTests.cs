@@ -12,7 +12,7 @@
             var fileSystem = new MockFileSystem();
             var path = XFS.Path("C:\\test");
             var directory = fileSystem.Path.GetDirectoryName(path);
-            fileSystem.AddFile(path, new MockFileData("Bla"));
+            fileSystem.AddFileWithCreate(path, new MockFileData("Bla"));
 
             var fileCount1 = fileSystem.Directory.GetFiles(directory, "*").Length;
             fileSystem.File.Delete(path);

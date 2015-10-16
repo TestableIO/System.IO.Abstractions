@@ -338,7 +338,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
             var fileContent = new byte[] { 1, 2, 3, 4 };
-            
+            fileSystem.Directory.CreateDirectory(path);
+
             // Act
             fileSystem.File.WriteAllBytes(path, fileContent);
 
@@ -355,6 +356,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
             var fileContent = new byte[] { 1, 2, 3, 4 };
+            fileSystem.Directory.CreateDirectory(path);
 
             // Act
             fileSystem.File.WriteAllBytes(path, fileContent);
@@ -390,6 +392,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             var bytes = new UTF8Encoding(true).GetBytes(fileContent);
+            fileSystem.Directory.CreateDirectory(filePath);
             var stream = fileSystem.File.OpenWrite(filePath);
             stream.Write(bytes, 0, bytes.Length);
             stream.Close();
@@ -475,18 +478,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_AppendText_CreatesNewFileForAppendToNonExistingFile()
         {
-            string filepath = XFS.Path(@"c:\something\doesnt\exist.txt");
-            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            string filePath = XFS.Path(@"c:\something\doesnt\exist.txt");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
 
-            var stream = filesystem.File.AppendText(filepath);
+            fileSystem.Directory.CreateDirectory(filePath);
+            var stream = fileSystem.File.AppendText(filePath);
 
             stream.Write("New too!");
             stream.Flush();
             stream.Close();
 
-            var file = filesystem.GetFile(filepath);
+            var file = fileSystem.GetFile(filePath);
             Assert.That(file.TextContents, Is.EqualTo("New too!"));
-            Assert.That(filesystem.FileExists(filepath));
+            Assert.That(fileSystem.FileExists(filePath));
         }
 
         [Test]

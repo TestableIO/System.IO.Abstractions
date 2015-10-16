@@ -21,6 +21,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(fileSystem.FileExists(fullPath), Is.False);
 
+            fileSystem.Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
+
             sut.Create(fullPath).Close();
 
             Assert.That(fileSystem.FileExists(fullPath), Is.True);
@@ -34,6 +36,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var data = new UTF8Encoding(false).GetBytes("Test string");
 
             var sut = new MockFile(fileSystem);
+            fileSystem.Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
             using (var stream = sut.Create(fullPath))
             {
                 stream.Write(data, 0, data.Length);
@@ -52,6 +55,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             var mockFile = new MockFile(fileSystem);
+
+            fileSystem.Directory.CreateDirectory(Path.GetDirectoryName(path));
 
             // Create a file
             using (var stream = mockFile.Create(path))
