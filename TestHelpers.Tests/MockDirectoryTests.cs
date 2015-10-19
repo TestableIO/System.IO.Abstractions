@@ -393,6 +393,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_Exists_ShouldReturnFalseForFiles()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(XFS.Path(@"c:\foo\bar.txt"), new MockFileData("Demo text content"));
+
+            // Act
+            var result = fileSystem.Directory.Exists(XFS.Path(@"c:\foo\bar.txt"));
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        [Test]
         public void MockDirectory_CreateDirectory_ShouldCreateFolderInMemoryFileSystem()
         {
             // Arrange
