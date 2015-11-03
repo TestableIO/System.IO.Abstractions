@@ -134,7 +134,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
-            var result = directoryInfo.EnumerateFileSystemInfos("f*").ToArray();
+            var result = directoryInfo.EnumerateFileSystemInfos("f*", SearchOption.AllDirectories).ToArray();
 
             Assert.That(result.Length, Is.EqualTo(2));
         }

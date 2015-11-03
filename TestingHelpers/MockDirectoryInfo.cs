@@ -186,7 +186,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern, SearchOption searchOption)
         {
-            return GetDirectories(searchPattern, searchOption);
+            return GetFileSystemInfos(searchPattern, searchOption);
         }
 
         public override DirectorySecurity GetAccessControl()
