@@ -30,23 +30,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
-            if (path == null)
-            {
-                throw new ArgumentNullException("path");
-            }
-
-            if (path.Length == 0)
-            {
-                throw new ArgumentException("Path cannot be the empty string or all whitespace.", "path");
-            }
-
-            if (mockFileDataAccessor.FileExists(path))
-            {
-                var message = string.Format(CultureInfo.InvariantCulture, @"Cannot create ""{0}"" because a file or directory with the same name already exists.", path);
-                var ex = new IOException(message);
-                ex.Data.Add("Path", path);
-                throw ex;
-            }
+            ThrowExceptionIfNull(path, paramName: "path");
+            ThrowExceptionIfPathIsEmptyOrContainsWhitespacesOnly(path);
+            ThrowExceptionIfFileExists(path, message: string.Format(@"Cannot create ""{0}"" because a file or directory with the same name already exists.", path));
 
             path = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(path));
 
@@ -157,16 +143,15 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
         {
-            if(path == null)
-                throw new ArgumentNullException();
-
-            if (!Exists(path))
-            {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
-            }
+            ThrowExceptionIfNull(path, "path");
+            ThrowExceptionIfNull(searchPattern, "searchPattern");
+            ThrowExceptionIfPathContainsInvalidChars(path);
+            ThrowExceptionIfFileExists(path, "The directory name is invalid.");
+            ThrowExceptionIfDirectoryDoesNotExist(path, string.Format("Could not find a part of the path '{0}'.", path));
 
             return GetFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
         }
+
 
         private string[] GetFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
         {
@@ -242,21 +227,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase GetParent(string path)
         {
-            if (path == null)
-            {
-                throw new ArgumentNullException("path");
-            }
-
-            if (path.Length == 0)
-            {
-                throw new ArgumentException("Path cannot be the empty string or all whitespace.", "path");
-            }
-
-            var invalidChars = mockFileDataAccessor.Path.GetInvalidPathChars();
-            if (path.IndexOfAny(invalidChars) > -1)
-            {
-                throw new ArgumentException("Path contains invalid path characters.", "path");
-            }
+            ThrowExceptionIfNull(path, "path");
+            ThrowExceptionIfPathIsEmptyOrContainsWhitespacesOnly(path);
+            ThrowExceptionIfPathContainsInvalidChars(path);
 
             var absolutePath = mockFileDataAccessor.Path.GetFullPath(path);
             var sepAsString = mockFileDataAccessor.Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture);
@@ -374,13 +347,13 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
         {
+            ThrowExceptionIfNull(path, "path");
+            ThrowExceptionIfNull(searchPattern, "searchPattern");
+            ThrowExceptionIfPathContainsInvalidChars(path);
+            ThrowExceptionIfFileExists(path, "The directory name is invalid.");
+            ThrowExceptionIfDirectoryDoesNotExist(path, string.Format("Could not find a part of the path '{0}'.", path));
+
             path = EnsurePathEndsWithDirectorySeparator(path);
-
-            if (!Exists(path))
-            {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
-            }
-
             var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
             return dirs.Where(p => string.Compare(p, path, StringComparison.OrdinalIgnoreCase) != 0);
         }
@@ -421,10 +394,62 @@ namespace System.IO.Abstractions.TestingHelpers
             return fileSystemEntries;
         }
 
+        #region Exception helper methods
+        private void ThrowExceptionIfNull(string value, string paramName)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(paramName);
+            }
+        }
+
+        private void ThrowExceptionIfPathIsEmptyOrContainsWhitespacesOnly(string value)
+        {
+            if (value != null && string.IsNullOrWhiteSpace(value))
+            {
+                throw new ArgumentException("Path cannot be the empty string or all whitespace.");
+            }
+        }
+
+        private void ThrowExceptionIfFileExists(string path, string message)
+        {
+            path = EnsurePathDoesNotEndWithDirectorySeparator(path);
+
+            if (mockFileDataAccessor.FileExists(path))
+            {
+                throw new IOException(message);
+            }
+        }
+
+        private void ThrowExceptionIfDirectoryDoesNotExist(string path, string message)
+        {
+            if (!Exists(path))
+            {
+                throw new DirectoryNotFoundException(message);
+            }
+        }
+
+        private void ThrowExceptionIfPathContainsInvalidChars(string path)
+        {
+            var invalidChars = mockFileDataAccessor.Path.GetInvalidPathChars();
+            if (path.IndexOfAny(invalidChars) > -1)
+            {
+                throw new ArgumentException("Illegal characters in path.");
+            }
+        }
+        #endregion
+
         static string EnsurePathEndsWithDirectorySeparator(string path)
         {
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
                 path += Path.DirectorySeparatorChar;
+            return path;
+        }
+
+        static string EnsurePathDoesNotEndWithDirectorySeparator(string path)
+        {
+            if (path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
+                path = path.Substring(0, path.Length - 1);
             return path;
         }
     }

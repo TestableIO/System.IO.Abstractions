@@ -7,6 +7,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using XFS = MockUnixSupport;
 
     [TestFixture]
+    [SetUICulture("en-US")]
     public class MockDirectoryTests
     {
         [Test]
@@ -453,6 +454,51 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [TestCase(null,
+            ExpectedException = typeof(ArgumentNullException))]
+        [TestCase("",
+            ExpectedException = typeof(ArgumentException),
+            ExpectedMessage = "Path cannot be the empty string or all whitespace.")]
+        [TestCase(":",
+            ExpectedException = typeof(ArgumentException),
+            ExpectedMessage = "The path is not of a legal form.")]
+        public void MockDirectory_CreateDirectory_ShouldFailForInvalidPath(string path)
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\foo\exists.txt"), new MockFileData("Demo text content") }
+            });
+
+            fileSystem.Directory.CreateDirectory(path);
+        }
+
+        [Test]
+        [ExpectedException(typeof(IOException),
+            ExpectedMessage = @"Cannot create ""c:\foo\exists.txt"" because a file or directory with the same name already exists.")]
+        public void MockDirectory_CreateDirectory_ShouldFailIfFileAlreadyExists()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\foo\exists.txt"), new MockFileData("Demo text content") }
+            });
+
+            fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo\exists.txt"));
+        }
+
+        [Test]
+        public void MockDirectory_CreateDirecotry_ShouldSucceedIfDirectoryAlreadyExists()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\foo.txt"), new MockFileData("Demo text content") }
+            });
+
+            var result = fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo"));
+
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
         public void MockDirectory_CreateDirectory_ShouldFailIfTryingToCreateUNCPathOnlyServer()
         {
             // Arrange
@@ -595,6 +641,35 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.Throws<DirectoryNotFoundException>(action);
+        }
+
+        [Test]
+        [ExpectedException(typeof(IOException),
+            ExpectedMessage="The directory name is invalid.")]
+        public void MockDirectory_GetFiles_ShouldThrowDirectoryNotFoundException_IfPathIsAnExistentFile()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\foo\bar.txt"),  new MockDirectoryData() }
+            });
+
+            fileSystem.Directory.GetFiles(XFS.Path(@"c:\foo\bar.txt"));
+        }
+
+        [Test]
+        [ExpectedException(typeof(ArgumentException),
+            ExpectedMessage = "Illegal characters in path.")]
+        public void MockDirectory_GetFiles_ShouldThrowArgumentExceptionIfPathHasIllegalCharacters()
+        {
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Pass("Path.GetInvalidPathChars() does not return anything on Mono if not running on Windows");
+                return;
+            }
+
+            var fileSystem = new MockFileSystem();
+
+            fileSystem.Directory.GetFiles(XFS.Path(@"c:\foo\bar<|foo"));
         }
 
         [Test]
@@ -810,6 +885,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<DirectoryNotFoundException>(action);
         }
 
+        [Test]
+        [ExpectedException(typeof(IOException),
+            ExpectedMessage = "The directory name is invalid.")]
+        public void MockDirectory_EnumerateDirectories_ShouldThrowDirectoryNotFoundException_IfPathIsAnExistentFile()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\foo\bar.txt"),  new MockDirectoryData() }
+            });
+
+            fileSystem.Directory.EnumerateDirectories(XFS.Path(@"c:\foo\bar.txt"));
+        }
+
         public static IEnumerable<object[]> GetPathsForMoving()
         {
             yield return new object[] { @"a:\folder1\", @"A:\folder3\", "file.txt", @"folder2\file2.txt" };
@@ -890,29 +978,35 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectory_GetParent_ShouldThrowArgumentNullExceptionIfPathIsNull()
-        {
-            // Arrange
+        [TestCase(null,
+            ExpectedException = typeof(ArgumentNullException))]
+        [TestCase("",
+            ExpectedException = typeof(ArgumentException),
+            ExpectedMessage = "Path cannot be the empty string or all whitespace.")]
+        [TestCase(":",
+            ExpectedException = typeof(ArgumentException),
+            ExpectedMessage = "The path is not of a legal form.")]
+        public void MockDirectory_GetParent_ShouldFailForInvalidPath(string path){
             var fileSystem = new MockFileSystem();
 
-            // Act
-            TestDelegate act = () => fileSystem.Directory.GetParent(null);
-
-            // Assert
-            Assert.Throws<ArgumentNullException>(act);
+            fileSystem.Directory.GetParent(path);
         }
 
+
         [Test]
-        public void MockDirectory_GetParent_ShouldThrowArgumentExceptionIfPathIsEmpty()
+        [ExpectedException(typeof(ArgumentException),
+            ExpectedMessage = "Illegal characters in path.")]
+        public void MockDirectory_GetParent_ShouldThrowArgumentExceptionIfPathHasIllegalCharacters()
         {
-            // Arrange
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Pass("Path.GetInvalidPathChars() does not return anything on Mono if not running on Windows");
+                return;
+            }
+
             var fileSystem = new MockFileSystem();
 
-            // Act
-            TestDelegate act = () => fileSystem.Directory.GetParent(string.Empty);
-
-            // Assert
-            Assert.Throws<ArgumentException>(act);
+            fileSystem.Directory.GetParent(XFS.Path(@"c:\foo\bar<|foo"));
         }
 
         [Test]
@@ -928,24 +1022,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsNotNull(actualResult);
         }
 
-        [Test]
-        public void MockDirectory_GetParent_ShouldThrowArgumentExceptionIfPathHasIllegalCharacters()
-        {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
-                return;
-            }
-
-            // Arrange
-            var fileSystem = new MockFileSystem();
-
-            // Act
-            TestDelegate act = () => fileSystem.Directory.GetParent(XFS.Path("c:\\director\ty\\has\\illegal\\character"));
-
-            // Assert
-            Assert.Throws<ArgumentException>(act);
-        }
 
         [Test]
         public void MockDirectory_GetParent_ShouldReturnNullIfPathIsRoot()
@@ -961,27 +1037,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsNull(actualResult);
         }
 
-        public static IEnumerable<string[]> MockDirectory_GetParent_Cases
+        [Test]
+        public void MockDirectory_GetParent_ShouldReturnTheParentWithoutTrailingDirectorySeparatorChar()
         {
-            get
-            {
-                yield return new [] { XFS.Path(@"c:\a"), XFS.Path(@"c:\") };
-                yield return new [] { XFS.Path(@"c:\a\b\c\d"), XFS.Path(@"c:\a\b\c") };
-                yield return new [] { XFS.Path(@"c:\a\b\c\d\"), XFS.Path(@"c:\a\b\c") };
-            }
-        }
-
-        public void MockDirectory_GetParent_ShouldReturnTheParentWithoutTrailingDirectorySeparatorChar(string path, string expectedResult)
-        {
-            // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(path);
+            fileSystem.AddDirectory(XFS.Path(@"c:\a\b\c\d"));
 
-            // Act
-            var actualResult = fileSystem.Directory.GetParent(path);
-
-            // Assert
-            Assert.AreEqual(expectedResult, actualResult.FullName);
+            Assert.That(fileSystem.Directory.GetParent(XFS.Path(@"c:\a")).FullName, Is.EqualTo(XFS.Path(@"c:\")));
+            Assert.That(fileSystem.Directory.GetParent(XFS.Path(@"c:\a\b\c\d")).FullName, Is.EqualTo(XFS.Path(@"c:\a\b\c")));
+            Assert.That(fileSystem.Directory.GetParent(XFS.Path(@"c:\a\b\c\d\")).FullName, Is.EqualTo(XFS.Path(@"c:\a\b\c")));
         }
 
         [Test]
