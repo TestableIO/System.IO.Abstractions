@@ -368,7 +368,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(XFS.Path(@"c:\foo\bar.txt"), new MockFileData("Demo text content"));
+            fileSystem.AddFileWithCreate(XFS.Path(@"c:\foo\bar.txt"), new MockFileData("Demo text content"));
 
             // Act
             var result = fileSystem.Directory.Exists(XFS.Path(@"c:\foo\"));

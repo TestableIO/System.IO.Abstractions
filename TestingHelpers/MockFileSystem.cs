@@ -32,7 +32,20 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (files == null) return;
             foreach (var entry in files)
-                AddFile(entry.Key, entry.Value);
+                AddFileWithCreate(entry.Key, entry.Value);
+        }
+
+        public void AddFileWithCreate(string path, MockFileData value)
+        {
+            var fixedPath = FixPath(path);
+
+            var directoryName = Path.GetDirectoryName(fixedPath);
+            if (!directory.Exists(directoryName))
+            {
+                directory.CreateDirectory(directoryName);
+            }
+
+            AddFile(fixedPath, value);
         }
 
         public FileBase File
@@ -94,7 +107,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
                 if (!directory.Exists(directoryPath))
                 {
-                    AddDirectory(directoryPath);
+                    throw new DirectoryNotFoundException();
                 }
 
                 files[fixedPath] = mockFile;

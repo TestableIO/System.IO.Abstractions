@@ -16,6 +16,7 @@
             string path = XFS.Path(@"c:\something\demo.txt");
             string fileContent = "Hello there!";
             var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(path);
 
             // Act
             fileSystem.File.WriteAllText(path, fileContent);
@@ -34,6 +35,7 @@
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(path);
 
             // Act
             fileSystem.File.WriteAllText(path, "foo");
@@ -112,6 +114,7 @@
             byte[] expectedBytes = encodingsWithContents.Value;
             Encoding encoding = encodingsWithContents.Key;
             var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(path);
 
             // Act
             fileSystem.File.WriteAllText(path, FileContent, encoding);
@@ -131,6 +134,7 @@
             var expected = "Hello there!" + Environment.NewLine + "Second line!" + Environment.NewLine;
 
             var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(path);
 
             // Act
             fileSystem.File.WriteAllLines(path, fileContent);

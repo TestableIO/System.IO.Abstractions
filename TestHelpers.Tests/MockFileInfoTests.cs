@@ -428,7 +428,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(XFS.Path(@"c:\temp\file.txt"), new MockFileData(new byte[] { 1, 2 }));
+            fileSystem.AddFileWithCreate(XFS.Path(@"c:\temp\file.txt"), new MockFileData(new byte[] { 1, 2 }));
             var fileInfo = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file.txt"));
 
             // Act
@@ -446,7 +446,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(XFS.Path(@"c:\temp\file.txt"), new MockFileData(@"line 1\r\nline 2"));
+            fileSystem.AddFileWithCreate(XFS.Path(@"c:\temp\file.txt"), new MockFileData(@"line 1\r\nline 2"));
             var fileInfo = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file.txt"));
 
             // Act

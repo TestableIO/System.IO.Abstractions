@@ -8,6 +8,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockPathTests
     {
         static readonly string TestPath = XFS.Path("C:\\test\\test.bmp");
+        readonly IMockFileDataAccessor mockFileDataAccessor;
 
         private MockPath SetupMockPath()
         {
@@ -327,7 +328,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void GetTempFileName_Called_ReturnsStringLengthGreaterThanZero()
         {
             //Arrange
-            var mockPath = new MockPath(new MockFileSystem());
+            var fileSystem = new MockFileSystem();
+            var mockPath = new MockPath(fileSystem);
+
+            //Creating directory explicitly because in normal system Tempory path always exist.
+            fileSystem.Directory.CreateDirectory(mockPath.GetTempPath());
 
             //Act
             var result = mockPath.GetTempFileName();
@@ -342,6 +347,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             //Arrange
             var fileSystem = new MockFileSystem();
             var mockPath = new MockPath(fileSystem);
+
+            //Creating directory explicitly because in normal system Tempory path always exist.
+            fileSystem.Directory.CreateDirectory(mockPath.GetTempPath());
 
             //Act
             var result = mockPath.GetTempFileName();

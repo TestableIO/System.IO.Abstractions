@@ -13,16 +13,18 @@
         public void MockFileStream_Flush_WritesByteToFile()
         {
             // Arrange
-            var filepath = XFS.Path(@"c:\something\foo.txt");
-            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            var cut = new MockFileStream(filesystem, filepath);
+            var filePath = XFS.Path(@"c:\something\foo.txt");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            fileSystem.Directory.CreateDirectory(filePath);
+            var cut = new MockFileStream(fileSystem, filePath);
 
             // Act
             cut.WriteByte(255);
             cut.Flush();
 
             // Assert
-            CollectionAssert.AreEqual(new byte[]{255}, filesystem.GetFile(filepath).Contents);
+            CollectionAssert.AreEqual(new byte[]{255}, fileSystem.GetFile(filePath).Contents);
         }
 
         [Test]
@@ -31,7 +33,7 @@
             var fileSystem = new MockFileSystem();
             var path = XFS.Path("C:\\test");
             var directory = fileSystem.Path.GetDirectoryName(path);
-            fileSystem.AddFile(path, new MockFileData("Bla"));
+            fileSystem.AddFileWithCreate(path, new MockFileData("Bla"));
             var stream = fileSystem.File.Open(path, FileMode.Open, FileAccess.ReadWrite, FileShare.Delete);
 
             var fileCount1 = fileSystem.Directory.GetFiles(directory, "*").Length;
