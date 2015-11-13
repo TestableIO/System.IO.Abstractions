@@ -63,7 +63,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             sourceFileSystem.File.SetLastAccessTime(sourceFileName, dateLastAccessed);
             var sourceFile = sourceFileSystem.DirectoryInfo.FromDirectoryName(Path.GetDirectoryName(sourceFileName)).GetFiles().Single();
 
-            // create a new destination file system and copy the source file tehre
+            // create a new destination file system and copy the source file there
             var dfs = new MockFileSystem();
             dfs.AddFile(destinationFileName, new MockFileData(sourceFileSystem, sourceFile));
             destinationFileInfo = dfs.DirectoryInfo.FromDirectoryName(Path.GetDirectoryName(destinationFileName)).GetFiles().Single();
