@@ -27,6 +27,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// The actual contents of the file.
         /// </summary>
         private byte[] contents;
+        private readonly Func<byte[]> lazyLoadContent;
 
         /// <summary>
         /// The date and time the <see cref="MockFileData"/> was created.
@@ -67,7 +68,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <param name="textContents">The textual content encoded into bytes with <see cref="DefaultEncoding"/>.</param>
         public MockFileData(string textContents)
             : this(DefaultEncoding.GetBytes(textContents))
-        {}
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MockFileData"/> class with the content of <paramref name="textContents"/> using the encoding of <paramref name="encoding"/>.
@@ -97,11 +98,44 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <summary>
-        /// Gets or sets the byte contents of the <see cref="MockFileData"/>.
+        /// Allows insertion of a file where the content is lazy loaded through a Func.
         /// </summary>
+        /// <param name="lazyLoadContent">Func to return the file's content the first time it is requested.</param>
+        public MockFileData(Func<byte[]> lazyLoadContent)
+        {
+            if (lazyLoadContent == null)
+            {
+                throw new ArgumentNullException("lazyLoadContent");
+            }
+            this.lazyLoadContent = lazyLoadContent;
+        }
+
+        /// <summary>
+        /// Allows insertion of a FileSystemInfoBase object into a new file system. Attributes and time stamps
+        /// are copied, and the content will be lazy loaded the first time it is touched.
+        /// </summary>
+        /// <param name="fileSystem">The source file system where the file info originates</param>
+        /// <param name="fileInfo">The source file to be copied</param>
+        public MockFileData(IFileSystem fileSystem, FileSystemInfoBase fileInfo)
+        {
+            if (fileSystem == null)
+            {
+                throw new ArgumentNullException("fileSystem");
+            }
+            if (fileInfo == null)
+            {
+                throw new ArgumentNullException("fileInfo");
+            }
+            creationTime = fileInfo.CreationTime;
+            lastAccessTime = fileInfo.LastAccessTime;
+            lastWriteTime = fileInfo.LastWriteTime;
+            attributes = fileInfo.Attributes;
+            lazyLoadContent = () => fileSystem.File.ReadAllBytes(fileInfo.FullName);
+        }
+
         public byte[] Contents
         {
-            get { return contents; }
+            get { return contents ?? (contents = lazyLoadContent()); }
             set { contents = value; }
         }
 
