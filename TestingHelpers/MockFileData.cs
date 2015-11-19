@@ -68,7 +68,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <param name="textContents">The textual content encoded into bytes with <see cref="DefaultEncoding"/>.</param>
         public MockFileData(string textContents)
             : this(DefaultEncoding.GetBytes(textContents))
-        { }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MockFileData"/> class with the content of <paramref name="textContents"/> using the encoding of <paramref name="encoding"/>.
@@ -133,6 +133,9 @@ namespace System.IO.Abstractions.TestingHelpers
             lazyLoadContent = () => fileSystem.File.ReadAllBytes(fileInfo.FullName);
         }
 
+        /// <summary>
+        /// Gets or sets the byte contents of the <see cref="MockFileData"/>.
+        /// </summary> 
         public byte[] Contents
         {
             get { return contents ?? (contents = lazyLoadContent()); }

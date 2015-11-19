@@ -38,6 +38,58 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     }
 
     [TestFixture]
+    public class MockFileDataLazyLoadAndDirectoryBrowsing
+    {
+        private class ContentCalledException : Exception
+        {
+            public ContentCalledException() : base("Content was called")
+            {
+            }
+        }
+
+        private IFileSystem fileSystem;
+
+        [SetUp]
+        public void SetUp()
+        {
+            var mockFileData = new MockFileData(() =>
+            {
+                throw new ContentCalledException();
+            });
+            fileSystem = new MockFileSystem();
+            ((MockFileSystem)fileSystem).AddFile(@"b:\thefile.useless", mockFileData);
+        }
+
+        [Test]
+        public void TestThatFileExist()
+        {
+            Assert.IsTrue(fileSystem.File.Exists(@"b:\thefile.useless"));
+        }
+
+        [Test]
+        public void TestThatDirectoryGetFilesDoesNotLoadContent()
+        {
+            Assert.AreEqual(1, fileSystem.Directory.GetFiles(@"B:\").Length);
+        }
+
+        [Test]
+        public void TestThatDirectoryInfoGetFilesDoesNotLoadContent()
+        {
+            Assert.AreEqual(1, fileSystem.DirectoryInfo.FromDirectoryName(@"B:\").GetFiles().Length);
+        }
+
+        [Test]
+        public void TestThatContentIsBeingUsedOnDemandWhenTheFileSizeIsRetrievedThruFileInfoObject()
+        {
+            var file = fileSystem.DirectoryInfo.FromDirectoryName(@"B:\").GetFiles().Single();
+            long fileLength = -1;
+            Assert.Throws(typeof(ContentCalledException), () => fileLength = file.Length);
+            Assert.AreEqual(-1, fileLength);
+        }
+
+    }
+
+    [TestFixture]
     public class MockFileDataInsertFileInfoObjectTests
     {
         private IFileSystem destinationFileSystem;
