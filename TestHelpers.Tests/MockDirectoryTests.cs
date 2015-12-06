@@ -643,6 +643,30 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<ArgumentException>(action);
         }
 
+        private IEnumerable<string> GetSearchPatternForTwoDotsExceptions()
+        {
+            yield return @"a..\b";
+            yield return @"a../b";
+            yield return @"../";
+            yield return @"..\";
+            yield return @"aaa\vv..\";
+        }
+
+        [TestCaseSource("GetSearchPatternForTwoDotsExceptions")]
+        public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneDirectoryPathSep(string searchPattern)
+        {
+            // Arrange
+            var directoryPath = XFS.Path(@"c:\Foo");
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(directoryPath);
+
+            // Act
+            TestDelegate action = () => fileSystem.Directory.GetFiles(directoryPath, searchPattern);
+
+            // Assert
+            Assert.Throws<ArgumentException>(action);
+        }
+
         [Test]
         public void MockDirectory_GetRoot_Returns_Root()
         {

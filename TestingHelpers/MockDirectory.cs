@@ -437,10 +437,21 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             const string TWO_DOTS = "..";
+            Func<ArgumentException> createException = () => new ArgumentException(@"Search pattern cannot contain "".."" to move up directories and can be contained only internally in file/directory names, as in ""a..b"".", searchPattern);
 
             if (searchPattern.EndsWith(TWO_DOTS, StringComparison.OrdinalIgnoreCase))
             {
-                throw new ArgumentException(@"Search pattern cannot contain "".."" to move up directories and can be contained only internally in file/directory names, as in ""a..b"".", searchPattern);
+                throw createException();
+            }
+
+            int position;
+            if ((position = searchPattern.IndexOf(TWO_DOTS, StringComparison.OrdinalIgnoreCase)) >= 0)
+            {
+                var characterAfterTwoDots = searchPattern[position + 2];
+                if (characterAfterTwoDots == Path.DirectorySeparatorChar || characterAfterTwoDots == Path.AltDirectorySeparatorChar)
+                {
+                    throw createException();
+                }
             }
         }
     }
