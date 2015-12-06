@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION" xml:space="preserve">
+    <value>Illegal characters in path.</value>
+  </data>
   <data name="NOT_IMPLEMENTED_EXCEPTION" xml:space="preserve">
     <value>This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.</value>
   </data>
