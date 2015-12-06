@@ -1,12 +1,14 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
-    using System.Linq;
-
     [Serializable]
     public class MockFileData
     {
+        /// <summary>
+        /// The default encoding.
+        /// </summary>
         public static readonly Encoding DefaultEncoding = new UTF8Encoding(false, true);
 
         public static readonly MockFileData NullObject = new MockFileData(string.Empty) {
@@ -15,10 +17,13 @@ namespace System.IO.Abstractions.TestingHelpers
           CreationTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
         };
 
-        byte[] contents;
-        DateTimeOffset creationTime = new DateTimeOffset(2010, 01, 02, 00, 00, 00, TimeSpan.FromHours(4));
-        DateTimeOffset lastAccessTime = new DateTimeOffset(2010, 02, 04, 00, 00, 00, TimeSpan.FromHours(4));
-        DateTimeOffset lastWriteTime = new DateTimeOffset(2010, 01, 04, 00, 00, 00, TimeSpan.FromHours(4));
+        /// <summary>
+        /// The actual contents of the file.
+        /// </summary>
+        private byte[] contents;
+        private DateTimeOffset creationTime = new DateTimeOffset(2010, 01, 02, 00, 00, 00, TimeSpan.FromHours(4));
+        private DateTimeOffset lastAccessTime = new DateTimeOffset(2010, 02, 04, 00, 00, 00, TimeSpan.FromHours(4));
+        private DateTimeOffset lastWriteTime = new DateTimeOffset(2010, 01, 04, 00, 00, 00, TimeSpan.FromHours(4));
 
         private FileAttributes attributes = FileAttributes.Normal;
 
@@ -49,15 +54,24 @@ namespace System.IO.Abstractions.TestingHelpers
             this.contents = contents;
         }
 
+        /// <summary>
+        /// Gets or sets the byte contents of the file.
+        /// </summary>
         public byte[] Contents
         {
             get { return contents; }
             set { contents = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the string contents of the file.
+        /// </summary>
+        /// <remarks>
+        /// The setter uses the <see cref="DefaultEncoding"/> using this can scramble the actual contents.
+        /// </remarks>
         public string TextContents
         {
-            get { return DefaultEncoding.GetString(contents); }
+            get { return MockFile.ReadAllBytes(contents, DefaultEncoding); }
             set { contents = DefaultEncoding.GetBytes(value); }
         }
 

@@ -228,7 +228,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_GetCreationTimeUtcOfNonExistantFile_ShouldReturnDefaultValue() {
             ExecuteDefaultValueTest((f, p) => f.GetCreationTimeUtc(p));
         }
-        
+
         [Test]
         public void MockFile_SetLastWriteTimeUtc_ShouldAffectLastWriteTime()
         {
@@ -330,7 +330,38 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(text, result);
         }
-        
+
+        private IEnumerable<Encoding> GetEncodingsForReadAllText()
+        {
+            // little endian
+            yield return new UTF32Encoding(false, true, true);
+
+            // big endian
+            yield return new UTF32Encoding(true, true, true);
+            yield return new UTF8Encoding(true, true);
+
+            yield return new ASCIIEncoding();
+        }
+
+        [TestCaseSource("GetEncodingsForReadAllText")]
+        public void MockFile_ReadAllText_ShouldReturnTheOriginalContentWhenTheFileContainsDifferentEncodings(Encoding encoding)
+        {
+            // Arrange
+            string text = "Hello there!";
+            var encodedText = encoding.GetPreamble().Concat(encoding.GetBytes(text)).ToArray();
+            var path = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+                {
+                    { path, new MockFileData(encodedText) }
+                });
+
+            // Act
+            var actualText = fileSystem.File.ReadAllText(path);
+
+            // Assert
+            Assert.AreEqual(text, actualText);
+        }
+
         [Test]
         public void MockFile_ReadAllBytes_ShouldReturnDataSavedByWriteAllBytes()
         {
@@ -338,7 +369,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
             var fileContent = new byte[] { 1, 2, 3, 4 };
-            
+
             // Act
             fileSystem.File.WriteAllBytes(path, fileContent);
 

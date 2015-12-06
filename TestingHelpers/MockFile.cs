@@ -211,7 +211,8 @@ namespace System.IO.Abstractions.TestingHelpers
             return mockFileDataAccessor.GetFile(path, true).LastWriteTime.UtcDateTime;
         }
 
-        public override void Move(string sourceFileName, string destFileName) {
+        public override void Move(string sourceFileName, string destFileName)
+        {
             ValidateParameter(sourceFileName, "sourceFileName");
             ValidateParameter(destFileName, "destFileName");
 
@@ -232,9 +233,10 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile.Contents));
             mockFileDataAccessor.RemoveFile(sourceFileName);
         }
-        
+
         [DebuggerNonUserCode]
-        private void ValidateParameter(string value, string paramName) {
+        private void ValidateParameter(string value, string paramName)
+        {
             if (value == null)
                 throw new ArgumentNullException(paramName, "File name cannot be null.");
             if (value == string.Empty)
@@ -345,7 +347,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (!mockFileDataAccessor.FileExists(path))
                 throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", path));
-            return mockFileDataAccessor.GetFile(path).TextContents;
+            return ReadAllText(path, MockFileData.DefaultEncoding);
         }
 
         public override string ReadAllText(string path, Encoding encoding)
@@ -355,7 +357,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentNullException("encoding");
             }
 
-            return encoding.GetString(mockFileDataAccessor.GetFile(path).Contents);
+            return ReadAllTextInternal(path, encoding);
         }
 
         public override IEnumerable<string> ReadLines(string path)
@@ -430,7 +432,8 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 sb.AppendLine(line);
             }
-            WriteAllText(path, sb.ToString()); 
+
+            WriteAllText(path, sb.ToString());
         }
 
         public override void WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding)
@@ -461,6 +464,21 @@ namespace System.IO.Abstractions.TestingHelpers
         private void WriteAllText(string path, MockFileData mockFileData)
         {
             mockFileDataAccessor.AddFile(path, mockFileData);
+        }
+
+        internal static string ReadAllBytes(byte[] contents, Encoding encoding)
+        {
+            using (var ms = new MemoryStream(contents))
+            using (var sr = new StreamReader(ms, encoding))
+            {
+                return sr.ReadToEnd();
+            }
+        }
+
+        private string ReadAllTextInternal(string path, Encoding encoding)
+        {
+            var mockFileData = mockFileDataAccessor.GetFile(path);
+            return ReadAllBytes(mockFileData.Contents, encoding);
         }
     }
 }
