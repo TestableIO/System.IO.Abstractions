@@ -246,7 +246,7 @@ namespace System.IO.Abstractions.TestingHelpers
             if (ExtractFileName(value).IndexOfAny(mockPath.GetInvalidFileNameChars()) > -1)
                 throw new NotSupportedException("The given path's format is not supported.");
             if (ExtractFilePath(value).IndexOfAny(mockPath.GetInvalidPathChars()) > -1)
-                throw new ArgumentException("Illegal characters in path.");
+                throw new ArgumentException(Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION);
         }
 
         private string ExtractFilePath(string fullFileName)

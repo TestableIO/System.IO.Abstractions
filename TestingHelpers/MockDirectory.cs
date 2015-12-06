@@ -453,6 +453,12 @@ namespace System.IO.Abstractions.TestingHelpers
                     throw createException();
                 }
             }
+
+            var invalidPathChars = Path.GetInvalidPathChars();
+            if (searchPattern.IndexOfAny(invalidPathChars) > -1)
+            {
+                throw new ArgumentException(Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION, "searchPattern");
+            }
         }
     }
 }

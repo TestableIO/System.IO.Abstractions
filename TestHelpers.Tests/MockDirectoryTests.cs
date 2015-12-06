@@ -668,6 +668,39 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_GetFiles_ShouldFindFilesContainingTwoOrMoreDots()
+        {
+            // Arrange
+            string testPath = XFS.Path(@"c:\foo..r\bar.txt");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+                {
+                    { testPath, new MockFileData(string.Empty) }
+                });
+
+            // Act
+            var actualResult = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), @"foo..r\*");
+
+            // Assert
+            Assert.That(actualResult, Is.EquivalentTo(new [] { testPath }));
+        }
+
+        [TestCase(@"""")]
+        [TestCase("aa\t")]
+        public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternHasIllegalCharacters(string searchPattern)
+        {
+            // Arrange
+            var directoryPath = XFS.Path(@"c:\Foo");
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(directoryPath);
+
+            // Act
+            TestDelegate action = () => fileSystem.Directory.GetFiles(directoryPath, searchPattern);
+
+            // Assert
+            Assert.Throws<ArgumentException>(action);
+        }
+
+        [Test]
         public void MockDirectory_GetRoot_Returns_Root()
         {
             string testDir = XFS.Path(@"c:\foo\bar\");
