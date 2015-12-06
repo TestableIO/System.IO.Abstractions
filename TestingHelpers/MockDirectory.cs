@@ -16,7 +16,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string currentDirectory;
 
-        public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory) 
+        public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory)
         {
             this.currentDirectory = currentDirectory;
             this.mockFileDataAccessor = mockFileDataAccessor;
@@ -170,6 +170,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string[] GetFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
         {
+            CheckSearchPattern(searchPattern);
             path = EnsurePathEndsWithDirectorySeparator(path);
             path = mockFileDataAccessor.Path.GetFullPath(path);
 
@@ -426,6 +427,21 @@ namespace System.IO.Abstractions.TestingHelpers
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
                 path += Path.DirectorySeparatorChar;
             return path;
+        }
+
+        static void CheckSearchPattern(string searchPattern)
+        {
+            if (searchPattern == null)
+            {
+                throw new ArgumentNullException("searchPattern");
+            }
+
+            const string TWO_DOTS = "..";
+
+            if (searchPattern.EndsWith(TWO_DOTS, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new ArgumentException(@"Search pattern cannot contain "".."" to move up directories and can be contained only internally in file/directory names, as in ""a..b"".", searchPattern);
+            }
         }
     }
 }
