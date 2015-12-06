@@ -16,7 +16,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string currentDirectory;
 
-        public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory) 
+        public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory)
         {
             this.currentDirectory = currentDirectory;
             this.mockFileDataAccessor = mockFileDataAccessor;
@@ -170,6 +170,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string[] GetFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
         {
+            CheckSearchPattern(searchPattern);
             path = EnsurePathEndsWithDirectorySeparator(path);
             path = mockFileDataAccessor.Path.GetFullPath(path);
 
@@ -179,11 +180,31 @@ namespace System.IO.Abstractions.TestingHelpers
                 ? @"([^<>:""/|?*]*/)*"
                 : @"([^<>:""/\\|?*]*\\)*";
 
-            var fileNamePattern = searchPattern == "*"
-                ? isUnix ? @"[^/]*?/?" : @"[^\\]*?\\?"
-                : Regex.Escape(searchPattern)
+            string fileNamePattern;
+            string pathPatternSpecial = null;
+            if (searchPattern == "*")
+            {
+                fileNamePattern = isUnix ? @"[^/]*?/?" : @"[^\\]*?\\?";
+            }
+            else
+            {
+                fileNamePattern = Regex.Escape(searchPattern)
                     .Replace(@"\*", isUnix ? @"[^<>:""/|?*]*?" : @"[^<>:""/\\|?*]*?")
                     .Replace(@"\?", isUnix ? @"[^<>:""/|?*]?" : @"[^<>:""/\\|?*]?");
+
+                var extension = Path.GetExtension(searchPattern);
+                bool hasExtensionLengthOfThree = extension != null && extension.Length == 4 && !extension.Contains("*") && !extension.Contains("?");
+                if (hasExtensionLengthOfThree)
+                {
+                    var fileNamePatternSpecial = string.Format(CultureInfo.InvariantCulture, "{0}[^.]", fileNamePattern);
+                    pathPatternSpecial = string.Format(
+                        CultureInfo.InvariantCulture,
+                        isUnix ? @"(?i:^{0}{1}{2}(?:/?)$)" : @"(?i:^{0}{1}{2}(?:\\?)$)",
+                        Regex.Escape(path),
+                        searchOption == SearchOption.AllDirectories ? allDirectoriesPattern : string.Empty,
+                        fileNamePatternSpecial);
+                }
+            }
 
             var pathPattern = string.Format(
                 CultureInfo.InvariantCulture,
@@ -192,8 +213,22 @@ namespace System.IO.Abstractions.TestingHelpers
                 searchOption == SearchOption.AllDirectories ? allDirectoriesPattern : string.Empty,
                 fileNamePattern);
 
+
             return files
-                .Where(p => Regex.IsMatch(p, pathPattern))
+                .Where(p =>
+                    {
+                        if (Regex.IsMatch(p, pathPattern))
+                        {
+                            return true;
+                        }
+
+                        if (pathPatternSpecial != null && Regex.IsMatch(p, pathPatternSpecial))
+                        {
+                            return true;
+                        }
+
+                        return false;
+                    })
                 .ToArray();
         }
 
@@ -426,6 +461,38 @@ namespace System.IO.Abstractions.TestingHelpers
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
                 path += Path.DirectorySeparatorChar;
             return path;
+        }
+
+        static void CheckSearchPattern(string searchPattern)
+        {
+            if (searchPattern == null)
+            {
+                throw new ArgumentNullException("searchPattern");
+            }
+
+            const string TWO_DOTS = "..";
+            Func<ArgumentException> createException = () => new ArgumentException(@"Search pattern cannot contain "".."" to move up directories and can be contained only internally in file/directory names, as in ""a..b"".", searchPattern);
+
+            if (searchPattern.EndsWith(TWO_DOTS, StringComparison.OrdinalIgnoreCase))
+            {
+                throw createException();
+            }
+
+            int position;
+            if ((position = searchPattern.IndexOf(TWO_DOTS, StringComparison.OrdinalIgnoreCase)) >= 0)
+            {
+                var characterAfterTwoDots = searchPattern[position + 2];
+                if (characterAfterTwoDots == Path.DirectorySeparatorChar || characterAfterTwoDots == Path.AltDirectorySeparatorChar)
+                {
+                    throw createException();
+                }
+            }
+
+            var invalidPathChars = Path.GetInvalidPathChars();
+            if (searchPattern.IndexOfAny(invalidPathChars) > -1)
+            {
+                throw new ArgumentException(Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION, "searchPattern");
+            }
         }
     }
 }
