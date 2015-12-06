@@ -87,6 +87,74 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternWithThreeCharacterLongFileExtension_RepectingAllDirectorySearchOption()
+        {
+            // Arrange
+            var additionalFilePath = XFS.Path(@"c:\a\a\c.gifx");
+            var fileSystem = SetupFileSystem();
+            fileSystem.AddFile(additionalFilePath, new MockFileData(string.Empty));
+            fileSystem.AddFile(XFS.Path(@"c:\a\a\c.gifx.xyz"), new MockFileData(string.Empty));
+            fileSystem.AddFile(XFS.Path(@"c:\a\a\c.gifx\xyz"), new MockFileData(string.Empty));
+            var expected = new[]
+                {
+                    XFS.Path(@"c:\a.gif"),
+                    XFS.Path(@"c:\a\b.gif"),
+                    XFS.Path(@"c:\a\a\c.gif"),
+                    additionalFilePath
+                };
+
+            // Act
+            var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), "*.gif", SearchOption.AllDirectories);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        [Test]
+        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternWithThreeCharacterLongFileExtension_RepectingTopDirectorySearchOption()
+        {
+            // Arrange
+            var additionalFilePath = XFS.Path(@"c:\a\c.gifx");
+            var fileSystem = SetupFileSystem();
+            fileSystem.AddFile(additionalFilePath, new MockFileData(string.Empty));
+            fileSystem.AddFile(XFS.Path(@"c:\a\a\c.gifx.xyz"), new MockFileData(string.Empty));
+            fileSystem.AddFile(XFS.Path(@"c:\a\a\c.gifx"), new MockFileData(string.Empty));
+            var expected = new[]
+                {
+                    XFS.Path(@"c:\a\b.gif"),
+                    additionalFilePath
+                };
+
+            // Act
+            var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\a"), "*.gif", SearchOption.TopDirectoryOnly);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        [Test]
+        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternOnlyIfTheFileExtensionIsThreeCharacterLong()
+        {
+            // Arrange
+            var additionalFilePath = XFS.Path(@"c:\a\c.gi");
+            var fileSystem = SetupFileSystem();
+            fileSystem.AddFile(additionalFilePath, new MockFileData(string.Empty));
+            fileSystem.AddFile(XFS.Path(@"c:\a\a\c.gifx.xyz"), new MockFileData(string.Empty));
+            fileSystem.AddFile(XFS.Path(@"c:\a\a\c.gif"), new MockFileData(string.Empty));
+            fileSystem.AddFile(XFS.Path(@"c:\a\a\c.gifx"), new MockFileData(string.Empty));
+            var expected = new[]
+                {
+                    additionalFilePath
+                };
+
+            // Act
+            var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\a"), "*.gi", SearchOption.AllDirectories);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        [Test]
         public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternWithDotsInFilenames()
         {
             // Arrange
