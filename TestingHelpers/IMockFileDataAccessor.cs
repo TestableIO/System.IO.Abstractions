@@ -15,5 +15,6 @@ namespace System.IO.Abstractions.TestingHelpers
         IFileInfoFactory FileInfo {get; }
         PathBase Path { get; }
         IDirectoryInfoFactory DirectoryInfo { get; }
+        IDriveInfoFactory DriveInfo { get; }
     }
 }

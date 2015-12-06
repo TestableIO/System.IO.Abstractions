@@ -15,6 +15,7 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly IFileInfoFactory fileInfoFactory;
         readonly PathBase pathField;
         readonly IDirectoryInfoFactory directoryInfoFactory;
+        private readonly IDriveInfoFactory driveInfoFactory;
 
         public MockFileSystem() : this(null) { }
 
@@ -29,6 +30,7 @@ namespace System.IO.Abstractions.TestingHelpers
             directory = new MockDirectory(this, file, currentDirectory);
             fileInfoFactory = new MockFileInfoFactory(this);
             directoryInfoFactory = new MockDirectoryInfoFactory(this);
+            driveInfoFactory = new MockDriveInfoFactory(this);
 
             if (files == null) return;
             foreach (var entry in files)
@@ -60,13 +62,18 @@ namespace System.IO.Abstractions.TestingHelpers
             get { return directoryInfoFactory; }
         }
 
+        public IDriveInfoFactory DriveInfo
+        {
+            get { return driveInfoFactory; }
+        }
+
         private string FixPath(string path)
         {
             var pathSeparatorFixed = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             return pathField.GetFullPath(pathSeparatorFixed);
         }
 
-        public MockFileData GetFile(string path, bool returnNullObject = false) 
+        public MockFileData GetFile(string path, bool returnNullObject = false)
         {
             path = FixPath(path);
 
@@ -126,7 +133,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     if (lastIndex < 0)
                         throw new ArgumentException(@"The UNC path should be of the form \\server\share.", "path");
 
-                    /* 
+                    /*
                      * Although CreateDirectory(@"\\server\share\") is not going to work in real code, we allow it here for the purposes of setting up test doubles.
                      * See PR https://github.com/tathamoddie/System.IO.Abstractions/pull/90 for conversation
                      */

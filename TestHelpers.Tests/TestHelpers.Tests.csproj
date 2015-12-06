@@ -80,6 +80,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MockDriveInfoFactoryTests.cs" />
+    <Compile Include="MockDriveInfoTests.cs" />
     <Compile Include="MockFileDeleteTests.cs" />
     <Compile Include="FileSystemTests.cs" />
     <Compile Include="MockDirectoryInfoTests.cs" />

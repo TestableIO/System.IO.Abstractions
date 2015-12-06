@@ -230,5 +230,10 @@ namespace System.IO.Abstractions
         {
             get { return instance.Root; }
         }
+
+        public override string ToString()
+        {
+            return instance.ToString();
+        }
     }
 }

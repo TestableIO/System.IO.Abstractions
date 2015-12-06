@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
@@ -111,7 +113,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileSystem_AddDirectory_ShouldThrowExceptionIfDirectoryIsReadOnly()
         {
             // Arrange
-            const string baseDirectory = @"C:\Test";
+            string baseDirectory = MockUnixSupport.Path(@"C:\Test");
             var fileSystem = new MockFileSystem();
             fileSystem.AddFile(baseDirectory, new MockFileData(string.Empty));
             fileSystem.File.SetAttributes(baseDirectory, FileAttributes.ReadOnly);
@@ -121,6 +123,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.Throws<UnauthorizedAccessException>(act);
+        }
+
+        [Test]
+        public void MockFileSystem_DriveInfo_ShouldNotThrowAnyException()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\Test"));
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"Z:\Test"));
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"d:\Test"));
+
+            // Act
+            var actualResults = fileSystem.DriveInfo.GetDrives();
+
+            // Assert
+            Assert.IsNotNull(actualResults);
         }
     }
 }

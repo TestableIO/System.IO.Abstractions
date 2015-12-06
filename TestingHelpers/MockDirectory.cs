@@ -287,8 +287,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentException("Path cannot be the empty string or all whitespace.", "path");
             }
 
-            var invalidChars = mockFileDataAccessor.Path.GetInvalidPathChars();
-            if (path.IndexOfAny(invalidChars) > -1)
+            if (MockPath.HasIllegalCharacters(path, false))
             {
                 throw new ArgumentException("Path contains invalid path characters.", "path");
             }
