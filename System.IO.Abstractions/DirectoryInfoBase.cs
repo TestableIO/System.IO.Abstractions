@@ -3,13 +3,23 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     public abstract class DirectoryInfoBase : FileSystemInfoBase
     {
         public abstract void Create();
+
+#if NET40
         public abstract void Create(DirectorySecurity directorySecurity);
+#endif
+
         public abstract DirectoryInfoBase CreateSubdirectory(string path);
+
+#if NET40
         public abstract DirectoryInfoBase CreateSubdirectory(string path, DirectorySecurity directorySecurity);
+#endif
+
         public abstract void Delete(bool recursive);
         public abstract IEnumerable<DirectoryInfoBase> EnumerateDirectories();
         public abstract IEnumerable<DirectoryInfoBase> EnumerateDirectories(String searchPattern);

@@ -1,6 +1,8 @@
 ﻿namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     public class FileSystem : IFileSystem
     {
         DirectoryBase directory;

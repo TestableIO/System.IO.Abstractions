@@ -1,6 +1,8 @@
 namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     internal class DirectoryInfoFactory : IDirectoryInfoFactory
     {
         public DirectoryInfoBase FromDirectoryName(string directoryName)

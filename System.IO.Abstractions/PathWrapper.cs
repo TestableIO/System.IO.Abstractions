@@ -1,6 +1,8 @@
 ﻿namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     public class PathWrapper : PathBase
     {
         public override char AltDirectorySeparatorChar
@@ -16,7 +18,14 @@
         [Obsolete("Please use GetInvalidPathChars or GetInvalidFileNameChars instead.")]
         public override char[] InvalidPathChars
         {
-            get { return Path.InvalidPathChars; }
+            get
+            {
+#if DOTNET5_4
+                return Path.GetInvalidPathChars();
+#else
+                return Path.InvalidPathChars;
+#endif
+            }
         }
 
         public override char PathSeparator

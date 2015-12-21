@@ -2,9 +2,12 @@
 
 namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     public class FileSystemWatcherWrapper : FileSystemWatcherBase
     {
+#if NET40
         [NonSerialized]
         private readonly FileSystemWatcher watcher;
 
@@ -30,6 +33,7 @@ namespace System.IO.Abstractions
         {
             this.watcher = watcher;
         }
+#endif
 
         public override bool IncludeSubdirectories
         {

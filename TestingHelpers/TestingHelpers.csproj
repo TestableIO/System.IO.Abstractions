@@ -105,12 +105,6 @@
     <None Include="TestingHelpers.nuspec" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\System.IO.Abstractions\System.IO.Abstractions.csproj">
-      <Project>{4D398F3A-0784-4401-93CD-46CD2FBD6B92}</Project>
-      <Name>System.IO.Abstractions</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

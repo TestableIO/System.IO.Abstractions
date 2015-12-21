@@ -1,9 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Security.AccessControl;
+#if DOTNET5_4
+using System.IO;
+#endif
 
 namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     public class DirectoryWrapper : DirectoryBase
     {
         public override DirectoryInfoBase CreateDirectory(string path)
@@ -11,10 +16,12 @@ namespace System.IO.Abstractions
             return Directory.CreateDirectory(path);
         }
 
+#if NET40
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
             return Directory.CreateDirectory(path, directorySecurity);
         }
+#endif
 
         public override void Delete(string path)
         {
@@ -31,6 +38,7 @@ namespace System.IO.Abstractions
             return Directory.Exists(path);
         }
 
+#if NET40
         public override DirectorySecurity GetAccessControl(string path)
         {
             return Directory.GetAccessControl(path);
@@ -40,6 +48,7 @@ namespace System.IO.Abstractions
         {
             return Directory.GetAccessControl(path, includeSections);
         }
+#endif
 
         public override DateTime GetCreationTime(string path)
         {
@@ -121,10 +130,12 @@ namespace System.IO.Abstractions
             return Directory.GetLastWriteTimeUtc(path);
         }
 
+#if NET40
         public override string[] GetLogicalDrives()
         {
             return Directory.GetLogicalDrives();
         }
+#endif
 
         public override DirectoryInfoBase GetParent(string path)
         {
@@ -136,10 +147,12 @@ namespace System.IO.Abstractions
             Directory.Move(sourceDirName, destDirName);
         }
 
+#if NET40
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
             Directory.SetAccessControl(path, directorySecurity);
         }
+#endif
 
         public override void SetCreationTime(string path, DateTime creationTime)
         {

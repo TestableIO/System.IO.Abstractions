@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Security.AccessControl;
 using System.Text;
+using System.IO;
 
 namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     public class FileWrapper : FileBase
     {
         public override void AppendAllLines(string path, IEnumerable<string> contents)
@@ -57,36 +60,43 @@ namespace System.IO.Abstractions
             return File.Create(path, bufferSize, options);
         }
 
+#if NET40
         public override Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
         {
             return File.Create(path, bufferSize, options, fileSecurity);
         }
+#endif
 
         public override StreamWriter CreateText(string path)
         {
             return File.CreateText(path);
         }
 
+#if NET40
         public override void Decrypt(string path)
         {
             File.Decrypt(path);
         }
+#endif
 
         public override void Delete(string path)
         {
             File.Delete(path);
         }
 
+#if NET40
         public override void Encrypt(string path)
         {
             File.Encrypt(path);
         }
+#endif
 
         public override bool Exists(string path)
         {
             return File.Exists(path);
         }
 
+#if NET40
         public override FileSecurity GetAccessControl(string path)
         {
             return File.GetAccessControl(path);
@@ -96,6 +106,7 @@ namespace System.IO.Abstractions
         {
             return File.GetAccessControl(path, includeSections);
         }
+#endif
 
         public override FileAttributes GetAttributes(string path)
         {
@@ -202,6 +213,7 @@ namespace System.IO.Abstractions
             return File.ReadLines(path, encoding);
         }
 
+#if NET40
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
         {
             File.Replace(sourceFileName, destinationFileName, destinationBackupFileName);
@@ -216,6 +228,7 @@ namespace System.IO.Abstractions
         {
             File.SetAccessControl(path, fileSecurity);
         }
+#endif
 
         public override void SetAttributes(string path, FileAttributes fileAttributes)
         {

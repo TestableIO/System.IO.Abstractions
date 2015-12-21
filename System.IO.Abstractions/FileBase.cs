@@ -4,7 +4,9 @@ using System.Text;
 
 namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     public abstract class FileBase
     {
         public abstract void AppendAllLines(String path, IEnumerable<String> contents);
@@ -17,14 +19,30 @@ namespace System.IO.Abstractions
         public abstract Stream Create(string path);
         public abstract Stream Create(string path, int bufferSize);
         public abstract Stream Create(string path, int bufferSize, FileOptions options);
+
+#if NET40
         public abstract Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity);
+#endif
+
         public abstract StreamWriter CreateText(string path);
+
+#if NET40
         public abstract void Decrypt(string path);
+#endif
+
         public abstract void Delete(string path);
+
+#if NET40
         public abstract void Encrypt(string path);
+#endif
+
         public abstract bool Exists(string path);
+
+#if NET40
         public abstract FileSecurity GetAccessControl(string path);
         public abstract FileSecurity GetAccessControl(string path, AccessControlSections includeSections);
+#endif
+
         public abstract FileAttributes GetAttributes(string path);
         public abstract DateTime GetCreationTime(string path);
         public abstract DateTime GetCreationTimeUtc(string path);
@@ -46,9 +64,13 @@ namespace System.IO.Abstractions
         public abstract string ReadAllText(string path, Encoding encoding);
         public abstract IEnumerable<String> ReadLines(String path);
         public abstract IEnumerable<String> ReadLines(String path, Encoding encoding);
+
+#if NET40
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName);
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
         public abstract void SetAccessControl(string path, FileSecurity fileSecurity);
+#endif
+
         public abstract void SetAttributes(string path, FileAttributes fileAttributes);
         public abstract void SetCreationTime(string path, DateTime creationTime);
         public abstract void SetCreationTimeUtc(string path, DateTime creationTimeUtc);

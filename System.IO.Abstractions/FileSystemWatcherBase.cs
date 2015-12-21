@@ -2,15 +2,21 @@
 
 namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     public abstract class FileSystemWatcherBase : IDisposable
     {
         public abstract bool IncludeSubdirectories { get; set; }
         public abstract bool EnableRaisingEvents { get; set; }
         public abstract string Filter { get; set; }
         public abstract int InternalBufferSize { get; set; }
+#if NET40
         public abstract NotifyFilters NotifyFilter { get; set; }
+#endif
         public abstract string Path { get; set; }
+
+#if NET40
         public abstract ISite Site { get; set; }
         public abstract ISynchronizeInvoke SynchronizingObject { get; set; }
         public virtual event FileSystemEventHandler Changed;
@@ -18,9 +24,13 @@ namespace System.IO.Abstractions
         public virtual event FileSystemEventHandler Deleted;
         public virtual event ErrorEventHandler Error;
         public virtual event RenamedEventHandler Renamed;
+#endif
+
         public abstract void BeginInit();
         public abstract void Dispose();
         public abstract void EndInit();
+
+#if NET40
         public abstract WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType);
         public abstract WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout);
 
@@ -73,5 +83,7 @@ namespace System.IO.Abstractions
                 onError(sender, args);
             }
         }
+
+#endif
     }
 }
