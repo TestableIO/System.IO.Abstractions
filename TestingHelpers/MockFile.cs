@@ -114,17 +114,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream Create(string path, int bufferSize)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override Stream Create(string path, int bufferSize, FileOptions options)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override StreamWriter CreateText(string path)
@@ -154,12 +154,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileSecurity GetAccessControl(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override FileSecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         /// <summary>
@@ -395,17 +395,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override void SetAttributes(string path, FileAttributes fileAttributes)
@@ -461,7 +461,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override void WriteAllLines(string path, string[] contents)
