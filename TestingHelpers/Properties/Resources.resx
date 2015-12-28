@@ -126,4 +126,7 @@
   <data name="NOT_IMPLEMENTED_EXCEPTION" xml:space="preserve">
     <value>This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.</value>
   </data>
+  <data name="VALUE_CANNOT_BE_NULL" xml:space="preserve">
+    <value>Value cannot be null.</value>
+  </data>
 </root>

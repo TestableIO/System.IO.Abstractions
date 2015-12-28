@@ -86,5 +86,14 @@ namespace System.IO.Abstractions.TestingHelpers.Properties {
                 return ResourceManager.GetString("NOT_IMPLEMENTED_EXCEPTION", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value cannot be null..
+        /// </summary>
+        internal static string VALUE_CANNOT_BE_NULL {
+            get {
+                return ResourceManager.GetString("VALUE_CANNOT_BE_NULL", resourceCulture);
+            }
+        }
     }
 }

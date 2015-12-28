@@ -61,6 +61,34 @@
             Assert.Throws<UnauthorizedAccessException>(action, "Access to the path '{0}' is denied.", path);
         }
 
+        [Test]
+        public void MockFile_WriteAllText_ShouldThrowAnArgumentExceptionIfThePathIsEmpty()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.WriteAllText(string.Empty, "hello world");
+
+            // Assert
+            Assert.Throws<ArgumentException>(action);
+        }
+
+        [Test]
+        public void MockFile_WriteAllText_ShouldThrowAnArgumentNullExceptionIfThePathIsNull()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.WriteAllText(null, "hello world");
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(action);
+            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
+            Assert.That(exception.ParamName, Is.EqualTo("path"));
+        }
+
         private IEnumerable<KeyValuePair<Encoding, byte[]>> GetEncodingsWithExpectedBytes()
         {
             Encoding utf8WithoutBom = new UTF8Encoding(false, true);
