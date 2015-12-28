@@ -95,6 +95,7 @@
     <Compile Include="MockFileMoveTests.cs" />
     <Compile Include="MockFileOpenTests.cs" />
     <Compile Include="MockFileReadAllLinesTests.cs" />
+    <Compile Include="MockFileReadLinesTests.cs" />
     <Compile Include="MockFileStreamTests.cs" />
     <Compile Include="MockFileSystemTests.cs" />
     <Compile Include="MockFileTests.cs" />
