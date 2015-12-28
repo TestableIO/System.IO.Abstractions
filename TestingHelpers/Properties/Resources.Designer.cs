@@ -38,7 +38,14 @@ namespace TestingHelpers.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TestingHelpers.Properties.Resources", typeof(Resources).GetTypeInfo().Assembly);
+
+#if NET40
+                    Assembly assembly = typeof(Resources).Assembly;
+#elif DOTNET5_4
+                    Assembly assembly = typeof(Resources).GetTypeInfo().Assembly;
+#endif
+
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("TestingHelpers.Properties.Resources", assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

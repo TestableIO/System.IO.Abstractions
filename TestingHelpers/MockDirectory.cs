@@ -333,7 +333,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var absolutePath = mockFileDataAccessor.Path.GetFullPath(path);
-            var sepAsString = mockFileDataAccessor.Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture);
+            var sepAsString = mockFileDataAccessor.Path.DirectorySeparatorChar.ToString();
 
             var lastIndex = 0;
             if (absolutePath != sepAsString)
@@ -396,10 +396,12 @@ namespace System.IO.Abstractions.TestingHelpers
             Delete(fullSourcePath);
         }
 
+#if NET40
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
+#endif
 
         public override void SetCreationTime(string path, DateTime creationTime)
         {
@@ -497,7 +499,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         static string EnsurePathEndsWithDirectorySeparator(string path)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.OrdinalIgnoreCase))
                 path += Path.DirectorySeparatorChar;
             return path;
         }
@@ -530,7 +532,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var invalidPathChars = Path.GetInvalidPathChars();
             if (searchPattern.IndexOfAny(invalidPathChars) > -1)
             {
-                throw new ArgumentException(Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION, "searchPattern");
+                throw new ArgumentException(TestingHelpers.Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION, "searchPattern");
             }
         }
     }

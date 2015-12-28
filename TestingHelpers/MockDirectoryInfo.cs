@@ -5,7 +5,9 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+#if NET40
     [Serializable]
+#endif
     public class MockDirectoryInfo : DirectoryInfoBase
     {
         readonly IMockFileDataAccessor mockFileDataAccessor;
@@ -13,7 +15,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private static string EnsurePathEndsWithDirectorySeparator(string path)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.OrdinalIgnoreCase))
                 path += Path.DirectorySeparatorChar;
             return path;
         }
@@ -124,20 +126,24 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.Directory.CreateDirectory(FullName);
         }
 
+#if NET40
         public override void Create(DirectorySecurity directorySecurity)
         {
             mockFileDataAccessor.Directory.CreateDirectory(FullName, directorySecurity);
         }
+#endif
 
         public override DirectoryInfoBase CreateSubdirectory(string path)
         {
             return mockFileDataAccessor.Directory.CreateDirectory(Path.Combine(FullName, path));
         }
 
+#if NET40
         public override DirectoryInfoBase CreateSubdirectory(string path, DirectorySecurity directorySecurity)
         {
             return mockFileDataAccessor.Directory.CreateDirectory(Path.Combine(FullName, path), directorySecurity);
         }
+#endif
 
         public override void Delete(bool recursive)
         {
@@ -189,6 +195,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetFileSystemInfos(searchPattern, searchOption);
         }
 
+#if NET40
         public override DirectorySecurity GetAccessControl()
         {
             return mockFileDataAccessor.Directory.GetAccessControl(directoryPath);
@@ -198,6 +205,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             return mockFileDataAccessor.Directory.GetAccessControl(directoryPath, includeSections);
         }
+#endif
 
         public override DirectoryInfoBase[] GetDirectories()
         {
@@ -264,10 +272,12 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
         }
 
+#if NET40
         public override void SetAccessControl(DirectorySecurity directorySecurity)
         {
             mockFileDataAccessor.Directory.SetAccessControl(directoryPath, directorySecurity);
         }
+#endif
 
         public override DirectoryInfoBase Parent
         {

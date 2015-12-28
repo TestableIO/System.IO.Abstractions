@@ -2,7 +2,9 @@
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+#if NET40
     [Serializable]
+#endif
     internal class MockFileInfo : FileInfoBase
     {
         readonly IMockFileDataAccessor mockFileSystem;
@@ -176,6 +178,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return new MockFile(mockFileSystem).CreateText(FullName);
         }
 
+#if NET40
         public override void Decrypt()
         {
             if (MockFileData == null) throw new FileNotFoundException("File not found", path);
@@ -191,6 +194,7 @@ namespace System.IO.Abstractions.TestingHelpers
             for(var i = 0; i < contents.Length; i++)
                 contents[i] ^= (byte) (i % 256);
         }
+#endif
 
         public override FileSecurity GetAccessControl()
         {
@@ -248,10 +252,12 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
 
+#if NET40
         public override void SetAccessControl(FileSecurity fileSecurity)
         {
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
+#endif
 
         public override DirectoryInfoBase Directory
         {
@@ -293,8 +299,13 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+#if NET40
                 return MockFileData.Contents.LongLength;
+#elif DOTNET5_4
+                return (long) MockFileData.Contents.Length;
+#endif
             }
         }
+
     }
 }

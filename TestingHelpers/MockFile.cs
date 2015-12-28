@@ -7,7 +7,9 @@ using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+#if NET40
     [Serializable]
+#endif
     public class MockFile : FileBase
     {
         readonly IMockFileDataAccessor mockFileDataAccessor;
@@ -122,36 +124,43 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
 
+#if NET40
         public override Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
         {
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
+#endif
 
         public override StreamWriter CreateText(string path)
         {
             return new StreamWriter(Create(path));
         }
 
+#if NET40
         public override void Decrypt(string path)
         {
             new MockFileInfo(mockFileDataAccessor, path).Decrypt();
         }
+#endif
 
         public override void Delete(string path)
         {
             mockFileDataAccessor.RemoveFile(path);
         }
 
+#if NET40
         public override void Encrypt(string path)
         {
             new MockFileInfo(mockFileDataAccessor, path).Encrypt();
         }
+#endif
 
         public override bool Exists(string path)
         {
             return mockFileDataAccessor.FileExists(path) && !mockFileDataAccessor.AllDirectories.Any(d => d.Equals(path, StringComparison.OrdinalIgnoreCase));
         }
 
+#if NET40
         public override FileSecurity GetAccessControl(string path)
         {
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
@@ -161,6 +170,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
+#endif
 
         public override FileAttributes GetAttributes(string path)
         {
@@ -246,7 +256,7 @@ namespace System.IO.Abstractions.TestingHelpers
             if (ExtractFileName(value).IndexOfAny(mockPath.GetInvalidFileNameChars()) > -1)
                 throw new NotSupportedException("The given path's format is not supported.");
             if (ExtractFilePath(value).IndexOfAny(mockPath.GetInvalidPathChars()) > -1)
-                throw new ArgumentException(Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION);
+                throw new ArgumentException(TestingHelpers.Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION);
         }
 
         private string ExtractFilePath(string fullFileName)
@@ -380,10 +390,12 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
 
+#if NET40
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
+#endif
 
         public override void SetAttributes(string path, FileAttributes fileAttributes)
         {

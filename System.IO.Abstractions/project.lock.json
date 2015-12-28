@@ -248,6 +248,15 @@
           "ref/dotnet/System.Runtime.InteropServices.dll": {}
         }
       },
+      "System.Runtime.InteropServices.RuntimeInformation/4.0.0-rc2-23611": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime": "4.0.0"
+        },
+        "compile": {
+          "ref/dotnet5.1/System.Runtime.InteropServices.RuntimeInformation.dll": {}
+        }
+      },
       "System.Security.AccessControl/4.0.0-beta-23516": {
         "type": "package",
         "dependencies": {
@@ -359,6 +368,20 @@
         },
         "runtime": {
           "lib/dotnet5.4/Microsoft.CSharp.dll": {}
+        }
+      },
+      "runtime.win.System.Runtime.InteropServices.RuntimeInformation/4.0.0-rc2-23611": {
+        "type": "package",
+        "dependencies": {
+          "System.Resources.ResourceManager": "4.0.0",
+          "System.Runtime": "4.0.0",
+          "System.Threading": "4.0.0"
+        },
+        "compile": {
+          "ref/dotnet/_._": {}
+        },
+        "runtime": {
+          "runtimes/win/lib/dotnet5.1/System.Runtime.InteropServices.RuntimeInformation.dll": {}
         }
       },
       "runtime.win7.System.IO.FileSystem/4.0.1-rc2-23616": {
@@ -606,6 +629,15 @@
         },
         "compile": {
           "ref/dotnet/System.Runtime.InteropServices.dll": {}
+        }
+      },
+      "System.Runtime.InteropServices.RuntimeInformation/4.0.0-rc2-23611": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime": "4.0.0"
+        },
+        "compile": {
+          "ref/dotnet5.1/System.Runtime.InteropServices.RuntimeInformation.dll": {}
         }
       },
       "System.Security.AccessControl/4.0.0-beta-23516": {
@@ -739,6 +771,20 @@
           "lib/dotnet5.4/Microsoft.CSharp.dll": {}
         }
       },
+      "runtime.win.System.Runtime.InteropServices.RuntimeInformation/4.0.0-rc2-23611": {
+        "type": "package",
+        "dependencies": {
+          "System.Resources.ResourceManager": "4.0.0",
+          "System.Runtime": "4.0.0",
+          "System.Threading": "4.0.0"
+        },
+        "compile": {
+          "ref/dotnet/_._": {}
+        },
+        "runtime": {
+          "runtimes/win/lib/dotnet5.1/System.Runtime.InteropServices.RuntimeInformation.dll": {}
+        }
+      },
       "runtime.win7.System.IO.FileSystem/4.0.1-rc2-23616": {
         "type": "package",
         "dependencies": {
@@ -984,6 +1030,15 @@
         },
         "compile": {
           "ref/dotnet/System.Runtime.InteropServices.dll": {}
+        }
+      },
+      "System.Runtime.InteropServices.RuntimeInformation/4.0.0-rc2-23611": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime": "4.0.0"
+        },
+        "compile": {
+          "ref/dotnet5.1/System.Runtime.InteropServices.RuntimeInformation.dll": {}
         }
       },
       "System.Security.AccessControl/4.0.0-beta-23516": {
@@ -1139,6 +1194,18 @@
         "ref/wpa81/_._",
         "ref/xamarinios10/_._",
         "ref/xamarinmac20/_._"
+      ]
+    },
+    "runtime.win.System.Runtime.InteropServices.RuntimeInformation/4.0.0-rc2-23611": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "Zb3rIgl3QsbNKwirnyN1FKuFv45niz0a2ZnbeYNRHaPDp5je+4/K92/WvQfgYKexGhYvl1jrt9L3NVFegLQwRw==",
+      "files": [
+        "ref/dotnet/_._",
+        "runtime.win.System.Runtime.InteropServices.RuntimeInformation.4.0.0-rc2-23611.nupkg",
+        "runtime.win.System.Runtime.InteropServices.RuntimeInformation.4.0.0-rc2-23611.nupkg.sha512",
+        "runtime.win.System.Runtime.InteropServices.RuntimeInformation.nuspec",
+        "runtimes/win/lib/dotnet5.1/System.Runtime.InteropServices.RuntimeInformation.dll"
       ]
     },
     "runtime.win7.System.IO.FileSystem/4.0.1-rc2-23616": {
@@ -1951,6 +2018,26 @@
         "System.Runtime.InteropServices.nuspec"
       ]
     },
+    "System.Runtime.InteropServices.RuntimeInformation/4.0.0-rc2-23611": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "6hZz1uP/r1VLOmztWFqvZq9+dKRz9g6kUFvKyfQGyeLTQUGF7JdPROpezrPETR/8pAXJzXSO31/IPQjvyHDh+g==",
+      "files": [
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "ref/dotnet5.1/System.Runtime.InteropServices.RuntimeInformation.dll",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "runtime.json",
+        "System.Runtime.InteropServices.RuntimeInformation.4.0.0-rc2-23611.nupkg",
+        "System.Runtime.InteropServices.RuntimeInformation.4.0.0-rc2-23611.nupkg.sha512",
+        "System.Runtime.InteropServices.RuntimeInformation.nuspec"
+      ]
+    },
     "System.Security.AccessControl/4.0.0-beta-23516": {
       "type": "package",
       "serviceable": true,
@@ -2287,6 +2374,7 @@
       "System.Collections >= 4.0.11-*",
       "System.Linq >= 4.0.1-*",
       "System.Runtime >= 4.0.21-*",
+      "System.Runtime.InteropServices.RuntimeInformation >= 4.0.0-*",
       "System.Threading >= 4.0.11-*",
       "System.IO.FileSystem >= 4.0.1-*",
       "System.IO.FileSystem.AccessControl >= 4.0.0-*"

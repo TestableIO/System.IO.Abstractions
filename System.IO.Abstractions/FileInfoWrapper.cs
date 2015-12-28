@@ -168,22 +168,34 @@ namespace System.IO.Abstractions
             return instance.OpenWrite();
         }
 
-#if NET40
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)
         {
+#if NET40
             return instance.Replace(destinationFileName, destinationBackupFileName);
+#elif DOTNET5_4
+            File.Copy(destinationFileName, destinationBackupFileName);
+            instance.MoveTo(destinationFileName);
+            return this;
+#endif
         }
 
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
+#if NET40
             return instance.Replace(destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
-        }
+#elif DOTNET5_4
+            File.Copy(destinationFileName, destinationBackupFileName);
+            instance.MoveTo(destinationFileName);
+            return this;
 #endif
+        }
 
+#if NET40
         public override void SetAccessControl(FileSecurity fileSecurity)
         {
             instance.SetAccessControl(fileSecurity);
         }
+#endif
 
         public override DirectoryInfoBase Directory
         {

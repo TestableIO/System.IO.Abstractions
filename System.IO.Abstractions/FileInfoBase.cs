@@ -27,13 +27,13 @@ namespace System.IO.Abstractions
         public abstract Stream OpenRead();
         public abstract StreamReader OpenText();
         public abstract Stream OpenWrite();
-
-#if NET40
         public abstract FileInfoBase Replace(string destinationFileName, string destinationBackupFileName);
         public abstract FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
+
+#if NET40
+        public abstract void SetAccessControl(FileSecurity fileSecurity);
 #endif
 
-        public abstract void SetAccessControl(FileSecurity fileSecurity);
         public abstract DirectoryInfoBase Directory { get; }
         public abstract string DirectoryName { get; }
         public abstract bool IsReadOnly { get; set; }

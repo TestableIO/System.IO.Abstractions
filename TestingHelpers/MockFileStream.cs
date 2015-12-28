@@ -1,6 +1,8 @@
 ﻿namespace System.IO.Abstractions.TestingHelpers
 {
+#if NET40
     [Serializable]
+#endif
     public class MockFileStream : MemoryStream
     {
         readonly IMockFileDataAccessor mockFileDataAccessor;
@@ -34,10 +36,12 @@
             }
         }
 
+#if NET40
         public override void Close()
         {
             InternalFlush();
         }
+#endif
 
         public override void Flush()
         {

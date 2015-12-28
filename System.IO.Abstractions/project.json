@@ -15,6 +15,7 @@
         "System.Collections": "4.0.11-*",
         "System.Linq": "4.0.1-*",
         "System.Runtime": "4.0.21-*",
+        "System.Runtime.InteropServices.RuntimeInformation": "4.0.0-*",
         "System.Threading": "4.0.11-*",
         "System.IO.FileSystem": "4.0.1-*",
         "System.IO.FileSystem.AccessControl": "4.0.0-*"

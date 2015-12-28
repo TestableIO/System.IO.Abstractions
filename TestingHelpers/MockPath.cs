@@ -8,7 +8,9 @@ namespace System.IO.Abstractions.TestingHelpers
     /// <summary>
     ///     PathWrapper calls direct to Path but all this does is string manipulation so we can inherit directly from PathWrapper as no IO is done
     /// </summary>
+#if NET40
     [Serializable]
+#endif
     public class MockPath : PathWrapper
     {
         readonly IMockFileDataAccessor mockFileDataAccessor;
@@ -70,7 +72,7 @@ namespace System.IO.Abstractions.TestingHelpers
             // unc paths need at least two segments, the others need one segment
             bool isUnixRooted =
                 mockFileDataAccessor.Directory.GetCurrentDirectory()
-                    .StartsWith(DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase);
+                    .StartsWith(DirectorySeparatorChar.ToString(), StringComparison.OrdinalIgnoreCase);
 
             var minPathSegments = isUnc
                 ? 2
@@ -97,7 +99,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 }
             }
 
-            var fullPath = string.Join(DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), stack.Reverse().ToArray());
+            var fullPath = string.Join(DirectorySeparatorChar.ToString(), stack.Reverse().ToArray());
 
             if (hasTrailingSlash)
             {

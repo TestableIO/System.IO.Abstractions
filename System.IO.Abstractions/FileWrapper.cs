@@ -213,17 +213,27 @@ namespace System.IO.Abstractions
             return File.ReadLines(path, encoding);
         }
 
-#if NET40
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
         {
+#if NET40
             File.Replace(sourceFileName, destinationFileName, destinationBackupFileName);
+#elif DOTNET5_4
+            File.Copy(destinationFileName, destinationBackupFileName);
+            File.Move(sourceFileName, destinationFileName);
+#endif
         }
 
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
+#if NET40
             File.Replace(sourceFileName, destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
+#elif DOTNET5_4
+            File.Copy(destinationFileName, destinationBackupFileName);
+            File.Move(sourceFileName, destinationFileName);
+#endif
         }
 
+#if NET40
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
             File.SetAccessControl(path, fileSecurity);
