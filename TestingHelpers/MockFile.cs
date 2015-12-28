@@ -508,7 +508,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </remarks>
         public override void WriteAllText(string path, string contents)
         {
-            WriteAllText(path, new MockFileData(contents));
+            WriteAllText(path, contents, MockFileData.DefaultEncoding);
         }
 
         /// <summary>
@@ -543,17 +543,13 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </remarks>
         public override void WriteAllText(string path, string contents, Encoding encoding)
         {
-            WriteAllText(path, new MockFileData(contents, encoding));
-        }
-
-        private void WriteAllText(string path, MockFileData mockFileData)
-        {
             if (path == null)
             {
                 throw new ArgumentNullException("path", Properties.Resources.VALUE_CANNOT_BE_NULL);
             }
 
-            mockFileDataAccessor.AddFile(path, mockFileData);
+            MockFileData data = contents == null ? new MockFileData(new byte[0]) : new MockFileData(contents, encoding);
+            mockFileDataAccessor.AddFile(path, data);
         }
 
         internal static string ReadAllBytes(byte[] contents, Encoding encoding)

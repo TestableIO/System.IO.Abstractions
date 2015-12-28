@@ -89,6 +89,24 @@
             Assert.That(exception.ParamName, Is.EqualTo("path"));
         }
 
+        [Test]
+        public void MockFile_WriteAllText_ShouldNotThrowAnArgumentNullExceptionIfTheContentIsNull()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            string directoryPath = XFS.Path(@"c:\something");
+            string filePath = XFS.Path(@"c:\something\demo.txt");
+            fileSystem.AddDirectory(directoryPath);
+
+            // Act
+            fileSystem.File.WriteAllText(filePath, null);
+
+            // Assert
+            // no exception should be thrown, also the documentation says so
+            var data = fileSystem.GetFile(filePath);
+            Assert.That(data.Contents, Is.Empty);
+        }
+
         private IEnumerable<KeyValuePair<Encoding, byte[]>> GetEncodingsWithExpectedBytes()
         {
             Encoding utf8WithoutBom = new UTF8Encoding(false, true);
