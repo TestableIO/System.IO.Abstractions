@@ -66,7 +66,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return pathField.GetFullPath(pathSeparatorFixed);
         }
 
-        public MockFileData GetFile(string path, bool returnNullObject = false) 
+        public MockFileData GetFile(string path, bool returnNullObject = false)
         {
             path = FixPath(path);
 
@@ -86,7 +86,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
                     if (isReadOnly || isHidden)
                     {
-                        throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path));
+                        throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.ACCESS_TO_THE_PATH_IS_DENIED, path));
                     }
                 }
 
@@ -110,7 +110,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 if (FileExists(path) &&
                     (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-                    throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path));
+                    throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.ACCESS_TO_THE_PATH_IS_DENIED, path));
 
                 var lastIndex = 0;
 
@@ -126,7 +126,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     if (lastIndex < 0)
                         throw new ArgumentException(@"The UNC path should be of the form \\server\share.", "path");
 
-                    /* 
+                    /*
                      * Although CreateDirectory(@"\\server\share\") is not going to work in real code, we allow it here for the purposes of setting up test doubles.
                      * See PR https://github.com/tathamoddie/System.IO.Abstractions/pull/90 for conversation
                      */

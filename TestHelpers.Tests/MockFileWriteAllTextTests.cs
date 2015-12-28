@@ -107,6 +107,38 @@
             Assert.That(data.Contents, Is.Empty);
         }
 
+        [Test]
+        public void MockFile_WriteAllText_ShouldThrowAnUnauthorizedAccessExceptionIfTheFileIsReadOnly()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            string filePath = XFS.Path(@"c:\something\demo.txt");
+            var mockFileData = new MockFileData(new byte[0]);
+            mockFileData.Attributes = FileAttributes.ReadOnly;
+            fileSystem.AddFile(filePath, mockFileData);
+
+            // Act
+            TestDelegate action = () => fileSystem.File.WriteAllText(filePath, null);
+
+            // Assert
+            Assert.Throws<UnauthorizedAccessException>(action);
+        }
+
+        [Test]
+        public void MockFile_WriteAllText_ShouldThrowAnUnauthorizedAccessExceptionIfThePathIsOneDirectory()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            string directoryPath = XFS.Path(@"c:\something");
+            fileSystem.AddDirectory(directoryPath);
+
+            // Act
+            TestDelegate action = () => fileSystem.File.WriteAllText(directoryPath, null);
+
+            // Assert
+            Assert.Throws<UnauthorizedAccessException>(action);
+        }
+
         private IEnumerable<KeyValuePair<Encoding, byte[]>> GetEncodingsWithExpectedBytes()
         {
             Encoding utf8WithoutBom = new UTF8Encoding(false, true);

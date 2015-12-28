@@ -548,6 +548,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentNullException("path", Properties.Resources.VALUE_CANNOT_BE_NULL);
             }
 
+            if (mockFileDataAccessor.Directory.Exists(path))
+            {
+                throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.ACCESS_TO_THE_PATH_IS_DENIED, path));
+            }
+
             MockFileData data = contents == null ? new MockFileData(new byte[0]) : new MockFileData(contents, encoding);
             mockFileDataAccessor.AddFile(path, data);
         }
