@@ -5,7 +5,7 @@ namespace System.IO.Abstractions.TestingHelpers
 #if NET40
     [Serializable]
 #endif
-    internal class MockFileInfo : FileInfoBase
+    public class MockFileInfo : FileInfoBase
     {
         readonly IMockFileDataAccessor mockFileSystem;
         readonly string path;

@@ -75,9 +75,11 @@
                     0, 108, 0, 108, 0, 111, 0, 32, 0, 116, 0, 104, 0, 101, 0, 114,
                     0, 101, 0, 33, 0, 32, 0, 68, 0, 122, 0, 105, 1, 25, 0, 107, 0, 105, 0, 46 } },
 
+#if NET40
                 // Default encoding does not need a BOM
                 { Encoding.Default, new byte [] { 72, 101, 108, 108, 111, 32, 116,
                     104, 101, 114, 101, 33, 32, 68, 122, 105, 101, 107, 105, 46 } },
+#endif
 
                 // UTF-32 needs a BOM, the BOM is the first four bytes
                 { Encoding.UTF32, new byte [] {255, 254, 0, 0, 72, 0, 0, 0, 101,

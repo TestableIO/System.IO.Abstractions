@@ -11,6 +11,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using XFS = MockUnixSupport;
 
     public class MockFileCreateTests {
+
+#if NET40
         [Test]
         public void Mockfile_Create_ShouldCreateNewStream()
         {
@@ -25,6 +27,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(fileSystem.FileExists(fullPath), Is.True);
         }
+#endif
 
         [Test]
         public void Mockfile_Create_CanWriteToNewStream()
@@ -72,6 +75,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(actualContents, Is.EqualTo(expectedContents));
         }
 
+#if NET40
         [Test]
         public void Mockfile_Create_ThrowsWhenPathIsReadOnly()
         {
@@ -84,5 +88,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var exception =  Assert.Throws<UnauthorizedAccessException>(() => mockFile.Create(path).Close());
             Assert.That(exception.Message, Is.EqualTo(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path)));
         }
+#endif
     }
 }

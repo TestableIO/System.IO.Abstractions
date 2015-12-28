@@ -414,6 +414,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<UnauthorizedAccessException>(action, "Access to the path '{0}' is denied.", path);
         }
 
+#if NET40
         [Test]
         public void MockFile_OpenWrite_ShouldCreateNewFiles() {
             string filePath = XFS.Path(@"c:\something\demo.txt");
@@ -448,6 +449,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(fileSystem.FileExists(filePath), Is.True);
             Assert.That(fileSystem.GetFile(filePath).TextContents, Is.EqualTo(endFileContent));
         }
+#endif
 
         [Test]
         public void MockFile_Delete_ShouldRemoveFileFromFileSystem()
@@ -497,7 +499,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             stream.Write("Me too!");
             stream.Flush();
+#if NET40
             stream.Close();
+#endif
 
             var file = filesystem.GetFile(filepath);
             Assert.That(file.TextContents, Is.EqualTo("I'm here. Me too!"));
@@ -513,13 +517,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             stream.Write("New too!");
             stream.Flush();
+#if NET40
             stream.Close();
+#endif
 
             var file = filesystem.GetFile(filepath);
             Assert.That(file.TextContents, Is.EqualTo("New too!"));
             Assert.That(filesystem.FileExists(filepath));
         }
 
+#if NET40
         [Test]
         public void Serializable_works()
         {
@@ -605,5 +612,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreNotEqual(Content, newcontents);
         }
+#endif
     }
 }

@@ -5,6 +5,11 @@
   "tags": [ "" ],
   "projectUrl": "",
   "licenseUrl": "",
+  "dependencies": {
+    "System.IO.Abstractions": "1.0.0-*",
+    "TestingHelpers": "1.0.0-*",
+    "NUnit": "3.0.0-rc-3"
+  },
   "frameworks": {
     "net40": { },
     "dotnet5.4": {
@@ -13,7 +18,8 @@
         "System.Collections": "4.0.11-beta-23516",
         "System.Linq": "4.0.1-beta-23516",
         "System.Runtime": "4.0.21-beta-23516",
-        "System.Threading": "4.0.11-beta-23516"
+        "System.Threading": "4.0.11-beta-23516",
+        "System.Text.Encoding.Extensions": "4.0.11-*"
       }
     }
   }

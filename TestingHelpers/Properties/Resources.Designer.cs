@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace TestingHelpers.Properties {
+namespace System.IO.Abstractions.TestingHelpers.Properties {
     using System;
     using System.Reflection;
     

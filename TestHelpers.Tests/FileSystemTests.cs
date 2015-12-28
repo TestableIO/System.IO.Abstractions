@@ -2,6 +2,7 @@
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
+#if NET40
     [TestFixture]
     public class FileSystemTests
     {
@@ -17,4 +18,5 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(memoryStream.Length > 0, "Length didn't increase after serialization task.");
         }
     }
+#endif
 }
