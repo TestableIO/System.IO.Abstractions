@@ -2,7 +2,12 @@
   "locked": false,
   "version": 2,
   "targets": {
-    ".NETFramework,Version=v4.0": {},
+    ".NETFramework,Version=v4.0": {
+      "System.IO.Abstractions/1.0.0": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.0"
+      }
+    },
     ".NETPlatform,Version=v5.4": {
       "Microsoft.CSharp/4.0.1-rc2-23611": {
         "type": "package",
@@ -70,15 +75,28 @@
           "ref/dotnet/System.Globalization.dll": {}
         }
       },
-      "System.IO/4.0.0": {
+      "System.IO/4.0.11-rc2-23616": {
         "type": "package",
         "dependencies": {
-          "System.Runtime": "4.0.0",
+          "System.Runtime": "4.0.20",
           "System.Text.Encoding": "4.0.0",
           "System.Threading.Tasks": "4.0.0"
         },
         "compile": {
-          "ref/dotnet/System.IO.dll": {}
+          "ref/dotnet5.4/System.IO.dll": {}
+        }
+      },
+      "System.IO.Abstractions/1.0.0": {
+        "type": "project",
+        "framework": ".NETPlatform,Version=v5.4",
+        "dependencies": {
+          "Microsoft.CSharp": "4.0.1",
+          "System.Collections": "4.0.11",
+          "System.IO.FileSystem": "4.0.1",
+          "System.IO.FileSystem.AccessControl": "4.0.0",
+          "System.Linq": "4.0.1",
+          "System.Runtime": "4.0.21",
+          "System.Threading": "4.0.11"
         }
       },
       "System.IO.FileSystem/4.0.1-rc2-23616": {
@@ -311,6 +329,23 @@
           "ref/dotnet/System.Text.Encoding.dll": {}
         }
       },
+      "System.Text.RegularExpressions/4.0.11-rc2-23616": {
+        "type": "package",
+        "dependencies": {
+          "System.Collections": "4.0.10",
+          "System.Globalization": "4.0.10",
+          "System.Resources.ResourceManager": "4.0.0",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.Extensions": "4.0.10",
+          "System.Threading": "4.0.10"
+        },
+        "compile": {
+          "ref/dotnet5.4/System.Text.RegularExpressions.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet5.4/System.Text.RegularExpressions.dll": {}
+        }
+      },
       "System.Threading/4.0.11-rc2-23611": {
         "type": "package",
         "dependencies": {
@@ -331,8 +366,18 @@
         }
       }
     },
-    ".NETFramework,Version=v4.0/win7-x86": {},
-    ".NETFramework,Version=v4.0/win7-x64": {},
+    ".NETFramework,Version=v4.0/win7-x86": {
+      "System.IO.Abstractions/1.0.0": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.0"
+      }
+    },
+    ".NETFramework,Version=v4.0/win7-x64": {
+      "System.IO.Abstractions/1.0.0": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.0"
+      }
+    },
     ".NETPlatform,Version=v5.4/win7-x86": {
       "Microsoft.CSharp/4.0.1-rc2-23611": {
         "type": "package",
@@ -430,15 +475,28 @@
           "ref/dotnet/System.Globalization.dll": {}
         }
       },
-      "System.IO/4.0.0": {
+      "System.IO/4.0.11-rc2-23616": {
         "type": "package",
         "dependencies": {
-          "System.Runtime": "4.0.0",
+          "System.Runtime": "4.0.20",
           "System.Text.Encoding": "4.0.0",
           "System.Threading.Tasks": "4.0.0"
         },
         "compile": {
-          "ref/dotnet/System.IO.dll": {}
+          "ref/dotnet5.4/System.IO.dll": {}
+        }
+      },
+      "System.IO.Abstractions/1.0.0": {
+        "type": "project",
+        "framework": ".NETPlatform,Version=v5.4",
+        "dependencies": {
+          "Microsoft.CSharp": "4.0.1",
+          "System.Collections": "4.0.11",
+          "System.IO.FileSystem": "4.0.1",
+          "System.IO.FileSystem.AccessControl": "4.0.0",
+          "System.Linq": "4.0.1",
+          "System.Runtime": "4.0.21",
+          "System.Threading": "4.0.11"
         }
       },
       "System.IO.FileSystem/4.0.1-rc2-23616": {
@@ -679,6 +737,23 @@
         },
         "compile": {
           "ref/dotnet/System.Text.Encoding.Extensions.dll": {}
+        }
+      },
+      "System.Text.RegularExpressions/4.0.11-rc2-23616": {
+        "type": "package",
+        "dependencies": {
+          "System.Collections": "4.0.10",
+          "System.Globalization": "4.0.10",
+          "System.Resources.ResourceManager": "4.0.0",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.Extensions": "4.0.10",
+          "System.Threading": "4.0.10"
+        },
+        "compile": {
+          "ref/dotnet5.4/System.Text.RegularExpressions.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet5.4/System.Text.RegularExpressions.dll": {}
         }
       },
       "System.Threading/4.0.11-rc2-23611": {
@@ -808,15 +883,28 @@
           "ref/dotnet/System.Globalization.dll": {}
         }
       },
-      "System.IO/4.0.0": {
+      "System.IO/4.0.11-rc2-23616": {
         "type": "package",
         "dependencies": {
-          "System.Runtime": "4.0.0",
+          "System.Runtime": "4.0.20",
           "System.Text.Encoding": "4.0.0",
           "System.Threading.Tasks": "4.0.0"
         },
         "compile": {
-          "ref/dotnet/System.IO.dll": {}
+          "ref/dotnet5.4/System.IO.dll": {}
+        }
+      },
+      "System.IO.Abstractions/1.0.0": {
+        "type": "project",
+        "framework": ".NETPlatform,Version=v5.4",
+        "dependencies": {
+          "Microsoft.CSharp": "4.0.1",
+          "System.Collections": "4.0.11",
+          "System.IO.FileSystem": "4.0.1",
+          "System.IO.FileSystem.AccessControl": "4.0.0",
+          "System.Linq": "4.0.1",
+          "System.Runtime": "4.0.21",
+          "System.Threading": "4.0.11"
         }
       },
       "System.IO.FileSystem/4.0.1-rc2-23616": {
@@ -1059,6 +1147,23 @@
           "ref/dotnet/System.Text.Encoding.Extensions.dll": {}
         }
       },
+      "System.Text.RegularExpressions/4.0.11-rc2-23616": {
+        "type": "package",
+        "dependencies": {
+          "System.Collections": "4.0.10",
+          "System.Globalization": "4.0.10",
+          "System.Resources.ResourceManager": "4.0.0",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.Extensions": "4.0.10",
+          "System.Threading": "4.0.10"
+        },
+        "compile": {
+          "ref/dotnet5.4/System.Text.RegularExpressions.dll": {}
+        },
+        "runtime": {
+          "lib/dotnet5.4/System.Text.RegularExpressions.dll": {}
+        }
+      },
       "System.Threading/4.0.11-rc2-23611": {
         "type": "package",
         "dependencies": {
@@ -1091,6 +1196,10 @@
     }
   },
   "libraries": {
+    "System.IO.Abstractions/1.0.0": {
+      "type": "project",
+      "path": "../System.IO.Abstractions/project.json"
+    },
     "Microsoft.CSharp/4.0.1-rc2-23611": {
       "type": "package",
       "serviceable": true,
@@ -1236,6 +1345,7 @@
     },
     "System.Diagnostics.Debug/4.0.10": {
       "type": "package",
+      "serviceable": true,
       "sha512": "pi2KthuvI2LWV2c2V+fwReDsDiKpNl040h6DcwFOb59SafsPT/V1fCy0z66OKwysurJkBMmp5j5CBe3Um+ub0g==",
       "files": [
         "lib/DNXCore50/System.Diagnostics.Debug.dll",
@@ -1348,30 +1458,43 @@
         "System.Globalization.nuspec"
       ]
     },
-    "System.IO/4.0.0": {
+    "System.IO/4.0.11-rc2-23616": {
       "type": "package",
-      "sha512": "MoCHQ0u5n0OMwUS8OX4Gl48qKiQziSW5cXvt82d+MmAcsLq9OL90+ihnu/aJ1h6OOYcBswrZAEuApfZha9w2lg==",
+      "serviceable": true,
+      "sha512": "SyZ3zWYKTRgXbvinJsRlIUenJxdjjfrG6V75cUE9yjDLEq37BmCc5pgPBNaU5ffZJdNNPHAenygQL3RLJ4Zc5w==",
       "files": [
+        "lib/DNXCore50/System.IO.dll",
         "lib/MonoAndroid10/_._",
         "lib/MonoTouch10/_._",
         "lib/net45/_._",
+        "lib/netcore50/System.IO.dll",
         "lib/win8/_._",
         "lib/wp80/_._",
         "lib/wpa81/_._",
         "lib/xamarinios10/_._",
         "lib/xamarinmac20/_._",
-        "License.rtf",
-        "ref/dotnet/de/System.IO.xml",
-        "ref/dotnet/es/System.IO.xml",
-        "ref/dotnet/fr/System.IO.xml",
-        "ref/dotnet/it/System.IO.xml",
-        "ref/dotnet/ja/System.IO.xml",
-        "ref/dotnet/ko/System.IO.xml",
-        "ref/dotnet/ru/System.IO.xml",
-        "ref/dotnet/System.IO.dll",
-        "ref/dotnet/System.IO.xml",
-        "ref/dotnet/zh-hans/System.IO.xml",
-        "ref/dotnet/zh-hant/System.IO.xml",
+        "ref/dotnet5.1/de/System.IO.xml",
+        "ref/dotnet5.1/es/System.IO.xml",
+        "ref/dotnet5.1/fr/System.IO.xml",
+        "ref/dotnet5.1/it/System.IO.xml",
+        "ref/dotnet5.1/ja/System.IO.xml",
+        "ref/dotnet5.1/ko/System.IO.xml",
+        "ref/dotnet5.1/ru/System.IO.xml",
+        "ref/dotnet5.1/System.IO.dll",
+        "ref/dotnet5.1/System.IO.xml",
+        "ref/dotnet5.1/zh-hans/System.IO.xml",
+        "ref/dotnet5.1/zh-hant/System.IO.xml",
+        "ref/dotnet5.4/de/System.IO.xml",
+        "ref/dotnet5.4/es/System.IO.xml",
+        "ref/dotnet5.4/fr/System.IO.xml",
+        "ref/dotnet5.4/it/System.IO.xml",
+        "ref/dotnet5.4/ja/System.IO.xml",
+        "ref/dotnet5.4/ko/System.IO.xml",
+        "ref/dotnet5.4/ru/System.IO.xml",
+        "ref/dotnet5.4/System.IO.dll",
+        "ref/dotnet5.4/System.IO.xml",
+        "ref/dotnet5.4/zh-hans/System.IO.xml",
+        "ref/dotnet5.4/zh-hant/System.IO.xml",
         "ref/MonoAndroid10/_._",
         "ref/MonoTouch10/_._",
         "ref/net45/_._",
@@ -1391,8 +1514,9 @@
         "ref/wpa81/_._",
         "ref/xamarinios10/_._",
         "ref/xamarinmac20/_._",
-        "System.IO.4.0.0.nupkg",
-        "System.IO.4.0.0.nupkg.sha512",
+        "runtimes/win8-aot/lib/netcore50/System.IO.dll",
+        "System.IO.4.0.11-rc2-23616.nupkg",
+        "System.IO.4.0.11-rc2-23616.nupkg.sha512",
         "System.IO.nuspec"
       ]
     },
@@ -1584,6 +1708,7 @@
     },
     "System.ObjectModel/4.0.10": {
       "type": "package",
+      "serviceable": true,
       "sha512": "Djn1wb0vP662zxbe+c3mOhvC4vkQGicsFs1Wi0/GJJpp3Eqp+oxbJ+p2Sx3O0efYueggAI5SW+BqEoczjfr1cA==",
       "files": [
         "lib/dotnet/System.ObjectModel.dll",
@@ -1648,6 +1773,7 @@
     },
     "System.Reflection.Extensions/4.0.0": {
       "type": "package",
+      "serviceable": true,
       "sha512": "dbYaZWCyFAu1TGYUqR2n+Q+1casSHPR2vVW0WVNkXpZbrd2BXcZ7cpvpu9C98CTHtNmyfMWCLpCclDqly23t6A==",
       "files": [
         "lib/DNXCore50/System.Reflection.Extensions.dll",
@@ -1681,6 +1807,7 @@
     },
     "System.Reflection.Primitives/4.0.0": {
       "type": "package",
+      "serviceable": true,
       "sha512": "n9S0XpKv2ruc17FSnaiX6nV47VfHTZ1wLjKZlAirUZCvDQCH71mVp+Ohabn0xXLh5pK2PKp45HCxkqu5Fxn/lA==",
       "files": [
         "lib/DNXCore50/System.Reflection.Primitives.dll",
@@ -1714,6 +1841,7 @@
     },
     "System.Reflection.TypeExtensions/4.0.0": {
       "type": "package",
+      "serviceable": true,
       "sha512": "YRM/msNAM86hdxPyXcuZSzmTO0RQFh7YMEPBLTY8cqXvFPYIx2x99bOyPkuU81wRYQem1c1HTkImQ2DjbOBfew==",
       "files": [
         "lib/DNXCore50/System.Reflection.TypeExtensions.dll",
@@ -1747,6 +1875,7 @@
     },
     "System.Resources.ResourceManager/4.0.0": {
       "type": "package",
+      "serviceable": true,
       "sha512": "qmqeZ4BJgjfU+G2JbrZt4Dk1LsMxO4t+f/9HarNY6w8pBgweO6jT+cknUH7c3qIrGvyUqraBhU45Eo6UtA0fAw==",
       "files": [
         "lib/DNXCore50/System.Resources.ResourceManager.dll",
@@ -1853,6 +1982,7 @@
     },
     "System.Runtime.Extensions/4.0.10": {
       "type": "package",
+      "serviceable": true,
       "sha512": "5dsEwf3Iml7d5OZeT20iyOjT+r+okWpN7xI2v+R4cgd3WSj4DeRPTvPFjDpacbVW4skCAZ8B9hxXJYgkCFKJ1A==",
       "files": [
         "lib/DNXCore50/System.Runtime.Extensions.dll",
@@ -1886,6 +2016,7 @@
     },
     "System.Runtime.Handles/4.0.0": {
       "type": "package",
+      "serviceable": true,
       "sha512": "638VhpRq63tVcQ6HDb3um3R/J2BtR1Sa96toHo6PcJGPXEPEsleCuqhBgX2gFCz0y0qkutANwW6VPPY5wQu1XQ==",
       "files": [
         "lib/DNXCore50/System.Runtime.Handles.dll",
@@ -2145,6 +2276,67 @@
         "System.Text.Encoding.Extensions.nuspec"
       ]
     },
+    "System.Text.RegularExpressions/4.0.11-rc2-23616": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "XmybL8cOPlqAvUOGuUhkx6SuENyiGXDE+aZKOBs4pX6r9N3snypkHZELNbETKQ9glyfV2NNO+byvOViyx7GPiw==",
+      "files": [
+        "lib/dotnet5.4/System.Text.RegularExpressions.dll",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net45/_._",
+        "lib/netcore50/System.Text.RegularExpressions.dll",
+        "lib/win8/_._",
+        "lib/wp80/_._",
+        "lib/wpa81/_._",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "ref/dotnet5.1/de/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.1/es/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.1/fr/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.1/it/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.1/ja/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.1/ko/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.1/ru/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.1/System.Text.RegularExpressions.dll",
+        "ref/dotnet5.1/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.1/zh-hans/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.1/zh-hant/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.4/de/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.4/es/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.4/fr/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.4/it/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.4/ja/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.4/ko/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.4/ru/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.4/System.Text.RegularExpressions.dll",
+        "ref/dotnet5.4/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.4/zh-hans/System.Text.RegularExpressions.xml",
+        "ref/dotnet5.4/zh-hant/System.Text.RegularExpressions.xml",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/net45/_._",
+        "ref/netcore50/de/System.Text.RegularExpressions.xml",
+        "ref/netcore50/es/System.Text.RegularExpressions.xml",
+        "ref/netcore50/fr/System.Text.RegularExpressions.xml",
+        "ref/netcore50/it/System.Text.RegularExpressions.xml",
+        "ref/netcore50/ja/System.Text.RegularExpressions.xml",
+        "ref/netcore50/ko/System.Text.RegularExpressions.xml",
+        "ref/netcore50/ru/System.Text.RegularExpressions.xml",
+        "ref/netcore50/System.Text.RegularExpressions.dll",
+        "ref/netcore50/System.Text.RegularExpressions.xml",
+        "ref/netcore50/zh-hans/System.Text.RegularExpressions.xml",
+        "ref/netcore50/zh-hant/System.Text.RegularExpressions.xml",
+        "ref/win8/_._",
+        "ref/wp80/_._",
+        "ref/wpa81/_._",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "System.Text.RegularExpressions.4.0.11-rc2-23616.nupkg",
+        "System.Text.RegularExpressions.4.0.11-rc2-23616.nupkg.sha512",
+        "System.Text.RegularExpressions.nuspec"
+      ]
+    },
     "System.Threading/4.0.11-rc2-23611": {
       "type": "package",
       "serviceable": true,
@@ -2280,7 +2472,9 @@
     }
   },
   "projectFileDependencyGroups": {
-    "": [],
+    "": [
+      "System.IO.Abstractions >= 1.0.0-*"
+    ],
     ".NETFramework,Version=v4.0": [],
     ".NETPlatform,Version=v5.4": [
       "Microsoft.CSharp >= 4.0.1-*",
@@ -2288,8 +2482,10 @@
       "System.Linq >= 4.0.1-*",
       "System.Runtime >= 4.0.21-*",
       "System.Threading >= 4.0.11-*",
+      "System.IO >= 4.0.11-*",
       "System.IO.FileSystem >= 4.0.1-*",
-      "System.IO.FileSystem.AccessControl >= 4.0.0-*"
+      "System.IO.FileSystem.AccessControl >= 4.0.0-*",
+      "System.Text.RegularExpressions >= 4.0.11-*"
     ]
   }
 }

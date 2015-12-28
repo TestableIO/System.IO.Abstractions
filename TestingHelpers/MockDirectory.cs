@@ -8,7 +8,9 @@ namespace System.IO.Abstractions.TestingHelpers
 {
     using XFS = MockUnixSupport;
 
+#if NET40
     [Serializable]
+#endif
     public class MockDirectory : DirectoryBase
     {
         readonly FileBase fileBase;
@@ -23,6 +25,7 @@ namespace System.IO.Abstractions.TestingHelpers
             this.fileBase = fileBase;
         }
 
+#if NET40
         public override DirectoryInfoBase CreateDirectory(string path)
         {
             return CreateDirectory(path, null);
@@ -58,6 +61,38 @@ namespace System.IO.Abstractions.TestingHelpers
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
             return created;
         }
+#elif DOTNET5_4
+        public override DirectoryInfoBase CreateDirectory(string path)
+        {
+            if (path == null)
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            if (path.Length == 0)
+            {
+                throw new ArgumentException("Path cannot be the empty string or all whitespace.", "path");
+            }
+
+            if (mockFileDataAccessor.FileExists(path))
+            {
+                var message = string.Format(CultureInfo.InvariantCulture, @"Cannot create ""{0}"" because a file or directory with the same name already exists.", path);
+                var ex = new IOException(message);
+                ex.Data.Add("Path", path);
+                throw ex;
+            }
+
+            path = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(path));
+
+            if (!Exists(path))
+            {
+                mockFileDataAccessor.AddDirectory(path);
+            }
+
+            var created = new MockDirectoryInfo(mockFileDataAccessor, path);
+            return created;
+        }
+#endif
 
         public override void Delete(string path)
         {
@@ -98,6 +133,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+#if NET40
         public override DirectorySecurity GetAccessControl(string path)
         {
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
@@ -107,6 +143,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
+#endif
 
         public override DateTime GetCreationTime(string path)
         {
@@ -265,6 +302,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return fileBase.GetLastWriteTimeUtc(path);
         }
 
+#if NET40
         public override string[] GetLogicalDrives()
         {
             return mockFileDataAccessor
@@ -274,6 +312,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 .Distinct()
                 .ToArray();
         }
+#endif
 
         public override DirectoryInfoBase GetParent(string path)
         {
