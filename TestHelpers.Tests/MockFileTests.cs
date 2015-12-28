@@ -240,6 +240,35 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_GetAttributeWithEmptyParameter_ShouldThrowOneArgumentException()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.GetAttributes(string.Empty);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentException>(action);
+            Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
+        }
+
+        [Test]
+        public void MockFile_GetAttributeWithIllegalParameter_ShouldThrowOneArgumentException()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.GetAttributes(string.Empty);
+
+            // Assert
+            // Note: The actual type of the exception differs from the documentation.
+            //       According to the documentation it should be of type NotSupportedException.
+            Assert.Throws<ArgumentException>(action);
+        }
+
+        [Test]
         public void MockFile_GetCreationTimeOfNonExistantFile_ShouldReturnDefaultValue() {
             ExecuteDefaultValueTest((f, p) => f.GetCreationTime(p));
         }
