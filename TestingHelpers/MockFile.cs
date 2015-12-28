@@ -49,7 +49,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 var dir = mockFileDataAccessor.Path.GetDirectoryName(path);
                 if (!mockFileDataAccessor.Directory.Exists(dir))
                 {
-                    throw new DirectoryNotFoundException(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
+                    throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
                 }
 
                 mockFileDataAccessor.AddFile(path, new MockFileData(contents, encoding));
@@ -71,7 +71,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 return sw;
             }
 
-            return new StreamWriter(this.Create(path));
+            return new StreamWriter(Create(path));
         }
 
         public override void Copy(string sourceFileName, string destFileName)
