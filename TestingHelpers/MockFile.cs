@@ -162,21 +162,44 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
 
+        /// <summary>
+        /// Gets the <see cref="FileAttributes"/> of the file on the path.
+        /// </summary>
+        /// <param name="path">The path to the file.</param>
+        /// <returns>The <see cref="FileAttributes"/> of the file on the path.</returns>
+        /// <exception cref="ArgumentException"><paramref name="path"/> is empty, contains only white spaces, or contains invalid characters.</exception>
+        /// <exception cref="PathTooLongException">The specified path, file name, or both exceed the system-defined maximum length. For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.</exception>
+        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
+        /// <exception cref="FileNotFoundException"><paramref name="path"/> represents a file and is invalid, such as being on an unmapped drive, or the file cannot be found.</exception>
+        /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> represents a directory and is invalid, such as being on an unmapped drive, or the directory cannot be found.</exception>
+        /// <exception cref="IOException">This file is being used by another process.</exception>
+        /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission.</exception>
         public override FileAttributes GetAttributes(string path)
         {
             var possibleFileData = mockFileDataAccessor.GetFile(path);
-            FileAttributes result = FileAttributes.Normal;
-            if (possibleFileData == null)
+            FileAttributes result;
+            if (possibleFileData != null)
+            {
+                result = possibleFileData.Attributes;
+            }
+            else
             {
                 var directoryInfo = mockFileDataAccessor.DirectoryInfo.FromDirectoryName(path);
                 if (directoryInfo.Exists)
                 {
                     result = directoryInfo.Attributes;
                 }
-            }
-            else
-            {
-                result = possibleFileData.Attributes;
+                else
+                {
+                    var parentDirectoryInfo = directoryInfo.Parent;
+                    if (!parentDirectoryInfo.Exists)
+                    {
+                        throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture,
+                            Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, path));
+                    }
+
+                    throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find file '{0}'.", path));
+                }
             }
 
             return result;
