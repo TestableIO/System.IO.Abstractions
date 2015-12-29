@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using NUnit.Framework;
 using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
@@ -78,6 +79,34 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 yield return new TestCaseData(writeArrayUtf32)
                     .SetName("WriteAllLines(string, string[], Encoding.UTF32)");
             }
+
+            public static IEnumerable ForPathIsDirectory
+            {
+                get
+                {
+                    var fileSystem = new MockFileSystem();
+                    var path = XFS.Path(@"c:\something");
+                    fileSystem.Directory.CreateDirectory(path);
+                    var fileContentEnumerable = new List<string>();
+                    var fileContentArray = fileContentEnumerable.ToArray();
+                    TestDelegate writeEnumberable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
+                    TestDelegate writeEnumberableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
+                    TestDelegate writeArray = () => fileSystem.File.WriteAllLines(path, fileContentArray);
+                    TestDelegate writeArrayUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentArray, Encoding.UTF32);
+
+                    // IEnumerable
+                    yield return new TestCaseData(writeEnumberable, path)
+                        .SetName("WriteAllLines(string, IEnumerable<string>)");
+                    yield return new TestCaseData(writeEnumberableUtf32, path)
+                        .SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
+
+                    // string[]
+                    yield return new TestCaseData(writeArray, path)
+                        .SetName("WriteAllLines(string, string[])");
+                    yield return new TestCaseData(writeArrayUtf32, path)
+                        .SetName("WriteAllLines(string, string[], Encoding.UTF32)");
+                }
+            }
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), "ForDifferentEncoding")]
@@ -121,6 +150,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             var exception = Assert.Throws<ArgumentException>(action);
             Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."));
+        }
+
+        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForPathIsDirectory")]
+        public void MockFile_WriteAllLinesGeneric_ShouldThrowAnUnauthorizedAccessExceptionIfPathIsOneDirectory(TestDelegate action, string path)
+        {
+            // Arrange
+            // is done in the test case source
+
+            // Act
+            // is done in the test case source
+
+            // Assert
+            var exception = Assert.Throws<UnauthorizedAccessException>(action);
+            var expectedMessage = string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path);
+            Assert.That(exception.Message, Is.EqualTo(expectedMessage));
         }
     }
 }
