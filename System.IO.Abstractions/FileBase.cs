@@ -37,12 +37,8 @@ namespace System.IO.Abstractions
 #endif
 
         public abstract bool Exists(string path);
-
-#if NET40
         public abstract FileSecurity GetAccessControl(string path);
         public abstract FileSecurity GetAccessControl(string path, AccessControlSections includeSections);
-#endif
-
         public abstract FileAttributes GetAttributes(string path);
         public abstract DateTime GetCreationTime(string path);
         public abstract DateTime GetCreationTimeUtc(string path);
@@ -66,11 +62,7 @@ namespace System.IO.Abstractions
         public abstract IEnumerable<String> ReadLines(String path, Encoding encoding);
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName);
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
-
-#if NET40
         public abstract void SetAccessControl(string path, FileSecurity fileSecurity);
-#endif
-
         public abstract void SetAttributes(string path, FileAttributes fileAttributes);
         public abstract void SetCreationTime(string path, DateTime creationTime);
         public abstract void SetCreationTimeUtc(string path, DateTime creationTimeUtc);

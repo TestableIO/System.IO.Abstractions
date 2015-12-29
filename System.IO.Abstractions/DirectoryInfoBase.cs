@@ -24,10 +24,8 @@ namespace System.IO.Abstractions
         public abstract IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos();
         public abstract IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(String searchPattern);
         public abstract IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(String searchPattern, SearchOption searchOption);
-#if NET40
         public abstract DirectorySecurity GetAccessControl();
         public abstract DirectorySecurity GetAccessControl(AccessControlSections includeSections);
-#endif
         public abstract DirectoryInfoBase[] GetDirectories();
         public abstract DirectoryInfoBase[] GetDirectories(string searchPattern);
         public abstract DirectoryInfoBase[] GetDirectories(string searchPattern, SearchOption searchOption);
@@ -38,9 +36,7 @@ namespace System.IO.Abstractions
         public abstract FileSystemInfoBase[] GetFileSystemInfos(string searchPattern);
         public abstract FileSystemInfoBase[] GetFileSystemInfos(string searchPattern, SearchOption searchOption);
         public abstract void MoveTo(string destDirName);
-#if NET40
         public abstract void SetAccessControl(DirectorySecurity directorySecurity);
-#endif
         public abstract DirectoryInfoBase Parent { get; }
         public abstract DirectoryInfoBase Root { get; }
         

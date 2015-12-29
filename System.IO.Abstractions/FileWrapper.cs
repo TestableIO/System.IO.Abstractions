@@ -96,17 +96,25 @@ namespace System.IO.Abstractions
             return File.Exists(path);
         }
 
-#if NET40
         public override FileSecurity GetAccessControl(string path)
         {
+#if NET40
             return File.GetAccessControl(path);
+#elif DOTNET5_4
+            var info = new FileInfo(path);
+            return info.GetAccessControl();
+#endif
         }
 
         public override FileSecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
+#if NET40
             return File.GetAccessControl(path, includeSections);
-        }
+#elif DOTNET5_4
+            var info = new FileInfo(path);
+            return info.GetAccessControl(includeSections);
 #endif
+        }
 
         public override FileAttributes GetAttributes(string path)
         {
@@ -233,12 +241,15 @@ namespace System.IO.Abstractions
 #endif
         }
 
-#if NET40
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
+#if NET40
             File.SetAccessControl(path, fileSecurity);
-        }
+#elif DOTNET5_4
+            var info = new FileInfo(path);
+            info.SetAccessControl(fileSecurity);
 #endif
+        }
 
         public override void SetAttributes(string path, FileAttributes fileAttributes)
         {

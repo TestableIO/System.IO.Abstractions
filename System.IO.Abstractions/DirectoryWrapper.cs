@@ -43,17 +43,25 @@ namespace System.IO.Abstractions
             return Directory.Exists(path);
         }
 
-#if NET40
         public override DirectorySecurity GetAccessControl(string path)
         {
+#if NET40
             return Directory.GetAccessControl(path);
+#elif DOTNET5_4
+            var info = new DirectoryInfo(path);
+            return info.GetAccessControl();
+#endif
         }
 
         public override DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
+#if NET40
             return Directory.GetAccessControl(path, includeSections);
-        }
+#elif DOTNET5_4
+            var info = new DirectoryInfo(path);
+            return info.GetAccessControl(includeSections);
 #endif
+        }
 
         public override DateTime GetCreationTime(string path)
         {

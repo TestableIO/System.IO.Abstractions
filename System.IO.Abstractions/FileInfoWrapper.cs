@@ -190,12 +190,10 @@ namespace System.IO.Abstractions
 #endif
         }
 
-#if NET40
         public override void SetAccessControl(FileSecurity fileSecurity)
         {
             instance.SetAccessControl(fileSecurity);
         }
-#endif
 
         public override DirectoryInfoBase Directory
         {

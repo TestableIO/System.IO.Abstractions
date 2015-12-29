@@ -14,12 +14,8 @@ namespace System.IO.Abstractions
         public abstract void Delete(string path);
         public abstract void Delete(string path, bool recursive);
         public abstract bool Exists(string path);
-
-#if NET40
         public abstract DirectorySecurity GetAccessControl(string path);
         public abstract DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections);
-#endif
-
         public abstract DateTime GetCreationTime(string path);
         public abstract DateTime GetCreationTimeUtc(string path);
         public abstract string GetCurrentDirectory();
