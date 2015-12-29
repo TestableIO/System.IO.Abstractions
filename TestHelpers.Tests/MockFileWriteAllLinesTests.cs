@@ -80,6 +80,26 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     .SetName("WriteAllLines(string, string[], Encoding.UTF32)");
             }
 
+            private static IEnumerable ForNullEncoding
+            {
+                get
+                {
+                    var fileSystem = new MockFileSystem();
+                    var fileContentEnumerable = new List<string>();
+                    var fileContentArray = fileContentEnumerable.ToArray();
+                    TestDelegate writeEnumberableNull = () => fileSystem.File.WriteAllLines(Path, fileContentEnumerable, null);
+                    TestDelegate writeArrayNull = () => fileSystem.File.WriteAllLines(Path, fileContentArray, null);
+
+                    // IEnumerable
+                    yield return new TestCaseData(writeEnumberableNull)
+                        .SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
+
+                    // string[]
+                    yield return new TestCaseData(writeArrayNull)
+                        .SetName("WriteAllLines(string, string[], Encoding.UTF32)");
+                }
+            }
+
             public static IEnumerable ForPathIsDirectory
             {
                 get
@@ -199,6 +219,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var exception = Assert.Throws<ArgumentNullException>(action);
             Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
             Assert.That(exception.ParamName, Is.StringStarting("path"));
+        }
+
+        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForNullEncoding")]
+        public void MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentNullExceptionIfEncodingIsNull(TestDelegate action)
+        {
+            // Arrange
+            // is done in the test case source
+
+            // Act
+            // is done in the test case source
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(action);
+            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
+            Assert.That(exception.ParamName, Is.StringStarting("encoding"));
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), "ForIllegalPath")]

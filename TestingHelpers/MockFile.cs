@@ -546,6 +546,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentNullException("contents", Properties.Resources.VALUE_CANNOT_BE_NULL);
             }
 
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding", Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
+
             var sb = new StringBuilder();
             foreach (var line in contents)
             {
@@ -642,6 +647,11 @@ namespace System.IO.Abstractions.TestingHelpers
             if (contents == null)
             {
                 throw new ArgumentNullException("contents", Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
+
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding", Properties.Resources.VALUE_CANNOT_BE_NULL);
             }
 
             WriteAllLines(path, new List<string>(contents), encoding);
