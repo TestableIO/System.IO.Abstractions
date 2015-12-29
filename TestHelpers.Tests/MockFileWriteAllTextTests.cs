@@ -61,6 +61,84 @@
             Assert.Throws<UnauthorizedAccessException>(action, "Access to the path '{0}' is denied.", path);
         }
 
+        [Test]
+        public void MockFile_WriteAllText_ShouldThrowAnArgumentExceptionIfThePathIsEmpty()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.WriteAllText(string.Empty, "hello world");
+
+            // Assert
+            Assert.Throws<ArgumentException>(action);
+        }
+
+        [Test]
+        public void MockFile_WriteAllText_ShouldThrowAnArgumentNullExceptionIfThePathIsNull()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.WriteAllText(null, "hello world");
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(action);
+            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
+            Assert.That(exception.ParamName, Is.EqualTo("path"));
+        }
+
+        [Test]
+        public void MockFile_WriteAllText_ShouldNotThrowAnArgumentNullExceptionIfTheContentIsNull()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            string directoryPath = XFS.Path(@"c:\something");
+            string filePath = XFS.Path(@"c:\something\demo.txt");
+            fileSystem.AddDirectory(directoryPath);
+
+            // Act
+            fileSystem.File.WriteAllText(filePath, null);
+
+            // Assert
+            // no exception should be thrown, also the documentation says so
+            var data = fileSystem.GetFile(filePath);
+            Assert.That(data.Contents, Is.Empty);
+        }
+
+        [Test]
+        public void MockFile_WriteAllText_ShouldThrowAnUnauthorizedAccessExceptionIfTheFileIsReadOnly()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            string filePath = XFS.Path(@"c:\something\demo.txt");
+            var mockFileData = new MockFileData(new byte[0]);
+            mockFileData.Attributes = FileAttributes.ReadOnly;
+            fileSystem.AddFile(filePath, mockFileData);
+
+            // Act
+            TestDelegate action = () => fileSystem.File.WriteAllText(filePath, null);
+
+            // Assert
+            Assert.Throws<UnauthorizedAccessException>(action);
+        }
+
+        [Test]
+        public void MockFile_WriteAllText_ShouldThrowAnUnauthorizedAccessExceptionIfThePathIsOneDirectory()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            string directoryPath = XFS.Path(@"c:\something");
+            fileSystem.AddDirectory(directoryPath);
+
+            // Act
+            TestDelegate action = () => fileSystem.File.WriteAllText(directoryPath, null);
+
+            // Assert
+            Assert.Throws<UnauthorizedAccessException>(action);
+        }
+
         private IEnumerable<KeyValuePair<Encoding, byte[]>> GetEncodingsWithExpectedBytes()
         {
             Encoding utf8WithoutBom = new UTF8Encoding(false, true);

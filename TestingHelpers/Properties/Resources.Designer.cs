@@ -61,6 +61,15 @@ namespace System.IO.Abstractions.TestingHelpers.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Access to the path &apos;{0}&apos; is denied..
+        /// </summary>
+        internal static string ACCESS_TO_THE_PATH_IS_DENIED {
+            get {
+                return ResourceManager.GetString("ACCESS_TO_THE_PATH_IS_DENIED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not find a part of the path &apos;{0}&apos;..
         /// </summary>
         internal static string COULD_NOT_FIND_PART_OF_PATH_EXCEPTION {
@@ -84,6 +93,15 @@ namespace System.IO.Abstractions.TestingHelpers.Properties {
         internal static string NOT_IMPLEMENTED_EXCEPTION {
             get {
                 return ResourceManager.GetString("NOT_IMPLEMENTED_EXCEPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value cannot be null..
+        /// </summary>
+        internal static string VALUE_CANNOT_BE_NULL {
+            get {
+                return ResourceManager.GetString("VALUE_CANNOT_BE_NULL", resourceCulture);
             }
         }
     }

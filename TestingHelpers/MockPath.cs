@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -22,7 +21,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (path == null)
             {
-                throw new ArgumentNullException("path", "Value cannot be null.");
+                throw new ArgumentNullException("path", Properties.Resources.VALUE_CANNOT_BE_NULL);
             }
 
             if(path.Length == 0)
