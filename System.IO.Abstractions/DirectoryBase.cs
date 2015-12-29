@@ -9,10 +9,7 @@ namespace System.IO.Abstractions
     public abstract class DirectoryBase
     {
         public abstract DirectoryInfoBase CreateDirectory(string path);
-
-#if NET40
         public abstract DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity);
-#endif
 
         public abstract void Delete(string path);
         public abstract void Delete(string path, bool recursive);
@@ -46,11 +43,7 @@ namespace System.IO.Abstractions
 
         public abstract DirectoryInfoBase GetParent(string path);
         public abstract void Move(string sourceDirName, string destDirName);
-
-#if NET40
         public abstract void SetAccessControl(string path, DirectorySecurity directorySecurity);
-#endif
-
         public abstract void SetCreationTime(string path, DateTime creationTime);
         public abstract void SetCreationTimeUtc(string path, DateTime creationTimeUtc);
         public abstract void SetCurrentDirectory(string path);

@@ -16,12 +16,17 @@ namespace System.IO.Abstractions
             return Directory.CreateDirectory(path);
         }
 
-#if NET40
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
+#if NET40
             return Directory.CreateDirectory(path, directorySecurity);
-        }
+#elif DOTNET5_4
+            var info = new DirectoryInfo(path);
+            info.Create();
+            info.SetAccessControl(directorySecurity);
+            return info;
 #endif
+        }
 
         public override void Delete(string path)
         {
@@ -147,12 +152,15 @@ namespace System.IO.Abstractions
             Directory.Move(sourceDirName, destDirName);
         }
 
-#if NET40
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
+#if NET40
             Directory.SetAccessControl(path, directorySecurity);
-        }
+#elif DOTNET5_4
+            var info = new DirectoryInfo(path);
+            info.SetAccessControl(directorySecurity);
 #endif
+        }
 
         public override void SetCreationTime(string path, DateTime creationTime)
         {

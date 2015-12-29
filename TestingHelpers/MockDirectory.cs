@@ -25,7 +25,6 @@ namespace System.IO.Abstractions.TestingHelpers
             this.fileBase = fileBase;
         }
 
-#if NET40
         public override DirectoryInfoBase CreateDirectory(string path)
         {
             return CreateDirectory(path, null);
@@ -61,38 +60,6 @@ namespace System.IO.Abstractions.TestingHelpers
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
             return created;
         }
-#elif DOTNET5_4
-        public override DirectoryInfoBase CreateDirectory(string path)
-        {
-            if (path == null)
-            {
-                throw new ArgumentNullException("path");
-            }
-
-            if (path.Length == 0)
-            {
-                throw new ArgumentException("Path cannot be the empty string or all whitespace.", "path");
-            }
-
-            if (mockFileDataAccessor.FileExists(path))
-            {
-                var message = string.Format(CultureInfo.InvariantCulture, @"Cannot create ""{0}"" because a file or directory with the same name already exists.", path);
-                var ex = new IOException(message);
-                ex.Data.Add("Path", path);
-                throw ex;
-            }
-
-            path = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(path));
-
-            if (!Exists(path))
-            {
-                mockFileDataAccessor.AddDirectory(path);
-            }
-
-            var created = new MockDirectoryInfo(mockFileDataAccessor, path);
-            return created;
-        }
-#endif
 
         public override void Delete(string path)
         {
@@ -396,12 +363,10 @@ namespace System.IO.Abstractions.TestingHelpers
             Delete(fullSourcePath);
         }
 
-#if NET40
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
             throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
         }
-#endif
 
         public override void SetCreationTime(string path, DateTime creationTime)
         {
