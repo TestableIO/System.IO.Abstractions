@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -8,7 +6,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class StringExtensions
     {
         [Test]
-        public void SplitLines_InputWithOneLine_ShouldReturnOnlyOneLine() 
+        public void SplitLines_InputWithOneLine_ShouldReturnOnlyOneLine()
         {
             var input = "This is row one";
             var expected = new[] { "This is row one" };

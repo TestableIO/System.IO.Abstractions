@@ -489,28 +489,28 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void WriteAllLines(string path, IEnumerable<string> contents)
         {
+            WriteAllLines(path, contents, MockFileData.DefaultEncoding);
+        }
+
+        public override void WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding)
+        {
             var sb = new StringBuilder();
             foreach (var line in contents)
             {
                 sb.AppendLine(line);
             }
 
-            WriteAllText(path, sb.ToString());
-        }
-
-        public override void WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding)
-        {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            WriteAllText(path, sb.ToString(), encoding);
         }
 
         public override void WriteAllLines(string path, string[] contents)
         {
-            WriteAllText(path, string.Join("\n", contents));
+            WriteAllLines(path, contents, MockFileData.DefaultEncoding);
         }
 
         public override void WriteAllLines(string path, string[] contents, Encoding encoding)
         {
-            WriteAllText(path, string.Join("\n", contents), encoding);
+            WriteAllLines(path, new List<string>(contents), encoding);
         }
 
         /// <summary>

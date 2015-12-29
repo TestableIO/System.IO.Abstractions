@@ -1,0 +1,126 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+using NUnit.Framework;
+using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
+
+namespace System.IO.Abstractions.TestingHelpers.Tests
+{
+    public class MockFileWriteAllLinesTests
+    {
+        private class TestDataForWriteAllLines
+        {
+            public static readonly string Path = XFS.Path(@"c:\something\demo.txt");
+
+            public static IEnumerable ForDifferentEncoding
+            {
+                get
+                {
+                    var fileSystem = new MockFileSystem();
+                    var fileContentEnumerable = new List<string> { "first line", "second line", "third line", "fourth and last line" };
+                    var fileContentArray = fileContentEnumerable.ToArray();
+                    Action writeEnumberable = () => fileSystem.File.WriteAllLines(Path, fileContentEnumerable);
+                    Action writeEnumberableUtf32 = () => fileSystem.File.WriteAllLines(Path, fileContentEnumerable, Encoding.UTF32);
+                    Action writeArray = () => fileSystem.File.WriteAllLines(Path, fileContentArray);
+                    Action writeArrayUtf32 = () => fileSystem.File.WriteAllLines(Path, fileContentArray, Encoding.UTF32);
+
+                    // IEnumerable
+                    yield return new TestCaseData(fileSystem, writeEnumberable, fileContentArray)
+                        .SetName("WriteAllLines(string, IEnumerable<string>)");
+                    yield return new TestCaseData(fileSystem, writeEnumberableUtf32, fileContentArray)
+                        .SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
+
+                    // string[]
+                    yield return new TestCaseData(fileSystem, writeArray, fileContentArray)
+                        .SetName("WriteAllLines(string, string[])");
+                    yield return new TestCaseData(fileSystem, writeArrayUtf32, fileContentArray)
+                        .SetName("WriteAllLines(string, string[], Encoding.UTF32)");
+                }
+            }
+
+            public static IEnumerable ForIllegalPath
+            {
+                get
+                {
+                    const string illegalPath = "<<<";
+                    return GetCasesForArgumentChecking(illegalPath);
+                }
+            }
+
+            public static IEnumerable ForNullPath
+            {
+                get
+                {
+                    const string illegalPath = null;
+                    return GetCasesForArgumentChecking(illegalPath);
+                }
+            }
+
+            private static IEnumerable GetCasesForArgumentChecking(string path)
+            {
+                var fileSystem = new MockFileSystem();
+                var fileContentEnumerable = new List<string>();
+                var fileContentArray = fileContentEnumerable.ToArray();
+                TestDelegate writeEnumberable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
+                TestDelegate writeEnumberableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
+                TestDelegate writeArray = () => fileSystem.File.WriteAllLines(path, fileContentArray);
+                TestDelegate writeArrayUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentArray, Encoding.UTF32);
+
+                // IEnumerable
+                yield return new TestCaseData(writeEnumberable)
+                    .SetName("WriteAllLines(string, IEnumerable<string>)");
+                yield return new TestCaseData(writeEnumberableUtf32)
+                    .SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
+
+                // string[]
+                yield return new TestCaseData(writeArray)
+                    .SetName("WriteAllLines(string, string[])");
+                yield return new TestCaseData(writeArrayUtf32)
+                    .SetName("WriteAllLines(string, string[], Encoding.UTF32)");
+            }
+        }
+
+        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForDifferentEncoding")]
+        public void MockFile_WriteAllLinesGeneric_ShouldWriteTheCorrectContent(IMockFileDataAccessor fileSystem, Action action, string[] expectedResult)
+        {
+            // Arrange
+            // is done in the test case source
+
+            // Act
+            action();
+
+            // Assert
+            var actualContent = fileSystem.GetFile(TestDataForWriteAllLines.Path).TextContents.SplitLines();
+            Assert.That(actualContent, Is.EquivalentTo(expectedResult));
+        }
+
+        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForNullPath")]
+        public void MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentNullExceptionIfPathIsNull(TestDelegate action)
+        {
+            // Arrange
+            // is done in the test case source
+
+            // Act
+            // is done in the test case source
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(action);
+            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
+            Assert.That(exception.ParamName, Is.StringStarting("path"));
+        }
+
+        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForIllegalPath")]
+        public void MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentExceptionIfPathContainsIllegalCharacters(TestDelegate action)
+        {
+            // Arrange
+            // is done in the test case source
+
+            // Act
+            // is done in the test case source
+
+            // Assert
+            var exception = Assert.Throws<ArgumentException>(action);
+            Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."));
+        }
+    }
+}

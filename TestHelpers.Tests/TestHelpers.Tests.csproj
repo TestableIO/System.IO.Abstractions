@@ -100,6 +100,7 @@
     <Compile Include="MockFileSystemTests.cs" />
     <Compile Include="MockFileTests.cs" />
     <Compile Include="MockFileWriteAllBytesTests.cs" />
+    <Compile Include="MockFileWriteAllLinesTests.cs" />
     <Compile Include="MockFileWriteAllTextTests.cs" />
     <Compile Include="MockPathTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

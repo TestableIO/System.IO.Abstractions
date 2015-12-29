@@ -100,8 +100,8 @@ namespace System.IO.Abstractions
         /// Given a byte array and a file path, this method opens the specified file, writes the contents of the byte array to the file, and then closes the file.
         /// </remarks>
         public abstract void WriteAllBytes(string path, byte[] bytes);
-        public abstract void WriteAllLines(String path, IEnumerable<String> contents);
-        public abstract void WriteAllLines(String path, IEnumerable<String> contents, Encoding encoding);
+        public abstract void WriteAllLines(string path, IEnumerable<string> contents);
+        public abstract void WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding);
         public abstract void WriteAllLines(string path, string[] contents);
         public abstract void WriteAllLines(string path, string[] contents, Encoding encoding);
 
