@@ -489,11 +489,21 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void WriteAllLines(string path, IEnumerable<string> contents)
         {
+            if (contents == null)
+            {
+                throw new ArgumentNullException("contents", Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
+
             WriteAllLines(path, contents, MockFileData.DefaultEncoding);
         }
 
         public override void WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding)
         {
+            if (contents == null)
+            {
+                throw new ArgumentNullException("contents", Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
+
             var sb = new StringBuilder();
             foreach (var line in contents)
             {
@@ -505,11 +515,21 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void WriteAllLines(string path, string[] contents)
         {
+            if (contents == null)
+            {
+                throw new ArgumentNullException("contents", Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
+
             WriteAllLines(path, contents, MockFileData.DefaultEncoding);
         }
 
         public override void WriteAllLines(string path, string[] contents, Encoding encoding)
         {
+            if (contents == null)
+            {
+                throw new ArgumentNullException("contents", Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
+
             WriteAllLines(path, new List<string>(contents), encoding);
         }
 
