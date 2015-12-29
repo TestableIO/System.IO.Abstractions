@@ -97,11 +97,7 @@ namespace System.IO.Abstractions
         /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
         /// <exception cref="System.Security.SecurityException">The caller does not have the required permission.</exception>
         /// <remarks>
-        /// This method uses UTF-8 encoding without a Byte-Order Mark (BOM), so using the <see cref="M:Encoding.GetPreamble"/> method will return an empty byte array.
-        /// If it is necessary to include a UTF-8 identifier, such as a byte order mark, at the beginning of a file, use the <see cref="WriteAllText(string,string, Encoding)"/> method overload with <see cref="UTF8Encoding"/> encoding.
-        /// <para>
-        /// Given a string and a file path, this method opens the specified file, writes the string to the file, and then closes the file.
-        /// </para>
+        /// Given a byte array and a file path, this method opens the specified file, writes the contents of the byte array to the file, and then closes the file.
         /// </remarks>
         public abstract void WriteAllBytes(string path, byte[] bytes);
         public abstract void WriteAllLines(String path, IEnumerable<String> contents);
