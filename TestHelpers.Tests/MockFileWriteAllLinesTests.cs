@@ -24,17 +24,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     Action writeEnumberableUtf32 = () => fileSystem.File.WriteAllLines(Path, fileContentEnumerable, Encoding.UTF32);
                     Action writeArray = () => fileSystem.File.WriteAllLines(Path, fileContentArray);
                     Action writeArrayUtf32 = () => fileSystem.File.WriteAllLines(Path, fileContentArray, Encoding.UTF32);
+                    var expectedContent = string.Format(CultureInfo.InvariantCulture,
+                        "first line{0}second line{0}third line{0}fourth and last line{0}", Environment.NewLine);
 
                     // IEnumerable
-                    yield return new TestCaseData(fileSystem, writeEnumberable, fileContentArray)
+                    yield return new TestCaseData(fileSystem, writeEnumberable, expectedContent)
                         .SetName("WriteAllLines(string, IEnumerable<string>)");
-                    yield return new TestCaseData(fileSystem, writeEnumberableUtf32, fileContentArray)
+                    yield return new TestCaseData(fileSystem, writeEnumberableUtf32, expectedContent)
                         .SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
 
                     // string[]
-                    yield return new TestCaseData(fileSystem, writeArray, fileContentArray)
+                    yield return new TestCaseData(fileSystem, writeArray, expectedContent)
                         .SetName("WriteAllLines(string, string[])");
-                    yield return new TestCaseData(fileSystem, writeArrayUtf32, fileContentArray)
+                    yield return new TestCaseData(fileSystem, writeArrayUtf32, expectedContent)
                         .SetName("WriteAllLines(string, string[], Encoding.UTF32)");
                 }
             }
@@ -193,7 +195,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), "ForDifferentEncoding")]
-        public void MockFile_WriteAllLinesGeneric_ShouldWriteTheCorrectContent(IMockFileDataAccessor fileSystem, Action action, string[] expectedResult)
+        public void MockFile_WriteAllLinesGeneric_ShouldWriteTheCorrectContent(IMockFileDataAccessor fileSystem, Action action, string expectedContent)
         {
             // Arrange
             // is done in the test case source
@@ -202,8 +204,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             action();
 
             // Assert
-            var actualContent = fileSystem.GetFile(TestDataForWriteAllLines.Path).TextContents.SplitLines();
-            Assert.That(actualContent, Is.EquivalentTo(expectedResult));
+            var actualContent = fileSystem.GetFile(TestDataForWriteAllLines.Path).TextContents;
+            Assert.That(actualContent, Is.EqualTo(expectedContent));
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), "ForNullPath")]
