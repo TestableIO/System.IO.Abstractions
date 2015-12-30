@@ -428,9 +428,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 fileSystem.File.ReadAllBytes(path));
         }
 
-        [Test]
-
 #if NET40
+        [Test]
         public void MockFile_OpenWrite_ShouldCreateNewFiles() {
             string filePath = XFS.Path(@"c:\something\demo.txt");
             string fileContent = "this is some content";

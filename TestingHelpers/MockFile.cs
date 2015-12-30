@@ -160,7 +160,6 @@ namespace System.IO.Abstractions.TestingHelpers
             return mockFileDataAccessor.FileExists(path) && !mockFileDataAccessor.AllDirectories.Any(d => d.Equals(path, StringComparison.OrdinalIgnoreCase));
         }
 
-#if NET40
         public override FileSecurity GetAccessControl(string path)
         {
             throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
@@ -170,7 +169,6 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
-#endif
 
         /// <summary>
         /// Gets the <see cref="FileAttributes"/> of the file on the path.
@@ -413,12 +411,10 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
-#if NET40
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
             throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
-#endif
 
         public override void SetAttributes(string path, FileAttributes fileAttributes)
         {
