@@ -116,6 +116,18 @@ namespace System.IO.Abstractions
 #endif
         }
 
+        /// <summary>
+        /// Gets the <see cref="FileAttributes"/> of the file on the path.
+        /// </summary>
+        /// <param name="path">The path to the file.</param>
+        /// <returns>The <see cref="FileAttributes"/> of the file on the path.</returns>
+        /// <exception cref="ArgumentException"><paramref name="path"/> is empty, contains only white spaces, or contains invalid characters.</exception>
+        /// <exception cref="PathTooLongException">The specified path, file name, or both exceed the system-defined maximum length. For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.</exception>
+        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
+        /// <exception cref="FileNotFoundException"><paramref name="path"/> represents a file and is invalid, such as being on an unmapped drive, or the file cannot be found.</exception>
+        /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> represents a directory and is invalid, such as being on an unmapped drive, or the directory cannot be found.</exception>
+        /// <exception cref="IOException">This file is being used by another process.</exception>
+        /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission.</exception>
         public override FileAttributes GetAttributes(string path)
         {
             return File.GetAttributes(path);

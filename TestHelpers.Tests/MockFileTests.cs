@@ -150,7 +150,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(lastWriteTime, result);
         }
 
-        static void ExecuteDefaultValueTest(Func<MockFile, string, DateTime> getDateValue) 
+        static void ExecuteDefaultValueTest(Func<MockFile, string, DateTime> getDateValue)
         {
             var expected = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc);
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -163,9 +163,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_GetLastWriteTimeOfNonExistantFile_ShouldReturnDefaultValue() 
+        public void MockFile_GetLastWriteTimeOfNonExistantFile_ShouldReturnDefaultValue()
         {
-            ExecuteDefaultValueTest((f, p) => f.GetLastWriteTime(p));  
+            ExecuteDefaultValueTest((f, p) => f.GetLastWriteTime(p));
         }
 
         [Test]
@@ -184,10 +184,30 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_GetAttributeOfNonExistantFile_ShouldReturnDefaultValue() {
+        public void MockFile_GetAttributeOfNonExistantFileButParentDirectoryExists_ShouldThrowOneFileNotFoundException()
+        {
+            // Arrange
             var fileSystem = new MockFileSystem();
-            var attributes = fileSystem.File.GetAttributes(XFS.Path(@"c:\something\demo.txt"));
-            Assert.That(attributes, Is.EqualTo(FileAttributes.Normal));
+            fileSystem.AddDirectory(XFS.Path(@"c:\something"));
+
+            // Act
+            TestDelegate action = () => fileSystem.File.GetAttributes(XFS.Path(@"c:\something\demo.txt"));
+
+            // Assert
+            Assert.Throws<FileNotFoundException>(action);
+        }
+
+        [Test]
+        public void MockFile_GetAttributeOfNonExistantFile_ShouldThrowOneDirectoryNotFoundException()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.GetAttributes(XFS.Path(@"c:\something\demo.txt"));
+
+            // Assert
+            Assert.Throws<DirectoryNotFoundException>(action);
         }
 
         [Test]
@@ -199,7 +219,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             };
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { XFS.Path(@"c:\something\demo.txt"),  filedata},
+                { XFS.Path(@"c:\something\demo.txt"),  filedata }
             });
 
             var attributes = fileSystem.File.GetAttributes(XFS.Path(@"c:\something\demo.txt"));
@@ -212,11 +232,40 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var filedata = new MockFileData("test");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { XFS.Path(@"\\share\folder\demo.txt"), filedata},
+                { XFS.Path(@"\\share\folder\demo.txt"), filedata }
             });
 
             var attributes = fileSystem.File.GetAttributes(XFS.Path(@"\\share\folder"));
             Assert.That(attributes, Is.EqualTo(FileAttributes.Directory));
+        }
+
+        [Test]
+        public void MockFile_GetAttributeWithEmptyParameter_ShouldThrowOneArgumentException()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.GetAttributes(string.Empty);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentException>(action);
+            Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
+        }
+
+        [Test]
+        public void MockFile_GetAttributeWithIllegalParameter_ShouldThrowOneArgumentException()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.GetAttributes(string.Empty);
+
+            // Assert
+            // Note: The actual type of the exception differs from the documentation.
+            //       According to the documentation it should be of type NotSupportedException.
+            Assert.Throws<ArgumentException>(action);
         }
 
         [Test]

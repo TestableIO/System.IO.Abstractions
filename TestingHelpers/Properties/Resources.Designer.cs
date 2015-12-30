@@ -67,6 +67,15 @@ namespace System.IO.Abstractions.TestingHelpers.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not find a part of the path &apos;{0}&apos;..
+        /// </summary>
+        internal static string COULD_NOT_FIND_PART_OF_PATH_EXCEPTION {
+            get {
+                return ResourceManager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///    Looks up a localized string similar to Illegal characters in path..
         /// </summary>
         internal static string ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION {
