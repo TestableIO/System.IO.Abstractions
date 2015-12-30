@@ -455,50 +455,334 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.GetFile(path).LastWriteTime = new DateTimeOffset(lastWriteTimeUtc, TimeSpan.Zero);
         }
 
+        /// <summary>
+        /// Creates a new file, writes the specified byte array to the file, and then closes the file.
+        /// If the target file already exists, it is overwritten.
+        /// </summary>
+        /// <param name="path">The file to write to.</param>
+        /// <param name="bytes">The bytes to write to the file. </param>
+        /// <exception cref="ArgumentException"><paramref name="path"/> is a zero-length string, contains only white space, or contains one or more invalid characters as defined by <see cref="Path.GetInvalidPathChars"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/> or contents is empty.</exception>
+        /// <exception cref="PathTooLongException">
+        /// The specified path, file name, or both exceed the system-defined maximum length.
+        /// For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.
+        /// </exception>
+        /// <exception cref="DirectoryNotFoundException">The specified path is invalid (for example, it is on an unmapped drive).</exception>
+        /// <exception cref="IOException">An I/O error occurred while opening the file.</exception>
+        /// <exception cref="UnauthorizedAccessException">
+        /// path specified a file that is read-only.
+        /// -or-
+        /// This operation is not supported on the current platform.
+        /// -or-
+        /// path specified a directory.
+        /// -or-
+        /// The caller does not have the required permission.
+        /// </exception>
+        /// <exception cref="FileNotFoundException">The file specified in <paramref name="path"/> was not found.</exception>
+        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
+        /// <exception cref="System.Security.SecurityException">The caller does not have the required permission.</exception>
+        /// <remarks>
+        /// Given a byte array and a file path, this method opens the specified file, writes the contents of the byte array to the file, and then closes the file.
+        /// </remarks>
         public override void WriteAllBytes(string path, byte[] bytes)
         {
+            if (path == null)
+            {
+                throw new ArgumentNullException("path", "Path cannot be null.");
+            }
+
+            if (bytes == null)
+            {
+                throw new ArgumentNullException("bytes", Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
+
             mockFileDataAccessor.AddFile(path, new MockFileData(bytes));
         }
 
+        /// <summary>
+        /// Creates a new file, writes a collection of strings to the file, and then closes the file.
+        /// </summary>
+        /// <param name="path">The file to write to.</param>
+        /// <param name="contents">The lines to write to the file.</param>
+        /// <exception cref="ArgumentException"><paramref name="path"/> is a zero-length string, contains only white space, or contains one or more invalid characters as defined by <see cref="Path.GetInvalidPathChars"/>.</exception>
+        /// <exception cref="ArgumentNullException">Either <paramref name="path"/> or <paramref name="contents"/> is <see langword="null"/>.</exception>
+        /// <exception cref="DirectoryNotFoundException">The specified path is invalid (for example, it is on an unmapped drive).</exception>
+        /// <exception cref="FileNotFoundException">The file specified in <paramref name="path"/> was not found.</exception>
+        /// <exception cref="IOException">An I/O error occurred while opening the file.</exception>
+        /// <exception cref="PathTooLongException">
+        /// The specified path, file name, or both exceed the system-defined maximum length.
+        /// For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.
+        /// </exception>
+        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
+        /// <exception cref="System.Security.SecurityException">The caller does not have the required permission.</exception>
+        /// <exception cref="UnauthorizedAccessException">
+        /// <paramref name="path"/> specified a file that is read-only.
+        /// -or-
+        /// This operation is not supported on the current platform.
+        /// -or-
+        /// <paramref name="path"/> specified a directory.
+        /// -or-
+        /// The caller does not have the required permission.
+        /// </exception>
+        /// <remarks>
+        /// <para>
+        ///     If the target file already exists, it is overwritten.
+        /// </para>
+        /// <para>
+        ///     You can use this method to create the contents for a collection class that takes an <see cref="IEnumerable{T}"/> in its constructor, such as a <see cref="List{T}"/>, <see cref="HashSet{T}"/>, or a <see cref="SortedSet{T}"/> class.
+        /// </para>
+        /// </remarks>
         public override void WriteAllLines(string path, IEnumerable<string> contents)
         {
+            if (contents == null)
+            {
+                throw new ArgumentNullException("contents", Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
+
+            WriteAllLines(path, contents, MockFileData.DefaultEncoding);
+        }
+
+        /// <summary>
+        /// Creates a new file by using the specified encoding, writes a collection of strings to the file, and then closes the file.
+        /// </summary>
+        /// <param name="path">The file to write to.</param>
+        /// <param name="contents">The lines to write to the file.</param>
+        /// <param name="encoding">The character encoding to use.</param>
+        /// <exception cref="ArgumentException"><paramref name="path"/> is a zero-length string, contains only white space, or contains one or more invalid characters as defined by <see cref="Path.GetInvalidPathChars"/>.</exception>
+        /// <exception cref="ArgumentNullException">Either <paramref name="path"/>, <paramref name="contents"/>, or <paramref name="encoding"/> is <see langword="null"/>.</exception>
+        /// <exception cref="DirectoryNotFoundException">The specified path is invalid (for example, it is on an unmapped drive).</exception>
+        /// <exception cref="FileNotFoundException">The file specified in <paramref name="path"/> was not found.</exception>
+        /// <exception cref="IOException">An I/O error occurred while opening the file.</exception>
+        /// <exception cref="PathTooLongException">
+        /// The specified path, file name, or both exceed the system-defined maximum length.
+        /// For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.
+        /// </exception>
+        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
+        /// <exception cref="System.Security.SecurityException">The caller does not have the required permission.</exception>
+        /// <exception cref="UnauthorizedAccessException">
+        /// <paramref name="path"/> specified a file that is read-only.
+        /// -or-
+        /// This operation is not supported on the current platform.
+        /// -or-
+        /// <paramref name="path"/> specified a directory.
+        /// -or-
+        /// The caller does not have the required permission.
+        /// </exception>
+        /// <remarks>
+        /// <para>
+        ///     If the target file already exists, it is overwritten.
+        /// </para>
+        /// <para>
+        ///     You can use this method to create a file that contains the following:
+        /// <list type="bullet">
+        /// <item>
+        /// <description>The results of a LINQ to Objects query on the lines of a file, as obtained by using the ReadLines method.</description>
+        /// </item>
+        /// <item>
+        /// <description>The contents of a collection that implements an <see cref="IEnumerable{T}"/> of strings.</description>
+        /// </item>
+        /// </list>
+        /// </para>
+        /// </remarks>
+        public override void WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding)
+        {
+            if (contents == null)
+            {
+                throw new ArgumentNullException("contents", Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
+
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding", Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
+
             var sb = new StringBuilder();
             foreach (var line in contents)
             {
                 sb.AppendLine(line);
             }
 
-            WriteAllText(path, sb.ToString());
+            WriteAllText(path, sb.ToString(), encoding);
         }
 
-        public override void WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding)
-        {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
-        }
-
+        /// <summary>
+        /// Creates a new file, writes the specified string array to the file by using the specified encoding, and then closes the file.
+        /// </summary>
+        /// <param name="path">The file to write to.</param>
+        /// <param name="contents">The string array to write to the file.</param>
+        /// <exception cref="ArgumentException"><paramref name="path"/> is a zero-length string, contains only white space, or contains one or more invalid characters as defined by <see cref="Path.GetInvalidPathChars"/>.</exception>
+        /// <exception cref="ArgumentNullException">Either <paramref name="path"/> or <paramref name="contents"/> is <see langword="null"/>.</exception>
+        /// <exception cref="PathTooLongException">
+        /// The specified path, file name, or both exceed the system-defined maximum length.
+        /// For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.
+        /// </exception>
+        /// <exception cref="DirectoryNotFoundException">The specified path is invalid (for example, it is on an unmapped drive).</exception>
+        /// <exception cref="IOException">An I/O error occurred while opening the file.</exception>
+        /// <exception cref="UnauthorizedAccessException">
+        /// <paramref name="path"/> specified a file that is read-only.
+        /// -or-
+        /// This operation is not supported on the current platform.
+        /// -or-
+        /// <paramref name="path"/> specified a directory.
+        /// -or-
+        /// The caller does not have the required permission.
+        /// </exception>
+        /// <exception cref="FileNotFoundException">The file specified in <paramref name="path"/> was not found.</exception>
+        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
+        /// <exception cref="System.Security.SecurityException">The caller does not have the required permission.</exception>
+        /// <remarks>
+        /// <para>
+        ///     If the target file already exists, it is overwritten.
+        /// </para>
+        /// <para>
+        ///     The default behavior of the WriteAllLines method is to write out data using UTF-8 encoding without a byte order mark (BOM). If it is necessary to include a UTF-8 identifier, such as a byte order mark, at the beginning of a file, use the <see cref="FileBase.WriteAllLines(string,string[],System.Text.Encoding)"/> method overload with <see cref="UTF8Encoding"/> encoding.
+        /// </para>
+        /// <para>
+        ///     Given a string array and a file path, this method opens the specified file, writes the string array to the file using the specified encoding,
+        ///     and then closes the file.
+        /// </para>
+        /// </remarks>
         public override void WriteAllLines(string path, string[] contents)
         {
-            WriteAllText(path, string.Join("\n", contents));
+            if (contents == null)
+            {
+                throw new ArgumentNullException("contents", Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
+
+            WriteAllLines(path, contents, MockFileData.DefaultEncoding);
         }
 
+        /// <summary>
+        /// Creates a new file, writes the specified string array to the file by using the specified encoding, and then closes the file.
+        /// </summary>
+        /// <param name="path">The file to write to.</param>
+        /// <param name="contents">The string array to write to the file.</param>
+        /// <param name="encoding">An <see cref="Encoding"/> object that represents the character encoding applied to the string array.</param>
+        /// <exception cref="ArgumentException"><paramref name="path"/> is a zero-length string, contains only white space, or contains one or more invalid characters as defined by <see cref="Path.GetInvalidPathChars"/>.</exception>
+        /// <exception cref="ArgumentNullException">Either <paramref name="path"/> or <paramref name="contents"/> is <see langword="null"/>.</exception>
+        /// <exception cref="PathTooLongException">
+        /// The specified path, file name, or both exceed the system-defined maximum length.
+        /// For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.
+        /// </exception>
+        /// <exception cref="DirectoryNotFoundException">The specified path is invalid (for example, it is on an unmapped drive).</exception>
+        /// <exception cref="IOException">An I/O error occurred while opening the file.</exception>
+        /// <exception cref="UnauthorizedAccessException">
+        /// <paramref name="path"/> specified a file that is read-only.
+        /// -or-
+        /// This operation is not supported on the current platform.
+        /// -or-
+        /// <paramref name="path"/> specified a directory.
+        /// -or-
+        /// The caller does not have the required permission.
+        /// </exception>
+        /// <exception cref="FileNotFoundException">The file specified in <paramref name="path"/> was not found.</exception>
+        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
+        /// <exception cref="System.Security.SecurityException">The caller does not have the required permission.</exception>
+        /// <remarks>
+        /// <para>
+        ///     If the target file already exists, it is overwritten.
+        /// </para>
+        /// <para>
+        ///     Given a string array and a file path, this method opens the specified file, writes the string array to the file using the specified encoding,
+        ///     and then closes the file.
+        /// </para>
+        /// </remarks>
         public override void WriteAllLines(string path, string[] contents, Encoding encoding)
         {
-            WriteAllText(path, string.Join("\n", contents), encoding);
+            if (contents == null)
+            {
+                throw new ArgumentNullException("contents", Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
+
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding", Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
+
+            WriteAllLines(path, new List<string>(contents), encoding);
         }
 
+        /// <summary>
+        /// Creates a new file, writes the specified string to the file using the specified encoding, and then closes the file. If the target file already exists, it is overwritten.
+        /// </summary>
+        /// <param name="path">The file to write to. </param>
+        /// <param name="contents">The string to write to the file. </param>
+        /// <exception cref="ArgumentException"><paramref name="path"/> is a zero-length string, contains only white space, or contains one or more invalid characters as defined by <see cref="Path.GetInvalidPathChars"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/> or contents is empty.</exception>
+        /// <exception cref="PathTooLongException">
+        /// The specified path, file name, or both exceed the system-defined maximum length.
+        /// For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.
+        /// </exception>
+        /// <exception cref="DirectoryNotFoundException">The specified path is invalid (for example, it is on an unmapped drive).</exception>
+        /// <exception cref="IOException">An I/O error occurred while opening the file.</exception>
+        /// <exception cref="UnauthorizedAccessException">
+        /// path specified a file that is read-only.
+        /// -or-
+        /// This operation is not supported on the current platform.
+        /// -or-
+        /// path specified a directory.
+        /// -or-
+        /// The caller does not have the required permission.
+        /// </exception>
+        /// <exception cref="FileNotFoundException">The file specified in <paramref name="path"/> was not found.</exception>
+        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
+        /// <exception cref="System.Security.SecurityException">The caller does not have the required permission.</exception>
+        /// <remarks>
+        /// This method uses UTF-8 encoding without a Byte-Order Mark (BOM), so using the <see cref="M:Encoding.GetPreamble"/> method will return an empty byte array.
+        /// If it is necessary to include a UTF-8 identifier, such as a byte order mark, at the beginning of a file, use the <see cref="FileBase.WriteAllText(string,string,System.Text.Encoding)"/> method overload with <see cref="UTF8Encoding"/> encoding.
+        /// <para>
+        /// Given a string and a file path, this method opens the specified file, writes the string to the file, and then closes the file.
+        /// </para>
+        /// </remarks>
         public override void WriteAllText(string path, string contents)
         {
-            WriteAllText(path, new MockFileData(contents));
+            WriteAllText(path, contents, MockFileData.DefaultEncoding);
         }
 
+        /// <summary>
+        /// Creates a new file, writes the specified string to the file using the specified encoding, and then closes the file. If the target file already exists, it is overwritten.
+        /// </summary>
+        /// <param name="path">The file to write to. </param>
+        /// <param name="contents">The string to write to the file. </param>
+        /// <param name="encoding">The encoding to apply to the string.</param>
+        /// <exception cref="ArgumentException"><paramref name="path"/> is a zero-length string, contains only white space, or contains one or more invalid characters as defined by <see cref="Path.GetInvalidPathChars"/>.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/> or contents is empty.</exception>
+        /// <exception cref="PathTooLongException">
+        /// The specified path, file name, or both exceed the system-defined maximum length.
+        /// For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.
+        /// </exception>
+        /// <exception cref="DirectoryNotFoundException">The specified path is invalid (for example, it is on an unmapped drive).</exception>
+        /// <exception cref="IOException">An I/O error occurred while opening the file.</exception>
+        /// <exception cref="UnauthorizedAccessException">
+        /// path specified a file that is read-only.
+        /// -or-
+        /// This operation is not supported on the current platform.
+        /// -or-
+        /// path specified a directory.
+        /// -or-
+        /// The caller does not have the required permission.
+        /// </exception>
+        /// <exception cref="FileNotFoundException">The file specified in <paramref name="path"/> was not found.</exception>
+        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
+        /// <exception cref="System.Security.SecurityException">The caller does not have the required permission.</exception>
+        /// <remarks>
+        /// Given a string and a file path, this method opens the specified file, writes the string to the file using the specified encoding, and then closes the file.
+        /// The file handle is guaranteed to be closed by this method, even if exceptions are raised.
+        /// </remarks>
         public override void WriteAllText(string path, string contents, Encoding encoding)
         {
-            WriteAllText(path, new MockFileData(contents, encoding));
-        }
+            if (path == null)
+            {
+                throw new ArgumentNullException("path", Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
 
-        private void WriteAllText(string path, MockFileData mockFileData)
-        {
-            mockFileDataAccessor.AddFile(path, mockFileData);
+            if (mockFileDataAccessor.Directory.Exists(path))
+            {
+                throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.ACCESS_TO_THE_PATH_IS_DENIED, path));
+            }
+
+            MockFileData data = contents == null ? new MockFileData(new byte[0]) : new MockFileData(contents, encoding);
+            mockFileDataAccessor.AddFile(path, data);
         }
 
         internal static string ReadAllBytes(byte[] contents, Encoding encoding)

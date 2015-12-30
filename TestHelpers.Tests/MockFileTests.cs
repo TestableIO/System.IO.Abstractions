@@ -429,42 +429,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_WriteAllBytes_ShouldWriteDataToMemoryFileSystem()
-        {
-            // Arrange
-            string path = XFS.Path(@"c:\something\demo.txt");
-            var fileSystem = new MockFileSystem();
-            var fileContent = new byte[] { 1, 2, 3, 4 };
-
-            // Act
-            fileSystem.File.WriteAllBytes(path, fileContent);
-
-            // Assert
-            Assert.AreEqual(
-                fileContent,
-                fileSystem.GetFile(path).Contents);
-        }
-
-        [Test]
-        public void MockFile_WriteAllBytes_ShouldThrowAnUnauthorizedAccessExceptionIfFileIsHidden()
-        {
-            // Arrange
-            string path = XFS.Path(@"c:\something\demo.txt");
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { path, new MockFileData("this is hidden") },
-            });
-            fileSystem.File.SetAttributes(path, FileAttributes.Hidden);
-
-            // Act
-            TestDelegate action = () => fileSystem.File.WriteAllBytes(path, new byte[] { 123 });
-
-            // Assert
-            Assert.Throws<UnauthorizedAccessException>(action, "Access to the path '{0}' is denied.", path);
-        }
 
 #if NET40
-        [Test]
         public void MockFile_OpenWrite_ShouldCreateNewFiles() {
             string filePath = XFS.Path(@"c:\something\demo.txt");
             string fileContent = "this is some content";
