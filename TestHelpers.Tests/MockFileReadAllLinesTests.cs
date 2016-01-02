@@ -9,7 +9,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using XFS = MockUnixSupport;
 
     public class MockFileReadAllLinesTests {
-        [Test]
+        [Fact]
         public void MockFile_ReadAllLines_ShouldReturnOriginalTextData()
         {
             // Arrange
@@ -25,12 +25,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadAllLines(XFS.Path(@"c:\something\demo.txt"));
 
             // Assert
-            CollectionAssert.AreEqual(
+            CollectionAssert.Equal(
                 new[] { "Demo", "text", "content", "value" },
                 result);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_ReadAllLines_ShouldReturnOriginalDataWithCustomEncoding()
         {
             // Arrange
@@ -47,7 +47,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadAllLines(XFS.Path(@"c:\something\demo.txt"), Encoding.BigEndianUnicode);
 
             // Assert
-            CollectionAssert.AreEqual(
+            CollectionAssert.Equal(
                 new [] { "Hello", "there", "Bob", "Bob!" },
                 result);
         }

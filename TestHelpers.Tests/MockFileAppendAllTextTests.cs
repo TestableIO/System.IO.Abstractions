@@ -12,7 +12,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     public class MockFileAppendAllTextTests {
 
-        [Test]
+        [Fact]
         public void MockFile_AppendAllText_ShouldPersistNewText()
         {
             // Arrange
@@ -28,12 +28,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             file.AppendAllText(path, "+ some text");
 
             // Assert
-            Assert.AreEqual(
+            Assert.Equal(
                 "Demo text content+ some text",
                 file.ReadAllText(path));
         }
 
-        [Test]
+        [Fact]
         public void MockFile_AppendAllText_ShouldPersistNewTextWithDifferentEncoding()
         {
             // Arrange
@@ -49,12 +49,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             file.AppendAllText(Path, "BB", Encoding.UTF8);
 
             // Assert
-            CollectionAssert.AreEqual(
+            CollectionAssert.Equal(
                 new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66 },
                 fileSystem.GetFile(Path).Contents);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_AppendAllText_ShouldCreateIfNotExist()
         {
             // Arrange
@@ -68,12 +68,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.AppendAllText(path, " some text");
 
             // Assert
-            Assert.AreEqual(
+            Assert.Equal(
                 "Demo text content some text",
                 fileSystem.File.ReadAllText(path));
         }
 
-        [Test]
+        [Fact]
         public void MockFile_AppendAllText_ShouldCreateIfNotExistWithBom()
         {
             // Arrange
@@ -85,12 +85,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.AppendAllText(path, "AA", Encoding.UTF32);
 
             // Assert
-            CollectionAssert.AreEqual(
+            CollectionAssert.Equal(
                 new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0 },
                 fileSystem.GetFile(path).Contents);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_AppendAllText_ShouldFailIfNotExistButDirectoryAlsoNotExist()
         {
             // Arrange
@@ -112,7 +112,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(ex.Message, Is.EqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path)));
         }
 
-        [Test]
+        [Fact]
         public void MockFile_AppendAllText_ShouldPersistNewTextWithCustomEncoding()
         {
             // Arrange
@@ -146,7 +146,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 };
             }
 
-            CollectionAssert.AreEqual(
+            CollectionAssert.Equal(
                 expected,
                 file.ReadAllBytes(path));
         }

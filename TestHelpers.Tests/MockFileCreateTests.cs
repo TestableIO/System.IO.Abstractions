@@ -13,7 +13,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileCreateTests {
 
 #if NET40
-        [Test]
+        [Fact]
         public void Mockfile_Create_ShouldCreateNewStream()
         {
             string fullPath = XFS.Path(@"c:\something\demo.txt");
@@ -29,7 +29,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 #endif
 
-        [Test]
+        [Fact]
         public void Mockfile_Create_CanWriteToNewStream()
         {
             string fullPath = XFS.Path(@"c:\something\demo.txt");
@@ -48,7 +48,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(fileData, Is.EqualTo(data));
         }
 
-        [Test]
+        [Fact]
         public void Mockfile_Create_OverwritesExistingFile()
         {
             string path = XFS.Path(@"c:\some\file.txt");
@@ -76,7 +76,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
 #if NET40
-        [Test]
+        [Fact]
         public void Mockfile_Create_ThrowsWhenPathIsReadOnly()
         {
             string path = XFS.Path(@"c:\something\read-only.txt");

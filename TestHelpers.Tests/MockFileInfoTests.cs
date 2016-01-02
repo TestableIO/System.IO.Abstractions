@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
-using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using XFS = MockUnixSupport;
 
-    [TestFixture]
     public class MockFileInfoTests
     {
-        [Test]
+        [Fact]
         public void MockFileInfo_Exists_ShouldReturnTrueIfFileExistsInMemoryFileSystem()
         {
             // Arrange
@@ -27,7 +25,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(result);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_Exists_ShouldReturnFalseIfFileDoesNotExistInMemoryFileSystem()
         {
             // Arrange
@@ -45,7 +43,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(result);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_Length_ShouldReturnLengthOfFileInMemoryFileSystem()
         {
             // Arrange
@@ -64,7 +62,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(fileContent.Length, result);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_Length_ShouldThrowFileNotFoundExceptionIfFileDoesNotExistInMemoryFileSystem()
         {
             // Arrange
@@ -82,7 +80,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(XFS.Path(@"c:\foo.txt"), ex.FileName);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_CreationTimeUtc_ShouldReturnCreationTimeUtcOfFileInMemoryFileSystem()
         {
             // Arrange
@@ -101,7 +99,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(creationTime.ToUniversalTime(), result);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_CreationTimeUtc_ShouldSetCreationTimeUtcOfFileInMemoryFileSystem()
         {
             // Arrange
@@ -122,7 +120,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
 
-        [Test]
+        [Fact]
         public void MockFileInfo_CreationTime_ShouldReturnCreationTimeOfFileInMemoryFileSystem()
         {
             // Arrange
@@ -141,7 +139,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(creationTime, result);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_CreationTime_ShouldSetCreationTimeOfFileInMemoryFileSystem()
         {
             // Arrange
@@ -161,7 +159,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(newTime, fileInfo.CreationTime);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_IsReadOnly_ShouldSetReadOnlyAttributeOfFileInMemoryFileSystem()
         {
             // Arrange
@@ -179,7 +177,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(FileAttributes.ReadOnly, fileData.Attributes & FileAttributes.ReadOnly);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_IsReadOnly_ShouldSetNotReadOnlyAttributeOfFileInMemoryFileSystem()
         {
             // Arrange
@@ -197,7 +195,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreNotEqual(FileAttributes.ReadOnly, fileData.Attributes & FileAttributes.ReadOnly);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_AppendText_ShouldAddTextToFileInMemoryFileSystem()
         {
             // Arrange
@@ -220,7 +218,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual("Demo text contentThis should be at the end\r\n", newcontents);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_OpenWrite_ShouldAddDataToFileInMemoryFileSystem()
         {
             // Arrange
@@ -245,7 +243,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
 #if NET40
-        [Test]
+        [Fact]
         public void MockFileInfo_Encrypt_ShouldReturnXorOfFileInMemoryFileSystem()
         {
             // Arrange
@@ -269,7 +267,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreNotEqual("Demo text content", newcontents);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_Decrypt_ShouldReturnCorrectContentsFileInMemoryFileSystem()
         {
             // Arrange
@@ -295,7 +293,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 #endif
 
-        [Test]
+        [Fact]
         public void MockFileInfo_LastAccessTimeUtc_ShouldReturnLastAccessTimeUtcOfFileInMemoryFileSystem()
         {
             // Arrange
@@ -314,7 +312,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(lastAccessTime.ToUniversalTime(), result);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_LastAccessTimeUtc_ShouldSetCreationTimeUtcOfFileInMemoryFileSystem()
         {
             // Arrange
@@ -334,7 +332,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(newUtcTime, fileInfo.LastAccessTimeUtc);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_LastWriteTimeUtc_ShouldReturnLastWriteTimeUtcOfFileInMemoryFileSystem()
         {
             // Arrange
@@ -353,7 +351,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(lastWriteTime.ToUniversalTime(), result);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_LastWriteTimeUtc_ShouldSetLastWriteTimeUtcOfFileInMemoryFileSystem()
         {
             // Arrange
@@ -373,7 +371,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(newUtcTime, fileInfo.LastWriteTime);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_GetExtension_ShouldReturnExtension()
         {
             // Arrange
@@ -387,7 +385,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(".txt", result);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_GetExtensionWithoutExtension_ShouldReturnEmptyString()
         {
             // Arrange
@@ -401,7 +399,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(string.Empty, result);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_GetDirectoryName_ShouldReturnCompleteDirectoryPath()
         {
             // Arrange
@@ -413,7 +411,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(XFS.Path(@"c:\temp\level1\level2"), result);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_GetDirectory_ShouldReturnDirectoryInfoWithCorrectPath()
         {
             // Arrange
@@ -425,7 +423,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(XFS.Path(@"c:\temp\level1\level2"), result.FullName);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_OpenRead_ShouldReturnByteContentOfFile()
         {
             // Arrange
@@ -443,7 +441,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(new byte[] { 1, 2 }, result);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfo_OpenText_ShouldReturnStringContentOfFile()
         {
             // Arrange

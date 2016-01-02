@@ -3,10 +3,10 @@ using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    [TestFixture]
+
     public class MockFileInfoFactoryTests
     {
-        [Test]
+        [Fact]
         public void MockFileInfoFactory_FromFileName_ShouldReturnFileInfoForExistingFile()
         {
             // Arrange
@@ -24,7 +24,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsNotNull(result);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfoFactory_FromFileName_ShouldReturnFileInfoForNonExistantFile()
         {
             // Arrange

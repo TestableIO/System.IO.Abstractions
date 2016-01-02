@@ -7,7 +7,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using XFS = MockUnixSupport;
 
     public class MockFileExistsTests {
-        [Test]
+        [Fact]
         public void MockFile_Exists_ShouldReturnTrueForSamePath()
         {
             // Arrange
@@ -23,10 +23,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.Exists(XFS.Path(@"c:\something\other.gif"));
 
             // Assert
-            Assert.IsTrue(result);
+            Assert.True(result);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Exists_ShouldReturnTrueForPathVaryingByCase()
         {
             // Arrange
@@ -42,10 +42,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.Exists(XFS.Path(@"c:\SomeThing\Other.gif"));
 
             // Assert
-            Assert.IsTrue(result);
+            Assert.True(result);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Exists_ShouldReturnFalseForEntirelyDifferentPath()
         {
             // Arrange
@@ -64,7 +64,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(result);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Exists_ShouldReturnFalseForNullPath()
         {
             var file = new MockFile(new MockFileSystem());
@@ -72,7 +72,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(file.Exists(null), Is.False);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Exists_ShouldReturnFalseForDirectories()
         {
             // Arrange

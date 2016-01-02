@@ -1,12 +1,12 @@
-﻿using NUnit.Framework;
+﻿
+using Xunit;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-#if NET40
-    [TestFixture]
+#if DNX451
     public class FileSystemTests
     {
-        [Test]
+        [Fact]
         public void Is_Serializable()
         {
             var fileSystem = new FileSystem();
@@ -15,7 +15,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var serializer = new Runtime.Serialization.Formatters.Binary.BinaryFormatter();
             serializer.Serialize(memoryStream, fileSystem);
 
-            Assert.That(memoryStream.Length > 0, "Length didn't increase after serialization task.");
+            Assert.True(memoryStream.Length > 0, "Length didn't increase after serialization task.");
         }
     }
 #endif

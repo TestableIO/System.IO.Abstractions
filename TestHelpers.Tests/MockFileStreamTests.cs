@@ -6,10 +6,9 @@
 
     using XFS = MockUnixSupport;
 
-    [TestFixture]
     public class MockFileStreamTests
     {
-        [Test]
+        [Fact]
         public void MockFileStream_Flush_WritesByteToFile()
         {
             // Arrange
@@ -22,10 +21,10 @@
             cut.Flush();
 
             // Assert
-            CollectionAssert.AreEqual(new byte[]{255}, filesystem.GetFile(filepath).Contents);
+            CollectionAssert.Equal(new byte[]{255}, filesystem.GetFile(filepath).Contents);
         }
 
-        [Test]
+        [Fact]
         public void MockFileStream_Dispose_ShouldNotResurrectFile()
         {
             var fileSystem = new MockFileSystem();
@@ -40,9 +39,9 @@
             stream.Dispose();
             var fileCount3 = fileSystem.Directory.GetFiles(directory, "*").Length;
 
-            Assert.AreEqual(1, fileCount1, "File should have existed");
-            Assert.AreEqual(0, fileCount2, "File should have been deleted");
-            Assert.AreEqual(0, fileCount3, "Disposing stream should not have resurrected the file");
+            Assert.Equal(1, fileCount1, "File should have existed");
+            Assert.Equal(0, fileCount2, "File should have been deleted");
+            Assert.Equal(0, fileCount3, "Disposing stream should not have resurrected the file");
         }
     }
 }

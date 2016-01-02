@@ -11,7 +11,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using XFS = MockUnixSupport;
 
     public class MockFileCopyTests {
-        [Test]
+        [Fact]
         public void MockFile_Copy_ShouldOverwriteFileWhenOverwriteFlagIsTrue()
         {
             string sourceFileName = XFS.Path(@"c:\source\demo.txt");
@@ -26,10 +26,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.Copy(sourceFileName, destFileName, true);
 
             var copyResult = fileSystem.GetFile(destFileName);
-            Assert.AreEqual(copyResult.Contents, sourceContents.Contents);
+            Assert.Equal(copyResult.Contents, sourceContents.Contents);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Copy_ShouldCreateFileAtNewDestination()
         {
             string sourceFileName = XFS.Path(@"c:\source\demo.txt");
@@ -43,10 +43,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.Copy(sourceFileName, destFileName, false);
 
             var copyResult = fileSystem.GetFile(destFileName);
-            Assert.AreEqual(copyResult.Contents, sourceContents.Contents);
+            Assert.Equal(copyResult.Contents, sourceContents.Contents);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Copy_ShouldThrowExceptionWhenFileExistsAtDestination()
         {
             string sourceFileName = XFS.Path(@"c:\source\demo.txt");
@@ -75,7 +75,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Copy(sourceFileName, destFileName), string.Format(CultureInfo.InvariantCulture, @"Could not find a part of the path '{0}'.", destFilePath));
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Copy_ShouldThrowArgumentNullExceptionWhenSourceIsNull_Message()
         {
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
@@ -86,7 +86,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.Message, Is.StringStarting("File name cannot be null."));
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Copy_ShouldThrowArgumentNullExceptionWhenSourceIsNull_ParamName()
         {
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
@@ -97,7 +97,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenSourceFileNameContainsInvalidChars_Message()
         {
             if (XFS.IsUnixPlatform())
@@ -121,7 +121,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidChars_Message()
         {
             if (XFS.IsUnixPlatform())
@@ -145,7 +145,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenTargetPathContainsInvalidChars_Message()
         {
             if (XFS.IsUnixPlatform())
@@ -169,7 +169,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenTargetFileNameContainsInvalidChars_Message()
         {
             if (XFS.IsUnixPlatform())
@@ -193,7 +193,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceIsEmpty_Message()
         {
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
@@ -204,7 +204,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.Message, Is.StringStarting("Empty file name is not legal."));
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceIsEmpty_ParamName()
         {
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
@@ -215,7 +215,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceIsStringOfBlanks()
         {
             string sourceFilePath = "   ";
@@ -227,7 +227,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.Message, Is.EqualTo("The path is not of a legal form."));
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Copy_ShouldThrowArgumentNullExceptionWhenTargetIsNull_Message()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
@@ -238,7 +238,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.Message, Is.StringStarting("File name cannot be null."));
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Copy_ShouldThrowArgumentNullExceptionWhenTargetIsNull_ParamName()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
@@ -249,7 +249,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.ParamName, Is.EqualTo("destFileName"));
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetIsStringOfBlanks()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
@@ -261,7 +261,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.Message, Is.EqualTo("The path is not of a legal form."));
         }
 
-        [Test]
+        [Fact]
         public void MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetIsEmpty_Message()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
