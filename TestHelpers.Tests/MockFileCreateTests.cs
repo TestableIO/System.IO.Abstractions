@@ -4,15 +4,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     using Globalization;
 
-    using NUnit.Framework;
 
     using Text;
-
+    using Xunit;
     using XFS = MockUnixSupport;
 
     public class MockFileCreateTests {
 
-#if NET40
+#if DNX451
         [Fact]
         public void Mockfile_Create_ShouldCreateNewStream()
         {
@@ -21,11 +20,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var sut = new MockFile(fileSystem);
 
-            Assert.That(fileSystem.FileExists(fullPath), Is.False);
+            Assert.False(fileSystem.FileExists(fullPath));
 
             sut.Create(fullPath).Close();
 
-            Assert.That(fileSystem.FileExists(fullPath), Is.True);
+            Assert.True(fileSystem.FileExists(fullPath));
         }
 #endif
 
@@ -45,7 +44,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockFileData = fileSystem.GetFile(fullPath);
             var fileData = mockFileData.Contents;
 
-            Assert.That(fileData, Is.EqualTo(data));
+            Assert.Equal(data, fileData);
         }
 
         [Fact]
@@ -72,10 +71,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var actualContents = fileSystem.GetFile(path).Contents;
 
-            Assert.That(actualContents, Is.EqualTo(expectedContents));
+            Assert.Equal(expectedContents, actualContents);
         }
 
-#if NET40
+#if DNX451
         [Fact]
         public void Mockfile_Create_ThrowsWhenPathIsReadOnly()
         {
@@ -86,7 +85,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             mockFile.SetAttributes(path, FileAttributes.ReadOnly);
          
             var exception =  Assert.Throws<UnauthorizedAccessException>(() => mockFile.Create(path).Close());
-            Assert.That(exception.Message, Is.EqualTo(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path)));
+            Assert.Equal(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path), exception.Message);
         }
 #endif
     }

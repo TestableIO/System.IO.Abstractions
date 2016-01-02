@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework; 
+using Xunit;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -21,7 +21,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileInfoFactory.FromFileName(@"c:\a.txt");
 
             // Assert
-            Assert.IsNotNull(result);
+            Assert.NotNull(result);
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileInfoFactory.FromFileName(@"c:\foo.txt");
 
             // Assert
-            Assert.IsNotNull(result);
+            Assert.NotNull(result);
         }
     }
 }

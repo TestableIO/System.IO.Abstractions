@@ -1,4 +1,6 @@
 ﻿
+using Xunit;
+
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
 

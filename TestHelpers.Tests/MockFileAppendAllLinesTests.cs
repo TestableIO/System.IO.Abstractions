@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Xunit;
 using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests

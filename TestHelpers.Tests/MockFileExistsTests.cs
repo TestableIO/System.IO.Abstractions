@@ -1,8 +1,7 @@
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using Collections.Generic;
-
-    using NUnit.Framework;
+    using Xunit;
 
     using XFS = MockUnixSupport;
 
@@ -61,7 +60,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.Exists(XFS.Path(@"c:\SomeThing\DoesNotExist.gif"));
 
             // Assert
-            Assert.IsFalse(result);
+            Assert.False(result);
         }
 
         [Fact]
@@ -69,7 +68,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var file = new MockFile(new MockFileSystem());
 
-            Assert.That(file.Exists(null), Is.False);
+            Assert.False(file.Exists(null));
         }
 
         [Fact]
@@ -88,7 +87,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.Exists(XFS.Path(@"c:\SomeThing\"));
 
             // Assert
-            Assert.IsFalse(result);
+            Assert.False(result);
         }
     }
 }

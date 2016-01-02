@@ -4,6 +4,8 @@ using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
+    using Xunit;
+    using Xunit.Extensions;
     using XFS = MockUnixSupport;
 
     public class MockFileTests
@@ -157,7 +159,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var actual = getDateValue(file, path);
 
-            Assert.That(actual.ToUniversalTime(), Is.EqualTo(expected));
+            Assert.Equal(expected, actual.ToUniversalTime());
         }
 
         [Fact]
@@ -221,7 +223,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             var attributes = fileSystem.File.GetAttributes(XFS.Path(@"c:\something\demo.txt"));
-            Assert.That(attributes, Is.EqualTo(FileAttributes.Hidden));
+            Assert.Equal(FileAttributes.Hidden, attributes);
         }
 
         [Fact]
@@ -234,7 +236,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             var attributes = fileSystem.File.GetAttributes(XFS.Path(@"\\share\folder"));
-            Assert.That(attributes, Is.EqualTo(FileAttributes.Directory));
+            Assert.Equal(FileAttributes.Directory, attributes);
         }
 
         [Fact]
@@ -378,19 +380,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Equal(text, result);
         }
 
-        private IEnumerable<Encoding> GetEncodingsForReadAllText()
+        public static IEnumerable<object[]> EncodingsForReadAllText
         {
-            // little endian
-            yield return new UTF32Encoding(false, true, true);
+            get
+            {
+                // little endian
+                yield return new object[] { new UTF32Encoding(false, true, true) };
 
-            // big endian
-            yield return new UTF32Encoding(true, true, true);
-            yield return new UTF8Encoding(true, true);
+                // big endian
+                yield return new object[] { new UTF32Encoding(true, true, true) };
+                yield return new object[] { new UTF8Encoding(true, true) };
 
-            yield return new ASCIIEncoding();
+                yield return new object[] { new ASCIIEncoding() };
+            }
         }
 
-        [TestCaseSource("GetEncodingsForReadAllText")]
+        [Theory]
+        [MemberData("EncodingsForReadAllText")]
         public void MockFile_ReadAllText_ShouldReturnTheOriginalContentWhenTheFileContainsDifferentEncodings(Encoding encoding)
         {
             // Arrange
@@ -426,7 +432,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 fileSystem.File.ReadAllBytes(path));
         }
 
-#if NET40
+#if DNX451
         [Fact]
         public void MockFile_OpenWrite_ShouldCreateNewFiles() {
             string filePath = XFS.Path(@"c:\something\demo.txt");
@@ -438,8 +444,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             stream.Write(bytes, 0, bytes.Length);
             stream.Close();
 
-            Assert.That(fileSystem.FileExists(filePath), Is.True);
-            Assert.That(fileSystem.GetFile(filePath).TextContents, Is.EqualTo(fileContent));
+            Assert.True(fileSystem.FileExists(filePath));
+            Assert.Equal(fileSystem.GetFile(filePath).TextContents, fileContent);
         }
 
         [Fact]
@@ -458,8 +464,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             stream.Write(bytes, 0, bytes.Length);
             stream.Close();
 
-            Assert.That(fileSystem.FileExists(filePath), Is.True);
-            Assert.That(fileSystem.GetFile(filePath).TextContents, Is.EqualTo(endFileContent));
+            Assert.True(fileSystem.FileExists(filePath));
+            Assert.Equal(fileSystem.GetFile(filePath).TextContents, endFileContent);
         }
 #endif
 
@@ -476,7 +482,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             file.Delete(fullPath);
 
-            Assert.That(fileSystem.FileExists(fullPath), Is.False);
+            Assert.False(fileSystem.FileExists(fullPath));
         }
 
         [Fact]
@@ -511,12 +517,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             stream.Write("Me too!");
             stream.Flush();
-#if NET40
+#if DNX451
             stream.Close();
 #endif
 
             var file = filesystem.GetFile(filepath);
-            Assert.That(file.TextContents, Is.EqualTo("I'm here. Me too!"));
+            Assert.Equal("I'm here. Me too!", file.TextContents);
         }
 
         [Fact]
@@ -529,16 +535,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             stream.Write("New too!");
             stream.Flush();
-#if NET40
+#if DNX451
             stream.Close();
 #endif
 
             var file = filesystem.GetFile(filepath);
-            Assert.That(file.TextContents, Is.EqualTo("New too!"));
-            Assert.That(filesystem.FileExists(filepath));
+            Assert.Equal("New too!", file.TextContents);
+            Assert.True(filesystem.FileExists(filepath));
         }
 
-#if NET40
+#if DNX451
         [Fact]
         public void Serializable_works()
         {
@@ -551,7 +557,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             formatter.Serialize(stream, data);
 
             //Assert
-            Assert.Pass();
+            Assert.True(true);
         }
 
         [Fact]
@@ -572,7 +578,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             MockFileData deserialized = (MockFileData)formatter.Deserialize(stream);
 
             //Assert
-            Assert.That(deserialized.TextContents, Is.EqualTo(textContentStr));
+            Assert.Equal(textContentStr, deserialized.TextContents);
         }
 
         [Fact]
@@ -597,7 +603,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
             // Assert
-            Assert.AreNotEqual(Content, newcontents);
+            Assert.NotEqual(Content, newcontents);
         }
 
         [Fact]
@@ -622,7 +628,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
             // Assert
-            Assert.AreNotEqual(Content, newcontents);
+            Assert.NotEqual(Content, newcontents);
         }
 #endif
     }

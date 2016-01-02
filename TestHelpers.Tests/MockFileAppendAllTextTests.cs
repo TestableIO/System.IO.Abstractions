@@ -4,10 +4,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     using Globalization;
 
-    using NUnit.Framework;
 
     using Text;
-
+    using Xunit;
     using XFS = MockUnixSupport;
 
     public class MockFileAppendAllTextTests {
@@ -106,10 +105,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Exception ex;
             ex = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.AppendAllText(path, "some text"));
-            Assert.That(ex.Message, Is.EqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path)));
+            Assert.Equal(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path), ex.Message);
 
             ex = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.AppendAllText(path, "some text", Encoding.Unicode));
-            Assert.That(ex.Message, Is.EqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path)));
+            Assert.Equal(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path), ex.Message);
         }
 
         [Fact]

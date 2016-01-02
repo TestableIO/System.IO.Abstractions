@@ -2,10 +2,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using Collections.Generic;
 
-    using NUnit.Framework;
 
     using Text;
-
+    using Xunit;
     using XFS = MockUnixSupport;
 
     public class MockFileReadLinesTests {

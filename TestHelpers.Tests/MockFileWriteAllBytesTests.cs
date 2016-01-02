@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using Xunit;
 using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
@@ -66,7 +66,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
             Assert.That(exception.Message, Is.StringStarting("Path cannot be null."));
-            Assert.That(exception.ParamName, Is.EqualTo("path"));
+            Assert.Equal("path", exception.ParamName);
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
             Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
-            Assert.That(exception.ParamName, Is.EqualTo("bytes"));
+            Assert.Equal("bytes", exception.ParamName);
         }
     }
 }

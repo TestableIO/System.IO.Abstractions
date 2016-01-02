@@ -56,7 +56,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = directoryInfo.Exists;
 
-            Assert.That(result, Is.EqualTo(expected));
+            Assert.Equal(expected, result);
         }
   
         [Fact]
@@ -73,7 +73,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = directoryInfo.FullName;
 
-            Assert.That(result, Is.EqualTo(XFS.Path(@"c:\temp\folder")));
+            Assert.Equal(XFS.Path(@"c:\temp\folder"), result);
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
             var result = directoryInfo.GetFileSystemInfos();
 
-            Assert.That(result.Length, Is.EqualTo(2));
+            Assert.Equal(2, result.Length);
         }
 
         [Fact]
@@ -103,7 +103,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
             var result = directoryInfo.EnumerateFileSystemInfos().ToArray();
 
-            Assert.That(result.Length, Is.EqualTo(2));
+            Assert.Equal(2, result.Length);
         }
 
         [Fact]
@@ -119,7 +119,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
             var result = directoryInfo.GetFileSystemInfos("f*");
 
-            Assert.That(result.Length, Is.EqualTo(2));
+            Assert.Equal(2, result.Length);
         }
 
         [Fact]
@@ -135,7 +135,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
             var result = directoryInfo.EnumerateFileSystemInfos("f*", SearchOption.AllDirectories).ToArray();
 
-            Assert.That(result.Length, Is.EqualTo(2));
+            Assert.Equal(2, result.Length);
         }
 
         [Fact]

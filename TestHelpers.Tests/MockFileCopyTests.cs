@@ -5,8 +5,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using Globalization;
 
     using Linq;
-
-    using NUnit.Framework;
+    using Xunit;
 
     using XFS = MockUnixSupport;
 
@@ -94,7 +93,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Copy(null, destFilePath));
 
-            Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
+            Assert.Equal("sourceFileName", exception.ParamName);
         }
 
         [Fact]
@@ -212,7 +211,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(string.Empty, destFilePath));
 
-            Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
+            Assert.Equal("sourceFileName", exception.ParamName);
         }
 
         [Fact]
@@ -224,7 +223,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("The path is not of a legal form."));
+            Assert.Equal("The path is not of a legal form.", exception.Message);
         }
 
         [Fact]
@@ -246,7 +245,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Copy(sourceFilePath, null));
 
-            Assert.That(exception.ParamName, Is.EqualTo("destFileName"));
+            Assert.Equal("destFileName", exception.ParamName);
         }
 
         [Fact]
@@ -258,7 +257,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("The path is not of a legal form."));
+            Assert.Equal("The path is not of a legal form.", exception.Message);
         }
 
         [Fact]

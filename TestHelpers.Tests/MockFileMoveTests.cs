@@ -3,8 +3,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using Collections.Generic;
 
     using Linq;
-
-    using NUnit.Framework;
+    using Xunit;
 
     using XFS = MockUnixSupport;
 
@@ -24,9 +23,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.File.Move(sourceFilePath, destFilePath);
 
-            Assert.That(fileSystem.FileExists(destFilePath), Is.True);
-            Assert.That(fileSystem.GetFile(destFilePath).TextContents, Is.EqualTo(sourceFileContent));
-            Assert.That(fileSystem.FileExists(sourceFilePath), Is.False);
+            Assert.True(fileSystem.FileExists(destFilePath));
+            Assert.Equal(sourceFileContent, fileSystem.GetFile(destFilePath).TextContents);
+            Assert.False(fileSystem.FileExists(sourceFilePath));
         }
 
         [Fact]
@@ -43,7 +42,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<IOException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("A file can not be created if it already exists."));
+            Assert.Equal("A file can not be created if it already exists.", exception.Message);
         }
 
         [Fact]
@@ -64,7 +63,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(null, destFilePath));
 
-            Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
+            Assert.Equal("sourceFileName", exception.ParamName);
         }
 
         [Fact]
@@ -181,7 +180,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(string.Empty, destFilePath));
 
-            Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
+            Assert.Equal("sourceFileName", exception.ParamName);
         }
 
         [Fact]
@@ -193,7 +192,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("The path is not of a legal form."));
+            Assert.Equal("The path is not of a legal form.", exception.Message);
         }
 
         [Fact]
@@ -214,7 +213,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(sourceFilePath, null));
 
-            Assert.That(exception.ParamName, Is.EqualTo("destFileName"));
+            Assert.Equal("destFileName", exception.ParamName);
         }
 
         [Fact]
@@ -226,7 +225,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("The path is not of a legal form."));
+            Assert.Equal("The path is not of a legal form.", exception.Message);
         }
 
         [Fact]
@@ -247,7 +246,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, string.Empty));
 
-            Assert.That(exception.ParamName, Is.EqualTo("destFileName"));
+            Assert.Equal("destFileName", exception.ParamName);
         }
 
         [Fact]
@@ -259,7 +258,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<FileNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("The file \"" + XFS.Path("c:\\something\\demo.txt") + "\" could not be found."));
+            Assert.Equal("The file \"" + XFS.Path("c:\\something\\demo.txt") + "\" could not be found.", exception.Message);
         }
 
         [Fact]
@@ -270,7 +269,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<FileNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
-            Assert.That(exception.FileName, Is.EqualTo(XFS.Path(@"c:\something\demo.txt")));
+            Assert.Equal(XFS.Path(@"c:\something\demo.txt"), exception.FileName);
         }
 
         [Fact]
@@ -288,7 +287,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
             //Message = "Could not find a part of the path."
-            Assert.That(exception.Message, Is.EqualTo(XFS.Path(@"Could not find a part of the path.")));
+            Assert.Equal(XFS.Path(@"Could not find a part of the path."), exception.Message);
         }
     }
 }
