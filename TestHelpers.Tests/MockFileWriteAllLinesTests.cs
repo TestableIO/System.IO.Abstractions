@@ -27,15 +27,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
                 // IEnumerable
                 yield return new object[] { fileSystem, writeEnumberable, expectedContent };
-                //.SetName("WriteAllLines(string, IEnumerable<string>)");
                 yield return new object[] { fileSystem, writeEnumberableUtf32, expectedContent };
-                //.SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
 
                 // string[]
                 yield return new object[] { fileSystem, writeArray, expectedContent };
-                //.SetName("WriteAllLines(string, string[])");
                 yield return new object[] { fileSystem, writeArrayUtf32, expectedContent };
-                //.SetName("WriteAllLines(string, string[], Encoding.UTF32)");
             }
         }
 
@@ -69,15 +65,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // IEnumerable
             yield return new object[] { writeEnumberable };
-            //.SetName("WriteAllLines(string, IEnumerable<string>)");
             yield return new object[] { writeEnumberableUtf32 };
-            //.SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
 
             // string[]
             yield return new object[] { writeArray };
-            //.SetName("WriteAllLines(string, string[])");
             yield return new object[] { writeArrayUtf32 };
-            //.SetName("WriteAllLines(string, string[], Encoding.UTF32)");
         }
 
         private static IEnumerable<object[]> ForNullEncoding
@@ -92,11 +84,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
                 // IEnumerable
                 yield return new object[] { writeEnumberableNull };
-                //.SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
 
                 // string[]
                 yield return new object[] { writeArrayNull };
-                //.SetName("WriteAllLines(string, string[], Encoding.UTF32)");
             }
         }
 
@@ -116,15 +106,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
                 // IEnumerable
                 yield return new object[] { writeEnumberable, path };
-                //.SetName("WriteAllLines(string, IEnumerable<string>)");
                 yield return new object[] { writeEnumberableUtf32, path };
-                //.SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
 
                 // string[]
                 yield return new object[] { writeArray, path };
-                //.SetName("WriteAllLines(string, string[])");
                 yield return new object[] { writeArrayUtf32, path };
-                //.SetName("WriteAllLines(string, string[], Encoding.UTF32)");
             }
         }
 
@@ -146,15 +132,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
                 // IEnumerable
                 yield return new object[] { writeEnumberable, path };
-                //.SetName("WriteAllLines(string, IEnumerable<string>)");
                 yield return new object[] { writeEnumberableUtf32, path };
-                //.SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
 
                 // string[]
                 yield return new object[] { writeArray, path };
-                //.SetName("WriteAllLines(string, string[])");
                 yield return new object[] { writeArrayUtf32, path };
-                //.SetName("WriteAllLines(string, string[], Encoding.UTF32)");
             }
         }
 
@@ -179,15 +161,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
                 // IEnumerable
                 yield return new object[] { writeEnumberable };
-                //.SetName("WriteAllLines(string, IEnumerable<string>)");
                 yield return new object[] { writeEnumberableUtf32 };
-                //.SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
 
                 // string[]
                 yield return new object[] { writeArray };
-                //.SetName("WriteAllLines(string, string[])");
                 yield return new object[] { writeArrayUtf32 };
-                //.SetName("WriteAllLines(string, string[], Encoding.UTF32)");
             }
         }
 
