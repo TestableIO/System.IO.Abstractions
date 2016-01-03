@@ -19,11 +19,7 @@ namespace System.IO.Abstractions
         public abstract Stream Create(string path);
         public abstract Stream Create(string path, int bufferSize);
         public abstract Stream Create(string path, int bufferSize, FileOptions options);
-
-#if NET40
         public abstract Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity);
-#endif
-
         public abstract StreamWriter CreateText(string path);
 
 #if NET40

@@ -60,12 +60,16 @@ namespace System.IO.Abstractions
             return File.Create(path, bufferSize, options);
         }
 
-#if NET40
         public override Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
         {
+#if NET40
             return File.Create(path, bufferSize, options, fileSecurity);
-        }
+#elif DOTNET5_4
+            var fs = File.Create(path, bufferSize, options);
+            fs.SetAccessControl(fileSecurity);
+            return fs;
 #endif
+        }
 
         public override StreamWriter CreateText(string path)
         {

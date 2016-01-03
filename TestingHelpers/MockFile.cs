@@ -124,12 +124,10 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
-#if NET40
         public override Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
         {
             throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
-#endif
 
         public override StreamWriter CreateText(string path)
         {
