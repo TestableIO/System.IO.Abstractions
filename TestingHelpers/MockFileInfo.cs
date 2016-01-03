@@ -2,8 +2,10 @@
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+#if NET40
     [Serializable]
-    internal class MockFileInfo : FileInfoBase
+#endif
+    public class MockFileInfo : FileInfoBase
     {
         readonly IMockFileDataAccessor mockFileSystem;
         readonly string path;
@@ -176,6 +178,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return new MockFile(mockFileSystem).CreateText(FullName);
         }
 
+#if NET40
         public override void Decrypt()
         {
             if (MockFileData == null) throw new FileNotFoundException("File not found", path);
@@ -191,6 +194,7 @@ namespace System.IO.Abstractions.TestingHelpers
             for(var i = 0; i < contents.Length; i++)
                 contents[i] ^= (byte) (i % 256);
         }
+#endif
 
         public override FileSecurity GetAccessControl()
         {
@@ -293,8 +297,13 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+#if NET40
                 return MockFileData.Contents.LongLength;
+#elif DOTNET5_4
+                return (long) MockFileData.Contents.Length;
+#endif
             }
         }
+
     }
 }

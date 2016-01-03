@@ -2,7 +2,9 @@
 
 namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     public class FileSystemWatcherWrapper : FileSystemWatcherBase
     {
         [NonSerialized]

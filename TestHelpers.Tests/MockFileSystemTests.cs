@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework;
+using Xunit;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    [TestFixture]
+
     public class MockFileSystemTests
     {
-        [Test]
+        [Fact]
         public void MockFileSystem_GetFile_ShouldReturnNullWhenFileIsNotRegistered()
         {
             // Arrange
@@ -20,10 +20,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.GetFile(@"c:\something\else.txt");
 
             // Assert
-            Assert.IsNull(result);
+            Assert.Null(result);
         }
 
-        [Test]
+        [Fact]
         public void MockFileSystem_GetFile_ShouldReturnFileRegisteredInConstructor()
         {
             // Arrange
@@ -38,10 +38,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.GetFile(@"c:\something\demo.txt");
 
             // Assert
-            Assert.AreEqual(file1, result);
+            Assert.Equal(file1, result);
         }
 
-        [Test]
+        [Fact]
         public void MockFileSystem_GetFile_ShouldReturnFileRegisteredInConstructorWhenPathsDifferByCase()
         {
             // Arrange
@@ -56,10 +56,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.GetFile(@"c:\SomeThing\DEMO.txt");
 
             // Assert
-            Assert.AreEqual(file1, result);
+            Assert.Equal(file1, result);
         }
 
-        [Test]
+        [Fact]
         public void MockFileSystem_AddFile_ShouldRepaceExistingFile()
         {
             const string path = @"c:\some\file.txt";
@@ -68,15 +68,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             {
                 { path, new MockFileData(existingContent) }
             });
-            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(existingContent));
+            Assert.Equal(fileSystem.GetFile(path).TextContents, existingContent);
 
             const string newContent = "New content";
             fileSystem.AddFile(path, new MockFileData(newContent));
 
-            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(newContent));
+            Assert.Equal(fileSystem.GetFile(path).TextContents, newContent);
         }
 
-        [Test]
+#if DNX451
+        [Fact]
         public void Is_Serializable()
         {
             var file1 = new MockFileData("Demo\r\ntext\ncontent\rvalue");
@@ -90,10 +91,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var serializer = new Runtime.Serialization.Formatters.Binary.BinaryFormatter();
             serializer.Serialize(memoryStream, fileSystem);
 
-            Assert.That(memoryStream.Length > 0, "Length didn't increase after serialization task.");
+            Assert.True(memoryStream.Length > 0, "Length didn't increase after serialization task.");
         }
+#endif
 
-        [Test]
+        [Fact]
         public void MockFileSystem_AddDirectory_ShouldCreateDirectory()
         {
             // Arrange
@@ -104,10 +106,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(baseDirectory);
 
             // Assert
-            Assert.IsTrue(fileSystem.Directory.Exists(baseDirectory));
+            Assert.True(fileSystem.Directory.Exists(baseDirectory));
         }
 
-        [Test]
+        [Fact]
         public void MockFileSystem_AddDirectory_ShouldThrowExceptionIfDirectoryIsReadOnly()
         {
             // Arrange
@@ -117,10 +119,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.SetAttributes(baseDirectory, FileAttributes.ReadOnly);
 
             // Act
-            TestDelegate act = () => fileSystem.AddDirectory(baseDirectory);
 
             // Assert
-            Assert.Throws<UnauthorizedAccessException>(act);
+            Assert.Throws<UnauthorizedAccessException>(() => fileSystem.AddDirectory(baseDirectory));
         }
     }
 }

@@ -3,7 +3,9 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     public abstract class DirectoryBase
     {
         public abstract DirectoryInfoBase CreateDirectory(string path);

@@ -5,7 +5,9 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+#if NET40
     [Serializable]
+#endif
     public class MockDirectoryInfo : DirectoryInfoBase
     {
         readonly IMockFileDataAccessor mockFileDataAccessor;
@@ -13,7 +15,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private static string EnsurePathEndsWithDirectorySeparator(string path)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.OrdinalIgnoreCase))
                 path += Path.DirectorySeparatorChar;
             return path;
         }

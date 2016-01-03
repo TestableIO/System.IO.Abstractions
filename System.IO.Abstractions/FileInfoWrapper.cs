@@ -2,7 +2,9 @@
 
 namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     public class FileInfoWrapper : FileInfoBase
     {
         readonly FileInfo instance;
@@ -109,6 +111,7 @@ namespace System.IO.Abstractions
             return instance.CreateText();
         }
 
+#if NET40
         public override void Decrypt()
         {
             instance.Decrypt();
@@ -118,6 +121,7 @@ namespace System.IO.Abstractions
         {
             instance.Encrypt();
         }
+#endif
 
         public override FileSecurity GetAccessControl()
         {
@@ -166,12 +170,24 @@ namespace System.IO.Abstractions
 
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)
         {
+#if NET40
             return instance.Replace(destinationFileName, destinationBackupFileName);
+#elif DOTNET5_4
+            File.Copy(destinationFileName, destinationBackupFileName);
+            instance.MoveTo(destinationFileName);
+            return this;
+#endif
         }
 
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
+#if NET40
             return instance.Replace(destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
+#elif DOTNET5_4
+            File.Copy(destinationFileName, destinationBackupFileName);
+            instance.MoveTo(destinationFileName);
+            return this;
+#endif
         }
 
         public override void SetAccessControl(FileSecurity fileSecurity)

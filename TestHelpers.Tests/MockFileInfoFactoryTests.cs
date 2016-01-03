@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework; 
+using Xunit;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    [TestFixture]
+
     public class MockFileInfoFactoryTests
     {
-        [Test]
+        [Fact]
         public void MockFileInfoFactory_FromFileName_ShouldReturnFileInfoForExistingFile()
         {
             // Arrange
@@ -21,10 +21,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileInfoFactory.FromFileName(@"c:\a.txt");
 
             // Assert
-            Assert.IsNotNull(result);
+            Assert.NotNull(result);
         }
 
-        [Test]
+        [Fact]
         public void MockFileInfoFactory_FromFileName_ShouldReturnFileInfoForNonExistantFile()
         {
             // Arrange
@@ -39,7 +39,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileInfoFactory.FromFileName(@"c:\foo.txt");
 
             // Assert
-            Assert.IsNotNull(result);
+            Assert.NotNull(result);
         }
     }
 }

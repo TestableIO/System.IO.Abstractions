@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using NUnit.Framework;
+using Xunit;
 using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     public class MockFileAppendAllLinesTests
     {
-        [Test]
+        [Fact]
         public void MockFile_AppendAllLines_ShouldPersistNewLinesToExistingFile()
         {
             // Arrange
@@ -22,12 +22,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             file.AppendAllLines(path, new[] { "line 1", "line 2", "line 3" });
 
             // Assert
-            Assert.AreEqual(
+            Assert.Equal(
                 "Demo text contentline 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine,
                 file.ReadAllText(path));
         }
 
-        [Test]
+        [Fact]
         public void MockFile_AppendAllLines_ShouldPersistNewLinesToNewFile()
         {
             // Arrange
@@ -42,7 +42,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             file.AppendAllLines(path, new[] { "line 1", "line 2", "line 3" });
 
             // Assert
-            Assert.AreEqual(
+            Assert.Equal(
                 "line 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine,
                 file.ReadAllText(path));
         }

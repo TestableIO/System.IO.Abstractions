@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Security.AccessControl;
 using System.Text;
+using System.IO;
 
 namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     public class FileWrapper : FileBase
     {
         public override void AppendAllLines(string path, IEnumerable<string> contents)
@@ -59,7 +62,13 @@ namespace System.IO.Abstractions
 
         public override Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
         {
+#if NET40
             return File.Create(path, bufferSize, options, fileSecurity);
+#elif DOTNET5_4
+            var fs = File.Create(path, bufferSize, options);
+            fs.SetAccessControl(fileSecurity);
+            return fs;
+#endif
         }
 
         public override StreamWriter CreateText(string path)
@@ -67,20 +76,24 @@ namespace System.IO.Abstractions
             return File.CreateText(path);
         }
 
+#if NET40
         public override void Decrypt(string path)
         {
             File.Decrypt(path);
         }
+#endif
 
         public override void Delete(string path)
         {
             File.Delete(path);
         }
 
+#if NET40
         public override void Encrypt(string path)
         {
             File.Encrypt(path);
         }
+#endif
 
         public override bool Exists(string path)
         {
@@ -89,12 +102,22 @@ namespace System.IO.Abstractions
 
         public override FileSecurity GetAccessControl(string path)
         {
+#if NET40
             return File.GetAccessControl(path);
+#elif DOTNET5_4
+            var info = new FileInfo(path);
+            return info.GetAccessControl();
+#endif
         }
 
         public override FileSecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
+#if NET40
             return File.GetAccessControl(path, includeSections);
+#elif DOTNET5_4
+            var info = new FileInfo(path);
+            return info.GetAccessControl(includeSections);
+#endif
         }
 
         /// <summary>
@@ -216,17 +239,32 @@ namespace System.IO.Abstractions
 
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
         {
+#if NET40
             File.Replace(sourceFileName, destinationFileName, destinationBackupFileName);
+#elif DOTNET5_4
+            File.Copy(destinationFileName, destinationBackupFileName);
+            File.Move(sourceFileName, destinationFileName);
+#endif
         }
 
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
+#if NET40
             File.Replace(sourceFileName, destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
+#elif DOTNET5_4
+            File.Copy(destinationFileName, destinationBackupFileName);
+            File.Move(sourceFileName, destinationFileName);
+#endif
         }
 
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
+#if NET40
             File.SetAccessControl(path, fileSecurity);
+#elif DOTNET5_4
+            var info = new FileInfo(path);
+            info.SetAccessControl(fileSecurity);
+#endif
         }
 
         public override void SetAttributes(string path, FileAttributes fileAttributes)

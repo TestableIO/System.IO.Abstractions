@@ -1,6 +1,8 @@
 ﻿namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     public abstract class FileSystemInfoBase
     {
         public abstract void Delete();

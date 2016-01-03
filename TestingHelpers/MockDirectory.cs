@@ -8,7 +8,9 @@ namespace System.IO.Abstractions.TestingHelpers
 {
     using XFS = MockUnixSupport;
 
+#if NET40
     [Serializable]
+#endif
     public class MockDirectory : DirectoryBase
     {
         readonly FileBase fileBase;
@@ -294,7 +296,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var absolutePath = mockFileDataAccessor.Path.GetFullPath(path);
-            var sepAsString = mockFileDataAccessor.Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture);
+            var sepAsString = mockFileDataAccessor.Path.DirectorySeparatorChar.ToString();
 
             var lastIndex = 0;
             if (absolutePath != sepAsString)
@@ -458,7 +460,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         static string EnsurePathEndsWithDirectorySeparator(string path)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.OrdinalIgnoreCase))
                 path += Path.DirectorySeparatorChar;
             return path;
         }
@@ -491,7 +493,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var invalidPathChars = Path.GetInvalidPathChars();
             if (searchPattern.IndexOfAny(invalidPathChars) > -1)
             {
-                throw new ArgumentException(Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION, "searchPattern");
+                throw new ArgumentException(TestingHelpers.Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION, "searchPattern");
             }
         }
     }

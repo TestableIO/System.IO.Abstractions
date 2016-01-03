@@ -7,7 +7,9 @@ using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+#if NET40
     [Serializable]
+#endif
     public class MockFile : FileBase
     {
         readonly IMockFileDataAccessor mockFileDataAccessor;
@@ -132,20 +134,24 @@ namespace System.IO.Abstractions.TestingHelpers
             return new StreamWriter(Create(path));
         }
 
+#if NET40
         public override void Decrypt(string path)
         {
             new MockFileInfo(mockFileDataAccessor, path).Decrypt();
         }
+#endif
 
         public override void Delete(string path)
         {
             mockFileDataAccessor.RemoveFile(path);
         }
 
+#if NET40
         public override void Encrypt(string path)
         {
             new MockFileInfo(mockFileDataAccessor, path).Encrypt();
         }
+#endif
 
         public override bool Exists(string path)
         {
@@ -269,7 +275,7 @@ namespace System.IO.Abstractions.TestingHelpers
             if (ExtractFileName(value).IndexOfAny(mockPath.GetInvalidFileNameChars()) > -1)
                 throw new NotSupportedException("The given path's format is not supported.");
             if (ExtractFilePath(value).IndexOfAny(mockPath.GetInvalidPathChars()) > -1)
-                throw new ArgumentException(Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION);
+                throw new ArgumentException(TestingHelpers.Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION);
         }
 
         private string ExtractFilePath(string fullFileName)

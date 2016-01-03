@@ -1,9 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Security.AccessControl;
+using System.Linq;
+#if DOTNET5_4
+using System.IO;
+#endif
 
 namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     public class DirectoryWrapper : DirectoryBase
     {
         public override DirectoryInfoBase CreateDirectory(string path)
@@ -13,7 +19,14 @@ namespace System.IO.Abstractions
 
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
+#if NET40
             return Directory.CreateDirectory(path, directorySecurity);
+#elif DOTNET5_4
+            var info = new DirectoryInfo(path);
+            info.Create();
+            info.SetAccessControl(directorySecurity);
+            return info;
+#endif
         }
 
         public override void Delete(string path)
@@ -33,12 +46,22 @@ namespace System.IO.Abstractions
 
         public override DirectorySecurity GetAccessControl(string path)
         {
+#if NET40
             return Directory.GetAccessControl(path);
+#elif DOTNET5_4
+            var info = new DirectoryInfo(path);
+            return info.GetAccessControl();
+#endif
         }
 
         public override DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
+#if NET40
             return Directory.GetAccessControl(path, includeSections);
+#elif DOTNET5_4
+            var info = new DirectoryInfo(path);
+            return info.GetAccessControl(includeSections);
+#endif
         }
 
         public override DateTime GetCreationTime(string path)
@@ -123,7 +146,11 @@ namespace System.IO.Abstractions
 
         public override string[] GetLogicalDrives()
         {
+#if NET40
             return Directory.GetLogicalDrives();
+#elif DOTNET5_4
+            return DriveInfo.GetDrives().Select(d => d.Name).ToArray();
+#endif
         }
 
         public override DirectoryInfoBase GetParent(string path)
@@ -138,7 +165,12 @@ namespace System.IO.Abstractions
 
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
+#if NET40
             Directory.SetAccessControl(path, directorySecurity);
+#elif DOTNET5_4
+            var info = new DirectoryInfo(path);
+            info.SetAccessControl(directorySecurity);
+#endif
         }
 
         public override void SetCreationTime(string path, DateTime creationTime)

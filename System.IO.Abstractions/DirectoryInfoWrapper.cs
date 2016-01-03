@@ -4,7 +4,9 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     public class DirectoryInfoWrapper : DirectoryInfoBase
     {
         readonly DirectoryInfo instance;
@@ -93,7 +95,12 @@ namespace System.IO.Abstractions
 
         public override void Create(DirectorySecurity directorySecurity)
         {
-            instance.Create(directorySecurity);
+#if NET40
+            instance.Create(directorySecurity); 
+#elif DOTNET5_4
+            instance.Create();
+            instance.SetAccessControl(directorySecurity);
+#endif
         }
 
         public override DirectoryInfoBase CreateSubdirectory(string path)
@@ -103,7 +110,13 @@ namespace System.IO.Abstractions
 
         public override DirectoryInfoBase CreateSubdirectory(string path, DirectorySecurity directorySecurity)
         {
+#if NET40
             return new DirectoryInfoWrapper(instance.CreateSubdirectory(path, directorySecurity));
+#elif DOTNET5_4
+            var info = instance.CreateSubdirectory(path);
+            instance.SetAccessControl(directorySecurity);
+            return new DirectoryInfoWrapper(info);
+#endif
         }
 
         public override void Delete(bool recursive)

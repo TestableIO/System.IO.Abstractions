@@ -6,7 +6,9 @@ namespace System.IO.Abstractions.TestingHelpers
     /// <summary>
     /// The class represents the associated data of a file.
     /// </summary>
+#if NET40
     [Serializable]
+#endif
     public class MockFileData
     {
         /// <summary>

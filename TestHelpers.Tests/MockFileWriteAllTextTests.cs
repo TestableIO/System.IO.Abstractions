@@ -2,14 +2,12 @@
 {
     using Collections.Generic;
 
-    using NUnit.Framework;
-
     using Text;
-
+    using Xunit;
     using XFS = MockUnixSupport;
 
     public class MockFileWriteAllTextTests {
-        [Test]
+        [Fact]
         public void MockFile_WriteAllText_ShouldWriteTextFileToMemoryFileSystem()
         {
             // Arrange
@@ -21,12 +19,12 @@
             fileSystem.File.WriteAllText(path, fileContent);
 
             // Assert
-            Assert.AreEqual(
+            Assert.Equal(
                 fileContent,
                 fileSystem.GetFile(path).TextContents);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_WriteAllText_ShouldOverriteAnExistingFile()
         {
             // http://msdn.microsoft.com/en-us/library/ms143375.aspx
@@ -40,10 +38,10 @@
             fileSystem.File.WriteAllText(path, "bar");
 
             // Assert
-            Assert.AreEqual("bar", fileSystem.GetFile(path).TextContents);
+            Assert.Equal("bar", fileSystem.GetFile(path).TextContents);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_WriteAllText_ShouldThrowAnUnauthorizedAccessExceptionIfFileIsHidden()
         {
             // Arrange
@@ -55,41 +53,42 @@
             fileSystem.File.SetAttributes(path, FileAttributes.Hidden);
 
             // Act
-            TestDelegate action = () => fileSystem.File.WriteAllText(path, "hello world");
+            Action action = () => fileSystem.File.WriteAllText(path, "hello world");
 
             // Assert
-            Assert.Throws<UnauthorizedAccessException>(action, "Access to the path '{0}' is denied.", path);
+            //Assert.Throws<UnauthorizedAccessException>(action, "Access to the path '{0}' is denied.", path);
+            Assert.Throws<UnauthorizedAccessException>(action);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_WriteAllText_ShouldThrowAnArgumentExceptionIfThePathIsEmpty()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.WriteAllText(string.Empty, "hello world");
+            Action action = () => fileSystem.File.WriteAllText(string.Empty, "hello world");
 
             // Assert
             Assert.Throws<ArgumentException>(action);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_WriteAllText_ShouldThrowAnArgumentNullExceptionIfThePathIsNull()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.WriteAllText(null, "hello world");
+            Action action = () => fileSystem.File.WriteAllText(null, "hello world");
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
-            Assert.That(exception.ParamName, Is.EqualTo("path"));
+            Assert.StartsWith("Value cannot be null.", exception.Message);
+            Assert.Equal("path", exception.ParamName);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_WriteAllText_ShouldNotThrowAnArgumentNullExceptionIfTheContentIsNull()
         {
             // Arrange
@@ -104,10 +103,10 @@
             // Assert
             // no exception should be thrown, also the documentation says so
             var data = fileSystem.GetFile(filePath);
-            Assert.That(data.Contents, Is.Empty);
+            Assert.Empty(data.Contents);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_WriteAllText_ShouldThrowAnUnauthorizedAccessExceptionIfTheFileIsReadOnly()
         {
             // Arrange
@@ -118,13 +117,13 @@
             fileSystem.AddFile(filePath, mockFileData);
 
             // Act
-            TestDelegate action = () => fileSystem.File.WriteAllText(filePath, null);
+            Action action = () => fileSystem.File.WriteAllText(filePath, null);
 
             // Assert
             Assert.Throws<UnauthorizedAccessException>(action);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_WriteAllText_ShouldThrowAnUnauthorizedAccessExceptionIfThePathIsOneDirectory()
         {
             // Arrange
@@ -133,7 +132,7 @@
             fileSystem.AddDirectory(directoryPath);
 
             // Act
-            TestDelegate action = () => fileSystem.File.WriteAllText(directoryPath, null);
+            Action action = () => fileSystem.File.WriteAllText(directoryPath, null);
 
             // Assert
             Assert.Throws<UnauthorizedAccessException>(action);
@@ -153,9 +152,11 @@
                     0, 108, 0, 108, 0, 111, 0, 32, 0, 116, 0, 104, 0, 101, 0, 114,
                     0, 101, 0, 33, 0, 32, 0, 68, 0, 122, 0, 105, 1, 25, 0, 107, 0, 105, 0, 46 } },
 
+#if DNX451
                 // Default encoding does not need a BOM
                 { Encoding.Default, new byte [] { 72, 101, 108, 108, 111, 32, 116,
                     104, 101, 114, 101, 33, 32, 68, 122, 105, 101, 107, 105, 46 } },
+#endif
 
                 // UTF-32 needs a BOM, the BOM is the first four bytes
                 { Encoding.UTF32, new byte [] {255, 254, 0, 0, 72, 0, 0, 0, 101,
@@ -181,7 +182,7 @@
             };
         }
 
-        [TestCaseSource("GetEncodingsWithExpectedBytes")]
+        [MemberData("GetEncodingsWithExpectedBytes")]
         public void MockFile_WriteAllText_Encoding_ShouldWriteTextFileToMemoryFileSystem(KeyValuePair<Encoding, byte[]> encodingsWithContents)
         {
             // Arrange
@@ -196,10 +197,10 @@
 
             // Assert
             var actualBytes = fileSystem.GetFile(path).Contents;
-            Assert.AreEqual(expectedBytes, actualBytes);
+            Assert.Equal(expectedBytes, actualBytes);
         }
 
-        [Test]
+        [Fact]
         public void MockFile_WriteAllTextMultipleLines_ShouldWriteTextFileToMemoryFileSystem()
         {
             // Arrange
@@ -214,7 +215,7 @@
             fileSystem.File.WriteAllLines(path, fileContent);
 
             // Assert
-            Assert.AreEqual(
+            Assert.Equal(
                 expected,
                 fileSystem.GetFile(path).TextContents);
         }

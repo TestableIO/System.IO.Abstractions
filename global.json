@@ -1,0 +1,6 @@
+{
+  "projects": [ "System.IO.Abstractions", "TestHelpers.Tests", "TestingHelpers" ],
+  "sdk": {
+    "version": "1.0.0-rc1-update1"
+  }
+}

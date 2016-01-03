@@ -1,6 +1,8 @@
 ﻿namespace System.IO.Abstractions
 {
+#if NET40
     [Serializable]
+#endif
     public abstract class PathBase
     {
         public abstract char AltDirectorySeparatorChar { get; }

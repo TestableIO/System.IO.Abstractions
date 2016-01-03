@@ -4,14 +4,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     using Globalization;
 
-    using NUnit.Framework;
 
     using Text;
-
+    using Xunit;
     using XFS = MockUnixSupport;
 
     public class MockFileCreateTests {
-        [Test]
+
+        [Fact]
         public void Mockfile_Create_ShouldCreateNewStream()
         {
             string fullPath = XFS.Path(@"c:\something\demo.txt");
@@ -19,14 +19,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var sut = new MockFile(fileSystem);
 
-            Assert.That(fileSystem.FileExists(fullPath), Is.False);
+            Assert.False(fileSystem.FileExists(fullPath));
 
-            sut.Create(fullPath).Close();
+            var stream = sut.Create(fullPath);
+#if DNX451
+            stream.Close();
+#endif
 
-            Assert.That(fileSystem.FileExists(fullPath), Is.True);
+            Assert.True(fileSystem.FileExists(fullPath));
         }
 
-        [Test]
+        [Fact]
         public void Mockfile_Create_CanWriteToNewStream()
         {
             string fullPath = XFS.Path(@"c:\something\demo.txt");
@@ -42,10 +45,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockFileData = fileSystem.GetFile(fullPath);
             var fileData = mockFileData.Contents;
 
-            Assert.That(fileData, Is.EqualTo(data));
+            Assert.Equal(data, fileData);
         }
 
-        [Test]
+        [Fact]
         public void Mockfile_Create_OverwritesExistingFile()
         {
             string path = XFS.Path(@"c:\some\file.txt");
@@ -69,10 +72,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var actualContents = fileSystem.GetFile(path).Contents;
 
-            Assert.That(actualContents, Is.EqualTo(expectedContents));
+            Assert.Equal(expectedContents, actualContents);
         }
 
-        [Test]
+        [Fact]
         public void Mockfile_Create_ThrowsWhenPathIsReadOnly()
         {
             string path = XFS.Path(@"c:\something\read-only.txt");
@@ -82,7 +85,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             mockFile.SetAttributes(path, FileAttributes.ReadOnly);
          
             var exception =  Assert.Throws<UnauthorizedAccessException>(() => mockFile.Create(path).Close());
-            Assert.That(exception.Message, Is.EqualTo(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path)));
+            Assert.Equal(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path), exception.Message);
         }
     }
 }

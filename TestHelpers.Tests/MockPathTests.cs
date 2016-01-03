@@ -1,8 +1,8 @@
-﻿using NUnit.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
+    using Xunit;
     using XFS = MockUnixSupport;
 
     public class MockPathTests
@@ -14,7 +14,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             return new MockPath(null);
         }
 
-        [Test]
+        [Fact]
         public void ChangeExtension_ExtensionNoPeriod_PeriodAdded()
         {
             //Arrange
@@ -24,10 +24,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.ChangeExtension(TestPath, "doc");
 
             //Assert
-            Assert.AreEqual(XFS.Path("C:\\test\\test.doc"), result);
+            Assert.Equal(XFS.Path("C:\\test\\test.doc"), result);
         }
 
-        [Test]
+        [Fact]
         public void Combine_SentTwoPaths_Combines()
         {
             //Arrange
@@ -37,10 +37,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.Combine(XFS.Path("C:\\test"), "test.bmp");
 
             //Assert
-            Assert.AreEqual(XFS.Path("C:\\test\\test.bmp"), result);
+            Assert.Equal(XFS.Path("C:\\test\\test.bmp"), result);
         }
 
-        [Test]
+        [Fact]
         public void Combine_SentThreePaths_Combines()
         {
             //Arrange
@@ -50,10 +50,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.Combine(XFS.Path("C:\\test"), "subdir1", "test.bmp");
 
             //Assert
-            Assert.AreEqual(XFS.Path("C:\\test\\subdir1\\test.bmp"), result);
+            Assert.Equal(XFS.Path("C:\\test\\subdir1\\test.bmp"), result);
         }
 
-        [Test]
+        [Fact]
         public void Combine_SentFourPaths_Combines()
         {
             //Arrange
@@ -63,10 +63,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.Combine(XFS.Path("C:\\test"), "subdir1", "subdir2", "test.bmp");
 
             //Assert
-            Assert.AreEqual(XFS.Path("C:\\test\\subdir1\\subdir2\\test.bmp"), result);
+            Assert.Equal(XFS.Path("C:\\test\\subdir1\\subdir2\\test.bmp"), result);
         }
 
-        [Test]
+        [Fact]
         public void Combine_SentFivePaths_Combines()
         {
             //Arrange
@@ -76,10 +76,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.Combine(XFS.Path("C:\\test"), "subdir1", "subdir2", "subdir3", "test.bmp");
 
             //Assert
-            Assert.AreEqual(XFS.Path("C:\\test\\subdir1\\subdir2\\subdir3\\test.bmp"), result);
+            Assert.Equal(XFS.Path("C:\\test\\subdir1\\subdir2\\subdir3\\test.bmp"), result);
         }
 
-        [Test]
+        [Fact]
         public void GetDirectoryName_SentPath_ReturnsDirectory()
         {
             //Arrange
@@ -89,10 +89,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetDirectoryName(TestPath);
 
             //Assert
-            Assert.AreEqual(XFS.Path("C:\\test"), result);
+            Assert.Equal(XFS.Path("C:\\test"), result);
         }
 
-        [Test]
+        [Fact]
         public void GetExtension_SendInPath_ReturnsExtension()
         {
             //Arrange
@@ -102,10 +102,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetExtension(TestPath);
 
             //Assert
-            Assert.AreEqual(".bmp", result);
+            Assert.Equal(".bmp", result);
         }
 
-        [Test]
+        [Fact]
         public void GetFileName_SendInPath_ReturnsFilename()
         {
             //Arrange
@@ -115,10 +115,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetFileName(TestPath);
 
             //Assert
-            Assert.AreEqual("test.bmp", result);
+            Assert.Equal("test.bmp", result);
         }
 
-        [Test]
+        [Fact]
         public void GetFileNameWithoutExtension_SendInPath_ReturnsFileNameNoExt()
         {
             //Arrange
@@ -128,10 +128,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetFileNameWithoutExtension(TestPath);
 
             //Assert
-            Assert.AreEqual("test", result);
+            Assert.Equal("test", result);
         }
 
-        [Test]
+        [Fact]
         public void GetFullPath_SendInPath_ReturnsFullPath()
         {
             //Arrange
@@ -141,7 +141,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetFullPath(TestPath);
 
             //Assert
-            Assert.AreEqual(TestPath, result);
+            Assert.Equal(TestPath, result);
         }
 
         public static IEnumerable<string[]> GetFullPath_RelativePaths_Cases
@@ -158,7 +158,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        [TestCaseSource("GetFullPath_RelativePaths_Cases")]
+        [MemberData("GetFullPath_RelativePaths_Cases")]
         public void GetFullPath_RelativePaths_ShouldReturnTheAbsolutePathWithCurrentDirectory(string currentDir, string relativePath, string expectedResult)
         {
             //Arrange
@@ -170,7 +170,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = mockPath.GetFullPath(relativePath);
 
             //Assert
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.Equal(expectedResult, actualResult);
         }
 
         public static IEnumerable<string[]> GetFullPath_RootedPathWithRelativeSegments_Cases
@@ -185,7 +185,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        [TestCaseSource("GetFullPath_RootedPathWithRelativeSegments_Cases")]
+        [MemberData("GetFullPath_RootedPathWithRelativeSegments_Cases")]
         public void GetFullPath_RootedPathWithRelativeSegments_ShouldReturnAnRootedAbsolutePath(string rootedPath, string expectedResult)
         {
             //Arrange
@@ -196,7 +196,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = mockPath.GetFullPath(rootedPath);
 
             //Assert
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.Equal(expectedResult, actualResult);
         }
 
         public static IEnumerable<string[]> GetFullPath_AbsolutePaths_Cases
@@ -214,7 +214,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        [TestCaseSource("GetFullPath_AbsolutePaths_Cases")]
+        [MemberData("GetFullPath_AbsolutePaths_Cases")]
         public void GetFullPath_AbsolutePaths_ShouldReturnThePathWithTheRoot_Or_Unc(string currentDir, string absolutePath, string expectedResult)
         {
             //Arrange
@@ -226,10 +226,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = mockPath.GetFullPath(absolutePath);
 
             //Assert
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.Equal(expectedResult, actualResult);
         }
 
-        [Test]
+        [Fact]
         public void GetFullPath_InvalidUNCPaths_ShouldThrowArgumentException()
         {
             //Arrange
@@ -237,13 +237,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockPath = new MockPath(mockFileSystem);
 
             //Act
-            TestDelegate action = () => mockPath.GetFullPath(XFS.Path(@"\\shareZ"));
+            Action action = () => mockPath.GetFullPath(XFS.Path(@"\\shareZ"));
 
             //Assert
             Assert.Throws<ArgumentException>(action);
         }
 
-        [Test]
+        [Fact]
         public void GetFullPath_NullValue_ShouldThrowArgumentNullException()
         {
             //Arrange
@@ -251,13 +251,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockPath = new MockPath(mockFileSystem);
 
             //Act
-            TestDelegate action = () => mockPath.GetFullPath(null);
+            Action action = () => mockPath.GetFullPath(null);
 
             //Assert
             Assert.Throws<ArgumentNullException>(action);
         }
 
-        [Test]
+        [Fact]
         public void GetFullPath_EmptyValue_ShouldThrowArgumentException()
         {
             //Arrange
@@ -265,13 +265,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockPath = new MockPath(mockFileSystem);
 
             //Act
-            TestDelegate action = () => mockPath.GetFullPath(string.Empty);
+            Action action = () => mockPath.GetFullPath(string.Empty);
 
             //Assert
             Assert.Throws<ArgumentException>(action);
         }
 
-        [Test]
+        [Fact]
         public void GetInvalidFileNameChars_Called_ReturnsChars()
         {
             //Arrange
@@ -281,10 +281,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetInvalidFileNameChars();
 
             //Assert
-            Assert.IsTrue(result.Length > 0);
+            Assert.True(result.Length > 0);
         }
 
-        [Test]
+        [Fact]
         public void GetInvalidPathChars_Called_ReturnsChars()
         {
             //Arrange
@@ -294,10 +294,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetInvalidPathChars();
 
             //Assert
-            Assert.IsTrue(result.Length > 0);
+            Assert.True(result.Length > 0);
         }
 
-        [Test]
+        [Fact]
         public void GetPathRoot_SendInPath_ReturnsRoot()
         {
             //Arrange
@@ -307,10 +307,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetPathRoot(TestPath);
 
             //Assert
-            Assert.AreEqual(XFS.Path("C:\\"), result);
+            Assert.Equal(XFS.Path("C:\\"), result);
         }
 
-        [Test]
+        [Fact]
         public void GetRandomFileName_Called_ReturnsStringLengthGreaterThanZero()
         {
             //Arrange
@@ -320,10 +320,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetRandomFileName();
 
             //Assert
-            Assert.IsTrue(result.Length > 0);
+            Assert.True(result.Length > 0);
         }
 
-        [Test]
+        [Fact]
         public void GetTempFileName_Called_ReturnsStringLengthGreaterThanZero()
         {
             //Arrange
@@ -333,10 +333,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetTempFileName();
 
             //Assert
-            Assert.IsTrue(result.Length > 0);
+            Assert.True(result.Length > 0);
         }
 
-        [Test]
+        [Fact]
         public void GetTempFileName_Called_CreatesEmptyFileInTempDirectory()
         {
             //Arrange
@@ -347,10 +347,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetTempFileName();
 
             Assert.True(fileSystem.FileExists(result));
-            Assert.AreEqual(0, fileSystem.FileInfo.FromFileName(result).Length);
+            Assert.Equal(0, fileSystem.FileInfo.FromFileName(result).Length);
         }
 
-        [Test]
+        [Fact]
         public void GetTempPath_Called_ReturnsStringLengthGreaterThanZero()
         {
             //Arrange
@@ -360,10 +360,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetTempPath();
 
             //Assert
-            Assert.IsTrue(result.Length > 0);
+            Assert.True(result.Length > 0);
         }
 
-        [Test]
+        [Fact]
         public void HasExtension_PathSentIn_DeterminesExtension()
         {
             //Arrange
@@ -373,10 +373,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.HasExtension(TestPath);
 
             //Assert
-            Assert.AreEqual(true, result);
+            Assert.Equal(true, result);
         }
 
-        [Test]
+        [Fact]
         public void IsPathRooted_PathSentIn_DeterminesPathExists()
         {
             //Arrange
@@ -386,7 +386,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.IsPathRooted(TestPath);
 
             //Assert
-            Assert.AreEqual(true, result);
+            Assert.Equal(true, result);
         }
     }
 }

@@ -1,11 +1,12 @@
-﻿using NUnit.Framework;
+﻿
+using Xunit;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    [TestFixture]
+
     public class StringExtensions
     {
-        [Test]
+        [Fact]
         public void SplitLines_InputWithOneLine_ShouldReturnOnlyOneLine()
         {
             var input = "This is row one";
@@ -13,47 +14,47 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = input.SplitLines();
 
-            Assert.That(result, Is.EquivalentTo(expected));
+            Assert.Equal(expected, result);
         }
 
-        [Test]
+        [Fact]
         public void SplitLines_InputWithTwoLinesSeparatedWithLf_ShouldReturnBothLines() {
             var input = "This is row one\nThis is row two";
             var expected = new[] { "This is row one", "This is row two" };
 
             var result = input.SplitLines();
 
-            Assert.That(result, Is.EquivalentTo(expected));
+            Assert.Equal(expected, result);
         }
 
-        [Test]
+        [Fact]
         public void SplitLines_InputWithTwoLinesSeparatedWithCr_ShouldReturnBothLines() {
             var input = "This is row one\rThis is row two";
             var expected = new[] { "This is row one", "This is row two" };
 
             var result = input.SplitLines();
 
-            Assert.That(result, Is.EquivalentTo(expected));
+            Assert.Equal(expected, result);
         }
 
-        [Test]
+        [Fact]
         public void SplitLines_InputWithTwoLinesSeparatedWithCrLf_ShouldReturnBothLines() {
             var input = "This is row one\r\nThis is row two";
             var expected = new[] { "This is row one", "This is row two" };
 
             var result = input.SplitLines();
 
-            Assert.That(result, Is.EquivalentTo(expected));
+            Assert.Equal(expected, result);
         }
 
-        [Test]
+        [Fact]
         public void SplitLines_InputWithTwoLinesSeparatedWithAllLineEndings_ShouldReturnAllLines() {
             var input = "one\r\ntwo\rthree\nfour";
             var expected = new[] { "one", "two", "three", "four" };
 
             var result = input.SplitLines();
 
-            Assert.That(result, Is.EquivalentTo(expected));
+            Assert.Equal(expected, result);
         }
 
     }

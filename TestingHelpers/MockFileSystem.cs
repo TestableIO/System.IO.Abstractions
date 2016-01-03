@@ -6,7 +6,9 @@ namespace System.IO.Abstractions.TestingHelpers
 {
     using XFS = MockUnixSupport;
 
+#if NET40
     [Serializable]
+#endif
     public class MockFileSystem : IFileSystem, IMockFileDataAccessor
     {
         readonly IDictionary<string, MockFileData> files;
