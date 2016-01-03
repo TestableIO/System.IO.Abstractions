@@ -23,7 +23,6 @@ namespace System.IO.Abstractions
         public abstract void BeginInit();
         public abstract void Dispose();
         public abstract void EndInit();
-
         public abstract WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType);
         public abstract WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout);
 

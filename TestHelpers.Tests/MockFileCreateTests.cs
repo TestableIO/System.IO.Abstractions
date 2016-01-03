@@ -11,7 +11,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     public class MockFileCreateTests {
 
-#if DNX451
         [Fact]
         public void Mockfile_Create_ShouldCreateNewStream()
         {
@@ -22,11 +21,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.False(fileSystem.FileExists(fullPath));
 
-            sut.Create(fullPath).Close();
+            var stream = sut.Create(fullPath);
+#if DNX451
+            stream.Close();
+#endif
 
             Assert.True(fileSystem.FileExists(fullPath));
         }
-#endif
 
         [Fact]
         public void Mockfile_Create_CanWriteToNewStream()
@@ -74,7 +75,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Equal(expectedContents, actualContents);
         }
 
-#if DNX451
         [Fact]
         public void Mockfile_Create_ThrowsWhenPathIsReadOnly()
         {
@@ -87,6 +87,5 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var exception =  Assert.Throws<UnauthorizedAccessException>(() => mockFile.Create(path).Close());
             Assert.Equal(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path), exception.Message);
         }
-#endif
     }
 }

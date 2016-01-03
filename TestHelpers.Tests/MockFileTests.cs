@@ -432,7 +432,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 fileSystem.File.ReadAllBytes(path));
         }
 
-#if DNX451
         [Fact]
         public void MockFile_OpenWrite_ShouldCreateNewFiles() {
             string filePath = XFS.Path(@"c:\something\demo.txt");
@@ -442,7 +441,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var bytes = new UTF8Encoding(true).GetBytes(fileContent);
             var stream = fileSystem.File.OpenWrite(filePath);
             stream.Write(bytes, 0, bytes.Length);
+#if DNX451
             stream.Close();
+#endif
 
             Assert.True(fileSystem.FileExists(filePath));
             Assert.Equal(fileSystem.GetFile(filePath).TextContents, fileContent);
@@ -462,12 +463,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var bytes = new UTF8Encoding(true).GetBytes(endFileContent);
             var stream = fileSystem.File.OpenWrite(filePath);
             stream.Write(bytes, 0, bytes.Length);
+#if DNX451
             stream.Close();
+#endif
 
             Assert.True(fileSystem.FileExists(filePath));
             Assert.Equal(fileSystem.GetFile(filePath).TextContents, endFileContent);
         }
-#endif
 
         [Fact]
         public void MockFile_Delete_ShouldRemoveFileFromFileSystem()

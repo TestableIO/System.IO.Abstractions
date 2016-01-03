@@ -10,7 +10,6 @@ namespace System.IO.Abstractions
     {
         public abstract DirectoryInfoBase CreateDirectory(string path);
         public abstract DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity);
-
         public abstract void Delete(string path);
         public abstract void Delete(string path, bool recursive);
         public abstract bool Exists(string path);

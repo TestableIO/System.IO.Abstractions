@@ -781,7 +781,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Equal(XFS.Path("C:\\"), fileSystem.Directory.GetDirectoryRoot(XFS.Path(@"C:\foo\bar")));
         }
 
-#if DNX451
         [Fact]
         public void MockDirectory_GetLogicalDrives_Returns_LogicalDrives()
         {
@@ -806,7 +805,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 Assert.True(drives.Contains("d:\\"));
             }
         }
-#endif
 
         [Fact]
         public void MockDirectory_GetDirectories_Returns_Child_Directories()

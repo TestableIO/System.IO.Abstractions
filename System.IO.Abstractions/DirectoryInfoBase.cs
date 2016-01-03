@@ -10,10 +10,8 @@ namespace System.IO.Abstractions
     {
         public abstract void Create();
         public abstract void Create(DirectorySecurity directorySecurity);
-
         public abstract DirectoryInfoBase CreateSubdirectory(string path);
         public abstract DirectoryInfoBase CreateSubdirectory(string path, DirectorySecurity directorySecurity);
-
         public abstract void Delete(bool recursive);
         public abstract IEnumerable<DirectoryInfoBase> EnumerateDirectories();
         public abstract IEnumerable<DirectoryInfoBase> EnumerateDirectories(String searchPattern);
