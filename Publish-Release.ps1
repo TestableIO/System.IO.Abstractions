@@ -15,15 +15,15 @@ $SolutionRoot = Split-Path -Path $PSScriptFilePath -Parent
 $NuGetExe = Join-Path $SolutionRoot -ChildPath ".nuget/nuget.exe"
 
 # Build the NuGet package
-$ProjectPath = Join-Path -Path $SolutionRoot -ChildPath "System.IO.Abstractions\System.IO.Abstractions.csproj"
-& $NuGetExe pack $ProjectPath -Prop Configuration=Release -OutputDirectory $SolutionRoot
+$ProjectPath = Join-Path -Path $SolutionRoot -ChildPath "System.IO.Abstractions"
+& dnu pack $ProjectPath --configuration Release --out $SolutionRoot
 if (-not $?)
 {
 	throw "The NuGet process returned an error code."
 }
 
-$ProjectPath = Join-Path -Path $SolutionRoot -ChildPath "TestingHelpers\TestingHelpers.csproj"
-& $NuGetExe pack $ProjectPath -Prop Configuration=Release -OutputDirectory $SolutionRoot
+$ProjectPath = Join-Path -Path $SolutionRoot -ChildPath "TestingHelpers"
+& dnu pack $ProjectPath --configuration Release --out $SolutionRoot
 if (-not $?)
 {
 	throw "The NuGet process returned an error code."
@@ -32,14 +32,14 @@ if (-not $?)
 # Upload the NuGet package
 if ($Push)
 {
-	$NuPkgPath = Join-Path -Path $SolutionRoot -ChildPath "System.IO.Abstractions.$ReleaseVersionNumber.nupkg"
+	$NuPkgPath = Join-Path -Path $SolutionRoot -ChildPath "Release/System.IO.Abstractions.$ReleaseVersionNumber.nupkg"
 	& $NuGetExe push $NuPkgPath
 	if (-not $?)
 	{
 		throw "The NuGet process returned an error code."
 	}
 
-	$NuPkgPath = Join-Path -Path $SolutionRoot -ChildPath "System.IO.Abstractions.TestingHelpers.$ReleaseVersionNumber.nupkg"
+	$NuPkgPath = Join-Path -Path $SolutionRoot -ChildPath "Release/System.IO.Abstractions.TestingHelpers.$ReleaseVersionNumber.nupkg"
 	& $NuGetExe push $NuPkgPath
 	if (-not $?)
 	{
