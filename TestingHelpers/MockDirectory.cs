@@ -267,7 +267,6 @@ namespace System.IO.Abstractions.TestingHelpers
             return fileBase.GetLastWriteTimeUtc(path);
         }
 
-#if NET40
         public override string[] GetLogicalDrives()
         {
             return mockFileDataAccessor
@@ -277,7 +276,6 @@ namespace System.IO.Abstractions.TestingHelpers
                 .Distinct()
                 .ToArray();
         }
-#endif
 
         public override DirectoryInfoBase GetParent(string path)
         {

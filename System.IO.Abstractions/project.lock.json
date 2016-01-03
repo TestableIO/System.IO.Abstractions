@@ -107,6 +107,17 @@
           "ref/dotnet5.4/System.IO.FileSystem.AccessControl.dll": {}
         }
       },
+      "System.IO.FileSystem.DriveInfo/4.0.0-rc2-23608": {
+        "type": "package",
+        "dependencies": {
+          "System.IO": "4.0.0",
+          "System.IO.FileSystem": "4.0.0",
+          "System.Runtime": "4.0.0"
+        },
+        "compile": {
+          "ref/dotnet5.4/System.IO.FileSystem.DriveInfo.dll": {}
+        }
+      },
       "System.IO.FileSystem.Primitives/4.0.0": {
         "type": "package",
         "dependencies": {
@@ -408,6 +419,24 @@
           "runtimes/win7/lib/dotnet5.4/System.IO.FileSystem.dll": {}
         }
       },
+      "runtime.win7.System.IO.FileSystem.DriveInfo/4.0.0-rc2-23608": {
+        "type": "package",
+        "dependencies": {
+          "System.IO.FileSystem": "4.0.0",
+          "System.IO.FileSystem.Primitives": "4.0.0",
+          "System.Resources.ResourceManager": "4.0.0",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.Extensions": "4.0.10",
+          "System.Runtime.InteropServices": "4.0.20",
+          "System.Threading.Tasks": "4.0.10"
+        },
+        "compile": {
+          "ref/dotnet/_._": {}
+        },
+        "runtime": {
+          "runtimes/win7/lib/dotnet5.4/System.IO.FileSystem.DriveInfo.dll": {}
+        }
+      },
       "runtime.win7.System.Threading/4.0.11-rc2-23611": {
         "type": "package",
         "compile": {
@@ -488,6 +517,17 @@
         },
         "compile": {
           "ref/dotnet5.4/System.IO.FileSystem.AccessControl.dll": {}
+        }
+      },
+      "System.IO.FileSystem.DriveInfo/4.0.0-rc2-23608": {
+        "type": "package",
+        "dependencies": {
+          "System.IO": "4.0.0",
+          "System.IO.FileSystem": "4.0.0",
+          "System.Runtime": "4.0.0"
+        },
+        "compile": {
+          "ref/dotnet5.4/System.IO.FileSystem.DriveInfo.dll": {}
         }
       },
       "System.IO.FileSystem.Primitives/4.0.0": {
@@ -733,7 +773,7 @@
           "ref/dotnet/System.Threading.Overlapped.dll": {}
         }
       },
-      "System.Threading.Tasks/4.0.0": {
+      "System.Threading.Tasks/4.0.10": {
         "type": "package",
         "dependencies": {
           "System.Runtime": "4.0.0"
@@ -809,6 +849,24 @@
           "runtimes/win7/lib/dotnet5.4/System.IO.FileSystem.dll": {}
         }
       },
+      "runtime.win7.System.IO.FileSystem.DriveInfo/4.0.0-rc2-23608": {
+        "type": "package",
+        "dependencies": {
+          "System.IO.FileSystem": "4.0.0",
+          "System.IO.FileSystem.Primitives": "4.0.0",
+          "System.Resources.ResourceManager": "4.0.0",
+          "System.Runtime": "4.0.20",
+          "System.Runtime.Extensions": "4.0.10",
+          "System.Runtime.InteropServices": "4.0.20",
+          "System.Threading.Tasks": "4.0.10"
+        },
+        "compile": {
+          "ref/dotnet/_._": {}
+        },
+        "runtime": {
+          "runtimes/win7/lib/dotnet5.4/System.IO.FileSystem.DriveInfo.dll": {}
+        }
+      },
       "runtime.win7.System.Threading/4.0.11-rc2-23611": {
         "type": "package",
         "compile": {
@@ -889,6 +947,17 @@
         },
         "compile": {
           "ref/dotnet5.4/System.IO.FileSystem.AccessControl.dll": {}
+        }
+      },
+      "System.IO.FileSystem.DriveInfo/4.0.0-rc2-23608": {
+        "type": "package",
+        "dependencies": {
+          "System.IO": "4.0.0",
+          "System.IO.FileSystem": "4.0.0",
+          "System.Runtime": "4.0.0"
+        },
+        "compile": {
+          "ref/dotnet5.4/System.IO.FileSystem.DriveInfo.dll": {}
         }
       },
       "System.IO.FileSystem.Primitives/4.0.0": {
@@ -1134,7 +1203,7 @@
           "ref/dotnet/System.Threading.Overlapped.dll": {}
         }
       },
-      "System.Threading.Tasks/4.0.0": {
+      "System.Threading.Tasks/4.0.10": {
         "type": "package",
         "dependencies": {
           "System.Runtime": "4.0.0"
@@ -1220,6 +1289,23 @@
         "runtimes/win7/lib/dotnet5.4/System.IO.FileSystem.dll",
         "runtimes/win7/lib/net/_._",
         "runtimes/win7/lib/netcore50/System.IO.FileSystem.dll",
+        "runtimes/win7/lib/win8/_._",
+        "runtimes/win7/lib/wp8/_._",
+        "runtimes/win7/lib/wpa81/_._"
+      ]
+    },
+    "runtime.win7.System.IO.FileSystem.DriveInfo/4.0.0-rc2-23608": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "0mhFlLwBCSpDle1k7zLeG0/ivhb4M5ZJ/a11UqZO2Z9ijyLdE29LZHaCPbPyBdwWJxb/BM/VNPRe/fzlKEPWdQ==",
+      "files": [
+        "ref/dotnet/_._",
+        "runtime.win7.System.IO.FileSystem.DriveInfo.4.0.0-rc2-23608.nupkg",
+        "runtime.win7.System.IO.FileSystem.DriveInfo.4.0.0-rc2-23608.nupkg.sha512",
+        "runtime.win7.System.IO.FileSystem.DriveInfo.nuspec",
+        "runtimes/win7/lib/dotnet5.4/System.IO.FileSystem.DriveInfo.dll",
+        "runtimes/win7/lib/net/_._",
+        "runtimes/win7/lib/netcore50/_._",
         "runtimes/win7/lib/win8/_._",
         "runtimes/win7/lib/wp8/_._",
         "runtimes/win7/lib/wpa81/_._"
@@ -1517,6 +1603,38 @@
         "System.IO.FileSystem.AccessControl.4.0.0-beta-23516.nupkg",
         "System.IO.FileSystem.AccessControl.4.0.0-beta-23516.nupkg.sha512",
         "System.IO.FileSystem.AccessControl.nuspec"
+      ]
+    },
+    "System.IO.FileSystem.DriveInfo/4.0.0-rc2-23608": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "1deZwCIOodcXsWT2KhF9/HK0GecEuHq/MrTSy7RSOXRdRjAQjD/bKoDsjNK2FvJlhBr12eiMxD3tfFyQyY7K5g==",
+      "files": [
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net46/System.IO.FileSystem.DriveInfo.dll",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "ref/dotnet5.4/de/System.IO.FileSystem.DriveInfo.xml",
+        "ref/dotnet5.4/es/System.IO.FileSystem.DriveInfo.xml",
+        "ref/dotnet5.4/fr/System.IO.FileSystem.DriveInfo.xml",
+        "ref/dotnet5.4/it/System.IO.FileSystem.DriveInfo.xml",
+        "ref/dotnet5.4/ja/System.IO.FileSystem.DriveInfo.xml",
+        "ref/dotnet5.4/ko/System.IO.FileSystem.DriveInfo.xml",
+        "ref/dotnet5.4/ru/System.IO.FileSystem.DriveInfo.xml",
+        "ref/dotnet5.4/System.IO.FileSystem.DriveInfo.dll",
+        "ref/dotnet5.4/System.IO.FileSystem.DriveInfo.xml",
+        "ref/dotnet5.4/zh-hans/System.IO.FileSystem.DriveInfo.xml",
+        "ref/dotnet5.4/zh-hant/System.IO.FileSystem.DriveInfo.xml",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/net46/System.IO.FileSystem.DriveInfo.dll",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "runtime.json",
+        "System.IO.FileSystem.DriveInfo.4.0.0-rc2-23608.nupkg",
+        "System.IO.FileSystem.DriveInfo.4.0.0-rc2-23608.nupkg.sha512",
+        "System.IO.FileSystem.DriveInfo.nuspec"
       ]
     },
     "System.IO.FileSystem.Primitives/4.0.0": {
@@ -2364,6 +2482,40 @@
         "System.Threading.Tasks.4.0.0.nupkg.sha512",
         "System.Threading.Tasks.nuspec"
       ]
+    },
+    "System.Threading.Tasks/4.0.10": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "NOwJGDfk79jR0bnzosbXLVD/PdI8KzBeESoa3CofEM5v9R5EBfcI0Jyf18stx+0IYV9okmDIDxVtxq9TbnR9bQ==",
+      "files": [
+        "lib/DNXCore50/System.Threading.Tasks.dll",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net46/_._",
+        "lib/netcore50/System.Threading.Tasks.dll",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "ref/dotnet/de/System.Threading.Tasks.xml",
+        "ref/dotnet/es/System.Threading.Tasks.xml",
+        "ref/dotnet/fr/System.Threading.Tasks.xml",
+        "ref/dotnet/it/System.Threading.Tasks.xml",
+        "ref/dotnet/ja/System.Threading.Tasks.xml",
+        "ref/dotnet/ko/System.Threading.Tasks.xml",
+        "ref/dotnet/ru/System.Threading.Tasks.xml",
+        "ref/dotnet/System.Threading.Tasks.dll",
+        "ref/dotnet/System.Threading.Tasks.xml",
+        "ref/dotnet/zh-hans/System.Threading.Tasks.xml",
+        "ref/dotnet/zh-hant/System.Threading.Tasks.xml",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/net46/_._",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "runtimes/win8-aot/lib/netcore50/System.Threading.Tasks.dll",
+        "System.Threading.Tasks.4.0.10.nupkg",
+        "System.Threading.Tasks.4.0.10.nupkg.sha512",
+        "System.Threading.Tasks.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
@@ -2377,7 +2529,8 @@
       "System.Runtime.InteropServices.RuntimeInformation >= 4.0.0-*",
       "System.Threading >= 4.0.11-*",
       "System.IO.FileSystem >= 4.0.1-*",
-      "System.IO.FileSystem.AccessControl >= 4.0.0-*"
+      "System.IO.FileSystem.AccessControl >= 4.0.0-*",
+      "System.IO.FileSystem.DriveInfo >= 4.0.0-*"
     ]
   }
 }

@@ -32,11 +32,7 @@ namespace System.IO.Abstractions
         public abstract DateTime GetLastAccessTimeUtc(string path);
         public abstract DateTime GetLastWriteTime(string path);
         public abstract DateTime GetLastWriteTimeUtc(string path);
-
-#if NET40
         public abstract string[] GetLogicalDrives();
-#endif
-
         public abstract DirectoryInfoBase GetParent(string path);
         public abstract void Move(string sourceDirName, string destDirName);
         public abstract void SetAccessControl(string path, DirectorySecurity directorySecurity);

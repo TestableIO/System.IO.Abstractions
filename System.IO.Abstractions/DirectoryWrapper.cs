@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security.AccessControl;
+using System.Linq;
 #if DOTNET5_4
 using System.IO;
 #endif
@@ -143,12 +144,14 @@ namespace System.IO.Abstractions
             return Directory.GetLastWriteTimeUtc(path);
         }
 
-#if NET40
         public override string[] GetLogicalDrives()
         {
+#if NET40
             return Directory.GetLogicalDrives();
-        }
+#elif DOTNET5_4
+            return DriveInfo.GetDrives().Select(d => d.Name).ToArray();
 #endif
+        }
 
         public override DirectoryInfoBase GetParent(string path)
         {
