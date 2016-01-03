@@ -182,7 +182,7 @@
             };
         }
 
-        [TestCaseSource("GetEncodingsWithExpectedBytes")]
+        [MemberData("GetEncodingsWithExpectedBytes")]
         public void MockFile_WriteAllText_Encoding_ShouldWriteTextFileToMemoryFileSystem(KeyValuePair<Encoding, byte[]> encodingsWithContents)
         {
             // Arrange

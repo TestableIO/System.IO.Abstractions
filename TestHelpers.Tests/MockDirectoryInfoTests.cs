@@ -45,7 +45,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        [TestCaseSource("MockDirectoryInfo_Exists_Cases")]
+        [MemberData("MockDirectoryInfo_Exists_Cases")]
         public void MockDirectoryInfo_Exists(string path, bool expected) 
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> 

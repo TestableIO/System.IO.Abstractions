@@ -14,7 +14,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = input.SplitLines();
 
-            Assert.That(result, Is.EquivalentTo(expected));
+            Assert.Equal(expected, result);
         }
 
         [Fact]
@@ -24,7 +24,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = input.SplitLines();
 
-            Assert.That(result, Is.EquivalentTo(expected));
+            Assert.Equal(expected, result);
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = input.SplitLines();
 
-            Assert.That(result, Is.EquivalentTo(expected));
+            Assert.Equal(expected, result);
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = input.SplitLines();
 
-            Assert.That(result, Is.EquivalentTo(expected));
+            Assert.Equal(expected, result);
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = input.SplitLines();
 
-            Assert.That(result, Is.EquivalentTo(expected));
+            Assert.Equal(expected, result);
         }
 
     }

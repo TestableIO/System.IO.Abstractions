@@ -6,10 +6,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     using Linq;
     using Xunit;
-
+    using Xunit.Abstractions;
     using XFS = MockUnixSupport;
 
     public class MockFileCopyTests {
+
+        private readonly ITestOutputHelper _output;
+
+        public MockFileCopyTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Fact]
         public void MockFile_Copy_ShouldOverwriteFileWhenOverwriteFlagIsTrue()
         {
@@ -57,11 +65,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 {destFileName, new MockFileData("Destination content")}
             });
 
-            Assert.Throws<IOException>(() => fileSystem.File.Copy(sourceFileName, destFileName), XFS.Path(@"The file c:\destination\demo.txt already exists."));
+            var ex = Assert.Throws<IOException>(() => fileSystem.File.Copy(sourceFileName, destFileName));
+            Assert.Equal(XFS.Path(@"The file c:\destination\demo.txt already exists."), ex.Message);
         }
 
-        [TestCase(@"c:\source\demo.txt", @"c:\source\doesnotexist\demo.txt")]
-        [TestCase(@"c:\source\demo.txt", @"c:\doesnotexist\demo.txt")]
+        [Theory]
+        [InlineData(@"c:\source\demo.txt", @"c:\source\doesnotexist\demo.txt")]
+        [InlineData(@"c:\source\demo.txt", @"c:\doesnotexist\demo.txt")]
         public void MockFile_Copy_ShouldThrowExceptionWhenFolderInDestinationDoesNotExist(string sourceFilePath, string destFilePath)
         {
             string sourceFileName = XFS.Path(sourceFilePath);
@@ -71,7 +81,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 {sourceFileName, MockFileData.NullObject}
             });
 
-            Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Copy(sourceFileName, destFileName), string.Format(CultureInfo.InvariantCulture, @"Could not find a part of the path '{0}'.", destFilePath));
+            var ex = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Copy(sourceFileName, destFileName));
+            Assert.Equal(string.Format(CultureInfo.InvariantCulture, @"Could not find a part of the path '{0}'.", destFilePath), ex.Message);
         }
 
         [Fact]
@@ -82,7 +93,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Copy(null, destFilePath));
 
-            Assert.That(exception.Message, Is.StringStarting("File name cannot be null."));
+            Assert.StartsWith("File name cannot be null.", exception.Message);
         }
 
         [Fact]
@@ -101,7 +112,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             if (XFS.IsUnixPlatform())
             {
-                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
+                // Path.GetInvalidChars() does not return anything on Mono
                 return;
             }
 
@@ -115,8 +126,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var exception =
                     Assert.Throws<NotSupportedException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
 
-                Assert.That(exception.Message, Is.EqualTo("The given path's format is not supported."),
-                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+                _output.WriteLine(string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+                Assert.Equal("The given path's format is not supported.", exception.Message);
             }
         }
 
@@ -125,7 +136,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             if (XFS.IsUnixPlatform())
             {
-                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
+                // Path.GetInvalidChars() does not return anything on Mono
                 return;
             }
 
@@ -139,8 +150,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var exception =
                     Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
 
-                Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
-                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+                _output.WriteLine(string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+                Assert.Equal("Illegal characters in path.", exception.Message);
             }
         }
 
@@ -149,7 +160,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             if (XFS.IsUnixPlatform())
             {
-                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
+                // Path.GetInvalidChars() does not return anything on Mono
                 return;
             }
 
@@ -163,8 +174,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var exception =
                     Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
 
-                Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
-                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+                _output.WriteLine(string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+                Assert.Equal("Illegal characters in path.", exception.Message);
             }
         }
 
@@ -173,7 +184,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             if (XFS.IsUnixPlatform())
             {
-                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
+                // Path.GetInvalidChars() does not return anything on Mono
                 return;
             }
 
@@ -187,8 +198,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var exception =
                     Assert.Throws<NotSupportedException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
 
-                Assert.That(exception.Message, Is.EqualTo("The given path's format is not supported."),
-                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+                _output.WriteLine(string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+                Assert.Equal("The given path's format is not supported.", exception.Message);
             }
         }
 
@@ -200,7 +211,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(string.Empty, destFilePath));
 
-            Assert.That(exception.Message, Is.StringStarting("Empty file name is not legal."));
+            Assert.StartsWith("Empty file name is not legal.", exception.Message);
         }
 
         [Fact]
@@ -234,7 +245,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Copy(sourceFilePath, null));
 
-            Assert.That(exception.Message, Is.StringStarting("File name cannot be null."));
+            Assert.StartsWith("File name cannot be null.", exception.Message);
         }
 
         [Fact]
@@ -268,7 +279,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, string.Empty));
 
-            Assert.That(exception.Message, Is.StringStarting("Empty file name is not legal."));
+            Assert.StartsWith("Empty file name is not legal.", exception.Message);
         }
     }
 }

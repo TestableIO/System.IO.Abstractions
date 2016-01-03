@@ -530,7 +530,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var ex = Assert.Throws<ArgumentException>(() => fileSystem.Directory.CreateDirectory(XFS.Path(@"\\server", () => false)));
 
             // Assert
-            StringAssert.StartsWith("The UNC path should be of the form \\\\server\\share.", ex.Message);
+            Assert.StartsWith("The UNC path should be of the form \\\\server\\share.", ex.Message);
             Assert.Equal("path", ex.ParamName);
         }
 
@@ -720,7 +720,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return @"aaa\vv..\";
         }
 
-        [TestCaseSource("GetSearchPatternForTwoDotsExceptions")]
+        [MemberData("GetSearchPatternForTwoDotsExceptions")]
         public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneDirectoryPathSep(string searchPattern)
         {
             // Arrange
@@ -749,11 +749,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), @"foo..r\*");
 
             // Assert
-            Assert.That(actualResult, Is.EquivalentTo(new [] { testPath }));
+            Assert.Equal(new [] { testPath }, actualResult);
         }
 
-        [TestCase(@"""")]
-        [TestCase("aa\t")]
+        [Theory]
+        [InlineData(@"""")]
+        [InlineData("aa\t")]
         public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternHasIllegalCharacters(string searchPattern)
         {
             // Arrange
@@ -842,7 +843,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetDirectories(XFS.Path(@"c:\Folder\"), "*.foo");
 
             // Assert
-            Assert.That(actualResult, Is.EquivalentTo(new []{XFS.Path(@"C:\Folder\.foo\"), XFS.Path(@"C:\Folder\foo.foo\")}));
+            Assert.Equal(new []{XFS.Path(@"C:\Folder\.foo\"), XFS.Path(@"C:\Folder\foo.foo\")}, actualResult);
         }
 
         [Fact]
@@ -860,7 +861,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetDirectories(XFS.Path(@"c:\Folder\"), "*.foo", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo\"), XFS.Path(@"C:\Folder\foo.foo\"), XFS.Path(@"C:\Folder\.foo\.foo\") }));
+            Assert.Equal(new[] { XFS.Path(@"C:\Folder\.foo\"), XFS.Path(@"C:\Folder\foo.foo\"), XFS.Path(@"C:\Folder\.foo\.foo\") }, actualResult);
         }
 
         [Fact]
@@ -922,7 +923,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"c:\Folder\"), "*.foo");
 
             // Assert
-            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo\"), XFS.Path(@"C:\Folder\foo.foo\") }));
+            Assert.Equal(new[] { XFS.Path(@"C:\Folder\.foo\"), XFS.Path(@"C:\Folder\foo.foo\") }, actualResult);
         }
 
         [Fact]
@@ -940,7 +941,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"c:\Folder\"), "*.foo", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo\"), XFS.Path(@"C:\Folder\foo.foo\"), XFS.Path(@"C:\Folder\.foo\.foo\") }));
+            Assert.Equal(new[] { XFS.Path(@"C:\Folder\.foo\"), XFS.Path(@"C:\Folder\foo.foo\"), XFS.Path(@"C:\Folder\.foo\.foo\") }, actualResult);
         }
 
         [Fact]
@@ -993,7 +994,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.True(fileSystem.File.Exists(@"C:\NewLocation\Data\someFile.txt"));
         }
 
-        [TestCaseSource("GetPathsForMoving")]
+        [Theory]
+        [MemberData("GetPathsForMoving")]
         public void MockDirectory_Move_ShouldMove(string sourceDirName, string destDirName, string filePathOne, string filePathTwo)
         {
             // Arrange
@@ -1090,7 +1092,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             if (XFS.IsUnixPlatform())
             {
-                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
+                // Path.GetInvalidChars() does not return anything on Mono
                 return;
             }
 
@@ -1115,7 +1117,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetParent(XFS.Path(@"c:\"));
 
             // Assert
-            Assert.IsNull(actualResult);
+            Assert.Null(actualResult);
         }
 
         public static IEnumerable<string[]> MockDirectory_GetParent_Cases
@@ -1153,7 +1155,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Action action = () => fileSystem.Directory.Move(path, path);
 
             // Assert
-            Assert.Throws<IOException>(action, "Source and destination path must be different.");
+            var ex = Assert.Throws<IOException>(action);
+            Assert.Equal("Source and destination path must be different.", ex.Message);
         }
 
         [Fact]
@@ -1169,7 +1172,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Action action = () => fileSystem.Directory.Move(sourcePath, destPath);
 
             // Assert
-            Assert.Throws<IOException>(action, "Source and destination path must have identical roots. Move will not work across volumes.");
+            var ex = Assert.Throws<IOException>(action);
+            Assert.Equal("Source and destination path must have identical roots. Move will not work across volumes.", ex.Message);
         }
 
         [Fact]
@@ -1191,7 +1195,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.EnumerateFiles(XFS.Path(@"c:\a"), "*", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            Assert.Equal(expected, result);
         }
 
         [Fact]
@@ -1210,7 +1214,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.EnumerateFiles(XFS.Path(@"c:\"), "*.gif", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            Assert.Equal(expected, result);
         }
 
         [Fact]
@@ -1233,7 +1237,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.EnumerateFileSystemEntries(XFS.Path(@"c:\a"), "*", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            Assert.Equal(expected, result);
         }
 
         [Fact]
@@ -1252,7 +1256,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.EnumerateFileSystemEntries(XFS.Path(@"c:\"), "*.gif", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            Assert.Equal(expected, result);
         }
     }
 }

@@ -48,7 +48,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             file.AppendAllText(Path, "BB", Encoding.UTF8);
 
             // Assert
-            CollectionAssert.Equal(
+            Assert.Equal(
                 new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66 },
                 fileSystem.GetFile(Path).Contents);
         }
@@ -84,7 +84,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.AppendAllText(path, "AA", Encoding.UTF32);
 
             // Assert
-            CollectionAssert.Equal(
+            Assert.Equal(
                 new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0 },
                 fileSystem.GetFile(path).Contents);
         }
@@ -145,7 +145,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 };
             }
 
-            CollectionAssert.Equal(
+            Assert.Equal(
                 expected,
                 file.ReadAllBytes(path));
         }

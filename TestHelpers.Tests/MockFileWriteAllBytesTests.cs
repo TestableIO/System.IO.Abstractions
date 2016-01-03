@@ -38,7 +38,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Action action = () => fileSystem.File.WriteAllBytes(path, new byte[] { 123 });
 
             // Assert
-            Assert.Throws<UnauthorizedAccessException>(action, "Access to the path '{0}' is denied.", path);
+            var ex = Assert.Throws<UnauthorizedAccessException>(action);
+            Assert.Equal(string.Format("Access to the path '{0}' is denied.", path), ex.Message);
         }
 
         [Fact]
@@ -65,7 +66,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Path cannot be null."));
+            Assert.StartsWith("Path cannot be null.", exception.Message);
             Assert.Equal("path", exception.ParamName);
         }
 
@@ -81,7 +82,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
+            Assert.StartsWith("Value cannot be null.", exception.Message);
             Assert.Equal("bytes", exception.ParamName);
         }
     }

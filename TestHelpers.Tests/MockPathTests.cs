@@ -158,7 +158,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        [TestCaseSource("GetFullPath_RelativePaths_Cases")]
+        [MemberData("GetFullPath_RelativePaths_Cases")]
         public void GetFullPath_RelativePaths_ShouldReturnTheAbsolutePathWithCurrentDirectory(string currentDir, string relativePath, string expectedResult)
         {
             //Arrange
@@ -185,7 +185,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        [TestCaseSource("GetFullPath_RootedPathWithRelativeSegments_Cases")]
+        [MemberData("GetFullPath_RootedPathWithRelativeSegments_Cases")]
         public void GetFullPath_RootedPathWithRelativeSegments_ShouldReturnAnRootedAbsolutePath(string rootedPath, string expectedResult)
         {
             //Arrange
@@ -214,7 +214,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        [TestCaseSource("GetFullPath_AbsolutePaths_Cases")]
+        [MemberData("GetFullPath_AbsolutePaths_Cases")]
         public void GetFullPath_AbsolutePaths_ShouldReturnThePathWithTheRoot_Or_Unc(string currentDir, string absolutePath, string expectedResult)
         {
             //Arrange

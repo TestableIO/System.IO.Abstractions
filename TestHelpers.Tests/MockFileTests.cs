@@ -250,7 +250,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentException>(action);
-            Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
+            Assert.StartsWith("The path is not of a legal form.", exception.Message);
         }
 
         [Fact]
@@ -334,7 +334,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadAllBytes(XFS.Path(@"c:\something\other.gif"));
 
             // Assert
-            CollectionAssert.Equal(
+            Assert.Equal(
                 new byte[] { 0x21, 0x58, 0x3f, 0xa9 },
                 result);
         }

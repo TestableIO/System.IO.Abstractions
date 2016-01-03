@@ -24,7 +24,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadLines(XFS.Path(@"c:\something\demo.txt"));
 
             // Assert
-            CollectionAssert.Equal(
+            Assert.Equal(
                 new[] { "Demo", "text", "content", "value" },
                 result);
         }
@@ -46,7 +46,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadLines(XFS.Path(@"c:\something\demo.txt"), Encoding.BigEndianUnicode);
 
             // Assert
-            CollectionAssert.Equal(
+            Assert.Equal(
                 new [] { "Hello", "there", "Bob", "Bob!" },
                 result);
         }

@@ -20,7 +20,7 @@
             cut.Flush();
 
             // Assert
-            CollectionAssert.Equal(new byte[]{255}, filesystem.GetFile(filepath).Contents);
+            Assert.Equal(new byte[]{255}, filesystem.GetFile(filepath).Contents);
         }
 
         [Fact]
@@ -38,9 +38,9 @@
             stream.Dispose();
             var fileCount3 = fileSystem.Directory.GetFiles(directory, "*").Length;
 
-            Assert.Equal(1, fileCount1, "File should have existed");
-            Assert.Equal(0, fileCount2, "File should have been deleted");
-            Assert.Equal(0, fileCount3, "Disposing stream should not have resurrected the file");
+            Assert.Equal(1, fileCount1); // File should have existed
+            Assert.Equal(0, fileCount2); // File should have been deleted
+            Assert.Equal(0, fileCount3); // Disposing stream should not have resurrected the file
         }
     }
 }
