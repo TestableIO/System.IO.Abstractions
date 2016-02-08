@@ -12,6 +12,8 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         readonly IMockFileDataAccessor mockFileDataAccessor;
 
+        private static readonly char[] InvalidAdditionalPathChars = { '*', '?' };
+
         public MockPath(IMockFileDataAccessor mockFileDataAccessor)
         {
             this.mockFileDataAccessor = mockFileDataAccessor;
@@ -131,9 +133,37 @@ namespace System.IO.Abstractions.TestingHelpers
 
             string fullPath = mockFileDataAccessor.Path.Combine(tempDir, fileName);
 
-            mockFileDataAccessor.AddFile(fullPath, new MockFileData(String.Empty));
+            mockFileDataAccessor.AddFile(fullPath, new MockFileData(string.Empty));
 
             return fullPath;
+        }
+
+        internal static bool HasIllegalCharacters(string path, bool checkAdditional)
+        {
+            if (path == null)
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            if (checkAdditional)
+            {
+                return path.IndexOfAny(Path.GetInvalidPathChars().Concat(InvalidAdditionalPathChars).ToArray()) >= 0;
+            }
+
+            return path.IndexOfAny(Path.GetInvalidPathChars()) >= 0;
+        }
+
+        internal static void CheckInvalidPathChars(string path, bool checkAdditional = false)
+        {
+            if (path == null)
+            {
+                throw new ArgumentNullException("path");
+            }
+
+            if (HasIllegalCharacters(path, checkAdditional))
+            {
+                throw new ArgumentException(Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION);
+            }
         }
     }
 }

@@ -69,6 +69,8 @@
     <Compile Include="MockDirectoryData.cs" />
     <Compile Include="MockDirectoryInfo.cs" />
     <Compile Include="MockDirectoryInfoFactory.cs" />
+    <Compile Include="MockDriveInfo.cs" />
+    <Compile Include="MockDriveInfoFactory.cs" />
     <Compile Include="MockFile.cs" />
     <Compile Include="MockFileData.cs" />
     <Compile Include="MockFileInfo.cs" />

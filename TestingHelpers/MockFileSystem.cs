@@ -15,6 +15,7 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly IFileInfoFactory fileInfoFactory;
         readonly PathBase pathField;
         readonly IDirectoryInfoFactory directoryInfoFactory;
+        private readonly IDriveInfoFactory driveInfoFactory;
 
         public MockFileSystem() : this(null) { }
 
@@ -29,6 +30,7 @@ namespace System.IO.Abstractions.TestingHelpers
             directory = new MockDirectory(this, file, currentDirectory);
             fileInfoFactory = new MockFileInfoFactory(this);
             directoryInfoFactory = new MockDirectoryInfoFactory(this);
+            driveInfoFactory = new MockDriveInfoFactory(this);
 
             if (files == null) return;
             foreach (var entry in files)
@@ -58,6 +60,11 @@ namespace System.IO.Abstractions.TestingHelpers
         public IDirectoryInfoFactory DirectoryInfo
         {
             get { return directoryInfoFactory; }
+        }
+
+        public IDriveInfoFactory DriveInfo
+        {
+            get { return driveInfoFactory; }
         }
 
         private string FixPath(string path)

@@ -32,5 +32,12 @@
         {
             get { return directoryInfoFactory ?? (directoryInfoFactory = new DirectoryInfoFactory()); }
         }
+
+        private readonly Lazy<DriveInfoFactory> driveInfoFactory = new Lazy<DriveInfoFactory>(() => new DriveInfoFactory());
+
+        public IDriveInfoFactory DriveInfo
+        {
+            get { return driveInfoFactory.Value; }
+        }
     }
 }

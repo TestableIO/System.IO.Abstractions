@@ -35,7 +35,7 @@ namespace System.IO.Abstractions
         public abstract void SetAccessControl(DirectorySecurity directorySecurity);
         public abstract DirectoryInfoBase Parent { get; }
         public abstract DirectoryInfoBase Root { get; }
-        
+
         public static implicit operator DirectoryInfoBase(DirectoryInfo directoryInfo)
         {
             if (directoryInfo == null)

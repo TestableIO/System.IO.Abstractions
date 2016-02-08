@@ -261,15 +261,30 @@ namespace System.IO.Abstractions.TestingHelpers
         private void ValidateParameter(string value, string paramName)
         {
             if (value == null)
+            {
                 throw new ArgumentNullException(paramName, "File name cannot be null.");
+            }
+
             if (value == string.Empty)
+            {
                 throw new ArgumentException("Empty file name is not legal.", paramName);
-            if (value.Trim() == "")
+            }
+
+            if (value.Trim() == string.Empty)
+            {
                 throw new ArgumentException("The path is not of a legal form.");
+            }
+
             if (ExtractFileName(value).IndexOfAny(mockPath.GetInvalidFileNameChars()) > -1)
+            {
                 throw new NotSupportedException("The given path's format is not supported.");
-            if (ExtractFilePath(value).IndexOfAny(mockPath.GetInvalidPathChars()) > -1)
+            }
+
+            var filePath = ExtractFilePath(value);
+            if (MockPath.HasIllegalCharacters(filePath, false))
+            {
                 throw new ArgumentException(Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION);
+            }
         }
 
         private string ExtractFilePath(string fullFileName)
