@@ -199,5 +199,240 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(new[] { "b", "c" }, directories);
         }
+
+
+        [Test]
+        public void MockDirectoryInfo_CreationTimeUtc_ShouldReturnCreationTimeUtcOfFileInMemoryFileSystem() 
+        {
+            // Arrange
+            var creationTime = DateTime.Now.AddHours(-4);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder")) { CreationTimeUtc = creationTime };
+
+            // Act
+            var result = directoryInfo.CreationTimeUtc;
+
+            // Assert
+            Assert.AreEqual(creationTime.ToUniversalTime(), result);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_CreationTimeUtc_ShouldSetCreationTimeUtcOfFileInMemoryFileSystem() {
+            // Arrange
+            var creationTime = DateTime.Now.AddHours(-4);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder")) { CreationTimeUtc = creationTime };
+
+            // Act
+            var newUtcTime = DateTime.UtcNow;
+            directoryInfo.CreationTimeUtc = newUtcTime;
+
+            // Assert
+            Assert.AreEqual(newUtcTime, directoryInfo.CreationTimeUtc);
+        }
+
+
+        [Test]
+        public void MockDirectoryInfo_CreationTime_ShouldReturnCreationTimeOfFileInMemoryFileSystem() {
+            // Arrange
+            var creationTime = DateTime.Now.AddHours(-4);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
+            });
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder")) { CreationTime = creationTime };
+
+            // Act
+            var result = directoryInfo.CreationTime;
+
+            // Assert
+            Assert.AreEqual(creationTime, result);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_CreationTime_ShouldSetCreationTimeOfFileInMemoryFileSystem() 
+        {
+            // Arrange
+            var creationTime = DateTime.Now.AddHours(-4);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
+            });
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder")) { CreationTime = creationTime };
+
+            // Act
+            var newTime = DateTime.Now;
+            directoryInfo.CreationTime = newTime;
+
+            // Assert
+            Assert.AreEqual(newTime, directoryInfo.CreationTime);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_LastAccessTimeUtc_ShouldReturnCreationTimeUtcOfFileInMemoryFileSystem() 
+        {
+            // Arrange
+            var lastAccessTime = DateTime.Now.AddHours(-4);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder")) { LastAccessTime = lastAccessTime };
+
+            // Act
+            var result = directoryInfo.LastAccessTimeUtc;
+
+            // Assert
+            Assert.AreEqual(lastAccessTime.ToUniversalTime(), result);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_LastAccessTimeUtc_ShouldSetCreationTimeUtcOfFileInMemoryFileSystem() 
+        {
+            // Arrange
+            var lastAccessTime = DateTime.Now.AddHours(-4);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder")) { LastAccessTimeUtc = lastAccessTime };
+
+            // Act
+            var newUtcTime = DateTime.UtcNow;
+            directoryInfo.LastAccessTimeUtc = newUtcTime;
+
+            // Assert
+            Assert.AreEqual(newUtcTime, directoryInfo.LastAccessTimeUtc);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_LastAccessTime_ShouldReturnCreationTimeOfFileInMemoryFileSystem()
+        {
+            // Arrange
+            var lastAccessTime = DateTime.Now.AddHours(-4);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder")) { LastAccessTime = lastAccessTime };
+
+            // Act
+            var result = directoryInfo.LastAccessTime;
+
+            // Assert
+            Assert.AreEqual(lastAccessTime, result);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_LastAccessTime_ShouldSetCreationTimeOfFileInMemoryFileSystem() 
+        {
+            // Arrange
+            var lastAccessTime = DateTime.Now.AddHours(-4);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder")) { LastAccessTime = lastAccessTime };
+
+            // Act
+            var newTime = DateTime.Now;
+            directoryInfo.LastAccessTime = newTime;
+
+            // Assert
+            Assert.AreEqual(newTime, directoryInfo.LastAccessTime);
+        }
+
+
+
+        [Test]
+        public void MockDirectoryInfo_LastWriteTimeUtc_ShouldReturnCreationTimeUtcOfFileInMemoryFileSystem() 
+        {
+            // Arrange
+            var lastWriteTime = DateTime.Now.AddHours(-4);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder")) { LastWriteTimeUtc = lastWriteTime };
+
+            // Act
+            var result = directoryInfo.LastWriteTimeUtc;
+
+            // Assert
+            Assert.AreEqual(lastWriteTime.ToUniversalTime(), result);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_LastWriteTimeUtc_ShouldSetCreationTimeUtcOfFileInMemoryFileSystem() 
+        {
+            // Arrange
+            var lastWriteTime = DateTime.Now.AddHours(-4);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder")) { LastWriteTimeUtc = lastWriteTime };
+
+            // Act
+            var newUtcTime = DateTime.UtcNow;
+            directoryInfo.LastWriteTimeUtc = newUtcTime;
+
+            // Assert
+            Assert.AreEqual(newUtcTime, directoryInfo.LastWriteTimeUtc);
+        }
+
+
+        [Test]
+        public void MockDirectoryInfo_LastWriteTime_ShouldReturnCreationTimeOfFileInMemoryFileSystem() 
+        {
+            // Arrange
+            var lastWriteTime = DateTime.Now.AddHours(-4);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder")) { LastWriteTime = lastWriteTime };
+
+            // Act
+            var result = directoryInfo.LastWriteTime;
+
+            // Assert
+            Assert.AreEqual(lastWriteTime, result);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_LastWriteTime_ShouldSetCreationTimeOfFileInMemoryFileSystem() 
+        {
+            // Arrange
+            var lastWriteTime = DateTime.Now.AddHours(-4);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder")) { LastWriteTime = lastWriteTime };
+
+            // Act
+            var newTime = DateTime.Now;
+            directoryInfo.LastWriteTime = newTime;
+
+            // Assert
+            Assert.AreEqual(newTime, directoryInfo.LastWriteTime);
+        }
     }
 }

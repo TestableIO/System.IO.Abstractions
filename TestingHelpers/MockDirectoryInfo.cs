@@ -44,16 +44,32 @@ namespace System.IO.Abstractions.TestingHelpers
             set { MockFileData.Attributes = value; }
         }
 
-        public override DateTime CreationTime
+        public override DateTime CreationTime 
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get 
+            {
+                CheckDirectoryExists();
+                return MockFileData.CreationTime.DateTime;
+            }
+            set 
+            {
+                CheckDirectoryExists();
+                MockFileData.CreationTime = value;
+            }
         }
 
-        public override DateTime CreationTimeUtc
+        public override DateTime CreationTimeUtc 
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get 
+            {
+                CheckDirectoryExists();
+                return MockFileData.CreationTime.UtcDateTime;
+            }
+            set 
+            {
+                CheckDirectoryExists();
+                MockFileData.CreationTime = value.ToLocalTime();
+            }
         }
 
         public override bool Exists
@@ -87,31 +103,60 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
-        public override DateTime LastAccessTime
+        public override DateTime LastAccessTime 
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get 
+            {
+                CheckDirectoryExists();
+                return MockFileData.LastAccessTime.DateTime;
+            }
+            set 
+            {
+                CheckDirectoryExists();
+                MockFileData.LastAccessTime = value;
+            }
         }
 
-        public override DateTime LastAccessTimeUtc
+        public override DateTime LastAccessTimeUtc 
         {
-            get {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", directoryPath);
+            get 
+            {
+                CheckDirectoryExists();
                 return MockFileData.LastAccessTime.UtcDateTime;
             }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            set 
+            {
+                CheckDirectoryExists();
+                MockFileData.LastAccessTime = value.ToLocalTime();
+            }
         }
 
-        public override DateTime LastWriteTime
+        public override DateTime LastWriteTime 
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get 
+            {
+                CheckDirectoryExists();
+                return MockFileData.LastWriteTime.DateTime;
+            }
+            set 
+            {
+                CheckDirectoryExists();
+                MockFileData.LastWriteTime = value;
+            }
         }
 
-        public override DateTime LastWriteTimeUtc
+        public override DateTime LastWriteTimeUtc 
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get 
+            {
+                CheckDirectoryExists();
+                return MockFileData.LastWriteTime.UtcDateTime;
+            }
+            set 
+            {
+                CheckDirectoryExists();
+                MockFileData.LastWriteTime = value.ToLocalTime();
+            }
         }
 
         public override string Name
@@ -283,6 +328,11 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 return new MockDirectoryInfo(mockFileDataAccessor, mockFileDataAccessor.Directory.GetDirectoryRoot(FullName));
             }
+        }
+
+        private void CheckDirectoryExists() 
+        {
+            if (MockFileData == null) throw new FileNotFoundException("File not found", directoryPath);
         }
     }
 }
