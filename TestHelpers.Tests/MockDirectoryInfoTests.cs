@@ -202,7 +202,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
 
         [Test]
-        public void MockDirectoryInfo_CreationTimeUtc_ShouldReturnCreationTimeUtcOfFileInMemoryFileSystem() 
+        public void MockDirectoryInfo_CreationTimeUtc_ShouldReturnCreationTimeUtcOfFolderInMemoryFileSystem() 
         {
             // Arrange
             var creationTime = DateTime.Now.AddHours(-4);
@@ -221,7 +221,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectoryInfo_CreationTimeUtc_ShouldSetCreationTimeUtcOfFileInMemoryFileSystem() {
+        public void MockDirectoryInfo_CreationTimeUtc_ShouldSetCreationTimeUtcOfFolderInMemoryFileSystem() {
             // Arrange
             var creationTime = DateTime.Now.AddHours(-4);
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -241,7 +241,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
 
         [Test]
-        public void MockDirectoryInfo_CreationTime_ShouldReturnCreationTimeOfFileInMemoryFileSystem() {
+        public void MockDirectoryInfo_CreationTime_ShouldReturnCreationTimeOfFolderInMemoryFileSystem() {
             // Arrange
             var creationTime = DateTime.Now.AddHours(-4);
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -258,7 +258,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectoryInfo_CreationTime_ShouldSetCreationTimeOfFileInMemoryFileSystem() 
+        public void MockDirectoryInfo_CreationTime_ShouldSetCreationTimeOfFolderInMemoryFileSystem() 
         {
             // Arrange
             var creationTime = DateTime.Now.AddHours(-4);
@@ -277,7 +277,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectoryInfo_LastAccessTimeUtc_ShouldReturnCreationTimeUtcOfFileInMemoryFileSystem() 
+        public void MockDirectoryInfo_LastAccessTimeUtc_ShouldReturnCreationTimeUtcOfFolderInMemoryFileSystem() 
         {
             // Arrange
             var lastAccessTime = DateTime.Now.AddHours(-4);
@@ -296,7 +296,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectoryInfo_LastAccessTimeUtc_ShouldSetCreationTimeUtcOfFileInMemoryFileSystem() 
+        public void MockDirectoryInfo_LastAccessTimeUtc_ShouldSetCreationTimeUtcOfFolderInMemoryFileSystem() 
         {
             // Arrange
             var lastAccessTime = DateTime.Now.AddHours(-4);
@@ -316,7 +316,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectoryInfo_LastAccessTime_ShouldReturnCreationTimeOfFileInMemoryFileSystem()
+        public void MockDirectoryInfo_LastAccessTime_ShouldReturnCreationTimeOfFolderInMemoryFileSystem()
         {
             // Arrange
             var lastAccessTime = DateTime.Now.AddHours(-4);
@@ -335,7 +335,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectoryInfo_LastAccessTime_ShouldSetCreationTimeOfFileInMemoryFileSystem() 
+        public void MockDirectoryInfo_LastAccessTime_ShouldSetCreationTimeOfFolderInMemoryFileSystem() 
         {
             // Arrange
             var lastAccessTime = DateTime.Now.AddHours(-4);
@@ -353,11 +353,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(newTime, directoryInfo.LastAccessTime);
         }
-
-
-
+        
         [Test]
-        public void MockDirectoryInfo_LastWriteTimeUtc_ShouldReturnCreationTimeUtcOfFileInMemoryFileSystem() 
+        public void MockDirectoryInfo_LastWriteTimeUtc_ShouldReturnCreationTimeUtcOfFolderInMemoryFileSystem() 
         {
             // Arrange
             var lastWriteTime = DateTime.Now.AddHours(-4);
@@ -376,7 +374,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectoryInfo_LastWriteTimeUtc_ShouldSetCreationTimeUtcOfFileInMemoryFileSystem() 
+        public void MockDirectoryInfo_LastWriteTimeUtc_ShouldSetCreationTimeUtcOfFolderInMemoryFileSystem() 
         {
             // Arrange
             var lastWriteTime = DateTime.Now.AddHours(-4);
@@ -397,7 +395,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
 
         [Test]
-        public void MockDirectoryInfo_LastWriteTime_ShouldReturnCreationTimeOfFileInMemoryFileSystem() 
+        public void MockDirectoryInfo_LastWriteTime_ShouldReturnCreationTimeOfFolderInMemoryFileSystem() 
         {
             // Arrange
             var lastWriteTime = DateTime.Now.AddHours(-4);
@@ -416,7 +414,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectoryInfo_LastWriteTime_ShouldSetCreationTimeOfFileInMemoryFileSystem() 
+        public void MockDirectoryInfo_LastWriteTime_ShouldSetCreationTimeOfFolderInMemoryFileSystem() 
         {
             // Arrange
             var lastWriteTime = DateTime.Now.AddHours(-4);
