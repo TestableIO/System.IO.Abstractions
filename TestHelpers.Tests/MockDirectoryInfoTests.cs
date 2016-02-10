@@ -200,6 +200,30 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(new[] { "b", "c" }, directories);
         }
 
+        [Test]
+        public void MockDirectoryInfo_Attributes_ShouldReturnDefaultAttributeIfNotExists() 
+        {
+            ExecuteDefaultValueTest((d) => d.Attributes, MockFileData.NullObject.Attributes);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_Attributes_ShouldThrowIfAttributeSetAndNotExists() 
+        {
+            ExecuteSetDefaultValueThrowsTest((d) => d.Attributes = FileAttributes.Normal);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_CreationTimeUtc_ShouldReturnDefaultCreationTimeUtcIfNotExists() 
+        {
+            ExecuteDefaultValueTest((d) => d.CreationTimeUtc, MockFileData.NullObject.CreationTime.UtcDateTime);
+        }
+
+
+        [Test]
+        public void MockDirectoryInfo_CreationTimeUtc_ShouldThrowIfCreationTimeUtcSetAndIfNotExists() 
+        {
+            ExecuteSetDefaultValueThrowsTest((d) => d.CreationTimeUtc = DateTime.FromFileTimeUtc(100));
+        }
 
         [Test]
         public void MockDirectoryInfo_CreationTimeUtc_ShouldReturnCreationTimeUtcOfFolderInMemoryFileSystem() 
@@ -239,6 +263,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(newUtcTime, directoryInfo.CreationTimeUtc);
         }
 
+        [Test]
+        public void MockDirectoryInfo_CreationTime_ShouldReturnDefaultCreationTimeIfNotExists() 
+        {
+            ExecuteDefaultValueTest((d) => d.CreationTime, MockFileData.NullObject.CreationTime.DateTime);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_CreationTime_ShouldThrowIfCreationTimeSetAndIfNotExists() 
+        {
+            ExecuteSetDefaultValueThrowsTest((d) => d.CreationTime = DateTime.FromFileTime(100));
+        }
 
         [Test]
         public void MockDirectoryInfo_CreationTime_ShouldReturnCreationTimeOfFolderInMemoryFileSystem() {
@@ -274,6 +309,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.AreEqual(newTime, directoryInfo.CreationTime);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_LastAccessTimeUtc_ShouldReturnDefaultLastAccessTimeUtcIfNotExists() 
+        {
+            ExecuteDefaultValueTest((d) => d.LastAccessTimeUtc, MockFileData.NullObject.LastAccessTime.UtcDateTime);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_LastAccessTimeUtc_ShouldThrowIfLastAccessTimeUtcSetAndIfNotExists() 
+        {
+            ExecuteSetDefaultValueThrowsTest((d) => d.LastAccessTimeUtc = DateTime.FromFileTimeUtc(100));
         }
 
         [Test]
@@ -316,6 +363,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectoryInfo_LastAccessTime_ShouldReturnDefaultLastAccessTimeIfNotExists() 
+        {
+            ExecuteDefaultValueTest((d) => d.LastAccessTime, MockFileData.NullObject.LastAccessTime.DateTime);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_LastAccessTime_ShouldThrowIfLastAccessTimeSetAndIfNotExists() 
+        {
+            ExecuteSetDefaultValueThrowsTest((d) => d.LastAccessTime = DateTime.FromFileTime(100));
+        }
+
+        [Test]
         public void MockDirectoryInfo_LastAccessTime_ShouldReturnCreationTimeOfFolderInMemoryFileSystem()
         {
             // Arrange
@@ -353,7 +412,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(newTime, directoryInfo.LastAccessTime);
         }
-        
+
+        [Test]
+        public void MockDirectoryInfo_LastWriteTimeUtc_ShouldReturnDefaultLastWriteTimeUtcIfNotExists() 
+        {
+            ExecuteDefaultValueTest((d) => d.LastWriteTimeUtc, MockFileData.NullObject.LastWriteTime.UtcDateTime);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_LastWriteTimeUtc_ShouldThrowIfLastWriteTimeUtcSetAndIfNotExists() 
+        {
+            ExecuteSetDefaultValueThrowsTest((d) => d.LastWriteTimeUtc = DateTime.FromFileTimeUtc(100));
+        }
+
         [Test]
         public void MockDirectoryInfo_LastWriteTimeUtc_ShouldReturnCreationTimeUtcOfFolderInMemoryFileSystem() 
         {
@@ -392,7 +463,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(newUtcTime, directoryInfo.LastWriteTimeUtc);
         }
+        
+        [Test]
+        public void MockDirectoryInfo_LastWriteTime_ShouldReturnDefaultLastWriteTimeIfNotExists() {
+            ExecuteDefaultValueTest((d) => d.LastWriteTime, MockFileData.NullObject.LastWriteTime.DateTime);
+        }
 
+        [Test]
+        public void MockDirectoryInfo_LastWriteTime_ShouldThrowIfLastWriteTimeSetAndIfNotExists() {
+            ExecuteSetDefaultValueThrowsTest((d) => d.LastWriteTime = DateTime.FromFileTime(100));
+        }
 
         [Test]
         public void MockDirectoryInfo_LastWriteTime_ShouldReturnCreationTimeOfFolderInMemoryFileSystem() 
@@ -431,6 +511,30 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.AreEqual(newTime, directoryInfo.LastWriteTime);
+        }
+
+        static void ExecuteDefaultValueTest<T>(Func<MockDirectoryInfo, T> getDateValue, T expected) 
+        {
+            // Arrange
+            string path = XFS.Path(@"c:\temp\folder");
+            var fileSystem = new MockFileSystem();
+            var file = new MockDirectoryInfo(fileSystem, path);
+
+            // Act
+            var actual = getDateValue(file);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        static void ExecuteSetDefaultValueThrowsTest(Action<MockDirectoryInfo> setDateValue) 
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
+
+            // Assert
+            Assert.Throws<FileNotFoundException>(() => setDateValue(directoryInfo));
         }
     }
 }

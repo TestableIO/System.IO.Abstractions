@@ -24,9 +24,16 @@ namespace System.IO.Abstractions.TestingHelpers
             this.directoryPath = EnsurePathEndsWithDirectorySeparator(directoryPath);
         }
 
-        MockFileData MockFileData
+        MockFileData GetMockFileData(bool returnNullObject)
         {
-            get { return mockFileDataAccessor.GetFile(directoryPath); }
+            var mockFileData = mockFileDataAccessor.GetFile(directoryPath, returnNullObject);
+
+            if (mockFileData == null) 
+            {
+                throw new FileNotFoundException("File not found", directoryPath);
+            }
+
+            return mockFileData;
         }
 
         public override void Delete()
@@ -40,21 +47,19 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileAttributes Attributes
         {
-            get { return MockFileData.Attributes; }
-            set { MockFileData.Attributes = value; }
+            get { return this.GetMockFileData(true).Attributes; }
+            set { this.GetMockFileData(false).Attributes = value; }
         }
 
         public override DateTime CreationTime 
         {
             get 
             {
-                CheckDirectoryExists();
-                return MockFileData.CreationTime.DateTime;
+                return this.GetMockFileData(true).CreationTime.DateTime;
             }
             set 
             {
-                CheckDirectoryExists();
-                MockFileData.CreationTime = value;
+                this.GetMockFileData(false).CreationTime = value;
             }
         }
 
@@ -62,13 +67,11 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get 
             {
-                CheckDirectoryExists();
-                return MockFileData.CreationTime.UtcDateTime;
+                return this.GetMockFileData(true).CreationTime.UtcDateTime;
             }
             set 
             {
-                CheckDirectoryExists();
-                MockFileData.CreationTime = value.ToLocalTime();
+                this.GetMockFileData(false).CreationTime = value.ToLocalTime();
             }
         }
 
@@ -107,13 +110,11 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get 
             {
-                CheckDirectoryExists();
-                return MockFileData.LastAccessTime.DateTime;
+                return this.GetMockFileData(true).LastAccessTime.DateTime;
             }
             set 
             {
-                CheckDirectoryExists();
-                MockFileData.LastAccessTime = value;
+                this.GetMockFileData(false).LastAccessTime = value;
             }
         }
 
@@ -121,13 +122,11 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get 
             {
-                CheckDirectoryExists();
-                return MockFileData.LastAccessTime.UtcDateTime;
+                return this.GetMockFileData(true).LastAccessTime.UtcDateTime;
             }
             set 
             {
-                CheckDirectoryExists();
-                MockFileData.LastAccessTime = value.ToLocalTime();
+                this.GetMockFileData(false).LastAccessTime = value.ToLocalTime();
             }
         }
 
@@ -135,13 +134,11 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get 
             {
-                CheckDirectoryExists();
-                return MockFileData.LastWriteTime.DateTime;
+                return this.GetMockFileData(true).LastWriteTime.DateTime;
             }
             set 
             {
-                CheckDirectoryExists();
-                MockFileData.LastWriteTime = value;
+                this.GetMockFileData(false).LastWriteTime = value;
             }
         }
 
@@ -149,16 +146,14 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get 
             {
-                CheckDirectoryExists();
-                return MockFileData.LastWriteTime.UtcDateTime;
+                return this.GetMockFileData(true).LastWriteTime.UtcDateTime;
             }
             set 
             {
-                CheckDirectoryExists();
-                MockFileData.LastWriteTime = value.ToLocalTime();
+                this.GetMockFileData(false).LastWriteTime = value.ToLocalTime();
             }
         }
-
+        
         public override string Name
         {
             get { return new MockPath(mockFileDataAccessor).GetFileName(directoryPath.TrimEnd('\\')); }
@@ -328,11 +323,6 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 return new MockDirectoryInfo(mockFileDataAccessor, mockFileDataAccessor.Directory.GetDirectoryRoot(FullName));
             }
-        }
-
-        private void CheckDirectoryExists() 
-        {
-            if (MockFileData == null) throw new FileNotFoundException("File not found", directoryPath);
         }
     }
 }
