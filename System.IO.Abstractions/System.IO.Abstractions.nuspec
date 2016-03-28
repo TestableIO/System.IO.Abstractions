@@ -10,5 +10,15 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Just like System.Web.Abstractions, but for System.IO. Yay for testable IO access! Be sure to check out the System.IO.Abstractions.TestingHelpers package too.</description>
     <tags>testing</tags>
+    <dependencies>
+      <group targetFramework="net20">
+        <dependency id="LinqBridge" version="1.3.0" />
+      </group>
+    </dependencies>
   </metadata>
+  <files>
+    <file src="bin\Debug\System.IO.Abstractions.dll" target="lib\Net40\System.IO.Abstractions.dll" />
+    <file src="..\System.IO.Abstractions35\bin\Debug\System.IO.Abstractions.dll" target="lib\Net35\System.IO.Abstractions.dll" />
+    <file src="..\System.IO.Abstractions20\bin\Debug\System.IO.Abstractions.dll" target="lib\Net20\System.IO.Abstractions.dll" />
+  </files>
 </package>

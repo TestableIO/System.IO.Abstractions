@@ -36,7 +36,14 @@
 
         public override string Combine(params string[] paths)
         {
+#if !NET40
+            string result = paths[0];
+            for (int i = 1; i < paths.Length; i++)
+                result = Path.Combine(result, paths[i]);
+            return result;
+#else
             return Path.Combine(paths);
+#endif
         }
 
         public override string Combine(string path1, string path2)
@@ -46,12 +53,20 @@
 
         public override string Combine(string path1, string path2, string path3)
         {
+#if !NET40
+            return Path.Combine(Path.Combine(path1, path2), path3);
+#else
             return Path.Combine(path1, path2, path3);
+#endif
         }
 
         public override string Combine(string path1, string path2, string path3, string path4)
         {
+#if !NET40
+            return Path.Combine(Path.Combine(Path.Combine(path1, path2), path3), path4);
+#else
             return Path.Combine(path1, path2, path3, path4);
+#endif
         }
 
         public override string GetDirectoryName(string path)
