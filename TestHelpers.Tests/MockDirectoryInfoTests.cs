@@ -10,6 +10,43 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockDirectoryInfoTests
     {
         [Test]
+        public void MockDirectoryInfo_CreationTime_ShouldReturnCreationTimeOfFileInMemoryFileSystem()
+        {
+            // Arrange
+            var creationTime = DateTime.Now.AddHours(-4);
+            var directoryData = new MockDirectoryData { CreationTime = creationTime };
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\a\"), directoryData }
+            });
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\a\"));
+
+            // Act
+            var result = directoryInfo.CreationTime;
+
+            // Assert
+            Assert.AreEqual(creationTime, result);
+        }
+        [Test]
+        public void MockDirectoryInfo_CreationTime_ShouldSetCreationTimeOfFileInMemoryFileSystem()
+        {
+            // Arrange
+            var creationTime = DateTime.Now.AddHours(-4);
+            var directoryData = new MockDirectoryData { CreationTime = creationTime };
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\a\"), directoryData }
+            });
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\a\"));
+
+            // Act
+            var newTime = DateTime.Now;
+            directoryInfo.CreationTime = newTime;
+
+            // Assert
+            Assert.AreEqual(newTime, directoryInfo.CreationTime);
+        }
+        [Test]
         public void MockDirectoryInfo_GetExtension_ShouldReturnEmptyString()
         {
             // Arrange
