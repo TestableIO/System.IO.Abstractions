@@ -47,6 +47,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(newTime, directoryInfo.CreationTime);
         }
         [Test]
+        public void MockDirectoryInfo_LastWriteTime_ShouldReturnLastWriteTimeOfDirectoryInMemoryFileSystem()
+        {
+            // Arrange
+            var lastWriteTime = DateTime.Now.AddHours(-4);
+            var directoryData = new MockDirectoryData { LastWriteTime = lastWriteTime };
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\a\"), directoryData }
+            });
+            var fileInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\a\"));
+
+            // Act
+            var result = fileInfo.LastWriteTime;
+
+            // Assert
+            Assert.AreEqual(lastWriteTime, result);
+        }
+        [Test]
         public void MockDirectoryInfo_GetExtension_ShouldReturnEmptyString()
         {
             // Arrange
