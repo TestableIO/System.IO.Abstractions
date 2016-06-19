@@ -21,5 +21,19 @@
             Assert.AreEqual(1, fileCount1, "File should have existed");
             Assert.AreEqual(0, fileCount2, "File should have been deleted");
         }
+
+        [TestCase(" ")]
+        [TestCase("   ")]
+        public void MockFile_Delete_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.Delete(path);
+
+            // Assert
+            Assert.Throws<ArgumentException>(action);
+        }
     }
 }

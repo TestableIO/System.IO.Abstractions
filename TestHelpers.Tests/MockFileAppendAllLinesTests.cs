@@ -46,5 +46,90 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 "line 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine,
                 file.ReadAllText(path));
         }
+
+        [Test]
+        public void MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathIsZeroLength()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.AppendAllLines(string.Empty, new[] { "does not matter" });
+
+            // Assert
+            Assert.Throws<ArgumentException>(action);
+        }
+
+        [TestCase(" ")]
+        [TestCase("   ")]
+        public void MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.AppendAllLines(path, new[] { "does not matter" });
+
+            // Assert
+            Assert.Throws<ArgumentException>(action);
+        }
+
+        [TestCase("\"")]
+        [TestCase("<")]
+        [TestCase(">")]
+        [TestCase("|")]
+        public void MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathContainsInvalidChar(string path)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.AppendAllLines(path, new[] { "does not matter" });
+
+            // Assert
+            Assert.Throws<NotSupportedException>(action);
+        }
+
+        [Test]
+        public void MockFile_AppendAllLines_ShouldThrowArgumentNullExceptionIfPathIsNull()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.AppendAllLines(null, new[] { "does not matter" });
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(action);
+            Assert.That(exception.ParamName, Is.EqualTo("path"));
+        }
+
+        [Test]
+        public void MockFile_AppendAllLines_ShouldThrowArgumentNullExceptionIfContentIsNull()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.AppendAllLines("foo", null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(action);
+            Assert.That(exception.ParamName, Is.EqualTo("contents"));
+        }
+
+        [Test]
+        public void MockFile_AppendAllLines_ShouldThrowArgumentNullExceptionIfEncodingIsNull()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.AppendAllLines("foo.txt", new [] { "bar" }, null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(action);
+            Assert.That(exception.ParamName, Is.EqualTo("encoding"));
+        }
     }
 }

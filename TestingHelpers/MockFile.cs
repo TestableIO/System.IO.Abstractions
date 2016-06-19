@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.AccessControl;
@@ -10,22 +9,37 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockFile : FileBase
     {
-        readonly IMockFileDataAccessor mockFileDataAccessor;
-        readonly MockPath mockPath;
+        private readonly IMockFileDataAccessor mockFileDataAccessor;
+        private readonly MockPath mockPath;
 
         public MockFile(IMockFileDataAccessor mockFileDataAccessor)
         {
+            if (mockFileDataAccessor == null)
+            {
+                throw new ArgumentNullException("mockFileDataAccessor");
+            }
+
             this.mockFileDataAccessor = mockFileDataAccessor;
             mockPath = new MockPath(mockFileDataAccessor);
         }
 
         public override void AppendAllLines(string path, IEnumerable<string> contents)
         {
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+            VerifyValueIsNotNull(contents, "contents");
+
             AppendAllLines(path, contents, MockFileData.DefaultEncoding);
         }
 
         public override void AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding)
         {
+            if (encoding == null)
+            {
+                throw new ArgumentNullException("encoding");
+            }
+
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
             var concatContents = contents.Aggregate("", (a, b) => a + b + Environment.NewLine);
             AppendAllText(path, concatContents, encoding);
         }
@@ -37,12 +51,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void AppendAllText(string path, string contents, Encoding encoding)
         {
-            ValidateParameter(path, "path");
-
             if (encoding == null)
             {
                 throw new ArgumentNullException("encoding");
             }
+
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
             if (!mockFileDataAccessor.FileExists(path))
             {
@@ -81,8 +95,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Copy(string sourceFileName, string destFileName, bool overwrite)
         {
-            ValidateParameter(sourceFileName, "sourceFileName");
-            ValidateParameter(destFileName, "destFileName");
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, "sourceFileName");
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(destFileName, "destFileName");
 
             var directoryNameOfDestination = mockPath.GetDirectoryName(destFileName);
             if (!mockFileDataAccessor.Directory.Exists(directoryNameOfDestination))
@@ -107,6 +121,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream Create(string path)
         {
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
             mockFileDataAccessor.AddFile(path, new MockFileData(new byte[0]));
             var stream = OpenWrite(path);
             return stream;
@@ -139,6 +155,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Delete(string path)
         {
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
             mockFileDataAccessor.RemoveFile(path);
         }
 
@@ -207,37 +225,65 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime GetCreationTime(string path)
         {
-            return mockFileDataAccessor.GetFile(path, true).CreationTime.LocalDateTime;
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            return GetTimeFromFile(path, data => data.CreationTime.LocalDateTime, () => MockFileData.DefaultDateTime);
         }
 
         public override DateTime GetCreationTimeUtc(string path)
         {
-            return mockFileDataAccessor.GetFile(path, true).CreationTime.UtcDateTime;
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            return GetTimeFromFile(path, data => data.CreationTime.UtcDateTime, () => MockFileData.DefaultDateTimeUtc);
         }
 
         public override DateTime GetLastAccessTime(string path)
         {
-            return mockFileDataAccessor.GetFile(path, true).LastAccessTime.LocalDateTime;
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            return GetTimeFromFile(path, data => data.LastAccessTime.LocalDateTime, () => MockFileData.DefaultDateTime);
         }
 
         public override DateTime GetLastAccessTimeUtc(string path)
         {
-            return mockFileDataAccessor.GetFile(path, true).LastAccessTime.UtcDateTime;
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            return GetTimeFromFile(path, data => data.LastAccessTime.UtcDateTime, () => MockFileData.DefaultDateTimeUtc);
         }
 
         public override DateTime GetLastWriteTime(string path) {
-            return mockFileDataAccessor.GetFile(path, true).LastWriteTime.LocalDateTime;
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            return GetTimeFromFile(path, data => data.LastWriteTime.LocalDateTime, () => MockFileData.DefaultDateTime);
         }
 
         public override DateTime GetLastWriteTimeUtc(string path)
         {
-            return mockFileDataAccessor.GetFile(path, true).LastWriteTime.UtcDateTime;
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            return GetTimeFromFile(path, data => data.LastWriteTime.UtcDateTime, () => MockFileData.DefaultDateTimeUtc);
+        }
+
+        private DateTime GetTimeFromFile(string path, Func<MockFileData, DateTime> existingFileFunction, Func<DateTime> nonExistingFileFunction)
+        {
+            DateTime result;
+            MockFileData data;
+            if (mockFileDataAccessor.TryGetFile(path, out data))
+            {
+                result = existingFileFunction(data);
+            }
+            else
+            {
+                result = nonExistingFileFunction();
+            }
+
+            return result;
         }
 
         public override void Move(string sourceFileName, string destFileName)
         {
-            ValidateParameter(sourceFileName, "sourceFileName");
-            ValidateParameter(destFileName, "destFileName");
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, "sourceFileName");
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(destFileName, "destFileName");
 
             if (mockFileDataAccessor.GetFile(destFileName) != null)
                 throw new IOException("A file can not be created if it already exists.");
@@ -255,47 +301,6 @@ namespace System.IO.Abstractions.TestingHelpers
 
             mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile.Contents));
             mockFileDataAccessor.RemoveFile(sourceFileName);
-        }
-
-        [DebuggerNonUserCode]
-        private void ValidateParameter(string value, string paramName)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException(paramName, "File name cannot be null.");
-            }
-
-            if (value == string.Empty)
-            {
-                throw new ArgumentException("Empty file name is not legal.", paramName);
-            }
-
-            if (value.Trim() == string.Empty)
-            {
-                throw new ArgumentException("The path is not of a legal form.");
-            }
-
-            if (ExtractFileName(value).IndexOfAny(mockPath.GetInvalidFileNameChars()) > -1)
-            {
-                throw new NotSupportedException("The given path's format is not supported.");
-            }
-
-            var filePath = ExtractFilePath(value);
-            if (MockPath.HasIllegalCharacters(filePath, false))
-            {
-                throw new ArgumentException(Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION);
-            }
-        }
-
-        private string ExtractFilePath(string fullFileName)
-        {
-            var extractFilePath = fullFileName.Split(mockPath.DirectorySeparatorChar);
-            return string.Join(mockPath.DirectorySeparatorChar.ToString(), extractFilePath.Take(extractFilePath.Length - 1));
-        }
-
-        private string ExtractFileName(string fullFileName)
-        {
-            return fullFileName.Split(mockPath.DirectorySeparatorChar).Last();
         }
 
         public override Stream Open(string path, FileMode mode)
@@ -494,10 +499,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentNullException("path", "Path cannot be null.");
             }
 
-            if (bytes == null)
-            {
-                throw new ArgumentNullException("bytes", Properties.Resources.VALUE_CANNOT_BE_NULL);
-            }
+            VerifyValueIsNotNull(bytes, "bytes");
 
             mockFileDataAccessor.AddFile(path, new MockFileData(bytes));
         }
@@ -537,10 +539,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </remarks>
         public override void WriteAllLines(string path, IEnumerable<string> contents)
         {
-            if (contents == null)
-            {
-                throw new ArgumentNullException("contents", Properties.Resources.VALUE_CANNOT_BE_NULL);
-            }
+            VerifyValueIsNotNull(contents, "contents");
 
             WriteAllLines(path, contents, MockFileData.DefaultEncoding);
         }
@@ -589,15 +588,8 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </remarks>
         public override void WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding)
         {
-            if (contents == null)
-            {
-                throw new ArgumentNullException("contents", Properties.Resources.VALUE_CANNOT_BE_NULL);
-            }
-
-            if (encoding == null)
-            {
-                throw new ArgumentNullException("encoding", Properties.Resources.VALUE_CANNOT_BE_NULL);
-            }
+            VerifyValueIsNotNull(contents, "contents");
+            VerifyValueIsNotNull(encoding, "encoding");
 
             var sb = new StringBuilder();
             foreach (var line in contents)
@@ -647,10 +639,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </remarks>
         public override void WriteAllLines(string path, string[] contents)
         {
-            if (contents == null)
-            {
-                throw new ArgumentNullException("contents", Properties.Resources.VALUE_CANNOT_BE_NULL);
-            }
+            VerifyValueIsNotNull(contents, "contents");
 
             WriteAllLines(path, contents, MockFileData.DefaultEncoding);
         }
@@ -692,15 +681,8 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </remarks>
         public override void WriteAllLines(string path, string[] contents, Encoding encoding)
         {
-            if (contents == null)
-            {
-                throw new ArgumentNullException("contents", Properties.Resources.VALUE_CANNOT_BE_NULL);
-            }
-
-            if (encoding == null)
-            {
-                throw new ArgumentNullException("encoding", Properties.Resources.VALUE_CANNOT_BE_NULL);
-            }
+            VerifyValueIsNotNull(contents, "contents");
+            VerifyValueIsNotNull(encoding, "encoding");
 
             WriteAllLines(path, new List<string>(contents), encoding);
         }
@@ -774,10 +756,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </remarks>
         public override void WriteAllText(string path, string contents, Encoding encoding)
         {
-            if (path == null)
-            {
-                throw new ArgumentNullException("path", Properties.Resources.VALUE_CANNOT_BE_NULL);
-            }
+            VerifyValueIsNotNull(path, "path");
 
             if (mockFileDataAccessor.Directory.Exists(path))
             {
@@ -801,6 +780,14 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             var mockFileData = mockFileDataAccessor.GetFile(path);
             return ReadAllBytes(mockFileData.Contents, encoding);
+        }
+
+        private void VerifyValueIsNotNull(object value, string parameterName)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(parameterName, Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
         }
     }
 }

@@ -224,7 +224,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("The path is not of a legal form."));
+            Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
         }
 
         [Test]
@@ -258,7 +258,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("The path is not of a legal form."));
+            Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
         }
 
         [Test]

@@ -23,6 +23,9 @@ namespace System.IO.Abstractions.TestingHelpers
           CreationTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
         };
 
+        public static readonly DateTime DefaultDateTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc).ToLocalTime();
+        public static readonly DateTime DefaultDateTimeUtc = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc);
+
         /// <summary>
         /// The actual contents of the file.
         /// </summary>

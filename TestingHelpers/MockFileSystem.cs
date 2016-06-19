@@ -17,12 +17,17 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly IDirectoryInfoFactory directoryInfoFactory;
         private readonly IDriveInfoFactory driveInfoFactory;
 
+        [NonSerialized]
+        private readonly PathVerifier pathVerifier;
+
         public MockFileSystem() : this(null) { }
 
         public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = "")
         {
-            if (String.IsNullOrEmpty(currentDirectory))
+            if (string.IsNullOrEmpty(currentDirectory))
                 currentDirectory = IO.Path.GetTempPath();
+
+            pathVerifier = new PathVerifier(this);
 
             this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
             pathField = new MockPath(this);
@@ -32,9 +37,13 @@ namespace System.IO.Abstractions.TestingHelpers
             directoryInfoFactory = new MockDirectoryInfoFactory(this);
             driveInfoFactory = new MockDriveInfoFactory(this);
 
-            if (files == null) return;
-            foreach (var entry in files)
-                AddFile(entry.Key, entry.Value);
+            if (files != null)
+            {
+                foreach (var entry in files)
+                {
+                    AddFile(entry.Key, entry.Value);
+                }
+            }
         }
 
         public FileBase File
@@ -67,6 +76,11 @@ namespace System.IO.Abstractions.TestingHelpers
             get { return driveInfoFactory; }
         }
 
+        public PathVerifier PathVerifier
+        {
+            get { return pathVerifier; }
+        }
+
         private string FixPath(string path)
         {
             var pathSeparatorFixed = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
@@ -79,6 +93,25 @@ namespace System.IO.Abstractions.TestingHelpers
 
             lock (files)
                 return FileExists(path) ? files[path] : returnNullObject ? MockFileData.NullObject : null;
+        }
+
+        public bool TryGetFile(string path, out MockFileData result)
+        {
+            path = FixPath(path);
+            lock (files)
+            {
+                var fileExists = FileExists(path);
+                if (fileExists)
+                {
+                    result = files[path];
+                }
+                else
+                {
+                    result = null;
+                }
+
+                return fileExists;
+            }
         }
 
         public void AddFile(string path, MockFileData mockFile)
