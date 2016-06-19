@@ -10,7 +10,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     using XFS = MockUnixSupport;
 
-    public class MockFileCreateTests {
+    public class MockFileCreateTests
+    {
         [Test]
         public void Mockfile_Create_ShouldCreateNewStream()
         {
@@ -73,16 +74,76 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void Mockfile_Create_ThrowsWhenPathIsReadOnly()
+        public void Mockfile_Create_ShouldThrowUnauthorizedAccessExceptionIfPathIsReadOnly()
         {
+            // Arrange
             string path = XFS.Path(@"c:\something\read-only.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { { path, new MockFileData("Content") } });
             var mockFile = new MockFile(fileSystem);
-            
+
+            // Act
             mockFile.SetAttributes(path, FileAttributes.ReadOnly);
-         
+
+            // Assert
             var exception =  Assert.Throws<UnauthorizedAccessException>(() => mockFile.Create(path).Close());
             Assert.That(exception.Message, Is.EqualTo(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path)));
+        }
+
+        [Test]
+        public void Mockfile_Create_ShouldThrowArgumentExceptionIfPathIsZeroLength()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.Create("");
+
+            // Assert
+            Assert.Throws<ArgumentException>(action);
+        }
+
+        [TestCase("\"")]
+        [TestCase("<")]
+        [TestCase(">")]
+        [TestCase("|")]
+        public void MockFile_Create_ShouldThrowArgumentNullExceptionIfPathIsNull1(string path)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.Create(path);
+
+            // Assert
+            Assert.Throws<ArgumentException>(action);
+        }
+
+        [TestCase(" ")]
+        [TestCase("   ")]
+        public void MockFile_Create_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.Create(path);
+
+            // Assert
+            Assert.Throws<ArgumentException>(action);
+        }
+
+        [Test]
+        public void MockFile_Create_ShouldThrowArgumentNullExceptionIfPathIsNull()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.File.Create(null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(action);
+            Assert.That(exception.Message, Is.StringStarting("Path cannot be null."));
         }
     }
 }

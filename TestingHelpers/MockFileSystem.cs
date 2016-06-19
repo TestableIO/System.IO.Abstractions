@@ -17,12 +17,17 @@ namespace System.IO.Abstractions.TestingHelpers
         readonly IDirectoryInfoFactory directoryInfoFactory;
         private readonly IDriveInfoFactory driveInfoFactory;
 
+        [NonSerialized]
+        private readonly PathVerifier pathVerifier;
+
         public MockFileSystem() : this(null) { }
 
         public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = "")
         {
-            if (String.IsNullOrEmpty(currentDirectory))
+            if (string.IsNullOrEmpty(currentDirectory))
                 currentDirectory = IO.Path.GetTempPath();
+
+            pathVerifier = new PathVerifier(this);
 
             this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
             pathField = new MockPath(this);
@@ -32,9 +37,13 @@ namespace System.IO.Abstractions.TestingHelpers
             directoryInfoFactory = new MockDirectoryInfoFactory(this);
             driveInfoFactory = new MockDriveInfoFactory(this);
 
-            if (files == null) return;
-            foreach (var entry in files)
-                AddFile(entry.Key, entry.Value);
+            if (files != null)
+            {
+                foreach (var entry in files)
+                {
+                    AddFile(entry.Key, entry.Value);
+                }
+            }
         }
 
         public FileBase File
@@ -67,18 +76,22 @@ namespace System.IO.Abstractions.TestingHelpers
             get { return driveInfoFactory; }
         }
 
+        public PathVerifier PathVerifier
+        {
+            get { return pathVerifier; }
+        }
+
         private string FixPath(string path)
         {
             var pathSeparatorFixed = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             return pathField.GetFullPath(pathSeparatorFixed);
         }
 
-        public MockFileData GetFile(string path, bool returnNullObject = false)
+        public MockFileData GetFile(string path)
         {
             path = FixPath(path);
 
-            lock (files)
-                return FileExists(path) ? files[path] : returnNullObject ? MockFileData.NullObject : null;
+            return GetFileWithoutFixingPath(path);
         }
 
         public void AddFile(string path, MockFileData mockFile)
@@ -127,7 +140,6 @@ namespace System.IO.Abstractions.TestingHelpers
 
                 if (isUnc)
                 {
-
                     //First, confirm they aren't trying to create '\\server\'
                     lastIndex = path.IndexOf(separator, 2, StringComparison.OrdinalIgnoreCase);
                     if (lastIndex < 0)
@@ -196,6 +208,16 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 lock (files)
                     return files.Where(f => f.Value.IsDirectory).Select(f => f.Key).ToArray();
+            }
+        }
+
+        private MockFileData GetFileWithoutFixingPath(string path)
+        {
+            lock (files)
+            {
+                MockFileData result;
+                files.TryGetValue(path, out result);
+                return result;
             }
         }
     }

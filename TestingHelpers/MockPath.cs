@@ -28,7 +28,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if(path.Length == 0)
             {
-                throw new ArgumentException("The path is not of a legal form.", "path");
+                throw new ArgumentException(Properties.Resources.THE_PATH_IS_NOT_OF_A_LEGAL_FORM, "path");
             }
 
             path = path.Replace(AltDirectorySeparatorChar, DirectorySeparatorChar);

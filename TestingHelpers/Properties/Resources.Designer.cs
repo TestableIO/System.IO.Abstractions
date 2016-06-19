@@ -97,6 +97,15 @@ namespace System.IO.Abstractions.TestingHelpers.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The path is not of a legal form..
+        /// </summary>
+        internal static string THE_PATH_IS_NOT_OF_A_LEGAL_FORM {
+            get {
+                return ResourceManager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Value cannot be null..
         /// </summary>
         internal static string VALUE_CANNOT_BE_NULL {

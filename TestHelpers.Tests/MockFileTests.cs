@@ -11,6 +11,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileTests
     {
         [Test]
+        public void MockFile_Constructor_ShouldThrowArgumentNullExceptionIfMockFileDataAccessorIsNull()
+        {
+            // Arrange
+            // nothing to do
+
+            // Act
+            TestDelegate action = () => new MockFile(null);
+
+            // Assert
+            Assert.Throws<ArgumentNullException>(action);
+        }
+
+        [Test]
         public void MockFile_GetSetCreationTime_ShouldPersist()
         {
             // Arrange

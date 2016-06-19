@@ -10,8 +10,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     using XFS = MockUnixSupport;
 
-    public class MockFileAppendAllTextTests {
-
+    public class MockFileAppendAllTextTests
+    {
         [Test]
         public void MockFile_AppendAllText_ShouldPersistNewText()
         {
@@ -19,7 +19,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { path, new MockFileData("Demo text content") }
+                {path, new MockFileData("Demo text content")}
             });
 
             var file = new MockFile(fileSystem);
@@ -40,7 +40,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             const string Path = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { Path, new MockFileData("AA", Encoding.UTF32) }
+                {Path, new MockFileData("AA", Encoding.UTF32)}
             });
 
             var file = new MockFile(fileSystem);
@@ -50,7 +50,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             CollectionAssert.AreEqual(
-                new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66 },
+                new byte[] {255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66},
                 fileSystem.GetFile(Path).Contents);
         }
 
@@ -61,7 +61,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { path, new MockFileData("Demo text content") }
+                {path, new MockFileData("Demo text content")}
             });
 
             // Act
@@ -86,7 +86,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             CollectionAssert.AreEqual(
-                new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0 },
+                new byte[] {255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0},
                 fileSystem.GetFile(path).Contents);
         }
 
@@ -97,7 +97,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { path, new MockFileData("Demo text content") }
+                {path, new MockFileData("Demo text content")}
             });
 
             // Act
@@ -106,10 +106,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Exception ex;
             ex = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.AppendAllText(path, "some text"));
-            Assert.That(ex.Message, Is.EqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path)));
+            Assert.That(ex.Message,
+                Is.EqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path)));
 
-            ex = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.AppendAllText(path, "some text", Encoding.Unicode));
-            Assert.That(ex.Message, Is.EqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path)));
+            ex =
+                Assert.Throws<DirectoryNotFoundException>(
+                    () => fileSystem.File.AppendAllText(path, "some text", Encoding.Unicode));
+            Assert.That(ex.Message,
+                Is.EqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path)));
         }
 
         [Test]
@@ -119,7 +123,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { path, new MockFileData("Demo text content") }
+                {path, new MockFileData("Demo text content")}
             });
 
             var file = new MockFile(fileSystem);
