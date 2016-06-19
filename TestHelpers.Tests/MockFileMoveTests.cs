@@ -52,7 +52,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentNullException>(()=>fileSystem.File.Move(null, destFilePath));
+            var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(null, destFilePath));
 
             Assert.That(exception.Message, Is.StringStarting("File name cannot be null."));
         }

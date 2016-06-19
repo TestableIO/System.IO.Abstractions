@@ -5,20 +5,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     [TestFixture]
     public class MockFileGetLastAccessTimeUtcTests
     {
-        [Test]
-        public void MockFile_GetLastAccessTimeUtc_ShouldThrowArgumentNullExceptionIfPathIsNull()
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem();
-
-            // Act
-            TestDelegate action = () => fileSystem.File.GetLastAccessTimeUtc(null);
-
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.ParamName, Is.EqualTo("path"));
-        }
-
         [TestCase(" ")]
         [TestCase("   ")]
         public void MockFile_GetLastAccessTimeUtc_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)

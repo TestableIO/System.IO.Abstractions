@@ -5,20 +5,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     [TestFixture]
     public class MockFileGetLastWriteTimeTests
     {
-        [Test]
-        public void MockFile_GetLastWriteTime_ShouldThrowArgumentNullExceptionIfPathIsNull()
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem();
-
-            // Act
-            TestDelegate action = () => fileSystem.File.GetLastWriteTime(null);
-
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.ParamName, Is.EqualTo("path"));
-        }
-
         [TestCase(" ")]
         [TestCase("   ")]
         public void MockFile_GetLastWriteTime_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)

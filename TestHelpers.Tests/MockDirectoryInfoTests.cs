@@ -47,9 +47,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [TestCaseSource("MockDirectoryInfo_Exists_Cases")]
-        public void MockDirectoryInfo_Exists(string path, bool expected) 
+        public void MockDirectoryInfo_Exists(string path, bool expected)
         {
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> 
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 {XFS.Path(@"c:\temp\folder\file.txt"), new MockFileData("Hello World")}
             });
@@ -59,9 +59,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(result, Is.EqualTo(expected));
         }
-  
+
         [Test]
-        public void MockDirectoryInfo_FullName_ShouldReturnFullNameWithoutIncludingTrailingPathDelimiter() 
+        public void MockDirectoryInfo_FullName_ShouldReturnFullNameWithoutIncludingTrailingPathDelimiter()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {

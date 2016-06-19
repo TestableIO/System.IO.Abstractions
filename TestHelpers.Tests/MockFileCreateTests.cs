@@ -102,19 +102,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<ArgumentException>(action);
         }
 
-        [Test]
-        public void Mockfile_Create_ShouldThrowArgumentNullExceptionIfPathIsNull()
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem();
-
-            // Act
-            TestDelegate action = () => fileSystem.File.Create(null);
-
-            // Assert
-            Assert.Throws<ArgumentNullException>(action);
-        }
-
         [TestCase("\"")]
         [TestCase("<")]
         [TestCase(">")]

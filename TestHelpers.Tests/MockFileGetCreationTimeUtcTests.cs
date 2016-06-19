@@ -5,20 +5,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     [TestFixture]
     public class MockFileGetCreationTimeUtcTests
     {
-        [Test]
-        public void MockFile_GetCreationTimeUtc_ShouldThrowArgumentNullExceptionIfPathIsNull()
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem();
-
-            // Act
-            TestDelegate action = () => fileSystem.File.GetCreationTimeUtc(null);
-
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.ParamName, Is.EqualTo("path"));
-        }
-
         [TestCase(" ")]
         [TestCase("   ")]
         public void MockFile_GetCreationTimeUtc_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)

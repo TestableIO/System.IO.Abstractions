@@ -91,20 +91,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_AppendAllLines_ShouldThrowArgumentNullExceptionIfPathIsNull()
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem();
-
-            // Act
-            TestDelegate action = () => fileSystem.File.AppendAllLines(null, new[] { "does not matter" });
-
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.ParamName, Is.EqualTo("path"));
-        }
-
-        [Test]
         public void MockFile_AppendAllLines_ShouldThrowArgumentNullExceptionIfContentIsNull()
         {
             // Arrange
