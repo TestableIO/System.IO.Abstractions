@@ -87,31 +87,11 @@ namespace System.IO.Abstractions.TestingHelpers
             return pathField.GetFullPath(pathSeparatorFixed);
         }
 
-        public MockFileData GetFile(string path, bool returnNullObject = false)
+        public MockFileData GetFile(string path)
         {
             path = FixPath(path);
 
-            lock (files)
-                return FileExists(path) ? files[path] : returnNullObject ? MockFileData.NullObject : null;
-        }
-
-        public bool TryGetFile(string path, out MockFileData result)
-        {
-            path = FixPath(path);
-            lock (files)
-            {
-                var fileExists = FileExists(path);
-                if (fileExists)
-                {
-                    result = files[path];
-                }
-                else
-                {
-                    result = null;
-                }
-
-                return fileExists;
-            }
+            return GetFileWithoutFixingPath(path);
         }
 
         public void AddFile(string path, MockFileData mockFile)
@@ -160,7 +140,6 @@ namespace System.IO.Abstractions.TestingHelpers
 
                 if (isUnc)
                 {
-
                     //First, confirm they aren't trying to create '\\server\'
                     lastIndex = path.IndexOf(separator, 2, StringComparison.OrdinalIgnoreCase);
                     if (lastIndex < 0)
@@ -229,6 +208,16 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 lock (files)
                     return files.Where(f => f.Value.IsDirectory).Select(f => f.Key).ToArray();
+            }
+        }
+
+        private MockFileData GetFileWithoutFixingPath(string path)
+        {
+            lock (files)
+            {
+                MockFileData result;
+                files.TryGetValue(path, out result);
+                return result;
             }
         }
     }

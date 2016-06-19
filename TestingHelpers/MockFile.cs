@@ -267,10 +267,10 @@ namespace System.IO.Abstractions.TestingHelpers
         private DateTime GetTimeFromFile(string path, Func<MockFileData, DateTime> existingFileFunction, Func<DateTime> nonExistingFileFunction)
         {
             DateTime result;
-            MockFileData data;
-            if (mockFileDataAccessor.TryGetFile(path, out data))
+            MockFileData file = mockFileDataAccessor.GetFile(path);
+            if (file != null)
             {
-                result = existingFileFunction(data);
+                result = existingFileFunction(file);
             }
             else
             {
