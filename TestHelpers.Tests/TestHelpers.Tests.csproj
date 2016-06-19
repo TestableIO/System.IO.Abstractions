@@ -83,6 +83,7 @@
   <ItemGroup>
     <Compile Include="MockDriveInfoFactoryTests.cs" />
     <Compile Include="MockDriveInfoTests.cs" />
+    <Compile Include="MockDirectoryArgumentPathTests.cs" />
     <Compile Include="MockFileArgumentPathTests.cs" />
     <Compile Include="MockFileDeleteTests.cs" />
     <Compile Include="FileSystemTests.cs" />

@@ -99,6 +99,16 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Copy(string sourceFileName, string destFileName, bool overwrite)
         {
+            if (sourceFileName == null)
+            {
+                throw new ArgumentNullException("sourceFileName", "File name cannot be null.");
+            }
+
+            if (destFileName == null)
+            {
+                throw new ArgumentNullException("destFileName", "File name cannot be null.");
+            }
+
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, "sourceFileName");
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(destFileName, "destFileName");
 
@@ -125,6 +135,10 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream Create(string path)
         {
+            if (path == null)
+            {
+                throw new ArgumentNullException("path", "Path cannot be null.");
+            }
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
             mockFileDataAccessor.AddFile(path, new MockFileData(new byte[0]));
@@ -300,6 +314,16 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Move(string sourceFileName, string destFileName)
         {
+            if (sourceFileName == null)
+            {
+                throw new ArgumentNullException("sourceFileName", "File name cannot be null.");
+            }
+
+            if (destFileName == null)
+            {
+                throw new ArgumentNullException("destFileName", "File name cannot be null.");
+            }
+
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, "sourceFileName");
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(destFileName, "destFileName");
 

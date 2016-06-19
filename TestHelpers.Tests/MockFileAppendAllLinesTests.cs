@@ -87,7 +87,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             TestDelegate action = () => fileSystem.File.AppendAllLines(path, new[] { "does not matter" });
 
             // Assert
-            Assert.Throws<NotSupportedException>(action);
+            Assert.Throws<ArgumentException>(action);
         }
 
         [Test]

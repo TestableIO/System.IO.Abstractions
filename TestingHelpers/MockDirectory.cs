@@ -398,16 +398,22 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override IEnumerable<string> EnumerateDirectories(string path)
         {
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
             return EnumerateDirectories(path, "*");
         }
 
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern)
         {
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
             return EnumerateDirectories(path, searchPattern, SearchOption.TopDirectoryOnly);
         }
 
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
         {
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
             path = EnsurePathEndsWithDirectorySeparator(path);
 
             if (!Exists(path))

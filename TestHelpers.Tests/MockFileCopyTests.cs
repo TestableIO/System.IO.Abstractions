@@ -114,9 +114,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var sourceFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
 
                 var exception =
-                    Assert.Throws<NotSupportedException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
+                    Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
 
-                Assert.That(exception.Message, Is.EqualTo("The given path's format is not supported."),
+                Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
                     string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
             }
         }
@@ -186,9 +186,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var destFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
 
                 var exception =
-                    Assert.Throws<NotSupportedException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
+                    Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
 
-                Assert.That(exception.Message, Is.EqualTo("The given path's format is not supported."),
+                Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
                     string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
             }
         }

@@ -1,5 +1,4 @@
-﻿
-using System.Linq;
+﻿using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -21,7 +20,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (path == null)
             {
-                throw new ArgumentNullException(paramName, "File name cannot be null.");
+                throw new ArgumentNullException(paramName,  Properties.Resources.VALUE_CANNOT_BE_NULL);
             }
 
             if (path == string.Empty)
@@ -31,12 +30,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (path.Trim() == string.Empty)
             {
-                throw new ArgumentException("The path is not of a legal form.", paramName);
+                throw new ArgumentException(Properties.Resources.THE_PATH_IS_NOT_OF_A_LEGAL_FORM, paramName);
             }
 
             if (ExtractFileName(path).IndexOfAny(_mockFileDataAccessor.Path.GetInvalidFileNameChars()) > -1)
             {
-                throw new NotSupportedException("The given path's format is not supported.");
+                throw new ArgumentException(Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION);
             }
 
             var filePath = ExtractFilePath(path);
