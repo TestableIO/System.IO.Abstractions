@@ -46,8 +46,16 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime CreationTime
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get
+            {
+                if (MockFileData == null) throw new FileNotFoundException("File not found", directoryPath);
+                return mockFileDataAccessor.Directory.GetCreationTime(directoryPath);
+            }
+            set
+            {
+                if (MockFileData == null) throw new FileNotFoundException("File not found", directoryPath);
+                MockFileData.CreationTime = value;
+            }
         }
 
         public override DateTime CreationTimeUtc
@@ -104,7 +112,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime LastWriteTime
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get
+            {
+                if (MockFileData == null) throw new FileNotFoundException("File not found", directoryPath);
+                return mockFileDataAccessor.Directory.GetLastWriteTime(directoryPath);
+            }
             set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
         }
 
