@@ -24,9 +24,16 @@ namespace System.IO.Abstractions.TestingHelpers
             this.directoryPath = EnsurePathEndsWithDirectorySeparator(directoryPath);
         }
 
-        MockFileData MockFileData
+        MockFileData GetMockFileData(bool returnNullObject)
         {
-            get { return mockFileDataAccessor.GetFile(directoryPath); }
+            var mockFileData = mockFileDataAccessor.GetFile(directoryPath, returnNullObject);
+
+            if (mockFileData == null) 
+            {
+                throw new FileNotFoundException("File not found", directoryPath);
+            }
+
+            return mockFileData;
         }
 
         public override void Delete()
@@ -40,20 +47,32 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileAttributes Attributes
         {
-            get { return MockFileData.Attributes; }
-            set { MockFileData.Attributes = value; }
+            get { return this.GetMockFileData(true).Attributes; }
+            set { this.GetMockFileData(false).Attributes = value; }
         }
 
-        public override DateTime CreationTime
+        public override DateTime CreationTime 
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get 
+            {
+                return this.GetMockFileData(true).CreationTime.DateTime;
+            }
+            set 
+            {
+                this.GetMockFileData(false).CreationTime = value;
+            }
         }
 
-        public override DateTime CreationTimeUtc
+        public override DateTime CreationTimeUtc 
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get 
+            {
+                return this.GetMockFileData(true).CreationTime.UtcDateTime;
+            }
+            set 
+            {
+                this.GetMockFileData(false).CreationTime = value.ToLocalTime();
+            }
         }
 
         public override bool Exists
@@ -87,33 +106,54 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
-        public override DateTime LastAccessTime
+        public override DateTime LastAccessTime 
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-        }
-
-        public override DateTime LastAccessTimeUtc
-        {
-            get {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", directoryPath);
-                return MockFileData.LastAccessTime.UtcDateTime;
+            get 
+            {
+                return this.GetMockFileData(true).LastAccessTime.DateTime;
             }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            set 
+            {
+                this.GetMockFileData(false).LastAccessTime = value;
+            }
         }
 
-        public override DateTime LastWriteTime
+        public override DateTime LastAccessTimeUtc 
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get 
+            {
+                return this.GetMockFileData(true).LastAccessTime.UtcDateTime;
+            }
+            set 
+            {
+                this.GetMockFileData(false).LastAccessTime = value.ToLocalTime();
+            }
         }
 
-        public override DateTime LastWriteTimeUtc
+        public override DateTime LastWriteTime 
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get 
+            {
+                return this.GetMockFileData(true).LastWriteTime.DateTime;
+            }
+            set 
+            {
+                this.GetMockFileData(false).LastWriteTime = value;
+            }
         }
 
+        public override DateTime LastWriteTimeUtc 
+        {
+            get 
+            {
+                return this.GetMockFileData(true).LastWriteTime.UtcDateTime;
+            }
+            set 
+            {
+                this.GetMockFileData(false).LastWriteTime = value.ToLocalTime();
+            }
+        }
+        
         public override string Name
         {
             get { return new MockPath(mockFileDataAccessor).GetFileName(directoryPath.TrimEnd('\\')); }

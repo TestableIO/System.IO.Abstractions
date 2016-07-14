@@ -9,6 +9,7 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockFileData
     {
+        private const int DefaultFileAttributes = -1;
         /// <summary>
         /// The default encoding.
         /// </summary>
@@ -21,6 +22,7 @@ namespace System.IO.Abstractions.TestingHelpers
           LastWriteTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
           LastAccessTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
           CreationTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
+          Attributes = ((FileAttributes)DefaultFileAttributes)
         };
 
         /// <summary>
