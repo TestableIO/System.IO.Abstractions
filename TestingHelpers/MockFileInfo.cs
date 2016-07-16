@@ -240,12 +240,33 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            return Replace(destinationFileName, destinationBackupFileName, false);
         }
 
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            if (!Exists)
+            {
+                throw new FileNotFoundException("File not found", path);
+            }
+
+            var destinationFileInfo = mockFileSystem.FileInfo.FromFileName(destinationFileName);
+
+            if (!destinationFileInfo.Exists)
+            {
+                throw new FileNotFoundException("File not found", destinationFileName);
+            }
+
+            var mockFile = new MockFile(mockFileSystem);
+            if (destinationBackupFileName != null)
+            {
+                mockFile.Copy(destinationFileName, destinationBackupFileName, true);
+            }
+
+            mockFile.Delete(destinationFileName);
+            mockFile.Move(path, destinationFileName);
+
+            return destinationFileInfo;
         }
 
         public override void SetAccessControl(FileSecurity fileSecurity)
