@@ -5,7 +5,7 @@ using System.Linq;
 namespace System.IO.Abstractions.TestingHelpers
 {
     /// <summary>
-    ///     PathWrapper calls direct to Path but all this does is string manipulation so we can inherit directly from PathWrapper as no IO is done
+    /// PathWrapper calls direct to Path but all this does is string manipulation so we can inherit directly from PathWrapper as no IO is done
     /// </summary>
     [Serializable]
     public class MockPath : PathWrapper
@@ -26,7 +26,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentNullException("path", Properties.Resources.VALUE_CANNOT_BE_NULL);
             }
 
-            if(path.Length == 0)
+            if (path.Length == 0)
             {
                 throw new ArgumentException(Properties.Resources.THE_PATH_IS_NOT_OF_A_LEGAL_FORM, "path");
             }
@@ -63,7 +63,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 // absolute path on the current drive or volume
                 pathSegments = GetSegments(GetPathRoot(mockFileDataAccessor.Directory.GetCurrentDirectory()), path);
             }
-                        else
+            else
             {
                 pathSegments = GetSegments(path);
             }
