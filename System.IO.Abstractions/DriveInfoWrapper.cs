@@ -136,7 +136,6 @@
             get { return instance.RootDirectory; }
         }
 
-
         /// <summary>
         /// Gets or sets the volume label of a drive.
         /// </summary>
