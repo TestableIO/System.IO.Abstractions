@@ -10,12 +10,17 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockPath : PathWrapper
     {
-        readonly IMockFileDataAccessor mockFileDataAccessor;
+        private readonly IMockFileDataAccessor mockFileDataAccessor;
 
         private static readonly char[] InvalidAdditionalPathChars = { '*', '?' };
 
         public MockPath(IMockFileDataAccessor mockFileDataAccessor)
         {
+            if (mockFileDataAccessor == null)
+            {
+                throw new ArgumentNullException("mockFileDataAccessor");
+            }
+
             this.mockFileDataAccessor = mockFileDataAccessor;
         }
 

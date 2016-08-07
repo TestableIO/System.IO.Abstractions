@@ -6,6 +6,7 @@ namespace System.IO.Abstractions.TestingHelpers
 {
     internal static class StringExtensions
     {
+        [Pure]
         internal static string[] SplitLines(this string input)
         {
             var list = new List<string>();

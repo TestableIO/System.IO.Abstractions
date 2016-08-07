@@ -263,7 +263,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileSystemInfoBase[] GetFileSystemInfos(string searchPattern, SearchOption searchOption)
         {
-            return GetDirectories(searchPattern, searchOption).OfType<FileSystemInfoBase>().Concat(this.GetFiles(searchPattern, searchOption)).ToArray();
+            return GetDirectories(searchPattern, searchOption).OfType<FileSystemInfoBase>().Concat(GetFiles(searchPattern, searchOption)).ToArray();
         }
 
         public override void MoveTo(string destDirName)

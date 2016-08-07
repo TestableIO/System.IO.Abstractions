@@ -9,12 +9,12 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockFileSystem : IFileSystem, IMockFileDataAccessor
     {
-        readonly IDictionary<string, MockFileData> files;
-        readonly FileBase file;
-        readonly DirectoryBase directory;
-        readonly IFileInfoFactory fileInfoFactory;
-        readonly PathBase pathField;
-        readonly IDirectoryInfoFactory directoryInfoFactory;
+        private readonly IDictionary<string, MockFileData> files;
+        private readonly FileBase file;
+        private readonly DirectoryBase directory;
+        private readonly IFileInfoFactory fileInfoFactory;
+        private readonly PathBase pathField;
+        private readonly IDirectoryInfoFactory directoryInfoFactory;
         private readonly IDriveInfoFactory driveInfoFactory;
 
         [NonSerialized]

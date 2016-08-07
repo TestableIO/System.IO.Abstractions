@@ -18,6 +18,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory)
         {
+            if (mockFileDataAccessor == null)
+            {
+                throw new ArgumentNullException("mockFileDataAccessor");
+            }
+
             this.currentDirectory = currentDirectory;
             this.mockFileDataAccessor = mockFileDataAccessor;
             this.fileBase = fileBase;
@@ -37,7 +42,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (path.Length == 0)
             {
-                throw new ArgumentException("Path cannot be the empty string or all whitespace.", "path");
+                throw new ArgumentException(Properties.Resources.PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE, "path");
             }
 
             if (mockFileDataAccessor.FileExists(path))
@@ -100,12 +105,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectorySecurity GetAccessControl(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override DateTime GetCreationTime(string path)
@@ -284,7 +289,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (path.Length == 0)
             {
-                throw new ArgumentException("Path cannot be the empty string or all whitespace.", "path");
+                throw new ArgumentException(Properties.Resources.PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE, "path");
             }
 
             if (MockPath.HasIllegalCharacters(path, false))
@@ -358,7 +363,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override void SetCreationTime(string path, DateTime creationTime)

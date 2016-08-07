@@ -135,4 +135,7 @@
   <data name="VALUE_CANNOT_BE_NULL" xml:space="preserve">
     <value>Value cannot be null.</value>
   </data>
+  <data name="PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE" xml:space="preserve">
+    <value>Path cannot be the empty string or all whitespace.</value>
+  </data>
 </root>

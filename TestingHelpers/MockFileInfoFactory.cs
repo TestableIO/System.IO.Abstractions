@@ -3,10 +3,15 @@
     [Serializable]
     public class MockFileInfoFactory : IFileInfoFactory
     {
-        readonly IMockFileDataAccessor mockFileSystem;
+        private readonly IMockFileDataAccessor mockFileSystem;
 
         public MockFileInfoFactory(IMockFileDataAccessor mockFileSystem)
         {
+            if (mockFileSystem == null)
+            {
+                throw new ArgumentNullException("mockFileSystem");
+            }
+
             this.mockFileSystem = mockFileSystem;
         }
 

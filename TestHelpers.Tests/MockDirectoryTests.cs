@@ -1023,7 +1023,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         public void MockDirectory_GetCurrentDirectory_ShouldReturnDefaultPathWhenNotSet() {
-            string directory = System.IO.Path.GetTempPath();
+            string directory = Path.GetTempPath();
             var fileSystem = new MockFileSystem();
 
             var actual = fileSystem.Directory.GetCurrentDirectory();

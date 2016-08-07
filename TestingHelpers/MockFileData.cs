@@ -17,7 +17,8 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <summary>
         /// The null object.
         /// </summary>
-        public static readonly MockFileData NullObject = new MockFileData(string.Empty) {
+        public static readonly MockFileData NullObject = new MockFileData(string.Empty)
+        {
           LastWriteTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
           LastAccessTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
           CreationTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
