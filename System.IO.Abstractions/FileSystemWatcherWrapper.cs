@@ -94,7 +94,7 @@ namespace System.IO.Abstractions
             watcher.BeginInit();
         }
 
-        public void Dispose(bool disposing)
+        public override void Dispose(bool disposing)
         {
             if (disposing)
             {

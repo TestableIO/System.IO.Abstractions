@@ -40,7 +40,7 @@ namespace System.IO.Abstractions
             return new FileSystemWatcherWrapper(watcher);
         }
 
-        public void Dispose(bool disposing)
+        public virtual void Dispose(bool disposing)
         {
             // do nothing
         }
