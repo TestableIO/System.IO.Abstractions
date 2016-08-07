@@ -167,7 +167,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!Exists(path))
             {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, path));
             }
 
             return GetFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
@@ -423,7 +423,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!Exists(path))
             {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, path));
             }
 
             var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);

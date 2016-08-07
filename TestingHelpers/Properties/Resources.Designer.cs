@@ -79,6 +79,15 @@ namespace System.IO.Abstractions.TestingHelpers.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File name cannot be null..
+        /// </summary>
+        internal static string FILENAME_CANNOT_BE_NULL {
+            get {
+                return ResourceManager.GetString("FILENAME_CANNOT_BE_NULL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Illegal characters in path..
         /// </summary>
         internal static string ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION {

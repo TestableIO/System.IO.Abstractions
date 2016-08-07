@@ -65,7 +65,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 var dir = mockFileDataAccessor.Path.GetDirectoryName(path);
                 if (!mockFileDataAccessor.Directory.Exists(dir))
                 {
-                    throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
+                    throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, path));
                 }
 
                 mockFileDataAccessor.AddFile(path, new MockFileData(contents, encoding));
@@ -101,12 +101,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (sourceFileName == null)
             {
-                throw new ArgumentNullException("sourceFileName", "File name cannot be null.");
+                throw new ArgumentNullException("sourceFileName", Properties.Resources.FILENAME_CANNOT_BE_NULL);
             }
 
             if (destFileName == null)
             {
-                throw new ArgumentNullException("destFileName", "File name cannot be null.");
+                throw new ArgumentNullException("destFileName", Properties.Resources.FILENAME_CANNOT_BE_NULL);
             }
 
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, "sourceFileName");
@@ -115,7 +115,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var directoryNameOfDestination = mockPath.GetDirectoryName(destFileName);
             if (!mockFileDataAccessor.Directory.Exists(directoryNameOfDestination))
             {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", destFileName));
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, destFileName));
             }
 
             var fileExists = mockFileDataAccessor.FileExists(destFileName);
@@ -316,12 +316,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (sourceFileName == null)
             {
-                throw new ArgumentNullException("sourceFileName", "File name cannot be null.");
+                throw new ArgumentNullException("sourceFileName", Properties.Resources.FILENAME_CANNOT_BE_NULL);
             }
 
             if (destFileName == null)
             {
-                throw new ArgumentNullException("destFileName", "File name cannot be null.");
+                throw new ArgumentNullException("destFileName", Properties.Resources.FILENAME_CANNOT_BE_NULL);
             }
 
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, "sourceFileName");

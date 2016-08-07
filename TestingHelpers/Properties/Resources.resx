@@ -138,4 +138,7 @@
   <data name="PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE" xml:space="preserve">
     <value>Path cannot be the empty string or all whitespace.</value>
   </data>
+  <data name="FILENAME_CANNOT_BE_NULL" xml:space="preserve">
+    <value>File name cannot be null.</value>
+  </data>
 </root>
