@@ -7,10 +7,15 @@ namespace System.IO.Abstractions
     [Serializable]
     public class DirectoryInfoWrapper : DirectoryInfoBase
     {
-        readonly DirectoryInfo instance;
+        private readonly DirectoryInfo instance;
 
         public DirectoryInfoWrapper(DirectoryInfo instance)
         {
+            if (instance == null)
+            {
+                throw new ArgumentNullException("instance");
+            }
+
             this.instance = instance;
         }
 

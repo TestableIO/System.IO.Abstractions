@@ -7,8 +7,8 @@ namespace System.IO.Abstractions
     [Serializable]
     public abstract class FileBase
     {
-        public abstract void AppendAllLines(String path, IEnumerable<String> contents);
-        public abstract void AppendAllLines(String path, IEnumerable<String> contents, Encoding encoding);
+        public abstract void AppendAllLines(string path, IEnumerable<string> contents);
+        public abstract void AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding);
         public abstract void AppendAllText(string path, string contents);
         public abstract void AppendAllText(string path, string contents, Encoding encoding);
         public abstract StreamWriter AppendText(string path);
@@ -217,8 +217,8 @@ namespace System.IO.Abstractions
         public abstract string[] ReadAllLines(string path, Encoding encoding);
         public abstract string ReadAllText(string path);
         public abstract string ReadAllText(string path, Encoding encoding);
-        public abstract IEnumerable<String> ReadLines(String path);
-        public abstract IEnumerable<String> ReadLines(String path, Encoding encoding);
+        public abstract IEnumerable<string> ReadLines(string path);
+        public abstract IEnumerable<string> ReadLines(string path, Encoding encoding);
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName);
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
         public abstract void SetAccessControl(string path, FileSecurity fileSecurity);
