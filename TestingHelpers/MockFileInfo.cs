@@ -3,10 +3,10 @@
 namespace System.IO.Abstractions.TestingHelpers
 {
     [Serializable]
-    internal class MockFileInfo : FileInfoBase
+    public class MockFileInfo : FileInfoBase
     {
-        readonly IMockFileDataAccessor mockFileSystem;
-        readonly string path;
+        private readonly IMockFileDataAccessor mockFileSystem;
+        private readonly string path;
 
         public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path)
         {
