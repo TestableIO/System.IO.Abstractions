@@ -19,14 +19,30 @@ namespace System.IO.Abstractions
         public virtual event ErrorEventHandler Error;
         public virtual event RenamedEventHandler Renamed;
         public abstract void BeginInit();
-        public abstract void Dispose();
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         public abstract void EndInit();
         public abstract WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType);
         public abstract WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout);
 
         public static implicit operator FileSystemWatcherBase(FileSystemWatcher watcher)
         {
+            if (watcher == null)
+            {
+                throw new ArgumentNullException("watcher");
+            }
+
             return new FileSystemWatcherWrapper(watcher);
+        }
+
+        public void Dispose(bool disposing)
+        {
+            // do nothing
         }
 
         protected void OnCreated(object sender, FileSystemEventArgs args)
