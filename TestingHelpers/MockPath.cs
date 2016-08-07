@@ -114,11 +114,11 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 fullPath = DirectorySeparatorChar + fullPath;
             }
-            else if (isUnixRooted && isUnc)
+            else if (isUnixRooted)
             {
                 fullPath = @"//" + fullPath;
             }
-            else if (!isUnixRooted && isUnc)
+            else if (isUnc)
             {
                 fullPath = @"\\" + fullPath;
             }
