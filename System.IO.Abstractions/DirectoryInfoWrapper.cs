@@ -118,47 +118,83 @@ namespace System.IO.Abstractions
 
         public override IEnumerable<DirectoryInfoBase> EnumerateDirectories()
         {
+#if !NET40
+            return GetDirectories();
+#else
             return instance.EnumerateDirectories().Select(directoryInfo => new DirectoryInfoWrapper(directoryInfo));
+#endif
         }
 
         public override IEnumerable<DirectoryInfoBase> EnumerateDirectories(string searchPattern)
         {
+#if !NET40
+            return GetDirectories(searchPattern);
+#else
             return instance.EnumerateDirectories(searchPattern).Select(directoryInfo => new DirectoryInfoWrapper(directoryInfo));
+#endif
         }
 
         public override IEnumerable<DirectoryInfoBase> EnumerateDirectories(string searchPattern, SearchOption searchOption)
         {
+#if !NET40
+            return GetDirectories(searchPattern, searchOption);
+#else
             return instance.EnumerateDirectories(searchPattern, searchOption).Select(directoryInfo => new DirectoryInfoWrapper(directoryInfo));
+#endif
         }
 
         public override IEnumerable<FileInfoBase> EnumerateFiles()
         {
+#if !NET40
+            return GetFiles();
+#else
             return instance.EnumerateFiles().Select(fileInfo => new FileInfoWrapper(fileInfo));
+#endif
         }
 
         public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern)
         {
+#if !NET40
+            return GetFiles(searchPattern);
+#else
             return instance.EnumerateFiles(searchPattern).Select(fileInfo => new FileInfoWrapper(fileInfo));
+#endif
         }
 
         public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern, SearchOption searchOption)
         {
+#if !NET40
+            return GetFiles(searchPattern, searchOption);
+#else
             return instance.EnumerateFiles(searchPattern, searchOption).Select(fileInfo => new FileInfoWrapper(fileInfo));
+#endif
         }
 
         public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos()
         {
+#if !NET40
+            return GetFileSystemInfos();
+#else
             return instance.EnumerateFileSystemInfos().WrapFileSystemInfos();
+#endif
         }
 
         public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern)
         {
+#if !NET40
+            return GetFileSystemInfos(searchPattern);
+#else
             return instance.EnumerateFileSystemInfos(searchPattern).WrapFileSystemInfos();
+#endif
         }
 
         public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern, SearchOption searchOption)
         {
+#if !NET40
+            return GetFileSystemInfos(searchPattern, searchOption);
+#else
             return instance.EnumerateFileSystemInfos(searchPattern, searchOption).WrapFileSystemInfos();
+#endif
         }
 
         public override DirectorySecurity GetAccessControl()
@@ -213,7 +249,20 @@ namespace System.IO.Abstractions
 
         public override FileSystemInfoBase[] GetFileSystemInfos(string searchPattern, SearchOption searchOption)
         {
+#if !NET40
+            if (searchOption == SearchOption.TopDirectoryOnly)
+            {
+                return instance.GetFileSystemInfos(searchPattern).WrapFileSystemInfos();
+            }
+            else
+            {
+                var fis = instance.GetFiles(searchPattern, searchOption).WrapFileSystemInfos();
+                var dis = instance.GetDirectories(searchPattern, searchOption).WrapFileSystemInfos();
+                return fis.Union(dis).ToArray();
+            }
+#else
             return instance.GetFileSystemInfos(searchPattern, searchOption).WrapFileSystemInfos();
+#endif
         }
 
         public override void MoveTo(string destDirName)

@@ -9,12 +9,28 @@ namespace System.IO.Abstractions
     {
         public override void AppendAllLines(string path, IEnumerable<string> contents)
         {
+#if !NET40
+            using (var sw = new StreamWriter(path, append: true))
+            {
+                foreach (var s in contents)
+                    sw.WriteLine(s);
+            }
+#else
             File.AppendAllLines(path, contents);
+#endif
         }
 
         public override void AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding)
         {
+#if !NET40
+            using (var sw = new StreamWriter(path, append: true, encoding: encoding))
+            {
+                foreach (var s in contents)
+                    sw.WriteLine(s);
+            }
+#else
             File.AppendAllLines(path, contents, encoding);
+#endif
         }
 
         public override void AppendAllText(string path, string contents)
@@ -206,12 +222,20 @@ namespace System.IO.Abstractions
 
         public override IEnumerable<string> ReadLines(string path)
         {
+#if !NET40
+            return File.ReadAllLines(path);
+#else
             return File.ReadLines(path);
+#endif
         }
 
         public override IEnumerable<string> ReadLines(string path, Encoding encoding)
         {
+#if !NET40
+            return File.ReadAllLines(path, encoding);
+#else
             return File.ReadLines(path, encoding);
+#endif
         }
 
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
@@ -333,7 +357,15 @@ namespace System.IO.Abstractions
         /// </remarks>
         public override void WriteAllLines(string path, IEnumerable<string> contents)
         {
+#if !NET40
+            using (var sw = new StreamWriter(path, append: false))
+            {
+                foreach (var s in contents)
+                    sw.WriteLine(s);
+            }
+#else
             File.WriteAllLines(path, contents);
+#endif
         }
 
         /// <summary>
@@ -380,7 +412,15 @@ namespace System.IO.Abstractions
         /// </remarks>
         public override void WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding)
         {
+#if !NET40
+            using (var sw = new StreamWriter(path, append: false, encoding: encoding))
+            {
+                foreach (var s in contents)
+                    sw.WriteLine(s);
+            }
+#else
             File.WriteAllLines(path, contents, encoding);
+#endif
         }
 
         /// <summary>

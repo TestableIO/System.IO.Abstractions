@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
@@ -178,47 +179,93 @@ namespace System.IO.Abstractions
 
         public override IEnumerable<string> EnumerateDirectories(string path)
         {
+#if !NET40
+            return Directory.GetDirectories(path);
+#else
             return Directory.EnumerateDirectories(path);
+#endif
         }
 
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern)
         {
+#if !NET40
+            return Directory.GetDirectories(path, searchPattern);
+#else
             return Directory.EnumerateDirectories(path, searchPattern);
+#endif
         }
 
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
         {
+#if !NET40
+            return Directory.GetDirectories(path, searchPattern, searchOption);
+#else
             return Directory.EnumerateDirectories(path, searchPattern, searchOption);
+#endif
         }
 
         public override IEnumerable<string> EnumerateFiles(string path)
         {
-           return Directory.EnumerateFiles(path);
+#if !NET40
+            return Directory.GetFiles(path);
+#else
+            return Directory.EnumerateFiles(path);
+#endif
         }
  
         public override IEnumerable<string> EnumerateFiles(string path, string searchPattern)
         {
+#if !NET40
+            return Directory.GetFiles(path, searchPattern);
+#else
             return Directory.EnumerateFiles(path, searchPattern);
+#endif
         }
 
         public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption)
         {
+#if !NET40
+            return Directory.GetFiles(path, searchPattern, searchOption);
+#else
             return Directory.EnumerateFiles(path, searchPattern, searchOption);
+#endif
         }
 
         public override IEnumerable<string> EnumerateFileSystemEntries(string path)
         {
+#if !NET40
+            return Directory.GetFileSystemEntries(path);
+#else
             return Directory.EnumerateFileSystemEntries(path);
+#endif
         }
 
         public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern)
         {
+#if !NET40
+            return Directory.GetFileSystemEntries(path, searchPattern);
+#else
             return Directory.EnumerateFileSystemEntries(path, searchPattern);
+#endif
         }
 
         public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
         {
+#if !NET40
+            if (searchOption == SearchOption.TopDirectoryOnly)
+            {
+                return Directory.GetFileSystemEntries(path, searchPattern);
+            }
+            else
+            {
+                var fs = GetFiles(path, searchPattern, searchOption);
+                var ds = GetDirectories(path, searchPattern, searchOption);
+                return fs.Union(ds);
+            }
+            
+#else
             return Directory.EnumerateFileSystemEntries(path, searchPattern, searchOption);
+#endif
         }
     }
 }

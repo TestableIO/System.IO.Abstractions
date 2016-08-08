@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C5B51937-7CC9-4D9D-89A6-CEDAB506CAA7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>System.IO.Abstractions</RootNamespace>
+    <AssemblyName>System.IO.Abstractions</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\System.IO.Abstractions\Converters.cs">
+      <Link>Converters.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\DirectoryBase.cs">
+      <Link>DirectoryBase.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\DirectoryInfoBase.cs">
+      <Link>DirectoryInfoBase.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\DirectoryInfoFactory.cs">
+      <Link>DirectoryInfoFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\DirectoryInfoWrapper.cs">
+      <Link>DirectoryInfoWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\DirectoryWrapper.cs">
+      <Link>DirectoryWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\DriveInfoBase.cs">
+      <Link>DriveInfoBase.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\DriveInfoFactory.cs">
+      <Link>DriveInfoFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\DriveInfoWrapper.cs">
+      <Link>DriveInfoWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\FileBase.cs">
+      <Link>FileBase.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\FileInfoBase.cs">
+      <Link>FileInfoBase.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\FileInfoFactory.cs">
+      <Link>FileInfoFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\FileInfoWrapper.cs">
+      <Link>FileInfoWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\FileSystem.cs">
+      <Link>FileSystem.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\FileSystemInfoBase.cs">
+      <Link>FileSystemInfoBase.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\FileSystemWatcherBase.cs">
+      <Link>FileSystemWatcherBase.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\FileSystemWatcherWrapper.cs">
+      <Link>FileSystemWatcherWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\FileWrapper.cs">
+      <Link>FileWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\IDirectoryInfoFactory.cs">
+      <Link>IDirectoryInfoFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\IDriveInfoFactory.cs">
+      <Link>IDriveInfoFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\IFileInfoFactory.cs">
+      <Link>IFileInfoFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\IFileSystem.cs">
+      <Link>IFileSystem.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\Lazy.cs">
+      <Link>Lazy.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\PathBase.cs">
+      <Link>PathBase.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\PathWrapper.cs">
+      <Link>PathWrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\System.IO.Abstractions\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
