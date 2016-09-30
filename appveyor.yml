@@ -1,0 +1,5 @@
+cache:
+- packages -> pqckqges\packages.config
+
+before_build:
+- nuget restore
