@@ -17,3 +17,12 @@ before_build:
 
 build:
   publish_nuget: true
+
+deploy:
+- provider: NuGet
+  api_key:
+    secure: kTNf1aNQVwwimPmGQreJV8UrGI1jBSUiwiTgThlyLZM4tKPguC0ZmSPi8+s7hd4M
+  skip_symbols: false
+  artifact: /.*\.nupkg/
+  on:
+    branch: master
