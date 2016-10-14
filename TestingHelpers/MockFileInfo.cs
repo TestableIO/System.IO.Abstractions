@@ -6,7 +6,7 @@ namespace System.IO.Abstractions.TestingHelpers
     public class MockFileInfo : FileInfoBase
     {
         private readonly IMockFileDataAccessor mockFileSystem;
-        private readonly string path;
+        private string path;
 
         public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path)
         {
@@ -209,8 +209,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void MoveTo(string destFileName)
         {
-            CopyTo(destFileName);
+            var movedFileInfo = CopyTo(destFileName);
             Delete();
+            path = movedFileInfo.FullName;
         }
 
         public override Stream Open(FileMode mode)
