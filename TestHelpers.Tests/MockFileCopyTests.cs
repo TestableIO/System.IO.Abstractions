@@ -10,7 +10,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     using XFS = MockUnixSupport;
 
-    public class MockFileCopyTests {
+    public class MockFileCopyTests
+    {
         [Test]
         public void MockFile_Copy_ShouldOverwriteFileWhenOverwriteFlagIsTrue()
         {
@@ -44,6 +45,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var copyResult = fileSystem.GetFile(destFileName);
             Assert.AreEqual(copyResult.Contents, sourceContents.Contents);
+        }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowFileNotFoundExceptionIfSourceFileDoesntExist()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(@"C:\");
+
+            var exception = Assert.Throws<FileNotFoundException>(() => fileSystem.File.Copy(@"C:\notExist.txt", @"C:\someFile.txt", false));
+            Assert.AreEqual(@"Can't find C:\notExist.txt", exception.Message);
+            Assert.AreEqual(@"C:\notExist.txt", exception.FileName);
         }
 
         [Test]

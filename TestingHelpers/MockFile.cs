@@ -129,6 +129,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 mockFileDataAccessor.RemoveFile(destFileName);
             }
 
+            if (!mockFileDataAccessor.FileExists(sourceFileName))
+            {
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", sourceFileName), sourceFileName);
+            }
+
             var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
             mockFileDataAccessor.AddFile(destFileName, sourceFile);
         }
@@ -140,6 +145,12 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentNullException("path", "Path cannot be null.");
             }
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            var directoryPath = mockPath.GetDirectoryName(path);
+            if (!mockFileDataAccessor.Directory.Exists(directoryPath))
+            {
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, path));
+            }
 
             mockFileDataAccessor.AddFile(path, new MockFileData(new byte[0]));
             var stream = OpenWrite(path);
@@ -283,7 +294,8 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetTimeFromFile(path, data => data.LastAccessTime.UtcDateTime, () => MockFileData.DefaultDateTimeOffset.UtcDateTime);
         }
 
-        public override DateTime GetLastWriteTime(string path) {
+        public override DateTime GetLastWriteTime(string path)
+        {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
             return GetTimeFromFile(path, data => data.LastWriteTime.LocalDateTime, () => MockFileData.DefaultDateTimeOffset.LocalDateTime);

@@ -17,6 +17,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             string fullPath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(@"c:\something");
 
             var sut = new MockFile(fileSystem);
 
@@ -32,6 +33,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             string fullPath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(@"c:\something");
             var data = new UTF8Encoding(false).GetBytes("Test string");
 
             var sut = new MockFile(fileSystem);
@@ -51,6 +53,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             string path = XFS.Path(@"c:\some\file.txt");
             var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(@"c:\some");
 
             var mockFile = new MockFile(fileSystem);
 
@@ -144,6 +147,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
             Assert.That(exception.Message, Is.StringStarting("Path cannot be null."));
+        }
+
+        [Test]
+        public void MockFile_Create_ShouldThrowExceptionWhenFolderDoesNotExist()
+        {
+            var fileSystem = new MockFileSystem();
+
+            var exception = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Create(@"c:\doesnotexist\demo.txt"));
+            Assert.AreEqual(@"Could not find a part of the path 'c:\doesnotexist\demo.txt'.", exception.Message);
         }
     }
 }
