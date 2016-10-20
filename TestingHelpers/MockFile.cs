@@ -415,6 +415,11 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", path), path);
+            }
+
             return mockFileDataAccessor.GetFile(path).Contents;
         }
 
