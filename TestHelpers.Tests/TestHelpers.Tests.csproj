@@ -98,6 +98,7 @@
     <Compile Include="MockFileGetLastAccessTimeTests.cs" />
     <Compile Include="MockFileGetCreationTimeUtcTests.cs" />
     <Compile Include="MockFileGetCreationTimeTests.cs" />
+    <Compile Include="MockFileStreamFactoryTests.cs" />
     <Compile Include="MockFileInfoFactoryTests.cs" />
     <Compile Include="MockFileInfoTests.cs" />
     <Compile Include="MockFileMoveTests.cs" />

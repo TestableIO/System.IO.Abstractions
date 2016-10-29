@@ -13,6 +13,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private readonly FileBase file;
         private readonly DirectoryBase directory;
         private readonly IFileInfoFactory fileInfoFactory;
+        private readonly IFileStreamFactory fileStreamFactory;
         private readonly PathBase pathField;
         private readonly IDirectoryInfoFactory directoryInfoFactory;
         private readonly IDriveInfoFactory driveInfoFactory;
@@ -34,6 +35,7 @@ namespace System.IO.Abstractions.TestingHelpers
             file = new MockFile(this);
             directory = new MockDirectory(this, file, currentDirectory);
             fileInfoFactory = new MockFileInfoFactory(this);
+            fileStreamFactory = new MockFileStreamFactory(this);
             directoryInfoFactory = new MockDirectoryInfoFactory(this);
             driveInfoFactory = new MockDriveInfoFactory(this);
 
@@ -59,6 +61,11 @@ namespace System.IO.Abstractions.TestingHelpers
         public IFileInfoFactory FileInfo
         {
             get { return fileInfoFactory; }
+        }
+
+        public IFileStreamFactory FileStream
+        {
+            get { return fileStreamFactory; }
         }
 
         public PathBase Path
