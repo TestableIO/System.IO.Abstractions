@@ -8,19 +8,26 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockDirectoryInfo : DirectoryInfoBase
     {
-        readonly IMockFileDataAccessor mockFileDataAccessor;
-        readonly string directoryPath;
+        private readonly IMockFileDataAccessor mockFileDataAccessor;
+        private readonly string directoryPath;
 
-        private static string EnsurePathEndsWithDirectorySeparator(string path)
-        {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
-                path += Path.DirectorySeparatorChar;
-            return path;
-        }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MockDirectoryInfo"/> class.
+        /// </summary>
+        /// <param name="mockFileDataAccessor">The mock file data accessor.</param>
+        /// <param name="directoryPath">The directory path.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="mockFileDataAccessor"/> or <paramref name="directoryPath"/> is <see langref="null"/>.</exception>
         public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath)
         {
+            if (mockFileDataAccessor == null)
+            {
+                throw new ArgumentNullException("mockFileDataAccessor");
+            }
+
             this.mockFileDataAccessor = mockFileDataAccessor;
+
+            directoryPath = mockFileDataAccessor.Path.GetFullPath(directoryPath);
+
             this.directoryPath = EnsurePathEndsWithDirectorySeparator(directoryPath);
         }
 
@@ -46,14 +53,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime CreationTime
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
+            set { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
         }
 
         public override DateTime CreationTimeUtc
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
+            set { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
         }
 
         public override bool Exists
@@ -67,7 +74,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 // System.IO.Path.GetExtension does only string manipulation,
                 // so it's safe to delegate.
-                return Path.GetExtension(this.directoryPath);
+                return Path.GetExtension(directoryPath);
             }
         }
 
@@ -89,8 +96,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime LastAccessTime
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
+            set { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
         }
 
         public override DateTime LastAccessTimeUtc
@@ -99,19 +106,19 @@ namespace System.IO.Abstractions.TestingHelpers
                 if (MockFileData == null) throw new FileNotFoundException("File not found", directoryPath);
                 return MockFileData.LastAccessTime.UtcDateTime;
             }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            set { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
         }
 
         public override DateTime LastWriteTime
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
+            set { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
         }
 
         public override DateTime LastWriteTimeUtc
         {
-            get { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
-            set { throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all."); }
+            get { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
+            set { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
         }
 
         public override string Name
@@ -256,7 +263,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileSystemInfoBase[] GetFileSystemInfos(string searchPattern, SearchOption searchOption)
         {
-            return GetDirectories(searchPattern, searchOption).OfType<FileSystemInfoBase>().Concat(this.GetFiles(searchPattern, searchOption)).ToArray();
+            return GetDirectories(searchPattern, searchOption).OfType<FileSystemInfoBase>().Concat(GetFiles(searchPattern, searchOption)).ToArray();
         }
 
         public override void MoveTo(string destDirName)
@@ -283,6 +290,16 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 return new MockDirectoryInfo(mockFileDataAccessor, mockFileDataAccessor.Directory.GetDirectoryRoot(FullName));
             }
+        }
+
+        private string EnsurePathEndsWithDirectorySeparator(string path)
+        {
+            if (!path.EndsWith(mockFileDataAccessor.Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
+            {
+                path += mockFileDataAccessor.Path.DirectorySeparatorChar;
+            }
+
+            return path;
         }
     }
 }

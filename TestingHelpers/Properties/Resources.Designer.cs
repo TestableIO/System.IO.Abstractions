@@ -79,6 +79,15 @@ namespace System.IO.Abstractions.TestingHelpers.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File name cannot be null..
+        /// </summary>
+        internal static string FILENAME_CANNOT_BE_NULL {
+            get {
+                return ResourceManager.GetString("FILENAME_CANNOT_BE_NULL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Illegal characters in path..
         /// </summary>
         internal static string ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION {
@@ -93,6 +102,24 @@ namespace System.IO.Abstractions.TestingHelpers.Properties {
         internal static string NOT_IMPLEMENTED_EXCEPTION {
             get {
                 return ResourceManager.GetString("NOT_IMPLEMENTED_EXCEPTION", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path cannot be the empty string or all whitespace..
+        /// </summary>
+        internal static string PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE {
+            get {
+                return ResourceManager.GetString("PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The path is not of a legal form..
+        /// </summary>
+        internal static string THE_PATH_IS_NOT_OF_A_LEGAL_FORM {
+            get {
+                return ResourceManager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM", resourceCulture);
             }
         }
         

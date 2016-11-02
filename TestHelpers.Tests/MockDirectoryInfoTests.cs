@@ -9,26 +9,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     [TestFixture]
     public class MockDirectoryInfoTests
     {
-        [Test]
-        public void MockDirectoryInfo_GetExtension_ShouldReturnEmptyString()
+        public static IEnumerable<object[]> MockDirectoryInfo_GetExtension_Cases
         {
-            // Arrange
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp"));
-
-            // Act
-            var result = directoryInfo.Extension;
-
-            // Assert
-            Assert.AreEqual(string.Empty, result);
+            get
+            {
+                yield return new object[] { XFS.Path(@"c:\temp") };
+                yield return new object[] { XFS.Path(@"c:\temp\") };
+            }
         }
 
-        [Test]
-        public void MockDirectoryInfo_GetExtensionWithTrailingSlash_ShouldReturnEmptyString()
+        [TestCaseSource("MockDirectoryInfo_GetExtension_Cases")]
+        public void MockDirectoryInfo_GetExtension_ShouldReturnEmptyString(string directoryPath)
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\"));
+            var directoryInfo = new MockDirectoryInfo(fileSystem, directoryPath);
 
             // Act
             var result = directoryInfo.Extension;
@@ -47,9 +42,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [TestCaseSource("MockDirectoryInfo_Exists_Cases")]
-        public void MockDirectoryInfo_Exists(string path, bool expected) 
+        public void MockDirectoryInfo_Exists(string path, bool expected)
         {
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> 
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 {XFS.Path(@"c:\temp\folder\file.txt"), new MockFileData("Hello World")}
             });
@@ -59,9 +54,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(result, Is.EqualTo(expected));
         }
-  
+
         [Test]
-        public void MockDirectoryInfo_FullName_ShouldReturnFullNameWithoutIncludingTrailingPathDelimiter() 
+        public void MockDirectoryInfo_FullName_ShouldReturnFullNameWithoutIncludingTrailingPathDelimiter()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
@@ -198,6 +193,76 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.AreEqual(new[] { "b", "c" }, directories);
+        }
+
+        public static IEnumerable<object[]> MockDirectoryInfo_FullName_Data
+        {
+            get
+            {
+                yield return new object[] { XFS.Path(@"c:\temp\\folder"), XFS.Path(@"c:\temp\folder") };
+                yield return new object[] { XFS.Path(@"c:\temp//folder"), XFS.Path(@"c:\temp\folder") };
+                yield return new object[] { XFS.Path(@"c:\temp//\\///folder"), XFS.Path(@"c:\temp\folder") };
+                yield return new object[] { XFS.Path(@"\\unc\folder"), XFS.Path(@"\\unc\folder") };
+                yield return new object[] { XFS.Path(@"\\unc/folder\\foo"), XFS.Path(@"\\unc\folder\foo") };
+            }
+        }
+
+        [TestCaseSource("MockDirectoryInfo_FullName_Data")]
+        public void MockDirectoryInfo_FullName_ShouldReturnNormalizedPath(string directoryPath, string expectedFullName)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\a.txt"), "" }
+            });
+            var directoryInfo = new MockDirectoryInfo(fileSystem, directoryPath);
+
+            // Act
+            var actualFullName = directoryInfo.FullName;
+
+            // Assert
+            Assert.AreEqual(expectedFullName, actualFullName);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_Constructor_ShouldThrowArgumentNullException_IfArgumentDirectoryIsNull()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+           TestDelegate action = () => new MockDirectoryInfo(fileSystem, null);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentNullException>(action);
+            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
+        }
+
+        [Test]
+        public void MockDirectoryInfo_Constructor_ShouldThrowArgumentNullException_IfArgumentFileSystemIsNull()
+        {
+            // Arrange
+            // nothing to do
+
+            // Act
+            TestDelegate action = () => new MockDirectoryInfo(null, XFS.Path(@"c:\foo\bar\folder"));
+
+            // Assert
+            Assert.Throws<ArgumentNullException>(action);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_Constructor_ShouldThrowArgumentException_IfArgumentDirectoryIsEmpty()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => new MockDirectoryInfo(fileSystem, string.Empty);
+
+            // Assert
+            var exception = Assert.Throws<ArgumentException>(action);
+            Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
         }
     }
 }

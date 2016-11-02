@@ -11,13 +11,19 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockDirectory : DirectoryBase
     {
-        readonly FileBase fileBase;
-        readonly IMockFileDataAccessor mockFileDataAccessor;
+        private readonly FileBase fileBase;
+
+        private readonly IMockFileDataAccessor mockFileDataAccessor;
 
         private string currentDirectory;
 
         public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory)
         {
+            if (mockFileDataAccessor == null)
+            {
+                throw new ArgumentNullException("mockFileDataAccessor");
+            }
+
             this.currentDirectory = currentDirectory;
             this.mockFileDataAccessor = mockFileDataAccessor;
             this.fileBase = fileBase;
@@ -37,7 +43,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (path.Length == 0)
             {
-                throw new ArgumentException("Path cannot be the empty string or all whitespace.", "path");
+                throw new ArgumentException(Properties.Resources.PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE, "path");
             }
 
             if (mockFileDataAccessor.FileExists(path))
@@ -100,12 +106,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectorySecurity GetAccessControl(string path)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override DateTime GetCreationTime(string path)
@@ -162,7 +168,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!Exists(path))
             {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, path));
             }
 
             return GetFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
@@ -284,7 +290,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (path.Length == 0)
             {
-                throw new ArgumentException("Path cannot be the empty string or all whitespace.", "path");
+                throw new ArgumentException(Properties.Resources.PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE, "path");
             }
 
             if (MockPath.HasIllegalCharacters(path, false))
@@ -358,7 +364,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override void SetCreationTime(string path, DateTime creationTime)
@@ -398,21 +404,27 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override IEnumerable<string> EnumerateDirectories(string path)
         {
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
             return EnumerateDirectories(path, "*");
         }
 
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern)
         {
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
             return EnumerateDirectories(path, searchPattern, SearchOption.TopDirectoryOnly);
         }
 
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
         {
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
             path = EnsurePathEndsWithDirectorySeparator(path);
 
             if (!Exists(path))
             {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, path));
             }
 
             var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);

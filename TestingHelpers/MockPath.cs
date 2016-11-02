@@ -5,17 +5,22 @@ using System.Linq;
 namespace System.IO.Abstractions.TestingHelpers
 {
     /// <summary>
-    ///     PathWrapper calls direct to Path but all this does is string manipulation so we can inherit directly from PathWrapper as no IO is done
+    /// PathWrapper calls direct to Path but all this does is string manipulation so we can inherit directly from PathWrapper as no IO is done
     /// </summary>
     [Serializable]
     public class MockPath : PathWrapper
     {
-        readonly IMockFileDataAccessor mockFileDataAccessor;
+        private readonly IMockFileDataAccessor mockFileDataAccessor;
 
         private static readonly char[] InvalidAdditionalPathChars = { '*', '?' };
 
         public MockPath(IMockFileDataAccessor mockFileDataAccessor)
         {
+            if (mockFileDataAccessor == null)
+            {
+                throw new ArgumentNullException("mockFileDataAccessor");
+            }
+
             this.mockFileDataAccessor = mockFileDataAccessor;
         }
 
@@ -26,9 +31,9 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentNullException("path", Properties.Resources.VALUE_CANNOT_BE_NULL);
             }
 
-            if(path.Length == 0)
+            if (path.Length == 0)
             {
-                throw new ArgumentException("The path is not of a legal form.", "path");
+                throw new ArgumentException(Properties.Resources.THE_PATH_IS_NOT_OF_A_LEGAL_FORM, "path");
             }
 
             path = path.Replace(AltDirectorySeparatorChar, DirectorySeparatorChar);
@@ -63,7 +68,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 // absolute path on the current drive or volume
                 pathSegments = GetSegments(GetPathRoot(mockFileDataAccessor.Directory.GetCurrentDirectory()), path);
             }
-                        else
+            else
             {
                 pathSegments = GetSegments(path);
             }
@@ -109,11 +114,11 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 fullPath = DirectorySeparatorChar + fullPath;
             }
-            else if (isUnixRooted && isUnc)
+            else if (isUnixRooted)
             {
                 fullPath = @"//" + fullPath;
             }
-            else if (!isUnixRooted && isUnc)
+            else if (isUnc)
             {
                 fullPath = @"\\" + fullPath;
             }

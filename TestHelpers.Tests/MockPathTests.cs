@@ -9,11 +9,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     {
         static readonly string TestPath = XFS.Path("C:\\test\\test.bmp");
 
-        private MockPath SetupMockPath()
-        {
-            return new MockPath(null);
-        }
-
         [Test]
         public void ChangeExtension_ExtensionNoPeriod_PeriodAdded()
         {
@@ -269,6 +264,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             //Assert
             Assert.Throws<ArgumentException>(action);
+        }
+
+        [Test]
+        public void GetFullPath_WithMultipleDirectorySeparators_ShouldReturnTheNormalizedForm()
+        {
+            //Arrange
+            var mockFileSystem = new MockFileSystem();
+            var mockPath = new MockPath(mockFileSystem);
+
+            //Act
+            var actualFullPath =  mockPath.GetFullPath(XFS.Path(@"c:\foo\\//bar\file.dat"));
+
+            //Assert
+            Assert.AreEqual(XFS.Path(@"c:\foo\bar\file.dat"), actualFullPath);
         }
 
         [Test]

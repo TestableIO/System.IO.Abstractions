@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using NUnit.Framework;
 
@@ -10,6 +12,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     [TestFixture]
     public class MockFileTests
     {
+        [Test]
+        public void MockFile_Constructor_ShouldThrowArgumentNullExceptionIfMockFileDataAccessorIsNull()
+        {
+            // Arrange
+            // nothing to do
+
+            // Act
+            TestDelegate action = () => new MockFile(null);
+
+            // Assert
+            Assert.Throws<ArgumentNullException>(action);
+        }
+
         [Test]
         public void MockFile_GetSetCreationTime_ShouldPersist()
         {
@@ -541,7 +556,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             MockFileData data = new MockFileData("Text Contents");
 
             //Act
-            System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            IFormatter formatter = new BinaryFormatter();
             Stream stream = new MemoryStream();
             formatter.Serialize(stream, data);
 
@@ -558,7 +573,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             //Act
             MockFileData data = new MockFileData(textContentStr);
 
-            System.Runtime.Serialization.IFormatter formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            IFormatter formatter = new BinaryFormatter();
             Stream stream = new MemoryStream();
             formatter.Serialize(stream, data);
 

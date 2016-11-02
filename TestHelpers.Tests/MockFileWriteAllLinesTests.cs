@@ -71,15 +71,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
                 // IEnumerable
                 yield return new TestCaseData(writeEnumberable)
-                    .SetName("WriteAllLines(string, IEnumerable<string>)");
+                    .SetName("WriteAllLines(string, IEnumerable<string>) input: " + path);
                 yield return new TestCaseData(writeEnumberableUtf32)
-                    .SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
+                    .SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32) input: " + path);
 
                 // string[]
                 yield return new TestCaseData(writeArray)
-                    .SetName("WriteAllLines(string, string[])");
+                    .SetName("WriteAllLines(string, string[]) input: " + path);
                 yield return new TestCaseData(writeArrayUtf32)
-                    .SetName("WriteAllLines(string, string[], Encoding.UTF32)");
+                    .SetName("WriteAllLines(string, string[], Encoding.UTF32) input: " + path);
             }
 
             private static IEnumerable ForNullEncoding

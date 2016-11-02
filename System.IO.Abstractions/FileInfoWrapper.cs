@@ -5,10 +5,15 @@ namespace System.IO.Abstractions
     [Serializable]
     public class FileInfoWrapper : FileInfoBase
     {
-        readonly FileInfo instance;
+        private readonly FileInfo instance;
 
         public FileInfoWrapper(FileInfo instance)
         {
+            if (instance == null)
+            {
+                throw new ArgumentNullException("instance");
+            }
+
             this.instance = instance;
         }
 

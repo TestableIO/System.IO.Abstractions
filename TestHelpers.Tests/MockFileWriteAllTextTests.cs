@@ -75,21 +75,6 @@
         }
 
         [Test]
-        public void MockFile_WriteAllText_ShouldThrowAnArgumentNullExceptionIfThePathIsNull()
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem();
-
-            // Act
-            TestDelegate action = () => fileSystem.File.WriteAllText(null, "hello world");
-
-            // Assert
-            var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
-            Assert.That(exception.ParamName, Is.EqualTo("path"));
-        }
-
-        [Test]
         public void MockFile_WriteAllText_ShouldNotThrowAnArgumentNullExceptionIfTheContentIsNull()
         {
             // Arrange

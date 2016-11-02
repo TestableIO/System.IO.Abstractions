@@ -79,7 +79,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
                 if (x[1] == ':' && y[1] == ':')
                 {
-                    return Char.ToUpperInvariant(x[0]) == Char.ToUpperInvariant(y[0]);
+                    return char.ToUpperInvariant(x[0]) == char.ToUpperInvariant(y[0]);
                 }
 
                 return false;

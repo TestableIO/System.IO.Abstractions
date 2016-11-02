@@ -458,5 +458,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.AreEqual(@"line 1\r\nline 2", result);
         }
+
+        [Test]
+        public void MockFileInfo_MoveTo_ShouldUpdateFileInfoDirectoryAndFullName()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(XFS.Path(@"c:\temp\file.txt"), new MockFileData(@"line 1\r\nline 2"));
+            var fileInfo = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file.txt"));
+
+            // Act
+            string destinationFolder = XFS.Path(@"c:\temp2");
+            string destination = XFS.Path(destinationFolder + @"\file.txt");
+            fileSystem.AddDirectory(destination);
+            fileInfo.MoveTo(destination);
+
+            Assert.AreEqual(fileInfo.DirectoryName, destinationFolder);
+            Assert.AreEqual(fileInfo.FullName, destination);
+        }
     }
 }

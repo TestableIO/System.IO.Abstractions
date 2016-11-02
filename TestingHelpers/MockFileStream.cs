@@ -3,8 +3,8 @@
     [Serializable]
     public class MockFileStream : MemoryStream
     {
-        readonly IMockFileDataAccessor mockFileDataAccessor;
-        readonly string path;
+        private readonly IMockFileDataAccessor mockFileDataAccessor;
+        private readonly string path;
 
         public MockFileStream(IMockFileDataAccessor mockFileDataAccessor, string path, bool forAppend = false)
         {

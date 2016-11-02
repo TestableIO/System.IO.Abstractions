@@ -9,26 +9,36 @@ namespace System.IO.Abstractions
         private readonly FileSystemWatcher watcher;
 
         public FileSystemWatcherWrapper()
+            : this(new FileSystemWatcher())
         {
-            watcher = new FileSystemWatcher();
-            SetupEvents();
+            // do nothing
         }
 
         public FileSystemWatcherWrapper(string path)
+            : this(new FileSystemWatcher(path))
         {
-            watcher = new FileSystemWatcher(path);
-            SetupEvents();
+            // do nothing
         }
 
         public FileSystemWatcherWrapper(string path, string filter)
+            : this(new FileSystemWatcher(path, filter))
         {
-            watcher = new FileSystemWatcher(path, filter);
-            SetupEvents();
+            // do nothing
         }
 
         public FileSystemWatcherWrapper(FileSystemWatcher watcher)
         {
+            if (watcher == null)
+            {
+                throw new ArgumentNullException("watcher");
+            }
+
             this.watcher = watcher;
+            this.watcher.Created += OnCreated;
+            this.watcher.Changed += OnChanged;
+            this.watcher.Deleted += OnDeleted;
+            this.watcher.Error += OnError;
+            this.watcher.Renamed += OnRenamed;
         }
 
         public override bool IncludeSubdirectories
@@ -84,9 +94,19 @@ namespace System.IO.Abstractions
             watcher.BeginInit();
         }
 
-        public override void Dispose()
+        public override void Dispose(bool disposing)
         {
-            watcher.Dispose();
+            if (disposing)
+            {
+                watcher.Created -= OnCreated;
+                watcher.Changed -= OnChanged;
+                watcher.Deleted -= OnDeleted;
+                watcher.Error -= OnError;
+                watcher.Renamed -= OnRenamed;
+                watcher.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
 
         public override void EndInit()
@@ -102,15 +122,6 @@ namespace System.IO.Abstractions
         public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
         {
             return watcher.WaitForChanged(changeType, timeout);
-        }
-
-        private void SetupEvents()
-        {
-            watcher.Created += OnCreated;
-            watcher.Changed += OnChanged;
-            watcher.Deleted += OnDeleted;
-            watcher.Error += OnError;
-            watcher.Renamed += OnRenamed;
         }
     }
 }

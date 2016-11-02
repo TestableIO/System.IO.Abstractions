@@ -3,13 +3,18 @@
 namespace System.IO.Abstractions.TestingHelpers
 {
     [Serializable]
-    internal class MockFileInfo : FileInfoBase
+    public class MockFileInfo : FileInfoBase
     {
-        readonly IMockFileDataAccessor mockFileSystem;
-        readonly string path;
+        private readonly IMockFileDataAccessor mockFileSystem;
+        private string path;
 
         public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path)
         {
+            if (mockFileSystem == null)
+            {
+                throw new ArgumentNullException("mockFileSystem");
+            }
+
             this.mockFileSystem = mockFileSystem;
             this.path = path;
         }
@@ -78,7 +83,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 // System.IO.Path.GetExtension does only string manipulation,
                 // so it's safe to delegate.
-                return Path.GetExtension(this.path);
+                return Path.GetExtension(path);
             }
         }
 
@@ -134,7 +139,7 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 if (MockFileData == null) throw new FileNotFoundException("File not found", path);
-                return MockFileData.LastWriteTime.UtcDateTime;    
+                return MockFileData.LastWriteTime.UtcDateTime;
             }
             set
             {
@@ -159,7 +164,7 @@ namespace System.IO.Abstractions.TestingHelpers
             new MockFile(mockFileSystem).Copy(FullName, destFileName);
             return mockFileSystem.FileInfo.FromFileName(destFileName);
         }
-        
+
         public override FileInfoBase CopyTo(string destFileName, bool overwrite)
         {
             new MockFile(mockFileSystem).Copy(FullName, destFileName, overwrite);
@@ -194,18 +199,19 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileSecurity GetAccessControl()
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override FileSecurity GetAccessControl(AccessControlSections includeSections)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override void MoveTo(string destFileName)
         {
-            CopyTo(destFileName);
+            var movedFileInfo = CopyTo(destFileName);
             Delete();
+            path = movedFileInfo.FullName;
         }
 
         public override Stream Open(FileMode mode)
@@ -240,24 +246,24 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override void SetAccessControl(FileSecurity fileSecurity)
         {
-            throw new NotImplementedException("This test helper hasn't been implemented yet. They are implemented on an as-needed basis. As it seems like you need it, now would be a great time to send us a pull request over at https://github.com/tathamoddie/System.IO.Abstractions. You know, because it's open source and all.");
+            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
         public override DirectoryInfoBase Directory
         {
             get
             {
-                return mockFileSystem.DirectoryInfo.FromDirectoryName(this.DirectoryName);
+                return mockFileSystem.DirectoryInfo.FromDirectoryName(DirectoryName);
             }
         }
 
@@ -267,7 +273,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 // System.IO.Path.GetDirectoryName does only string manipulation,
                 // so it's safe to delegate.
-                return Path.GetDirectoryName(this.path);
+                return Path.GetDirectoryName(path);
             }
         }
 
@@ -283,7 +289,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 if (MockFileData == null) throw new FileNotFoundException("File not found", path);
                 if(value)
                     MockFileData.Attributes |= FileAttributes.ReadOnly;
-                else 
+                else
                     MockFileData.Attributes &= ~FileAttributes.ReadOnly;
             }
         }

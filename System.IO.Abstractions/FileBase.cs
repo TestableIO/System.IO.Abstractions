@@ -7,8 +7,8 @@ namespace System.IO.Abstractions
     [Serializable]
     public abstract class FileBase
     {
-        public abstract void AppendAllLines(String path, IEnumerable<String> contents);
-        public abstract void AppendAllLines(String path, IEnumerable<String> contents, Encoding encoding);
+        public abstract void AppendAllLines(string path, IEnumerable<string> contents);
+        public abstract void AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding);
         public abstract void AppendAllText(string path, string contents);
         public abstract void AppendAllText(string path, string contents, Encoding encoding);
         public abstract StreamWriter AppendText(string path);
@@ -22,6 +22,34 @@ namespace System.IO.Abstractions
         public abstract void Decrypt(string path);
         public abstract void Delete(string path);
         public abstract void Encrypt(string path);
+
+        /// <summary>
+        /// Determines whether the specified file exists.
+        /// </summary>
+        /// <param name="path">The file to check.</param>
+        /// <returns><see langword="true"/> if the caller has the required permissions and path contains the name of an existing file; otherwise, <see langword="false"/>. This method also returns <see langword="false"/> if <paramref name="path"/> is <see langword="null"/>, an invalid path, or a zero-length string. If the caller does not have sufficient permissions to read the specified file, no exception is thrown and the method returns <see langword="false"/> regardless of the existence of <paramref name="path"/>.</returns>
+        /// <remarks>
+        /// <para>
+        /// The Exists method should not be used for path validation, this method merely checks if the file specified in <paramref name="path"/> exists.
+        /// Passing an invalid path to Exists returns <see langword="false"/>.
+        /// </para>
+        /// <para>
+        /// Be aware that another process can potentially do something with the file in between the time you call the Exists method and perform another operation on the file, such as <see cref="Delete"/>.
+        /// </para>
+        /// <para>
+        /// The <paramref name="path"/> parameter is permitted to specify relative or absolute path information.
+        /// Relative path information is interpreted as relative to the current working directory.
+        /// To obtain the current working directory, see <see cref="DirectoryBase.GetCurrentDirectory"/>.
+        /// </para>
+        /// <para>
+        /// If <paramref name="path"/> describes a directory, this method returns <see langword="false"/>. Trailing spaces are removed from the <paramref name="path"/> parameter before determining if the file exists.
+        /// </para>
+        /// <para>
+        /// The Exists method returns <see langword="false"/> if any error occurs while trying to determine if the specified file exists.
+        /// This can occur in situations that raise exceptions such as passing a file name with invalid characters or too many characters
+        ///  a failing or missing disk, or if the caller does not have permission to read the file.
+        /// </para>
+        /// </remarks>
         public abstract bool Exists(string path);
         public abstract FileSecurity GetAccessControl(string path);
         public abstract FileSecurity GetAccessControl(string path, AccessControlSections includeSections);
@@ -39,11 +67,143 @@ namespace System.IO.Abstractions
         /// <exception cref="IOException">This file is being used by another process.</exception>
         /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission.</exception>
         public abstract FileAttributes GetAttributes(string path);
+
+        /// <summary>
+        /// Returns the creation date and time of the specified file or directory.
+        /// </summary>
+        /// <param name="path">The file or directory for which to obtain creation date and time information. </param>
+        /// <returns>A <see cref="DateTime"/> structure set to the creation date and time for the specified file or directory. This value is expressed in local time.</returns>
+        /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission.</exception>
+        /// <exception cref="ArgumentException"><paramref name="path"/> is empty, contains only white spaces, or contains invalid characters.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+        /// <exception cref="PathTooLongException">The specified path, file name, or both exceed the system-defined maximum length. For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.</exception>
+        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
+        /// <remarks>
+        /// <para>
+        /// The <paramref name="path"/> parameter is permitted to specify relative or absolute path information. Relative path information is interpreted as relative to the current working directory. To obtain the current working directory, see <see cref="DirectoryBase.GetCurrentDirectory"/>.
+        /// </para>
+        /// <para>
+        /// If the file described in the <paramref name="path"/> parameter does not exist, this method returns 12:00 midnight, January 1, 1601 A.D. (C.E.) Coordinated Universal Time (UTC), adjusted to local time.
+        /// </para>
+        /// <para>
+        /// NTFS-formatted drives may cache file meta-info, such as file creation time, for a short period of time, which is known as "file tunneling." As a result, it may be necessary to explicitly set the creation time of a file if you are overwriting or replacing an existing file.
+        /// </para>
+        /// </remarks>
         public abstract DateTime GetCreationTime(string path);
+
+        /// <summary>
+        /// Returns the creation date and time, in coordinated universal time (UTC), of the specified file or directory.
+        /// </summary>
+        /// <param name="path">The file or directory for which to obtain creation date and time information. </param>
+        /// <returns>A <see cref="DateTime"/> structure set to the creation date and time for the specified file or directory. This value is expressed in UTC time.</returns>
+        /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission.</exception>
+        /// <exception cref="ArgumentException"><paramref name="path"/> is empty, contains only white spaces, or contains invalid characters.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+        /// <exception cref="PathTooLongException">The specified path, file name, or both exceed the system-defined maximum length. For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.</exception>
+        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
+        /// <remarks>
+        /// <para>
+        /// The <paramref name="path"/> parameter is permitted to specify relative or absolute path information. Relative path information is interpreted as relative to the current working directory. To obtain the current working directory, see <see cref="DirectoryBase.GetCurrentDirectory"/>.
+        /// </para>
+        /// <para>
+        /// If the file described in the <paramref name="path"/> parameter does not exist, this method returns 12:00 midnight, January 1, 1601 A.D. (C.E.) Coordinated Universal Time (UTC).
+        /// </para>
+        /// <para>
+        /// NTFS-formatted drives may cache file meta-info, such as file creation time, for a short period of time, which is known as "file tunneling." As a result, it may be necessary to explicitly set the creation time of a file if you are overwriting or replacing an existing file.
+        /// </para>
+        /// </remarks>
         public abstract DateTime GetCreationTimeUtc(string path);
+
+        /// <summary>
+        /// Returns the date and time the specified file or directory was last accessed.
+        /// </summary>
+        /// <param name="path">The file or directory for which to obtain access date and time information. </param>
+        /// <returns>A <see cref="DateTime"/> structure set to the date and time that the specified file or directory was last accessed. This value is expressed in local time.</returns>
+        /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission.</exception>
+        /// <exception cref="ArgumentException"><paramref name="path"/> is empty, contains only white spaces, or contains invalid characters.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+        /// <exception cref="PathTooLongException">The specified path, file name, or both exceed the system-defined maximum length. For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.</exception>
+        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
+        /// <remarks>
+        /// <para>
+        /// The <paramref name="path"/> parameter is permitted to specify relative or absolute path information. Relative path information is interpreted as relative to the current working directory. To obtain the current working directory, see <see cref="DirectoryBase.GetCurrentDirectory"/>.
+        /// </para>
+        /// <para>
+        /// If the file described in the <paramref name="path"/> parameter does not exist, this method returns 12:00 midnight, January 1, 1601 A.D. (C.E.) Coordinated Universal Time (UTC), adjusted to local time.
+        /// </para>
+        /// <para>
+        /// NTFS-formatted drives may cache file meta-info, such as file creation time, for a short period of time, which is known as "file tunneling." As a result, it may be necessary to explicitly set the creation time of a file if you are overwriting or replacing an existing file.
+        /// </para>
+        /// </remarks>
         public abstract DateTime GetLastAccessTime(string path);
+
+        /// <summary>
+        /// Returns the date and time, in coordinated universal time (UTC), that the specified file or directory was last accessed.
+        /// </summary>
+        /// <param name="path">The file or directory for which to obtain creation date and time information. </param>
+        /// <returns>A <see cref="DateTime"/> structure set to the date and time that the specified file or directory was last accessed. This value is expressed in UTC time.</returns>
+        /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission.</exception>
+        /// <exception cref="ArgumentException"><paramref name="path"/> is empty, contains only white spaces, or contains invalid characters.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+        /// <exception cref="PathTooLongException">The specified path, file name, or both exceed the system-defined maximum length. For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.</exception>
+        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
+        /// <remarks>
+        /// <para>
+        /// The <paramref name="path"/> parameter is permitted to specify relative or absolute path information. Relative path information is interpreted as relative to the current working directory. To obtain the current working directory, see <see cref="DirectoryBase.GetCurrentDirectory"/>.
+        /// </para>
+        /// <para>
+        /// If the file described in the <paramref name="path"/> parameter does not exist, this method returns 12:00 midnight, January 1, 1601 A.D. (C.E.) Coordinated Universal Time (UTC).
+        /// </para>
+        /// <para>
+        /// NTFS-formatted drives may cache file meta-info, such as file creation time, for a short period of time, which is known as "file tunneling." As a result, it may be necessary to explicitly set the creation time of a file if you are overwriting or replacing an existing file.
+        /// </para>
+        /// </remarks>
         public abstract DateTime GetLastAccessTimeUtc(string path);
+
+        /// <summary>
+        /// Returns the date and time the specified file or directory was last written to.
+        /// </summary>
+        /// <param name="path">The file or directory for which to obtain creation date and time information. </param>
+        /// <returns>A <see cref="DateTime"/> structure set to the date and time that the specified file or directory was last written to. This value is expressed in local time.</returns>
+        /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission.</exception>
+        /// <exception cref="ArgumentException"><paramref name="path"/> is empty, contains only white spaces, or contains invalid characters.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+        /// <exception cref="PathTooLongException">The specified path, file name, or both exceed the system-defined maximum length. For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.</exception>
+        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
+        /// <remarks>
+        /// <para>
+        /// If the file described in the path parameter does not exist, this method returns 12:00 midnight, January 1, 1601 A.D. (C.E.) Coordinated Universal Time (UTC), adjusted to local time.
+        /// </para>
+        /// <para>
+        /// The <paramref name="path"/> parameter is permitted to specify relative or absolute path information. Relative path information is interpreted as relative to the current working directory. To obtain the current working directory, see <see cref="DirectoryBase.GetCurrentDirectory"/>.
+        /// </para>
+        /// <para>
+        /// NTFS-formatted drives may cache file meta-info, such as file creation time, for a short period of time, which is known as "file tunneling." As a result, it may be necessary to explicitly set the creation time of a file if you are overwriting or replacing an existing file.
+        /// </para>
+        /// </remarks>
         public abstract DateTime GetLastWriteTime(string path);
+
+        /// <summary>
+        /// Returns the date and time, in coordinated universal time (UTC), that the specified file or directory was last written to.
+        /// </summary>
+        /// <param name="path">The file or directory for which to obtain creation date and time information. </param>
+        /// <returns>A <see cref="DateTime"/> structure set to the date and time that the specified file or directory was last written to. This value is expressed in local time.</returns>
+        /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission.</exception>
+        /// <exception cref="ArgumentException"><paramref name="path"/> is empty, contains only white spaces, or contains invalid characters.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="path"/> is <see langword="null"/>.</exception>
+        /// <exception cref="PathTooLongException">The specified path, file name, or both exceed the system-defined maximum length. For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.</exception>
+        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
+        /// <remarks>
+        /// <para>
+        /// If the file described in the path parameter does not exist, this method returns 12:00 midnight, January 1, 1601 A.D. (C.E.) Coordinated Universal Time (UTC).
+        /// </para>
+        /// <para>
+        /// The <paramref name="path"/> parameter is permitted to specify relative or absolute path information. Relative path information is interpreted as relative to the current working directory. To obtain the current working directory, see <see cref="DirectoryBase.GetCurrentDirectory"/>.
+        /// </para>
+        /// <para>
+        /// NTFS-formatted drives may cache file meta-info, such as file creation time, for a short period of time, which is known as "file tunneling." As a result, it may be necessary to explicitly set the creation time of a file if you are overwriting or replacing an existing file.
+        /// </para>
+        /// </remarks>
         public abstract DateTime GetLastWriteTimeUtc(string path);
         public abstract void Move(string sourceFileName, string destFileName);
         public abstract Stream Open(string path, FileMode mode);
@@ -57,8 +217,8 @@ namespace System.IO.Abstractions
         public abstract string[] ReadAllLines(string path, Encoding encoding);
         public abstract string ReadAllText(string path);
         public abstract string ReadAllText(string path, Encoding encoding);
-        public abstract IEnumerable<String> ReadLines(String path);
-        public abstract IEnumerable<String> ReadLines(String path, Encoding encoding);
+        public abstract IEnumerable<string> ReadLines(string path);
+        public abstract IEnumerable<string> ReadLines(string path, Encoding encoding);
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName);
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
         public abstract void SetAccessControl(string path, FileSecurity fileSecurity);
