@@ -817,8 +817,6 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </remarks>
         public override void WriteAllText(string path, string contents)
         {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-
             WriteAllText(path, contents, MockFileData.DefaultEncoding);
         }
 
@@ -861,7 +859,13 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.ACCESS_TO_THE_PATH_IS_DENIED, path));
             }
-
+            
+            var destDir = mockFileDataAccessor.Directory.GetParent(path);
+            if (!destDir.Exists)
+            {
+                throw new DirectoryNotFoundException(string.Format("Could not find a part of the path '{0}'.", destDir));
+            }
+     
             MockFileData data = contents == null ? new MockFileData(new byte[0]) : new MockFileData(contents, encoding);
             mockFileDataAccessor.AddFile(path, data);
         }

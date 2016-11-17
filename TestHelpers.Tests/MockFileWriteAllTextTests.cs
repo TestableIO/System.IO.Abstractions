@@ -16,6 +16,7 @@
             string path = XFS.Path(@"c:\something\demo.txt");
             string fileContent = "Hello there!";
             var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(@"c:\something");
 
             // Act
             fileSystem.File.WriteAllText(path, fileContent);
@@ -34,6 +35,7 @@
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(@"c:\something");
 
             // Act
             fileSystem.File.WriteAllText(path, "foo");
@@ -124,6 +126,20 @@
             Assert.Throws<UnauthorizedAccessException>(action);
         }
 
+        [Test]
+        public void MockFile_WriteAllText_ShouldThrowDirectoryNotFoundExceptionIfPathDoesNotExists()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            string path = XFS.Path(@"c:\something\file.txt");
+          
+            // Act
+            TestDelegate action = () => fileSystem.File.WriteAllText(path, string.Empty);
+
+            // Assert
+            Assert.Throws<DirectoryNotFoundException>(action);
+        }
+
         private IEnumerable<KeyValuePair<Encoding, byte[]>> GetEncodingsWithExpectedBytes()
         {
             Encoding utf8WithoutBom = new UTF8Encoding(false, true);
@@ -175,6 +191,7 @@
             byte[] expectedBytes = encodingsWithContents.Value;
             Encoding encoding = encodingsWithContents.Key;
             var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(@"c:\something");
 
             // Act
             fileSystem.File.WriteAllText(path, FileContent, encoding);
@@ -194,6 +211,7 @@
             var expected = "Hello there!" + Environment.NewLine + "Second line!" + Environment.NewLine;
 
             var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(@"c:\something");
 
             // Act
             fileSystem.File.WriteAllLines(path, fileContent);
