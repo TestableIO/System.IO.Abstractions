@@ -8,12 +8,28 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileWriteAllBytesTests
     {
         [Test]
+        public void MockFile_WriteAllBytes_ShouldThrowDirectoryNotFoundExceptionIfPathDoesNotExists()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            string path = XFS.Path(@"c:\something\file.txt");
+            var fileContent = new byte[] { 1, 2, 3, 4 };
+
+            // Act
+            TestDelegate action = () => fileSystem.File.WriteAllBytes(path, fileContent);
+
+            // Assert
+            Assert.Throws<DirectoryNotFoundException>(action);
+        }
+
+        [Test]
         public void MockFile_WriteAllBytes_ShouldWriteDataToMemoryFileSystem()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
             var fileContent = new byte[] { 1, 2, 3, 4 };
+            fileSystem.AddDirectory(@"c:\something");
 
             // Act
             fileSystem.File.WriteAllBytes(path, fileContent);

@@ -593,10 +593,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
             VerifyValueIsNotNull(bytes, "bytes");
 
+            VerifyDirectoryExists(path);
+
             mockFileDataAccessor.AddFile(path, new MockFileData(bytes));
         }
 
-        /// <summary>
+       /// <summary>
         /// Creates a new file, writes a collection of strings to the file, and then closes the file.
         /// </summary>
         /// <param name="path">The file to write to.</param>
@@ -859,12 +861,8 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.ACCESS_TO_THE_PATH_IS_DENIED, path));
             }
-            
-            var destDir = mockFileDataAccessor.Directory.GetParent(path);
-            if (!destDir.Exists)
-            {
-                throw new DirectoryNotFoundException(string.Format("Could not find a part of the path '{0}'.", destDir));
-            }
+
+            VerifyDirectoryExists(path);
      
             MockFileData data = contents == null ? new MockFileData(new byte[0]) : new MockFileData(contents, encoding);
             mockFileDataAccessor.AddFile(path, data);
@@ -890,6 +888,15 @@ namespace System.IO.Abstractions.TestingHelpers
             if (value == null)
             {
                 throw new ArgumentNullException(parameterName, Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
+        }
+
+        private void VerifyDirectoryExists(string path)
+        {
+            var destDir = mockFileDataAccessor.Directory.GetParent(path);
+            if (!destDir.Exists)
+            {
+                throw new DirectoryNotFoundException(string.Format("Could not find a part of the path '{0}'.", destDir));
             }
         }
     }
