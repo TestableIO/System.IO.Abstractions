@@ -283,12 +283,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 {sourceFilePath, new MockFileData(new byte[] {0})}
             });
 
-            //var exists = fileSystem.Directory.Exists(XFS.Path(@"c:\something"));
-            //exists = fileSystem.Directory.Exists(XFS.Path(@"c:\something22"));
-
-            var exception = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
-            //Message = "Could not find a part of the path."
-            Assert.That(exception.Message, Is.EqualTo(XFS.Path(@"Could not find a part of the path.")));
+            Assert.That(() => fileSystem.File.Move(sourceFilePath, destFilePath),
+                Throws.InstanceOf<DirectoryNotFoundException>().With.Message.StartsWith(@"Could not find a part of the path"));
         }
     }
 }

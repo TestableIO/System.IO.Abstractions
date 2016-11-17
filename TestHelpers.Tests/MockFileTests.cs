@@ -433,6 +433,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
             var fileContent = new byte[] { 1, 2, 3, 4 };
+            fileSystem.AddDirectory(@"c:\something");
 
             // Act
             fileSystem.File.WriteAllBytes(path, fileContent);
