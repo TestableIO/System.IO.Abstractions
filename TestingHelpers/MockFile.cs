@@ -241,12 +241,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 }
                 else
                 {
-                    var parentDirectoryInfo = directoryInfo.Parent;
-                    if (!parentDirectoryInfo.Exists)
-                    {
-                        throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture,
-                            Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, path));
-                    }
+                    VerifyDirectoryExists(path);
 
                     throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find file '{0}'.", path));
                 }
@@ -335,11 +330,7 @@ namespace System.IO.Abstractions.TestingHelpers
             if (sourceFile == null)
                 throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "The file \"{0}\" could not be found.", sourceFileName), sourceFileName);
 
-            var destDir = mockFileDataAccessor.Directory.GetParent(destFileName);
-            if (!destDir.Exists)
-            {
-                throw new DirectoryNotFoundException("Could not find a part of the path.");
-            }
+            VerifyDirectoryExists(destFileName);
 
             mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile.Contents));
             mockFileDataAccessor.RemoveFile(sourceFileName);
@@ -893,10 +884,10 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private void VerifyDirectoryExists(string path)
         {
-            var destDir = mockFileDataAccessor.Directory.GetParent(path);
-            if (!destDir.Exists)
+            DirectoryInfoBase dir = mockFileDataAccessor.Directory.GetParent(path);
+            if (!dir.Exists)
             {
-                throw new DirectoryNotFoundException(string.Format("Could not find a part of the path '{0}'.", destDir));
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, dir));
             }
         }
     }
