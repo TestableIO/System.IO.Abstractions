@@ -155,7 +155,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override StreamWriter AppendText()
         {
             if (MockFileData == null) throw new FileNotFoundException("File not found", path);
-            return new StreamWriter(new MockFileStream(mockFileSystem, FullName, true));
+            return new StreamWriter(new MockFileStream(mockFileSystem, FullName, MockFileStream.StreamType.APPEND));
             //return ((MockFileDataModifier) MockFileData).AppendText();
         }
 
@@ -231,7 +231,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream OpenRead()
         {
-            return new MockFileStream(mockFileSystem, path);
+            if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+            return new MockFileStream(mockFileSystem, path, MockFileStream.StreamType.READ);
         }
 
         public override StreamReader OpenText()
@@ -241,7 +242,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream OpenWrite()
         {
-            return new MockFileStream(mockFileSystem, path);
+            return new MockFileStream(mockFileSystem, path, MockFileStream.StreamType.WRITE);
         }
 
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)
