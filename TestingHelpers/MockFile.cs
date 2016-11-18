@@ -407,7 +407,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-            return new MockFileStream(mockFileDataAccessor, path);
+            return new MockFileStream(mockFileDataAccessor, path, MockFileStream.StreamType.WRITE);
         }
 
         public override byte[] ReadAllBytes(string path)
