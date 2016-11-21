@@ -101,6 +101,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (!Exists(sourceFileName))
             {
+                throw new FileNotFoundException();
             }
             if (sourceFileName == null)
             {
