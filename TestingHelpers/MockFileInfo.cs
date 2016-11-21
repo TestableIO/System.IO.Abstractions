@@ -209,7 +209,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void MoveTo(string destFileName)
         {
-            var movedFileInfo = CopyTo(destFileName);
+            var movedFileInfo = CopyTo(destFileName, true);
             Delete();
             path = movedFileInfo.FullName;
         }

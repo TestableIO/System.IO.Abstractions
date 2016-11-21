@@ -323,7 +323,16 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(destFileName, "destFileName");
 
             if (mockFileDataAccessor.GetFile(destFileName) != null)
-                throw new IOException("A file can not be created if it already exists.");
+            {
+                if (destFileName.Equals(sourceFileName))
+                {
+                    return;
+                } else
+                {
+                    throw new IOException("A file can not be created if it already exists.");
+                }
+            }
+                
 
             var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
 

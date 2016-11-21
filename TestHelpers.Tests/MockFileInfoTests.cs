@@ -476,5 +476,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(fileInfo.DirectoryName, destinationFolder);
             Assert.AreEqual(fileInfo.FullName, destination);
         }
+
+        [Test]
+        public void MockFileInfo_MoveTo_SameSourceAndTargetIsANoOp()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(XFS.Path(@"c:\temp\file.txt"), new MockFileData(@"line 1\r\nline 2"));
+            var fileInfo = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file.txt"));
+
+            // Act
+            string destination = XFS.Path(XFS.Path(@"c:\temp\file.txt"));
+            fileInfo.MoveTo(destination);
+
+            Assert.AreEqual(fileInfo.FullName, destination);
+        }
     }
 }
