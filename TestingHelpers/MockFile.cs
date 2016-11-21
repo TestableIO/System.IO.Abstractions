@@ -99,6 +99,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Copy(string sourceFileName, string destFileName, bool overwrite)
         {
+            if (!Exists(sourceFileName))
+            {
+            }
             if (sourceFileName == null)
             {
                 throw new ArgumentNullException("sourceFileName", Properties.Resources.FILENAME_CANNOT_BE_NULL);

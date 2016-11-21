@@ -305,5 +305,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(() => fileSystem.File.Move(sourceFilePath, destFilePath),
                 Throws.InstanceOf<DirectoryNotFoundException>().With.Message.StartsWith(@"Could not find a part of the path"));
         }
+
+        [Test]
+        [ExpectedException(typeof(FileNotFoundException))]
+        public void MockFile_Move_ShouldThrowExceptionWhenSourceDoesNotExist()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            fileSystem.File.Move(sourceFilePath, XFS.Path(@"c:\something\demo2.txt"));
+        }
+
+        [Test]
+        [ExpectedException(typeof(FileNotFoundException))]
+        public void MockFile_Move_ShouldThrowExceptionWhenSourceDoesNotExist_EvenWhenCopyingToItself()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            fileSystem.File.Move(sourceFilePath, XFS.Path(@"c:\something\demo.txt"));
+        }
     }
 }
