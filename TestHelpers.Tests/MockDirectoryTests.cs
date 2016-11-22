@@ -844,6 +844,49 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_GetDirectories_RelativeWithNoSubDirectories_ShouldReturnDirectories()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("Folder");
+
+            // Act
+            var actualResult = fileSystem.Directory.GetDirectories("Folder");
+
+            // Assert
+            Assert.That(actualResult, Is.Empty);
+        }
+
+        [TestCase(@"Folder\SubFolder")]
+        [TestCase(@"Folder")]
+        public void MockDirectory_GetDirectories_RelativeDirectory_ShouldReturnDirectories(string relativeDirPath)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(relativeDirPath);
+
+            // Act
+            var actualResult = fileSystem.Directory.GetDirectories(relativeDirPath);
+
+            // Assert
+            Assert.That(actualResult, Is.Empty);
+        }
+
+        [Test]
+        public void MockDirectory_GetDirectories_AbsoluteWithNoSubDirectories_ShouldReturnDirectories()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("Folder");
+
+            // Act
+            var actualResult = fileSystem.Directory.GetDirectories(fileSystem.Path.GetFullPath("Folder"));
+
+            // Assert
+            Assert.That(actualResult, Is.Empty);
+        }
+
+        [Test]
         public void MockDirectory_GetDirectories_WithAllDirectories_ShouldReturnsAllMatchingSubFolders()
         {
             // Arrange
