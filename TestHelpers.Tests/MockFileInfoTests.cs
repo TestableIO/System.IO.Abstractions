@@ -490,6 +490,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileInfo.MoveTo(destination);
 
             Assert.AreEqual(fileInfo.FullName, destination);
+            Assert.True(fileInfo.Exists);
         }
 
         [Test]
