@@ -184,7 +184,6 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             CheckSearchPattern(searchPattern);
             path = EnsurePathEndsWithDirectorySeparator(path);
-            path = mockFileDataAccessor.Path.GetFullPath(path);
 
             bool isUnix = XFS.IsUnixPlatform();
 
@@ -434,6 +433,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
             path = EnsurePathEndsWithDirectorySeparator(path);
+            path = mockFileDataAccessor.Path.GetFullPath(path);
 
             if (!Exists(path))
             {
