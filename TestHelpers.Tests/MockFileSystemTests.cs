@@ -140,5 +140,35 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.IsNotNull(actualResults);
         }
+
+        [Test]
+        public void MockFileSystem_RemoveFile_RemovesFiles()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(@"C:\file.txt", new MockFileData("Content"));
+
+            // Act
+            fileSystem.RemoveFile(@"C:\file.txt");
+
+            // Assert
+            Assert.False(fileSystem.FileExists(@"C:\file.txt"));
+        }
+
+        [Test]
+        [ExpectedException(typeof(UnauthorizedAccessException))]
+        public void MockFileSystem_RemoveFile_ThrowsExceptionIfFileIsReadOnly()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(@"C:\file.txt", new MockFileData("Content"));
+            var fileInfo = fileSystem.FileInfo.FromFileName(@"C:\file.txt");
+            fileInfo.Attributes |= FileAttributes.ReadOnly;
+
+            // Act
+            fileSystem.RemoveFile(@"C:\file.txt");
+
+            // Assert - expect an exception.
+        }
     }
 }
