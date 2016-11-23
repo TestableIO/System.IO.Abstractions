@@ -325,6 +325,8 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void Move(string sourceName, string destName)
         {
             //if we're moving a file, not a directory, call the appropriate file moving function.
+            var fileData = mockFileDataAccessor.GetFile((mockFileDataAccessor.Path.GetFullPath(sourceName)));
+            if (fileData != null && (fileData.Attributes & FileAttributes.Directory) == 0)
             {
                 fileBase.Move(sourceName, destName);
                 return;
