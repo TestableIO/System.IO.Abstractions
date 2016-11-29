@@ -140,5 +140,68 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.IsNotNull(actualResults);
         }
+
+        [Test]
+        public void MockFileSystem_AddFile_ShouldMatchCapitalization_PerfectMatch()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\test"));
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\LOUD"));
+
+            // Act
+            fileSystem.AddFile(@"C:\test\file.txt", "foo");
+            fileSystem.AddFile(@"C:\LOUD\file.txt", "foo");
+            fileSystem.AddDirectory(@"C:\test\SUBDirectory");
+            fileSystem.AddDirectory(@"C:\LOUD\SUBDirectory");
+
+            // Assert
+            Assert.Contains(@"C:\test\file.txt", fileSystem.AllFiles.ToList());
+            Assert.Contains(@"C:\LOUD\file.txt", fileSystem.AllFiles.ToList());
+            Assert.Contains(@"C:\test\SUBDirectory\", fileSystem.AllDirectories.ToList());
+            Assert.Contains(@"C:\LOUD\SUBDirectory\", fileSystem.AllDirectories.ToList());
+        }
+
+        [Test]
+        public void MockFileSystem_AddFile_ShouldMatchCapitalization_PartialMatch()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\test\subtest"));
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\LOUD\SUBLOUD"));
+
+            // Act
+            fileSystem.AddFile(@"C:\test\SUBTEST\file.txt", "foo");
+            fileSystem.AddFile(@"C:\LOUD\subloud\file.txt", "foo");
+            fileSystem.AddDirectory(@"C:\test\SUBTEST\SUBDirectory");
+            fileSystem.AddDirectory(@"C:\LOUD\subloud\SUBDirectory");
+
+            // Assert
+            Assert.Contains(@"C:\test\subtest\file.txt", fileSystem.AllFiles.ToList());
+            Assert.Contains(@"C:\LOUD\SUBLOUD\file.txt", fileSystem.AllFiles.ToList());
+            Assert.Contains(@"C:\test\subtest\SUBDirectory\", fileSystem.AllDirectories.ToList());
+            Assert.Contains(@"C:\LOUD\SUBLOUD\SUBDirectory\", fileSystem.AllDirectories.ToList());
+        }
+
+        [Test]
+        public void MockFileSystem_AddFile_ShouldMatchCapitalization_PartialMatch_FurtherLeft()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\test\subtest"));
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\LOUD\SUBLOUD"));
+
+            // Act
+            fileSystem.AddFile(@"C:\test\SUBTEST\new\file.txt", "foo");
+            fileSystem.AddFile(@"C:\LOUD\subloud\new\file.txt", "foo");
+            fileSystem.AddDirectory(@"C:\test\SUBTEST\new\SUBDirectory");
+            fileSystem.AddDirectory(@"C:\LOUD\subloud\new\SUBDirectory");
+
+            // Assert
+            Assert.Contains(@"C:\test\subtest\new\file.txt", fileSystem.AllFiles.ToList());
+            Assert.Contains(@"C:\LOUD\SUBLOUD\new\file.txt", fileSystem.AllFiles.ToList());
+            Assert.Contains(@"C:\test\subtest\new\SUBDirectory\", fileSystem.AllDirectories.ToList());
+            Assert.Contains(@"C:\LOUD\SUBLOUD\new\SUBDirectory\", fileSystem.AllDirectories.ToList());
+        }
     }
 }

@@ -81,11 +81,36 @@ namespace System.IO.Abstractions.TestingHelpers
             get { return pathVerifier; }
         }
 
-        private string FixPath(string path)
+        private string FixPath(string path, bool checkCaps = false)
         {
             var pathSeparatorFixed = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-            return pathField.GetFullPath(pathSeparatorFixed);
+            var fullPath = pathField.GetFullPath(pathSeparatorFixed);
+
+            return checkCaps ? GetPathWithCorrectDirectoryCapitalization(fullPath) : fullPath;
         }
+
+        //If C:\foo exists, ensures that trying to save a file to "C:\FOO\file.txt" instead saves it to "C:\foo\file.txt".
+        private string GetPathWithCorrectDirectoryCapitalization(string fullPath)
+        {          
+            string[] splitPath = fullPath.Split(Path.DirectorySeparatorChar);
+            string leftHalf = fullPath;
+            string rightHalf = "";
+            for (int i = splitPath.Length - 1; i > 1; i--)
+            {
+                rightHalf = i == splitPath.Length - 1 ? splitPath[i] : splitPath[i] + Path.DirectorySeparatorChar + rightHalf;
+                int lastSeparator = leftHalf.LastIndexOf(Path.DirectorySeparatorChar);
+                leftHalf = lastSeparator > 0 ? leftHalf.Substring(0, lastSeparator) : leftHalf;
+                if (directory.Exists(leftHalf))
+                {
+                    leftHalf += Path.DirectorySeparatorChar;
+                    leftHalf = pathField.GetFullPath(leftHalf);
+                    string baseDirectory = AllDirectories.First(dir => dir.Equals(leftHalf, StringComparison.OrdinalIgnoreCase));
+                    return baseDirectory + rightHalf;
+                }
+            }
+            return fullPath;
+        }
+
 
         public MockFileData GetFile(string path)
         {
@@ -96,7 +121,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public void AddFile(string path, MockFileData mockFile)
         {
-            var fixedPath = FixPath(path);
+            var fixedPath = FixPath(path, true);
             lock (files)
             {
                 if (FileExists(fixedPath))
@@ -123,25 +148,25 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public void AddDirectory(string path)
         {
-            var fixedPath = FixPath(path);
+            var fixedPath = FixPath(path, true);
             var separator = XFS.Separator();
 
             lock (files)
             {
-                if (FileExists(path) &&
+                if (FileExists(fixedPath) &&
                     (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-                    throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.ACCESS_TO_THE_PATH_IS_DENIED, path));
+                    throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.ACCESS_TO_THE_PATH_IS_DENIED, fixedPath));
 
                 var lastIndex = 0;
 
                 bool isUnc =
-                    path.StartsWith(@"\\", StringComparison.OrdinalIgnoreCase) ||
-                    path.StartsWith(@"//", StringComparison.OrdinalIgnoreCase);
+                    fixedPath.StartsWith(@"\\", StringComparison.OrdinalIgnoreCase) ||
+                    fixedPath.StartsWith(@"//", StringComparison.OrdinalIgnoreCase);
 
                 if (isUnc)
                 {
                     //First, confirm they aren't trying to create '\\server\'
-                    lastIndex = path.IndexOf(separator, 2, StringComparison.OrdinalIgnoreCase);
+                    lastIndex = fixedPath.IndexOf(separator, 2, StringComparison.OrdinalIgnoreCase);
                     if (lastIndex < 0)
                         throw new ArgumentException(@"The UNC path should be of the form \\server\share.", "path");
 
@@ -151,16 +176,16 @@ namespace System.IO.Abstractions.TestingHelpers
                      */
                 }
 
-                while ((lastIndex = path.IndexOf(separator, lastIndex + 1, StringComparison.OrdinalIgnoreCase)) > -1)
+                while ((lastIndex = fixedPath.IndexOf(separator, lastIndex + 1, StringComparison.OrdinalIgnoreCase)) > -1)
                 {
-                    var segment = path.Substring(0, lastIndex + 1);
+                    var segment = fixedPath.Substring(0, lastIndex + 1);
                     if (!directory.Exists(segment))
                     {
                         files[segment] = new MockDirectoryData();
                     }
                 }
 
-                var s = path.EndsWith(separator, StringComparison.OrdinalIgnoreCase) ? path : path + separator;
+                var s = fixedPath.EndsWith(separator, StringComparison.OrdinalIgnoreCase) ? fixedPath : fixedPath + separator;
                 files[s] = new MockDirectoryData();
             }
         }
