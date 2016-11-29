@@ -14,6 +14,8 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw new ArgumentNullException("mockFileSystem");
             }
+            //Workaround - this forces MSCORLIB's Path to validate the path.
+            mockFileSystem.Path.GetFullPath(path);
 
             this.mockFileSystem = mockFileSystem;
             this.path = path;

@@ -264,5 +264,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var exception = Assert.Throws<ArgumentException>(action);
             Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
         }
+
+        [Test]
+        [ExpectedException(typeof(PathTooLongException))]
+        public void MockDirectoryInfo_Constructor_ExceptionIfPathIsTooLong()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            //act
+            var directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName("C:\\LoremipsumdolorsitametconsecteturadipiscingelitFuscevitaenuncconsequatpellentesqueturpissedpharetralacusEtiamposuerenecjustonecfermentumInsedarcuetipsumvolutpatrutrumnecegetduiVestibulumelementumconvalliseleifendUtutnibhmalesuadalobortisipsumaiaculissapienAliquamconsequatnonurnaeuporttitor");
+
+            //assert - expect an exception
+        }
     }
 }
