@@ -347,7 +347,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadAllBytes(XFS.Path(@"c:\something\other.gif"));
 
             // Assert
-            result.Should().BeSameAs(new byte[] { 0x21, 0x58, 0x3f, 0xa9 });
+            result.ShouldBeEquivalentTo(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }, options => options.WithStrictOrdering());
         }
 
         [Fact]
@@ -391,23 +391,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Equal(text, result);
         }
 
-        private IEnumerable<object[]> EncodingsForReadAllText
+        private static IEnumerable<object[]> GetEncodingsForReadAllText()
         {
-            get
-            {
-                // little endian
-                yield return new object[] {new UTF32Encoding(false, true, true)};
+            // little endian
+            yield return new object[] {new UTF32Encoding(false, true, true)};
 
-                // big endian
-                yield return new object[] {new UTF32Encoding(true, true, true)};
-                yield return new object[] {new UTF8Encoding(true, true)};
+            // big endian
+            yield return new object[] {new UTF32Encoding(true, true, true)};
+            yield return new object[] {new UTF8Encoding(true, true)};
 
-                yield return new object[] {new ASCIIEncoding()};
-            }
+            yield return new object[] {new ASCIIEncoding()};
         }
 
         [Theory]
-        [MemberData("GetEncodingsForReadAllText")]
+        [MemberData(nameof(GetEncodingsForReadAllText))]
         public void MockFile_ReadAllText_ShouldReturnTheOriginalContentWhenTheFileContainsDifferentEncodings(Encoding encoding)
         {
             // Arrange

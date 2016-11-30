@@ -711,20 +711,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<ArgumentException>(action);
         }
 
-        private static IEnumerable<object[]> GetSearchPatternForTwoDotsExceptions
+        private static IEnumerable<object[]> GetSearchPatternForTwoDotsExceptions()
         {
-            get
-            {
-                yield return new object[] { @"a..\b" };
-                yield return new object[] { @"a../b" };
-                yield return new object[] { @"../" };
-                yield return new object[] { @"..\" };
-                yield return new object[] { @"aaa\vv..\" };
-            }
+            yield return new object[] {@"a..\b"};
+            yield return new object[] {@"a../b"};
+            yield return new object[] {@"../"};
+            yield return new object[] {@"..\"};
+            yield return new object[] {@"aaa\vv..\"};
         }
 
         [Theory]
-        [MemberData("GetSearchPatternForTwoDotsExceptions")]
+        [MemberData(nameof(GetSearchPatternForTwoDotsExceptions))]
         public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneDirectoryPathSep(string searchPattern)
         {
             // Arrange
@@ -972,18 +969,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<DirectoryNotFoundException>(action);
         }
 
-        public static IEnumerable<object[]> PathsForMoving
+        public static IEnumerable<object[]> GetPathsForMoving()
         {
-            get
-            {
-                yield return new object[] {@"a:\folder1\", @"A:\folder3\", "file.txt", @"folder2\file2.txt"};
-                yield return new object[] {@"A:\folder1\", @"A:\folder3\", "file.txt", @"folder2\file2.txt"};
-                yield return new object[] {@"a:\folder1\", @"a:\folder3\", "file.txt", @"folder2\file2.txt"};
-                yield return new object[] {@"A:\folder1\", @"a:\folder3\", "file.txt", @"folder2\file2.txt"};
-                yield return new object[] {@"A:\folder1\", @"a:\folder3\", "file.txt", @"Folder2\file2.txt"};
-                yield return new object[] {@"A:\folder1\", @"a:\folder3\", "file.txt", @"Folder2\fiLe2.txt"};
-                yield return new object[] {@"A:\folder1\", @"a:\folder3\", "folder444\\file.txt", @"Folder2\fiLe2.txt"};
-            }
+            yield return new object[] {@"a:\folder1\", @"A:\folder3\", "file.txt", @"folder2\file2.txt"};
+            yield return new object[] {@"A:\folder1\", @"A:\folder3\", "file.txt", @"folder2\file2.txt"};
+            yield return new object[] {@"a:\folder1\", @"a:\folder3\", "file.txt", @"folder2\file2.txt"};
+            yield return new object[] {@"A:\folder1\", @"a:\folder3\", "file.txt", @"folder2\file2.txt"};
+            yield return new object[] {@"A:\folder1\", @"a:\folder3\", "file.txt", @"Folder2\file2.txt"};
+            yield return new object[] {@"A:\folder1\", @"a:\folder3\", "file.txt", @"Folder2\fiLe2.txt"};
+            yield return new object[] {@"A:\folder1\", @"a:\folder3\", "folder444\\file.txt", @"Folder2\fiLe2.txt"};
         }
 
         [Fact]
@@ -1002,7 +996,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Theory]
-        [MemberData("GetPathsForMoving")]
+        [MemberData(nameof(GetPathsForMoving))]
         public void MockDirectory_Move_ShouldMove(string sourceDirName, string destDirName, string filePathOne, string filePathTwo)
         {
             // Arrange

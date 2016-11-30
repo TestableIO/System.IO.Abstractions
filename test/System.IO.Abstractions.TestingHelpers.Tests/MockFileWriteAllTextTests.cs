@@ -143,83 +143,80 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<DirectoryNotFoundException>(action);
         }
 
-        private static IEnumerable<object[]> EncodingsWithExpectedBytes
+        private static IEnumerable<object[]> GetEncodingsWithExpectedBytes()
         {
-            get
+            Encoding utf8WithoutBom = new UTF8Encoding(false, true);
+            return new Dictionary<Encoding, byte[]>
             {
-                Encoding utf8WithoutBom = new UTF8Encoding(false, true);
-                return new Dictionary<Encoding, byte[]>
+                // ASCII does not need a BOM
                 {
-                    // ASCII does not need a BOM
+                    Encoding.ASCII, new byte[]
                     {
-                        Encoding.ASCII, new byte[]
-                        {
-                            72, 101, 108, 108, 111, 32, 116,
-                            104, 101, 114, 101, 33, 32, 68, 122, 105, 63, 107, 105, 46
-                        }
-                    },
+                        72, 101, 108, 108, 111, 32, 116,
+                        104, 101, 114, 101, 33, 32, 68, 122, 105, 63, 107, 105, 46
+                    }
+                },
 
-                    // BigEndianUnicode needs a BOM, the BOM is the first two bytes
+                // BigEndianUnicode needs a BOM, the BOM is the first two bytes
+                {
+                    Encoding.BigEndianUnicode, new byte[]
                     {
-                        Encoding.BigEndianUnicode, new byte[]
-                        {
-                            254, 255, 0, 72, 0, 101,
-                            0, 108, 0, 108, 0, 111, 0, 32, 0, 116, 0, 104, 0, 101, 0, 114,
-                            0, 101, 0, 33, 0, 32, 0, 68, 0, 122, 0, 105, 1, 25, 0, 107, 0, 105, 0, 46
-                        }
-                    },
+                        254, 255, 0, 72, 0, 101,
+                        0, 108, 0, 108, 0, 111, 0, 32, 0, 116, 0, 104, 0, 101, 0, 114,
+                        0, 101, 0, 33, 0, 32, 0, 68, 0, 122, 0, 105, 1, 25, 0, 107, 0, 105, 0, 46
+                    }
+                },
 #if NET45
 // Default encoding does not need a BOM
                 { Encoding.Default, new byte [] { 72, 101, 108, 108, 111, 32, 116,
                     104, 101, 114, 101, 33, 32, 68, 122, 105, 101, 107, 105, 46 } },
 #endif
-                    // UTF-32 needs a BOM, the BOM is the first four bytes
+                // UTF-32 needs a BOM, the BOM is the first four bytes
+                {
+                    Encoding.UTF32, new byte[]
                     {
-                        Encoding.UTF32, new byte[]
-                        {
-                            255, 254, 0, 0, 72, 0, 0, 0, 101,
-                            0, 0, 0, 108, 0, 0, 0, 108, 0, 0, 0, 111, 0, 0, 0, 32, 0, 0,
-                            0, 116, 0, 0, 0, 104, 0, 0, 0, 101, 0, 0, 0, 114, 0, 0, 0,
-                            101, 0, 0, 0, 33, 0, 0, 0, 32, 0, 0, 0, 68, 0, 0, 0, 122, 0,
-                            0, 0, 105, 0, 0, 0, 25, 1, 0, 0, 107, 0, 0, 0, 105, 0, 0, 0, 46, 0, 0, 0
-                        }
-                    },
-
-                    // UTF-7 does not need a BOM
-                    {
-                        Encoding.UTF7, new byte[]
-                        {
-                            72, 101, 108, 108, 111, 32, 116,
-                            104, 101, 114, 101, 43, 65, 67, 69, 45, 32, 68, 122, 105,
-                            43, 65, 82, 107, 45, 107, 105, 46
-                        }
-                    },
-
-                    // The default encoding does not need a BOM
-                    {
-                        utf8WithoutBom, new byte[]
-                        {
-                            72, 101, 108, 108, 111, 32, 116,
-                            104, 101, 114, 101, 33, 32, 68, 122, 105, 196, 153, 107, 105, 46
-                        }
-                    },
-
-                    // Unicode needs a BOM, the BOM is the first two bytes
-                    {
-                        Encoding.Unicode, new byte[]
-                        {
-                            255, 254, 72, 0, 101, 0, 108,
-                            0, 108, 0, 111, 0, 32, 0, 116, 0, 104, 0, 101, 0, 114, 0,
-                            101, 0, 33, 0, 32, 0, 68, 0, 122, 0, 105, 0, 25, 1, 107, 0,
-                            105, 0, 46, 0
-                        }
+                        255, 254, 0, 0, 72, 0, 0, 0, 101,
+                        0, 0, 0, 108, 0, 0, 0, 108, 0, 0, 0, 111, 0, 0, 0, 32, 0, 0,
+                        0, 116, 0, 0, 0, 104, 0, 0, 0, 101, 0, 0, 0, 114, 0, 0, 0,
+                        101, 0, 0, 0, 33, 0, 0, 0, 32, 0, 0, 0, 68, 0, 0, 0, 122, 0,
+                        0, 0, 105, 0, 0, 0, 25, 1, 0, 0, 107, 0, 0, 0, 105, 0, 0, 0, 46, 0, 0, 0
                     }
-                }.Select(keyValuePair => new object[] {keyValuePair});
-            }
+                },
+
+                // UTF-7 does not need a BOM
+                {
+                    Encoding.UTF7, new byte[]
+                    {
+                        72, 101, 108, 108, 111, 32, 116,
+                        104, 101, 114, 101, 43, 65, 67, 69, 45, 32, 68, 122, 105,
+                        43, 65, 82, 107, 45, 107, 105, 46
+                    }
+                },
+
+                // The default encoding does not need a BOM
+                {
+                    utf8WithoutBom, new byte[]
+                    {
+                        72, 101, 108, 108, 111, 32, 116,
+                        104, 101, 114, 101, 33, 32, 68, 122, 105, 196, 153, 107, 105, 46
+                    }
+                },
+
+                // Unicode needs a BOM, the BOM is the first two bytes
+                {
+                    Encoding.Unicode, new byte[]
+                    {
+                        255, 254, 72, 0, 101, 0, 108,
+                        0, 108, 0, 111, 0, 32, 0, 116, 0, 104, 0, 101, 0, 114, 0,
+                        101, 0, 33, 0, 32, 0, 68, 0, 122, 0, 105, 0, 25, 1, 107, 0,
+                        105, 0, 46, 0
+                    }
+                }
+            }.Select(keyValuePair => new object[] {keyValuePair});
         }
 
         [Theory]
-        [MemberData("GetEncodingsWithExpectedBytes")]
+        [MemberData(nameof(GetEncodingsWithExpectedBytes))]
         public void MockFile_WriteAllText_Encoding_ShouldWriteTextFileToMemoryFileSystem(KeyValuePair<Encoding, byte[]> encodingsWithContents)
         {
             // Arrange

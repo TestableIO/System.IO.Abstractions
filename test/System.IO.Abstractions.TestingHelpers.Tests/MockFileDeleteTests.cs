@@ -21,7 +21,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileCount2 = fileSystem.Directory.GetFiles(directory, "*").Length;
 
             fileCount1.Should().Be(1, "File should have existed");
-            fileCount2.Should().Be(2, "File should have been deleted");
+            fileCount2.Should().Be(0, "File should have been deleted");
         }
 
         [Theory]

@@ -22,6 +22,5 @@
   <ItemGroup>
     <ProjectReference Include="..\System.IO.Abstractions\System.IO.Abstractions.csproj" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

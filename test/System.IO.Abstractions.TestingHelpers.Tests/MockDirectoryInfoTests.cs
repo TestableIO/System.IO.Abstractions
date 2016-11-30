@@ -8,17 +8,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using XFS = MockUnixSupport;
     public class MockDirectoryInfoTests
     {
-        public static IEnumerable<object[]> MockDirectoryInfo_GetExtension_Cases
+        public static IEnumerable<object[]> MockDirectoryInfo_GetExtension_Cases()
         {
-            get
-            {
-                yield return new object[] { new object[] { XFS.Path(@"c:\temp") } };
-                yield return new object[] { new object[] { XFS.Path(@"c:\temp\") } };
-            }
+            yield return new object[] {XFS.Path(@"c:\temp")};
+            yield return new object[] {XFS.Path(@"c:\temp\")};
         }
 
         [Theory]
-        [MemberData("MockDirectoryInfo_GetExtension_Cases")]
+        [MemberData(nameof(MockDirectoryInfo_GetExtension_Cases))]
         public void MockDirectoryInfo_GetExtension_ShouldReturnEmptyString(string directoryPath)
         {
             // Arrange
@@ -32,17 +29,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Equal(string.Empty, result);
         }
 
-        public static IEnumerable<object[]> MockDirectoryInfo_Exists_Cases
+        public static IEnumerable<object[]> MockDirectoryInfo_Exists_Cases()
         {
-            get
-            {
-                yield return new object[] { XFS.Path(@"c:\temp\folder"), true };
-                yield return new object[] { XFS.Path(@"c:\temp\folder\notExistant"), false };
-            }
+            yield return new object[] {XFS.Path(@"c:\temp\folder"), true};
+            yield return new object[] {XFS.Path(@"c:\temp\folder\notExistant"), false};
         }
 
         [Theory]
-        [MemberData("MockDirectoryInfo_Exists_Cases")]
+        [MemberData(nameof(MockDirectoryInfo_Exists_Cases))]
         public void MockDirectoryInfo_Exists(string path, bool expected)
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -196,20 +190,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Equal(new[] { "b", "c" }, directories);
         }
 
-        public static IEnumerable<object[]> MockDirectoryInfo_FullName_Data
+        public static IEnumerable<object[]> MockDirectoryInfo_FullName_Data()
         {
-            get
-            {
-                yield return new object[] { XFS.Path(@"c:\temp\\folder"), XFS.Path(@"c:\temp\folder") };
-                yield return new object[] { XFS.Path(@"c:\temp//folder"), XFS.Path(@"c:\temp\folder") };
-                yield return new object[] { XFS.Path(@"c:\temp//\\///folder"), XFS.Path(@"c:\temp\folder") };
-                yield return new object[] { XFS.Path(@"\\unc\folder"), XFS.Path(@"\\unc\folder") };
-                yield return new object[] { XFS.Path(@"\\unc/folder\\foo"), XFS.Path(@"\\unc\folder\foo") };
-            }
+            yield return new object[] {XFS.Path(@"c:\temp\\folder"), XFS.Path(@"c:\temp\folder")};
+            yield return new object[] {XFS.Path(@"c:\temp//folder"), XFS.Path(@"c:\temp\folder")};
+            yield return new object[] {XFS.Path(@"c:\temp//\\///folder"), XFS.Path(@"c:\temp\folder")};
+            yield return new object[] {XFS.Path(@"\\unc\folder"), XFS.Path(@"\\unc\folder")};
+            yield return new object[] {XFS.Path(@"\\unc/folder\\foo"), XFS.Path(@"\\unc\folder\foo")};
         }
 
         [Theory]
-        [MemberData("MockDirectoryInfo_FullName_Data")]
+        [MemberData(nameof(MockDirectoryInfo_FullName_Data))]
         public void MockDirectoryInfo_FullName_ShouldReturnNormalizedPath(string directoryPath, string expectedFullName)
         {
             // Arrange

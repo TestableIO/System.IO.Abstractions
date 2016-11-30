@@ -22,7 +22,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             cut.Flush();
 
             // Assert
-            filesystem.GetFile(filepath).Contents.Should().BeSameAs(new byte[]{255});
+            filesystem.GetFile(filepath).Contents.ShouldBeEquivalentTo(new byte[]{255}, options => options.WithStrictOrdering());
         }
 
         [Fact]

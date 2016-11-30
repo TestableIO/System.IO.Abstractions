@@ -26,7 +26,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             sut.Create(fullPath).Dispose();
 
-            Assert.False(fileSystem.FileExists(fullPath));
+            Assert.True(fileSystem.FileExists(fullPath));
         }
 
         [Fact]

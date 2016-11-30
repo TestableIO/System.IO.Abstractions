@@ -52,8 +52,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             fileSystem.GetFile(Path)
-                .Contents.Should()
-                .BeSameAs(new byte[] {255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66});
+                .Contents.ShouldBeEquivalentTo(new byte[] {255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66}, options => options.WithStrictOrdering());
         }
 
         [Fact]
@@ -87,7 +86,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.AppendAllText(path, "AA", Encoding.UTF32);
 
             // Assert
-            fileSystem.GetFile(path).Contents.Should().BeSameAs(new byte[] {255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0});
+            fileSystem.GetFile(path).Contents.ShouldBeEquivalentTo(new byte[] {255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0}, options => options.WithStrictOrdering());
         }
 
         [Fact]
@@ -149,7 +148,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
 
-            file.ReadAllBytes(path).Should().BeSameAs(expected);
+            file.ReadAllBytes(path).ShouldBeEquivalentTo(expected, options => options.WithStrictOrdering());
         }
     }
 }

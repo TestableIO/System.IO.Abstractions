@@ -139,22 +139,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Equal(TestPath, result);
         }
 
-        public static IEnumerable<object[]> GetFullPath_RelativePaths_Cases
+        public static IEnumerable<object[]> GetFullPath_RelativePaths_Cases()
         {
-            get
-            {
-                yield return new object[] { XFS.Path(@"c:\a"), "b", XFS.Path(@"c:\a\b") };
-                yield return new object[] { XFS.Path(@"c:\a\b"), "c", XFS.Path(@"c:\a\b\c") };
-                yield return new object[] { XFS.Path(@"c:\a\b"), XFS.Path(@"c\"), XFS.Path(@"c:\a\b\c\") };
-                yield return new object[] { XFS.Path(@"c:\a\b"), XFS.Path(@"..\c"), XFS.Path(@"c:\a\c") };
-                yield return new object[] { XFS.Path(@"c:\a\b\c"), XFS.Path(@"..\c\..\"), XFS.Path(@"c:\a\b\") };
-                yield return new object[] { XFS.Path(@"c:\a\b\c"), XFS.Path(@"..\..\..\..\..\d"), XFS.Path(@"c:\d") };
-                yield return new object[] { XFS.Path(@"c:\a\b\c"), XFS.Path(@"..\..\..\..\..\d\"), XFS.Path(@"c:\d\") };
-            }
+            yield return new object[] {XFS.Path(@"c:\a"), "b", XFS.Path(@"c:\a\b")};
+            yield return new object[] {XFS.Path(@"c:\a\b"), "c", XFS.Path(@"c:\a\b\c")};
+            yield return new object[] {XFS.Path(@"c:\a\b"), XFS.Path(@"c\"), XFS.Path(@"c:\a\b\c\")};
+            yield return new object[] {XFS.Path(@"c:\a\b"), XFS.Path(@"..\c"), XFS.Path(@"c:\a\c")};
+            yield return new object[] {XFS.Path(@"c:\a\b\c"), XFS.Path(@"..\c\..\"), XFS.Path(@"c:\a\b\")};
+            yield return new object[] {XFS.Path(@"c:\a\b\c"), XFS.Path(@"..\..\..\..\..\d"), XFS.Path(@"c:\d")};
+            yield return new object[] {XFS.Path(@"c:\a\b\c"), XFS.Path(@"..\..\..\..\..\d\"), XFS.Path(@"c:\d\")};
         }
 
         [Theory]
-        [MemberData("GetFullPath_RelativePaths_Cases")]
+        [MemberData(nameof(GetFullPath_RelativePaths_Cases))]
         public void GetFullPath_RelativePaths_ShouldReturnTheAbsolutePathWithCurrentDirectory(string currentDir, string relativePath, string expectedResult)
         {
             //Arrange
@@ -169,20 +166,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Equal(expectedResult, actualResult);
         }
 
-        public static IEnumerable<object[]> GetFullPath_RootedPathWithRelativeSegments_Cases
+        public static IEnumerable<object[]> GetFullPath_RootedPathWithRelativeSegments_Cases()
         {
-            get
-            {
-                yield return new object[] { XFS.Path(@"c:\a\b\..\c"), XFS.Path(@"c:\a\c") };
-                yield return new object[] { XFS.Path(@"c:\a\b\.\.\..\.\c"), XFS.Path(@"c:\a\c") };
-                yield return new object[] { XFS.Path(@"c:\a\b\.\c"), XFS.Path(@"c:\a\b\c") };
-                yield return new object[] { XFS.Path(@"c:\a\b\.\.\.\.\c"), XFS.Path(@"c:\a\b\c") };
-                yield return new object[] { XFS.Path(@"c:\a\..\..\c"), XFS.Path(@"c:\c") };
-            }
+            yield return new object[] {XFS.Path(@"c:\a\b\..\c"), XFS.Path(@"c:\a\c")};
+            yield return new object[] {XFS.Path(@"c:\a\b\.\.\..\.\c"), XFS.Path(@"c:\a\c")};
+            yield return new object[] {XFS.Path(@"c:\a\b\.\c"), XFS.Path(@"c:\a\b\c")};
+            yield return new object[] {XFS.Path(@"c:\a\b\.\.\.\.\c"), XFS.Path(@"c:\a\b\c")};
+            yield return new object[] {XFS.Path(@"c:\a\..\..\c"), XFS.Path(@"c:\c")};
         }
 
         [Theory]
-        [MemberData("GetFullPath_RootedPathWithRelativeSegments_Cases")]
+        [MemberData(nameof(GetFullPath_RootedPathWithRelativeSegments_Cases))]
         public void GetFullPath_RootedPathWithRelativeSegments_ShouldReturnAnRootedAbsolutePath(string rootedPath, string expectedResult)
         {
             //Arrange
@@ -196,23 +190,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Equal(expectedResult, actualResult);
         }
 
-        public static IEnumerable<object[]> GetFullPath_AbsolutePaths_Cases
+        public static IEnumerable<object[]> GetFullPath_AbsolutePaths_Cases()
         {
-            get
-            {
-                yield return new object[] { XFS.Path(@"c:\a"), XFS.Path(@"/b"), XFS.Path(@"c:\b") };
-                yield return new object[] { XFS.Path(@"c:\a"), XFS.Path(@"/b\"), XFS.Path(@"c:\b\") };
-                yield return new object[] { XFS.Path(@"c:\a"), XFS.Path(@"\b"), XFS.Path(@"c:\b") };
-                yield return new object[] { XFS.Path(@"c:\a"), XFS.Path(@"\b\..\c"), XFS.Path(@"c:\c") };
-                yield return new object[] { XFS.Path(@"z:\a"), XFS.Path(@"\b\..\c"), XFS.Path(@"z:\c") };
-                yield return new object[] { XFS.Path(@"z:\a"), XFS.Path(@"\\computer\share\c"), XFS.Path(@"\\computer\share\c") };
-                yield return new object[] { XFS.Path(@"z:\a"), XFS.Path(@"\\computer\share\c\..\d"), XFS.Path(@"\\computer\share\d") };
-                yield return new object[] { XFS.Path(@"z:\a"), XFS.Path(@"\\computer\share\c\..\..\d"), XFS.Path(@"\\computer\share\d") };
-            }
+            yield return new object[] {XFS.Path(@"c:\a"), XFS.Path(@"/b"), XFS.Path(@"c:\b")};
+            yield return new object[] {XFS.Path(@"c:\a"), XFS.Path(@"/b\"), XFS.Path(@"c:\b\")};
+            yield return new object[] {XFS.Path(@"c:\a"), XFS.Path(@"\b"), XFS.Path(@"c:\b")};
+            yield return new object[] {XFS.Path(@"c:\a"), XFS.Path(@"\b\..\c"), XFS.Path(@"c:\c")};
+            yield return new object[] {XFS.Path(@"z:\a"), XFS.Path(@"\b\..\c"), XFS.Path(@"z:\c")};
+            yield return new object[] {XFS.Path(@"z:\a"), XFS.Path(@"\\computer\share\c"), XFS.Path(@"\\computer\share\c")};
+            yield return new object[] {XFS.Path(@"z:\a"), XFS.Path(@"\\computer\share\c\..\d"), XFS.Path(@"\\computer\share\d")}
+                ;
+            yield return
+                new object[] {XFS.Path(@"z:\a"), XFS.Path(@"\\computer\share\c\..\..\d"), XFS.Path(@"\\computer\share\d")};
         }
 
         [Theory]
-        [MemberData("GetFullPath_AbsolutePaths_Cases")]
+        [MemberData(nameof(GetFullPath_AbsolutePaths_Cases))]
         public void GetFullPath_AbsolutePaths_ShouldReturnThePathWithTheRoot_Or_Unc(string currentDir, string absolutePath, string expectedResult)
         {
             //Arrange

@@ -27,7 +27,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadAllLines(XFS.Path(@"c:\something\demo.txt"));
 
             // Assert
-            result.Should().BeSameAs(new[] { "Demo", "text", "content", "value" });
+            result.ShouldBeEquivalentTo(new[] { "Demo", "text", "content", "value" }, options => options.WithStrictOrdering());
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadAllLines(XFS.Path(@"c:\something\demo.txt"), Encoding.BigEndianUnicode);
 
             // Assert
-            result.Should().BeSameAs(new [] { "Hello", "there", "Bob", "Bob!" });
+            result.ShouldBeEquivalentTo(new[] { "Hello", "there", "Bob", "Bob!" }, options => options.WithStrictOrdering());
         }
     }
 }
