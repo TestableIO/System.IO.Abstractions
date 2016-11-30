@@ -485,7 +485,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             //act
-            var fileInfo = fileSystem.FileInfo.FromFileName("C:\\LoremipsumdolorsitametconsecteturadipiscingelitFuscevitaenuncconsequatpellentesqueturpissedpharetralacusEtiamposuerenecjustonecfermentumInsedarcuetipsumvolutpatrutrumnecegetduiVestibulumelementumconvalliseleifendUtutnibhmalesuadalobortisipsumaiaculissapienAliquamconsequatnonurnaeuporttitor\\filesfor.days");
+            var fileInfo = fileSystem.FileInfo.FromFileName((@"C:\".PadRight(300, 'x') + @"\filesFor.days"));
 
             //assert - expect an exception
         }

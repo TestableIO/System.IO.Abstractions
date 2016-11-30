@@ -273,8 +273,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             //act
-            var directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName("C:\\LoremipsumdolorsitametconsecteturadipiscingelitFuscevitaenuncconsequatpellentesqueturpissedpharetralacusEtiamposuerenecjustonecfermentumInsedarcuetipsumvolutpatrutrumnecegetduiVestibulumelementumconvalliseleifendUtutnibhmalesuadalobortisipsumaiaculissapienAliquamconsequatnonurnaeuporttitor");
-
+            var directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(@"C:\".PadRight(300, 'x'));
             //assert - expect an exception
         }
     }
