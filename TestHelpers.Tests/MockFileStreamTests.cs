@@ -46,17 +46,17 @@
         }
 
         [Test]
-        [ExpectedException(typeof(FileNotFoundException))]
         public void MockFileStream_Constructor_Reading_Nonexistent_File_Throws_Exception()
         {
-            // Arrange
+            //arrange
             var nonexistentFilePath = XFS.Path(@"c:\something\foo.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());         
 
-            // Act
-            var illegalFileStream = new MockFileStream(filesystem, nonexistentFilePath, MockFileStream.StreamType.READ);
+            //act
+            TestDelegate action = () => new MockFileStream(filesystem, nonexistentFilePath, MockFileStream.StreamType.READ);
 
-            // Assert - expect an exception
+            //assert
+            Assert.Throws<FileNotFoundException>(action);
         }
     }
 }

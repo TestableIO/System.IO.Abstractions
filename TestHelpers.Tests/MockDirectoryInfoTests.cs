@@ -266,15 +266,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(PathTooLongException))]
         public void MockDirectoryInfo_Constructor_ExceptionIfPathIsTooLong()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             //act
-            var directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(@"C:\".PadRight(300, 'x'));
-            //assert - expect an exception
+            TestDelegate action = () => fileSystem.DirectoryInfo.FromDirectoryName(@"C:\".PadRight(300, 'x'));
+
+            //assert
+            Assert.Throws<PathTooLongException>(action);
         }
     }
 }
