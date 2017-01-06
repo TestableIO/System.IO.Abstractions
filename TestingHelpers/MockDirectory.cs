@@ -106,12 +106,19 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectorySecurity GetAccessControl(string path)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            // First crude implementation to avoid NotImplementedException
+            if (Exists(path))
+            {
+                return new DirectorySecurity();
+            }
+
+            throw new DirectoryNotFoundException(path);
         }
 
         public override DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            // First crude implementation to avoid NotImplementedException
+            return GetAccessControl(path);
         }
 
         public override DateTime GetCreationTime(string path)
