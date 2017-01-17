@@ -194,12 +194,20 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileSecurity GetAccessControl(string path)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", path), path);
+            }
+
+            var fileData = mockFileDataAccessor.GetFile(path);
+            return fileData.AccessControl;
         }
 
         public override FileSecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            return GetAccessControl(path);
         }
 
         /// <summary>
@@ -494,7 +502,15 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", path), path);
+            }
+
+            var fileData = mockFileDataAccessor.GetFile(path);
+            fileData.AccessControl = fileSecurity;
         }
 
         public override void SetAttributes(string path, FileAttributes fileAttributes)
