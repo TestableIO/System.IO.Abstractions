@@ -194,12 +194,20 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileSecurity GetAccessControl(string path)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", path), path);
+            }
+
+            var fileData = mockFileDataAccessor.GetFile(path);
+            return fileData.AccessControl;
         }
 
         public override FileSecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            return GetAccessControl(path);
         }
 
         /// <summary>
@@ -241,12 +249,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 }
                 else
                 {
-                    var parentDirectoryInfo = directoryInfo.Parent;
-                    if (!parentDirectoryInfo.Exists)
-                    {
-                        throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture,
-                            Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, path));
-                    }
+                    VerifyDirectoryExists(path);
 
                     throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Could not find file '{0}'.", path));
                 }
@@ -335,11 +338,7 @@ namespace System.IO.Abstractions.TestingHelpers
             if (sourceFile == null)
                 throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "The file \"{0}\" could not be found.", sourceFileName), sourceFileName);
 
-            var destDir = mockFileDataAccessor.Directory.GetParent(destFileName);
-            if (!destDir.Exists)
-            {
-                throw new DirectoryNotFoundException("Could not find a part of the path.");
-            }
+            VerifyDirectoryExists(destFileName);
 
             mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile.Contents));
             mockFileDataAccessor.RemoveFile(sourceFileName);
@@ -503,7 +502,15 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", path), path);
+            }
+
+            var fileData = mockFileDataAccessor.GetFile(path);
+            fileData.AccessControl = fileSecurity;
         }
 
         public override void SetAttributes(string path, FileAttributes fileAttributes)
@@ -593,10 +600,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
             VerifyValueIsNotNull(bytes, "bytes");
 
+            VerifyDirectoryExists(path);
+
             mockFileDataAccessor.AddFile(path, new MockFileData(bytes));
         }
 
-        /// <summary>
+       /// <summary>
         /// Creates a new file, writes a collection of strings to the file, and then closes the file.
         /// </summary>
         /// <param name="path">The file to write to.</param>
@@ -817,8 +826,6 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </remarks>
         public override void WriteAllText(string path, string contents)
         {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-
             WriteAllText(path, contents, MockFileData.DefaultEncoding);
         }
 
@@ -862,6 +869,8 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.ACCESS_TO_THE_PATH_IS_DENIED, path));
             }
 
+            VerifyDirectoryExists(path);
+     
             MockFileData data = contents == null ? new MockFileData(new byte[0]) : new MockFileData(contents, encoding);
             mockFileDataAccessor.AddFile(path, data);
         }
@@ -886,6 +895,15 @@ namespace System.IO.Abstractions.TestingHelpers
             if (value == null)
             {
                 throw new ArgumentNullException(parameterName, Properties.Resources.VALUE_CANNOT_BE_NULL);
+            }
+        }
+
+        private void VerifyDirectoryExists(string path)
+        {
+            DirectoryInfoBase dir = mockFileDataAccessor.Directory.GetParent(path);
+            if (!dir.Exists)
+            {
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, dir));
             }
         }
     }

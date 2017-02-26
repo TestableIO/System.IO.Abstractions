@@ -94,6 +94,7 @@
     <Compile Include="MockFileCopyTests.cs" />
     <Compile Include="MockFileCreateTests.cs" />
     <Compile Include="MockFileExistsTests.cs" />
+    <Compile Include="MockFileGetAccessControlTests.cs" />
     <Compile Include="MockFileGetLastAccessTimeUtcTests.cs" />
     <Compile Include="MockFileGetLastAccessTimeTests.cs" />
     <Compile Include="MockFileGetCreationTimeUtcTests.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="MockFileOpenTests.cs" />
     <Compile Include="MockFileReadAllLinesTests.cs" />
     <Compile Include="MockFileReadLinesTests.cs" />
+    <Compile Include="MockFileSetAccessControlTests.cs" />
     <Compile Include="MockFileStreamTests.cs" />
     <Compile Include="MockFileSystemTests.cs" />
     <Compile Include="MockFileTests.cs" />

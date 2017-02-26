@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
@@ -1251,6 +1252,30 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        [Test]
+        public void MockDirectory_GetAccessControl_ShouldThrowExceptionOnDirectoryNotFound()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            Assert.Throws<DirectoryNotFoundException>(() => fileSystem.Directory.GetAccessControl(XFS.Path(@"c:\foo")));
+        }
+
+        [Test]
+        public void MockDirectory_GetAccessControl_ShouldReturnNewDirectorySecurity()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo"));
+
+            // Act
+            DirectorySecurity result = fileSystem.Directory.GetAccessControl(XFS.Path(@"c:\foo"));
+
+            // Assert
+            Assert.That(result, Is.Not.Null);
         }
     }
 }
