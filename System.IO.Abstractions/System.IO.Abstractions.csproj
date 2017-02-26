@@ -67,6 +67,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConvertingEnumerableT1T2.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="DirectoryBase.cs" />
     <Compile Include="DirectoryInfoBase.cs" />
