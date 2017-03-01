@@ -1012,6 +1012,31 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_Move_ShouldMoveDirectoryAtrributes()
+        {
+            // Arrange
+            const string sourceDirName = @"a:\folder1\";
+            const string destDirName = @"a:\folder2\";
+            const string filePathOne = "file1.txt";
+            const string filePathTwo = "file2.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(sourceDirName + filePathOne) , new MockFileData("aaa") },
+                { XFS.Path(sourceDirName + filePathTwo) , new MockFileData("bbb") },
+            });
+
+            var sourceDirectoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(sourceDirName);
+            sourceDirectoryInfo.Attributes |= FileAttributes.System;
+
+            // Act
+            fileSystem.DirectoryInfo.FromDirectoryName(sourceDirName).MoveTo(destDirName);
+
+            // Assert
+            var destDirectoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(destDirName);
+            Assert.IsTrue(destDirectoryInfo.Attributes.HasFlag(FileAttributes.System));
+        }
+
+        [Test]
         public void MockDirectory_GetCurrentDirectory_ShouldReturnValueFromFileSystemConstructor() {
             string directory = XFS.Path(@"D:\folder1\folder2");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>(), directory);
