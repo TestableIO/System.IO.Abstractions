@@ -349,6 +349,11 @@ namespace System.IO.Abstractions.TestingHelpers
             //Make sure that the destination exists
             mockFileDataAccessor.Directory.CreateDirectory(fullDestPath);
 
+            //Copy over the attributes
+            var sourceDirectoryInfo = mockFileDataAccessor.DirectoryInfo.FromDirectoryName(sourceDirName);
+            var destDirectoryInfo = mockFileDataAccessor.DirectoryInfo.FromDirectoryName(destDirName);
+            destDirectoryInfo.Attributes = sourceDirectoryInfo.Attributes;
+
             //Recursively move all the subdirectories from the source into the destination directory
             var subdirectories = GetDirectories(fullSourcePath);
             foreach (var subdirectory in subdirectories)
