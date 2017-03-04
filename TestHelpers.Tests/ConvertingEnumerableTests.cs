@@ -20,5 +20,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
         }
 
+        [Test]
+        public void Ctor_Arg2_Null_Throws_ArgumentNullException()
+        {
+            var stringarray = new string[] { "1", "2", "3" };
+
+            Assert.Throws<ArgumentNullException>(() =>
+            {
+                var instance = new ConvertingEnumerable<string, string>(stringarray, null);
+            });
+        }
+
     }
 }

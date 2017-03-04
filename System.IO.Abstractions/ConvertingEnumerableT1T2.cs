@@ -13,8 +13,9 @@ namespace System.IO.Abstractions
 
         public ConvertingEnumerable(IEnumerable<T1> enumerable, Func<T1, T2> converterFunction)
         {
-            this._collection = enumerable;
-            this._converterFunction = converterFunction;
+            if(enumerable == null) throw new ArgumentNullException("enumerable");
+            if(converterFunction == null) throw new ArgumentNullException("enumerable");
+
         }
 
         public IEnumerator<T2> GetEnumerator()
