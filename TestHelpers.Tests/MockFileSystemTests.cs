@@ -140,5 +140,106 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.IsNotNull(actualResults);
         }
+
+        [Test]
+        public void MockFileSystem_AllPaths_Should_ReturnAllPaths()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\something\demo.txt", MockFileData.NullObject },
+                { @"c:\something\other.gif", MockFileData.NullObject },
+                { @"d:\foobar\", new MockDirectoryData() },
+                { @"\\some.network.share\c$\test\", new MockDirectoryData() }
+            });
+
+            var expectedPaths = new[]
+                {
+                    @"c:\",
+                    @"c:\something\",
+                    @"c:\something\demo.txt",
+                    @"c:\something\other.gif",
+                    @"d:\",
+                    @"d:\foobar\",
+                    @"\\some.network.share\c$\",
+                    @"\\some.network.share\c$\test\"
+                };
+
+            // Assert
+            Assert.That(fileSystem.AllPaths, Is.EquivalentTo(expectedPaths));
+        }
+
+        [Test]
+        public void MockFileSystem_AllNodes_Should_ReturnAllNodes()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\something\demo.txt", MockFileData.NullObject },
+                { @"c:\something\other.gif", MockFileData.NullObject },
+                { @"d:\foobar\", new MockDirectoryData() },
+                { @"\\some.network.share\c$\test\", new MockDirectoryData() }
+            });
+
+            var expectedNodes = new[]
+                {
+                    @"c:\something\demo.txt",
+                    @"c:\something\other.gif",
+                    @"d:\foobar\",
+                    @"\\some.network.share\c$\test\"
+                };
+
+            // Assert
+            Assert.That(fileSystem.AllNodes, Is.EquivalentTo(expectedNodes));
+        }
+
+        [Test]
+        public void MockFileSystem_AllFiles_Should_ReturnAllFiles()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\something\demo.txt", MockFileData.NullObject },
+                { @"c:\something\other.gif", MockFileData.NullObject },
+                { @"d:\foobar\", new MockDirectoryData() },
+                { @"\\some.network.share\c$\test\", new MockDirectoryData() }
+            });
+
+            var expectedNodes = new[]
+                {
+                    @"c:\something\demo.txt",
+                    @"c:\something\other.gif",
+                };
+
+            // Assert
+            Assert.That(fileSystem.AllFiles, Is.EquivalentTo(expectedNodes));
+        }
+
+        [Test]
+        public void MockFileSystem_AllDirectories_Should_ReturnAllDirectories()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\something\demo.txt", MockFileData.NullObject },
+                { @"c:\something\other.gif", MockFileData.NullObject },
+                { @"d:\foobar\", new MockDirectoryData() },
+                { @"\\some.network.share\c$\test\", new MockDirectoryData() }
+            });
+
+            var expectedDirectories = new[]
+                {
+                    @"c:\",
+                    @"c:\something\",
+                    @"d:\",
+                    @"d:\foobar\",
+                    @"\\some.network.share\c$\",
+                    @"\\some.network.share\c$\test\"
+                };
+
+            // Assert
+            Assert.That(fileSystem.AllDirectories, Is.EquivalentTo(expectedDirectories));
+        }
+
     }
 }
