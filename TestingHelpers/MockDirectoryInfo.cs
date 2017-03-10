@@ -301,5 +301,10 @@ namespace System.IO.Abstractions.TestingHelpers
 
             return path;
         }
+
+        public override string ToString()
+        {
+            return FullName;
+        }
     }
 }
