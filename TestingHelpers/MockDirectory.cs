@@ -46,14 +46,6 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentException(Properties.Resources.PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE, "path");
             }
 
-            if (mockFileDataAccessor.FileExists(path))
-            {
-                var message = string.Format(CultureInfo.InvariantCulture, @"Cannot create ""{0}"" because a file or directory with the same name already exists.", path);
-                var ex = new IOException(message);
-                ex.Data.Add("Path", path);
-                throw ex;
-            }
-
             path = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(path));
 
             if (!Exists(path))
