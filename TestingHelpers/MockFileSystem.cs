@@ -193,6 +193,17 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        public IEnumerable<string> AllNodes
+        {
+            get
+            {
+                lock (files)
+                {
+                    return AllPaths.Where(path => !IsStartOfAnotherPath(path)).ToArray();
+                }
+            }
+        }
+
         public IEnumerable<string> AllFiles
         {
             get
@@ -209,6 +220,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 lock (files)
                     return files.Where(f => f.Value.IsDirectory).Select(f => f.Key).ToArray();
             }
+        }
+
+        private bool IsStartOfAnotherPath(string path)
+        {
+            return AllPaths.Any(otherPath => otherPath.StartsWith(path) && otherPath != path);
         }
 
         private MockFileData GetFileWithoutFixingPath(string path)
