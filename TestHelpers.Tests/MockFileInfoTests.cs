@@ -476,5 +476,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(fileInfo.DirectoryName, destinationFolder);
             Assert.AreEqual(fileInfo.FullName, destination);
         }
+
+        [Test]
+        public void MockFileInfo_Constructor_ExceptionIfPathIsTooLong()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            //act
+            TestDelegate action = () => fileSystem.FileInfo.FromFileName((@"C:\".PadRight(300, 'x') + @"\filesFor.days"));
+
+            //assert
+            Assert.Throws<PathTooLongException>(action);
+        }
     }
 }

@@ -280,5 +280,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(directoryPath, str);
         }
+
+        [Test]
+        public void MockDirectoryInfo_Constructor_ExceptionIfPathIsTooLong()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            //act
+            TestDelegate action = () => fileSystem.DirectoryInfo.FromDirectoryName(@"C:\".PadRight(300, 'x'));
+
+            //assert
+            Assert.Throws<PathTooLongException>(action);
+        }
     }
 }
