@@ -492,6 +492,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(fileSystem.AllDirectories.Any(d => d == XFS.Path(@"c:\bar\")));
         }
 
+        // Issue #210
+        [Test]
+        public void MockDirectory_CreateDirectory_ShouldIgnoreExistingDirectoryRegardlessOfTrailingSlash()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\foo\"), new MockDirectoryData() }
+            });
+
+            // Act/Assert
+            Assert.That(() => fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo")), Throws.Nothing);
+            Assert.That(() => fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo\")), Throws.Nothing);
+        }
+
         [Test]
         public void MockDirectory_CreateDirectory_ShouldReturnDirectoryInfoBase()
         {
@@ -503,6 +518,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Act
             var result = fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\bar"));
+
+            // Assert
+            Assert.IsNotNull(result);
+        }
+
+        [Test]
+        public void MockDirectory_CreMockDirectory_CreateDirectory_ShouldReturnDirectoryInfoBaseWhenDirectoryExists()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\foo\"), new MockDirectoryData() }
+            });
+
+            // Act
+            var result = fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo\"));
 
             // Assert
             Assert.IsNotNull(result);

@@ -264,5 +264,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var exception = Assert.Throws<ArgumentException>(action);
             Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
         }
+
+        [Test]
+        public void MockDirectoryInfo_ToString_ShouldReturnDirectoryName()
+        {
+            var directoryPath = XFS.Path(@"c:\temp\folder\folder");
+
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, directoryPath);
+
+            // Act
+            var str = directoryInfo.ToString();
+
+            // Assert
+            Assert.AreEqual(directoryPath, str);
+        }
     }
 }
