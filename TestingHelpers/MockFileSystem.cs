@@ -170,7 +170,13 @@ namespace System.IO.Abstractions.TestingHelpers
             path = FixPath(path);
 
             lock (files)
+            {
+                if (FileExists(path) && (files[path].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                {
+                    throw new UnauthorizedAccessException(string.Format("File {0} cannot be removed, it is read-only.", path));
+                }
                 files.Remove(path);
+            }
         }
 
         public bool FileExists(string path)
