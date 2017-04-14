@@ -13,6 +13,8 @@
         <Authors>Tatham Oddie</Authors>
         <RootNamespace>System.IO.Abstractions.TestingHelpers</RootNamespace>
         <AssemblyOriginatorKeyFile>../StrongName.pfx</AssemblyOriginatorKeyFile>
+        <PackageLicenseUrl>https://github.com/tathamoddie/System.IO.Abstractions/blob/master/License.txt</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/tathamoddie/System.IO.Abstractions</PackageProjectUrl>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
