@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Text.RegularExpressions;
@@ -31,10 +32,16 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase CreateDirectory(string path)
         {
-            return CreateDirectory(path, null);
+            return CreateDirectoryInternal(path, null);
         }
 
+#if NET40
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
+        {
+            return CreateDirectoryInternal(path, directorySecurity);
+        }
+#endif
+        private DirectoryInfoBase CreateDirectoryInternal(string path, DirectorySecurity directorySecurity)
         {
             if (path == null)
             {
@@ -43,7 +50,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (path.Length == 0)
             {
-                throw new ArgumentException(Properties.Resources.PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE, "path");
+                throw new ArgumentException(StringResources.Manager.GetString("PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE"), "path");
             }
 
             path = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(path));
@@ -167,7 +174,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!Exists(path))
             {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, path));
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), path));
             }
 
             return GetFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
@@ -270,6 +277,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return fileBase.GetLastWriteTimeUtc(path);
         }
 
+#if NET40
         public override string[] GetLogicalDrives()
         {
             return mockFileDataAccessor
@@ -279,6 +287,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 .Distinct()
                 .ToArray();
         }
+#endif
 
         public override DirectoryInfoBase GetParent(string path)
         {
@@ -289,7 +298,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (path.Length == 0)
             {
-                throw new ArgumentException(Properties.Resources.PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE, "path");
+                throw new ArgumentException(StringResources.Manager.GetString("PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE"), "path");
             }
 
             if (MockPath.HasIllegalCharacters(path, false))
@@ -298,7 +307,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var absolutePath = mockFileDataAccessor.Path.GetFullPath(path);
-            var sepAsString = mockFileDataAccessor.Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture);
+            var sepAsString = string.Format(CultureInfo.InvariantCulture, "{0}", mockFileDataAccessor.Path.DirectorySeparatorChar);
 
             var lastIndex = 0;
             if (absolutePath != sepAsString)
@@ -368,7 +377,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
 
         public override void SetCreationTime(string path, DateTime creationTime)
@@ -428,7 +437,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!Exists(path))
             {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, path));
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), path));
             }
 
             var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
@@ -473,7 +482,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         static string EnsurePathEndsWithDirectorySeparator(string path)
         {
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
+            if (!path.EndsWith(string.Format(CultureInfo.InvariantCulture, "{0}", Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase))
                 path += Path.DirectorySeparatorChar;
             return path;
         }
@@ -506,7 +515,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var invalidPathChars = Path.GetInvalidPathChars();
             if (searchPattern.IndexOfAny(invalidPathChars) > -1)
             {
-                throw new ArgumentException(Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION, "searchPattern");
+                throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"), "searchPattern");
             }
         }
     }
