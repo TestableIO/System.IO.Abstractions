@@ -53,14 +53,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime CreationTime
         {
-            get { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
-            set { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
+            get { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
+            set { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
         }
 
         public override DateTime CreationTimeUtc
         {
-            get { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
-            set { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
+            get { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
+            set { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
         }
 
         public override bool Exists
@@ -96,8 +96,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime LastAccessTime
         {
-            get { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
-            set { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
+            get { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
+            set { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
         }
 
         public override DateTime LastAccessTimeUtc
@@ -106,19 +106,19 @@ namespace System.IO.Abstractions.TestingHelpers
                 if (MockFileData == null) throw new FileNotFoundException("File not found", directoryPath);
                 return MockFileData.LastAccessTime.UtcDateTime;
             }
-            set { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
+            set { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
         }
 
         public override DateTime LastWriteTime
         {
-            get { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
-            set { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
+            get { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
+            set { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
         }
 
         public override DateTime LastWriteTimeUtc
         {
-            get { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
-            set { throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION); }
+            get { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
+            set { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
         }
 
         public override string Name
@@ -131,20 +131,24 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.Directory.CreateDirectory(FullName);
         }
 
+#if NET40
         public override void Create(DirectorySecurity directorySecurity)
         {
             mockFileDataAccessor.Directory.CreateDirectory(FullName, directorySecurity);
         }
+#endif
 
         public override DirectoryInfoBase CreateSubdirectory(string path)
         {
             return mockFileDataAccessor.Directory.CreateDirectory(Path.Combine(FullName, path));
         }
 
+#if NET40
         public override DirectoryInfoBase CreateSubdirectory(string path, DirectorySecurity directorySecurity)
         {
             return mockFileDataAccessor.Directory.CreateDirectory(Path.Combine(FullName, path), directorySecurity);
         }
+#endif
 
         public override void Delete(bool recursive)
         {
@@ -294,7 +298,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string EnsurePathEndsWithDirectorySeparator(string path)
         {
-            if (!path.EndsWith(mockFileDataAccessor.Path.DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
+            if (!path.EndsWith(string.Format(CultureInfo.InvariantCulture, "{0}", mockFileDataAccessor.Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase))
             {
                 path += mockFileDataAccessor.Path.DirectorySeparatorChar;
             }

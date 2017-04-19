@@ -65,7 +65,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 var dir = mockFileDataAccessor.Path.GetDirectoryName(path);
                 if (!mockFileDataAccessor.Directory.Exists(dir))
                 {
-                    throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, path));
+                    throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), path));
                 }
 
                 mockFileDataAccessor.AddFile(path, new MockFileData(contents, encoding));
@@ -101,12 +101,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (sourceFileName == null)
             {
-                throw new ArgumentNullException("sourceFileName", Properties.Resources.FILENAME_CANNOT_BE_NULL);
+                throw new ArgumentNullException("sourceFileName", StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
             }
 
             if (destFileName == null)
             {
-                throw new ArgumentNullException("destFileName", Properties.Resources.FILENAME_CANNOT_BE_NULL);
+                throw new ArgumentNullException("destFileName", StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
             }
 
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, "sourceFileName");
@@ -115,7 +115,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var directoryNameOfDestination = mockPath.GetDirectoryName(destFileName);
             if (!mockFileDataAccessor.Directory.Exists(directoryNameOfDestination))
             {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, destFileName));
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), destFileName));
             }
 
             var fileExists = mockFileDataAccessor.FileExists(destFileName);
@@ -148,31 +148,34 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream Create(string path, int bufferSize)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
 
         public override Stream Create(string path, int bufferSize, FileOptions options)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
 
+#if NET40
         public override Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
+#endif
 
         public override StreamWriter CreateText(string path)
         {
             return new StreamWriter(Create(path));
         }
 
+#if NET40
         public override void Decrypt(string path)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
             new MockFileInfo(mockFileDataAccessor, path).Decrypt();
         }
-
+#endif
         public override void Delete(string path)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -180,12 +183,14 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.RemoveFile(path);
         }
 
+#if NET40
         public override void Encrypt(string path)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
             new MockFileInfo(mockFileDataAccessor, path).Encrypt();
         }
+#endif
 
         public override bool Exists(string path)
         {
@@ -228,7 +233,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 if (path.Length == 0)
                 {
-                    throw new ArgumentException(Properties.Resources.THE_PATH_IS_NOT_OF_A_LEGAL_FORM, "path");
+                    throw new ArgumentException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"), "path");
                 }
             }
 
@@ -319,12 +324,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (sourceFileName == null)
             {
-                throw new ArgumentNullException("sourceFileName", Properties.Resources.FILENAME_CANNOT_BE_NULL);
+                throw new ArgumentNullException("sourceFileName", StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
             }
 
             if (destFileName == null)
             {
-                throw new ArgumentNullException("destFileName", Properties.Resources.FILENAME_CANNOT_BE_NULL);
+                throw new ArgumentNullException("destFileName", StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
             }
 
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, "sourceFileName");
@@ -490,15 +495,17 @@ namespace System.IO.Abstractions.TestingHelpers
             return ReadAllLines(path, encoding);
         }
 
+#if NET40
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
 
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
+#endif
 
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
@@ -866,7 +873,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (mockFileDataAccessor.Directory.Exists(path))
             {
-                throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.ACCESS_TO_THE_PATH_IS_DENIED, path));
+                throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("ACCESS_TO_THE_PATH_IS_DENIED"), path));
             }
 
             VerifyDirectoryExists(path);
@@ -894,7 +901,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (value == null)
             {
-                throw new ArgumentNullException(parameterName, Properties.Resources.VALUE_CANNOT_BE_NULL);
+                throw new ArgumentNullException(parameterName, StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
             }
         }
 
@@ -903,7 +910,7 @@ namespace System.IO.Abstractions.TestingHelpers
             DirectoryInfoBase dir = mockFileDataAccessor.Directory.GetParent(path);
             if (!dir.Exists)
             {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, dir));
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), dir));
             }
         }
     }

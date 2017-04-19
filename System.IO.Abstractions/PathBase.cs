@@ -5,8 +5,10 @@
     {
         public abstract char AltDirectorySeparatorChar { get; }
         public abstract char DirectorySeparatorChar { get; }
+#if NET40
         [Obsolete("Please use GetInvalidPathChars or GetInvalidFileNameChars instead.")]
         public abstract char[] InvalidPathChars { get; }
+#endif
         public abstract char PathSeparator { get; }
         public abstract char VolumeSeparatorChar { get; }
 

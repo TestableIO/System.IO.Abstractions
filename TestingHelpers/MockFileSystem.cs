@@ -106,7 +106,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
                     if (isReadOnly || isHidden)
                     {
-                        throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.ACCESS_TO_THE_PATH_IS_DENIED, path));
+                        throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("ACCESS_TO_THE_PATH_IS_DENIED"), path));
                     }
                 }
 
@@ -130,7 +130,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 if (FileExists(path) &&
                     (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-                    throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.ACCESS_TO_THE_PATH_IS_DENIED, path));
+                    throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("ACCESS_TO_THE_PATH_IS_DENIED"), path));
 
                 var lastIndex = 0;
 
