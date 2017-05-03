@@ -133,32 +133,38 @@ namespace System.IO.Abstractions
 
         public override IEnumerable<FileInfoBase> EnumerateFiles()
         {
-            return instance.EnumerateFiles().Select(fileInfo => new FileInfoWrapper(fileInfo));
+            var enumerable = instance.EnumerateFiles();
+            return new ConvertingEnumerable<FileInfo,FileInfoBase>(enumerable, fileInfo => (FileInfoBase)fileInfo);
         }
 
         public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern)
         {
-            return instance.EnumerateFiles(searchPattern).Select(fileInfo => new FileInfoWrapper(fileInfo));
+            var enumerable = instance.EnumerateFiles(searchPattern);
+            return new ConvertingEnumerable<FileInfo, FileInfoBase>(enumerable, fileInfo => (FileInfoBase)fileInfo);
         }
 
         public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern, SearchOption searchOption)
         {
-            return instance.EnumerateFiles(searchPattern, searchOption).Select(fileInfo => new FileInfoWrapper(fileInfo));
+            var enumerable = instance.EnumerateFiles(searchPattern, searchOption);
+            return new ConvertingEnumerable<FileInfo, FileInfoBase>(enumerable, fileInfo => (FileInfoBase)fileInfo);
         }
 
         public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos()
         {
-            return instance.EnumerateFileSystemInfos().WrapFileSystemInfos();
+            var enumerable = instance.EnumerateFileSystemInfos();
+            return new ConvertingEnumerable<FileSystemInfo, FileSystemInfoBase>(enumerable, Converters.AsFileSystemInfoBase);
         }
 
         public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern)
         {
-            return instance.EnumerateFileSystemInfos(searchPattern).WrapFileSystemInfos();
+            var enumerable = instance.EnumerateFileSystemInfos(searchPattern);
+            return new ConvertingEnumerable<FileSystemInfo, FileSystemInfoBase>(enumerable, Converters.AsFileSystemInfoBase);
         }
 
         public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern, SearchOption searchOption)
         {
-            return instance.EnumerateFileSystemInfos(searchPattern, searchOption).WrapFileSystemInfos();
+            var enumerable = instance.EnumerateFileSystemInfos(searchPattern, searchOption);
+            return new ConvertingEnumerable<FileSystemInfo, FileSystemInfoBase>(enumerable, Converters.AsFileSystemInfoBase);
         }
 
         public override DirectorySecurity GetAccessControl()
