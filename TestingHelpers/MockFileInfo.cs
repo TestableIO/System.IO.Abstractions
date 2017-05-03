@@ -161,12 +161,19 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileInfoBase CopyTo(string destFileName)
         {
-            new MockFile(mockFileSystem).Copy(FullName, destFileName);
-            return mockFileSystem.FileInfo.FromFileName(destFileName);
+            return CopyTo(destFileName, false);
         }
 
         public override FileInfoBase CopyTo(string destFileName, bool overwrite)
         {
+            if (!Exists)
+            {
+                throw new FileNotFoundException("The file does not exist and can't be moved or copied.", FullName);
+            }
+            if (destFileName == FullName)
+            {
+                return this;
+            }
             new MockFile(mockFileSystem).Copy(FullName, destFileName, overwrite);
             return mockFileSystem.FileInfo.FromFileName(destFileName);
         }
@@ -210,6 +217,10 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void MoveTo(string destFileName)
         {
             var movedFileInfo = CopyTo(destFileName);
+            if (destFileName == FullName)
+            {
+                return;
+            }
             Delete();
             path = movedFileInfo.FullName;
         }

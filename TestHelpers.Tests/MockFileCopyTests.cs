@@ -271,5 +271,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(exception.Message, Is.StringStarting("Empty file name is not legal."));
         }
+
+        [Test]
+        [ExpectedException(typeof(FileNotFoundException))]
+        public void MockFile_Copy_ShouldThrowExceptionWhenSourceDoesNotExist()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            fileSystem.File.Copy(sourceFilePath, XFS.Path(@"c:\something\demo2.txt"));
+        }
+
+        [Test]
+        [ExpectedException(typeof(FileNotFoundException))]
+        public void MockFile_Copy_ShouldThrowExceptionWhenSourceDoesNotExist_EvenWhenCopyingToItself()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            fileSystem.File.Copy(sourceFilePath, XFS.Path(@"c:\something\demo.txt"));
+        }
     }
 }

@@ -30,6 +30,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_Move_SameSourceAndTargetIsANoOp()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            string sourceFileContent = "this is some content";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {sourceFilePath, new MockFileData(sourceFileContent)},
+                {XFS.Path(@"c:\somethingelse\dummy.txt"), new MockFileData(new byte[] {0})}
+            });
+
+            string destFilePath = XFS.Path(@"c:\somethingelse\demo.txt");
+
+            fileSystem.File.Move(sourceFilePath, destFilePath);
+
+            Assert.That(fileSystem.FileExists(destFilePath), Is.True);
+            Assert.That(fileSystem.GetFile(destFilePath).TextContents, Is.EqualTo(sourceFileContent));
+        }
+
+        [Test]
         public void MockFile_Move_ShouldThrowIOExceptionWhenTargetAlreadyExists()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
@@ -285,6 +304,26 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(() => fileSystem.File.Move(sourceFilePath, destFilePath),
                 Throws.InstanceOf<DirectoryNotFoundException>().With.Message.StartsWith(@"Could not find a part of the path"));
+        }
+
+        [Test]
+        [ExpectedException(typeof(FileNotFoundException))]
+        public void MockFile_Move_ShouldThrowExceptionWhenSourceDoesNotExist()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            fileSystem.File.Move(sourceFilePath, XFS.Path(@"c:\something\demo2.txt"));
+        }
+
+        [Test]
+        [ExpectedException(typeof(FileNotFoundException))]
+        public void MockFile_Move_ShouldThrowExceptionWhenSourceDoesNotExist_EvenWhenCopyingToItself()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            fileSystem.File.Move(sourceFilePath, XFS.Path(@"c:\something\demo.txt"));
         }
     }
 }
