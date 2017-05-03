@@ -57,7 +57,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\StrongName.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>System.IO.Abstractions.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -106,6 +109,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="System.IO.Abstractions.snk" />
     <None Include="TestingHelpers.nuspec" />
   </ItemGroup>
   <ItemGroup>
