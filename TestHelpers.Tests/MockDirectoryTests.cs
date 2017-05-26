@@ -580,6 +580,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+		public void MockDirectory_CreateDirectory_ShouldReturnDirectoryInfoBaseIfDirectoryExists()
+		{
+			// Arrange
+			var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+			{
+				{ @"c:\some\path\file.txt", new MockFileData("Demo text content") }
+			});
+
+			// Act
+			var result = fileSystem.Directory.CreateDirectory(@"c:\some\path");
+
+			// Assert
+			Assert.IsNotNull(result);
+		}
+        
+        [Test]
         public void MockDirectory_Delete_ShouldDeleteDirectory()
         {
             // Arrange
