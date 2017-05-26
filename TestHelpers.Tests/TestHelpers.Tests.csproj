@@ -81,6 +81,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConvertingEnumerableTests.cs" />
     <Compile Include="MockDriveInfoFactoryTests.cs" />
     <Compile Include="MockDriveInfoTests.cs" />
     <Compile Include="MockDirectoryArgumentPathTests.cs" />

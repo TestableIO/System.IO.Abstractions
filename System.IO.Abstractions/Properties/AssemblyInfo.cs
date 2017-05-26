@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyVersion("0.0.0.1")]
@@ -17,3 +18,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 [assembly: CLSCompliant(true)]
+[assembly: InternalsVisibleTo("System.IO.Abstractions.TestingHelpers.Tests")]
