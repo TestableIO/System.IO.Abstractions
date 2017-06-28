@@ -15,6 +15,10 @@ cache:
 before_build:
 - nuget restore
 
+platform: Any CPU
+
+configuration: Release
+
 build:
   publish_nuget: true
 
