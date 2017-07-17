@@ -5,14 +5,13 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.ComponentModel.Primitives" Version="4.3.0" Condition="'$(TargetFramework)'!='net40'" />
-    <PackageReference Include="System.IO" Version="4.3.0" Condition="'$(TargetFramework)'!='net40'" />
-    <PackageReference Include="System.IO.FileSystem" Version="4.3.0" Condition="'$(TargetFramework)'!='net40'" />
-    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.3.0" Condition="'$(TargetFramework)'!='net40'" />
-    <PackageReference Include="System.IO.FileSystem.DriveInfo" Version="4.3.0" Condition="'$(TargetFramework)'!='net40'" />
-    <PackageReference Include="System.IO.FileSystem.Watcher" Version="4.3.0" Condition="'$(TargetFramework)'!='net40'" />
-    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" Condition="'$(TargetFramework)'!='net40'" />
+  <ItemGroup Condition="'$(TargetFramework)'!='net40'" >
+    <PackageReference Include="System.IO" Version="4.3.0" />
+    <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.3.0" />
+    <PackageReference Include="System.IO.FileSystem.DriveInfo" Version="4.3.0" />
+    <PackageReference Include="System.IO.FileSystem.Watcher" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
   </ItemGroup>
 
 </Project>

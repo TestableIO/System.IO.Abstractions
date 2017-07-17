@@ -77,6 +77,20 @@ namespace System.IO.Abstractions
             set { watcher.Path = value; }
         }
 
+#if NET40
+        public override ISite Site
+        {
+            get { return watcher.Site; }
+            set { watcher.Site = value; }
+        }
+
+        public override ISynchronizeInvoke SynchronizingObject
+        {
+            get { return watcher.SynchronizingObject; }
+            set { watcher.SynchronizingObject = value; }
+        }
+#endif
+
         public override void BeginInit()
         {
 #if NET40
