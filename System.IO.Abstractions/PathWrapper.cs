@@ -16,7 +16,7 @@
         [Obsolete("Please use GetInvalidPathChars or GetInvalidFileNameChars instead.")]
         public override char[] InvalidPathChars
         {
-            get { return Path.InvalidPathChars; }
+            get { return Path.GetInvalidPathChars(); }
         }
 
         public override char PathSeparator

@@ -77,6 +77,7 @@ namespace System.IO.Abstractions
             set { watcher.Path = value; }
         }
 
+#if NET40
         public override ISite Site
         {
             get { return watcher.Site; }
@@ -88,10 +89,13 @@ namespace System.IO.Abstractions
             get { return watcher.SynchronizingObject; }
             set { watcher.SynchronizingObject = value; }
         }
+#endif
 
         public override void BeginInit()
         {
+#if NET40
             watcher.BeginInit();
+#endif
         }
 
         public override void Dispose(bool disposing)
@@ -111,7 +115,9 @@ namespace System.IO.Abstractions
 
         public override void EndInit()
         {
+#if NET40
             watcher.EndInit();
+#endif
         }
 
         public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)

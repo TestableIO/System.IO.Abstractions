@@ -116,12 +116,20 @@ namespace System.IO.Abstractions
 
         public override void Decrypt()
         {
+#if NET40
             instance.Decrypt();
+#else
+            throw new NotSupportedException("Decrypt is only supported on .Net classic");
+#endif
         }
 
         public override void Encrypt()
         {
+#if NET40
             instance.Encrypt();
+#else
+            throw new NotSupportedException("Encrypt is only supported on .Net classic");
+#endif
         }
 
         public override FileSecurity GetAccessControl()
@@ -171,12 +179,20 @@ namespace System.IO.Abstractions
 
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)
         {
+#if NET40
             return instance.Replace(destinationFileName, destinationBackupFileName);
+#else
+            throw new NotSupportedException();
+#endif
         }
 
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
+#if NET40
             return instance.Replace(destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
+#else
+            throw new NotSupportedException();
+#endif
         }
 
         public override void SetAccessControl(FileSecurity fileSecurity)

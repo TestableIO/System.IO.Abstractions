@@ -59,7 +59,11 @@ namespace System.IO.Abstractions
 
         public override Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
         {
+#if NET40
             return File.Create(path, bufferSize, options, fileSecurity);
+#else
+            return File.Create(path, bufferSize, options);
+#endif
         }
 
         public override StreamWriter CreateText(string path)
@@ -69,7 +73,11 @@ namespace System.IO.Abstractions
 
         public override void Decrypt(string path)
         {
+#if NET40
             File.Decrypt(path);
+#else
+            throw new NotSupportedException("Decrypt is only supported on .Net classic");
+#endif
         }
 
         public override void Delete(string path)
@@ -79,7 +87,11 @@ namespace System.IO.Abstractions
 
         public override void Encrypt(string path)
         {
+#if NET40
             File.Encrypt(path);
+#else
+            throw new NotSupportedException("Encrypt is only supported on .Net classic");
+#endif
         }
 
         public override bool Exists(string path)
@@ -89,12 +101,12 @@ namespace System.IO.Abstractions
 
         public override FileSecurity GetAccessControl(string path)
         {
-            return File.GetAccessControl(path);
+            return new FileInfo(path).GetAccessControl();
         }
 
         public override FileSecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
-            return File.GetAccessControl(path, includeSections);
+            return new FileInfo(path).GetAccessControl(includeSections);
         }
 
         /// <summary>
@@ -216,17 +228,25 @@ namespace System.IO.Abstractions
 
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
         {
+#if NET40
             File.Replace(sourceFileName, destinationFileName, destinationBackupFileName);
+#else
+            throw new NotSupportedException();
+#endif
         }
 
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
+#if NET40
             File.Replace(sourceFileName, destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
+#else
+            throw new NotSupportedException();
+#endif
         }
 
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
-            File.SetAccessControl(path, fileSecurity);
+            new FileInfo(path).SetAccessControl(fileSecurity);
         }
 
         public override void SetAttributes(string path, FileAttributes fileAttributes)
