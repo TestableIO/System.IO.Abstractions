@@ -98,7 +98,8 @@ namespace System.IO.Abstractions
 
         public override void Create(DirectorySecurity directorySecurity)
         {
-            instance.Create(directorySecurity);
+            instance.Create();
+            instance.SetAccessControl(directorySecurity);
         }
 
         public override DirectoryInfoBase CreateSubdirectory(string path)
@@ -108,7 +109,9 @@ namespace System.IO.Abstractions
 
         public override DirectoryInfoBase CreateSubdirectory(string path, DirectorySecurity directorySecurity)
         {
-            return new DirectoryInfoWrapper(instance.CreateSubdirectory(path, directorySecurity));
+            var directoryInfo = instance.CreateSubdirectory(path);
+            directoryInfo.SetAccessControl(directorySecurity);
+            return new DirectoryInfoWrapper(directoryInfo);
         }
 
         public override void Delete(bool recursive)

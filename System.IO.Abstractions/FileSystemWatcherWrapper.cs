@@ -77,21 +77,11 @@ namespace System.IO.Abstractions
             set { watcher.Path = value; }
         }
 
-        public override ISite Site
-        {
-            get { return watcher.Site; }
-            set { watcher.Site = value; }
-        }
-
-        public override ISynchronizeInvoke SynchronizingObject
-        {
-            get { return watcher.SynchronizingObject; }
-            set { watcher.SynchronizingObject = value; }
-        }
-
         public override void BeginInit()
         {
+#if NET40
             watcher.BeginInit();
+#endif
         }
 
         public override void Dispose(bool disposing)
@@ -111,7 +101,9 @@ namespace System.IO.Abstractions
 
         public override void EndInit()
         {
+#if NET40
             watcher.EndInit();
+#endif
         }
 
         public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)

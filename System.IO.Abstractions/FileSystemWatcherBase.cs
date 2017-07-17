@@ -11,8 +11,6 @@ namespace System.IO.Abstractions
         public abstract int InternalBufferSize { get; set; }
         public abstract NotifyFilters NotifyFilter { get; set; }
         public abstract string Path { get; set; }
-        public abstract ISite Site { get; set; }
-        public abstract ISynchronizeInvoke SynchronizingObject { get; set; }
         public virtual event FileSystemEventHandler Changed;
         public virtual event FileSystemEventHandler Created;
         public virtual event FileSystemEventHandler Deleted;
