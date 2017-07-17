@@ -3,6 +3,15 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.3;netstandard1.6;net40</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	
+	<PackageId>System.IO.Abstractions</PackageId>
+    <!--<PackageVersion>$version$</PackageVersion>-->
+    <Authors>Tatham Oddie</Authors>
+    <PackageLicenseUrl>https://github.com/tathamoddie/System.IO.Abstractions/blob/master/License.txt</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/tathamoddie/System.IO.Abstractions</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Description>Just like System.Web.Abstractions, but for System.IO. Yay for testable IO access! Be sure to check out the System.IO.Abstractions.TestingHelpers package too.</Description>
+    <PackageTags>testing</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
