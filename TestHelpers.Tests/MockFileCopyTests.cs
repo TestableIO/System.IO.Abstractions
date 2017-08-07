@@ -271,5 +271,29 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(exception.Message, Is.StringStarting("Empty file name is not legal."));
         }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowFileNotFoundExceptionWhenSourceFileDoesNotExist_Message()
+        {
+            var sourceFileName = XFS.Path(@"c:\source\demo.txt");
+            var destFileName = XFS.Path(@"c:\destination\demo.txt");
+            var fileSystem = new MockFileSystem();
+            // The "real" System.IO.File throws a FileNotFoundException before checking if that the destination folder exists, therefore there is no need to create it.
+
+            var exception = Assert.Throws<FileNotFoundException>(() => fileSystem.File.Copy(sourceFileName, destFileName));
+            Assert.That(exception.Message, Is.EqualTo(XFS.Path(@"Could not find file 'c:\source\demo.txt'.")));
+        }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowFileNotFoundExceptionWhenSourceFileDoesNotExist_FileName()
+        {
+            var sourceFileName = XFS.Path(@"c:\source\demo.txt");
+            var destFileName = XFS.Path(@"c:\destination\demo.txt");
+            var fileSystem = new MockFileSystem();
+            // The "real" System.IO.File throws a FileNotFoundException before checking if that the destination folder exists, therefore there is no need to create it.
+
+            var exception = Assert.Throws<FileNotFoundException>(() => fileSystem.File.Copy(sourceFileName, destFileName));
+            Assert.That(exception.FileName, Is.EqualTo(sourceFileName));
+        }
     }
 }

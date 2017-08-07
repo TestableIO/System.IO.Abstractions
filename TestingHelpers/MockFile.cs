@@ -112,14 +112,20 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, "sourceFileName");
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(destFileName, "destFileName");
 
+            var sourceFileExists = mockFileDataAccessor.FileExists(sourceFileName);
+            if (!sourceFileExists)
+            {
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_FILE_EXCEPTION, sourceFileName), sourceFileName);
+            }
+
             var directoryNameOfDestination = mockPath.GetDirectoryName(destFileName);
             if (!mockFileDataAccessor.Directory.Exists(directoryNameOfDestination))
             {
                 throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, destFileName));
             }
 
-            var fileExists = mockFileDataAccessor.FileExists(destFileName);
-            if (fileExists)
+            var destFileExists = mockFileDataAccessor.FileExists(destFileName);
+            if (destFileExists)
             {
                 if (!overwrite)
                 {

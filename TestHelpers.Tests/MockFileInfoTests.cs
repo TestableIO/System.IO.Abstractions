@@ -476,5 +476,39 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(fileInfo.DirectoryName, destinationFolder);
             Assert.AreEqual(fileInfo.FullName, destination);
         }
+
+        [Test]
+        public void MockFileInfo_CopyTo_ShouldThrowFileNotFoundExceptionWhenSourceFileDoesNotExist_Message()
+        {
+            //Arrange
+            var sourceFileName = XFS.Path(@"c:\source\demo.txt");
+            var destFileName = XFS.Path(@"c:\destination\demo.txt");
+
+            var fileSystem = new MockFileSystem();
+            var fileInfo = fileSystem.FileInfo.FromFileName(sourceFileName);
+            // The "real" FileInfo throws a FileNotFoundException before checking if that the destination folder exists, therefore there is no need to create it.
+
+            //Act
+            var exception = Assert.Throws<FileNotFoundException>(() => fileInfo.CopyTo(destFileName));
+
+            Assert.That(exception.Message, Is.EqualTo(XFS.Path(@"Could not find file 'c:\source\demo.txt'.")));
+        }
+
+        [Test]
+        public void MockFileInfo_CopyTo_ShouldThrowFileNotFoundExceptionWhenSourceFileDoesNotExist_FileName()
+        {
+            //Arrange
+            var sourceFileName = XFS.Path(@"c:\source\demo.txt");
+            var destFileName = XFS.Path(@"c:\destination\demo.txt");
+
+            var fileSystem = new MockFileSystem();
+            var fileInfo = fileSystem.FileInfo.FromFileName(sourceFileName);
+            // The "real" FileInfo throws a FileNotFoundException before checking if that the destination folder exists, therefore there is no need to create it.
+
+            //Act
+            var exception = Assert.Throws<FileNotFoundException>(() => fileInfo.CopyTo(destFileName));
+
+            Assert.That(exception.FileName, Is.EqualTo(sourceFileName));
+        }
     }
 }
