@@ -4,6 +4,8 @@ using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using System.Security.AccessControl;
+
     using XFS = MockUnixSupport;
 
     [Serializable]
@@ -16,6 +18,8 @@ namespace System.IO.Abstractions.TestingHelpers
         private readonly PathBase pathField;
         private readonly IDirectoryInfoFactory directoryInfoFactory;
         private readonly IDriveInfoFactory driveInfoFactory;
+
+        private readonly IDictionary<string, MockDirectoryInfo> pathMockDirectoryInfo;
 
         [NonSerialized]
         private readonly PathVerifier pathVerifier;
@@ -30,6 +34,7 @@ namespace System.IO.Abstractions.TestingHelpers
             pathVerifier = new PathVerifier(this);
 
             this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
+            this.pathMockDirectoryInfo = new Dictionary<string, MockDirectoryInfo>();
             pathField = new MockPath(this);
             file = new MockFile(this);
             directory = new MockDirectory(this, file, currentDirectory);
@@ -146,7 +151,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
-        public void AddDirectory(string path)
+        public void AddDirectory(string path, MockDirectoryInfo mockDirectoryInfo = null)
         {
             var fixedPath = FixPath(path, true);
             var separator = XFS.Separator();
@@ -187,7 +192,41 @@ namespace System.IO.Abstractions.TestingHelpers
 
                 var s = fixedPath.EndsWith(separator, StringComparison.OrdinalIgnoreCase) ? fixedPath : fixedPath + separator;
                 files[s] = new MockDirectoryData();
+                AddMockDirectoryInfoToDictionary(s, mockDirectoryInfo ?? new MockDirectoryInfo(this, s));
             }
+        }
+
+        public DirectorySecurity GetAccessControlFromPath(string directoryPath)
+        {
+            if (this.pathMockDirectoryInfo.ContainsKey(directoryPath))
+            {
+                return this.pathMockDirectoryInfo[directoryPath].GetAccessControl();
+            }
+            else
+            {
+                AddMockDirectoryInfoToDictionary(directoryPath, new MockDirectoryInfo(this, directoryPath));
+                return this.pathMockDirectoryInfo[directoryPath].GetAccessControl();
+            }
+        }
+
+        public void SetDirectorySecurity(string directoryPath, DirectorySecurity directorySecurity)
+        {
+            if (this.pathMockDirectoryInfo.ContainsKey(directoryPath))
+            {
+                this.pathMockDirectoryInfo[directoryPath].SetAccessControl(directorySecurity);
+                return;
+            }
+            this.pathMockDirectoryInfo.Add(directoryPath, new MockDirectoryInfo(this, directoryPath, directorySecurity));
+        }
+
+        private void AddMockDirectoryInfoToDictionary(string path, MockDirectoryInfo mockDirectoryInfo)
+        {
+            if (this.pathMockDirectoryInfo.ContainsKey(path))
+            {
+                this.pathMockDirectoryInfo[path] = mockDirectoryInfo;
+                return;
+            }
+            this.pathMockDirectoryInfo.Add(path, mockDirectoryInfo);
         }
 
         public void RemoveFile(string path)

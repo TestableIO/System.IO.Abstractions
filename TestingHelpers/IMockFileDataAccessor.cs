@@ -2,6 +2,8 @@
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using System.Security.AccessControl;
+
     /// <summary>
     /// Provides access to the file system storage.
     /// </summary>
@@ -15,7 +17,7 @@ namespace System.IO.Abstractions.TestingHelpers
         MockFileData GetFile(string path);
 
         void AddFile(string path, MockFileData mockFile);
-        void AddDirectory(string path);
+        void AddDirectory(string path, MockDirectoryInfo mockDirectoryInfo);
 
         /// <summary>
         /// Removes the file.
@@ -47,6 +49,10 @@ namespace System.IO.Abstractions.TestingHelpers
         /// Gets the paths of all directories.
         /// </summary>
         IEnumerable<string> AllDirectories { get; }
+
+        DirectorySecurity GetAccessControlFromPath(string directoryPath);
+
+        void SetDirectorySecurity(string directoryPath, DirectorySecurity directorySecurity);
 
         DirectoryBase Directory { get; }
         IFileInfoFactory FileInfo {get; }

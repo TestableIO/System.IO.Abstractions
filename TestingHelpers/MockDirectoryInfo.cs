@@ -10,14 +10,16 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string directoryPath;
+        private DirectorySecurity directorySecurity;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MockDirectoryInfo"/> class.
         /// </summary>
         /// <param name="mockFileDataAccessor">The mock file data accessor.</param>
         /// <param name="directoryPath">The directory path.</param>
+        /// <param name="directorySecurity">The directory security.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="mockFileDataAccessor"/> or <paramref name="directoryPath"/> is <see langref="null"/>.</exception>
-        public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath)
+        public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath, DirectorySecurity directorySecurity = null)
         {
             if (mockFileDataAccessor == null)
             {
@@ -29,6 +31,8 @@ namespace System.IO.Abstractions.TestingHelpers
             directoryPath = mockFileDataAccessor.Path.GetFullPath(directoryPath);
 
             this.directoryPath = EnsurePathEndsWithDirectorySeparator(directoryPath);
+
+            this.directorySecurity = directorySecurity ?? new DirectorySecurity();
         }
 
         MockFileData MockFileData
@@ -198,12 +202,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectorySecurity GetAccessControl()
         {
-            return mockFileDataAccessor.Directory.GetAccessControl(directoryPath);
+            return this.directorySecurity;
         }
 
         public override DirectorySecurity GetAccessControl(AccessControlSections includeSections)
         {
-            return mockFileDataAccessor.Directory.GetAccessControl(directoryPath, includeSections);
+            return this.directorySecurity;
         }
 
         public override DirectoryInfoBase[] GetDirectories()
@@ -271,9 +275,9 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
         }
 
-        public override void SetAccessControl(DirectorySecurity directorySecurity)
+        public override void SetAccessControl(DirectorySecurity newDirectorySecurity)
         {
-            mockFileDataAccessor.Directory.SetAccessControl(directoryPath, directorySecurity);
+            this.directorySecurity = newDirectorySecurity;
         }
 
         public override DirectoryInfoBase Parent
