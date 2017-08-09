@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using System.Security.Principal;
+
     using XFS = MockUnixSupport;
 
     [Serializable]
@@ -17,13 +19,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string currentDirectory;
 
+        private string path;
+
         public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory)
         {
             if (mockFileDataAccessor == null)
             {
                 throw new ArgumentNullException("mockFileDataAccessor");
             }
-
             this.currentDirectory = currentDirectory;
             this.mockFileDataAccessor = mockFileDataAccessor;
             this.fileBase = fileBase;
@@ -50,10 +53,10 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!Exists(path))
             {
-                mockFileDataAccessor.AddDirectory(path);
+                mockFileDataAccessor.AddDirectory(path, new MockDirectoryInfo(mockFileDataAccessor, path, directorySecurity));
             }
 
-            var created = new MockDirectoryInfo(mockFileDataAccessor, path);
+            var created = new MockDirectoryInfo(mockFileDataAccessor, path, directorySecurity);
             return created;
         }
 
@@ -101,16 +104,15 @@ namespace System.IO.Abstractions.TestingHelpers
             // First crude implementation to avoid NotImplementedException
             if (Exists(path))
             {
-                return new DirectorySecurity();
+                return this.mockFileDataAccessor.GetAccessControlFromPath(path);
             }
-
             throw new DirectoryNotFoundException(path);
         }
 
         public override DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
-            // First crude implementation to avoid NotImplementedException
-            return GetAccessControl(path);
+            // Implementation doesn't currently include access control sections
+            return this.GetAccessControl(path);
         }
 
         public override DateTime GetCreationTime(string path)
@@ -162,7 +164,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
         {
-            if(path == null)
+            if (path == null)
                 throw new ArgumentNullException();
 
             if (!Exists(path))
@@ -234,7 +236,58 @@ namespace System.IO.Abstractions.TestingHelpers
 
                         return false;
                     })
-                .ToArray();
+                .Where(this.CheckUserHasReadPermissionsRecursively).ToArray();
+        }
+
+        private bool CheckUserHasReadPermissionsRecursively(string filePath)
+        {
+            var currentGroups = WindowsIdentity.GetCurrent().Groups.Select(
+                group =>
+                {
+                    try
+                    {
+                        return group.Translate(typeof(NTAccount)).Value;
+                    }
+                    catch
+                    {
+                        return string.Empty;
+                    }
+                }).Where(s => !string.IsNullOrWhiteSpace(s)).Distinct().ToList();
+            string currentUser = WindowsIdentity.GetCurrent().Name;
+            while (true)
+            {
+                var parent = this.GetParent(filePath);
+                //root directory
+                if(parent == null)
+                {
+                    return true;
+                }
+                filePath = EnsurePathEndsWithDirectorySeparator(parent.FullName);
+
+                var accessControl = this.mockFileDataAccessor.GetAccessControlFromPath(filePath);
+                var authorizationRuleCollection = accessControl.GetAccessRules(true, true, typeof(NTAccount));
+                var authRules = new AuthorizationRule[authorizationRuleCollection.Count];
+                authorizationRuleCollection.CopyTo(authRules, 0);
+                if (authRules.Any(rule =>
+                {
+                    var accessRule = rule as FileSystemAccessRule;
+                    if (accessRule == null)
+                    {
+                        return false;
+                    }
+                    return ((accessRule.IdentityReference.Value == currentUser ||
+                             currentGroups.Contains(accessRule.IdentityReference.Value))
+                        && accessRule.AccessControlType == AccessControlType.Deny && accessRule.FileSystemRights == FileSystemRights.Read);
+                }
+                ))
+                {
+                    return false;
+                }
+                if (filePath == parent.Root.FullName)
+                {
+                    return true;
+                }
+            }
         }
 
         public override string[] GetFileSystemEntries(string path)
@@ -294,7 +347,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (MockPath.HasIllegalCharacters(path, false))
             {
-                throw new ArgumentException("Path contains invalid path characters.", "path");
+                throw new ArgumentException("Path contains invalid directoryPath characters.", "path");
             }
 
             var absolutePath = mockFileDataAccessor.Path.GetFullPath(path);
@@ -328,14 +381,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (string.Equals(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase))
             {
-                throw new IOException("Source and destination path must be different.");
+                throw new IOException("Source and destination directoryPath must be different.");
             }
 
             var sourceRoot = mockFileDataAccessor.Path.GetPathRoot(fullSourcePath);
             var destinationRoot = mockFileDataAccessor.Path.GetPathRoot(fullDestPath);
             if (!string.Equals(sourceRoot, destinationRoot, StringComparison.OrdinalIgnoreCase))
             {
-                throw new IOException("Source and destination path must have identical roots. Move will not work across volumes.");
+                throw new IOException("Source and destination directoryPath must have identical roots. Move will not work across volumes.");
             }
 
             //Make sure that the destination exists
@@ -366,9 +419,13 @@ namespace System.IO.Abstractions.TestingHelpers
             Delete(fullSourcePath);
         }
 
-        public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
+        public override void SetAccessControl(string directoryPath, DirectorySecurity directorySecurity)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            if (Exists(directoryPath))
+            {
+                this.mockFileDataAccessor.SetDirectorySecurity(directoryPath, directorySecurity);
+            }
+            throw new DirectoryNotFoundException();
         }
 
         public override void SetCreationTime(string path, DateTime creationTime)
@@ -383,7 +440,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void SetCurrentDirectory(string path)
         {
-          currentDirectory = path;
+            currentDirectory = path;
         }
 
         public override void SetLastAccessTime(string path, DateTime lastAccessTime)
@@ -408,21 +465,21 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override IEnumerable<string> EnumerateDirectories(string path)
         {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "directoryPath");
 
             return EnumerateDirectories(path, "*");
         }
 
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern)
         {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "directoryPath");
 
             return EnumerateDirectories(path, searchPattern, SearchOption.TopDirectoryOnly);
         }
 
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
         {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "directoryPath");
 
             path = EnsurePathEndsWithDirectorySeparator(path);
 
