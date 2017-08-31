@@ -77,6 +77,8 @@
     <Compile Include="MockFileInfoFactory.cs" />
     <Compile Include="MockFileStream.cs" />
     <Compile Include="MockFileSystem.cs" />
+    <Compile Include="MockFileVersionInfo.cs" />
+    <Compile Include="MockFileVersionInfoMutableAdapter.cs" />
     <Compile Include="MockPath.cs" />
     <Compile Include="PathVerifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -184,5 +184,7 @@ namespace System.IO.Abstractions.TestingHelpers
             get { return accessControl; }
             set { accessControl = value; }
         }
+
+        public MockFileVersionInfo VersionInfo { get; internal set; }
     }
 }

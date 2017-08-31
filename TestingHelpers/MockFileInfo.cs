@@ -260,6 +260,11 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
+        public override FileVersionInfoBase GetVersion()
+        {
+            return MockFileData.VersionInfo;
+        }
+
         public override DirectoryInfoBase Directory
         {
             get

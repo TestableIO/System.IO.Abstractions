@@ -1,4 +1,5 @@
-﻿using System.Security.AccessControl;
+﻿using System.Diagnostics;
+using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
@@ -182,6 +183,11 @@ namespace System.IO.Abstractions
         public override void SetAccessControl(FileSecurity fileSecurity)
         {
             instance.SetAccessControl(fileSecurity);
+        }
+
+        public override FileVersionInfoBase GetVersion()
+        {
+            return FileVersionInfo.GetVersionInfo(FullName);
         }
 
         public override DirectoryInfoBase Directory

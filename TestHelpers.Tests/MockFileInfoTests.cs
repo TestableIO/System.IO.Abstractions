@@ -372,6 +372,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileSystem_VersionInfo_ShouldReturnVersionInfoOfFileInMemory()
+        {
+            var version = new MockFileVersionInfo { ProductName = "Testing MockFileVersionInfo" };
+            var fileData = new MockFileData("Demo text content") { VersionInfo = version };
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\a.txt"), fileData }
+            });
+
+            var actual = fileSystem.FileInfo.FromFileName(@"c:\a.txt").GetVersion();
+            Assert.AreSame(version, actual);
+        }
+
+        [Test]
         public void MockFileInfo_GetExtension_ShouldReturnExtension()
         {
             // Arrange

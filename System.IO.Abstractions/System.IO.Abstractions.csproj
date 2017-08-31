@@ -83,6 +83,8 @@
     <Compile Include="FileSystemInfoBase.cs" />
     <Compile Include="FileSystemWatcherBase.cs" />
     <Compile Include="FileSystemWatcherWrapper.cs" />
+    <Compile Include="FileVersionInfoBase.cs" />
+    <Compile Include="FileVersionInfoWrapper.cs" />
     <Compile Include="FileWrapper.cs" />
     <Compile Include="FileBase.cs" />
     <Compile Include="IDirectoryInfoFactory.cs" />

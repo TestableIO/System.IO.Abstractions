@@ -14,6 +14,7 @@ namespace System.IO.Abstractions
         public abstract void Encrypt();
         public abstract FileSecurity GetAccessControl();
         public abstract FileSecurity GetAccessControl(AccessControlSections includeSections);
+        public abstract FileVersionInfoBase GetVersion();
         public abstract void MoveTo(string destFileName);
         public abstract Stream Open(FileMode mode);
         public abstract Stream Open(FileMode mode, FileAccess access);
