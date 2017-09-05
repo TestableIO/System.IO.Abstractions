@@ -1,8 +1,9 @@
 ﻿namespace System.IO.Abstractions
 {
     [Serializable]
-    public abstract class FileSystemInfoBase
+    public abstract class FileSystemInfoBase : IFileSystemEntry
     {
+        public abstract IFileSystem FileSystem { get; }
         public abstract void Delete();
         public abstract void Refresh();
         public abstract FileAttributes Attributes { get; set; }

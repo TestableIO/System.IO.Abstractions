@@ -2,11 +2,8 @@
 {
     public interface IFileSystem
     {
-        FileBase File { get; }
-        DirectoryBase Directory { get; }
-        IFileInfoFactory FileInfo { get; }
-        PathBase Path { get; }
-        IDirectoryInfoFactory DirectoryInfo { get; }
-        IDriveInfoFactory DriveInfo { get; }
+        IFileSystemInternals Internals { get; }
+        IFile ParseFile(string fullName);
+        IDirectory ParseDirectory(string fullName);
     }
 }

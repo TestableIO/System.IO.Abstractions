@@ -44,7 +44,6 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <SignAssembly>false</SignAssembly>
     <Prefer32Bit>false</Prefer32Bit>
-    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -61,6 +60,9 @@
     <AssemblyOriginatorKeyFile>..\StrongName.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=10.4.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\..\Sitecore.DiagnosticsToolset\src\packages\JetBrains.Annotations.10.4.0\lib\net\JetBrains.Annotations.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -76,41 +78,35 @@
     <Compile Include="DriveInfoBase.cs" />
     <Compile Include="DriveInfoFactory.cs" />
     <Compile Include="DriveInfoWrapper.cs" />
+    <Compile Include="Extensions\FileExtensions.cs" />
+    <Compile Include="Extensions\FileSystemExtensions.cs" />
+    <Compile Include="Extensions\FolderExtensions.cs" />
+    <Compile Include="IUniqueTempDirectory.cs" />
+    <Compile Include="UniqueTempDirectory.cs" />
     <Compile Include="FileInfoBase.cs" />
     <Compile Include="FileInfoFactory.cs" />
     <Compile Include="FileInfoWrapper.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="FileSystemInfoBase.cs" />
+    <Compile Include="FileSystemInternals.cs" />
     <Compile Include="FileSystemWatcherBase.cs" />
     <Compile Include="FileSystemWatcherWrapper.cs" />
     <Compile Include="FileWrapper.cs" />
     <Compile Include="FileBase.cs" />
+    <Compile Include="IDirectory.cs" />
     <Compile Include="IDirectoryInfoFactory.cs" />
     <Compile Include="IDriveInfoFactory.cs" />
+    <Compile Include="IFile.cs" />
     <Compile Include="IFileInfoFactory.cs" />
     <Compile Include="IFileSystem.cs" />
+    <Compile Include="IFileSystemEntry.cs" />
+    <Compile Include="IFileSystemInternals.cs" />
     <Compile Include="PathBase.cs" />
     <Compile Include="PathWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
-      <Visible>False</Visible>
-      <ProductName>Windows Installer 3.1</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="packages.config" />
     <None Include="System.IO.Abstractions.nuspec">
       <SubType>Designer</SubType>
     </None>

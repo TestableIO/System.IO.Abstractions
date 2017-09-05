@@ -3,11 +3,11 @@
 namespace System.IO.Abstractions
 {
     [Serializable]
-    public abstract class FileInfoBase : FileSystemInfoBase
+    public abstract class FileInfoBase : FileSystemInfoBase, IFile
     {
         public abstract StreamWriter AppendText();
-        public abstract FileInfoBase CopyTo(string destFileName);
-        public abstract FileInfoBase CopyTo(string destFileName, bool overwrite);
+        public abstract IFile CopyTo(string destFileName);
+        public abstract IFile CopyTo(string destFileName, bool overwrite);
         public abstract Stream Create();
         public abstract StreamWriter CreateText();
         public abstract void Decrypt();
@@ -21,10 +21,10 @@ namespace System.IO.Abstractions
         public abstract Stream OpenRead();
         public abstract StreamReader OpenText();
         public abstract Stream OpenWrite();
-        public abstract FileInfoBase Replace(string destinationFileName, string destinationBackupFileName);
-        public abstract FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
+        public abstract IFile Replace(string destinationFileName, string destinationBackupFileName);
+        public abstract IFile Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
         public abstract void SetAccessControl(FileSecurity fileSecurity);
-        public abstract DirectoryInfoBase Directory { get; }
+        public abstract IDirectory Directory { get; }
         public abstract string DirectoryName { get; }
         public abstract bool IsReadOnly { get; set; }
         public abstract long Length { get; }

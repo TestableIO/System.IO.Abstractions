@@ -17,6 +17,11 @@ namespace System.IO.Abstractions
             this.instance = instance;
         }
 
+        public override IFileSystem FileSystem
+        {
+            get { return Abstractions.FileSystem.Instance; }
+        }
+
         public override void Delete()
         {
             instance.Delete();
@@ -94,14 +99,14 @@ namespace System.IO.Abstractions
             return instance.AppendText();
         }
 
-        public override FileInfoBase CopyTo(string destFileName)
+        public override IFile CopyTo(string destFileName)
         {
-            return instance.CopyTo(destFileName);
+            return new FileInfoWrapper(instance.CopyTo(destFileName));
         }
 
-        public override FileInfoBase CopyTo(string destFileName, bool overwrite)
+        public override IFile CopyTo(string destFileName, bool overwrite)
         {
-            return instance.CopyTo(destFileName, overwrite);
+            return new FileInfoWrapper(instance.CopyTo(destFileName, overwrite));
         }
 
         public override Stream Create()
@@ -169,14 +174,14 @@ namespace System.IO.Abstractions
             return instance.OpenWrite();
         }
 
-        public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)
+        public override IFile Replace(string destinationFileName, string destinationBackupFileName)
         {
-            return instance.Replace(destinationFileName, destinationBackupFileName);
+            return new FileInfoWrapper(instance.Replace(destinationFileName, destinationBackupFileName));
         }
 
-        public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
+        public override IFile Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
-            return instance.Replace(destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
+            return new FileInfoWrapper(instance.Replace(destinationFileName, destinationBackupFileName, ignoreMetadataErrors));
         }
 
         public override void SetAccessControl(FileSecurity fileSecurity)
@@ -184,9 +189,9 @@ namespace System.IO.Abstractions
             instance.SetAccessControl(fileSecurity);
         }
 
-        public override DirectoryInfoBase Directory
+        public override IDirectory Directory
         {
-            get { return instance.Directory; }
+            get { return new DirectoryInfoWrapper(instance.Directory); }
         }
 
         public override string DirectoryName
