@@ -85,10 +85,13 @@
     <Compile Include="FileSystemWatcherWrapper.cs" />
     <Compile Include="FileWrapper.cs" />
     <Compile Include="FileBase.cs" />
+    <Compile Include="IDirectory.cs" />
     <Compile Include="IDirectoryInfoFactory.cs" />
     <Compile Include="IDriveInfoFactory.cs" />
+    <Compile Include="IFile.cs" />
     <Compile Include="IFileInfoFactory.cs" />
     <Compile Include="IFileSystem.cs" />
+    <Compile Include="IFileSystemEntry.cs" />
     <Compile Include="PathBase.cs" />
     <Compile Include="PathWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

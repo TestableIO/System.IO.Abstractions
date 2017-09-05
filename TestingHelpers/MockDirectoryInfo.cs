@@ -141,12 +141,12 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.Directory.CreateDirectory(FullName, directorySecurity);
         }
 
-        public override DirectoryInfoBase CreateSubdirectory(string path)
+        public override IDirectory CreateSubdirectory(string path)
         {
             return mockFileDataAccessor.Directory.CreateDirectory(Path.Combine(FullName, path));
         }
 
-        public override DirectoryInfoBase CreateSubdirectory(string path, DirectorySecurity directorySecurity)
+        public override IDirectory CreateSubdirectory(string path, DirectorySecurity directorySecurity)
         {
             return mockFileDataAccessor.Directory.CreateDirectory(Path.Combine(FullName, path), directorySecurity);
         }
@@ -156,47 +156,47 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.Directory.Delete(directoryPath, recursive);
         }
 
-        public override IEnumerable<DirectoryInfoBase> EnumerateDirectories()
+        public override IEnumerable<IDirectory> EnumerateDirectories()
         {
             return GetDirectories();
         }
 
-        public override IEnumerable<DirectoryInfoBase> EnumerateDirectories(string searchPattern)
+        public override IEnumerable<IDirectory> EnumerateDirectories(string searchPattern)
         {
             return GetDirectories(searchPattern);
         }
 
-        public override IEnumerable<DirectoryInfoBase> EnumerateDirectories(string searchPattern, SearchOption searchOption)
+        public override IEnumerable<IDirectory> EnumerateDirectories(string searchPattern, SearchOption searchOption)
         {
             return GetDirectories(searchPattern, searchOption);
         }
 
-        public override IEnumerable<FileInfoBase> EnumerateFiles()
+        public override IEnumerable<IFile> EnumerateFiles()
         {
             return GetFiles();
         }
 
-        public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern)
+        public override IEnumerable<IFile> EnumerateFiles(string searchPattern)
         {
             return GetFiles(searchPattern);
         }
 
-        public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern, SearchOption searchOption)
+        public override IEnumerable<IFile> EnumerateFiles(string searchPattern, SearchOption searchOption)
         {
             return GetFiles(searchPattern, searchOption);
         }
 
-        public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos()
+        public override IEnumerable<IFileSystemEntry> EnumerateFileSystemInfos()
         {
             return GetFileSystemInfos();
         }
 
-        public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern)
+        public override IEnumerable<IFileSystemEntry> EnumerateFileSystemInfos(string searchPattern)
         {
             return GetFileSystemInfos(searchPattern);
         }
 
-        public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern, SearchOption searchOption)
+        public override IEnumerable<IFileSystemEntry> EnumerateFileSystemInfos(string searchPattern, SearchOption searchOption)
         {
             return GetFileSystemInfos(searchPattern, searchOption);
         }
@@ -211,17 +211,17 @@ namespace System.IO.Abstractions.TestingHelpers
             return mockFileDataAccessor.Directory.GetAccessControl(directoryPath, includeSections);
         }
 
-        public override DirectoryInfoBase[] GetDirectories()
+        public override IDirectory[] GetDirectories()
         {
             return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath));
         }
 
-        public override DirectoryInfoBase[] GetDirectories(string searchPattern)
+        public override IDirectory[] GetDirectories(string searchPattern)
         {
             return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath, searchPattern));
         }
 
-        public override DirectoryInfoBase[] GetDirectories(string searchPattern, SearchOption searchOption)
+        public override IDirectory[] GetDirectories(string searchPattern, SearchOption searchOption)
         {
             return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath, searchPattern, searchOption));
         }
@@ -234,17 +234,17 @@ namespace System.IO.Abstractions.TestingHelpers
                 .ToArray();
         }
 
-        public override FileInfoBase[] GetFiles()
+        public override IFile[] GetFiles()
         {
             return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName));
         }
 
-        public override FileInfoBase[] GetFiles(string searchPattern)
+        public override IFile[] GetFiles(string searchPattern)
         {
             return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName, searchPattern));
         }
 
-        public override FileInfoBase[] GetFiles(string searchPattern, SearchOption searchOption)
+        public override IFile[] GetFiles(string searchPattern, SearchOption searchOption)
         {
             return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName, searchPattern, searchOption));
         }
@@ -256,19 +256,19 @@ namespace System.IO.Abstractions.TestingHelpers
                   .ToArray();
         }
 
-        public override FileSystemInfoBase[] GetFileSystemInfos()
+        public override IFileSystemEntry[] GetFileSystemInfos()
         {
             return GetFileSystemInfos("*");
         }
 
-        public override FileSystemInfoBase[] GetFileSystemInfos(string searchPattern)
+        public override IFileSystemEntry[] GetFileSystemInfos(string searchPattern)
         {
             return GetFileSystemInfos(searchPattern, SearchOption.TopDirectoryOnly);
         }
 
-        public override FileSystemInfoBase[] GetFileSystemInfos(string searchPattern, SearchOption searchOption)
+        public override IFileSystemEntry[] GetFileSystemInfos(string searchPattern, SearchOption searchOption)
         {
-            return GetDirectories(searchPattern, searchOption).OfType<FileSystemInfoBase>().Concat(GetFiles(searchPattern, searchOption)).ToArray();
+            return GetDirectories(searchPattern, searchOption).OfType<IFileSystemEntry>().Concat(GetFiles(searchPattern, searchOption)).ToArray();
         }
 
         public override void MoveTo(string destDirName)
@@ -281,7 +281,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.Directory.SetAccessControl(directoryPath, directorySecurity);
         }
 
-        public override DirectoryInfoBase Parent
+        public override IDirectory Parent
         {
             get
             {
@@ -289,7 +289,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
-        public override DirectoryInfoBase Root
+        public override IDirectory Root
         {
             get
             {

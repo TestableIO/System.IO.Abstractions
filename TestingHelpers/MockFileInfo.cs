@@ -164,13 +164,13 @@ namespace System.IO.Abstractions.TestingHelpers
             //return ((MockFileDataModifier) MockFileData).AppendText();
         }
 
-        public override FileInfoBase CopyTo(string destFileName)
+        public override IFile CopyTo(string destFileName)
         {
             new MockFile(mockFileSystem).Copy(FullName, destFileName);
             return mockFileSystem.FileInfo.FromFileName(destFileName);
         }
 
-        public override FileInfoBase CopyTo(string destFileName, bool overwrite)
+        public override IFile CopyTo(string destFileName, bool overwrite)
         {
             new MockFile(mockFileSystem).Copy(FullName, destFileName, overwrite);
             return mockFileSystem.FileInfo.FromFileName(destFileName);
@@ -250,12 +250,12 @@ namespace System.IO.Abstractions.TestingHelpers
             return new MockFileStream(mockFileSystem, path, MockFileStream.StreamType.WRITE);
         }
 
-        public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)
+        public override IFile Replace(string destinationFileName, string destinationBackupFileName)
         {
             throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
-        public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
+        public override IFile Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
             throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
@@ -265,7 +265,7 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
         }
 
-        public override DirectoryInfoBase Directory
+        public override IDirectory Directory
         {
             get
             {
