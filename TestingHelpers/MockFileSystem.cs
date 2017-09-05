@@ -7,7 +7,7 @@ namespace System.IO.Abstractions.TestingHelpers
     using XFS = MockUnixSupport;
 
     [Serializable]
-    public class MockFileSystem : IFileSystem, IMockFileDataAccessor
+    public class MockFileSystem : IMockFileDataAccessor
     {
         private readonly IDictionary<string, MockFileData> files;
         private readonly FileBase file;
