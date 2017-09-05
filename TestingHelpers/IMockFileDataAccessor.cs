@@ -5,7 +5,7 @@ namespace System.IO.Abstractions.TestingHelpers
     /// <summary>
     /// Provides access to the file system storage.
     /// </summary>
-    public interface IMockFileDataAccessor
+    public interface IMockFileDataAccessor : IFileSystem
     {
         /// <summary>
         /// Gets a file.

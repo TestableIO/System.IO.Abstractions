@@ -24,6 +24,11 @@ namespace System.IO.Abstractions.TestingHelpers
             get { return mockFileSystem.GetFile(path); }
         }
 
+        public override IFileSystem FileSystem
+        {
+            get { return mockFileSystem; }
+        }
+
         public override void Delete()
         {
             mockFileSystem.RemoveFile(path);
