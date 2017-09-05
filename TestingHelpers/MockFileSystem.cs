@@ -245,5 +245,20 @@ namespace System.IO.Abstractions.TestingHelpers
                 return result;
             }
         }
+
+        public IFileSystemInternals Internals
+        {
+            get { return this; }
+        }
+
+        public IFile ParseFile(string fullName)
+        {
+            return FileInfo.FromFileName(fullName);
+        }
+
+        public IDirectory ParseDirectory(string fullName)
+        {
+            return DirectoryInfo.FromDirectoryName(fullName);
+        }
     }
 }

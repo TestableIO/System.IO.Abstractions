@@ -81,6 +81,7 @@
     <Compile Include="FileInfoWrapper.cs" />
     <Compile Include="FileSystem.cs" />
     <Compile Include="FileSystemInfoBase.cs" />
+    <Compile Include="FileSystemInternals.cs" />
     <Compile Include="FileSystemWatcherBase.cs" />
     <Compile Include="FileSystemWatcherWrapper.cs" />
     <Compile Include="FileWrapper.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="IFileInfoFactory.cs" />
     <Compile Include="IFileSystem.cs" />
     <Compile Include="IFileSystemEntry.cs" />
+    <Compile Include="IFileSystemInternals.cs" />
     <Compile Include="PathBase.cs" />
     <Compile Include="PathWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

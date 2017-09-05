@@ -221,7 +221,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(result, Is.EquivalentTo(expected));
         }
 
-        private void ExecuteTimeAttributeTest(Action<IFileSystem, string, DateTime> setter, Func<IFileSystem, string, DateTime> getter)
+        private void ExecuteTimeAttributeTest(Action<IFileSystemInternals, string, DateTime> setter, Func<IFileSystemInternals, string, DateTime> getter)
         {
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
