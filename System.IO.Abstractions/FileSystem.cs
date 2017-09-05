@@ -3,6 +3,8 @@
     [Serializable]
     public class FileSystem : IFileSystem
     {
+        internal static readonly FileSystem Instance = new FileSystem();
+        
         DirectoryBase directory;
         public DirectoryBase Directory
         {

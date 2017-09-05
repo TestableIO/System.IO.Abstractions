@@ -280,5 +280,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(directoryPath, str);
         }
+
+        [Test]
+        public void MockDirectoryInfo_FileSystem_ShouldReturnFileSystem()
+        {
+            var directoryPath = XFS.Path(@"c:\temp\folder\folder");
+
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, directoryPath);
+
+            // Act
+            var result = directoryInfo.FileSystem;
+
+            // Assert
+            Assert.AreEqual(fileSystem, result);
+        }
     }
 }
