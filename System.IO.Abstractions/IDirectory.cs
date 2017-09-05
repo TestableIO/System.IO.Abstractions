@@ -33,6 +33,7 @@ namespace System.IO.Abstractions
         IFileSystemEntry[] GetFileSystemInfos();
         IFileSystemEntry[] GetFileSystemInfos(string searchPattern);
         IFileSystemEntry[] GetFileSystemInfos(string searchPattern, SearchOption searchOption);
+        [Obsolete]
         void MoveTo(string destDirName);
         void SetAccessControl(DirectorySecurity directorySecurity);
     }

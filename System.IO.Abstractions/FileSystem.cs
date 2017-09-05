@@ -4,11 +4,12 @@
     public class FileSystem : IFileSystem
     {
         internal static readonly FileSystem Instance = new FileSystem();
-        
-        private IFileSystemInternals internals;
-        public IFileSystemInternals Internals
+
+        public IFileSystemInternals Internals { get; }
+
+        public FileSystem()
         {
-            get { return internals; }
+            Internals = new FileSystemInternals();
         }
 
         public IFile ParseFile(string fullName)
