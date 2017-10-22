@@ -4,7 +4,7 @@
         <PackageId>System.IO.Abstractions.TestingHelpers</PackageId>
         <AssemblyVersion>0.0.0.1</AssemblyVersion>
         <FileVersion>0.0.0.1</FileVersion>
-        <Version>2.1.0</Version>
+        <Version>0.0.0.1</Version>
         <Description>A set of pre-built mocks to help when testing file system interactions.</Description>
         <Company />
         <Product>System.IO.Abstractions</Product>

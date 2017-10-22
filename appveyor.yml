@@ -1,15 +1,15 @@
 image: Visual Studio 2017
 
-version: 2.0.0.{build}
+version: 2.1.0.{build}
 
 pull_requests:
   do_not_increment_build_number: true
 
-assembly_info:
+dotnet_csproj:
   patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
 
 before_build:
 - nuget restore
