@@ -11,6 +11,7 @@
     <Authors>Tatham Oddie</Authors>
     <RootNamespace>System.IO.Abstractions.TestingHelpers.Tests</RootNamespace>
     <AssemblyOriginatorKeyFile>../StrongName.pfx</AssemblyOriginatorKeyFile>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
