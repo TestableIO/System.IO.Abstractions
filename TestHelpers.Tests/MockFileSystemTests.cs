@@ -77,7 +77,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(newContent));
         }
-
+#if NET40
         [Test]
         public void Is_Serializable()
         {
@@ -94,6 +94,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(memoryStream.Length > 0, "Length didn't increase after serialization task.");
         }
+#endif
 
         [Test]
         public void MockFileSystem_AddDirectory_ShouldCreateDirectory()

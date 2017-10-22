@@ -11,22 +11,27 @@ namespace System.IO.Abstractions
         public abstract int InternalBufferSize { get; set; }
         public abstract NotifyFilters NotifyFilter { get; set; }
         public abstract string Path { get; set; }
+#if NET40
         public abstract ISite Site { get; set; }
         public abstract ISynchronizeInvoke SynchronizingObject { get; set; }
+#endif
         public virtual event FileSystemEventHandler Changed;
         public virtual event FileSystemEventHandler Created;
         public virtual event FileSystemEventHandler Deleted;
         public virtual event ErrorEventHandler Error;
         public virtual event RenamedEventHandler Renamed;
+#if NET40
         public abstract void BeginInit();
-
+#endif
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
+#if NET40
         public abstract void EndInit();
+#endif
         public abstract WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType);
         public abstract WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout);
 

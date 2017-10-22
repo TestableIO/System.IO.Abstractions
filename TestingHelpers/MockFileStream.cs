@@ -45,10 +45,18 @@
             }
         }
 
+#if NET40
         public override void Close()
         {
             InternalFlush();
         }
+#else
+        protected override void Dispose(bool disposing)
+        {
+            InternalFlush();
+            base.Dispose(disposing);
+        }
+#endif
 
         public override void Flush()
         {

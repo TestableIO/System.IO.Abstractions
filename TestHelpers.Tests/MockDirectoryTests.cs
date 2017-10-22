@@ -743,7 +743,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<ArgumentException>(action);
         }
 
-        private IEnumerable<string> GetSearchPatternForTwoDotsExceptions()
+        public static IEnumerable<string> GetSearchPatternForTwoDotsExceptions()
         {
             yield return @"a..\b";
             yield return @"a../b";
@@ -752,7 +752,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return @"aaa\vv..\";
         }
 
-        [TestCaseSource("GetSearchPatternForTwoDotsExceptions")]
+        [TestCaseSource(typeof(MockDirectoryTests), "GetSearchPatternForTwoDotsExceptions")]
         public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneDirectoryPathSep(string searchPattern)
         {
             // Arrange
@@ -812,6 +812,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(XFS.Path("C:\\"), fileSystem.Directory.GetDirectoryRoot(XFS.Path(@"C:\foo\bar")));
         }
 
+#if NET40
         [Test]
         public void MockDirectory_GetLogicalDrives_Returns_LogicalDrives()
         {
@@ -836,6 +837,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 Assert.IsTrue(drives.Contains("d:\\"));
             }
         }
+#endif
 
         [Test]
         public void MockDirectory_GetDirectories_Returns_Child_Directories()

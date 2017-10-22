@@ -50,8 +50,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return fs => fs.SetLastAccessTimeUtc(null, DateTime.Now);
             yield return fs => fs.SetLastWriteTime(null, DateTime.Now);
             yield return fs => fs.SetLastWriteTimeUtc(null, DateTime.Now);
+#if NET40
             yield return fs => fs.Decrypt(null);
             yield return fs => fs.Encrypt(null);
+#endif
         }
 
         [TestCaseSource("GetFileSystemActionsForArgumentNullException")]
