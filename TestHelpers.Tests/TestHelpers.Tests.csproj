@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net40</TargetFrameworks>
-    <PackageId>System.IO.Abstractions.TestingHelpers.Tests</PackageId>
     <AssemblyVersion>0.0.0.1</AssemblyVersion>
     <FileVersion>0.0.0.1</FileVersion>
     <Version>0.0.0.1</Version>
@@ -12,8 +11,6 @@
     <Authors>Tatham Oddie</Authors>
     <RootNamespace>System.IO.Abstractions.TestingHelpers.Tests</RootNamespace>
     <AssemblyOriginatorKeyFile>../StrongName.pfx</AssemblyOriginatorKeyFile>
-    <PackageLicenseUrl>https://github.com/tathamoddie/System.IO.Abstractions/blob/master/License.txt</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/tathamoddie/System.IO.Abstractions</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

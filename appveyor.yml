@@ -22,6 +22,6 @@ deploy:
   api_key:
     secure: lUmSV95QwsQtvPkHT02PT5fswmVcW0oMIJvOGEincUNnUNtTe3DOIjVEOpC0CMkQ
   skip_symbols: false
-  artifact: /.*\.nupkg/
+  artifact: '**\System.IO.Abstractions.*.nupkg'
   on:
     branch: master
