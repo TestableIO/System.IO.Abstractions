@@ -8,7 +8,7 @@
     <Copyright>Copyright © Tatham Oddie 2010</Copyright>
     <Authors>Tatham Oddie</Authors>
     <RootNamespace>System.IO.Abstractions.TestingHelpers.Tests</RootNamespace>
-    <AssemblyOriginatorKeyFile>../StrongName.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>../StrongName.snk</AssemblyOriginatorKeyFile>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

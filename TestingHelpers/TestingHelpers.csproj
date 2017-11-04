@@ -9,7 +9,7 @@
         <Copyright>Copyright © Tatham Oddie 2010</Copyright>
         <Authors>Tatham Oddie</Authors>
         <RootNamespace>System.IO.Abstractions.TestingHelpers</RootNamespace>
-        <AssemblyOriginatorKeyFile>../StrongName.pfx</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile>../StrongName.snk</AssemblyOriginatorKeyFile>
         <PackageLicenseUrl>https://github.com/tathamoddie/System.IO.Abstractions/blob/master/License.txt</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/tathamoddie/System.IO.Abstractions</PackageProjectUrl>
     </PropertyGroup>

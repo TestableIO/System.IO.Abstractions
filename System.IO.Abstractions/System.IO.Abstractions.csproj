@@ -7,7 +7,7 @@
         <Company />
         <Description>A set of abstractions to help make file system interactions testable.</Description>
         <Copyright>Copyright © Tatham Oddie 2010</Copyright>
-        <AssemblyOriginatorKeyFile>../StrongName.pfx</AssemblyOriginatorKeyFile>
+        <AssemblyOriginatorKeyFile>../StrongName.snk</AssemblyOriginatorKeyFile>
         <PackageLicenseUrl>https://github.com/tathamoddie/System.IO.Abstractions/blob/master/License.txt</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/tathamoddie/System.IO.Abstractions</PackageProjectUrl>
         <PackageTags>testing</PackageTags>

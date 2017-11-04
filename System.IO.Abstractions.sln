@@ -6,7 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F3BDA62-8052-4C37-97A0-94354AA971B0}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
-		StrongName.pfx = StrongName.pfx
+		StrongName.snk = StrongName.snk
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelpers.Tests", "TestHelpers.Tests\TestHelpers.Tests.csproj", "{20B02738-952A-40F5-9C10-E2F83013E9FC}"
