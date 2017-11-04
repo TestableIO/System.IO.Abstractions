@@ -7,17 +7,11 @@ version: 2.1.0.{build}
 pull_requests:
   do_not_increment_build_number: true
 
-for:
--
-  branches:
-    only:
-      - master
-
-  dotnet_csproj:
-    patch: true
-    file: '**\*.csproj'
-    version: '{version}'
-    package_version: '{version}'
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
 
 before_build:
 - nuget restore
