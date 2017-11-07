@@ -144,7 +144,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Path cannot be null."));
+            Assert.That(exception.Message, Does.StartWith("Path cannot be null."));
         }
     }
 }
