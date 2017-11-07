@@ -54,7 +54,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(null, destFilePath));
 
-            Assert.That(exception.Message, Is.StringStarting("File name cannot be null."));
+            Assert.That(exception.Message, Does.StartWith("File name cannot be null."));
         }
 
         [Test]
@@ -171,7 +171,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(string.Empty, destFilePath));
 
-            Assert.That(exception.Message, Is.StringStarting("Empty file name is not legal."));
+            Assert.That(exception.Message, Does.StartWith("Empty file name is not legal."));
         }
 
         [Test]
@@ -193,7 +193,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
+            Assert.That(exception.Message, Does.StartWith("The path is not of a legal form."));
         }
 
         [Test]
@@ -204,7 +204,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(sourceFilePath, null));
 
-            Assert.That(exception.Message, Is.StringStarting("File name cannot be null."));
+            Assert.That(exception.Message, Does.StartWith("File name cannot be null."));
         }
 
         [Test]
@@ -226,7 +226,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
+            Assert.That(exception.Message, Does.StartWith("The path is not of a legal form."));
         }
 
         [Test]
@@ -237,7 +237,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, string.Empty));
 
-            Assert.That(exception.Message, Is.StringStarting("Empty file name is not legal."));
+            Assert.That(exception.Message, Does.StartWith("Empty file name is not legal."));
         }
 
         [Test]
