@@ -878,6 +878,70 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_GetDirectories_RelativeWithNoSubDirectories_ShouldReturnDirectories()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("Folder");
+
+            // Act
+            var actualResult = fileSystem.Directory.GetDirectories("Folder");
+
+            // Assert
+            Assert.That(actualResult, Is.Empty);
+        }
+
+        [TestCase(@"Folder\SubFolder")]
+        [TestCase(@"Folder")]
+        public void MockDirectory_GetDirectories_RelativeDirectory_WithoutChildren_ShouldReturnNoChildDirectories(string relativeDirPath)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(relativeDirPath);
+
+            // Act
+            var actualResult = fileSystem.Directory.GetDirectories(relativeDirPath);
+
+            // Assert
+            Assert.That(actualResult, Is.Empty);
+        }
+
+        [TestCase(@"Folder\SubFolder")]
+        [TestCase(@"Folder")]
+        public void MockDirectory_GetDirectories_RelativeDirectory_WithChildren_ShouldReturnChildDirectories(string relativeDirPath)
+        {
+            // Arrange
+            const string currentDirectory = @"T:\foo";
+            var fileSystem = new MockFileSystem(null, currentDirectory: currentDirectory);
+            fileSystem.Directory.CreateDirectory(relativeDirPath);
+            fileSystem.Directory.CreateDirectory(relativeDirPath + @"\child");
+
+            // Act
+            var actualResult = fileSystem.Directory.GetDirectories(relativeDirPath);
+
+            // Assert
+            CollectionAssert.AreEqual(
+                new[] { currentDirectory + @"\" + relativeDirPath + @"\child\" },
+                actualResult
+            );
+        }
+
+        [Test]
+        public void MockDirectory_GetDirectories_AbsoluteWithNoSubDirectories_ShouldReturnDirectories()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("Folder");
+
+            // Act
+            var fullPath = fileSystem.Path.GetFullPath("Folder");
+            var actualResult = fileSystem.Directory.GetDirectories(fullPath);
+
+            // Assert
+            Assert.That(actualResult, Is.Empty);
+        }
+
+        [Test]
         public void MockDirectory_GetDirectories_WithAllDirectories_ShouldReturnsAllMatchingSubFolders()
         {
             // Arrange
