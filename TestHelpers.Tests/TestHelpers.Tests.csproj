@@ -10,6 +10,9 @@
     <RootNamespace>System.IO.Abstractions.TestingHelpers.Tests</RootNamespace>
     <AssemblyOriginatorKeyFile>../StrongName.snk</AssemblyOriginatorKeyFile>
     <IsPackable>false</IsPackable>
+
+    <!-- Workaround for https://github.com/nunit/nunit3-vs-adapter/issues/296 -->
+    <DebugType>Full</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -27,6 +30,10 @@
 
   <ItemGroup>
     <PackageReference Include="nunit" Version="3.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
 
 </Project>
