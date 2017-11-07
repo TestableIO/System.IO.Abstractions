@@ -10,6 +10,9 @@
     <RootNamespace>System.IO.Abstractions.TestingHelpers.Tests</RootNamespace>
     <AssemblyOriginatorKeyFile>../StrongName.snk</AssemblyOriginatorKeyFile>
     <IsPackable>false</IsPackable>
+
+    <!-- Workaround for https://github.com/nunit/nunit3-vs-adapter/issues/296 -->
+    <DebugType>Full</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
