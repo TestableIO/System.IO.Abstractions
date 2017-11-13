@@ -32,7 +32,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase CreateDirectory(string path)
         {
-            return CreateDirectoryInternal(path, null);
+            return CreateDirectoryInternal(path, new DirectorySecurity());
         }
 
 #if NET40
@@ -61,6 +61,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
+            created.SetAccessControl(directorySecurity);
             return created;
         }
 
@@ -93,7 +94,6 @@ namespace System.IO.Abstractions.TestingHelpers
             try
             {
                 path = EnsurePathEndsWithDirectorySeparator(path);
-
                 path = mockFileDataAccessor.Path.GetFullPath(path);
                 return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.OrdinalIgnoreCase));
             }
@@ -104,19 +104,21 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         public override DirectorySecurity GetAccessControl(string path)
-        {
-            // First crude implementation to avoid NotImplementedException
-            if (Exists(path))
+        {           
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+            path = EnsurePathEndsWithDirectorySeparator(path);
+            
+            if (!mockFileDataAccessor.Directory.Exists(path))
             {
-                return new DirectorySecurity();
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), path));
             }
 
-            throw new DirectoryNotFoundException(path);
+            var directoryData = (MockDirectoryData) mockFileDataAccessor.GetFile(path);
+            return directoryData.AccessControl;
         }
 
         public override DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
-            // First crude implementation to avoid NotImplementedException
             return GetAccessControl(path);
         }
 
@@ -376,7 +378,16 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
-            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+            path = EnsurePathEndsWithDirectorySeparator(path);
+
+            if (!mockFileDataAccessor.Directory.Exists(path))
+            {
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), path));
+            }
+
+            var directoryData = (MockDirectoryData)mockFileDataAccessor.GetFile(path);
+            directoryData.AccessControl = directorySecurity;
         }
 
         public override void SetCreationTime(string path, DateTime creationTime)
