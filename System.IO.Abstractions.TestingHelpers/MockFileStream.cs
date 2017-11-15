@@ -38,6 +38,15 @@
                 }
                 mockFileDataAccessor.AddFile(path, new MockFileData(new byte[] { }));
             }
+
+            canWrite = streamType != StreamType.READ;
+        }
+
+        private bool canWrite = true;
+
+        public override bool CanWrite
+        {
+            get { return canWrite; }
         }
 
 #if NET40
