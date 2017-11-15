@@ -667,6 +667,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.Throws<FileNotFoundException>(() => fileSystem.File.Replace(path1, path2, null));
         }
+
+        [Test]
+        public void MockFile_OpenRead_ShouldNotReturnWritableStream()
+        {
+            // Tests issue #230
+            // Arrange
+            string filePath = XFS.Path(@"c:\something\demo.txt");
+            string startContent = "hi there";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { filePath, new MockFileData(startContent) }
+            });
+
+            // Act
+            var stream = fileSystem.File.OpenRead(filePath);
+
+            // Assert
+            Assert.IsFalse(stream.CanWrite);
+        }
 #endif
     }
 }
