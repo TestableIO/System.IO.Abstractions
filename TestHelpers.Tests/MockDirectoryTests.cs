@@ -1335,6 +1335,57 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_EnumerateFiles_WhenFilterIsUnRooted_ShouldFindFilesInCurrentDirectory()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\a.txt"), MockFileData.NullObject },
+                { XFS.Path(@"c:\a\a.txt"), MockFileData.NullObject },
+                { XFS.Path(@"c:\a\b\b.txt"), MockFileData.NullObject },
+                { XFS.Path(@"c:\a\c\c.txt"), MockFileData.NullObject },
+            });
+
+            var expected = new[]
+            {
+                XFS.Path(@"c:\a\b\b.txt"),
+            };
+
+            fileSystem.Directory.SetCurrentDirectory(XFS.Path(@"c:\a"));
+
+            // Act
+            var result = fileSystem.Directory.EnumerateFiles(XFS.Path("b"));
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        [Test]
+        public void MockDirectory_EnumerateFiles_WhenFilterIsUnRooted_ShouldNotFindFilesInPathOutsideCurrentDirectory()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\a.txt"), MockFileData.NullObject },
+                { XFS.Path(@"c:\a\b\b.txt"), MockFileData.NullObject },
+                { XFS.Path(@"c:\c\b\b.txt"), MockFileData.NullObject },
+            });
+
+            var expected = new[]
+            {
+                XFS.Path(@"c:\a\b\b.txt"),
+            };
+
+            fileSystem.Directory.SetCurrentDirectory(XFS.Path(@"c:\a"));
+
+            // Act
+            var result = fileSystem.Directory.EnumerateFiles(XFS.Path("b"));
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        [Test]
         public void MockDirectory_EnumerateFileSystemEntries_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
         {
             // Arrange
