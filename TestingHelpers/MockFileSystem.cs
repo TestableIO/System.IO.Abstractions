@@ -137,7 +137,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
                 var directoryPath = Path.GetDirectoryName(fixedPath);
 
-                if (!directory.Exists(directoryPath))
+                if (directoryPath != null && !directory.Exists(directoryPath))
                 {
                     AddDirectory(directoryPath);
                 }
