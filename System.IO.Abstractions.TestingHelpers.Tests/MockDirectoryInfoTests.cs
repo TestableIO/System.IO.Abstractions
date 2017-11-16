@@ -287,5 +287,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(directoryPath, str);
         }
+        
+        [Test]
+        public void MockDirectoryInfo_GetRootName_Returns_DriveName_WhenTopLevelDirectory()
+        {
+            var testDir = XFS.Path(@"c:\temp");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { testDir,  new MockDirectoryData() }
+            });
+
+            Assert.AreEqual(@"c:\", fileSystem.DirectoryInfo.FromDirectoryName(testDir).Root.Name);
+        }
     }
 }
