@@ -1391,10 +1391,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo"));
+            fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo\"));
 
             // Act
-            DirectorySecurity result = fileSystem.Directory.GetAccessControl(XFS.Path(@"c:\foo"));
+            DirectorySecurity result = fileSystem.Directory.GetAccessControl(XFS.Path(@"c:\foo\"));
 
             // Assert
             Assert.That(result, Is.Not.Null);
