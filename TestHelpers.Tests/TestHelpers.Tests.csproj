@@ -24,6 +24,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="TestFiles\SecondTestFile.txt" />
+    <None Remove="TestFiles\TestFile.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="TestFiles\SecondTestFile.txt" />
+    <EmbeddedResource Include="TestFiles\TestFile.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../System.IO.Abstractions/System.IO.Abstractions.csproj" />
     <ProjectReference Include="../TestingHelpers/TestingHelpers.csproj" />
   </ItemGroup>
