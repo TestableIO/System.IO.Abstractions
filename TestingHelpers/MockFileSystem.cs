@@ -256,7 +256,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                lock (file)
+                lock (files)
                     return files.Where(f => !f.Value.IsDirectory).Select(f => f.Key).ToArray();
             }
         }
