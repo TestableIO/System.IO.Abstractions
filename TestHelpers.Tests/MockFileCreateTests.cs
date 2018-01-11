@@ -12,6 +12,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     public class MockFileCreateTests
     {
+
         [Test]
         public void Mockfile_Create_ShouldCreateNewStream()
         {
@@ -22,7 +23,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(fileSystem.FileExists(fullPath), Is.False);
 
-            sut.Create(fullPath).Close();
+            sut.Create(fullPath).Dispose();
 
             Assert.That(fileSystem.FileExists(fullPath), Is.True);
         }
@@ -85,7 +86,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             mockFile.SetAttributes(path, FileAttributes.ReadOnly);
 
             // Assert
-            var exception =  Assert.Throws<UnauthorizedAccessException>(() => mockFile.Create(path).Close());
+            var exception =  Assert.Throws<UnauthorizedAccessException>(() => mockFile.Create(path).Dispose());
             Assert.That(exception.Message, Is.EqualTo(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path)));
         }
 
@@ -143,7 +144,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Path cannot be null."));
+            Assert.That(exception.Message, Does.StartWith("Path cannot be null."));
         }
     }
 }

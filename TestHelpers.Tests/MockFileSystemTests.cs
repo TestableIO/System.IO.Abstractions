@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
@@ -77,7 +79,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(newContent));
         }
-
+#if NET40
         [Test]
         public void Is_Serializable()
         {
@@ -94,6 +96,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(memoryStream.Length > 0, "Length didn't increase after serialization task.");
         }
+#endif
 
         [Test]
         public void MockFileSystem_AddDirectory_ShouldCreateDirectory()
@@ -202,6 +205,33 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Contains(@"C:\LOUD\SUBLOUD\new\file.txt", fileSystem.AllFiles.ToList());
             Assert.Contains(@"C:\test\subtest\new\SUBDirectory\", fileSystem.AllDirectories.ToList());
             Assert.Contains(@"C:\LOUD\SUBLOUD\new\SUBDirectory\", fileSystem.AllDirectories.ToList());
+        }
+
+        [Test]
+        public void MockFileSystem_AddFileFromEmbeddedResource_ShouldAddTheFile()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            fileSystem.AddFileFromEmbeddedResource(@"C:\TestFile.txt", Assembly.GetExecutingAssembly(), "System.IO.Abstractions.TestingHelpers.Tests.TestFiles.TestFile.txt");
+            var result = fileSystem.GetFile(@"C:\TestFile.txt");
+
+            // Assert
+            Assert.AreEqual(new UTF8Encoding().GetBytes("This is a test file."), result.Contents);
+        }
+
+        [Test]
+        public void MockFileSystem_AddFilesFromEmbeddedResource_ShouldAddAllTheFiles()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            //Act
+            fileSystem.AddFilesFromEmbeddedNamespace(@"C:\", Assembly.GetExecutingAssembly(), "System.IO.Abstractions.TestingHelpers.Tests.TestFiles");
+
+            Assert.Contains(@"C:\TestFile.txt", fileSystem.AllFiles.ToList());
+            Assert.Contains(@"C:\SecondTestFile.txt", fileSystem.AllFiles.ToList());
         }
     }
 }

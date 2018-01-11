@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+#if NET40
 using System.Runtime.Serialization.Formatters.Binary;
+#endif
 using System.Text;
 using NUnit.Framework;
 
@@ -265,7 +267,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentException>(action);
-            Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
+            Assert.That(exception.Message, Does.StartWith("The path is not of a legal form."));
         }
 
         [Test]
@@ -395,7 +397,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(text, result);
         }
 
-        private IEnumerable<Encoding> GetEncodingsForReadAllText()
+        public static IEnumerable<Encoding> GetEncodingsForReadAllText()
         {
             // little endian
             yield return new UTF32Encoding(false, true, true);
@@ -407,7 +409,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return new ASCIIEncoding();
         }
 
-        [TestCaseSource("GetEncodingsForReadAllText")]
+        [TestCaseSource(typeof(MockFileTests), "GetEncodingsForReadAllText")]
         public void MockFile_ReadAllText_ShouldReturnTheOriginalContentWhenTheFileContainsDifferentEncodings(Encoding encoding)
         {
             // Arrange
@@ -453,7 +455,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var bytes = new UTF8Encoding(true).GetBytes(fileContent);
             var stream = fileSystem.File.OpenWrite(filePath);
             stream.Write(bytes, 0, bytes.Length);
-            stream.Close();
+            stream.Dispose();
 
             Assert.That(fileSystem.FileExists(filePath), Is.True);
             Assert.That(fileSystem.GetFile(filePath).TextContents, Is.EqualTo(fileContent));
@@ -473,7 +475,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var bytes = new UTF8Encoding(true).GetBytes(endFileContent);
             var stream = fileSystem.File.OpenWrite(filePath);
             stream.Write(bytes, 0, bytes.Length);
-            stream.Close();
+            stream.Dispose();
 
             Assert.That(fileSystem.FileExists(filePath), Is.True);
             Assert.That(fileSystem.GetFile(filePath).TextContents, Is.EqualTo(endFileContent));
@@ -527,7 +529,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             stream.Write("Me too!");
             stream.Flush();
-            stream.Close();
+            stream.Dispose();
 
             var file = filesystem.GetFile(filepath);
             Assert.That(file.TextContents, Is.EqualTo("I'm here. Me too!"));
@@ -543,13 +545,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             stream.Write("New too!");
             stream.Flush();
-            stream.Close();
+            stream.Dispose();
 
             var file = filesystem.GetFile(filepath);
             Assert.That(file.TextContents, Is.EqualTo("New too!"));
             Assert.That(filesystem.FileExists(filepath));
         }
 
+#if NET40
         [Test]
         public void Serializable_works()
         {
@@ -585,7 +588,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             //Assert
             Assert.That(deserialized.TextContents, Is.EqualTo(textContentStr));
         }
+#endif
 
+#if NET40
         [Test]
         public void MockFile_Encrypt_ShouldEncryptTheFile()
         {
@@ -635,5 +640,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreNotEqual(Content, newcontents);
         }
+#endif
     }
 }

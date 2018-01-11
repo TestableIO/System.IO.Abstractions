@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.AccessControl;
 using System.Text;
+using System.IO;
 
 namespace System.IO.Abstractions
 {
@@ -57,30 +58,36 @@ namespace System.IO.Abstractions
             return File.Create(path, bufferSize, options);
         }
 
+#if NET40
         public override Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
         {
             return File.Create(path, bufferSize, options, fileSecurity);
         }
+#endif
 
         public override StreamWriter CreateText(string path)
         {
             return File.CreateText(path);
         }
 
+#if NET40
         public override void Decrypt(string path)
         {
             File.Decrypt(path);
         }
+#endif
 
         public override void Delete(string path)
         {
             File.Delete(path);
         }
 
+#if NET40
         public override void Encrypt(string path)
         {
             File.Encrypt(path);
         }
+#endif
 
         public override bool Exists(string path)
         {
@@ -89,12 +96,12 @@ namespace System.IO.Abstractions
 
         public override FileSecurity GetAccessControl(string path)
         {
-            return File.GetAccessControl(path);
+            return new FileInfo(path).GetAccessControl();
         }
 
         public override FileSecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
-            return File.GetAccessControl(path, includeSections);
+            return new FileInfo(path).GetAccessControl(includeSections);
         }
 
         /// <summary>
@@ -214,6 +221,7 @@ namespace System.IO.Abstractions
             return File.ReadLines(path, encoding);
         }
 
+#if NET40
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
         {
             File.Replace(sourceFileName, destinationFileName, destinationBackupFileName);
@@ -223,10 +231,11 @@ namespace System.IO.Abstractions
         {
             File.Replace(sourceFileName, destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
         }
+#endif
 
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
-            File.SetAccessControl(path, fileSecurity);
+            new FileInfo(path).SetAccessControl(fileSecurity);
         }
 
         public override void SetAttributes(string path, FileAttributes fileAttributes)

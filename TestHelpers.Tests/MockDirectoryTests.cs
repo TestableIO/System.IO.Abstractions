@@ -743,7 +743,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<ArgumentException>(action);
         }
 
-        private IEnumerable<string> GetSearchPatternForTwoDotsExceptions()
+        public static IEnumerable<string> GetSearchPatternForTwoDotsExceptions()
         {
             yield return @"a..\b";
             yield return @"a../b";
@@ -752,7 +752,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return @"aaa\vv..\";
         }
 
-        [TestCaseSource("GetSearchPatternForTwoDotsExceptions")]
+        [TestCaseSource(typeof(MockDirectoryTests), "GetSearchPatternForTwoDotsExceptions")]
         public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneDirectoryPathSep(string searchPattern)
         {
             // Arrange
@@ -812,6 +812,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(XFS.Path("C:\\"), fileSystem.Directory.GetDirectoryRoot(XFS.Path(@"C:\foo\bar")));
         }
 
+#if NET40
         [Test]
         public void MockDirectory_GetLogicalDrives_Returns_LogicalDrives()
         {
@@ -836,6 +837,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 Assert.IsTrue(drives.Contains("d:\\"));
             }
         }
+#endif
 
         [Test]
         public void MockDirectory_GetDirectories_Returns_Child_Directories()
@@ -873,6 +875,70 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.That(actualResult, Is.EquivalentTo(new []{XFS.Path(@"C:\Folder\.foo\"), XFS.Path(@"C:\Folder\foo.foo\")}));
+        }
+
+        [Test]
+        public void MockDirectory_GetDirectories_RelativeWithNoSubDirectories_ShouldReturnDirectories()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("Folder");
+
+            // Act
+            var actualResult = fileSystem.Directory.GetDirectories("Folder");
+
+            // Assert
+            Assert.That(actualResult, Is.Empty);
+        }
+
+        [TestCase(@"Folder\SubFolder")]
+        [TestCase(@"Folder")]
+        public void MockDirectory_GetDirectories_RelativeDirectory_WithoutChildren_ShouldReturnNoChildDirectories(string relativeDirPath)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(relativeDirPath);
+
+            // Act
+            var actualResult = fileSystem.Directory.GetDirectories(relativeDirPath);
+
+            // Assert
+            Assert.That(actualResult, Is.Empty);
+        }
+
+        [TestCase(@"Folder\SubFolder")]
+        [TestCase(@"Folder")]
+        public void MockDirectory_GetDirectories_RelativeDirectory_WithChildren_ShouldReturnChildDirectories(string relativeDirPath)
+        {
+            // Arrange
+            const string currentDirectory = @"T:\foo";
+            var fileSystem = new MockFileSystem(null, currentDirectory: currentDirectory);
+            fileSystem.Directory.CreateDirectory(relativeDirPath);
+            fileSystem.Directory.CreateDirectory(relativeDirPath + @"\child");
+
+            // Act
+            var actualResult = fileSystem.Directory.GetDirectories(relativeDirPath);
+
+            // Assert
+            CollectionAssert.AreEqual(
+                new[] { currentDirectory + @"\" + relativeDirPath + @"\child\" },
+                actualResult
+            );
+        }
+
+        [Test]
+        public void MockDirectory_GetDirectories_AbsoluteWithNoSubDirectories_ShouldReturnDirectories()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("Folder");
+
+            // Act
+            var fullPath = fileSystem.Path.GetFullPath("Folder");
+            var actualResult = fileSystem.Directory.GetDirectories(fullPath);
+
+            // Assert
+            Assert.That(actualResult, Is.Empty);
         }
 
         [Test]
@@ -1325,10 +1391,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo"));
+            fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo\"));
 
             // Act
-            DirectorySecurity result = fileSystem.Directory.GetAccessControl(XFS.Path(@"c:\foo"));
+            DirectorySecurity result = fileSystem.Directory.GetAccessControl(XFS.Path(@"c:\foo\"));
 
             // Assert
             Assert.That(result, Is.Not.Null);

@@ -181,6 +181,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return new MockFile(mockFileSystem).CreateText(FullName);
         }
 
+#if NET40
         public override void Decrypt()
         {
             if (MockFileData == null) throw new FileNotFoundException("File not found", path);
@@ -196,15 +197,16 @@ namespace System.IO.Abstractions.TestingHelpers
             for(var i = 0; i < contents.Length; i++)
                 contents[i] ^= (byte) (i % 256);
         }
+#endif
 
         public override FileSecurity GetAccessControl()
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
 
         public override FileSecurity GetAccessControl(AccessControlSections includeSections)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
 
         public override void MoveTo(string destFileName)
@@ -245,19 +247,21 @@ namespace System.IO.Abstractions.TestingHelpers
             return new MockFileStream(mockFileSystem, path, MockFileStream.StreamType.WRITE);
         }
 
+#if NET40
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
 
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
+#endif
 
         public override void SetAccessControl(FileSecurity fileSecurity)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
 
         public override DirectoryInfoBase Directory
@@ -300,7 +304,7 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 if (MockFileData == null) throw new FileNotFoundException("File not found", path);
-                return MockFileData.Contents.LongLength;
+                return MockFileData.Contents.Length;
             }
         }
     }
