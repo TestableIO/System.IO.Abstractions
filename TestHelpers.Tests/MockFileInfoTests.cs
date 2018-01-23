@@ -243,7 +243,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual("ABCDEtext content", newcontents);
         }
-
+#if NET40
         [Test]
         public void MockFileInfo_Encrypt_ShouldReturnXorOfFileInMemoryFileSystem()
         {
@@ -292,6 +292,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual("Demo text content", newcontents);
         }
+#endif
 
         [Test]
         public void MockFileInfo_LastAccessTimeUtc_ShouldReturnLastAccessTimeUtcOfFileInMemoryFileSystem()

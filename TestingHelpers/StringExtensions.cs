@@ -4,10 +4,10 @@ using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
-    internal static class StringExtensions
+    public static class StringExtensions
     {
         [Pure]
-        internal static string[] SplitLines(this string input)
+        public static string[] SplitLines(this string input)
         {
             var list = new List<string>();
             using (var reader = new StringReader(input))

@@ -235,7 +235,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
+            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
         }
 
         [Test]
@@ -262,7 +262,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentException>(action);
-            Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
+            Assert.That(exception.Message, Does.StartWith("The path is not of a legal form."));
         }
 
         [Test]

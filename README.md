@@ -1,4 +1,5 @@
-[![AppVeyor](https://ci.appveyor.com/api/projects/status/github/tathamoddie/System.IO.Abstractions?svg=true)](https://ci.appveyor.com/project/tathamoddie/system-io-abstractions)
+[![Build status](https://ci.appveyor.com/api/projects/status/em172apw1v5k70vq/branch/master?svg=true)](https://ci.appveyor.com/project/tathamoddie/system-io-abstractions/branch/master)
+[![NuGet](https://img.shields.io/nuget/v/System.IO.Abstractions.svg)](https://www.nuget.org/packages/System.IO.Abstractions)
 
 Just like System.Web.Abstractions, but for System.IO. Yay for testable IO access!
 

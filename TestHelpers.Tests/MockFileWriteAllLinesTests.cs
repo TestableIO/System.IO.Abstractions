@@ -221,8 +221,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
-            Assert.That(exception.ParamName, Is.StringStarting("path"));
+            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
+            Assert.That(exception.ParamName, Does.StartWith("path"));
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), "ForNullEncoding")]
@@ -236,8 +236,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
-            Assert.That(exception.ParamName, Is.StringStarting("encoding"));
+            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
+            Assert.That(exception.ParamName, Does.StartWith("encoding"));
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), "ForIllegalPath")]
@@ -295,7 +295,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
+            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
             Assert.That(exception.ParamName, Is.EqualTo("contents"));
         }
     }
