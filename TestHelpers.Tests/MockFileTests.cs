@@ -447,6 +447,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_ReadLines_ShouldThrowFileNotFoundExceptionIfFileDoesNotExist()
+        {
+            var fileSystem = new MockFileSystem();
+            var file = new MockFile(fileSystem);
+            var exception = Assert.Throws<FileNotFoundException>(() => file.ReadAllBytes(@"C:\temp\nonExistent.txt"));
+
+            Assert.AreEqual(@"Can't find C:\temp\nonExistent.txt", exception.Message);
+            Assert.AreEqual(@"C:\temp\nonExistent.txt", exception.FileName);
+        }
+
+        [Test]
         public void MockFile_OpenWrite_ShouldCreateNewFiles() {
             string filePath = XFS.Path(@"c:\something\demo.txt");
             string fileContent = "this is some content";
@@ -540,6 +551,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             string filepath = XFS.Path(@"c:\something\doesnt\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            filesystem.AddDirectory(@"c:\something\doesnt");
 
             var stream = filesystem.File.AppendText(filepath);
 
