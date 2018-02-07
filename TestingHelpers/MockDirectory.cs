@@ -32,7 +32,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DirectoryInfoBase CreateDirectory(string path)
         {
-            return CreateDirectoryInternal(path, new DirectorySecurity());
+            return CreateDirectoryInternal(path, null);
         }
 
 #if NET40
@@ -61,7 +61,10 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
-            created.SetAccessControl(directorySecurity);
+            if(directorySecurity != null)
+            {
+                created.SetAccessControl(directorySecurity);
+            }
             return created;
         }
 
