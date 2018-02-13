@@ -1,0 +1,7 @@
+language: csharp
+solution: System.IO.Abstractions.sln
+install:
+  - dotnet restore
+script:
+  - dotnet build
+  - dotnet test
