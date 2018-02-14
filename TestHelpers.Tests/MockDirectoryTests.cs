@@ -784,10 +784,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(actualResult, Is.EquivalentTo(new [] { testPath }));
         }
 
-        [TestCase(@"""")]
 #if NET40
-        [TestCase("aa\t")]
+        [TestCase(@"""")]
 #endif
+        [TestCase("aa\t")]
         public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternHasIllegalCharacters(string searchPattern)
         {
             // Arrange
