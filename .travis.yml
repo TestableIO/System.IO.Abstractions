@@ -1,8 +1,7 @@
 language: csharp
 mono: none
 dotnet: 2.1.4
-install:
-  - dotnet restore
 script:
-  - dotnet build
-  - dotnet test
+  - dotnet build System.IO.Abstractions --framework netstandard1.4
+  - dotnet build TestingHelpers --framework netstandard1.4
+  - dotnet test TestHelpers.Tests --framework netcoreapp2.0
