@@ -78,8 +78,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            const string path = @"c:\something\demo3.txt";
-            fileSystem.AddDirectory(@"c:\something\");
+            var path = XFS.Path(@"c:\something\demo3.txt");
+            fileSystem.AddDirectory(XFS.Path(@"c:\something\"));
 
             // Act
             fileSystem.File.AppendAllText(path, "AA", Encoding.UTF32);
