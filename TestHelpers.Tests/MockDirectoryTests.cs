@@ -785,7 +785,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [TestCase(@"""")]
+#if NET40
         [TestCase("aa\t")]
+#endif
         public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternHasIllegalCharacters(string searchPattern)
         {
             // Arrange
