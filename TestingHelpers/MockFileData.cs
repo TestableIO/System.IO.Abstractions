@@ -60,7 +60,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// The access control of the <see cref="MockFileData"/>.
         /// </summary>
         [NonSerialized]
-        private FileSecurity accessControl = new FileSecurity();
+        private FileSecurity accessControl;
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="MockFileData"/> is a directory or not.
@@ -181,7 +181,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </summary>
         public FileSecurity AccessControl
         {
-            get { return accessControl; }
+            get { return accessControl ?? (accessControl = new FileSecurity()); }
             set { accessControl = value; }
         }
     }
