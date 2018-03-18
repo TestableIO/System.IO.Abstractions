@@ -1,4 +1,6 @@
-﻿using System.Security.AccessControl;
+﻿#if NET40
+using System.Security.AccessControl;
+#endif
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -199,6 +201,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 #endif
 
+#if NET40
         public override FileSecurity GetAccessControl()
         {
             throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
@@ -208,6 +211,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
+#endif
 
         public override void MoveTo(string destFileName)
         {
@@ -258,11 +262,12 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
 #endif
-
+#if NET40
         public override void SetAccessControl(FileSecurity fileSecurity)
         {
             throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
+#endif
 
         public override DirectoryInfoBase Directory
         {

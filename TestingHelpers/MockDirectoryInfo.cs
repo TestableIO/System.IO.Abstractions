@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+#if NET40
 using System.Security.AccessControl;
+#endif
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -200,15 +202,18 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetFileSystemInfos(searchPattern, searchOption);
         }
 
+#if NET40
         public override DirectorySecurity GetAccessControl()
         {
             return mockFileDataAccessor.Directory.GetAccessControl(directoryPath);
         }
 
+
         public override DirectorySecurity GetAccessControl(AccessControlSections includeSections)
         {
             return mockFileDataAccessor.Directory.GetAccessControl(directoryPath, includeSections);
         }
+#endif
 
         public override DirectoryInfoBase[] GetDirectories()
         {
@@ -275,10 +280,12 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
         }
 
+#if NET40
         public override void SetAccessControl(DirectorySecurity directorySecurity)
         {
             mockFileDataAccessor.Directory.SetAccessControl(directoryPath, directorySecurity);
         }
+#endif
 
         public override DirectoryInfoBase Parent
         {

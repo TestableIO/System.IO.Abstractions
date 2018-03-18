@@ -2,7 +2,9 @@
 using System.Globalization;
 using System.IO;
 using System.Linq;
+#if NET40
 using System.Security.AccessControl;
+#endif
 using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -30,18 +32,31 @@ namespace System.IO.Abstractions.TestingHelpers
             this.fileBase = fileBase;
         }
 
+
         public override DirectoryInfoBase CreateDirectory(string path)
         {
-            return CreateDirectoryInternal(path, new DirectorySecurity());
+            return CreateDirectoryInternal(path
+#if NET40
+                ,
+                new DirectorySecurity()
+#endif
+                );
         }
 
 #if NET40
-        public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
+        public override DirectoryInfoBase CreateDirectory(string path
+            , DirectorySecurity directorySecurity
+            )
         {
             return CreateDirectoryInternal(path, directorySecurity);
         }
 #endif
-        private DirectoryInfoBase CreateDirectoryInternal(string path, DirectorySecurity directorySecurity)
+        private DirectoryInfoBase CreateDirectoryInternal(string path
+#if NET40
+            ,
+            DirectorySecurity directorySecurity
+#endif
+            )
         {
             if (path == null)
             {
@@ -61,9 +76,12 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
+#if NET40
             created.SetAccessControl(directorySecurity);
+#endif
             return created;
         }
+
 
         public override void Delete(string path)
         {
@@ -103,6 +121,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+#if NET40
         public override DirectorySecurity GetAccessControl(string path)
         {           
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -121,6 +140,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             return GetAccessControl(path);
         }
+#endif
 
         public override DateTime GetCreationTime(string path)
         {
@@ -376,6 +396,7 @@ namespace System.IO.Abstractions.TestingHelpers
             Delete(fullSourcePath);
         }
 
+#if NET40
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -389,6 +410,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var directoryData = (MockDirectoryData)mockFileDataAccessor.GetFile(path);
             directoryData.AccessControl = directorySecurity;
         }
+#endif
 
         public override void SetCreationTime(string path, DateTime creationTime)
         {

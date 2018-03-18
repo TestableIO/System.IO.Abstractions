@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+#if NET40
 using System.Security.AccessControl;
+#endif
 using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -197,6 +199,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return mockFileDataAccessor.FileExists(path) && !mockFileDataAccessor.AllDirectories.Any(d => d.Equals(path, StringComparison.OrdinalIgnoreCase));
         }
 
+#if NET40
         public override FileSecurity GetAccessControl(string path)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -214,6 +217,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             return GetAccessControl(path);
         }
+#endif
 
         /// <summary>
         /// Gets the <see cref="FileAttributes"/> of the file on the path.
@@ -507,6 +511,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 #endif
 
+#if NET40
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -519,6 +524,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var fileData = mockFileDataAccessor.GetFile(path);
             fileData.AccessControl = fileSecurity;
         }
+#endif
 
         public override void SetAttributes(string path, FileAttributes fileAttributes)
         {

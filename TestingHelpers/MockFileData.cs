@@ -1,5 +1,7 @@
 ﻿using System.Linq;
+#if NET40
 using System.Security.AccessControl;
+#endif
 using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -56,11 +58,13 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </summary>
         private FileAttributes attributes = FileAttributes.Normal;
 
+#if NET40
         /// <summary>
         /// The access control of the <see cref="MockFileData"/>.
         /// </summary>
         [NonSerialized]
         private FileSecurity accessControl = new FileSecurity();
+#endif
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="MockFileData"/> is a directory or not.
@@ -176,6 +180,7 @@ namespace System.IO.Abstractions.TestingHelpers
             set { attributes = value; }
         }
 
+#if NET40
         /// <summary>
         /// Gets or sets <see cref="FileSecurity"/> of the <see cref="MockFileData"/>. This is the object that is returned for this <see cref="MockFileData"/> when calling <see cref="FileBase.GetAccessControl(string)"/>.
         /// </summary>
@@ -184,5 +189,6 @@ namespace System.IO.Abstractions.TestingHelpers
             get { return accessControl; }
             set { accessControl = value; }
         }
+#endif
     }
 }
