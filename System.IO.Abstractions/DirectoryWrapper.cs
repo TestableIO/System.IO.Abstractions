@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+#if NET40
 using System.Security.AccessControl;
+#endif
 
 namespace System.IO.Abstractions
 {
@@ -32,6 +34,7 @@ namespace System.IO.Abstractions
             return Directory.Exists(path);
         }
 
+#if NET40
         public override DirectorySecurity GetAccessControl(string path)
         {
             return new DirectoryInfo(path).GetAccessControl();
@@ -41,6 +44,7 @@ namespace System.IO.Abstractions
         {
             return new DirectoryInfo(path).GetAccessControl(includeSections);
         }
+#endif
 
         public override DateTime GetCreationTime(string path)
         {
@@ -139,10 +143,12 @@ namespace System.IO.Abstractions
             Directory.Move(sourceDirName, destDirName);
         }
 
+#if NET40
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
             new DirectoryInfo(path).SetAccessControl(directorySecurity);
         }
+#endif
 
         public override void SetCreationTime(string path, DateTime creationTime)
         {

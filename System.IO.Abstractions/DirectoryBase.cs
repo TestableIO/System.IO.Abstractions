@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+#if NET40
 using System.Security.AccessControl;
+#endif
 
 namespace System.IO.Abstractions
 {
@@ -13,8 +15,10 @@ namespace System.IO.Abstractions
         public abstract void Delete(string path);
         public abstract void Delete(string path, bool recursive);
         public abstract bool Exists(string path);
+#if NET40
         public abstract DirectorySecurity GetAccessControl(string path);
         public abstract DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections);
+#endif
         public abstract DateTime GetCreationTime(string path);
         public abstract DateTime GetCreationTimeUtc(string path);
         public abstract string GetCurrentDirectory();
@@ -36,7 +40,9 @@ namespace System.IO.Abstractions
 #endif
         public abstract DirectoryInfoBase GetParent(string path);
         public abstract void Move(string sourceDirName, string destDirName);
+#if NET40
         public abstract void SetAccessControl(string path, DirectorySecurity directorySecurity);
+#endif
         public abstract void SetCreationTime(string path, DateTime creationTime);
         public abstract void SetCreationTimeUtc(string path, DateTime creationTimeUtc);
         public abstract void SetCurrentDirectory(string path);
