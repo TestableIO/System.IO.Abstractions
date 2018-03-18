@@ -1,4 +1,6 @@
-﻿using System.Security.AccessControl;
+﻿#if NET40
+using System.Security.AccessControl;
+#endif
 
 namespace System.IO.Abstractions
 {
@@ -13,9 +15,10 @@ namespace System.IO.Abstractions
 #if NET40
         public abstract void Decrypt();
         public abstract void Encrypt();
-#endif
+
         public abstract FileSecurity GetAccessControl();
         public abstract FileSecurity GetAccessControl(AccessControlSections includeSections);
+#endif
         public abstract void MoveTo(string destFileName);
         public abstract Stream Open(FileMode mode);
         public abstract Stream Open(FileMode mode, FileAccess access);
@@ -26,8 +29,9 @@ namespace System.IO.Abstractions
 #if NET40
         public abstract FileInfoBase Replace(string destinationFileName, string destinationBackupFileName);
         public abstract FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
-#endif
+
         public abstract void SetAccessControl(FileSecurity fileSecurity);
+#endif
         public abstract DirectoryInfoBase Directory { get; }
         public abstract string DirectoryName { get; }
         public abstract bool IsReadOnly { get; set; }

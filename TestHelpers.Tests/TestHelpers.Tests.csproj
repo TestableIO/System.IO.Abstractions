@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net40</TargetFrameworks>
-    <Version>0.0.0.1</Version>
+    <Version>0.0.0.2</Version>
     <Description>The unit tests for our pre-built mocks</Description>
     <Company />
     <Product>System.IO.Abstractions</Product>

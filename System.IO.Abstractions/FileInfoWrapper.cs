@@ -1,4 +1,6 @@
-﻿using System.Security.AccessControl;
+﻿#if NET40
+using System.Security.AccessControl;
+#endif
 
 namespace System.IO.Abstractions
 {
@@ -126,6 +128,7 @@ namespace System.IO.Abstractions
         }
 #endif
 
+#if NET40
         public override FileSecurity GetAccessControl()
         {
             return instance.GetAccessControl();
@@ -135,7 +138,7 @@ namespace System.IO.Abstractions
         {
             return instance.GetAccessControl(includeSections);
         }
-
+#endif
         public override void MoveTo(string destFileName)
         {
             instance.MoveTo(destFileName);
@@ -183,10 +186,12 @@ namespace System.IO.Abstractions
         }
 #endif
 
+#if NET40
         public override void SetAccessControl(FileSecurity fileSecurity)
         {
             instance.SetAccessControl(fileSecurity);
         }
+#endif
 
         public override DirectoryInfoBase Directory
         {

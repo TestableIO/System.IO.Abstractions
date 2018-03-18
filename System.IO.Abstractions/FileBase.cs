@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+#if NET40
 using System.Security.AccessControl;
+#endif
 using System.Text;
 
 namespace System.IO.Abstractions
@@ -57,9 +59,10 @@ namespace System.IO.Abstractions
         /// </para>
         /// </remarks>
         public abstract bool Exists(string path);
+#if NET40
         public abstract FileSecurity GetAccessControl(string path);
         public abstract FileSecurity GetAccessControl(string path, AccessControlSections includeSections);
-
+#endif
         /// <summary>
         /// Gets the <see cref="FileAttributes"/> of the file on the path.
         /// </summary>
@@ -229,7 +232,9 @@ namespace System.IO.Abstractions
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName);
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
 #endif
+#if NET40
         public abstract void SetAccessControl(string path, FileSecurity fileSecurity);
+#endif
         public abstract void SetAttributes(string path, FileAttributes fileAttributes);
         public abstract void SetCreationTime(string path, DateTime creationTime);
         public abstract void SetCreationTimeUtc(string path, DateTime creationTimeUtc);
