@@ -1,6 +1,4 @@
-image:
-- Visual Studio 2017
-- Ubuntu
+image: Visual Studio 2017
 
 configuration: Release
 
