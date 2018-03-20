@@ -21,7 +21,7 @@ dotnet_csproj:
   package_version: '{version}'
 
 before_build:
-- nuget restore
+- cmd: nuget restore
 
 build:
   publish_nuget: true
