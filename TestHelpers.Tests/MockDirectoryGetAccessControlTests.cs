@@ -16,6 +16,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase("   ")]
         public void MockDirectory_GetAccessControl_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
         {
+            if (MockUnixSupport.IsUnixPlatform()) 
+            {
+                Assert.Inconclusive("Unix does not support ACLs.");
+            }
+
             // Arrange
             var fileSystem = new MockFileSystem();
 
@@ -30,6 +35,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_GetAccessControl_ShouldThrowDirectoryNotFoundExceptionIfDirectoryDoesNotExistInMockData()
         {
+            if (MockUnixSupport.IsUnixPlatform()) 
+            {
+                Assert.Inconclusive("Unix does not support ACLs.");
+            }
+
             // Arrange
             var fileSystem = new MockFileSystem();
             var expectedDirectoryName = XFS.Path(@"c:\a");
@@ -44,6 +54,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_GetAccessControl_ShouldReturnAccessControlOfDirectoryData()
         {
+            if (MockUnixSupport.IsUnixPlatform()) 
+            {
+                Assert.Inconclusive("Unix does not support ACLs.");
+            }
+            
             // Arrange
             var expectedDirectorySecurity = new DirectorySecurity();
             expectedDirectorySecurity.SetAccessRuleProtection(false, false);

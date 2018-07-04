@@ -542,6 +542,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_CreateDirectory_ShouldWorkWithUNCPath()
         {
+            if (MockUnixSupport.IsUnixPlatform()) 
+            {
+                Assert.Inconclusive("Unix does not support ACLs.");
+            }
+
             // Arrange
             var fileSystem = new MockFileSystem();
 
@@ -555,6 +560,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_CreateDirectory_ShouldFailIfTryingToCreateUNCPathOnlyServer()
         {
+            if (MockUnixSupport.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of UNC paths.");
+            }
+
             // Arrange
             var fileSystem = new MockFileSystem();
 
@@ -569,6 +579,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_CreateDirectory_ShouldSucceedIfTryingToCreateUNCPathShare()
         {
+            if (MockUnixSupport.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of UNC paths.");
+            }
+            
             // Arrange
             var fileSystem = new MockFileSystem();
 
@@ -745,11 +760,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         public static IEnumerable<string> GetSearchPatternForTwoDotsExceptions()
         {
-            yield return @"a..\b";
             yield return @"a../b";
             yield return @"../";
-            yield return @"..\";
-            yield return @"aaa\vv..\";
+
+            if (!MockUnixSupport.IsUnixPlatform()) 
+            {
+                // These are no problem on Unix platforms
+                yield return @"..\";
+                yield return @"aaa\vv..\";
+                yield return @"a..\b";
+            }
         }
 
         [TestCaseSource(typeof(MockDirectoryTests), "GetSearchPatternForTwoDotsExceptions")]
@@ -778,7 +798,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 });
 
             // Act
-            var actualResult = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), @"foo..r\*");
+            var actualResult = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), XFS.Path(@"foo..r\*"));
 
             // Assert
             Assert.That(actualResult, Is.EquivalentTo(new [] { testPath }));
@@ -790,6 +810,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase("aa\t")]
         public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternHasIllegalCharacters(string searchPattern)
         {
+            if (MockUnixSupport.IsUnixPlatform()) 
+            {
+                Assert.Inconclusive("Unix does not have this limitation.");
+            }
+
             // Arrange
             var directoryPath = XFS.Path(@"c:\Foo");
             var fileSystem = new MockFileSystem();
@@ -913,17 +938,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_GetDirectories_RelativeDirectory_WithChildren_ShouldReturnChildDirectories(string relativeDirPath)
         {
             // Arrange
-            const string currentDirectory = @"T:\foo";
+            var currentDirectory = XFS.Path(@"T:\foo");
             var fileSystem = new MockFileSystem(null, currentDirectory: currentDirectory);
-            fileSystem.Directory.CreateDirectory(relativeDirPath);
-            fileSystem.Directory.CreateDirectory(relativeDirPath + @"\child");
+            fileSystem.Directory.CreateDirectory(XFS.Path(relativeDirPath));
+            fileSystem.Directory.CreateDirectory(XFS.Path(relativeDirPath + @"\child"));
 
             // Act
-            var actualResult = fileSystem.Directory.GetDirectories(relativeDirPath);
+            var actualResult = fileSystem.Directory.GetDirectories(XFS.Path(relativeDirPath));
 
             // Assert
             CollectionAssert.AreEqual(
-                new[] { currentDirectory + @"\" + relativeDirPath + @"\child\" },
+                new[] { XFS.Path(currentDirectory + @"\" + relativeDirPath + @"\child\") },
                 actualResult
             );
         }
@@ -1067,13 +1092,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         public static IEnumerable<object[]> GetPathsForMoving()
         {
-            yield return new object[] { @"a:\folder1\", @"A:\folder3\", "file.txt", @"folder2\file2.txt" };
-            yield return new object[] { @"A:\folder1\", @"A:\folder3\", "file.txt", @"folder2\file2.txt" };
-            yield return new object[] { @"a:\folder1\", @"a:\folder3\", "file.txt", @"folder2\file2.txt" };
-            yield return new object[] { @"A:\folder1\", @"a:\folder3\", "file.txt", @"folder2\file2.txt" };
-            yield return new object[] { @"A:\folder1\", @"a:\folder3\", "file.txt", @"Folder2\file2.txt" };
-            yield return new object[] { @"A:\folder1\", @"a:\folder3\", "file.txt", @"Folder2\fiLe2.txt" };
-            yield return new object[] { @"A:\folder1\", @"a:\folder3\", "folder444\\file.txt", @"Folder2\fiLe2.txt" };
+            yield return new object[] { XFS.Path(@"a:\folder1\"), XFS.Path(@"A:\folder3\"), XFS.Path("file.txt"), XFS.Path(@"folder2\file2.txt") };
+            yield return new object[] { XFS.Path(@"A:\folder1\"), XFS.Path(@"A:\folder3\"), XFS.Path("file.txt"), XFS.Path(@"folder2\file2.txt") };
+            yield return new object[] { XFS.Path(@"a:\folder1\"), XFS.Path(@"a:\folder3\"), XFS.Path("file.txt"), XFS.Path(@"folder2\file2.txt") };
+            yield return new object[] { XFS.Path(@"A:\folder1\"), XFS.Path(@"a:\folder3\"), XFS.Path("file.txt"), XFS.Path(@"folder2\file2.txt") };
+            yield return new object[] { XFS.Path(@"A:\folder1\"), XFS.Path(@"a:\folder3\"), XFS.Path("file.txt"), XFS.Path(@"Folder2\file2.txt") };
+            yield return new object[] { XFS.Path(@"A:\folder1\"), XFS.Path(@"a:\folder3\"), XFS.Path("file.txt"), XFS.Path(@"Folder2\fiLe2.txt") };
+            yield return new object[] { XFS.Path(@"A:\folder1\"), XFS.Path(@"a:\folder3\"), XFS.Path("folder444\\file.txt"), XFS.Path(@"Folder2\fiLe2.txt") };
         }
 
         [Test]
@@ -1081,14 +1106,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(@"C:\OLD_LOCATION\Data");
-            fileSystem.AddFile(@"C:\old_location\Data\someFile.txt", new MockFileData("abc"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\OLD_LOCATION\Data"));
+            fileSystem.AddFile(XFS.Path(@"C:\old_location\Data\someFile.txt"), new MockFileData("abc"));
 
             // Act
-            fileSystem.Directory.Move(@"C:\old_location", @"C:\NewLocation\");
+            fileSystem.Directory.Move(XFS.Path(@"C:\old_location"), XFS.Path(@"C:\NewLocation\"));
 
             // Assert
-            Assert.IsTrue(fileSystem.File.Exists(@"C:\NewLocation\Data\someFile.txt"));
+            Assert.IsTrue(fileSystem.File.Exists(XFS.Path(@"C:\NewLocation\Data\someFile.txt")));
         }
 
         [TestCaseSource("GetPathsForMoving")]
@@ -1114,8 +1139,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_Move_ShouldMoveDirectoryAtrributes()
         {
             // Arrange
-            const string sourceDirName = @"a:\folder1\";
-            const string destDirName = @"a:\folder2\";
+            var sourceDirName = XFS.Path(@"a:\folder1\");
+            var destDirName = XFS.Path(@"a:\folder2\");
             const string filePathOne = "file1.txt";
             const string filePathTwo = "file2.txt";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -1282,6 +1307,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_Move_ShouldThrowAnIOExceptionIfDirectoriesAreOnDifferentVolumes()
         {
+            if(XFS.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of volumes");
+            }
+            
             // Arrange
             string sourcePath = XFS.Path(@"c:\a");
             string destPath = XFS.Path(@"d:\v");
@@ -1391,6 +1421,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_GetAccessControl_ShouldReturnNewDirectorySecurity()
         {
+            if (MockUnixSupport.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of UNC paths.");
+            }
+            
             // Arrange
             var fileSystem = new MockFileSystem();
             fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo\"));
