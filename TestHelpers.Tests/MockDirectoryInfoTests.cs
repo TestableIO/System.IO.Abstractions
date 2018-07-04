@@ -189,16 +189,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
 
             // Act
-            var directories = directoryInfo.EnumerateDirectories().ToArray();
-            foreach (var dir in directories)
-            {
-                System.Console.WriteLine(dir.FullName);
-            }
-
-            var directoryNames = directories.Select(a => a.Name).ToArray();
+            var directories = directoryInfo.EnumerateDirectories().Select(a => a.Name).ToArray();
 
             // Assert
-            Assert.AreEqual(new[] { "b", "c" }, directoryNames);
+            Assert.AreEqual(new[] { "b", "c" }, directories);
         }
 
         public static IEnumerable<object[]> MockDirectoryInfo_FullName_Data
