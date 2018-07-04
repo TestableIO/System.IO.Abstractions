@@ -189,10 +189,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
 
             // Act
-            var directories = directoryInfo.EnumerateDirectories().Select(a => a.Name).ToArray();
+            var directories = directoryInfo.EnumerateDirectories().ToArray();
+            foreach (var dir in directories)
+            {
+                System.Console.WriteLine(dir.FullName);
+            }
+
+            var directoryNames = directories.Select(a => a.Name).ToArray();
 
             // Assert
-            Assert.AreEqual(new[] { "b", "c" }, directories);
+            Assert.AreEqual(new[] { "b", "c" }, directoryNames);
         }
 
         public static IEnumerable<object[]> MockDirectoryInfo_FullName_Data
@@ -202,8 +208,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 yield return new object[] { XFS.Path(@"c:\temp\\folder"), XFS.Path(@"c:\temp\folder") };
                 yield return new object[] { XFS.Path(@"c:\temp//folder"), XFS.Path(@"c:\temp\folder") };
                 yield return new object[] { XFS.Path(@"c:\temp//\\///folder"), XFS.Path(@"c:\temp\folder") };
-                yield return new object[] { XFS.Path(@"\\unc\folder"), XFS.Path(@"\\unc\folder") };
-                yield return new object[] { XFS.Path(@"\\unc/folder\\foo"), XFS.Path(@"\\unc\folder\foo") };
+                if (!MockUnixSupport.IsUnixPlatform())
+                {
+                    yield return new object[] { XFS.Path(@"\\unc\folder"), XFS.Path(@"\\unc\folder") };
+                    yield return new object[] { XFS.Path(@"\\unc/folder\\foo"), XFS.Path(@"\\unc\folder\foo") };
+                }
             }
         }
 

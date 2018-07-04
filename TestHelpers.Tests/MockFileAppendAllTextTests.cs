@@ -139,7 +139,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 0, 32, 0, 116, 0, 101, 0, 120, 0, 116
             };
 
-            if (XFS.IsUnixPlatform())
+            if (false && XFS.IsUnixPlatform())
             {
                 // Remove EOF on mono
                 expected = new byte[]
@@ -149,6 +149,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     0, 32, 0, 116, 0, 101, 0, 120, 0, 116
                 };
             }
+
+            Console.WriteLine(file.ReadAllText(path));
 
             CollectionAssert.AreEqual(
                 expected,
