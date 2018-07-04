@@ -60,7 +60,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// The access control of the <see cref="MockFileData"/>.
         /// </summary>
         [NonSerialized]
-        private FileSecurity accessControl = new FileSecurity();
+        private FileSecurity accessControl;
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="MockFileData"/> is a directory or not.
@@ -181,7 +181,12 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </summary>
         public FileSecurity AccessControl
         {
-            get { return accessControl; }
+            get
+            {
+                // FileSecurity's constructor will throw PlatformNotSupportedException on non-Windows platform, so we initialize it in lazy way.
+                // This let's us use this class as long as we don't use AccessControl property.
+                return accessControl ?? (accessControl = new FileSecurity());
+            }
             set { accessControl = value; }
         }
     }
