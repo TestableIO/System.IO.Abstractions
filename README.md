@@ -1,4 +1,5 @@
-[![Build status](https://ci.appveyor.com/api/projects/status/em172apw1v5k70vq/branch/master?svg=true)](https://ci.appveyor.com/project/tathamoddie/system-io-abstractions/branch/master)
+[![Windows build status](https://ci.appveyor.com/api/projects/status/em172apw1v5k70vq/branch/master?svg=true)](https://ci.appveyor.com/project/tathamoddie/system-io-abstractions/branch/master)
+[![Linus build status](https://travis-ci.org/System-IO-Abstractions/System.IO.Abstractions.svg?branch=master)](https://travis-ci.org/System-IO-Abstractions/System.IO.Abstractions)
 [![NuGet](https://img.shields.io/nuget/v/System.IO.Abstractions.svg)](https://www.nuget.org/packages/System.IO.Abstractions)
 
 Just like System.Web.Abstractions, but for System.IO. Yay for testable IO access!
