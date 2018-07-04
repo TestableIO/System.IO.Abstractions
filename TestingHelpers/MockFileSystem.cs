@@ -173,7 +173,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
                     /*
                      * Although CreateDirectory(@"\\server\share\") is not going to work in real code, we allow it here for the purposes of setting up test doubles.
-                     * See PR https://github.com/tathamoddie/System.IO.Abstractions/pull/90 for conversation
+                     * See PR https://github.com/System-IO-Abstractions/System.IO.Abstractions/pull/90 for conversation
                      */
                 }
 

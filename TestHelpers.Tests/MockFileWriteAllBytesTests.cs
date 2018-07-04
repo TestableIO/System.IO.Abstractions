@@ -58,7 +58,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<UnauthorizedAccessException>(action, "Access to the path '{0}' is denied.", path);
         }
 
+#if NET40
         [Test]
+#endif
         public void MockFile_WriteAllBytes_ShouldThrowAnArgumentExceptionIfContainsIllegalCharacters()
         {
             // Arrange
