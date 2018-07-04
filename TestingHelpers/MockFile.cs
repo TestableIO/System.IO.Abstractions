@@ -141,6 +141,9 @@ namespace System.IO.Abstractions.TestingHelpers
             }
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
+            if (!mockFileDataAccessor.Directory.Exists(Path.GetDirectoryName(path)))
+                throw new DirectoryNotFoundException($"Could not find a part of the path '{path}'.");
+
             mockFileDataAccessor.AddFile(path, new MockFileData(new byte[0]));
             var stream = OpenWrite(path);
             return stream;
