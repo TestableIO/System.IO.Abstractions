@@ -217,7 +217,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 newcontents = newfile.ReadToEnd();
 
             // Assert
-            Assert.AreEqual("Demo text contentThis should be at the end\r\n", newcontents);
+            Assert.AreEqual($"Demo text contentThis should be at the end{Environment.NewLine}", newcontents);
         }
 
         [Test]
