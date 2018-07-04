@@ -58,7 +58,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<UnauthorizedAccessException>(action, "Access to the path '{0}' is denied.", path);
         }
 
+#if NET40
         [Test]
+#endif
         public void MockFile_WriteAllBytes_ShouldThrowAnArgumentExceptionIfContainsIllegalCharacters()
         {
             // Arrange
@@ -82,7 +84,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Path cannot be null."));
+            Assert.That(exception.Message, Does.StartWith("Path cannot be null."));
             Assert.That(exception.ParamName, Is.EqualTo("path"));
         }
 
@@ -98,7 +100,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
+            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
             Assert.That(exception.ParamName, Is.EqualTo("bytes"));
         }
     }

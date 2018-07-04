@@ -267,7 +267,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentException>(action);
-            Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
+            Assert.That(exception.Message, Does.StartWith("The path is not of a legal form."));
         }
 
         [Test]
@@ -540,6 +540,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             string filepath = XFS.Path(@"c:\something\doesnt\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            filesystem.AddDirectory(@"c:\something\doesnt");
 
             var stream = filesystem.File.AppendText(filepath);
 

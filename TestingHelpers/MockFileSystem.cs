@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -172,7 +173,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
                     /*
                      * Although CreateDirectory(@"\\server\share\") is not going to work in real code, we allow it here for the purposes of setting up test doubles.
-                     * See PR https://github.com/tathamoddie/System.IO.Abstractions/pull/90 for conversation
+                     * See PR https://github.com/System-IO-Abstractions/System.IO.Abstractions/pull/90 for conversation
                      */
                 }
 
@@ -190,7 +191,40 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
-        public void RemoveFile(string path)
+      public void AddFileFromEmbeddedResource(string path, Assembly resourceAssembly, string embeddedResourcePath)
+      {
+            using (var embeddedResourceStream = resourceAssembly.GetManifestResourceStream(embeddedResourcePath))
+            {
+                if (embeddedResourceStream == null)
+                {
+                    throw new Exception("Resource not found in assembly");
+                }
+
+                using (var streamReader = new BinaryReader(embeddedResourceStream))
+                {
+                    var fileData = streamReader.ReadBytes((int)embeddedResourceStream.Length);
+                    AddFile(path, new MockFileData(fileData));
+                }
+            }
+      }
+
+      public void AddFilesFromEmbeddedNamespace(string path, Assembly resourceAssembly, string embeddedRresourcePath)
+      {
+          var matchingResources = resourceAssembly.GetManifestResourceNames().Where(f => f.StartsWith(embeddedRresourcePath));
+          foreach (var resource in matchingResources)
+          {
+            using (var embeddedResourceStream = resourceAssembly.GetManifestResourceStream(resource))
+            using (var streamReader = new BinaryReader(embeddedResourceStream))
+            {
+                var fileName = resource.Substring(embeddedRresourcePath.Length + 1);
+                var fileData = streamReader.ReadBytes((int)embeddedResourceStream.Length);
+                var filePath = Path.Combine(path, fileName);
+                AddFile(filePath, new MockFileData(fileData));
+            }
+          }
+      }
+
+      public void RemoveFile(string path)
         {
             path = FixPath(path);
 
@@ -222,7 +256,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                lock (file)
+                lock (files)
                     return files.Where(f => !f.Value.IsDirectory).Select(f => f.Key).ToArray();
             }
         }

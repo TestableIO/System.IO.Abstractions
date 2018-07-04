@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net40</TargetFrameworks>
+    <TargetFrameworks>net40;netcoreapp2.0</TargetFrameworks>
     <Version>0.0.0.1</Version>
     <Description>The unit tests for our pre-built mocks</Description>
     <Company />
@@ -8,8 +8,11 @@
     <Copyright>Copyright © Tatham Oddie 2010</Copyright>
     <Authors>Tatham Oddie</Authors>
     <RootNamespace>System.IO.Abstractions.TestingHelpers.Tests</RootNamespace>
-    <AssemblyOriginatorKeyFile>../StrongName.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>../StrongName.snk</AssemblyOriginatorKeyFile>
     <IsPackable>false</IsPackable>
+
+    <!-- Workaround for https://github.com/nunit/nunit3-vs-adapter/issues/296 -->
+    <DebugType>Full</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -21,12 +24,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="TestFiles\SecondTestFile.txt" />
+    <None Remove="TestFiles\TestFile.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="TestFiles\SecondTestFile.txt" />
+    <EmbeddedResource Include="TestFiles\TestFile.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../System.IO.Abstractions/System.IO.Abstractions.csproj" />
     <ProjectReference Include="../TestingHelpers/TestingHelpers.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="nunit" Version="3.6.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" 
+                      Version="15.0.0"
+                      Condition="'$(TargetFramework)' != 'net40'" />
+    <PackageReference Include="nunit" Version="3.8.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
 
 </Project>
