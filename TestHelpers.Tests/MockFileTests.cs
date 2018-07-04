@@ -545,6 +545,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             string filepath = XFS.Path(@"c:\something\doesnt\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            filesystem.AddDirectory(@"c:\something\doesnt");
 
             var stream = filesystem.File.AppendText(filepath);
 

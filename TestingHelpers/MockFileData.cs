@@ -181,7 +181,12 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </summary>
         public FileSecurity AccessControl
         {
-            get { return accessControl ?? (accessControl = new FileSecurity()); }
+            get
+            {
+                // FileSecurity's constructor will throw PlatformNotSupportedException on non-Windows platform, so we initialize it in lazy way.
+                // This let's us use this class as long as we don't use AccessControl property.
+                return accessControl ?? (accessControl = new FileSecurity());
+            }
             set { accessControl = value; }
         }
     }
