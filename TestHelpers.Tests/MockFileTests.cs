@@ -246,6 +246,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_GetAttributeOfExistingUncDirectory_ShouldReturnCorrectValue()
         {
+            if (MockUnixSupport.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of UNC paths.");
+            }
+
             var filedata = new MockFileData("test");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
