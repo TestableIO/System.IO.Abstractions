@@ -61,10 +61,12 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
-            if(directorySecurity != null)
+
+            if (directorySecurity != null)
             {
                 created.SetAccessControl(directorySecurity);
             }
+
             return created;
         }
 
