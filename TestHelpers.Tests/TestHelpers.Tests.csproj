@@ -38,10 +38,11 @@
     <ProjectReference Include="../TestingHelpers/TestingHelpers.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+  </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" 
-                      Version="15.0.0"
-                      Condition="'$(TargetFramework)' != 'net40'" />
     <PackageReference Include="nunit" Version="3.8.1" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
   </ItemGroup>
