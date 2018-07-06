@@ -18,7 +18,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             string fullPath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(@"c:\something");
+            fileSystem.AddDirectory(XFS.Path(@"c:\something"));
 
             var sut = new MockFile(fileSystem);
 
@@ -34,7 +34,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             string fullPath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(@"c:\something");
+            fileSystem.AddDirectory(XFS.Path(@"c:\something"));
             var data = new UTF8Encoding(false).GetBytes("Test string");
 
             var sut = new MockFile(fileSystem);
@@ -54,7 +54,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             string path = XFS.Path(@"c:\some\file.txt");
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(@"c:\some");
+            fileSystem.AddDirectory(XFS.Path(@"c:\some"));
 
             var mockFile = new MockFile(fileSystem);
 
@@ -112,6 +112,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase("|")]
         public void MockFile_Create_ShouldThrowArgumentNullExceptionIfPathIsNull1(string path)
         {
+            if (MockUnixSupport.IsUnixPlatform()) 
+            {
+                Assert.Inconclusive("Unix does not have these restrictions.");
+            }
+
             // Arrange
             var fileSystem = new MockFileSystem();
 

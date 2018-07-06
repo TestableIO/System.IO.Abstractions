@@ -246,6 +246,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_GetAttributeOfExistingUncDirectory_ShouldReturnCorrectValue()
         {
+            if (MockUnixSupport.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of UNC paths.");
+            }
+
             var filedata = new MockFileData("test");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
@@ -435,7 +440,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
             var fileContent = new byte[] { 1, 2, 3, 4 };
-            fileSystem.AddDirectory(@"c:\something");
+            fileSystem.AddDirectory(XFS.Path(@"c:\something"));
 
             // Act
             fileSystem.File.WriteAllBytes(path, fileContent);
@@ -540,7 +545,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             string filepath = XFS.Path(@"c:\something\doesnt\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            filesystem.AddDirectory(@"c:\something\doesnt");
+            filesystem.AddDirectory(XFS.Path(@"c:\something\doesnt"));
 
             var stream = filesystem.File.AppendText(filepath);
 
