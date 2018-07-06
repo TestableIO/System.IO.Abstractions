@@ -618,6 +618,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_Encrypt_ShouldSetEncryptedAttribute()
+        {
+            // Arrange
+            var fileData = new MockFileData("Demo text content");
+            var filePath = XFS.Path(@"c:\a.txt");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {filePath, fileData }
+            });
+
+            // Act
+            fileSystem.File.Encrypt(filePath);
+            var attributes = fileSystem.File.GetAttributes(filePath);
+
+            // Assert
+            Assert.AreEqual(FileAttributes.Encrypted, attributes & FileAttributes.Encrypted);
+        }
+
+        [Test]
         public void MockFile_Decrypt_ShouldDecryptTheFile()
         {
             // Arrange
@@ -628,6 +647,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             {
                 {filePath, fileData }
             });
+            fileSystem.File.Encrypt(filePath);
 
             // Act
             fileSystem.File.Decrypt(filePath);
@@ -639,7 +659,28 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
             // Assert
-            Assert.AreNotEqual(Content, newcontents);
+            Assert.AreEqual(Content, newcontents);
+        }
+
+        [Test]
+        public void MockFile_Decrypt_ShouldRemoveEncryptedAttribute()
+        {
+            // Arrange
+            const string Content = "Demo text content";
+            var fileData = new MockFileData(Content);
+            var filePath = XFS.Path(@"c:\a.txt");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {filePath, fileData }
+            });
+            fileSystem.File.Encrypt(filePath);
+
+            // Act
+            fileSystem.File.Decrypt(filePath);
+            var attributes = fileSystem.File.GetAttributes(filePath);
+
+            // Assert
+            Assert.AreNotEqual(FileAttributes.Encrypted, attributes & FileAttributes.Encrypted);
         }
 #endif
     }
