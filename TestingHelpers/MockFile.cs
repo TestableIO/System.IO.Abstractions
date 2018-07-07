@@ -348,7 +348,8 @@ namespace System.IO.Abstractions.TestingHelpers
                 if (destFileName.Equals(sourceFileName))
                 {
                     return;
-                } else
+                }
+                else
                 {
                     throw new IOException("A file can not be created if it already exists.");
                 }
