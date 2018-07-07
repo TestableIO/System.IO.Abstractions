@@ -134,11 +134,6 @@ namespace System.IO.Abstractions.TestingHelpers
                 mockFileDataAccessor.RemoveFile(destFileName);
             }
 
-            if (!mockFileDataAccessor.FileExists(sourceFileName))
-            {
-                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), sourceFileName));
-            }
-
             var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
             mockFileDataAccessor.AddFile(destFileName, sourceFile);
         }
