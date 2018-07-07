@@ -153,16 +153,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\LOUD"));
 
             // Act
-            fileSystem.AddFile(@"C:\test\file.txt", "foo");
-            fileSystem.AddFile(@"C:\LOUD\file.txt", "foo");
-            fileSystem.AddDirectory(@"C:\test\SUBDirectory");
-            fileSystem.AddDirectory(@"C:\LOUD\SUBDirectory");
+            fileSystem.AddFile(MockUnixSupport.Path(@"C:\test\file.txt"), "foo");
+            fileSystem.AddFile(MockUnixSupport.Path(@"C:\LOUD\file.txt"), "foo");
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\test\SUBDirectory"));
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\LOUD\SUBDirectory"));
 
             // Assert
-            Assert.Contains(@"C:\test\file.txt", fileSystem.AllFiles.ToList());
-            Assert.Contains(@"C:\LOUD\file.txt", fileSystem.AllFiles.ToList());
-            Assert.Contains(@"C:\test\SUBDirectory\", fileSystem.AllDirectories.ToList());
-            Assert.Contains(@"C:\LOUD\SUBDirectory\", fileSystem.AllDirectories.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\test\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\LOUD\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\test\SUBDirectory\"), fileSystem.AllDirectories.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\LOUD\SUBDirectory\"), fileSystem.AllDirectories.ToList());
         }
 
         [Test]
@@ -174,16 +174,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\LOUD\SUBLOUD"));
 
             // Act
-            fileSystem.AddFile(@"C:\test\SUBTEST\file.txt", "foo");
-            fileSystem.AddFile(@"C:\LOUD\subloud\file.txt", "foo");
-            fileSystem.AddDirectory(@"C:\test\SUBTEST\SUBDirectory");
-            fileSystem.AddDirectory(@"C:\LOUD\subloud\SUBDirectory");
+            fileSystem.AddFile(MockUnixSupport.Path(@"C:\test\SUBTEST\file.txt"), "foo");
+            fileSystem.AddFile(MockUnixSupport.Path(@"C:\LOUD\subloud\file.txt"), "foo");
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\test\SUBTEST\SUBDirectory"));
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\LOUD\subloud\SUBDirectory"));
 
             // Assert
-            Assert.Contains(@"C:\test\subtest\file.txt", fileSystem.AllFiles.ToList());
-            Assert.Contains(@"C:\LOUD\SUBLOUD\file.txt", fileSystem.AllFiles.ToList());
-            Assert.Contains(@"C:\test\subtest\SUBDirectory\", fileSystem.AllDirectories.ToList());
-            Assert.Contains(@"C:\LOUD\SUBLOUD\SUBDirectory\", fileSystem.AllDirectories.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\test\subtest\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\LOUD\SUBLOUD\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\test\subtest\SUBDirectory\"), fileSystem.AllDirectories.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\LOUD\SUBLOUD\SUBDirectory\"), fileSystem.AllDirectories.ToList());
         }
 
         [Test]
@@ -195,16 +195,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\LOUD\SUBLOUD"));
 
             // Act
-            fileSystem.AddFile(@"C:\test\SUBTEST\new\file.txt", "foo");
-            fileSystem.AddFile(@"C:\LOUD\subloud\new\file.txt", "foo");
-            fileSystem.AddDirectory(@"C:\test\SUBTEST\new\SUBDirectory");
-            fileSystem.AddDirectory(@"C:\LOUD\subloud\new\SUBDirectory");
+            fileSystem.AddFile(MockUnixSupport.Path(@"C:\test\SUBTEST\new\file.txt"), "foo");
+            fileSystem.AddFile(MockUnixSupport.Path(@"C:\LOUD\subloud\new\file.txt"), "foo");
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\test\SUBTEST\new\SUBDirectory"));
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\LOUD\subloud\new\SUBDirectory"));
 
             // Assert
-            Assert.Contains(@"C:\test\subtest\new\file.txt", fileSystem.AllFiles.ToList());
-            Assert.Contains(@"C:\LOUD\SUBLOUD\new\file.txt", fileSystem.AllFiles.ToList());
-            Assert.Contains(@"C:\test\subtest\new\SUBDirectory\", fileSystem.AllDirectories.ToList());
-            Assert.Contains(@"C:\LOUD\SUBLOUD\new\SUBDirectory\", fileSystem.AllDirectories.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\test\subtest\new\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\LOUD\SUBLOUD\new\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\test\subtest\new\SUBDirectory\"), fileSystem.AllDirectories.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\LOUD\SUBLOUD\new\SUBDirectory\"), fileSystem.AllDirectories.ToList());
         }
 
         [Test]
@@ -214,8 +214,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             // Act
-            fileSystem.AddFileFromEmbeddedResource(@"C:\TestFile.txt", Assembly.GetExecutingAssembly(), "System.IO.Abstractions.TestingHelpers.Tests.TestFiles.TestFile.txt");
-            var result = fileSystem.GetFile(@"C:\TestFile.txt");
+            fileSystem.AddFileFromEmbeddedResource(MockUnixSupport.Path(@"C:\TestFile.txt"), Assembly.GetExecutingAssembly(), "System.IO.Abstractions.TestingHelpers.Tests.TestFiles.TestFile.txt");
+            var result = fileSystem.GetFile(MockUnixSupport.Path(@"C:\TestFile.txt"));
 
             // Assert
             Assert.AreEqual(new UTF8Encoding().GetBytes("This is a test file."), result.Contents);
@@ -228,10 +228,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             //Act
-            fileSystem.AddFilesFromEmbeddedNamespace(@"C:\", Assembly.GetExecutingAssembly(), "System.IO.Abstractions.TestingHelpers.Tests.TestFiles");
+            fileSystem.AddFilesFromEmbeddedNamespace(MockUnixSupport.Path(@"C:\"), Assembly.GetExecutingAssembly(), "System.IO.Abstractions.TestingHelpers.Tests.TestFiles");
 
-            Assert.Contains(@"C:\TestFile.txt", fileSystem.AllFiles.ToList());
-            Assert.Contains(@"C:\SecondTestFile.txt", fileSystem.AllFiles.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\TestFile.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\SecondTestFile.txt"), fileSystem.AllFiles.ToList());
         }
     }
 }

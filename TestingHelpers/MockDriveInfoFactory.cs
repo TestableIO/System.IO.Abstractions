@@ -43,6 +43,13 @@ namespace System.IO.Abstractions.TestingHelpers
             return result.ToArray();
         }
 
+        public DriveInfoBase FromDriveName(string driveName)
+        {
+            var drive = mockFileSystem.Path.GetPathRoot(driveName);
+
+            return new MockDriveInfo(mockFileSystem, drive);
+        }
+
         private string NormalizeDriveName(string driveName)
         {
             if (driveName.Length == 3 && driveName.EndsWith(@":\", StringComparison.OrdinalIgnoreCase))

@@ -61,6 +61,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
+
             if (directorySecurity != null)
             {
                 created.SetAccessControl(directorySecurity);
@@ -95,8 +96,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists(string path)
         {
+            if (path == "/" && XFS.IsUnixPlatform()) 
+            {
+                return true;
+            }
+
             try
             {
+
                 path = EnsurePathEndsWithDirectorySeparator(path);
                 path = mockFileDataAccessor.Path.GetFullPath(path);
                 return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.OrdinalIgnoreCase));
