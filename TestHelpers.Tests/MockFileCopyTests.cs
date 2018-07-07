@@ -50,9 +50,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(@"C:\");
 
-            var exception = Assert.Throws<FileNotFoundException>(() => fileSystem.File.Copy(@"C:\notExist.txt", @"C:\someFile.txt", false));
-            Assert.AreEqual(@"Can't find C:\notExist.txt", exception.Message);
-            Assert.AreEqual(@"C:\notExist.txt", exception.FileName);
+            TestDelegate action = () => fileSystem.File.Copy(@"C:\a.txt", @"C:\b.txt");
+
+            Assert.Throws<FileNotFoundException>(action);
         }
 
         [Test]

@@ -136,7 +136,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!mockFileDataAccessor.FileExists(sourceFileName))
             {
-                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", sourceFileName), sourceFileName);
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), sourceFileName));
             }
 
             var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
@@ -154,7 +154,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var directoryPath = mockPath.GetDirectoryName(path);
             if (!mockFileDataAccessor.Directory.Exists(directoryPath))
             {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.COULD_NOT_FIND_PART_OF_PATH_EXCEPTION, path));
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), path));
             }
 
             mockFileDataAccessor.AddFile(path, new MockFileData(new byte[0]));
@@ -219,7 +219,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!mockFileDataAccessor.FileExists(path))
             {
-                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", path), path);
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), path));
             }
 
             var fileData = mockFileDataAccessor.GetFile(path);
@@ -448,7 +448,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!mockFileDataAccessor.FileExists(path))
             {
-                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", path), path);
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), path));
             }
 
             return mockFileDataAccessor.GetFile(path).Contents;
@@ -460,7 +460,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!mockFileDataAccessor.FileExists(path))
             {
-                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", path));
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), path));
             }
 
             return mockFileDataAccessor

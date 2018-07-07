@@ -446,9 +446,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.WriteAllBytes(path, fileContent);
 
             // Assert
-            Assert.AreEqual(
-                fileContent,
-                fileSystem.File.ReadAllBytes(path));
+            Assert.AreEqual(fileContent,fileSystem.File.ReadAllBytes(path));
         }
 
         [Test]
@@ -456,10 +454,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var fileSystem = new MockFileSystem();
             var file = new MockFile(fileSystem);
-            var exception = Assert.Throws<FileNotFoundException>(() => file.ReadAllBytes(@"C:\temp\nonExistent.txt"));
 
-            Assert.AreEqual(@"Can't find C:\temp\nonExistent.txt", exception.Message);
-            Assert.AreEqual(@"C:\temp\nonExistent.txt", exception.FileName);
+            TestDelegate action = () => file.ReadAllBytes(@"C:\a.txt");
+
+            Assert.Throws<FileNotFoundException>(action);
         }
 
         [Test]
