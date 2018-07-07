@@ -37,8 +37,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null)
-                    throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
                 return MockFileData.Attributes;
             }
             set { MockFileData.Attributes = value; }
@@ -148,7 +147,8 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
-        public override string Name {
+        public override string Name
+        {
             get { return new MockPath(mockFileSystem).GetFileName(path); }
         }
 
@@ -185,17 +185,23 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void Decrypt()
         {
             if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+
             var contents = MockFileData.Contents;
             for (var i = 0; i < contents.Length; i++)
                 contents[i] ^= (byte)(i % 256);
+
+            MockFileData.Attributes &= ~FileAttributes.Encrypted;
         }
 
         public override void Encrypt()
         {
             if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+
             var contents = MockFileData.Contents;
             for(var i = 0; i < contents.Length; i++)
                 contents[i] ^= (byte) (i % 256);
+
+            MockFileData.Attributes |= FileAttributes.Encrypted;
         }
 #endif
 
