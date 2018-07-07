@@ -15,7 +15,7 @@
             // Arrange
             var filepath = XFS.Path(@"c:\something\foo.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            var cut = new MockFileStream(filesystem, filepath);
+            var cut = new MockFileStream(filesystem, filepath, MockFileStream.StreamType.WRITE);
 
             // Act
             cut.WriteByte(255);
@@ -43,6 +43,19 @@
             Assert.AreEqual(1, fileCount1, "File should have existed");
             Assert.AreEqual(0, fileCount2, "File should have been deleted");
             Assert.AreEqual(0, fileCount3, "Disposing stream should not have resurrected the file");
+        }
+
+        [Test]
+        public void MockFileStream_Constructor_Reading_Nonexistent_File_Throws_Exception()
+        {
+            // Arrange
+            var nonexistentFilePath = XFS.Path(@"c:\something\foo.txt");
+            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            // Act
+            Assert.Throws<FileNotFoundException>(() => new MockFileStream(filesystem, nonexistentFilePath, MockFileStream.StreamType.READ));
+
+            // Assert - expect an exception
         }
     }
 }

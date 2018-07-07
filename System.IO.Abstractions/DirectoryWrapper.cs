@@ -11,11 +11,12 @@ namespace System.IO.Abstractions
             return Directory.CreateDirectory(path);
         }
 
+#if NET40
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
             return Directory.CreateDirectory(path, directorySecurity);
-        }
-
+        }        
+#endif
         public override void Delete(string path)
         {
             Directory.Delete(path);
@@ -33,12 +34,12 @@ namespace System.IO.Abstractions
 
         public override DirectorySecurity GetAccessControl(string path)
         {
-            return Directory.GetAccessControl(path);
+            return new DirectoryInfo(path).GetAccessControl();
         }
 
         public override DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
-            return Directory.GetAccessControl(path, includeSections);
+            return new DirectoryInfo(path).GetAccessControl(includeSections);
         }
 
         public override DateTime GetCreationTime(string path)
@@ -121,10 +122,12 @@ namespace System.IO.Abstractions
             return Directory.GetLastWriteTimeUtc(path);
         }
 
+#if NET40
         public override string[] GetLogicalDrives()
         {
             return Directory.GetLogicalDrives();
         }
+#endif
 
         public override DirectoryInfoBase GetParent(string path)
         {
@@ -138,7 +141,7 @@ namespace System.IO.Abstractions
 
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
-            Directory.SetAccessControl(path, directorySecurity);
+            new DirectoryInfo(path).SetAccessControl(directorySecurity);
         }
 
         public override void SetCreationTime(string path, DateTime creationTime)

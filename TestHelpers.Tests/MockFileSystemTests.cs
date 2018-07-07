@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
@@ -77,7 +79,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(newContent));
         }
-
+#if NET40
         [Test]
         public void Is_Serializable()
         {
@@ -94,6 +96,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(memoryStream.Length > 0, "Length didn't increase after serialization task.");
         }
+#endif
 
         [Test]
         public void MockFileSystem_AddDirectory_ShouldCreateDirectory()
@@ -139,6 +142,96 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.IsNotNull(actualResults);
+        }
+
+        [Test]
+        public void MockFileSystem_AddFile_ShouldMatchCapitalization_PerfectMatch()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\test"));
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\LOUD"));
+
+            // Act
+            fileSystem.AddFile(MockUnixSupport.Path(@"C:\test\file.txt"), "foo");
+            fileSystem.AddFile(MockUnixSupport.Path(@"C:\LOUD\file.txt"), "foo");
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\test\SUBDirectory"));
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\LOUD\SUBDirectory"));
+
+            // Assert
+            Assert.Contains(MockUnixSupport.Path(@"C:\test\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\LOUD\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\test\SUBDirectory\"), fileSystem.AllDirectories.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\LOUD\SUBDirectory\"), fileSystem.AllDirectories.ToList());
+        }
+
+        [Test]
+        public void MockFileSystem_AddFile_ShouldMatchCapitalization_PartialMatch()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\test\subtest"));
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\LOUD\SUBLOUD"));
+
+            // Act
+            fileSystem.AddFile(MockUnixSupport.Path(@"C:\test\SUBTEST\file.txt"), "foo");
+            fileSystem.AddFile(MockUnixSupport.Path(@"C:\LOUD\subloud\file.txt"), "foo");
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\test\SUBTEST\SUBDirectory"));
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\LOUD\subloud\SUBDirectory"));
+
+            // Assert
+            Assert.Contains(MockUnixSupport.Path(@"C:\test\subtest\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\LOUD\SUBLOUD\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\test\subtest\SUBDirectory\"), fileSystem.AllDirectories.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\LOUD\SUBLOUD\SUBDirectory\"), fileSystem.AllDirectories.ToList());
+        }
+
+        [Test]
+        public void MockFileSystem_AddFile_ShouldMatchCapitalization_PartialMatch_FurtherLeft()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\test\subtest"));
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\LOUD\SUBLOUD"));
+
+            // Act
+            fileSystem.AddFile(MockUnixSupport.Path(@"C:\test\SUBTEST\new\file.txt"), "foo");
+            fileSystem.AddFile(MockUnixSupport.Path(@"C:\LOUD\subloud\new\file.txt"), "foo");
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\test\SUBTEST\new\SUBDirectory"));
+            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\LOUD\subloud\new\SUBDirectory"));
+
+            // Assert
+            Assert.Contains(MockUnixSupport.Path(@"C:\test\subtest\new\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\LOUD\SUBLOUD\new\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\test\subtest\new\SUBDirectory\"), fileSystem.AllDirectories.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\LOUD\SUBLOUD\new\SUBDirectory\"), fileSystem.AllDirectories.ToList());
+        }
+
+        [Test]
+        public void MockFileSystem_AddFileFromEmbeddedResource_ShouldAddTheFile()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            fileSystem.AddFileFromEmbeddedResource(MockUnixSupport.Path(@"C:\TestFile.txt"), Assembly.GetExecutingAssembly(), "System.IO.Abstractions.TestingHelpers.Tests.TestFiles.TestFile.txt");
+            var result = fileSystem.GetFile(MockUnixSupport.Path(@"C:\TestFile.txt"));
+
+            // Assert
+            Assert.AreEqual(new UTF8Encoding().GetBytes("This is a test file."), result.Contents);
+        }
+
+        [Test]
+        public void MockFileSystem_AddFilesFromEmbeddedResource_ShouldAddAllTheFiles()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            //Act
+            fileSystem.AddFilesFromEmbeddedNamespace(MockUnixSupport.Path(@"C:\"), Assembly.GetExecutingAssembly(), "System.IO.Abstractions.TestingHelpers.Tests.TestFiles");
+
+            Assert.Contains(MockUnixSupport.Path(@"C:\TestFile.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(MockUnixSupport.Path(@"C:\SecondTestFile.txt"), fileSystem.AllFiles.ToList());
         }
     }
 }

@@ -17,11 +17,17 @@ namespace System.IO.Abstractions
         public abstract Stream Create(string path);
         public abstract Stream Create(string path, int bufferSize);
         public abstract Stream Create(string path, int bufferSize, FileOptions options);
+#if NET40
         public abstract Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity);
+#endif
         public abstract StreamWriter CreateText(string path);
+#if NET40
         public abstract void Decrypt(string path);
+#endif
         public abstract void Delete(string path);
+#if NET40
         public abstract void Encrypt(string path);
+#endif
 
         /// <summary>
         /// Determines whether the specified file exists.
@@ -219,8 +225,10 @@ namespace System.IO.Abstractions
         public abstract string ReadAllText(string path, Encoding encoding);
         public abstract IEnumerable<string> ReadLines(string path);
         public abstract IEnumerable<string> ReadLines(string path, Encoding encoding);
+#if NET40
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName);
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
+#endif
         public abstract void SetAccessControl(string path, FileSecurity fileSecurity);
         public abstract void SetAttributes(string path, FileAttributes fileAttributes);
         public abstract void SetCreationTime(string path, DateTime creationTime);

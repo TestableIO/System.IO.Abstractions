@@ -13,11 +13,13 @@
             get { return Path.DirectorySeparatorChar; }
         }
 
+#if NET40
         [Obsolete("Please use GetInvalidPathChars or GetInvalidFileNameChars instead.")]
         public override char[] InvalidPathChars
         {
             get { return Path.InvalidPathChars; }
         }
+#endif
 
         public override char PathSeparator
         {

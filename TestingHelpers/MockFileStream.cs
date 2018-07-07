@@ -6,7 +6,14 @@
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string path;
 
-        public MockFileStream(IMockFileDataAccessor mockFileDataAccessor, string path, bool forAppend = false)
+        public enum StreamType
+        {
+            READ,
+            WRITE,
+            APPEND
+        }
+
+        public MockFileStream(IMockFileDataAccessor mockFileDataAccessor, string path, StreamType streamType)
         {
             if (mockFileDataAccessor == null)
             {
@@ -23,21 +30,33 @@
                 if (data != null && data.Length > 0)
                 {
                     Write(data, 0, data.Length);
-                    Seek(0, forAppend
+                    Seek(0, StreamType.APPEND.Equals(streamType)
                         ? SeekOrigin.End
                         : SeekOrigin.Begin);
                 }
             }
             else
             {
+                if (StreamType.READ.Equals(streamType))
+                {
+                    throw new FileNotFoundException("File not found.", path);
+                }
                 mockFileDataAccessor.AddFile(path, new MockFileData(new byte[] { }));
             }
         }
 
+#if NET40
         public override void Close()
         {
             InternalFlush();
         }
+#else
+        protected override void Dispose(bool disposing)
+        {
+            InternalFlush();
+            base.Dispose(disposing);
+        }
+#endif
 
         public override void Flush()
         {

@@ -12,18 +12,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     public class MockFileCreateTests
     {
+
         [Test]
         public void Mockfile_Create_ShouldCreateNewStream()
         {
             string fullPath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(@"c:\something");
+            fileSystem.AddDirectory(XFS.Path(@"c:\something"));
 
             var sut = new MockFile(fileSystem);
 
             Assert.That(fileSystem.FileExists(fullPath), Is.False);
 
-            sut.Create(fullPath).Close();
+            sut.Create(fullPath).Dispose();
 
             Assert.That(fileSystem.FileExists(fullPath), Is.True);
         }
@@ -33,7 +34,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             string fullPath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(@"c:\something");
+            fileSystem.AddDirectory(XFS.Path(@"c:\something"));
             var data = new UTF8Encoding(false).GetBytes("Test string");
 
             var sut = new MockFile(fileSystem);
@@ -53,7 +54,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             string path = XFS.Path(@"c:\some\file.txt");
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(@"c:\some");
+            fileSystem.AddDirectory(XFS.Path(@"c:\some"));
 
             var mockFile = new MockFile(fileSystem);
 
@@ -88,7 +89,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             mockFile.SetAttributes(path, FileAttributes.ReadOnly);
 
             // Assert
-            var exception =  Assert.Throws<UnauthorizedAccessException>(() => mockFile.Create(path).Close());
+            var exception =  Assert.Throws<UnauthorizedAccessException>(() => mockFile.Create(path).Dispose());
             Assert.That(exception.Message, Is.EqualTo(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path)));
         }
 
@@ -111,6 +112,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase("|")]
         public void MockFile_Create_ShouldThrowArgumentNullExceptionIfPathIsNull1(string path)
         {
+            if (MockUnixSupport.IsUnixPlatform()) 
+            {
+                Assert.Inconclusive("Unix does not have these restrictions.");
+            }
+
             // Arrange
             var fileSystem = new MockFileSystem();
 
@@ -146,16 +152,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Path cannot be null."));
+            Assert.That(exception.Message, Does.StartWith("Path cannot be null."));
         }
 
         [Test]
-        public void MockFile_Create_ShouldThrowExceptionWhenFolderDoesNotExist()
+        public void MockFile_Create_ShouldThrowDirectoryNotFoundExceptionIfCreatingAndParentPathDoesNotExist()
         {
+            // Arrange
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Create(@"c:\doesnotexist\demo.txt"));
-            Assert.AreEqual(@"Could not find a part of the path 'c:\doesnotexist\demo.txt'.", exception.Message);
+            // Act
+            TestDelegate action = () => fileSystem.File.Create("C:\\Path\\NotFound.ext");
+
+            // Assert
+            Assert.IsFalse(fileSystem.Directory.Exists("C:\\path"));
+            var exception = Assert.Throws<DirectoryNotFoundException>(action);
+            Assert.That(exception.Message, Does.StartWith("Could not find a part of the path"));
         }
     }
 }
