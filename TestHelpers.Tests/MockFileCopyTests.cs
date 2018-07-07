@@ -282,7 +282,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowExceptionWhenSourceDoesNotExist()
+        public void MockFile_Copy_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
@@ -293,7 +293,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowExceptionWhenSourceDoesNotExist_EvenWhenCopyingToItself()
+        public void MockFile_Copy_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist_EvenWhenCopyingToItself()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
