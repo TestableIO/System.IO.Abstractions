@@ -450,7 +450,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_ReadLines_ShouldThrowFileNotFoundExceptionIfFileDoesNotExist()
+        public void MockFile_ReadAllBytes_ShouldThrowFileNotFoundExceptionIfFileDoesNotExist()
         {
             var fileSystem = new MockFileSystem();
             var file = new MockFile(fileSystem);
