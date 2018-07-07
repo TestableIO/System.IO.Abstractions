@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿#if NET40
+using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -18,3 +19,4 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
     }
 }
+#endif

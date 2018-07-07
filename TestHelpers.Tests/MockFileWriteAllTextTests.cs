@@ -16,7 +16,7 @@
             string path = XFS.Path(@"c:\something\demo.txt");
             string fileContent = "Hello there!";
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(@"c:\something");
+            fileSystem.AddDirectory(XFS.Path(@"c:\something"));
 
             // Act
             fileSystem.File.WriteAllText(path, fileContent);
@@ -35,7 +35,7 @@
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(@"c:\something");
+            fileSystem.AddDirectory(XFS.Path(@"c:\something"));
 
             // Act
             fileSystem.File.WriteAllText(path, "foo");
@@ -132,7 +132,7 @@
             // Arrange
             var fileSystem = new MockFileSystem();
             string path = XFS.Path(@"c:\something\file.txt");
-          
+
             // Act
             TestDelegate action = () => fileSystem.File.WriteAllText(path, string.Empty);
 
@@ -140,7 +140,7 @@
             Assert.Throws<DirectoryNotFoundException>(action);
         }
 
-        private IEnumerable<KeyValuePair<Encoding, byte[]>> GetEncodingsWithExpectedBytes()
+        public static IEnumerable<KeyValuePair<Encoding, byte[]>> GetEncodingsWithExpectedBytes()
         {
             Encoding utf8WithoutBom = new UTF8Encoding(false, true);
             return new Dictionary<Encoding, byte[]>
@@ -154,10 +154,11 @@
                     0, 108, 0, 108, 0, 111, 0, 32, 0, 116, 0, 104, 0, 101, 0, 114,
                     0, 101, 0, 33, 0, 32, 0, 68, 0, 122, 0, 105, 1, 25, 0, 107, 0, 105, 0, 46 } },
 
+#if NET40
                 // Default encoding does not need a BOM
                 { Encoding.Default, new byte [] { 72, 101, 108, 108, 111, 32, 116,
                     104, 101, 114, 101, 33, 32, 68, 122, 105, 101, 107, 105, 46 } },
-
+#endif
                 // UTF-32 needs a BOM, the BOM is the first four bytes
                 { Encoding.UTF32, new byte [] {255, 254, 0, 0, 72, 0, 0, 0, 101,
                     0, 0, 0, 108, 0, 0, 0, 108, 0, 0, 0, 111, 0, 0, 0, 32, 0, 0,
@@ -182,7 +183,7 @@
             };
         }
 
-        [TestCaseSource("GetEncodingsWithExpectedBytes")]
+        [TestCaseSource(typeof(MockFileWriteAllTextTests), "GetEncodingsWithExpectedBytes")]
         public void MockFile_WriteAllText_Encoding_ShouldWriteTextFileToMemoryFileSystem(KeyValuePair<Encoding, byte[]> encodingsWithContents)
         {
             // Arrange
@@ -191,7 +192,7 @@
             byte[] expectedBytes = encodingsWithContents.Value;
             Encoding encoding = encodingsWithContents.Key;
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(@"c:\something");
+            fileSystem.AddDirectory(XFS.Path(@"c:\something"));
 
             // Act
             fileSystem.File.WriteAllText(path, FileContent, encoding);
@@ -211,7 +212,7 @@
             var expected = "Hello there!" + Environment.NewLine + "Second line!" + Environment.NewLine;
 
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(@"c:\something");
+            fileSystem.AddDirectory(XFS.Path(@"c:\something"));
 
             // Act
             fileSystem.File.WriteAllLines(path, fileContent);

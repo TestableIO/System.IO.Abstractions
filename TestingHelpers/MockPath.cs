@@ -28,12 +28,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (path == null)
             {
-                throw new ArgumentNullException("path", Properties.Resources.VALUE_CANNOT_BE_NULL);
+                throw new ArgumentNullException("path", StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
             }
 
             if (path.Length == 0)
             {
-                throw new ArgumentException(Properties.Resources.THE_PATH_IS_NOT_OF_A_LEGAL_FORM, "path");
+                throw new ArgumentException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"), "path");
             }
 
             path = path.Replace(AltDirectorySeparatorChar, DirectorySeparatorChar);
@@ -76,7 +76,7 @@ namespace System.IO.Abstractions.TestingHelpers
             // unc paths need at least two segments, the others need one segment
             bool isUnixRooted =
                 mockFileDataAccessor.Directory.GetCurrentDirectory()
-                    .StartsWith(DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase);
+                    .StartsWith(string.Format(CultureInfo.InvariantCulture, "{0}", DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase);
 
             var minPathSegments = isUnc
                 ? 2
@@ -103,7 +103,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 }
             }
 
-            var fullPath = string.Join(DirectorySeparatorChar.ToString(CultureInfo.InvariantCulture), stack.Reverse().ToArray());
+            var fullPath = string.Join(string.Format(CultureInfo.InvariantCulture, "{0}", DirectorySeparatorChar), stack.Reverse().ToArray());
 
             if (hasTrailingSlash)
             {
@@ -167,7 +167,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (HasIllegalCharacters(path, checkAdditional))
             {
-                throw new ArgumentException(Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION);
+                throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
             }
         }
     }

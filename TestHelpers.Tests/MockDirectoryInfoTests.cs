@@ -202,8 +202,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 yield return new object[] { XFS.Path(@"c:\temp\\folder"), XFS.Path(@"c:\temp\folder") };
                 yield return new object[] { XFS.Path(@"c:\temp//folder"), XFS.Path(@"c:\temp\folder") };
                 yield return new object[] { XFS.Path(@"c:\temp//\\///folder"), XFS.Path(@"c:\temp\folder") };
-                yield return new object[] { XFS.Path(@"\\unc\folder"), XFS.Path(@"\\unc\folder") };
-                yield return new object[] { XFS.Path(@"\\unc/folder\\foo"), XFS.Path(@"\\unc\folder\foo") };
+                if (!MockUnixSupport.IsUnixPlatform())
+                {
+                    yield return new object[] { XFS.Path(@"\\unc\folder"), XFS.Path(@"\\unc\folder") };
+                    yield return new object[] { XFS.Path(@"\\unc/folder\\foo"), XFS.Path(@"\\unc\folder\foo") };
+                }
             }
         }
 
@@ -235,7 +238,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
+            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
         }
 
         [Test]
@@ -262,7 +265,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentException>(action);
-            Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
+            Assert.That(exception.Message, Does.StartWith("The path is not of a legal form."));
+        }
+
+        [Test]
+        public void MockDirectoryInfo_ToString_ShouldReturnDirectoryName()
+        {
+            var directoryPath = XFS.Path(@"c:\temp\folder\folder");
+
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, directoryPath);
+
+            // Act
+            var str = directoryInfo.ToString();
+
+            // Assert
+            Assert.AreEqual(directoryPath, str);
         }
     }
 }

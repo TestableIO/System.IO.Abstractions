@@ -1,16 +1,21 @@
-version: 2.0.0.{build}
+image: Visual Studio 2017
+configuration: Release
+
+skip_branch_with_pr: true
+branches:
+  only:
+    - master
+
+version: 2.1.0.{build}
 
 pull_requests:
   do_not_increment_build_number: true
 
-assembly_info:
+dotnet_csproj:
   patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-
-cache:
-- packages -> packages\packages.config
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: '{version}'
 
 before_build:
 - nuget restore
@@ -21,7 +26,7 @@ build:
 deploy:
 - provider: NuGet
   api_key:
-    secure: kTNf1aNQVwwimPmGQreJV8UrGI1jBSUiwiTgThlyLZM4tKPguC0ZmSPi8+s7hd4M
+    secure: lUmSV95QwsQtvPkHT02PT5fswmVcW0oMIJvOGEincUNnUNtTe3DOIjVEOpC0CMkQ
   skip_symbols: false
   artifact: /.*\.nupkg/
   on:

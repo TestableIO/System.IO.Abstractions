@@ -18,7 +18,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 get
                 {
                     var fileSystem = new MockFileSystem();
-                    fileSystem.AddDirectory(@"c:\something");
+                    fileSystem.AddDirectory(XFS.Path(@"c:\something"));
                     var fileContentEnumerable = new List<string> { "first line", "second line", "third line", "fourth and last line" };
                     var fileContentArray = fileContentEnumerable.ToArray();
                     Action writeEnumberable = () => fileSystem.File.WriteAllLines(Path, fileContentEnumerable);
@@ -169,7 +169,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     var path = XFS.Path(@"c:\something\file.txt");
                     var mockFileData = new MockFileData(string.Empty);
                     mockFileData.Attributes = FileAttributes.ReadOnly;
-                    fileSystem.AddDirectory(@"c:\something");
+                    fileSystem.AddDirectory(XFS.Path(@"c:\something"));
                     fileSystem.AddFile(path, mockFileData);
                     List<string> fileContentEnumerable = null;
                     string[] fileContentArray = null;
@@ -221,8 +221,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
-            Assert.That(exception.ParamName, Is.StringStarting("path"));
+            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
+            Assert.That(exception.ParamName, Does.StartWith("path"));
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), "ForNullEncoding")]
@@ -236,13 +236,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
-            Assert.That(exception.ParamName, Is.StringStarting("encoding"));
+            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
+            Assert.That(exception.ParamName, Does.StartWith("encoding"));
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), "ForIllegalPath")]
         public void MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentExceptionIfPathContainsIllegalCharacters(TestDelegate action)
         {
+            if (MockUnixSupport.IsUnixPlatform()) 
+            {
+                Assert.Inconclusive("Unix does not have these restrictions.");
+            }
+            
             // Arrange
             // is done in the test case source
 
@@ -295,7 +300,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Is.StringStarting("Value cannot be null."));
+            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
             Assert.That(exception.ParamName, Is.EqualTo("contents"));
         }
     }

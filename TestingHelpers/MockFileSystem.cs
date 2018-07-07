@@ -1,91 +1,124 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
-    using XFS = MockUnixSupport;
+  using XFS = MockUnixSupport;
 
-    [Serializable]
-    public class MockFileSystem : IFileSystem, IMockFileDataAccessor
+  [Serializable]
+  public class MockFileSystem : IFileSystem, IMockFileDataAccessor
+  {
+    private readonly IDictionary<string, MockFileData> files;
+    private readonly FileBase file;
+    private readonly DirectoryBase directory;
+    private readonly IFileInfoFactory fileInfoFactory;
+    private readonly PathBase pathField;
+    private readonly IDirectoryInfoFactory directoryInfoFactory;
+    private readonly IDriveInfoFactory driveInfoFactory;
+    private readonly IFileSystemWatcherFactory fileSystemWatcherFactory;
+
+    [NonSerialized]
+    private readonly PathVerifier pathVerifier;
+
+    public MockFileSystem() : this(null) { }
+
+    public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = "")
     {
-        private readonly IDictionary<string, MockFileData> files;
-        private readonly FileBase file;
-        private readonly DirectoryBase directory;
-        private readonly IFileInfoFactory fileInfoFactory;
-        private readonly PathBase pathField;
-        private readonly IDirectoryInfoFactory directoryInfoFactory;
-        private readonly IDriveInfoFactory driveInfoFactory;
+      if (string.IsNullOrEmpty(currentDirectory))
+        currentDirectory = IO.Path.GetTempPath();
 
-        [NonSerialized]
-        private readonly PathVerifier pathVerifier;
+      pathVerifier = new PathVerifier(this);
 
-        public MockFileSystem() : this(null) { }
+      this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
+      pathField = new MockPath(this);
+      file = new MockFile(this);
+      directory = new MockDirectory(this, file, currentDirectory);
+      fileInfoFactory = new MockFileInfoFactory(this);
+      directoryInfoFactory = new MockDirectoryInfoFactory(this);
+      driveInfoFactory = new MockDriveInfoFactory(this);
+      fileSystemWatcherFactory = new MockFileSystemWatcherFactory();
 
-        public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = "")
+      if (files != null)
+      {
+        foreach (var entry in files)
         {
-            if (string.IsNullOrEmpty(currentDirectory))
-                currentDirectory = IO.Path.GetTempPath();
-
-            pathVerifier = new PathVerifier(this);
-
-            this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
-            pathField = new MockPath(this);
-            file = new MockFile(this);
-            directory = new MockDirectory(this, file, currentDirectory);
-            fileInfoFactory = new MockFileInfoFactory(this);
-            directoryInfoFactory = new MockDirectoryInfoFactory(this);
-            driveInfoFactory = new MockDriveInfoFactory(this);
-
-            if (files != null)
-            {
-                foreach (var entry in files)
-                {
-                    AddFile(entry.Key, entry.Value);
-                }
-            }
+          AddFile(entry.Key, entry.Value);
         }
+      }
+    }
 
-        public FileBase File
-        {
-            get { return file; }
-        }
+    public FileBase File
+    {
+      get { return file; }
+    }
 
-        public DirectoryBase Directory
-        {
-            get { return directory; }
-        }
+    public DirectoryBase Directory
+    {
+      get { return directory; }
+    }
 
-        public IFileInfoFactory FileInfo
-        {
-            get { return fileInfoFactory; }
-        }
+    public IFileInfoFactory FileInfo
+    {
+      get { return fileInfoFactory; }
+    }
 
-        public PathBase Path
-        {
-            get { return pathField; }
-        }
+    public PathBase Path
+    {
+      get { return pathField; }
+    }
 
-        public IDirectoryInfoFactory DirectoryInfo
-        {
-            get { return directoryInfoFactory; }
-        }
+    public IDirectoryInfoFactory DirectoryInfo
+    {
+      get { return directoryInfoFactory; }
+    }
 
-        public IDriveInfoFactory DriveInfo
-        {
-            get { return driveInfoFactory; }
-        }
+    public IDriveInfoFactory DriveInfo
+    {
+      get { return driveInfoFactory; }
+    }
+	
+    public IFileSystemWatcherFactory FileSystemWatcher
+    {
+      get { return fileSystemWatcherFactory; }
+    }
 
         public PathVerifier PathVerifier
         {
             get { return pathVerifier; }
         }
 
-        private string FixPath(string path)
+        private string FixPath(string path, bool checkCaps = false)
         {
             var pathSeparatorFixed = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-            return pathField.GetFullPath(pathSeparatorFixed);
+            var fullPath = pathField.GetFullPath(pathSeparatorFixed);
+
+            return checkCaps ? GetPathWithCorrectDirectoryCapitalization(fullPath) : fullPath;
         }
+
+        //If C:\foo exists, ensures that trying to save a file to "C:\FOO\file.txt" instead saves it to "C:\foo\file.txt".
+        private string GetPathWithCorrectDirectoryCapitalization(string fullPath)
+        {
+            string[] splitPath = fullPath.Split(Path.DirectorySeparatorChar);
+            string leftHalf = fullPath;
+            string rightHalf = "";
+            for (int i = splitPath.Length - 1; i > 1; i--)
+            {
+                rightHalf = i == splitPath.Length - 1 ? splitPath[i] : splitPath[i] + Path.DirectorySeparatorChar + rightHalf;
+                int lastSeparator = leftHalf.LastIndexOf(Path.DirectorySeparatorChar);
+                leftHalf = lastSeparator > 0 ? leftHalf.Substring(0, lastSeparator) : leftHalf;
+                if (directory.Exists(leftHalf))
+                {
+                    leftHalf += Path.DirectorySeparatorChar;
+                    leftHalf = pathField.GetFullPath(leftHalf);
+                    string baseDirectory = AllDirectories.First(dir => dir.Equals(leftHalf, StringComparison.OrdinalIgnoreCase));
+                    return baseDirectory + rightHalf;
+                }
+            }
+            return fullPath;
+        }
+
 
         public MockFileData GetFile(string path)
         {
@@ -96,7 +129,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public void AddFile(string path, MockFileData mockFile)
         {
-            var fixedPath = FixPath(path);
+            var fixedPath = FixPath(path, true);
             lock (files)
             {
                 if (FileExists(fixedPath))
@@ -106,7 +139,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
                     if (isReadOnly || isHidden)
                     {
-                        throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.ACCESS_TO_THE_PATH_IS_DENIED, path));
+                        throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("ACCESS_TO_THE_PATH_IS_DENIED"), path));
                     }
                 }
 
@@ -123,49 +156,82 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public void AddDirectory(string path)
         {
-            var fixedPath = FixPath(path);
+            var fixedPath = FixPath(path, true);
             var separator = XFS.Separator();
 
             lock (files)
             {
-                if (FileExists(path) &&
+                if (FileExists(fixedPath) &&
                     (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-                    throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, Properties.Resources.ACCESS_TO_THE_PATH_IS_DENIED, path));
+                    throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("ACCESS_TO_THE_PATH_IS_DENIED"), fixedPath));
 
                 var lastIndex = 0;
 
                 bool isUnc =
-                    path.StartsWith(@"\\", StringComparison.OrdinalIgnoreCase) ||
-                    path.StartsWith(@"//", StringComparison.OrdinalIgnoreCase);
+                    fixedPath.StartsWith(@"\\", StringComparison.OrdinalIgnoreCase) ||
+                    fixedPath.StartsWith(@"//", StringComparison.OrdinalIgnoreCase);
 
                 if (isUnc)
                 {
                     //First, confirm they aren't trying to create '\\server\'
-                    lastIndex = path.IndexOf(separator, 2, StringComparison.OrdinalIgnoreCase);
+                    lastIndex = fixedPath.IndexOf(separator, 2, StringComparison.OrdinalIgnoreCase);
                     if (lastIndex < 0)
                         throw new ArgumentException(@"The UNC path should be of the form \\server\share.", "path");
 
                     /*
                      * Although CreateDirectory(@"\\server\share\") is not going to work in real code, we allow it here for the purposes of setting up test doubles.
-                     * See PR https://github.com/tathamoddie/System.IO.Abstractions/pull/90 for conversation
+                     * See PR https://github.com/System-IO-Abstractions/System.IO.Abstractions/pull/90 for conversation
                      */
                 }
 
-                while ((lastIndex = path.IndexOf(separator, lastIndex + 1, StringComparison.OrdinalIgnoreCase)) > -1)
+                while ((lastIndex = fixedPath.IndexOf(separator, lastIndex + 1, StringComparison.OrdinalIgnoreCase)) > -1)
                 {
-                    var segment = path.Substring(0, lastIndex + 1);
+                    var segment = fixedPath.Substring(0, lastIndex + 1);
                     if (!directory.Exists(segment))
                     {
                         files[segment] = new MockDirectoryData();
                     }
                 }
 
-                var s = path.EndsWith(separator, StringComparison.OrdinalIgnoreCase) ? path : path + separator;
+                var s = fixedPath.EndsWith(separator, StringComparison.OrdinalIgnoreCase) ? fixedPath : fixedPath + separator;
                 files[s] = new MockDirectoryData();
             }
         }
 
-        public void RemoveFile(string path)
+      public void AddFileFromEmbeddedResource(string path, Assembly resourceAssembly, string embeddedResourcePath)
+      {
+            using (var embeddedResourceStream = resourceAssembly.GetManifestResourceStream(embeddedResourcePath))
+            {
+                if (embeddedResourceStream == null)
+                {
+                    throw new Exception("Resource not found in assembly");
+                }
+
+                using (var streamReader = new BinaryReader(embeddedResourceStream))
+                {
+                    var fileData = streamReader.ReadBytes((int)embeddedResourceStream.Length);
+                    AddFile(path, new MockFileData(fileData));
+                }
+            }
+      }
+
+      public void AddFilesFromEmbeddedNamespace(string path, Assembly resourceAssembly, string embeddedRresourcePath)
+      {
+          var matchingResources = resourceAssembly.GetManifestResourceNames().Where(f => f.StartsWith(embeddedRresourcePath));
+          foreach (var resource in matchingResources)
+          {
+            using (var embeddedResourceStream = resourceAssembly.GetManifestResourceStream(resource))
+            using (var streamReader = new BinaryReader(embeddedResourceStream))
+            {
+                var fileName = resource.Substring(embeddedRresourcePath.Length + 1);
+                var fileData = streamReader.ReadBytes((int)embeddedResourceStream.Length);
+                var filePath = Path.Combine(path, fileName);
+                AddFile(filePath, new MockFileData(fileData));
+            }
+          }
+      }
+
+      public void RemoveFile(string path)
         {
             path = FixPath(path);
 
@@ -197,7 +263,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                lock (file)
+                lock (files)
                     return files.Where(f => !f.Value.IsDirectory).Select(f => f.Key).ToArray();
             }
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -16,6 +17,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         void AddFile(string path, MockFileData mockFile);
         void AddDirectory(string path);
+
+        void AddFileFromEmbeddedResource(string path, Assembly resourceAssembly, string embeddedResourcePath);
+        void AddFilesFromEmbeddedNamespace(string path, Assembly resourceAssembly, string embeddedRresourcePath);
 
         /// <summary>
         /// Removes the file.
