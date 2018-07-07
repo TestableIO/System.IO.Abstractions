@@ -114,7 +114,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!Exists(sourceFileName))
             {
-                throw new FileNotFoundException();
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), sourceFileName));
             }
 
             var directoryNameOfDestination = mockPath.GetDirectoryName(destFileName);
