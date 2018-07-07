@@ -86,6 +86,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfoFactory_FromDriveName_WithDriveShouldReturnDrive()
         {
+            if (MockUnixSupport.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of drives.");
+            }
+
             // Arrange
             var fileSystem = new MockFileSystem();
             var factory = new MockDriveInfoFactory(fileSystem);
@@ -100,6 +105,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfoFactory_FromDriveName_WithPathShouldReturnDrive()
         {
+            if (MockUnixSupport.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of drives.");
+            }
+
             // Arrange
             var fileSystem = new MockFileSystem();
             var factory = new MockDriveInfoFactory(fileSystem);
