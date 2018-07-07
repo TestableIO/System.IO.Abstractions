@@ -341,27 +341,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_ReadAllBytes_ShouldReturnOriginalByteData()
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { XFS.Path(@"c:\something\demo.txt"), new MockFileData("Demo text content") },
-                { XFS.Path(@"c:\something\other.gif"), new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
-            });
-
-            var file = new MockFile(fileSystem);
-
-            // Act
-            var result = file.ReadAllBytes(XFS.Path(@"c:\something\other.gif"));
-
-            // Assert
-            CollectionAssert.AreEqual(
-                new byte[] { 0x21, 0x58, 0x3f, 0xa9 },
-                result);
-        }
-
-        [Test]
         public void MockFile_ReadAllText_ShouldReturnOriginalTextData()
         {
             // Arrange
@@ -431,33 +410,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.AreEqual(text, actualText);
-        }
-
-        [Test]
-        public void MockFile_ReadAllBytes_ShouldReturnDataSavedByWriteAllBytes()
-        {
-            // Arrange
-            string path = XFS.Path(@"c:\something\demo.txt");
-            var fileSystem = new MockFileSystem();
-            var fileContent = new byte[] { 1, 2, 3, 4 };
-            fileSystem.AddDirectory(XFS.Path(@"c:\something"));
-
-            // Act
-            fileSystem.File.WriteAllBytes(path, fileContent);
-
-            // Assert
-            Assert.AreEqual(fileContent,fileSystem.File.ReadAllBytes(path));
-        }
-
-        [Test]
-        public void MockFile_ReadAllBytes_ShouldThrowFileNotFoundExceptionIfFileDoesNotExist()
-        {
-            var fileSystem = new MockFileSystem();
-            var file = new MockFile(fileSystem);
-
-            TestDelegate action = () => file.ReadAllBytes(@"C:\a.txt");
-
-            Assert.Throws<FileNotFoundException>(action);
         }
 
         [Test]
