@@ -197,6 +197,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             CheckSearchPattern(searchPattern);
             path = EnsurePathEndsWithDirectorySeparator(path);
+            path = EnsureAbsolutePath(path);
 
             bool isUnix = XFS.IsUnixPlatform();
 
@@ -507,6 +508,13 @@ namespace System.IO.Abstractions.TestingHelpers
             if (!path.EndsWith(string.Format(CultureInfo.InvariantCulture, "{0}", Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase))
                 path += Path.DirectorySeparatorChar;
             return path;
+        }
+
+        private string EnsureAbsolutePath(string path)
+        {
+            return Path.IsPathRooted(path)
+                ? path
+                : Path.Combine(GetCurrentDirectory(), path);
         }
 
         static void CheckSearchPattern(string searchPattern)
