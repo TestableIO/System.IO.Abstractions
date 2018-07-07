@@ -36,6 +36,11 @@ namespace System.IO.Abstractions.TestingHelpers
             get { return mockFileDataAccessor.GetFile(directoryPath); }
         }
 
+        public override IFileSystem FileSystem
+        {
+            get { return mockFileDataAccessor; }
+        }
+
         public override void Delete()
         {
             mockFileDataAccessor.Directory.Delete(directoryPath);

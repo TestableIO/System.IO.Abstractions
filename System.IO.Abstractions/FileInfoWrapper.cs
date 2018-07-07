@@ -17,6 +17,11 @@ namespace System.IO.Abstractions
             this.instance = instance;
         }
 
+        public override IFileSystem FileSystem
+        {
+          get { return Abstractions.FileSystem.Instance; }
+        }
+
         public override void Delete()
         {
             instance.Delete();

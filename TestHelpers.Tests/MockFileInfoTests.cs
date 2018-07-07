@@ -477,5 +477,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(fileInfo.DirectoryName, destinationFolder);
             Assert.AreEqual(fileInfo.FullName, destination);
         }
+
+        [Test]
+        public void MockFileInfo_FileSystem_ShouldReturnFileSystem()
+        {
+            var filePath = XFS.Path(@"c:\temp\file.txt");
+
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var fileInfo = new MockFileInfo(fileSystem, filePath);
+
+            // Act
+            var result = fileInfo.FileSystem;
+
+            // Assert
+            Assert.AreEqual(fileSystem, result);
+        }
     }
 }
