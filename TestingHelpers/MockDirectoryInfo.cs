@@ -123,7 +123,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string Name
         {
-            get { return new MockPath(mockFileDataAccessor).GetFileName(directoryPath.TrimEnd('\\')); }
+            get { return new MockPath(mockFileDataAccessor).GetFileName(directoryPath.TrimEnd(mockFileDataAccessor.Path.DirectorySeparatorChar)); }
         }
 
         public override void Create()

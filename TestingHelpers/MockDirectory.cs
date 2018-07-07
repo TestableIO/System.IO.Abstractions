@@ -61,6 +61,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
+
             if (directorySecurity != null)
             {
                 created.SetAccessControl(directorySecurity);
@@ -95,8 +96,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists(string path)
         {
+            if (path == "/" && XFS.IsUnixPlatform()) 
+            {
+                return true;
+            }
+
             try
             {
+
                 path = EnsurePathEndsWithDirectorySeparator(path);
                 path = mockFileDataAccessor.Path.GetFullPath(path);
                 return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.OrdinalIgnoreCase));
@@ -190,6 +197,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             CheckSearchPattern(searchPattern);
             path = EnsurePathEndsWithDirectorySeparator(path);
+            path = EnsureAbsolutePath(path);
 
             bool isUnix = XFS.IsUnixPlatform();
 
@@ -500,6 +508,13 @@ namespace System.IO.Abstractions.TestingHelpers
             if (!path.EndsWith(string.Format(CultureInfo.InvariantCulture, "{0}", Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase))
                 path += Path.DirectorySeparatorChar;
             return path;
+        }
+
+        private string EnsureAbsolutePath(string path)
+        {
+            return Path.IsPathRooted(path)
+                ? path
+                : Path.Combine(GetCurrentDirectory(), path);
         }
 
         static void CheckSearchPattern(string searchPattern)
