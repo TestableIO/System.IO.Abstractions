@@ -1,16 +1,14 @@
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using Collections.Generic;
-
     using Globalization;
-
     using Linq;
-
     using NUnit.Framework;
-
     using XFS = MockUnixSupport;
 
-    public class MockFileCopyTests {
+    public class MockFileCopyTests
+    {
+
         [Test]
         public void MockFile_Copy_ShouldOverwriteFileWhenOverwriteFlagIsTrue()
         {

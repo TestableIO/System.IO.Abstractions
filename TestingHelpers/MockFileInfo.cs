@@ -156,7 +156,6 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (MockFileData == null) throw new FileNotFoundException("File not found", path);
             return new StreamWriter(new MockFileStream(mockFileSystem, FullName, MockFileStream.StreamType.APPEND));
-            //return ((MockFileDataModifier) MockFileData).AppendText();
         }
 
         public override FileInfoBase CopyTo(string destFileName)
