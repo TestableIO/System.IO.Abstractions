@@ -495,7 +495,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(FileNotFoundException))]
         public void MockFileInfo_MoveTo_SameSourceAndTargetThrowsExceptionIfSourceDoesntExist()
         {
             // Arrange
@@ -504,13 +503,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Act
             string destination = XFS.Path(XFS.Path(@"c:\temp\file.txt"));
-            fileInfo.MoveTo(destination);
+            TestDelegate action = () => fileInfo.MoveTo(destination);
 
-            Assert.AreEqual(fileInfo.FullName, destination);
+            Assert.Throws<FileNotFoundException>(action);
         }
 
         [Test]
-        [ExpectedException(typeof(FileNotFoundException))]
         public void MockFileInfo_MoveTo_ThrowsExceptionIfSourceDoesntExist()
         {
             // Arrange
@@ -519,13 +517,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Act
             string destination = XFS.Path(XFS.Path(@"c:\temp\file2.txt"));
-            fileInfo.MoveTo(destination);
+            TestDelegate action = () => fileInfo.MoveTo(destination);
 
-            Assert.AreEqual(fileInfo.FullName, destination);
+            Assert.Throws<FileNotFoundException>(action);
         }
 
         [Test]
-        [ExpectedException(typeof(FileNotFoundException))]
         public void MockFileInfo_CopyTo_ThrowsExceptionIfSourceDoesntExist()
         {
             // Arrange
@@ -534,9 +531,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Act
             string destination = XFS.Path(XFS.Path(@"c:\temp\file2.txt"));
-            fileInfo.CopyTo(destination);
+            TestDelegate action = () => fileInfo.CopyTo(destination);
 
-            Assert.AreEqual(fileInfo.FullName, destination);
+            Assert.Throws<FileNotFoundException>(action);
         }
     }
 }

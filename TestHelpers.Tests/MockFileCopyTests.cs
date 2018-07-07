@@ -273,23 +273,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(FileNotFoundException))]
         public void MockFile_Copy_ShouldThrowExceptionWhenSourceDoesNotExist()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            fileSystem.File.Copy(sourceFilePath, XFS.Path(@"c:\something\demo2.txt"));
+            TestDelegate action = () => fileSystem.File.Copy(sourceFilePath, XFS.Path(@"c:\something\demo2.txt"));
+
+            Assert.Throws<FileNotFoundException>(action);
         }
 
         [Test]
-        [ExpectedException(typeof(FileNotFoundException))]
         public void MockFile_Copy_ShouldThrowExceptionWhenSourceDoesNotExist_EvenWhenCopyingToItself()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            fileSystem.File.Copy(sourceFilePath, XFS.Path(@"c:\something\demo.txt"));
+            TestDelegate action = () => fileSystem.File.Copy(sourceFilePath, XFS.Path(@"c:\something\demo.txt"));
+
+            Assert.Throws<FileNotFoundException>(action);
         }
     }
 }
