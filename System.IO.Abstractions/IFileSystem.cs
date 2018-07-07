@@ -8,5 +8,6 @@
         PathBase Path { get; }
         IDirectoryInfoFactory DirectoryInfo { get; }
         IDriveInfoFactory DriveInfo { get; }
+        IFileSystemWatcherFactory FileSystemWatcher { get; }
     }
 }

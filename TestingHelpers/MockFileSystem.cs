@@ -17,6 +17,7 @@ namespace System.IO.Abstractions.TestingHelpers
     private readonly PathBase pathField;
     private readonly IDirectoryInfoFactory directoryInfoFactory;
     private readonly IDriveInfoFactory driveInfoFactory;
+    private readonly IFileSystemWatcherFactory fileSystemWatcherFactory;
 
     [NonSerialized]
     private readonly PathVerifier pathVerifier;
@@ -37,6 +38,7 @@ namespace System.IO.Abstractions.TestingHelpers
       fileInfoFactory = new MockFileInfoFactory(this);
       directoryInfoFactory = new MockDirectoryInfoFactory(this);
       driveInfoFactory = new MockDriveInfoFactory(this);
+      fileSystemWatcherFactory = new MockFileSystemWatcherFactory();
 
       if (files != null)
       {
@@ -75,6 +77,11 @@ namespace System.IO.Abstractions.TestingHelpers
     public IDriveInfoFactory DriveInfo
     {
       get { return driveInfoFactory; }
+    }
+	
+    public IFileSystemWatcherFactory FileSystemWatcher
+    {
+      get { return fileSystemWatcherFactory; }
     }
 
         public PathVerifier PathVerifier
