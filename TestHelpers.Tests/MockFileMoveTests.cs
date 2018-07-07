@@ -1,14 +1,12 @@
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using Collections.Generic;
-
     using Linq;
-
     using NUnit.Framework;
-
     using XFS = MockUnixSupport;
 
-    public class MockFileMoveTests {
+    public class MockFileMoveTests
+    {
         [Test]
         public void MockFile_Move_ShouldMoveFileWithinMemoryFileSystem()
         {
@@ -260,7 +258,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsEmpty_ParamName() {
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsEmpty_ParamName()
+        {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
@@ -282,7 +281,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist_FileName() {
+        public void MockFile_Move_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist_FileName()
+        {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             string destFilePath = XFS.Path(@"c:\something\demo1.txt");
             var fileSystem = new MockFileSystem();

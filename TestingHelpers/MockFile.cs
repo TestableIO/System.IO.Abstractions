@@ -99,7 +99,6 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Copy(string sourceFileName, string destFileName, bool overwrite)
         {
-            //This is the order that checks are executed in MSCORLIB.
             if (sourceFileName == null)
             {
                 throw new ArgumentNullException("sourceFileName", StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
@@ -109,8 +108,10 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw new ArgumentNullException("destFileName", StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
             }
+
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, "sourceFileName");
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(destFileName, "destFileName");
+
             if (!Exists(sourceFileName))
             {
                 throw new FileNotFoundException();
