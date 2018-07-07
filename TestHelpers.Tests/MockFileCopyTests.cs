@@ -45,17 +45,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowFileNotFoundExceptionIfSourceFileDoesntExist()
-        {
-            var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(@"C:\");
-
-            TestDelegate action = () => fileSystem.File.Copy(@"C:\a.txt", @"C:\b.txt");
-
-            Assert.Throws<FileNotFoundException>(action);
-        }
-
-        [Test]
         public void MockFile_Copy_ShouldThrowExceptionWhenFileExistsAtDestination()
         {
             string sourceFileName = XFS.Path(@"c:\source\demo.txt");
