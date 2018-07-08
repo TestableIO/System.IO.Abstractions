@@ -627,13 +627,9 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </remarks>
         public override void WriteAllBytes(string path, byte[] bytes)
         {
-            if (path == null)
-            {
-                throw new ArgumentNullException("path", "Path cannot be null.");
-            }
-
             VerifyValueIsNotNull(bytes, "bytes");
 
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
             VerifyDirectoryExists(path);
 
             mockFileDataAccessor.AddFile(path, new MockFileData(bytes));
