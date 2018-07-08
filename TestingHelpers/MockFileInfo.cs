@@ -192,20 +192,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (MockFileData == null) throw new FileNotFoundException("File not found", path);
 
-            var contents = MockFileData.Contents;
-            for (var i = 0; i < contents.Length; i++)
-                contents[i] ^= (byte)(i % 256);
-
             MockFileData.Attributes &= ~FileAttributes.Encrypted;
         }
 
         public override void Encrypt()
         {
             if (MockFileData == null) throw new FileNotFoundException("File not found", path);
-
-            var contents = MockFileData.Contents;
-            for(var i = 0; i < contents.Length; i++)
-                contents[i] ^= (byte) (i % 256);
 
             MockFileData.Attributes |= FileAttributes.Encrypted;
         }
