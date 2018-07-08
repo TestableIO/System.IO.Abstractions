@@ -49,7 +49,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_WriteAllBytes_ShouldThrowAnArgumentExceptionIfContainsIllegalCharacters()
         {
-            string path = XFS.Path(@"c:\*.txt");
+            string path = XFS.Path(@"c:\a/b.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { path, "" }
