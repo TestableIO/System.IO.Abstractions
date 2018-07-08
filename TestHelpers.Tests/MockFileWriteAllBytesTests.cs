@@ -57,7 +57,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_WriteAllBytes_ShouldThrowAnArgumentNullExceptionIfContainsIllegalCharacters()
+        public void MockFile_WriteAllBytes_ShouldThrowAnArgumentNullExceptionIfPathIsNull()
         {
             var fileSystem = new MockFileSystem();
 
@@ -67,7 +67,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_WriteAllBytes_ShouldThrowAnArgumentNullExceptionIfContainsIllegalCharacters2()
+        public void MockFile_WriteAllBytes_ShouldThrowAnArgumentExceptionIfContainsIllegalCharacters()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(@"C:\");
