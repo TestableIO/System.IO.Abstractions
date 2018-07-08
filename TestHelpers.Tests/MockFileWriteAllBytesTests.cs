@@ -50,8 +50,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_WriteAllBytes_ShouldThrowAnArgumentExceptionIfContainsIllegalCharacters()
         {
             var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(XFS.Path(@"C:\"));
 
-            TestDelegate action = () => fileSystem.File.WriteAllBytes("<<<", new byte[] { 123 });
+            TestDelegate action = () => fileSystem.File.WriteAllBytes(@"C:\*.txt", new byte[] { 123 });
 
             Assert.Throws<ArgumentException>(action);
         }
@@ -64,17 +65,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             TestDelegate action = () => fileSystem.File.WriteAllBytes(null, new byte[] { 123 });
 
             Assert.Throws<ArgumentNullException>(action);
-        }
-
-        [Test]
-        public void MockFile_WriteAllBytes_ShouldThrowAnArgumentExceptionIfContainsIllegalCharacters()
-        {
-            var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(@"C:\");
-
-            TestDelegate action = () => fileSystem.File.WriteAllBytes(@"c:\ab*cde.txt", new byte[100]);
-
-            var exception = Assert.Throws<ArgumentException>(action);
         }
 
         [Test]
