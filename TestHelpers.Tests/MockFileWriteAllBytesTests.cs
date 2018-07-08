@@ -49,10 +49,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_WriteAllBytes_ShouldThrowAnArgumentExceptionIfContainsIllegalCharacters()
         {
-            var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(XFS.Path(@"C:\"));
+            string path = XFS.Path(@"c:\*.txt");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, "" }
+            });
 
-            TestDelegate action = () => fileSystem.File.WriteAllBytes(@"C:\*.txt", new byte[] { 123 });
+            TestDelegate action = () => fileSystem.File.WriteAllBytes(path, new byte[] { 123 });
 
             Assert.Throws<ArgumentException>(action);
         }
