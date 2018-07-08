@@ -48,8 +48,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             TestDelegate action = () => fileSystem.File.GetAccessControl(expectedFileName);
 
             // Assert
-            var exception = Assert.Throws<FileNotFoundException>(action);
-            Assert.That(exception.FileName, Is.EqualTo(expectedFileName));
+            Assert.Throws<FileNotFoundException>(action);
         }
 
         [Test]
