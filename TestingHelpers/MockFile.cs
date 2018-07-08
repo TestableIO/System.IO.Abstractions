@@ -146,8 +146,11 @@ namespace System.IO.Abstractions.TestingHelpers
             }
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-            if (!mockFileDataAccessor.Directory.Exists(Path.GetDirectoryName(path)))
-                throw new DirectoryNotFoundException($"Could not find a part of the path '{path}'.");
+            var directoryPath = mockPath.GetDirectoryName(path);
+            if (!mockFileDataAccessor.Directory.Exists(directoryPath))
+            {
+                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), path));
+            }
 
             mockFileDataAccessor.AddFile(path, new MockFileData(new byte[0]));
             var stream = OpenWrite(path);
@@ -211,7 +214,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!mockFileDataAccessor.FileExists(path))
             {
-                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", path), path);
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), path));
             }
 
             var fileData = mockFileDataAccessor.GetFile(path);
@@ -299,7 +302,8 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetTimeFromFile(path, data => data.LastAccessTime.UtcDateTime, () => MockFileData.DefaultDateTimeOffset.UtcDateTime);
         }
 
-        public override DateTime GetLastWriteTime(string path) {
+        public override DateTime GetLastWriteTime(string path)
+        {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
             return GetTimeFromFile(path, data => data.LastWriteTime.LocalDateTime, () => MockFileData.DefaultDateTimeOffset.LocalDateTime);
@@ -437,6 +441,11 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), path));
+            }
+
             return mockFileDataAccessor.GetFile(path).Contents;
         }
 
@@ -446,7 +455,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!mockFileDataAccessor.FileExists(path))
             {
-                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "Can't find {0}", path));
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), path));
             }
 
             return mockFileDataAccessor
