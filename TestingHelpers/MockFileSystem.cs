@@ -2,87 +2,88 @@
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
-  using XFS = MockUnixSupport;
-
-  [Serializable]
-  public class MockFileSystem : IFileSystem, IMockFileDataAccessor
-  {
-    private readonly IDictionary<string, MockFileData> files;
-    private readonly FileBase file;
-    private readonly DirectoryBase directory;
-    private readonly IFileInfoFactory fileInfoFactory;
-    private readonly PathBase pathField;
-    private readonly IDirectoryInfoFactory directoryInfoFactory;
-    private readonly IDriveInfoFactory driveInfoFactory;
-    private readonly IFileSystemWatcherFactory fileSystemWatcherFactory;
-
-    [NonSerialized]
-    private readonly PathVerifier pathVerifier;
-
-    public MockFileSystem() : this(null) { }
-
-    public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = "")
+    [Serializable]
+    public class MockFileSystem : IFileSystem, IMockFileDataAccessor
     {
-      if (string.IsNullOrEmpty(currentDirectory))
-        currentDirectory = IO.Path.GetTempPath();
+        private readonly IDictionary<string, MockFileData> files;
+        private readonly FileBase file;
+        private readonly DirectoryBase directory;
+        private readonly IFileInfoFactory fileInfoFactory;
+        private readonly PathBase pathField;
+        private readonly IDirectoryInfoFactory directoryInfoFactory;
+        private readonly IDriveInfoFactory driveInfoFactory;
+        private readonly IFileSystemWatcherFactory fileSystemWatcherFactory;
 
-      pathVerifier = new PathVerifier(this);
+        [NonSerialized]
+        private readonly PathVerifier pathVerifier;
 
-      this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
-      pathField = new MockPath(this);
-      file = new MockFile(this);
-      directory = new MockDirectory(this, file, currentDirectory);
-      fileInfoFactory = new MockFileInfoFactory(this);
-      directoryInfoFactory = new MockDirectoryInfoFactory(this);
-      driveInfoFactory = new MockDriveInfoFactory(this);
-      fileSystemWatcherFactory = new MockFileSystemWatcherFactory();
+        public MockFileSystem() : this(null) { }
 
-      if (files != null)
-      {
-        foreach (var entry in files)
+        public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = "")
         {
-          AddFile(entry.Key, entry.Value);
+            if (string.IsNullOrEmpty(currentDirectory))
+            {
+                currentDirectory = IO.Path.GetTempPath();
+            }
+
+            pathVerifier = new PathVerifier(this);
+
+            this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
+            pathField = new MockPath(this);
+            file = new MockFile(this);
+            directory = new MockDirectory(this, file, currentDirectory);
+            fileInfoFactory = new MockFileInfoFactory(this);
+            directoryInfoFactory = new MockDirectoryInfoFactory(this);
+            driveInfoFactory = new MockDriveInfoFactory(this);
+            fileSystemWatcherFactory = new MockFileSystemWatcherFactory();
+
+            if (files != null)
+            {
+                foreach (var entry in files)
+                {
+                    AddFile(entry.Key, entry.Value);
+                }
+            }
         }
-      }
-    }
 
-    public FileBase File
-    {
-      get { return file; }
-    }
+        public FileBase File
+        {
+            get { return file; }
+        }
 
-    public DirectoryBase Directory
-    {
-      get { return directory; }
-    }
+        public DirectoryBase Directory
+        {
+            get { return directory; }
+        }
 
-    public IFileInfoFactory FileInfo
-    {
-      get { return fileInfoFactory; }
-    }
+        public IFileInfoFactory FileInfo
+        {
+            get { return fileInfoFactory; }
+        }
 
-    public PathBase Path
-    {
-      get { return pathField; }
-    }
+        public PathBase Path
+        {
+            get { return pathField; }
+        }
 
-    public IDirectoryInfoFactory DirectoryInfo
-    {
-      get { return directoryInfoFactory; }
-    }
+        public IDirectoryInfoFactory DirectoryInfo
+        {
+            get { return directoryInfoFactory; }
+        }
 
-    public IDriveInfoFactory DriveInfo
-    {
-      get { return driveInfoFactory; }
-    }
+        public IDriveInfoFactory DriveInfo
+        {
+            get { return driveInfoFactory; }
+        }
 	
-    public IFileSystemWatcherFactory FileSystemWatcher
-    {
-      get { return fileSystemWatcherFactory; }
-    }
+        public IFileSystemWatcherFactory FileSystemWatcher
+        {
+            get { return fileSystemWatcherFactory; }
+        }
 
         public PathVerifier PathVerifier
         {
@@ -103,11 +104,13 @@ namespace System.IO.Abstractions.TestingHelpers
             string[] splitPath = fullPath.Split(Path.DirectorySeparatorChar);
             string leftHalf = fullPath;
             string rightHalf = "";
+
             for (int i = splitPath.Length - 1; i > 1; i--)
             {
                 rightHalf = i == splitPath.Length - 1 ? splitPath[i] : splitPath[i] + Path.DirectorySeparatorChar + rightHalf;
                 int lastSeparator = leftHalf.LastIndexOf(Path.DirectorySeparatorChar);
                 leftHalf = lastSeparator > 0 ? leftHalf.Substring(0, lastSeparator) : leftHalf;
+
                 if (directory.Exists(leftHalf))
                 {
                     leftHalf += Path.DirectorySeparatorChar;
@@ -116,6 +119,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     return baseDirectory + rightHalf;
                 }
             }
+
             return fullPath;
         }
 
@@ -123,7 +127,6 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockFileData GetFile(string path)
         {
             path = FixPath(path);
-
             return GetFileWithoutFixingPath(path);
         }
 
@@ -198,8 +201,8 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
-      public void AddFileFromEmbeddedResource(string path, Assembly resourceAssembly, string embeddedResourcePath)
-      {
+        public void AddFileFromEmbeddedResource(string path, Assembly resourceAssembly, string embeddedResourcePath)
+        {
             using (var embeddedResourceStream = resourceAssembly.GetManifestResourceStream(embeddedResourcePath))
             {
                 if (embeddedResourceStream == null)
@@ -213,41 +216,47 @@ namespace System.IO.Abstractions.TestingHelpers
                     AddFile(path, new MockFileData(fileData));
                 }
             }
-      }
+        }
 
-      public void AddFilesFromEmbeddedNamespace(string path, Assembly resourceAssembly, string embeddedRresourcePath)
-      {
-          var matchingResources = resourceAssembly.GetManifestResourceNames().Where(f => f.StartsWith(embeddedRresourcePath));
-          foreach (var resource in matchingResources)
-          {
-            using (var embeddedResourceStream = resourceAssembly.GetManifestResourceStream(resource))
-            using (var streamReader = new BinaryReader(embeddedResourceStream))
+        public void AddFilesFromEmbeddedNamespace(string path, Assembly resourceAssembly, string embeddedRresourcePath)
+        {
+            var matchingResources = resourceAssembly.GetManifestResourceNames().Where(f => f.StartsWith(embeddedRresourcePath));
+            foreach (var resource in matchingResources)
             {
-                var fileName = resource.Substring(embeddedRresourcePath.Length + 1);
-                var fileData = streamReader.ReadBytes((int)embeddedResourceStream.Length);
-                var filePath = Path.Combine(path, fileName);
-                AddFile(filePath, new MockFileData(fileData));
+                using (var embeddedResourceStream = resourceAssembly.GetManifestResourceStream(resource))
+                using (var streamReader = new BinaryReader(embeddedResourceStream))
+                {
+                    var fileName = resource.Substring(embeddedRresourcePath.Length + 1);
+                    var fileData = streamReader.ReadBytes((int)embeddedResourceStream.Length);
+                    var filePath = Path.Combine(path, fileName);
+                    AddFile(filePath, new MockFileData(fileData));
+                }
             }
-          }
-      }
+        }
 
-      public void RemoveFile(string path)
+        public void RemoveFile(string path)
         {
             path = FixPath(path);
 
             lock (files)
+            {
                 files.Remove(path);
+            }
         }
 
         public bool FileExists(string path)
         {
             if (string.IsNullOrEmpty(path))
+            {
                 return false;
+            }
 
             path = FixPath(path);
 
             lock (files)
+            {
                 return files.ContainsKey(path);
+            }
         }
 
         public IEnumerable<string> AllPaths
@@ -255,7 +264,9 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 lock (files)
+                {
                     return files.Keys.ToArray();
+                }
             }
         }
 
@@ -264,7 +275,9 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 lock (files)
+                {
                     return files.Where(f => !f.Value.IsDirectory).Select(f => f.Key).ToArray();
+                }
             }
         }
 
@@ -273,7 +286,9 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 lock (files)
+                {
                     return files.Where(f => f.Value.IsDirectory).Select(f => f.Key).ToArray();
+                }
             }
         }
 
