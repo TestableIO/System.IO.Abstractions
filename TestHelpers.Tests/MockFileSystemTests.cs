@@ -199,5 +199,34 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Contains(XFS.Path(@"C:\TestFile.txt"), fileSystem.AllFiles.ToList());
             Assert.Contains(XFS.Path(@"C:\SecondTestFile.txt"), fileSystem.AllFiles.ToList());
         }
+
+        [Test]
+        public void MockFileSystem_RemoveFile_RemovesFiles()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(@"C:\file.txt", new MockFileData("Content"));
+
+            fileSystem.RemoveFile(@"C:\file.txt");
+
+            Assert.False(fileSystem.FileExists(@"C:\file.txt"));
+        }
+
+        [Test]
+        public void MockFileSystem_RemoveFile_ThrowsUnauthorizedAccessExceptionIfFileIsReadOnly()
+        {
+            var path = XFS.Path(@"C:\file.txt");
+            var readOnlyFile = new MockFileData("")
+            {
+                Attributes = FileAttributes.ReadOnly
+            };
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, readOnlyFile },
+            });
+
+            TestDelegate action = () => fileSystem.RemoveFile(path);
+
+            Assert.Throws<UnauthorizedAccessException>(action);
+        }
     }
 }

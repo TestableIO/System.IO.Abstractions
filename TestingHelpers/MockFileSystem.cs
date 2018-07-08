@@ -240,6 +240,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
             lock (files)
             {
+                if (FileExists(path) && (files[path].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                {
+                    throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("ACCESS_TO_THE_PATH_IS_DENIED"), path));
+                }
+
                 files.Remove(path);
             }
         }
