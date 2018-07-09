@@ -605,13 +605,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(XFS.Path(@"c:\temp\file1.txt"), new MockFileData(@"line 1\r\nline 2"));
-            fileSystem.AddFile(XFS.Path(@"c:\temp\file2.txt"), new MockFileData(@"line 3\r\nline 4"));
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
+            fileSystem.AddFile(path2, new MockFileData("2"));
 
             // Act
-            fileSystem.File.Replace(XFS.Path(@"c:\temp\file1.txt"), XFS.Path(@"c:\temp\file2.txt"), null);
+            fileSystem.File.Replace(path1, path2, null);
 
-            Assert.AreEqual(@"line 1\r\nline 2", fileSystem.File.ReadAllText(XFS.Path(@"c:\temp\file2.txt")));
+            Assert.AreEqual("1", fileSystem.File.ReadAllText(path2));
         }
 
         [Test]
@@ -619,13 +621,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(XFS.Path(@"c:\temp\file1.txt"), new MockFileData(@"line 1\r\nline 2"));
-            fileSystem.AddFile(XFS.Path(@"c:\temp\file2.txt"), new MockFileData(@"line 3\r\nline 4"));
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            var path3 = XFS.Path(@"c:\temp\file3.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
+            fileSystem.AddFile(path2, new MockFileData("2"));
 
             // Act
-            fileSystem.File.Replace(XFS.Path(@"c:\temp\file1.txt"), XFS.Path(@"c:\temp\file2.txt"), XFS.Path(@"c:\temp\file3.txt"));
+            fileSystem.File.Replace(path1, path2, path3);
 
-            Assert.AreEqual(@"line 3\r\nline 4", fileSystem.File.ReadAllText(XFS.Path(@"c:\temp\file3.txt")));
+            Assert.AreEqual("2", fileSystem.File.ReadAllText(path3));
         }
 
         [Test]
@@ -633,9 +638,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(XFS.Path(@"c:\temp\file2.txt"), new MockFileData(@"line 3\r\nline 4"));
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            fileSystem.AddFile(path2, new MockFileData("2"));
 
-            Assert.Throws<FileNotFoundException>(() => fileSystem.File.Replace(XFS.Path(@"c:\temp\file1.txt"), XFS.Path(@"c:\temp\file2.txt"), null));
+            Assert.Throws<FileNotFoundException>(() => fileSystem.File.Replace(path1, path2, null));
         }
 
         [Test]
@@ -643,9 +650,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(XFS.Path(@"c:\temp\file1.txt"), new MockFileData(@"line 1\r\nline 2"));
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
 
-            Assert.Throws<FileNotFoundException>(() => fileSystem.File.Replace(XFS.Path(@"c:\temp\file1.txt"), XFS.Path(@"c:\temp\file2.txt"), null));
+            Assert.Throws<FileNotFoundException>(() => fileSystem.File.Replace(path1, path2, null));
         }
 #endif
     }
