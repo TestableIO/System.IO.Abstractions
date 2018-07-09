@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -9,7 +10,7 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockFileSystem : IFileSystem, IMockFileDataAccessor
     {
-        private readonly IDictionary<string, MockFileData> files;
+        private readonly ConcurrentDictionary<string, MockFileData> files;
         private readonly FileBase file;
         private readonly DirectoryBase directory;
         private readonly IFileInfoFactory fileInfoFactory;
@@ -32,7 +33,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             pathVerifier = new PathVerifier(this);
 
-            this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
+            this.files = new ConcurrentDictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
             pathField = new MockPath(this);
             file = new MockFile(this);
             directory = new MockDirectory(this, file, currentDirectory);
@@ -133,6 +134,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public void AddFile(string path, MockFileData mockFile)
         {
             var fixedPath = FixPath(path, true);
+            // Explicitly lock to prevent concurrent adds
             lock (files)
             {
                 if (FileExists(fixedPath))
@@ -162,6 +164,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var fixedPath = FixPath(path, true);
             var separator = XFS.Separator();
 
+            // Explicitly lock here to prevent concurrent adds
             lock (files)
             {
                 if (FileExists(fixedPath) &&
@@ -238,6 +241,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             path = FixPath(path);
 
+            // Explicitly lock to prevent concurrent deletes
             lock (files)
             {
                 if (FileExists(path) && (files[path].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
@@ -245,7 +249,8 @@ namespace System.IO.Abstractions.TestingHelpers
                     throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("ACCESS_TO_THE_PATH_IS_DENIED"), path));
                 }
 
-                files.Remove(path);
+                MockFileData value;
+                files.TryRemove(path, out value);
             }
         }
 
@@ -257,21 +262,15 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             path = FixPath(path);
-
-            lock (files)
-            {
-                return files.ContainsKey(path);
-            }
+            
+            return files.ContainsKey(path);
         }
 
         public IEnumerable<string> AllPaths
         {
             get
             {
-                lock (files)
-                {
-                    return files.Keys.ToArray();
-                }
+                return files.Keys.ToArray();
             }
         }
 
@@ -279,10 +278,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                lock (files)
-                {
-                    return files.Where(f => !f.Value.IsDirectory).Select(f => f.Key).ToArray();
-                }
+                return files.Where(f => !f.Value.IsDirectory).Select(f => f.Key).ToArray();
             }
         }
 
@@ -290,21 +286,15 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                lock (files)
-                {
-                    return files.Where(f => f.Value.IsDirectory).Select(f => f.Key).ToArray();
-                }
+                return files.Where(f => f.Value.IsDirectory).Select(f => f.Key).ToArray();
             }
         }
 
         private MockFileData GetFileWithoutFixingPath(string path)
         {
-            lock (files)
-            {
-                MockFileData result;
-                files.TryGetValue(path, out result);
-                return result;
-            }
+            MockFileData result;
+            files.TryGetValue(path, out result);
+            return result;
         }
     }
 }
