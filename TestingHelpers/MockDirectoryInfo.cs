@@ -53,14 +53,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime CreationTime
         {
-            get { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
-            set { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
+            get { return MockFileData.CreationTime.LocalDateTime; }
+            set { MockFileData.CreationTime = new DateTimeOffset(value); }
         }
 
         public override DateTime CreationTimeUtc
         {
-            get { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
-            set { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
+            get { return MockFileData.CreationTime.UtcDateTime; }
+            set { MockFileData.CreationTime = new DateTimeOffset(value, TimeSpan.FromHours(0)); }
         }
 
         public override bool Exists

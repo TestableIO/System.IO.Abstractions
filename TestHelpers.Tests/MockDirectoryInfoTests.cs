@@ -283,5 +283,85 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(directoryPath, str);
         }
+
+        [Test]
+        public void MockDirectoryInfo_CreationTime_ShouldBeAssignableAndRetainedUtc()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var directoryPath = XFS.Path(@"c:\temp\folder\folder");
+            var currentTimeUtc = DateTime.UtcNow;
+
+            // Act
+            var directoryInfo = fileSystem.Directory.CreateDirectory(directoryPath);
+            directoryInfo.CreationTimeUtc = currentTimeUtc;
+
+            // Assert
+            Assert.AreEqual(currentTimeUtc, fileSystem.DirectoryInfo.FromDirectoryName(directoryPath).CreationTimeUtc);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_CreationTime_ShouldBeAssignableAndRetainedLocal()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var directoryPath = XFS.Path(@"c:\temp\folder\folder");
+            var currentTime = DateTime.Now;
+
+            // Act
+            var directoryInfo = fileSystem.Directory.CreateDirectory(directoryPath);
+            directoryInfo.CreationTime = currentTime;
+
+            // Assert
+            Assert.AreEqual(currentTime, fileSystem.DirectoryInfo.FromDirectoryName(directoryPath).CreationTime);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_CreationTime_ShouldBeTranslatedFromUtcToLocal()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var directoryPath = XFS.Path(@"c:\temp\folder\folder");
+            var currentTimeUtc = DateTime.UtcNow;
+
+            // Act
+            var directoryInfo = fileSystem.Directory.CreateDirectory(directoryPath);
+            directoryInfo.CreationTimeUtc = currentTimeUtc;
+
+            // Assert
+            Assert.AreEqual(currentTimeUtc.ToLocalTime(), fileSystem.DirectoryInfo.FromDirectoryName(directoryPath).CreationTime);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_CreationTime_ShouldBeTranslatedFromLocalToUtc()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var directoryPath = XFS.Path(@"c:\temp\folder\folder");
+            var currentTime = DateTime.Now;
+
+            // Act
+            var directoryInfo = fileSystem.Directory.CreateDirectory(directoryPath);
+            directoryInfo.CreationTime = currentTime;
+
+            // Assert
+            Assert.AreEqual(currentTime.ToUniversalTime(), fileSystem.DirectoryInfo.FromDirectoryName(directoryPath).CreationTimeUtc);
+        }
+
+        [Test, Ignore("Failing because MockDirectoryInfo adds trailing slash")]
+        public void MockDirectoryInfo_CreationTime_ShouldWorkIfPathIsActuallyAFile()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path = fileSystem.Path.GetTempFileName();
+            var currentTimeUtc = DateTime.UtcNow;
+
+            // Act
+            var directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(path);
+            directoryInfo.CreationTimeUtc = currentTimeUtc;
+
+            // Assert
+            Assert.AreEqual(currentTimeUtc, directoryInfo.CreationTimeUtc);
+        }
     }
 }
