@@ -78,13 +78,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase("<")]
         [TestCase(">")]
         [TestCase("|")]
+        [SkipOnUnix(SkipReason.WindowsOnlyPathRestrictions)]
         public void MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathContainsInvalidChar(string path)
         {
-            if (MockUnixSupport.IsUnixPlatform()) 
-            {
-                Assert.Inconclusive("Unix does not have these restrictions.");
-            }
-            
             // Arrange
             var fileSystem = new MockFileSystem();
 

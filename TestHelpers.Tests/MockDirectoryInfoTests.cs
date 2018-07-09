@@ -202,12 +202,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 yield return new object[] { XFS.Path(@"c:\temp\\folder"), XFS.Path(@"c:\temp\folder") };
                 yield return new object[] { XFS.Path(@"c:\temp//folder"), XFS.Path(@"c:\temp\folder") };
                 yield return new object[] { XFS.Path(@"c:\temp//\\///folder"), XFS.Path(@"c:\temp\folder") };
-                if (!MockUnixSupport.IsUnixPlatform())
-                {
-                    yield return new object[] { XFS.Path(@"\\unc\folder"), XFS.Path(@"\\unc\folder") };
-                    yield return new object[] { XFS.Path(@"\\unc/folder\\foo"), XFS.Path(@"\\unc\folder\foo") };
-                }
             }
+        }
+
+        public static IEnumerable<object[]> MockDirectoryInfo_FullName_Data_WindowsOnly
+        {
+            get
+            {
+                yield return new object[] { XFS.Path(@"\\unc\folder"), XFS.Path(@"\\unc\folder") };
+                yield return new object[] { XFS.Path(@"\\unc/folder\\foo"), XFS.Path(@"\\unc\folder\foo") };
+            }
+        }
+
+        [TestCaseSource("MockDirectoryInfo_FullName_Data_WindowsOnly")]
+        [SkipOnUnix(SkipReason.NoUNCPathsOnUnix)]
+        public void MockDirectoryInfo_FullName_ShouldReturnNormalizedPath_WindowsOnly(string directoryPath, string expectedFullName)
+        {
+            MockDirectoryInfo_FullName_ShouldReturnNormalizedPath(directoryPath, expectedFullName);
         }
 
         [TestCaseSource("MockDirectoryInfo_FullName_Data")]

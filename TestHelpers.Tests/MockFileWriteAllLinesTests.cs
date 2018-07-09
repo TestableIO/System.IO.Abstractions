@@ -241,13 +241,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), "ForIllegalPath")]
+        [SkipOnUnix(SkipReason.WindowsOnlyPathRestrictions)]
         public void MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentExceptionIfPathContainsIllegalCharacters(TestDelegate action)
-        {
-            if (MockUnixSupport.IsUnixPlatform()) 
-            {
-                Assert.Inconclusive("Unix does not have these restrictions.");
-            }
-            
+        {            
             // Arrange
             // is done in the test case source
 

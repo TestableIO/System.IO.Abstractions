@@ -746,18 +746,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<ArgumentException>(action);
         }
 
+        public static IEnumerable<string> GetSearchPatternForTwoDotsExceptions_WindowsOnly()
+        {
+            yield return @"..\";
+            yield return @"aaa\vv..\";
+            yield return @"a..\b";
+        }
+
+        [TestCaseSource(typeof(MockDirectoryTests), "GetSearchPatternForTwoDotsExceptions_WindowsOnly")]
+        [SkipOnUnix(SkipReason.WindowsOnlyPathRestrictions)]
+        public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneDirectoryPathSep_WindowsOnly(string searchPattern)
+        {
+            MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneDirectoryPathSep(searchPattern);
+        }
+
         public static IEnumerable<string> GetSearchPatternForTwoDotsExceptions()
         {
             yield return @"a../b";
             yield return @"../";
-
-            if (!MockUnixSupport.IsUnixPlatform()) 
-            {
-                // These are no problem on Unix platforms
-                yield return @"..\";
-                yield return @"aaa\vv..\";
-                yield return @"a..\b";
-            }
         }
 
         [TestCaseSource(typeof(MockDirectoryTests), "GetSearchPatternForTwoDotsExceptions")]
@@ -796,13 +802,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(@"""")]
 #endif
         [TestCase("aa\t")]
+        [SkipOnUnix(SkipReason.WindowsOnlyPathRestrictions)]
         public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternHasIllegalCharacters(string searchPattern)
         {
-            if (MockUnixSupport.IsUnixPlatform()) 
-            {
-                Assert.Inconclusive("Unix does not have this limitation.");
-            }
-
             // Arrange
             var directoryPath = XFS.Path(@"c:\Foo");
             var fileSystem = new MockFileSystem();
