@@ -10,13 +10,6 @@ namespace System.IO.Abstractions.TestingHelpers
     public class MockFileSystem : IFileSystem, IMockFileDataAccessor
     {
         private readonly IDictionary<string, MockFileData> files;
-        private readonly FileBase file;
-        private readonly DirectoryBase directory;
-        private readonly IFileInfoFactory fileInfoFactory;
-        private readonly PathBase pathField;
-        private readonly IDirectoryInfoFactory directoryInfoFactory;
-        private readonly IDriveInfoFactory driveInfoFactory;
-        private readonly IFileSystemWatcherFactory fileSystemWatcherFactory;
 
         [NonSerialized]
         private readonly PathVerifier pathVerifier;
@@ -33,13 +26,13 @@ namespace System.IO.Abstractions.TestingHelpers
             pathVerifier = new PathVerifier(this);
 
             this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
-            pathField = new MockPath(this);
-            file = new MockFile(this);
-            directory = new MockDirectory(this, file, currentDirectory);
-            fileInfoFactory = new MockFileInfoFactory(this);
-            directoryInfoFactory = new MockDirectoryInfoFactory(this);
-            driveInfoFactory = new MockDriveInfoFactory(this);
-            fileSystemWatcherFactory = new MockFileSystemWatcherFactory();
+            Path = new MockPath(this);
+            File = new MockFile(this);
+            Directory = new MockDirectory(this, File, currentDirectory);
+            FileInfo = new MockFileInfoFactory(this);
+            DirectoryInfo = new MockDirectoryInfoFactory(this);
+            DriveInfo = new MockDriveInfoFactory(this);
+            FileSystemWatcher = new MockFileSystemWatcherFactory();
 
             if (files != null)
             {
@@ -50,40 +43,19 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
-        public FileBase File
-        {
-            get { return file; }
-        }
+        public FileBase File { get; }
 
-        public DirectoryBase Directory
-        {
-            get { return directory; }
-        }
+        public DirectoryBase Directory { get; }
 
-        public IFileInfoFactory FileInfo
-        {
-            get { return fileInfoFactory; }
-        }
+        public IFileInfoFactory FileInfo { get; }
 
-        public PathBase Path
-        {
-            get { return pathField; }
-        }
+        public PathBase Path { get; }
 
-        public IDirectoryInfoFactory DirectoryInfo
-        {
-            get { return directoryInfoFactory; }
-        }
+        public IDirectoryInfoFactory DirectoryInfo { get; }
 
-        public IDriveInfoFactory DriveInfo
-        {
-            get { return driveInfoFactory; }
-        }
-	
-        public IFileSystemWatcherFactory FileSystemWatcher
-        {
-            get { return fileSystemWatcherFactory; }
-        }
+        public IDriveInfoFactory DriveInfo { get; }
+
+        public IFileSystemWatcherFactory FileSystemWatcher { get; }
 
         public PathVerifier PathVerifier
         {
@@ -93,7 +65,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private string FixPath(string path, bool checkCaps = false)
         {
             var pathSeparatorFixed = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-            var fullPath = pathField.GetFullPath(pathSeparatorFixed);
+            var fullPath = Path.GetFullPath(pathSeparatorFixed);
 
             return checkCaps ? GetPathWithCorrectDirectoryCapitalization(fullPath) : fullPath;
         }
@@ -111,10 +83,10 @@ namespace System.IO.Abstractions.TestingHelpers
                 int lastSeparator = leftHalf.LastIndexOf(Path.DirectorySeparatorChar);
                 leftHalf = lastSeparator > 0 ? leftHalf.Substring(0, lastSeparator) : leftHalf;
 
-                if (directory.Exists(leftHalf))
+                if (Directory.Exists(leftHalf))
                 {
                     leftHalf += Path.DirectorySeparatorChar;
-                    leftHalf = pathField.GetFullPath(leftHalf);
+                    leftHalf = Path.GetFullPath(leftHalf);
                     string baseDirectory = AllDirectories.First(dir => dir.Equals(leftHalf, StringComparison.OrdinalIgnoreCase));
                     return baseDirectory + rightHalf;
                 }
@@ -148,7 +120,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
                 var directoryPath = Path.GetDirectoryName(fixedPath);
 
-                if (!directory.Exists(directoryPath))
+                if (!Directory.Exists(directoryPath))
                 {
                     AddDirectory(directoryPath);
                 }
@@ -190,7 +162,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 while ((lastIndex = fixedPath.IndexOf(separator, lastIndex + 1, StringComparison.OrdinalIgnoreCase)) > -1)
                 {
                     var segment = fixedPath.Substring(0, lastIndex + 1);
-                    if (!directory.Exists(segment))
+                    if (!Directory.Exists(segment))
                     {
                         files[segment] = new MockDirectoryData();
                     }

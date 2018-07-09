@@ -16,7 +16,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase("   ")]
         public void MockDirectory_GetAccessControl_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
         {
-            if (MockUnixSupport.IsUnixPlatform()) 
+            if (XFS.IsUnixPlatform()) 
             {
                 Assert.Inconclusive("Unix does not support ACLs.");
             }
@@ -35,7 +35,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_GetAccessControl_ShouldThrowDirectoryNotFoundExceptionIfDirectoryDoesNotExistInMockData()
         {
-            if (MockUnixSupport.IsUnixPlatform()) 
+            if (XFS.IsUnixPlatform()) 
             {
                 Assert.Inconclusive("Unix does not support ACLs.");
             }
@@ -54,7 +54,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_GetAccessControl_ShouldReturnAccessControlOfDirectoryData()
         {
-            if (MockUnixSupport.IsUnixPlatform()) 
+            if (XFS.IsUnixPlatform()) 
             {
                 Assert.Inconclusive("Unix does not support ACLs.");
             }

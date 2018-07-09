@@ -14,12 +14,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockFile(IMockFileDataAccessor mockFileDataAccessor)
         {
-            if (mockFileDataAccessor == null)
-            {
-                throw new ArgumentNullException("mockFileDataAccessor");
-            }
-
-            this.mockFileDataAccessor = mockFileDataAccessor;
+            this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException("mockFileDataAccessor");
             mockPath = new MockPath(mockFileDataAccessor);
         }
 
@@ -240,12 +235,9 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission.</exception>
         public override FileAttributes GetAttributes(string path)
         {
-            if (path != null)
+            if (path != null && path.Length == 0)
             {
-                if (path.Length == 0)
-                {
-                    throw new ArgumentException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"), "path");
-                }
+                throw new ArgumentException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"), "path");
             }
 
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");

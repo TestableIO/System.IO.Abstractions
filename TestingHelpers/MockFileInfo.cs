@@ -10,12 +10,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path)
         {
-            if (mockFileSystem == null)
-            {
-                throw new ArgumentNullException("mockFileSystem");
-            }
-
-            this.mockFileSystem = mockFileSystem;
+            this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException("mockFileSystem");
             this.path = path;
         }
 

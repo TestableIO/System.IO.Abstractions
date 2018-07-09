@@ -20,13 +20,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory)
         {
-            if (mockFileDataAccessor == null)
-            {
-                throw new ArgumentNullException("mockFileDataAccessor");
-            }
-
             this.currentDirectory = currentDirectory;
-            this.mockFileDataAccessor = mockFileDataAccessor;
+            this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException("mockFileDataAccessor");
             this.fileBase = fileBase;
         }
 
