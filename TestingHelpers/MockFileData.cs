@@ -20,9 +20,10 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </summary>
         public static readonly MockFileData NullObject = new MockFileData(string.Empty)
         {
-          LastWriteTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
-          LastAccessTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
-          CreationTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
+            LastWriteTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
+            LastAccessTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
+            CreationTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
+            Attributes = FileAttributes.Normal,
         };
 
         /// <summary>
@@ -30,31 +31,6 @@ namespace System.IO.Abstractions.TestingHelpers
         /// E.g. for not existing files.
         /// </summary>
         public static readonly DateTimeOffset DefaultDateTimeOffset = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc);
-
-        /// <summary>
-        /// The actual contents of the file.
-        /// </summary>
-        private byte[] contents;
-
-        /// <summary>
-        /// The date and time the <see cref="MockFileData"/> was created.
-        /// </summary>
-        private DateTimeOffset creationTime = new DateTimeOffset(2010, 01, 02, 00, 00, 00, TimeSpan.FromHours(4));
-
-        /// <summary>
-        /// The date and time of the <see cref="MockFileData"/> was last accessed to.
-        /// </summary>
-        private DateTimeOffset lastAccessTime = new DateTimeOffset(2010, 02, 04, 00, 00, 00, TimeSpan.FromHours(4));
-
-        /// <summary>
-        /// The date and time of the <see cref="MockFileData"/> was last written to.
-        /// </summary>
-        private DateTimeOffset lastWriteTime = new DateTimeOffset(2010, 01, 04, 00, 00, 00, TimeSpan.FromHours(4));
-
-        /// <summary>
-        /// The attributes of the <see cref="MockFileData"/>.
-        /// </summary>
-        private FileAttributes attributes = FileAttributes.Normal;
 
         /// <summary>
         /// The access control of the <see cref="MockFileData"/>.
@@ -81,7 +57,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <param name="textContents">The textual content encoded into bytes with <see cref="DefaultEncoding"/>.</param>
         public MockFileData(string textContents)
             : this(DefaultEncoding.GetBytes(textContents))
-        {}
+        { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MockFileData"/> class with the content of <paramref name="textContents"/> using the encoding of <paramref name="encoding"/>.
@@ -92,7 +68,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockFileData(string textContents, Encoding encoding)
             : this()
         {
-            contents = encoding.GetPreamble().Concat(encoding.GetBytes(textContents)).ToArray();
+            Contents = encoding.GetPreamble().Concat(encoding.GetBytes(textContents)).ToArray();
         }
 
         /// <summary>
@@ -102,22 +78,13 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="contents"/> is <see langword="null" />.</exception>
         public MockFileData(byte[] contents)
         {
-            if (contents == null)
-            {
-                throw new ArgumentNullException("contents");
-            }
-
-            this.contents = contents;
+            Contents = contents ?? throw new ArgumentNullException("contents");
         }
 
         /// <summary>
         /// Gets or sets the byte contents of the <see cref="MockFileData"/>.
         /// </summary>
-        public byte[] Contents
-        {
-            get { return contents; }
-            set { contents = value; }
-        }
+        public byte[] Contents { get; set; }
 
         /// <summary>
         /// Gets or sets the string contents of the <see cref="MockFileData"/>.
@@ -127,36 +94,24 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </remarks>
         public string TextContents
         {
-            get { return MockFile.ReadAllBytes(contents, DefaultEncoding); }
-            set { contents = DefaultEncoding.GetBytes(value); }
+            get { return MockFile.ReadAllBytes(Contents, DefaultEncoding); }
+            set { Contents = DefaultEncoding.GetBytes(value); }
         }
 
         /// <summary>
         /// Gets or sets the date and time the <see cref="MockFileData"/> was created.
         /// </summary>
-        public DateTimeOffset CreationTime
-        {
-            get { return creationTime; }
-            set { creationTime = value; }
-        }
+        public DateTimeOffset CreationTime { get; set; } = new DateTimeOffset(2010, 01, 02, 00, 00, 00, TimeSpan.FromHours(4));
 
         /// <summary>
         /// Gets or sets the date and time of the <see cref="MockFileData"/> was last accessed to.
         /// </summary>
-        public DateTimeOffset LastAccessTime
-        {
-            get { return lastAccessTime; }
-            set { lastAccessTime = value; }
-        }
+        public DateTimeOffset LastAccessTime { get; set; } = new DateTimeOffset(2010, 02, 04, 00, 00, 00, TimeSpan.FromHours(4));
 
         /// <summary>
         /// Gets or sets the date and time of the <see cref="MockFileData"/> was last written to.
         /// </summary>
-        public DateTimeOffset LastWriteTime
-        {
-            get { return lastWriteTime; }
-            set { lastWriteTime = value; }
-        }
+        public DateTimeOffset LastWriteTime { get; set; } = new DateTimeOffset(2010, 01, 04, 00, 00, 00, TimeSpan.FromHours(4));
 
         /// <summary>
         /// Casts a string into <see cref="MockFileData"/>.
@@ -170,11 +125,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <summary>
         /// Gets or sets the specified <see cref="FileAttributes"/> of the <see cref="MockFileData"/>.
         /// </summary>
-        public FileAttributes Attributes
-        {
-            get { return attributes; }
-            set { attributes = value; }
-        }
+        public FileAttributes Attributes { get; set; } = FileAttributes.Normal;
 
         /// <summary>
         /// Gets or sets <see cref="FileSecurity"/> of the <see cref="MockFileData"/>. This is the object that is returned for this <see cref="MockFileData"/> when calling <see cref="FileBase.GetAccessControl(string)"/>.
