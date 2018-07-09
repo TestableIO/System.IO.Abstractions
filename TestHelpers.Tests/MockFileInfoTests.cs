@@ -464,5 +464,78 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.Throws<FileNotFoundException>(action);
         }
+
+#if NET40
+        [Test]
+        public void MockFileInfo_Replace_ShouldReplaceFileContents()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(XFS.Path(@"c:\temp\file1.txt"), new MockFileData(@"line 1\r\nline 2"));
+            fileSystem.AddFile(XFS.Path(@"c:\temp\file2.txt"), new MockFileData(@"line 3\r\nline 4"));
+            var fileInfo1 = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file1.txt"));
+            var fileInfo2 = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file2.txt"));
+
+            // Act
+            fileInfo1.Replace(XFS.Path(@"c:\temp\file2.txt"), null);
+
+            Assert.AreEqual(@"line 1\r\nline 2", fileInfo2.OpenText().ReadToEnd());
+        }
+
+        [Test]
+        public void MockFileInfo_Replace_ShouldCreateBackup()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(XFS.Path(@"c:\temp\file1.txt"), new MockFileData(@"line 1\r\nline 2"));
+            fileSystem.AddFile(XFS.Path(@"c:\temp\file2.txt"), new MockFileData(@"line 3\r\nline 4"));
+            var fileInfo1 = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file1.txt"));
+            var fileInfo2 = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file2.txt"));
+            var fileInfo3 = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file3.txt"));
+
+            // Act
+            fileInfo1.Replace(XFS.Path(@"c:\temp\file2.txt"), XFS.Path(@"c:\temp\file3.txt"));
+
+            Assert.AreEqual(@"line 3\r\nline 4", fileInfo3.OpenText().ReadToEnd());
+        }
+
+        [Test]
+        public void MockFileInfo_Replace_ShouldReturnDestinationFileInfo()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(XFS.Path(@"c:\temp\file1.txt"), new MockFileData(@"line 1\r\nline 2"));
+            fileSystem.AddFile(XFS.Path(@"c:\temp\file2.txt"), new MockFileData(@"line 3\r\nline 4"));
+            var fileInfo1 = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file1.txt"));
+            var fileInfo2 = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file2.txt"));
+
+            // Act
+            var result = fileInfo1.Replace(XFS.Path(@"c:\temp\file2.txt"), null);
+
+            Assert.AreEqual(fileInfo2.FullName, result.FullName);
+        }
+
+        [Test]
+        public void MockFileInfo_Replace_ShouldThrowIfSourceFileDoesNotExist()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(XFS.Path(@"c:\temp\file2.txt"), new MockFileData(@"line 3\r\nline 4"));
+            var fileInfo = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file1.txt"));
+
+            Assert.Throws<FileNotFoundException>(() => fileInfo.Replace(XFS.Path(@"c:\temp\file2.txt"), null));
+        }
+
+        [Test]
+        public void MockFileInfo_Replace_ShouldThrowIfDestinationFileDoesNotExist()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(XFS.Path(@"c:\temp\file1.txt"), new MockFileData(@"line 1\r\nline 2"));
+            var fileInfo = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file1.txt"));
+
+            Assert.Throws<FileNotFoundException>(() => fileInfo.Replace(XFS.Path(@"c:\temp\file2.txt"), null));
+        }
+#endif
     }
 }
