@@ -525,12 +525,30 @@ namespace System.IO.Abstractions.TestingHelpers
 #if NET40
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
         {
-            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
+            Replace(sourceFileName, destinationFileName, destinationBackupFileName, false);
         }
 
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
-            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
+            if (!File.Exists(sourceFileName))
+            {
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), sourceFileName));
+            }
+
+            if (!File.Exists(destinationFileName))
+            {
+                throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), destinationFileName));
+            }
+
+            var mockFile = new MockFile(mockFileDataAccessor);
+
+            if (destinationBackupFileName != null)
+            {
+                mockFile.Copy(destinationFileName, destinationBackupFileName, true);
+            }
+
+            mockFile.Delete(destinationFileName);
+            mockFile.Move(sourceFileName, destinationFileName);
         }
 #endif
 
