@@ -5,13 +5,6 @@ using NUnit.Framework.Interfaces;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    internal static class SkipReason
-    {
-        public const string NoDrivesOnUnix = "Unix does not have the concept of Drives";
-        public const string NoACLsOnUnix = "Unix does not support ACLs";
-        public const string NoUNCPathsOnUnix = "Unix does not have the concept of UNC paths";
-    }
-
     internal sealed class SkipOnUnixAttribute : Attribute, ITestAction
     {
         private readonly string reason;
