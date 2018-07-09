@@ -530,12 +530,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
-            if (!File.Exists(sourceFileName))
+            if (!mockFileDataAccessor.FileExists(sourceFileName))
             {
                 throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), sourceFileName));
             }
 
-            if (!File.Exists(destinationFileName))
+            if (!mockFileDataAccessor.FileExists(destinationFileName))
             {
                 throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), destinationFileName));
             }
