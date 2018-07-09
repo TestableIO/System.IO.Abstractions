@@ -493,6 +493,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileInfo_Replace_ShouldThrowIfDirectoryOfBackupPathDoesNotExist()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            var path3 = XFS.Path(@"c:\temp\subdirectory\file3.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
+            fileSystem.AddFile(path2, new MockFileData("2"));
+            var fileInfo1 = fileSystem.FileInfo.FromFileName(path1);
+
+            // Act
+            Assert.Throws<DirectoryNotFoundException>(() => fileInfo1.Replace(path2, path3));
+        }
+
+        [Test]
         public void MockFileInfo_Replace_ShouldReturnDestinationFileInfo()
         {
             // Arrange
