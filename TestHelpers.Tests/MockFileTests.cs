@@ -559,31 +559,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
 #if NET40
         [Test]
-        public void MockFile_Encrypt_ShouldEncryptTheFile()
-        {
-            // Arrange
-            const string Content = "Demo text content";
-            var fileData = new MockFileData(Content);
-            var filePath = XFS.Path(@"c:\a.txt");
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                {filePath, fileData }
-            });
-
-            // Act
-            fileSystem.File.Encrypt(filePath);
-
-            string newcontents;
-            using (var newfile = fileSystem.File.OpenText(filePath))
-            {
-                newcontents = newfile.ReadToEnd();
-            }
-
-            // Assert
-            Assert.AreNotEqual(Content, newcontents);
-        }
-
-        [Test]
         public void MockFile_Encrypt_ShouldSetEncryptedAttribute()
         {
             // Arrange
@@ -600,32 +575,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.AreEqual(FileAttributes.Encrypted, attributes & FileAttributes.Encrypted);
-        }
-
-        [Test]
-        public void MockFile_Decrypt_ShouldDecryptTheFile()
-        {
-            // Arrange
-            const string Content = "Demo text content";
-            var fileData = new MockFileData(Content);
-            var filePath = XFS.Path(@"c:\a.txt");
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                {filePath, fileData }
-            });
-            fileSystem.File.Encrypt(filePath);
-
-            // Act
-            fileSystem.File.Decrypt(filePath);
-
-            string newcontents;
-            using (var newfile = fileSystem.File.OpenText(filePath))
-            {
-                newcontents = newfile.ReadToEnd();
-            }
-
-            // Assert
-            Assert.AreEqual(Content, newcontents);
         }
 
         [Test]
