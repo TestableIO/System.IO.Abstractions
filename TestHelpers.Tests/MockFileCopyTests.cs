@@ -1,16 +1,14 @@
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using Collections.Generic;
-
     using Globalization;
-
     using Linq;
-
     using NUnit.Framework;
-
     using XFS = MockUnixSupport;
 
-    public class MockFileCopyTests {
+    public class MockFileCopyTests
+    {
+
         [Test]
         public void MockFile_Copy_ShouldOverwriteFileWhenOverwriteFlagIsTrue()
         {
@@ -270,6 +268,28 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, string.Empty));
 
             Assert.That(exception.Message, Does.StartWith("Empty file name is not legal."));
+        }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            TestDelegate action = () => fileSystem.File.Copy(sourceFilePath, XFS.Path(@"c:\something\demo2.txt"));
+
+            Assert.Throws<FileNotFoundException>(action);
+        }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist_EvenWhenCopyingToItself()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            TestDelegate action = () => fileSystem.File.Copy(sourceFilePath, XFS.Path(@"c:\something\demo.txt"));
+
+            Assert.Throws<FileNotFoundException>(action);
         }
     }
 }
