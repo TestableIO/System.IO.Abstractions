@@ -453,5 +453,104 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.Throws<FileNotFoundException>(action);
         }
+
+#if NET40
+        [Test]
+        public void MockFileInfo_Replace_ShouldReplaceFileContents()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
+            fileSystem.AddFile(path2, new MockFileData("2"));
+            var fileInfo1 = fileSystem.FileInfo.FromFileName(path1);
+            var fileInfo2 = fileSystem.FileInfo.FromFileName(path2);
+
+            // Act
+            fileInfo1.Replace(path2, null);
+
+            Assert.AreEqual("1", fileInfo2.OpenText().ReadToEnd());
+        }
+
+        [Test]
+        public void MockFileInfo_Replace_ShouldCreateBackup()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            var path3 = XFS.Path(@"c:\temp\file3.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
+            fileSystem.AddFile(path2, new MockFileData("2"));
+            var fileInfo1 = fileSystem.FileInfo.FromFileName(path1);
+            var fileInfo3 = fileSystem.FileInfo.FromFileName(path3);
+
+            // Act
+            fileInfo1.Replace(path2, path3);
+
+            Assert.AreEqual("2", fileInfo3.OpenText().ReadToEnd());
+        }
+
+        [Test]
+        public void MockFileInfo_Replace_ShouldThrowIfDirectoryOfBackupPathDoesNotExist()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            var path3 = XFS.Path(@"c:\temp\subdirectory\file3.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
+            fileSystem.AddFile(path2, new MockFileData("2"));
+            var fileInfo1 = fileSystem.FileInfo.FromFileName(path1);
+
+            // Act
+            Assert.Throws<DirectoryNotFoundException>(() => fileInfo1.Replace(path2, path3));
+        }
+
+        [Test]
+        public void MockFileInfo_Replace_ShouldReturnDestinationFileInfo()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
+            fileSystem.AddFile(path2, new MockFileData("2"));
+            var fileInfo1 = fileSystem.FileInfo.FromFileName(path1);
+            var fileInfo2 = fileSystem.FileInfo.FromFileName(path2);
+
+            // Act
+            var result = fileInfo1.Replace(path2, null);
+
+            Assert.AreEqual(fileInfo2.FullName, result.FullName);
+        }
+
+        [Test]
+        public void MockFileInfo_Replace_ShouldThrowIfSourceFileDoesNotExist()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            fileSystem.AddFile(path2, new MockFileData("1"));
+            var fileInfo = fileSystem.FileInfo.FromFileName(path1);
+
+            Assert.Throws<FileNotFoundException>(() => fileInfo.Replace(path2, null));
+        }
+
+        [Test]
+        public void MockFileInfo_Replace_ShouldThrowIfDestinationFileDoesNotExist()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
+            var fileInfo = fileSystem.FileInfo.FromFileName(path1);
+
+            Assert.Throws<FileNotFoundException>(() => fileInfo.Replace(path2, null));
+        }
+#endif
     }
 }
