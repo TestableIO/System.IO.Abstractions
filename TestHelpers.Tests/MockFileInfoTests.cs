@@ -217,7 +217,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 #if NET40
         [Test]
-        public void MockFileInfo_Encrypt_ShouldReturnXorOfFileInMemoryFileSystem()
+        public void MockFileInfo_Encrypt_ShouldSetEncryptedAttributeOfFileInMemoryFileSystem()
         {
             var fileData = new MockFileData("Demo text content");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -227,17 +227,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             fileInfo.Encrypt();
-            string newcontents;
-            using (var newfile = fileInfo.OpenText())
-            {
-                newcontents = newfile.ReadToEnd();
-            }
 
-            Assert.AreNotEqual("Demo text content", newcontents);
+            Assert.AreEqual(FileAttributes.Encrypted, fileData.Attributes & FileAttributes.Encrypted);
         }
 
         [Test]
-        public void MockFileInfo_Decrypt_ShouldReturnCorrectContentsFileInMemoryFileSystem()
+        public void MockFileInfo_Decrypt_ShouldUnsetEncryptedAttributeOfFileInMemoryFileSystem()
         {
             var fileData = new MockFileData("Demo text content");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -249,13 +244,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileInfo.Decrypt();
 
-            string newcontents;
-            using (var newfile = fileInfo.OpenText())
-            {
-                newcontents = newfile.ReadToEnd();
-            }
-
-            Assert.AreEqual("Demo text content", newcontents);
+            Assert.AreNotEqual(FileAttributes.Encrypted, fileData.Attributes & FileAttributes.Encrypted);
         }
 #endif
 
