@@ -258,12 +258,13 @@ namespace System.IO.Abstractions.TestingHelpers
 #if NET40
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)
         {
-            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
+            return Replace(destinationFileName, destinationBackupFileName, false);
         }
 
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
-            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
+            mockFileSystem.File.Replace(path, destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
+            return new FileInfo(destinationFileName);
         }
 #endif
 

@@ -598,5 +598,79 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreNotEqual(FileAttributes.Encrypted, attributes & FileAttributes.Encrypted);
         }
 #endif
+
+#if NET40
+        [Test]
+        public void MockFile_Replace_ShouldReplaceFileContents()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
+            fileSystem.AddFile(path2, new MockFileData("2"));
+
+            // Act
+            fileSystem.File.Replace(path1, path2, null);
+
+            Assert.AreEqual("1", fileSystem.File.ReadAllText(path2));
+        }
+
+        [Test]
+        public void MockFile_Replace_ShouldCreateBackup()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            var path3 = XFS.Path(@"c:\temp\file3.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
+            fileSystem.AddFile(path2, new MockFileData("2"));
+
+            // Act
+            fileSystem.File.Replace(path1, path2, path3);
+
+            Assert.AreEqual("2", fileSystem.File.ReadAllText(path3));
+        }
+
+        [Test]
+        public void MockFile_Replace_ShouldThrowIfDirectoryOfBackupPathDoesNotExist()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            var path3 = XFS.Path(@"c:\temp\subdirectory\file3.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
+            fileSystem.AddFile(path2, new MockFileData("2"));
+
+            // Act
+            Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Replace(path1, path2, path3));
+        }
+
+        [Test]
+        public void MockFile_Replace_ShouldThrowIfSourceFileDoesNotExist()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            fileSystem.AddFile(path2, new MockFileData("2"));
+
+            Assert.Throws<FileNotFoundException>(() => fileSystem.File.Replace(path1, path2, null));
+        }
+
+        [Test]
+        public void MockFile_Replace_ShouldThrowIfDestinationFileDoesNotExist()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
+
+            Assert.Throws<FileNotFoundException>(() => fileSystem.File.Replace(path1, path2, null));
+        }
+#endif
     }
 }
