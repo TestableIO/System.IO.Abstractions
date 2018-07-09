@@ -10,17 +10,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using XFS = MockUnixSupport;
 
     [TestFixture]
+    [SkipOnUnix(SkipReason.NoACLsOnUnix)]
     public class MockFileSetAccessControlTests
     {
         [TestCase(" ")]
         [TestCase("   ")]
         public void MockFile_SetAccessControl_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
         {
-            if (MockUnixSupport.IsUnixPlatform()) 
-            {
-                Assert.Inconclusive("Unix does not support ACLs.");
-            }
-            
             // Arrange
             var fileSystem = new MockFileSystem();
             var fileSecurity = new FileSecurity();
@@ -36,11 +32,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_SetAccessControl_ShouldThrowFileNotFoundExceptionIfFileDoesNotExistInMockData()
         {
-            if (MockUnixSupport.IsUnixPlatform()) 
-            {
-                Assert.Inconclusive("Unix does not support ACLs.");
-            }
-
             // Arrange
             var fileSystem = new MockFileSystem();
             var expectedFileName = XFS.Path(@"c:\a.txt");
@@ -57,11 +48,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_SetAccessControl_ShouldReturnAccessControlOfFileData()
         {
-            if (MockUnixSupport.IsUnixPlatform()) 
-            {
-                Assert.Inconclusive("Unix does not support ACLs.");
-            }
-
             // Arrange
             var filePath = XFS.Path(@"c:\a.txt");
             var fileData = new MockFileData("Test content");

@@ -5,17 +5,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using XFS = MockUnixSupport;
 
     [TestFixture]
+    [SkipOnUnix(SkipReason.NoDrivesOnUnix)]
     public class MockDriveInfoTests
     {
         [TestCase(@"c:")]
         [TestCase(@"c:\")]
         public void MockDriveInfo_Constructor_ShouldInitializeLocalWindowsDrives(string driveName)
         {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix does not have the concept of drives.");
-            }
-
             // Arrange
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(@"c:\Test"));
@@ -31,11 +27,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfo_Constructor_ShouldInitializeLocalWindowsDrives_SpecialForWindows()
         {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Using XFS.Path transform c into c:.");
-            }
-
             // Arrange
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(@"c:\Test"));
@@ -51,11 +42,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(@"\\unctoo")]
         public void MockDriveInfo_Constructor_ShouldThrowExceptionIfUncPath(string driveName)
         {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix does not have the concept of drives.");
-            }
-
             // Arrange
             var fileSystem = new MockFileSystem();
 
@@ -69,11 +55,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfo_RootDirectory_ShouldReturnTheDirectoryBase()
         {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix does not have the concept of drives.");
-            }
-            
             // Arrange
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(@"c:\Test"));

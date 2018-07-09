@@ -540,13 +540,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [SkipOnUnix(SkipReason.NoUNCPathsOnUnix)]
         public void MockDirectory_CreateDirectory_ShouldWorkWithUNCPath()
         {
-            if (MockUnixSupport.IsUnixPlatform()) 
-            {
-                Assert.Inconclusive("Unix does not support ACLs.");
-            }
-
             // Arrange
             var fileSystem = new MockFileSystem();
 
@@ -558,13 +554,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [SkipOnUnix(SkipReason.NoUNCPathsOnUnix)]
         public void MockDirectory_CreateDirectory_ShouldFailIfTryingToCreateUNCPathOnlyServer()
         {
-            if (MockUnixSupport.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix does not have the concept of UNC paths.");
-            }
-
             // Arrange
             var fileSystem = new MockFileSystem();
 
@@ -577,13 +569,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [SkipOnUnix(SkipReason.NoUNCPathsOnUnix)]
         public void MockDirectory_CreateDirectory_ShouldSucceedIfTryingToCreateUNCPathShare()
         {
-            if (MockUnixSupport.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix does not have the concept of UNC paths.");
-            }
-            
             // Arrange
             var fileSystem = new MockFileSystem();
 
@@ -1305,13 +1293,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [SkipOnUnix(SkipReason.NoDrivesOnUnix)]
         public void MockDirectory_Move_ShouldThrowAnIOExceptionIfDirectoriesAreOnDifferentVolumes()
         {
-            if(XFS.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix does not have the concept of volumes");
-            }
-            
             // Arrange
             string sourcePath = XFS.Path(@"c:\a");
             string destPath = XFS.Path(@"d:\v");
@@ -1470,13 +1454,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [SkipOnUnix(SkipReason.NoACLsOnUnix)]
         public void MockDirectory_GetAccessControl_ShouldReturnNewDirectorySecurity()
         {
-            if (MockUnixSupport.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix does not have the concept of UNC paths.");
-            }
-            
             // Arrange
             var fileSystem = new MockFileSystem();
             fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo\"));
