@@ -11,7 +11,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfoFactory_GetDrives_ShouldReturnDrives()
         {
-            if (MockUnixSupport.IsUnixPlatform())
+            if (XFS.IsUnixPlatform())
             {
                 Assert.Inconclusive("Unix does not have the concept of drives.");
             }
@@ -35,7 +35,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfoFactory_GetDrives_ShouldReturnDrivesWithNoDuplicates()
         {
-            if (MockUnixSupport.IsUnixPlatform())
+            if (XFS.IsUnixPlatform())
             {
                 Assert.Inconclusive("Unix does not have the concept of drives.");
             }
@@ -61,7 +61,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfoFactory_GetDrives_ShouldReturnOnlyLocalDrives()
         {
-            if (MockUnixSupport.IsUnixPlatform())
+            if (XFS.IsUnixPlatform())
             {
                 Assert.Inconclusive("Unix does not have the concept of drives.");
             }
@@ -86,7 +86,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfoFactory_FromDriveName_WithDriveShouldReturnDrive()
         {
-            if (MockUnixSupport.IsUnixPlatform())
+            if (XFS.IsUnixPlatform())
             {
                 Assert.Inconclusive("Unix does not have the concept of drives.");
             }
@@ -105,7 +105,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfoFactory_FromDriveName_WithPathShouldReturnDrive()
         {
-            if (MockUnixSupport.IsUnixPlatform())
+            if (XFS.IsUnixPlatform())
             {
                 Assert.Inconclusive("Unix does not have the concept of drives.");
             }

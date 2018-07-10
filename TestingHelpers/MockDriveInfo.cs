@@ -9,12 +9,12 @@
         {
             if (mockFileDataAccessor == null)
             {
-                throw new ArgumentNullException("mockFileDataAccessor");
+                throw new ArgumentNullException(nameof(mockFileDataAccessor));
             }
 
             if (name == null)
             {
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(name));
             }
 
             const string DRIVE_SEPARATOR = @":\";

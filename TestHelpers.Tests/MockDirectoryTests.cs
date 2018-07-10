@@ -542,7 +542,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_CreateDirectory_ShouldWorkWithUNCPath()
         {
-            if (MockUnixSupport.IsUnixPlatform()) 
+            if (XFS.IsUnixPlatform()) 
             {
                 Assert.Inconclusive("Unix does not support ACLs.");
             }
@@ -560,7 +560,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_CreateDirectory_ShouldFailIfTryingToCreateUNCPathOnlyServer()
         {
-            if (MockUnixSupport.IsUnixPlatform())
+            if (XFS.IsUnixPlatform())
             {
                 Assert.Inconclusive("Unix does not have the concept of UNC paths.");
             }
@@ -579,7 +579,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_CreateDirectory_ShouldSucceedIfTryingToCreateUNCPathShare()
         {
-            if (MockUnixSupport.IsUnixPlatform())
+            if (XFS.IsUnixPlatform())
             {
                 Assert.Inconclusive("Unix does not have the concept of UNC paths.");
             }
@@ -763,9 +763,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return @"a../b";
             yield return @"../";
 
-            if (!MockUnixSupport.IsUnixPlatform()) 
+            if (!XFS.IsUnixPlatform()) 
             {
-                // These are no problem on Unix platforms
+                // These are no problems on Unix platforms
                 yield return @"..\";
                 yield return @"aaa\vv..\";
                 yield return @"a..\b";
@@ -810,7 +810,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase("aa\t")]
         public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternHasIllegalCharacters(string searchPattern)
         {
-            if (MockUnixSupport.IsUnixPlatform()) 
+            if (XFS.IsUnixPlatform()) 
             {
                 Assert.Inconclusive("Unix does not have this limitation.");
             }
@@ -1472,7 +1472,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_GetAccessControl_ShouldReturnNewDirectorySecurity()
         {
-            if (MockUnixSupport.IsUnixPlatform())
+            if (XFS.IsUnixPlatform())
             {
                 Assert.Inconclusive("Unix does not have the concept of UNC paths.");
             }

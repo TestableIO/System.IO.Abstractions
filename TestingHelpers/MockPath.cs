@@ -18,7 +18,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (mockFileDataAccessor == null)
             {
-                throw new ArgumentNullException("mockFileDataAccessor");
+                throw new ArgumentNullException(nameof(mockFileDataAccessor));
             }
 
             this.mockFileDataAccessor = mockFileDataAccessor;
@@ -28,7 +28,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (path == null)
             {
-                throw new ArgumentNullException("path", StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
+                throw new ArgumentNullException(nameof(path), StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
             }
 
             if (path.Length == 0)
@@ -147,7 +147,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (path == null)
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             if (checkAdditional)
@@ -162,7 +162,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (path == null)
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             if (HasIllegalCharacters(path, checkAdditional))

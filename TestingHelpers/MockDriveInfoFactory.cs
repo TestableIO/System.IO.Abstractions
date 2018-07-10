@@ -9,12 +9,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockDriveInfoFactory(IMockFileDataAccessor mockFileSystem)
         {
-            if (mockFileSystem == null)
-            {
-                throw new ArgumentNullException("mockFileSystem");
-            }
-
-            this.mockFileSystem = mockFileSystem;
+            this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
         }
 
         public DriveInfoBase[] GetDrives()

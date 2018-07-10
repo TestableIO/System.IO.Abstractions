@@ -112,7 +112,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase("|")]
         public void MockFile_Create_ShouldThrowArgumentNullExceptionIfPathIsNull1(string path)
         {
-            if (MockUnixSupport.IsUnixPlatform()) 
+            if (XFS.IsUnixPlatform()) 
             {
                 Assert.Inconclusive("Unix does not have these restrictions.");
             }
