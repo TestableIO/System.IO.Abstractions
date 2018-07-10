@@ -57,10 +57,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public IFileSystemWatcherFactory FileSystemWatcher { get; }
 
-        public PathVerifier PathVerifier
-        {
-            get { return pathVerifier; }
-        }
+        public PathVerifier PathVerifier => pathVerifier;
 
         private string FixPath(string path, bool checkCaps = false)
         {
