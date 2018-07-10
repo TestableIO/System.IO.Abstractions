@@ -28,7 +28,7 @@ namespace System.IO.Abstractions.TestingHelpers
             // from http://stackoverflow.com/a/22565605 with some adaptions
             if (string.IsNullOrEmpty(oldValue))
             {
-                throw new ArgumentNullException("oldValue");
+                throw new ArgumentNullException(nameof(oldValue));
             }
 
             if (source.Length == 0)

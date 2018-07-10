@@ -8,7 +8,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         internal PathVerifier(IMockFileDataAccessor mockFileDataAccessor)
         {
-            _mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException("mockFileDataAccessor");
+            _mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
         }
 
         public void IsLegalAbsoluteOrRelative(string path, string paramName)

@@ -9,7 +9,7 @@ namespace System.IO.Abstractions
 
         public FileInfoWrapper(FileInfo instance)
         {
-            this.instance = instance ?? throw new ArgumentNullException("instance");
+            this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
         }
 
         public override void Delete()

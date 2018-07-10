@@ -21,7 +21,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory)
         {
             this.currentDirectory = currentDirectory;
-            this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException("mockFileDataAccessor");
+            this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
             this.fileBase = fileBase;
         }
 
@@ -40,7 +40,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (path == null)
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             if (path.Length == 0)
@@ -301,7 +301,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (path == null)
             {
-                throw new ArgumentNullException("path");
+                throw new ArgumentNullException(nameof(path));
             }
 
             if (path.Length == 0)
@@ -516,7 +516,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (searchPattern == null)
             {
-                throw new ArgumentNullException("searchPattern");
+                throw new ArgumentNullException(nameof(searchPattern));
             }
 
             const string TWO_DOTS = "..";

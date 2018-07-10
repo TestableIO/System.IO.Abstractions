@@ -15,7 +15,7 @@
 
         public MockFileStream(IMockFileDataAccessor mockFileDataAccessor, string path, StreamType streamType)
         {
-            this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException("mockFileDataAccessor");
+            this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
             this.path = path;
 
             if (mockFileDataAccessor.FileExists(path))

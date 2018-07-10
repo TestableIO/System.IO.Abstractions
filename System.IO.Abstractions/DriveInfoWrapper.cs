@@ -17,7 +17,7 @@
         /// <param name="instance">The drive info.</param>
         public DriveInfoWrapper(DriveInfo instance)
         {
-            this.instance = instance ?? throw new ArgumentNullException("instance");
+            this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
         }
 
         /// <summary>

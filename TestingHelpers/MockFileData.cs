@@ -104,7 +104,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (contents == null)
             {
-                throw new ArgumentNullException("contents");
+                throw new ArgumentNullException(nameof(contents));
             }
 
             this.contents = contents;

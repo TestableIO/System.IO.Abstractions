@@ -28,7 +28,7 @@ namespace System.IO.Abstractions
 
         public FileSystemWatcherWrapper(FileSystemWatcher watcher)
         {
-            this.watcher = watcher ?? throw new ArgumentNullException("watcher");
+            this.watcher = watcher ?? throw new ArgumentNullException(nameof(watcher));
             this.watcher.Created += OnCreated;
             this.watcher.Changed += OnChanged;
             this.watcher.Deleted += OnDeleted;
