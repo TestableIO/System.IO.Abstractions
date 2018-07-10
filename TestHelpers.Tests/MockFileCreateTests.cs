@@ -110,7 +110,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase("<")]
         [TestCase(">")]
         [TestCase("|")]
-        [SkipOnUnix(SkipReason.WindowsOnlyPathRestrictions)]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_Create_ShouldThrowArgumentNullExceptionIfPathIsNull1(string path)
         {
             // Arrange

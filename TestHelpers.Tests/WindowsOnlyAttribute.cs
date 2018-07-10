@@ -5,11 +5,11 @@ using NUnit.Framework.Interfaces;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    internal sealed class SkipOnUnixAttribute : Attribute, ITestAction
+    internal sealed class WindowsOnlyAttribute : Attribute, ITestAction
     {
         private readonly string reason;
 
-        public SkipOnUnixAttribute(string reason)
+        public WindowsOnlyAttribute(string reason)
         {
             this.reason = reason;
         }

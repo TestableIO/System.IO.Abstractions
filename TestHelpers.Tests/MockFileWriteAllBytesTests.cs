@@ -47,7 +47,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [SkipOnUnix(SkipReason.WindowsOnlyPathRestrictions)]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_WriteAllBytes_ShouldThrowAnArgumentExceptionIfContainsIllegalCharacters()
         {
             var fileSystem = new MockFileSystem();

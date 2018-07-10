@@ -7,7 +7,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using XFS = MockUnixSupport;
 
     [TestFixture]
-    [SkipOnUnix(SkipReason.NoDrivesOnUnix)]
+    [WindowsOnly(WindowsSpecifics.Drives)]
     public class MockDriveInfoFactoryTests
     {
         [Test]

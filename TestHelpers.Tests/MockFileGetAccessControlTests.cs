@@ -10,7 +10,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using XFS = MockUnixSupport;
 
     [TestFixture]
-    [SkipOnUnix(SkipReason.NoACLsOnUnix)]
+    [WindowsOnly(WindowsSpecifics.AccessControlLists)]
     public class MockFileGetAccessControlTests
     {
         [TestCase(" ")]

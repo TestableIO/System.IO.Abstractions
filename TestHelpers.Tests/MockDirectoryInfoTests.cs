@@ -215,7 +215,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [TestCaseSource("MockDirectoryInfo_FullName_Data_WindowsOnly")]
-        [SkipOnUnix(SkipReason.NoUNCPathsOnUnix)]
+        [WindowsOnly(WindowsSpecifics.UNCPaths)]
         public void MockDirectoryInfo_FullName_ShouldReturnNormalizedPath_WindowsOnly(string directoryPath, string expectedFullName)
         {
             MockDirectoryInfo_FullName_ShouldReturnNormalizedPath(directoryPath, expectedFullName);

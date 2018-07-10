@@ -244,7 +244,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [SkipOnUnix(SkipReason.NoUNCPathsOnUnix)]
+        [WindowsOnly(WindowsSpecifics.UNCPaths)]
         public void MockFile_GetAttributeOfExistingUncDirectory_ShouldReturnCorrectValue()
         {
             var filedata = new MockFileData("test");

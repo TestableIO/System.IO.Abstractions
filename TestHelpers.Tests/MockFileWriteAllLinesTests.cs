@@ -241,7 +241,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), "ForIllegalPath")]
-        [SkipOnUnix(SkipReason.WindowsOnlyPathRestrictions)]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentExceptionIfPathContainsIllegalCharacters(TestDelegate action)
         {            
             // Arrange

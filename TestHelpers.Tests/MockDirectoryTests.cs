@@ -540,7 +540,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [SkipOnUnix(SkipReason.NoUNCPathsOnUnix)]
+        [WindowsOnly(WindowsSpecifics.UNCPaths)]
         public void MockDirectory_CreateDirectory_ShouldWorkWithUNCPath()
         {
             // Arrange
@@ -554,7 +554,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [SkipOnUnix(SkipReason.NoUNCPathsOnUnix)]
+        [WindowsOnly(WindowsSpecifics.UNCPaths)]
         public void MockDirectory_CreateDirectory_ShouldFailIfTryingToCreateUNCPathOnlyServer()
         {
             // Arrange
@@ -569,7 +569,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [SkipOnUnix(SkipReason.NoUNCPathsOnUnix)]
+        [WindowsOnly(WindowsSpecifics.UNCPaths)]
         public void MockDirectory_CreateDirectory_ShouldSucceedIfTryingToCreateUNCPathShare()
         {
             // Arrange
@@ -754,7 +754,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [TestCaseSource(typeof(MockDirectoryTests), "GetSearchPatternForTwoDotsExceptions_WindowsOnly")]
-        [SkipOnUnix(SkipReason.WindowsOnlyPathRestrictions)]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneDirectoryPathSep_WindowsOnly(string searchPattern)
         {
             MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneDirectoryPathSep(searchPattern);
@@ -802,7 +802,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(@"""")]
 #endif
         [TestCase("aa\t")]
-        [SkipOnUnix(SkipReason.WindowsOnlyPathRestrictions)]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternHasIllegalCharacters(string searchPattern)
         {
             // Arrange
@@ -1295,7 +1295,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [SkipOnUnix(SkipReason.NoDrivesOnUnix)]
+        [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockDirectory_Move_ShouldThrowAnIOExceptionIfDirectoriesAreOnDifferentVolumes()
         {
             // Arrange
@@ -1456,7 +1456,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [SkipOnUnix(SkipReason.NoACLsOnUnix)]
+        [WindowsOnly(WindowsSpecifics.AccessControlLists)]
         public void MockDirectory_GetAccessControl_ShouldReturnNewDirectorySecurity()
         {
             // Arrange
