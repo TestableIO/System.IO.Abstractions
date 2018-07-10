@@ -14,12 +14,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockFile(IMockFileDataAccessor mockFileDataAccessor)
         {
-            if (mockFileDataAccessor == null)
-            {
-                throw new ArgumentNullException("mockFileDataAccessor");
-            }
-
-            this.mockFileDataAccessor = mockFileDataAccessor;
+            this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
             mockPath = new MockPath(mockFileDataAccessor);
         }
 
@@ -35,7 +30,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (encoding == null)
             {
-                throw new ArgumentNullException("encoding");
+                throw new ArgumentNullException(nameof(encoding));
             }
 
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -55,7 +50,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (encoding == null)
             {
-                throw new ArgumentNullException("encoding");
+                throw new ArgumentNullException(nameof(encoding));
             }
 
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -101,12 +96,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (sourceFileName == null)
             {
-                throw new ArgumentNullException("sourceFileName", StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
+                throw new ArgumentNullException(nameof(sourceFileName), StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
             }
 
             if (destFileName == null)
             {
-                throw new ArgumentNullException("destFileName", StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
+                throw new ArgumentNullException(nameof(destFileName), StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
             }
 
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, "sourceFileName");
@@ -142,7 +137,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (path == null)
             {
-                throw new ArgumentNullException("path", "Path cannot be null.");
+                throw new ArgumentNullException(nameof(path), "Path cannot be null.");
             }
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
@@ -240,12 +235,9 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission.</exception>
         public override FileAttributes GetAttributes(string path)
         {
-            if (path != null)
+            if (path != null && path.Length == 0)
             {
-                if (path.Length == 0)
-                {
-                    throw new ArgumentException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"), "path");
-                }
+                throw new ArgumentException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"), "path");
             }
 
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -336,12 +328,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (sourceFileName == null)
             {
-                throw new ArgumentNullException("sourceFileName", StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
+                throw new ArgumentNullException(nameof(sourceFileName), StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
             }
 
             if (destFileName == null)
             {
-                throw new ArgumentNullException("destFileName", StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
+                throw new ArgumentNullException(nameof(destFileName), StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
             }
 
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, "sourceFileName");
@@ -470,7 +462,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (encoding == null)
             {
-                throw new ArgumentNullException("encoding");
+                throw new ArgumentNullException(nameof(encoding));
             }
 
             if (!mockFileDataAccessor.FileExists(path))
@@ -501,7 +493,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (encoding == null)
             {
-                throw new ArgumentNullException("encoding");
+                throw new ArgumentNullException(nameof(encoding));
             }
 
             return ReadAllTextInternal(path, encoding);

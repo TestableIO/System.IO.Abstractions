@@ -36,7 +36,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_SetAccessControl_ShouldThrowDirectoryNotFoundExceptionIfDirectoryDoesNotExistInMockData()
         {
-            if (MockUnixSupport.IsUnixPlatform()) 
+            if (XFS.IsUnixPlatform()) 
             {
                 Assert.Inconclusive("Unix does not support ACLs.");
             }
@@ -56,7 +56,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_SetAccessControl_ShouldReturnAccessControlOfDirectoryData()
         {
-            if (MockUnixSupport.IsUnixPlatform()) 
+            if (XFS.IsUnixPlatform()) 
             {
                 Assert.Inconclusive("Unix does not support ACLs.");
             }
