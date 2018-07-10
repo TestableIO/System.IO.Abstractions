@@ -26,7 +26,7 @@ namespace System.IO.Abstractions.TestingHelpers
             this.directoryPath = EnsurePathEndsWithDirectorySeparator(directoryPath);
         }
 
-        MockFileData GetMockFileData(bool returnNullObject)
+        private MockFileData GetMockFileData(bool returnNullObject)
         {
             var file = mockFileDataAccessor.GetFile(directoryPath);
 
@@ -34,7 +34,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 if (!returnNullObject)
                 {
-                    throw new FileNotFoundException("File not found", directoryPath);
+                    throw new FileNotFoundException(StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), directoryPath);
                 }
                 else
                 {
