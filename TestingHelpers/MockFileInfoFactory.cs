@@ -7,12 +7,7 @@
 
         public MockFileInfoFactory(IMockFileDataAccessor mockFileSystem)
         {
-            if (mockFileSystem == null)
-            {
-                throw new ArgumentNullException("mockFileSystem");
-            }
-
-            this.mockFileSystem = mockFileSystem;
+            this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
         }
 
         public FileInfoBase FromFileName(string fileName)

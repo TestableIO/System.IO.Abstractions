@@ -11,12 +11,7 @@ namespace System.IO.Abstractions
 
         public DirectoryInfoWrapper(DirectoryInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("instance");
-            }
-
-            this.instance = instance;
+            this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
         }
 
         public override void Delete()
