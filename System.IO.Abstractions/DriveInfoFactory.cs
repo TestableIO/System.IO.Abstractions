@@ -19,5 +19,15 @@
 
             return driveInfoWrappers;
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DriveInfoBase"/> class, which acts as a wrapper for a logical drive.
+        /// </summary>
+        /// <param name="driveName">A valid drive path or drive letter.</param>
+        public DriveInfoBase FromDriveName(string driveName)
+        {
+            var realDriveInfo = new DriveInfo(driveName);
+            return new DriveInfoWrapper(realDriveInfo);
+        }
     }
 }

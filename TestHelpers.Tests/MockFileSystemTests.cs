@@ -1,7 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using NUnit.Framework;
+using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -11,24 +13,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFileSystem_GetFile_ShouldReturnNullWhenFileIsNotRegistered()
         {
-            // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { @"c:\something\demo.txt", new MockFileData("Demo\r\ntext\ncontent\rvalue") },
                 { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
             });
 
-            // Act
             var result = fileSystem.GetFile(@"c:\something\else.txt");
 
-            // Assert
             Assert.IsNull(result);
         }
 
         [Test]
         public void MockFileSystem_GetFile_ShouldReturnFileRegisteredInConstructor()
         {
-            // Arrange
             var file1 = new MockFileData("Demo\r\ntext\ncontent\rvalue");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
@@ -36,17 +34,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
             });
 
-            // Act
             var result = fileSystem.GetFile(@"c:\something\demo.txt");
 
-            // Assert
             Assert.AreEqual(file1, result);
         }
 
         [Test]
         public void MockFileSystem_GetFile_ShouldReturnFileRegisteredInConstructorWhenPathsDifferByCase()
         {
-            // Arrange
             var file1 = new MockFileData("Demo\r\ntext\ncontent\rvalue");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
@@ -54,10 +49,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
             });
 
-            // Act
             var result = fileSystem.GetFile(@"c:\SomeThing\DEMO.txt");
 
-            // Assert
             Assert.AreEqual(file1, result);
         }
 
@@ -77,7 +70,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(newContent));
         }
-
+#if NET40
         [Test]
         public void Is_Serializable()
         {
@@ -94,51 +87,146 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(memoryStream.Length > 0, "Length didn't increase after serialization task.");
         }
+#endif
 
         [Test]
         public void MockFileSystem_AddDirectory_ShouldCreateDirectory()
         {
-            // Arrange
-            string baseDirectory = MockUnixSupport.Path(@"C:\Test");
+            string baseDirectory = XFS.Path(@"C:\Test");
             var fileSystem = new MockFileSystem();
 
-            // Act
             fileSystem.AddDirectory(baseDirectory);
 
-            // Assert
             Assert.IsTrue(fileSystem.Directory.Exists(baseDirectory));
         }
 
         [Test]
         public void MockFileSystem_AddDirectory_ShouldThrowExceptionIfDirectoryIsReadOnly()
         {
-            // Arrange
-            string baseDirectory = MockUnixSupport.Path(@"C:\Test");
+            string baseDirectory = XFS.Path(@"C:\Test");
             var fileSystem = new MockFileSystem();
             fileSystem.AddFile(baseDirectory, new MockFileData(string.Empty));
             fileSystem.File.SetAttributes(baseDirectory, FileAttributes.ReadOnly);
 
-            // Act
             TestDelegate act = () => fileSystem.AddDirectory(baseDirectory);
 
-            // Assert
             Assert.Throws<UnauthorizedAccessException>(act);
         }
 
         [Test]
         public void MockFileSystem_DriveInfo_ShouldNotThrowAnyException()
         {
-            // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(MockUnixSupport.Path(@"C:\Test"));
-            fileSystem.AddDirectory(MockUnixSupport.Path(@"Z:\Test"));
-            fileSystem.AddDirectory(MockUnixSupport.Path(@"d:\Test"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\Test"));
 
-            // Act
             var actualResults = fileSystem.DriveInfo.GetDrives();
 
-            // Assert
             Assert.IsNotNull(actualResults);
+        }
+
+        [Test]
+        public void MockFileSystem_AddFile_ShouldMatchCapitalization_PerfectMatch()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(XFS.Path(@"C:\test"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\LOUD"));
+
+            fileSystem.AddFile(XFS.Path(@"C:\test\file.txt"), "foo");
+            fileSystem.AddFile(XFS.Path(@"C:\LOUD\file.txt"), "foo");
+            fileSystem.AddDirectory(XFS.Path(@"C:\test\SUBDirectory"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\LOUD\SUBDirectory"));
+
+            Assert.Contains(XFS.Path(@"C:\test\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(XFS.Path(@"C:\LOUD\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(XFS.Path(@"C:\test\SUBDirectory\"), fileSystem.AllDirectories.ToList());
+            Assert.Contains(XFS.Path(@"C:\LOUD\SUBDirectory\"), fileSystem.AllDirectories.ToList());
+        }
+
+        [Test]
+        public void MockFileSystem_AddFile_ShouldMatchCapitalization_PartialMatch()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(XFS.Path(@"C:\test\subtest"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\LOUD\SUBLOUD"));
+
+            fileSystem.AddFile(XFS.Path(@"C:\test\SUBTEST\file.txt"), "foo");
+            fileSystem.AddFile(XFS.Path(@"C:\LOUD\subloud\file.txt"), "foo");
+            fileSystem.AddDirectory(XFS.Path(@"C:\test\SUBTEST\SUBDirectory"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\LOUD\subloud\SUBDirectory"));
+
+            Assert.Contains(XFS.Path(@"C:\test\subtest\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(XFS.Path(@"C:\LOUD\SUBLOUD\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(XFS.Path(@"C:\test\subtest\SUBDirectory\"), fileSystem.AllDirectories.ToList());
+            Assert.Contains(XFS.Path(@"C:\LOUD\SUBLOUD\SUBDirectory\"), fileSystem.AllDirectories.ToList());
+        }
+
+        [Test]
+        public void MockFileSystem_AddFile_ShouldMatchCapitalization_PartialMatch_FurtherLeft()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(XFS.Path(@"C:\test\subtest"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\LOUD\SUBLOUD"));
+
+            fileSystem.AddFile(XFS.Path(@"C:\test\SUBTEST\new\file.txt"), "foo");
+            fileSystem.AddFile(XFS.Path(@"C:\LOUD\subloud\new\file.txt"), "foo");
+            fileSystem.AddDirectory(XFS.Path(@"C:\test\SUBTEST\new\SUBDirectory"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\LOUD\subloud\new\SUBDirectory"));
+
+            Assert.Contains(XFS.Path(@"C:\test\subtest\new\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(XFS.Path(@"C:\LOUD\SUBLOUD\new\file.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(XFS.Path(@"C:\test\subtest\new\SUBDirectory\"), fileSystem.AllDirectories.ToList());
+            Assert.Contains(XFS.Path(@"C:\LOUD\SUBLOUD\new\SUBDirectory\"), fileSystem.AllDirectories.ToList());
+        }
+
+        [Test]
+        public void MockFileSystem_AddFileFromEmbeddedResource_ShouldAddTheFile()
+        {
+            var fileSystem = new MockFileSystem();
+
+            fileSystem.AddFileFromEmbeddedResource(XFS.Path(@"C:\TestFile.txt"), Assembly.GetExecutingAssembly(), "System.IO.Abstractions.TestingHelpers.Tests.TestFiles.TestFile.txt");
+            var result = fileSystem.GetFile(XFS.Path(@"C:\TestFile.txt"));
+
+            Assert.AreEqual(new UTF8Encoding().GetBytes("This is a test file."), result.Contents);
+        }
+
+        [Test]
+        public void MockFileSystem_AddFilesFromEmbeddedResource_ShouldAddAllTheFiles()
+        {
+            var fileSystem = new MockFileSystem();
+
+            fileSystem.AddFilesFromEmbeddedNamespace(XFS.Path(@"C:\"), Assembly.GetExecutingAssembly(), "System.IO.Abstractions.TestingHelpers.Tests.TestFiles");
+
+            Assert.Contains(XFS.Path(@"C:\TestFile.txt"), fileSystem.AllFiles.ToList());
+            Assert.Contains(XFS.Path(@"C:\SecondTestFile.txt"), fileSystem.AllFiles.ToList());
+        }
+
+        [Test]
+        public void MockFileSystem_RemoveFile_RemovesFiles()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(@"C:\file.txt", new MockFileData("Content"));
+
+            fileSystem.RemoveFile(@"C:\file.txt");
+
+            Assert.False(fileSystem.FileExists(@"C:\file.txt"));
+        }
+
+        [Test]
+        public void MockFileSystem_RemoveFile_ThrowsUnauthorizedAccessExceptionIfFileIsReadOnly()
+        {
+            var path = XFS.Path(@"C:\file.txt");
+            var readOnlyFile = new MockFileData("")
+            {
+                Attributes = FileAttributes.ReadOnly
+            };
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, readOnlyFile },
+            });
+
+            TestDelegate action = () => fileSystem.RemoveFile(path);
+
+            Assert.Throws<UnauthorizedAccessException>(action);
         }
     }
 }

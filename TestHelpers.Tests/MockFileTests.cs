@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+#if NET40
 using System.Runtime.Serialization.Formatters.Binary;
+#endif
 using System.Text;
 using NUnit.Framework;
 
@@ -244,6 +246,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_GetAttributeOfExistingUncDirectory_ShouldReturnCorrectValue()
         {
+            if (MockUnixSupport.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of UNC paths.");
+            }
+
             var filedata = new MockFileData("test");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
@@ -265,7 +272,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentException>(action);
-            Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
+            Assert.That(exception.Message, Does.StartWith("The path is not of a legal form."));
         }
 
         [Test]
@@ -334,27 +341,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_ReadAllBytes_ShouldReturnOriginalByteData()
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { XFS.Path(@"c:\something\demo.txt"), new MockFileData("Demo text content") },
-                { XFS.Path(@"c:\something\other.gif"), new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
-            });
-
-            var file = new MockFile(fileSystem);
-
-            // Act
-            var result = file.ReadAllBytes(XFS.Path(@"c:\something\other.gif"));
-
-            // Assert
-            CollectionAssert.AreEqual(
-                new byte[] { 0x21, 0x58, 0x3f, 0xa9 },
-                result);
-        }
-
-        [Test]
         public void MockFile_ReadAllText_ShouldReturnOriginalTextData()
         {
             // Arrange
@@ -395,7 +381,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(text, result);
         }
 
-        private IEnumerable<Encoding> GetEncodingsForReadAllText()
+        public static IEnumerable<Encoding> GetEncodingsForReadAllText()
         {
             // little endian
             yield return new UTF32Encoding(false, true, true);
@@ -407,7 +393,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return new ASCIIEncoding();
         }
 
-        [TestCaseSource("GetEncodingsForReadAllText")]
+        [TestCaseSource(typeof(MockFileTests), "GetEncodingsForReadAllText")]
         public void MockFile_ReadAllText_ShouldReturnTheOriginalContentWhenTheFileContainsDifferentEncodings(Encoding encoding)
         {
             // Arrange
@@ -427,23 +413,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_ReadAllBytes_ShouldReturnDataSavedByWriteAllBytes()
-        {
-            // Arrange
-            string path = XFS.Path(@"c:\something\demo.txt");
-            var fileSystem = new MockFileSystem();
-            var fileContent = new byte[] { 1, 2, 3, 4 };
-
-            // Act
-            fileSystem.File.WriteAllBytes(path, fileContent);
-
-            // Assert
-            Assert.AreEqual(
-                fileContent,
-                fileSystem.File.ReadAllBytes(path));
-        }
-
-        [Test]
         public void MockFile_OpenWrite_ShouldCreateNewFiles() {
             string filePath = XFS.Path(@"c:\something\demo.txt");
             string fileContent = "this is some content";
@@ -452,7 +421,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var bytes = new UTF8Encoding(true).GetBytes(fileContent);
             var stream = fileSystem.File.OpenWrite(filePath);
             stream.Write(bytes, 0, bytes.Length);
-            stream.Close();
+            stream.Dispose();
 
             Assert.That(fileSystem.FileExists(filePath), Is.True);
             Assert.That(fileSystem.GetFile(filePath).TextContents, Is.EqualTo(fileContent));
@@ -472,7 +441,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var bytes = new UTF8Encoding(true).GetBytes(endFileContent);
             var stream = fileSystem.File.OpenWrite(filePath);
             stream.Write(bytes, 0, bytes.Length);
-            stream.Close();
+            stream.Dispose();
 
             Assert.That(fileSystem.FileExists(filePath), Is.True);
             Assert.That(fileSystem.GetFile(filePath).TextContents, Is.EqualTo(endFileContent));
@@ -526,7 +495,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             stream.Write("Me too!");
             stream.Flush();
-            stream.Close();
+            stream.Dispose();
 
             var file = filesystem.GetFile(filepath);
             Assert.That(file.TextContents, Is.EqualTo("I'm here. Me too!"));
@@ -537,18 +506,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             string filepath = XFS.Path(@"c:\something\doesnt\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            filesystem.AddDirectory(XFS.Path(@"c:\something\doesnt"));
 
             var stream = filesystem.File.AppendText(filepath);
 
             stream.Write("New too!");
             stream.Flush();
-            stream.Close();
+            stream.Dispose();
 
             var file = filesystem.GetFile(filepath);
             Assert.That(file.TextContents, Is.EqualTo("New too!"));
             Assert.That(filesystem.FileExists(filepath));
         }
 
+#if NET40
         [Test]
         public void Serializable_works()
         {
@@ -584,13 +555,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             //Assert
             Assert.That(deserialized.TextContents, Is.EqualTo(textContentStr));
         }
+#endif
 
+#if NET40
         [Test]
-        public void MockFile_Encrypt_ShouldEncryptTheFile()
+        public void MockFile_Encrypt_ShouldSetEncryptedAttribute()
         {
             // Arrange
-            const string Content = "Demo text content";
-            var fileData = new MockFileData(Content);
+            var fileData = new MockFileData("Demo text content");
             var filePath = XFS.Path(@"c:\a.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
@@ -599,19 +571,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Act
             fileSystem.File.Encrypt(filePath);
-
-            string newcontents;
-            using (var newfile = fileSystem.File.OpenText(filePath))
-            {
-                newcontents = newfile.ReadToEnd();
-            }
+            var attributes = fileSystem.File.GetAttributes(filePath);
 
             // Assert
-            Assert.AreNotEqual(Content, newcontents);
+            Assert.AreEqual(FileAttributes.Encrypted, attributes & FileAttributes.Encrypted);
         }
 
         [Test]
-        public void MockFile_Decrypt_ShouldDecryptTheFile()
+        public void MockFile_Decrypt_ShouldRemoveEncryptedAttribute()
         {
             // Arrange
             const string Content = "Demo text content";
@@ -621,18 +588,89 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             {
                 {filePath, fileData }
             });
+            fileSystem.File.Encrypt(filePath);
 
             // Act
             fileSystem.File.Decrypt(filePath);
-
-            string newcontents;
-            using (var newfile = fileSystem.File.OpenText(filePath))
-            {
-                newcontents = newfile.ReadToEnd();
-            }
+            var attributes = fileSystem.File.GetAttributes(filePath);
 
             // Assert
-            Assert.AreNotEqual(Content, newcontents);
+            Assert.AreNotEqual(FileAttributes.Encrypted, attributes & FileAttributes.Encrypted);
         }
+#endif
+
+#if NET40
+        [Test]
+        public void MockFile_Replace_ShouldReplaceFileContents()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
+            fileSystem.AddFile(path2, new MockFileData("2"));
+
+            // Act
+            fileSystem.File.Replace(path1, path2, null);
+
+            Assert.AreEqual("1", fileSystem.File.ReadAllText(path2));
+        }
+
+        [Test]
+        public void MockFile_Replace_ShouldCreateBackup()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            var path3 = XFS.Path(@"c:\temp\file3.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
+            fileSystem.AddFile(path2, new MockFileData("2"));
+
+            // Act
+            fileSystem.File.Replace(path1, path2, path3);
+
+            Assert.AreEqual("2", fileSystem.File.ReadAllText(path3));
+        }
+
+        [Test]
+        public void MockFile_Replace_ShouldThrowIfDirectoryOfBackupPathDoesNotExist()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            var path3 = XFS.Path(@"c:\temp\subdirectory\file3.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
+            fileSystem.AddFile(path2, new MockFileData("2"));
+
+            // Act
+            Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Replace(path1, path2, path3));
+        }
+
+        [Test]
+        public void MockFile_Replace_ShouldThrowIfSourceFileDoesNotExist()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            fileSystem.AddFile(path2, new MockFileData("2"));
+
+            Assert.Throws<FileNotFoundException>(() => fileSystem.File.Replace(path1, path2, null));
+        }
+
+        [Test]
+        public void MockFile_Replace_ShouldThrowIfDestinationFileDoesNotExist()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var path2 = XFS.Path(@"c:\temp\file2.txt");
+            fileSystem.AddFile(path1, new MockFileData("1"));
+
+            Assert.Throws<FileNotFoundException>(() => fileSystem.File.Replace(path1, path2, null));
+        }
+#endif
     }
 }

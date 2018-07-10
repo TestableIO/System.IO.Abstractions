@@ -9,12 +9,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockDriveInfoFactory(IMockFileDataAccessor mockFileSystem)
         {
-            if (mockFileSystem == null)
-            {
-                throw new ArgumentNullException("mockFileSystem");
-            }
-
-            this.mockFileSystem = mockFileSystem;
+            this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
         }
 
         public DriveInfoBase[] GetDrives()
@@ -41,6 +36,13 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             return result.ToArray();
+        }
+
+        public DriveInfoBase FromDriveName(string driveName)
+        {
+            var drive = mockFileSystem.Path.GetPathRoot(driveName);
+
+            return new MockDriveInfo(mockFileSystem, drive);
         }
 
         private string NormalizeDriveName(string driveName)

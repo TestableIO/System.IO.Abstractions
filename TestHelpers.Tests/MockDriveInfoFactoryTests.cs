@@ -11,6 +11,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfoFactory_GetDrives_ShouldReturnDrives()
         {
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of drives.");
+            }
+            
             // Arrange
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(@"C:\Test"));
@@ -30,6 +35,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfoFactory_GetDrives_ShouldReturnDrivesWithNoDuplicates()
         {
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of drives.");
+            }
+
             // Arrange
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(@"C:\Test"));
@@ -51,6 +61,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfoFactory_GetDrives_ShouldReturnOnlyLocalDrives()
         {
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of drives.");
+            }
+
             // Arrange
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(@"C:\Test"));
@@ -66,6 +81,44 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.That(actualNames, Is.EquivalentTo(new[] { @"C:\", @"Z:\", @"D:\" }));
+        }
+
+        [Test]
+        public void MockDriveInfoFactory_FromDriveName_WithDriveShouldReturnDrive()
+        {
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of drives.");
+            }
+
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var factory = new MockDriveInfoFactory(fileSystem);
+
+            // Act
+            var actualResult = factory.FromDriveName(@"Z:\");
+
+            // Assert
+            Assert.That(actualResult.Name, Is.EquivalentTo(@"Z:\"));
+        }
+
+        [Test]
+        public void MockDriveInfoFactory_FromDriveName_WithPathShouldReturnDrive()
+        {
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of drives.");
+            }
+
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var factory = new MockDriveInfoFactory(fileSystem);
+
+            // Act
+            var actualResult = factory.FromDriveName(@"Z:\foo\bar\");
+
+            // Assert
+            Assert.That(actualResult.Name, Is.EquivalentTo(@"Z:\"));
         }
     }
 }

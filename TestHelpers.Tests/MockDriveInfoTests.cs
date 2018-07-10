@@ -11,6 +11,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(@"c:\")]
         public void MockDriveInfo_Constructor_ShouldInitializeLocalWindowsDrives(string driveName)
         {
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of drives.");
+            }
+
             // Arrange
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(@"c:\Test"));
@@ -46,6 +51,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(@"\\unctoo")]
         public void MockDriveInfo_Constructor_ShouldThrowExceptionIfUncPath(string driveName)
         {
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of drives.");
+            }
+
             // Arrange
             var fileSystem = new MockFileSystem();
 
@@ -59,6 +69,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfo_RootDirectory_ShouldReturnTheDirectoryBase()
         {
+            if (XFS.IsUnixPlatform())
+            {
+                Assert.Inconclusive("Unix does not have the concept of drives.");
+            }
+            
             // Arrange
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(@"c:\Test"));

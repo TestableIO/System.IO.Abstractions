@@ -45,5 +45,11 @@
         {
             get { return driveInfoFactory.Value; }
         }
+		
+        private IFileSystemWatcherFactory fileSystemWatcherFactory;
+        public IFileSystemWatcherFactory FileSystemWatcher
+        {
+            get { return fileSystemWatcherFactory ?? (fileSystemWatcherFactory = new FileSystemWatcherFactory()); }
+        }
     }
 }

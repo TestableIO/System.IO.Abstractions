@@ -1,14 +1,12 @@
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using Collections.Generic;
-
     using Linq;
-
     using NUnit.Framework;
-
     using XFS = MockUnixSupport;
 
-    public class MockFileMoveTests {
+    public class MockFileMoveTests
+    {
         [Test]
         public void MockFile_Move_ShouldMoveFileWithinMemoryFileSystem()
         {
@@ -27,6 +25,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(fileSystem.FileExists(destFilePath), Is.True);
             Assert.That(fileSystem.GetFile(destFilePath).TextContents, Is.EqualTo(sourceFileContent));
             Assert.That(fileSystem.FileExists(sourceFilePath), Is.False);
+        }
+
+        [Test]
+        public void MockFile_Move_SameSourceAndTargetIsANoOp()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            string sourceFileContent = "this is some content";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {sourceFilePath, new MockFileData(sourceFileContent)},
+                {XFS.Path(@"c:\somethingelse\dummy.txt"), new MockFileData(new byte[] {0})}
+            });
+
+            string destFilePath = XFS.Path(@"c:\somethingelse\demo.txt");
+
+            fileSystem.File.Move(sourceFilePath, destFilePath);
+
+            Assert.That(fileSystem.FileExists(destFilePath), Is.True);
+            Assert.That(fileSystem.GetFile(destFilePath).TextContents, Is.EqualTo(sourceFileContent));
         }
 
         [Test]
@@ -54,7 +71,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(null, destFilePath));
 
-            Assert.That(exception.Message, Is.StringStarting("File name cannot be null."));
+            Assert.That(exception.Message, Does.StartWith("File name cannot be null."));
         }
 
         [Test]
@@ -171,7 +188,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(string.Empty, destFilePath));
 
-            Assert.That(exception.Message, Is.StringStarting("Empty file name is not legal."));
+            Assert.That(exception.Message, Does.StartWith("Empty file name is not legal."));
         }
 
         [Test]
@@ -193,7 +210,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
+            Assert.That(exception.Message, Does.StartWith("The path is not of a legal form."));
         }
 
         [Test]
@@ -204,7 +221,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(sourceFilePath, null));
 
-            Assert.That(exception.Message, Is.StringStarting("File name cannot be null."));
+            Assert.That(exception.Message, Does.StartWith("File name cannot be null."));
         }
 
         [Test]
@@ -226,7 +243,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.StringStarting("The path is not of a legal form."));
+            Assert.That(exception.Message, Does.StartWith("The path is not of a legal form."));
         }
 
         [Test]
@@ -237,11 +254,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, string.Empty));
 
-            Assert.That(exception.Message, Is.StringStarting("Empty file name is not legal."));
+            Assert.That(exception.Message, Does.StartWith("Empty file name is not legal."));
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsEmpty_ParamName() {
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsEmpty_ParamName()
+        {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
@@ -263,7 +281,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist_FileName() {
+        public void MockFile_Move_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist_FileName()
+        {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             string destFilePath = XFS.Path(@"c:\something\demo1.txt");
             var fileSystem = new MockFileSystem();
@@ -283,12 +302,30 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 {sourceFilePath, new MockFileData(new byte[] {0})}
             });
 
-            //var exists = fileSystem.Directory.Exists(XFS.Path(@"c:\something"));
-            //exists = fileSystem.Directory.Exists(XFS.Path(@"c:\something22"));
+            Assert.That(() => fileSystem.File.Move(sourceFilePath, destFilePath),
+                Throws.InstanceOf<DirectoryNotFoundException>().With.Message.StartsWith(@"Could not find a part of the path"));
+        }
 
-            var exception = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
-            //Message = "Could not find a part of the path."
-            Assert.That(exception.Message, Is.EqualTo(XFS.Path(@"Could not find a part of the path.")));
+        [Test]
+        public void MockFile_Move_ShouldThrowExceptionWhenSourceDoesNotExist()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            TestDelegate action = () => fileSystem.File.Move(sourceFilePath, XFS.Path(@"c:\something\demo2.txt"));
+
+            Assert.Throws<FileNotFoundException>(action);
+        }
+
+        [Test]
+        public void MockFile_Move_ShouldThrowExceptionWhenSourceDoesNotExist_EvenWhenCopyingToItself()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+
+            TestDelegate action = () => fileSystem.File.Move(sourceFilePath, XFS.Path(@"c:\something\demo.txt"));
+
+            Assert.Throws<FileNotFoundException>(action);
         }
     }
 }

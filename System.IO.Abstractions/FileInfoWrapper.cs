@@ -9,12 +9,7 @@ namespace System.IO.Abstractions
 
         public FileInfoWrapper(FileInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("instance");
-            }
-
-            this.instance = instance;
+            this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
         }
 
         public override void Delete()
@@ -114,6 +109,7 @@ namespace System.IO.Abstractions
             return instance.CreateText();
         }
 
+#if NET40
         public override void Decrypt()
         {
             instance.Decrypt();
@@ -123,6 +119,7 @@ namespace System.IO.Abstractions
         {
             instance.Encrypt();
         }
+#endif
 
         public override FileSecurity GetAccessControl()
         {
@@ -169,6 +166,7 @@ namespace System.IO.Abstractions
             return instance.OpenWrite();
         }
 
+#if NET40
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)
         {
             return instance.Replace(destinationFileName, destinationBackupFileName);
@@ -178,6 +176,7 @@ namespace System.IO.Abstractions
         {
             return instance.Replace(destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
         }
+#endif
 
         public override void SetAccessControl(FileSecurity fileSecurity)
         {

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Security.AccessControl;
 using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -56,6 +57,12 @@ namespace System.IO.Abstractions.TestingHelpers
         private FileAttributes attributes = FileAttributes.Normal;
 
         /// <summary>
+        /// The access control of the <see cref="MockFileData"/>.
+        /// </summary>
+        [NonSerialized]
+        private FileSecurity accessControl;
+
+        /// <summary>
         /// Gets a value indicating whether the <see cref="MockFileData"/> is a directory or not.
         /// </summary>
         public virtual bool IsDirectory { get { return false; } }
@@ -97,7 +104,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (contents == null)
             {
-                throw new ArgumentNullException("contents");
+                throw new ArgumentNullException(nameof(contents));
             }
 
             this.contents = contents;
@@ -167,6 +174,20 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get { return attributes; }
             set { attributes = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets <see cref="FileSecurity"/> of the <see cref="MockFileData"/>. This is the object that is returned for this <see cref="MockFileData"/> when calling <see cref="FileBase.GetAccessControl(string)"/>.
+        /// </summary>
+        public FileSecurity AccessControl
+        {
+            get
+            {
+                // FileSecurity's constructor will throw PlatformNotSupportedException on non-Windows platform, so we initialize it in lazy way.
+                // This let's us use this class as long as we don't use AccessControl property.
+                return accessControl ?? (accessControl = new FileSecurity());
+            }
+            set { accessControl = value; }
         }
     }
 }

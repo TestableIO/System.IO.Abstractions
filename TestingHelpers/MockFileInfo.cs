@@ -10,12 +10,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path)
         {
-            if (mockFileSystem == null)
-            {
-                throw new ArgumentNullException("mockFileSystem");
-            }
-
-            this.mockFileSystem = mockFileSystem;
+            this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
             this.path = path;
         }
 
@@ -37,8 +32,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null)
-                    throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
                 return MockFileData.Attributes;
             }
             set { MockFileData.Attributes = value; }
@@ -148,25 +142,32 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
-        public override string Name {
+        public override string Name
+        {
             get { return new MockPath(mockFileSystem).GetFileName(path); }
         }
 
         public override StreamWriter AppendText()
         {
             if (MockFileData == null) throw new FileNotFoundException("File not found", path);
-            return new StreamWriter(new MockFileStream(mockFileSystem, FullName, true));
-            //return ((MockFileDataModifier) MockFileData).AppendText();
+            return new StreamWriter(new MockFileStream(mockFileSystem, FullName, MockFileStream.StreamType.APPEND));
         }
 
         public override FileInfoBase CopyTo(string destFileName)
         {
-            new MockFile(mockFileSystem).Copy(FullName, destFileName);
-            return mockFileSystem.FileInfo.FromFileName(destFileName);
+            return CopyTo(destFileName, false);
         }
 
         public override FileInfoBase CopyTo(string destFileName, bool overwrite)
         {
+            if (!Exists)
+            {
+                throw new FileNotFoundException("The file does not exist and can't be moved or copied.", FullName);
+            }
+            if (destFileName == FullName)
+            {
+                return this;
+            }
             new MockFile(mockFileSystem).Copy(FullName, destFileName, overwrite);
             return mockFileSystem.FileInfo.FromFileName(destFileName);
         }
@@ -181,35 +182,39 @@ namespace System.IO.Abstractions.TestingHelpers
             return new MockFile(mockFileSystem).CreateText(FullName);
         }
 
+#if NET40
         public override void Decrypt()
         {
             if (MockFileData == null) throw new FileNotFoundException("File not found", path);
-            var contents = MockFileData.Contents;
-            for (var i = 0; i < contents.Length; i++)
-                contents[i] ^= (byte)(i % 256);
+
+            MockFileData.Attributes &= ~FileAttributes.Encrypted;
         }
 
         public override void Encrypt()
         {
             if (MockFileData == null) throw new FileNotFoundException("File not found", path);
-            var contents = MockFileData.Contents;
-            for(var i = 0; i < contents.Length; i++)
-                contents[i] ^= (byte) (i % 256);
+
+            MockFileData.Attributes |= FileAttributes.Encrypted;
         }
+#endif
 
         public override FileSecurity GetAccessControl()
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
 
         public override FileSecurity GetAccessControl(AccessControlSections includeSections)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
 
         public override void MoveTo(string destFileName)
         {
             var movedFileInfo = CopyTo(destFileName);
+            if (destFileName == FullName)
+            {
+                return;
+            }
             Delete();
             path = movedFileInfo.FullName;
         }
@@ -231,7 +236,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream OpenRead()
         {
-            return new MockFileStream(mockFileSystem, path);
+            if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+            return new MockFileStream(mockFileSystem, path, MockFileStream.StreamType.READ);
         }
 
         public override StreamReader OpenText()
@@ -241,22 +247,25 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream OpenWrite()
         {
-            return new MockFileStream(mockFileSystem, path);
+            return new MockFileStream(mockFileSystem, path, MockFileStream.StreamType.WRITE);
         }
 
+#if NET40
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            return Replace(destinationFileName, destinationBackupFileName, false);
         }
 
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            mockFileSystem.File.Replace(path, destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
+            return new FileInfo(destinationFileName);
         }
+#endif
 
         public override void SetAccessControl(FileSecurity fileSecurity)
         {
-            throw new NotImplementedException(Properties.Resources.NOT_IMPLEMENTED_EXCEPTION);
+            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
         }
 
         public override DirectoryInfoBase Directory
@@ -299,7 +308,7 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 if (MockFileData == null) throw new FileNotFoundException("File not found", path);
-                return MockFileData.Contents.LongLength;
+                return MockFileData.Contents.Length;
             }
         }
     }

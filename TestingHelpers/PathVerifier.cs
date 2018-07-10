@@ -8,19 +8,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
         internal PathVerifier(IMockFileDataAccessor mockFileDataAccessor)
         {
-            if (mockFileDataAccessor == null)
-            {
-                throw new ArgumentNullException("mockFileDataAccessor");
-            }
-
-            _mockFileDataAccessor = mockFileDataAccessor;
+            _mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
         }
 
         public void IsLegalAbsoluteOrRelative(string path, string paramName)
         {
             if (path == null)
             {
-                throw new ArgumentNullException(paramName,  Properties.Resources.VALUE_CANNOT_BE_NULL);
+                throw new ArgumentNullException(paramName, StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
             }
 
             if (path == string.Empty)
@@ -30,18 +25,18 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (path.Trim() == string.Empty)
             {
-                throw new ArgumentException(Properties.Resources.THE_PATH_IS_NOT_OF_A_LEGAL_FORM, paramName);
+                throw new ArgumentException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"), paramName);
             }
 
             if (ExtractFileName(path).IndexOfAny(_mockFileDataAccessor.Path.GetInvalidFileNameChars()) > -1)
             {
-                throw new ArgumentException(Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION);
+                throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
             }
 
             var filePath = ExtractFilePath(path);
             if (MockPath.HasIllegalCharacters(filePath, false))
             {
-                throw new ArgumentException(Properties.Resources.ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION);
+                throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
             }
         }
 

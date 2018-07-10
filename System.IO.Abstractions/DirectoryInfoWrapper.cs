@@ -11,12 +11,7 @@ namespace System.IO.Abstractions
 
         public DirectoryInfoWrapper(DirectoryInfo instance)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("instance");
-            }
-
-            this.instance = instance;
+            this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
         }
 
         public override void Delete()
@@ -96,20 +91,24 @@ namespace System.IO.Abstractions
             instance.Create();
         }
 
+#if NET40
         public override void Create(DirectorySecurity directorySecurity)
         {
             instance.Create(directorySecurity);
         }
+#endif
 
         public override DirectoryInfoBase CreateSubdirectory(string path)
         {
             return new DirectoryInfoWrapper(instance.CreateSubdirectory(path));
         }
 
+#if NET40
         public override DirectoryInfoBase CreateSubdirectory(string path, DirectorySecurity directorySecurity)
         {
             return new DirectoryInfoWrapper(instance.CreateSubdirectory(path, directorySecurity));
         }
+#endif
 
         public override void Delete(bool recursive)
         {
