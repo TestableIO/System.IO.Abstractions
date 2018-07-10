@@ -746,28 +746,27 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<ArgumentException>(action);
         }
 
-        public static IEnumerable<string> GetSearchPatternForTwoDotsExceptions_WindowsOnly()
-        {
-            yield return @"..\";
-            yield return @"aaa\vv..\";
-            yield return @"a..\b";
-        }
-
-        [TestCaseSource(typeof(MockDirectoryTests), "GetSearchPatternForTwoDotsExceptions_WindowsOnly")]
+        [TestCase(@"..\")]
+        [TestCase(@"aaa\vv..\")]
+        [TestCase(@"a..\b")]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneDirectoryPathSep_WindowsOnly(string searchPattern)
+        public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneBackslash(string searchPattern)
         {
-            MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneDirectoryPathSep(searchPattern);
+            // Arrange
+            var directoryPath = XFS.Path(@"c:\Foo");
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(directoryPath);
+
+            // Act
+            TestDelegate action = () => fileSystem.Directory.GetFiles(directoryPath, searchPattern);
+
+            // Assert
+            Assert.Throws<ArgumentException>(action);
         }
 
-        public static IEnumerable<string> GetSearchPatternForTwoDotsExceptions()
-        {
-            yield return @"a../b";
-            yield return @"../";
-        }
-
-        [TestCaseSource(typeof(MockDirectoryTests), "GetSearchPatternForTwoDotsExceptions")]
-        public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneDirectoryPathSep(string searchPattern)
+        [TestCase(@"a../b")]
+        [TestCase(@"../")]
+        public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneSlash(string searchPattern)
         {
             // Arrange
             var directoryPath = XFS.Path(@"c:\Foo");
