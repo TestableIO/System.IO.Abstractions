@@ -47,13 +47,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_WriteAllBytes_ShouldThrowAnArgumentExceptionIfContainsIllegalCharacters()
         {
-            if (MockUnixSupport.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix only disallows NULL characters.");
-            }
-
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(@"C:"));
 

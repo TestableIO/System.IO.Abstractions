@@ -195,29 +195,33 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(new[] { "b", "c" }, directories);
         }
 
-        public static IEnumerable<object[]> MockDirectoryInfo_FullName_Data
+        [TestCase(@"\\unc\folder", @"\\unc\folder")]
+        [TestCase(@"\\unc/folder\\foo", @"\\unc\folder\foo")]
+        [WindowsOnly(WindowsSpecifics.UNCPaths)]
+        public void MockDirectoryInfo_FullName_ShouldReturnNormalizedUNCPath(string directoryPath, string expectedFullName)
         {
-            get
-            {
-                yield return new object[] { XFS.Path(@"c:\temp\\folder"), XFS.Path(@"c:\temp\folder") };
-                yield return new object[] { XFS.Path(@"c:\temp//folder"), XFS.Path(@"c:\temp\folder") };
-                yield return new object[] { XFS.Path(@"c:\temp//\\///folder"), XFS.Path(@"c:\temp\folder") };
-                if (!MockUnixSupport.IsUnixPlatform())
-                {
-                    yield return new object[] { XFS.Path(@"\\unc\folder"), XFS.Path(@"\\unc\folder") };
-                    yield return new object[] { XFS.Path(@"\\unc/folder\\foo"), XFS.Path(@"\\unc\folder\foo") };
-                }
-            }
+            // Arrange
+            directoryPath = XFS.Path(directoryPath);
+            expectedFullName = XFS.Path(expectedFullName);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var directoryInfo = new MockDirectoryInfo(fileSystem, directoryPath);
+
+            // Act
+            var actualFullName = directoryInfo.FullName;
+
+            // Assert
+            Assert.AreEqual(expectedFullName, actualFullName);
         }
 
-        [TestCaseSource("MockDirectoryInfo_FullName_Data")]
+        [TestCase(@"c:\temp\\folder", @"c:\temp\folder")]
+        [TestCase(@"c:\temp//folder", @"c:\temp\folder")]
+        [TestCase(@"c:\temp//\\///folder", @"c:\temp\folder")]
         public void MockDirectoryInfo_FullName_ShouldReturnNormalizedPath(string directoryPath, string expectedFullName)
         {
             // Arrange
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { XFS.Path(@"c:\temp\folder\a.txt"), "" }
-            });
+            directoryPath = XFS.Path(directoryPath);
+            expectedFullName = XFS.Path(expectedFullName);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
             var directoryInfo = new MockDirectoryInfo(fileSystem, directoryPath);
 
             // Act

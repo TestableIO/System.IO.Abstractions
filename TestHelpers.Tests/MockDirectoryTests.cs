@@ -540,13 +540,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.UNCPaths)]
         public void MockDirectory_CreateDirectory_ShouldWorkWithUNCPath()
         {
-            if (XFS.IsUnixPlatform()) 
-            {
-                Assert.Inconclusive("Unix does not support ACLs.");
-            }
-
             // Arrange
             var fileSystem = new MockFileSystem();
 
@@ -558,13 +554,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.UNCPaths)]
         public void MockDirectory_CreateDirectory_ShouldFailIfTryingToCreateUNCPathOnlyServer()
         {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix does not have the concept of UNC paths.");
-            }
-
             // Arrange
             var fileSystem = new MockFileSystem();
 
@@ -577,13 +569,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.UNCPaths)]
         public void MockDirectory_CreateDirectory_ShouldSucceedIfTryingToCreateUNCPathShare()
         {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix does not have the concept of UNC paths.");
-            }
-            
             // Arrange
             var fileSystem = new MockFileSystem();
 
@@ -758,22 +746,27 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<ArgumentException>(action);
         }
 
-        public static IEnumerable<string> GetSearchPatternForTwoDotsExceptions()
+        [TestCase(@"..\")]
+        [TestCase(@"aaa\vv..\")]
+        [TestCase(@"a..\b")]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
+        public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneBackslash(string searchPattern)
         {
-            yield return @"a../b";
-            yield return @"../";
+            // Arrange
+            var directoryPath = XFS.Path(@"c:\Foo");
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(directoryPath);
 
-            if (!XFS.IsUnixPlatform()) 
-            {
-                // These are no problems on Unix platforms
-                yield return @"..\";
-                yield return @"aaa\vv..\";
-                yield return @"a..\b";
-            }
+            // Act
+            TestDelegate action = () => fileSystem.Directory.GetFiles(directoryPath, searchPattern);
+
+            // Assert
+            Assert.Throws<ArgumentException>(action);
         }
 
-        [TestCaseSource(typeof(MockDirectoryTests), "GetSearchPatternForTwoDotsExceptions")]
-        public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneDirectoryPathSep(string searchPattern)
+        [TestCase(@"a../b")]
+        [TestCase(@"../")]
+        public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneSlash(string searchPattern)
         {
             // Arrange
             var directoryPath = XFS.Path(@"c:\Foo");
@@ -808,13 +801,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(@"""")]
 #endif
         [TestCase("aa\t")]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternHasIllegalCharacters(string searchPattern)
         {
-            if (XFS.IsUnixPlatform()) 
-            {
-                Assert.Inconclusive("Unix does not have this limitation.");
-            }
-
             // Arrange
             var directoryPath = XFS.Path(@"c:\Foo");
             var fileSystem = new MockFileSystem();
@@ -1305,13 +1294,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockDirectory_Move_ShouldThrowAnIOExceptionIfDirectoriesAreOnDifferentVolumes()
         {
-            if(XFS.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix does not have the concept of volumes");
-            }
-            
             // Arrange
             string sourcePath = XFS.Path(@"c:\a");
             string destPath = XFS.Path(@"d:\v");
@@ -1470,13 +1455,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.AccessControlLists)]
         public void MockDirectory_GetAccessControl_ShouldReturnNewDirectorySecurity()
         {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix does not have the concept of UNC paths.");
-            }
-            
             // Arrange
             var fileSystem = new MockFileSystem();
             fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo\"));
