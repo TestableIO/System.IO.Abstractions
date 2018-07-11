@@ -195,15 +195,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(new[] { "b", "c" }, directories);
         }
 
-        public static IEnumerable<object[]> MockDirectoryInfo_FullName_Data_WindowsOnly
-        {
-            get
-            {
-                yield return new object[] { XFS.Path(@"\\unc\folder"), XFS.Path(@) };
-                yield return new object[] { XFS.Path(), XFS.Path() };
-            }
-        }
-
         [TestCase(@"\\unc\folder", @"\\unc\folder")]
         [TestCase(@"\\unc/folder\\foo", @"\\unc\folder\foo")]
         [WindowsOnly(WindowsSpecifics.UNCPaths)]
