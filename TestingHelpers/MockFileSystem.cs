@@ -92,11 +92,16 @@ namespace System.IO.Abstractions.TestingHelpers
             return fullPath;
         }
 
-
         public MockFileData GetFile(string path)
         {
             path = FixPath(path);
             return GetFileWithoutFixingPath(path);
+        }
+
+        private void SetEntry(string path, MockFileData mockFile)
+        {
+            path = FixPath(path, true);
+            files[path] = mockFile;
         }
 
         public void AddFile(string path, MockFileData mockFile)
@@ -104,10 +109,12 @@ namespace System.IO.Abstractions.TestingHelpers
             var fixedPath = FixPath(path, true);
             lock (files)
             {
-                if (FileExists(fixedPath))
+                var file = GetFile(fixedPath);
+
+                if (file != null)
                 {
-                    var isReadOnly = (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
-                    var isHidden = (files[fixedPath].Attributes & FileAttributes.Hidden) == FileAttributes.Hidden;
+                    var isReadOnly = (file.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
+                    var isHidden = (file.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden;
 
                     if (isReadOnly || isHidden)
                     {
@@ -122,7 +129,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     AddDirectory(directoryPath);
                 }
 
-                files[fixedPath] = mockFile;
+                SetEntry(fixedPath, mockFile);
             }
         }
 
@@ -134,7 +141,7 @@ namespace System.IO.Abstractions.TestingHelpers
             lock (files)
             {
                 if (FileExists(fixedPath) &&
-                    (files[fixedPath].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                    (GetFile(fixedPath).Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
                     throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("ACCESS_TO_THE_PATH_IS_DENIED"), fixedPath));
 
                 var lastIndex = 0;
@@ -161,12 +168,12 @@ namespace System.IO.Abstractions.TestingHelpers
                     var segment = fixedPath.Substring(0, lastIndex + 1);
                     if (!Directory.Exists(segment))
                     {
-                        files[segment] = new MockDirectoryData();
+                        SetEntry(segment, new MockDirectoryData());
                     }
                 }
 
                 var s = fixedPath.EndsWith(separator, StringComparison.OrdinalIgnoreCase) ? fixedPath : fixedPath + separator;
-                files[s] = new MockDirectoryData();
+                SetEntry(s, new MockDirectoryData());
             }
         }
 
@@ -209,7 +216,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             lock (files)
             {
-                if (FileExists(path) && (files[path].Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                if (FileExists(path) && (GetFile(path).Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
                 {
                     throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("ACCESS_TO_THE_PATH_IS_DENIED"), path));
                 }
