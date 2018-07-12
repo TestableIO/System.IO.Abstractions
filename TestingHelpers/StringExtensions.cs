@@ -60,28 +60,27 @@ namespace System.IO.Abstractions.TestingHelpers
         [Pure]
         public static string CleanPath(this string path)
         {
-            //TODO: remove redundant slashes, but preserve Unix root slash and unc double slash
-            if (MockUnixSupport.IsUnixPlatform() && path.StartsWith("/"))
+            if (path == null)
             {
-                return "/" + path.Substring(1).TrimEnd(Path.DirectorySeparatorChar);
+                return null;
             }
 
-            if (!MockUnixSupport.IsUnixPlatform())
+            if (MockUnixSupport.IsUnixPlatform() && path == "/")
             {
-                if (path.StartsWith("\\\\"))
-                {
-                    return "\\\\" + path.Substring(2).TrimEnd(Path.DirectorySeparatorChar);
-                }
-
-                var trimmed = path.TrimEnd(Path.DirectorySeparatorChar);
-
-                if (Regex.IsMatch(trimmed, "^[a-zA-Z]:$"))
-                {
-                    return trimmed + Path.DirectorySeparatorChar;
-                }
+                return path;
             }
 
-            return path.TrimEnd(Path.DirectorySeparatorChar);
+            var trimmed = path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+            if (!MockUnixSupport.IsUnixPlatform()
+                && trimmed.Length == 2
+                && Char.IsLetter(trimmed[0])
+                && trimmed[1] == ':')
+            {
+                return trimmed + Path.DirectorySeparatorChar;
+            }
+
+            return trimmed;
         }
     }
 }

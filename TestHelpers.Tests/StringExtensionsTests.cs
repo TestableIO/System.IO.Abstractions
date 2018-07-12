@@ -56,5 +56,40 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(result, Is.EquivalentTo(expected));
         }
 
+        [Test]
+        public void CleanPath_DriveRoot_PreserveTrailingSlash()
+        {
+            Assert.AreEqual(@"c:\", @"c:\".CleanPath());
+        }
+
+        [Test]
+        public void CleanPath_DriveRoot_AppendsTrailingSlash()
+        {
+            Assert.AreEqual(@"c:\", @"c:".CleanPath());
+        }
+
+        [Test]
+        public void CleanPath_DriveRoot_TrimsExcessTrailingSlash()
+        {
+            Assert.AreEqual(@"c:\", @"c:\\".CleanPath());
+        }
+
+        [Test]
+        public void CleanPath_DriveRoot_NormalizeAlternateSlash()
+        {
+            Assert.AreEqual(@"c:\", @"c:/".CleanPath());
+        }
+
+        [Test]
+        public void CleanPath_RootedPath_TrimsAllTrailingSlashes()
+        {
+            Assert.AreEqual(@"c:\x", @"c:\x\".CleanPath());
+        }
+
+        [Test]
+        public void CleanPath_RootedPath_DontAlterPathWithoutTrailingSlashes()
+        {
+            Assert.AreEqual(@"c:\x", @"c:\x".CleanPath());
+        }
     }
 }
