@@ -23,7 +23,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             directoryPath = mockFileDataAccessor.Path.GetFullPath(directoryPath);
 
-            this.directoryPath = EnsurePathEndsWithDirectorySeparator(directoryPath);
+            this.directoryPath = directoryPath.CleanPath();
         }
 
         MockFileData MockFileData
@@ -289,16 +289,6 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 return new MockDirectoryInfo(mockFileDataAccessor, mockFileDataAccessor.Directory.GetDirectoryRoot(FullName));
             }
-        }
-
-        private string EnsurePathEndsWithDirectorySeparator(string path)
-        {
-            if (!path.EndsWith(string.Format(CultureInfo.InvariantCulture, "{0}", mockFileDataAccessor.Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase))
-            {
-                path += mockFileDataAccessor.Path.DirectorySeparatorChar;
-            }
-
-            return path;
         }
 
         public override string ToString()

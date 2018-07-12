@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -54,6 +55,33 @@ namespace System.IO.Abstractions.TestingHelpers
             result.Append(source, startingPos, source.Length - startingPos);
 
             return result.ToString();
+        }
+
+        [Pure]
+        public static string CleanPath(this string path)
+        {
+            //TODO: remove redundant slashes, but preserve Unix root slash and unc double slash
+            if (MockUnixSupport.IsUnixPlatform() && path.StartsWith("/"))
+            {
+                return "/" + path.Substring(1).TrimEnd(Path.DirectorySeparatorChar);
+            }
+
+            if (!MockUnixSupport.IsUnixPlatform())
+            {
+                if (path.StartsWith("\\\\"))
+                {
+                    return "\\\\" + path.Substring(2).TrimEnd(Path.DirectorySeparatorChar);
+                }
+
+                var trimmed = path.TrimEnd(Path.DirectorySeparatorChar);
+
+                if (Regex.IsMatch(trimmed, "^[a-zA-Z]:$"))
+                {
+                    return trimmed + Path.DirectorySeparatorChar;
+                }
+            }
+
+            return path.TrimEnd(Path.DirectorySeparatorChar);
         }
     }
 }
