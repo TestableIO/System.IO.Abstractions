@@ -59,33 +59,38 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
         public void TrimSlashes_DriveRoot_PreserveTrailingSlash()
         {
-            Assert.AreEqual(XFS.Path(@"c:\"), XFS.Path(@"c:\").TrimSlashes());
+            Assert.AreEqual(@"c:\", @"c:\".TrimSlashes());
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
         public void TrimSlashes_DriveRoot_AppendsTrailingSlash()
         {
-            Assert.AreEqual(XFS.Path(@"c:\"), XFS.Path(@"c:").TrimSlashes());
+            Assert.AreEqual(@"c:\", @"c:".TrimSlashes());
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
         public void TrimSlashes_DriveRoot_TrimsExcessTrailingSlash()
         {
-            Assert.AreEqual(XFS.Path(@"c:\"), XFS.Path(@"c:\\").TrimSlashes());
+            Assert.AreEqual(@"c:\", @"c:\\".TrimSlashes());
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
         public void TrimSlashes_DriveRoot_NormalizeAlternateSlash()
         {
-            Assert.AreEqual(XFS.Path(@"c:\"), XFS.Path(@"c:/").TrimSlashes());
+            Assert.AreEqual(@"c:\", @"c:/".TrimSlashes());
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
         public void TrimSlashes_RootedPath_TrimsAllTrailingSlashes()
         {
-            Assert.AreEqual(XFS.Path(@"c:\x"), XFS.Path(@"c:\x\").TrimSlashes());
+            Assert.AreEqual(@"c:\x", @"c:\x\".TrimSlashes());
         }
 
         [Test]
