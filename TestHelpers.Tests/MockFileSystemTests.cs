@@ -72,7 +72,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 #if NET40
         [Test]
-        public void Is_Serializable()
+        public void MockFileSystem_ByDefault_IsSerializable()
         {
             var file1 = new MockFileData("Demo\r\ntext\ncontent\rvalue");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -108,9 +108,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(baseDirectory, new MockFileData(string.Empty));
             fileSystem.File.SetAttributes(baseDirectory, FileAttributes.ReadOnly);
 
-            TestDelegate act = () => fileSystem.AddDirectory(baseDirectory);
+            TestDelegate action = () => fileSystem.AddDirectory(baseDirectory);
 
-            Assert.Throws<UnauthorizedAccessException>(act);
+            Assert.Throws<UnauthorizedAccessException>(action);
         }
 
         [Test]
@@ -227,6 +227,29 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             TestDelegate action = () => fileSystem.RemoveFile(path);
 
             Assert.Throws<UnauthorizedAccessException>(action);
+        }
+
+        [Test]
+        public void MockFileSystem_AllNodes_ShouldReturnAllNodes()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\something\demo.txt"), MockFileData.NullObject },
+                { XFS.Path(@"c:\something\other.gif"), MockFileData.NullObject },
+                { XFS.Path(@"d:\foobar\"), new MockDirectoryData() },
+                { XFS.Path(@"d:\foo\bar"), new MockDirectoryData( )}
+            });
+            var expectedNodes = new[]
+            {
+                XFS.Path(@"c:\something\demo.txt"),
+                XFS.Path(@"c:\something\other.gif"),
+                XFS.Path(@"d:\foobar\"),
+                XFS.Path(@"d:\foo\bar")
+            };
+
+            var result = fileSystem.AllNodes;
+
+            Assert.AreEqual(expectedNodes, result);
         }
     }
 }

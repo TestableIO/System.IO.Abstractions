@@ -247,6 +247,17 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        public IEnumerable<string> AllNodes
+        {
+            get
+            {
+                lock (files)
+                {
+                    return AllPaths.Where(path => !IsStartOfAnotherPath(path)).ToArray();
+                }
+            }
+        }
+
         public IEnumerable<string> AllFiles
         {
             get
@@ -269,12 +280,16 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        private bool IsStartOfAnotherPath(string path)
+        {
+            return AllPaths.Any(otherPath => otherPath.StartsWith(path) && otherPath != path);
+        }
+
         private MockFileData GetFileWithoutFixingPath(string path)
         {
             lock (files)
             {
-                MockFileData result;
-                files.TryGetValue(path, out result);
+                files.TryGetValue(path, out var result);
                 return result;
             }
         }
