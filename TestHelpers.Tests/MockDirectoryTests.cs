@@ -625,7 +625,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var ex = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.Directory.Delete(XFS.Path(@"c:\baz")));
 
-            Assert.That(ex.Message, Is.EqualTo(XFS.Path("c:\\baz\\") + " does not exist or could not be found."));
+            Assert.That(ex.Message, Is.EqualTo(XFS.Path("c:\\baz") + " does not exist or could not be found."));
         }
 
         [Test]
@@ -640,7 +640,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var ex = Assert.Throws<IOException>(() => fileSystem.Directory.Delete(XFS.Path(@"c:\bar")));
 
-            Assert.That(ex.Message, Is.EqualTo("The directory specified by " + XFS.Path("c:\\bar\\") + " is read-only, or recursive is false and " + XFS.Path("c:\\bar\\") + " is not an empty directory."));
+            Assert.That(ex.Message, Is.EqualTo("The directory specified by " + XFS.Path("c:\\bar") + " is read-only, or recursive is false and " + XFS.Path("c:\\bar") + " is not an empty directory."));
         }
 
         [Test]
@@ -890,7 +890,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetDirectories(XFS.Path(@"c:\Folder\"), "*.foo");
 
             // Assert
-            Assert.That(actualResult, Is.EquivalentTo(new []{XFS.Path(@"C:\Folder\.foo\"), XFS.Path(@"C:\Folder\foo.foo\")}));
+            Assert.That(actualResult, Is.EquivalentTo(new []{XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo")}));
         }
 
         [Test]
@@ -937,7 +937,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             CollectionAssert.AreEqual(
-                new[] { XFS.Path(currentDirectory + @"\" + relativeDirPath + @"\child\") },
+                new[] { XFS.Path(currentDirectory + @"\" + relativeDirPath + @"\child") },
                 actualResult
             );
         }
@@ -972,7 +972,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetDirectories(XFS.Path(@"c:\Folder\"), "*.foo", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo\"), XFS.Path(@"C:\Folder\foo.foo\"), XFS.Path(@"C:\Folder\.foo\.foo\") }));
+            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo"), XFS.Path(@"C:\Folder\.foo\.foo") }));
         }
 
         [Test]
@@ -1034,7 +1034,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"c:\Folder\"), "*.foo");
 
             // Assert
-            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo\"), XFS.Path(@"C:\Folder\foo.foo\") }));
+            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo") }));
         }
 
         [Test]
@@ -1052,7 +1052,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"c:\Folder\"), "*.foo", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo\"), XFS.Path(@"C:\Folder\foo.foo\"), XFS.Path(@"C:\Folder\.foo\.foo\") }));
+            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo"), XFS.Path(@"C:\Folder\.foo\.foo") }));
         }
 
         [Test]
@@ -1415,7 +1415,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 XFS.Path(@"c:\a\a\a.txt"),
                 XFS.Path(@"c:\a\a\b.txt"),
                 XFS.Path(@"c:\a\a\c.gif"),
-                XFS.Path(@"c:\a\a\")
+                XFS.Path(@"c:\a\a")
             };
 
             // Act
