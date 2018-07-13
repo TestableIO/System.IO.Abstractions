@@ -489,7 +489,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.IsTrue(fileSystem.FileExists(XFS.Path(@"c:\bar\")));
-            Assert.IsTrue(fileSystem.AllDirectories.Any(d => d == XFS.Path(@"c:\bar\")));
+            Assert.IsTrue(fileSystem.AllDirectories.Any(d => d == XFS.Path(@"c:\bar")));
         }
 
         // Issue #210
@@ -665,7 +665,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_GetFileSystemEntries_Returns_Files_And_Directories()
         {
             string testPath = XFS.Path(@"c:\foo\bar.txt");
-            string testDir =  XFS.Path(@"c:\foo\bar\");
+            string testDir =  XFS.Path(@"c:\foo\bar");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { testPath, new MockFileData("Demo text content") },
@@ -674,8 +674,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var entries = fileSystem.Directory.GetFileSystemEntries(XFS.Path(@"c:\foo")).OrderBy(k => k);
             Assert.AreEqual(2, entries.Count());
-            Assert.AreEqual(testDir, entries.Last());
-            Assert.AreEqual(testPath, entries.First());
+            Assert.AreEqual(testDir, entries.First());
+            Assert.AreEqual(testPath, entries.Last());
         }
 
         [Test]
