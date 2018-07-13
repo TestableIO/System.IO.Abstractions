@@ -23,7 +23,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             directoryPath = mockFileDataAccessor.Path.GetFullPath(directoryPath);
 
-            this.directoryPath = directoryPath.CleanPath();
+            this.directoryPath = directoryPath.TrimSlashes();
         }
 
         MockFileData MockFileData

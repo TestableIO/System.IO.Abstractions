@@ -58,7 +58,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         [Pure]
-        public static string CleanPath(this string path)
+        public static string TrimSlashes(this string path)
         {
             if (path == null)
             {

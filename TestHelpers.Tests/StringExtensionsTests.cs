@@ -59,37 +59,37 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void CleanPath_DriveRoot_PreserveTrailingSlash()
         {
-            Assert.AreEqual(@"c:\", @"c:\".CleanPath());
+            Assert.AreEqual(@"c:\", @"c:\".TrimSlashes());
         }
 
         [Test]
         public void CleanPath_DriveRoot_AppendsTrailingSlash()
         {
-            Assert.AreEqual(@"c:\", @"c:".CleanPath());
+            Assert.AreEqual(@"c:\", @"c:".TrimSlashes());
         }
 
         [Test]
         public void CleanPath_DriveRoot_TrimsExcessTrailingSlash()
         {
-            Assert.AreEqual(@"c:\", @"c:\\".CleanPath());
+            Assert.AreEqual(@"c:\", @"c:\\".TrimSlashes());
         }
 
         [Test]
         public void CleanPath_DriveRoot_NormalizeAlternateSlash()
         {
-            Assert.AreEqual(@"c:\", @"c:/".CleanPath());
+            Assert.AreEqual(@"c:\", @"c:/".TrimSlashes());
         }
 
         [Test]
         public void CleanPath_RootedPath_TrimsAllTrailingSlashes()
         {
-            Assert.AreEqual(@"c:\x", @"c:\x\".CleanPath());
+            Assert.AreEqual(@"c:\x", @"c:\x\".TrimSlashes());
         }
 
         [Test]
         public void CleanPath_RootedPath_DontAlterPathWithoutTrailingSlashes()
         {
-            Assert.AreEqual(@"c:\x", @"c:\x".CleanPath());
+            Assert.AreEqual(@"c:\x", @"c:\x".TrimSlashes());
         }
     }
 }

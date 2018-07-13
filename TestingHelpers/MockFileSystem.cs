@@ -82,25 +82,24 @@ namespace System.IO.Abstractions.TestingHelpers
 
                 if (Directory.Exists(leftHalf))
                 {
-                    leftHalf += Path.DirectorySeparatorChar;
-                    leftHalf = Path.GetFullPath(leftHalf);
+                    leftHalf = Path.GetFullPath(leftHalf).TrimSlashes();
                     string baseDirectory = AllDirectories.First(dir => dir.Equals(leftHalf, StringComparison.OrdinalIgnoreCase));
-                    return baseDirectory + rightHalf;
+                    return baseDirectory + Path.DirectorySeparatorChar + rightHalf;
                 }
             }
 
-            return fullPath;
+            return fullPath.TrimSlashes();
         }
 
         public MockFileData GetFile(string path)
         {
-            path = FixPath(path);
+            path = FixPath(path).TrimSlashes();
             return GetFileWithoutFixingPath(path);
         }
 
         private void SetEntry(string path, MockFileData mockFile)
         {
-            path = FixPath(path, true);
+            path = FixPath(path, true).TrimSlashes();
             files[path] = mockFile;
         }
 
