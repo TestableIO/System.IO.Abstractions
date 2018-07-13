@@ -193,6 +193,15 @@ namespace System.IO.Abstractions.TestingHelpers
             path = path.TrimSlashes();
             path = EnsureAbsolutePath(path);
 
+            if (path.Length >= 2
+                && Char.IsLetter(path[0])
+                && path[1] == ':'
+                && !(path.EndsWith(Path.DirectorySeparatorChar.ToString())
+                    || path.EndsWith(Path.AltDirectorySeparatorChar.ToString())))
+            {
+                path += Path.DirectorySeparatorChar;
+            }
+
             bool isUnix = XFS.IsUnixPlatform();
 
             string allDirectoriesPattern = isUnix
