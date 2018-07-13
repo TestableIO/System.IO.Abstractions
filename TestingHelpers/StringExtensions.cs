@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -60,21 +59,23 @@ namespace System.IO.Abstractions.TestingHelpers
         [Pure]
         public static string TrimSlashes(this string path)
         {
-            if (path == null)
-            {
-                return null;
-            }
-
-            if (MockUnixSupport.IsUnixPlatform() && path == "/")
+            if (string.IsNullOrEmpty(path))
             {
                 return path;
             }
 
             var trimmed = path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
+            if (MockUnixSupport.IsUnixPlatform()
+                && (path[0] == Path.DirectorySeparatorChar || path[0] == Path.AltDirectorySeparatorChar)
+                && trimmed == "")
+            {
+                return Path.DirectorySeparatorChar.ToString();
+            }
+
             if (!MockUnixSupport.IsUnixPlatform()
                 && trimmed.Length == 2
-                && Char.IsLetter(trimmed[0])
+                && char.IsLetter(trimmed[0])
                 && trimmed[1] == ':')
             {
                 return trimmed + Path.DirectorySeparatorChar;

@@ -98,5 +98,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             Assert.AreEqual(XFS.Path(@"c:\x"), XFS.Path(@"c:\x").TrimSlashes());
         }
+
+        [Test]
+        [UnixOnly(UnixSpecifics.SlashRoot)]
+        public void TrimSlashes_SlashRoot_TrimsExcessTrailingSlash()
+        {
+            Assert.AreEqual("/", "//".TrimSlashes());
+        }
+
+        [Test]
+        [UnixOnly(UnixSpecifics.SlashRoot)]
+        public void TrimSlashes_SlashRoot_PreserveSlashRoot()
+        {
+            Assert.AreEqual("/", "/".TrimSlashes());
+        }
     }
 }
