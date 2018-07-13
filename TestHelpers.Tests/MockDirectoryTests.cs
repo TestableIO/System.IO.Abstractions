@@ -95,7 +95,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = SetupFileSystem();
             fileSystem.AddFile(additionalFilePath, new MockFileData(string.Empty));
             fileSystem.AddFile(XFS.Path(@"c:\a\a\c.gifx.xyz"), new MockFileData(string.Empty));
-            fileSystem.AddFile(XFS.Path(@"c:\a\a\c.gifx\xyz"), new MockFileData(string.Empty));
+            fileSystem.AddFile(XFS.Path(@"c:\a\a\c.gifz\xyz"), new MockFileData(string.Empty));
             var expected = new[]
                 {
                     XFS.Path(@"c:\a.gif"),
