@@ -867,12 +867,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var directories = fileSystem.Directory.GetDirectories(XFS.Path(@"A:\folder1")).ToArray();
 
             //Check that it does not returns itself
-            Assert.IsFalse(directories.Contains(XFS.Path(@"A:\folder1\")));
+            Assert.IsFalse(directories.Contains(XFS.Path(@"A:\folder1")));
 
             //Check that it correctly returns all child directories
             Assert.AreEqual(2, directories.Count());
-            Assert.IsTrue(directories.Contains(XFS.Path(@"A:\folder1\folder2\")));
-            Assert.IsTrue(directories.Contains(XFS.Path(@"A:\folder1\folder4\")));
+            Assert.IsTrue(directories.Contains(XFS.Path(@"A:\folder1\folder2")));
+            Assert.IsTrue(directories.Contains(XFS.Path(@"A:\folder1\folder4")));
         }
 
         [Test]
@@ -1011,12 +1011,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var directories = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"A:\folder1")).ToArray();
 
             //Check that it does not returns itself
-            Assert.IsFalse(directories.Contains(XFS.Path(@"A:\folder1\")));
+            Assert.IsFalse(directories.Contains(XFS.Path(@"A:\folder1")));
 
             //Check that it correctly returns all child directories
             Assert.AreEqual(2, directories.Count());
-            Assert.IsTrue(directories.Contains(XFS.Path(@"A:\folder1\folder2\")));
-            Assert.IsTrue(directories.Contains(XFS.Path(@"A:\folder1\folder4\")));
+            Assert.IsTrue(directories.Contains(XFS.Path(@"A:\folder1\folder2")));
+            Assert.IsTrue(directories.Contains(XFS.Path(@"A:\folder1\folder4")));
         }
 
         [Test]
