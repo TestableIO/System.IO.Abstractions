@@ -251,5 +251,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.AreEqual(expectedNodes, result);
         }
+
+        [Test]
+        [TestCase(@"C:\path")]
+        [TestCase(@"C:\path\")]
+        public void MockFileSystem_AddDirectory_TrailingSlashAllowedButNotRequired(string path)
+        {
+            var fileSystem = new MockFileSystem();
+            var path2 = XFS.Path(path);
+            fileSystem.AddDirectory(path2);
+            fileSystem.FileExists(path2);
+        }
     }
 }
