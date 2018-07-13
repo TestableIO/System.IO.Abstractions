@@ -396,7 +396,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileInfo = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file.txt"));
             string destinationFolder = XFS.Path(@"c:\temp2");
             string destination = XFS.Path(destinationFolder + @"\file.txt");
-            fileSystem.AddDirectory(destination);
+            fileSystem.AddDirectory(destinationFolder);
 
             fileInfo.MoveTo(destination);
 
