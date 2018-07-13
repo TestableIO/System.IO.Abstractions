@@ -243,7 +243,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             {
                 XFS.Path(@"c:\something\demo.txt"),
                 XFS.Path(@"c:\something\other.gif"),
-                XFS.Path(@"d:\foobar\"),
+                XFS.Path(@"d:\foobar"),
                 XFS.Path(@"d:\foo\bar")
             };
 
