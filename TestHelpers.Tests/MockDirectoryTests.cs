@@ -1468,5 +1468,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.That(result, Is.Not.Null);
         }
+
+        [Test]
+        public void MockDirectory_SetCreationTime_ShouldNotThrowWithoutTrailingBackslash()
+        {
+            var path = XFS.Path(@"C:\NoTrailingBackslash");
+            var fs = new MockFileSystem();
+            fs.Directory.CreateDirectory(path);
+            fs.Directory.SetCreationTime(path, DateTime.Now);
+            fs.Directory.Delete(path);
+        }
     }
 }
