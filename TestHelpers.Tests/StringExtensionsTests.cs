@@ -2,6 +2,8 @@
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
+    using XFS = MockUnixSupport;
+
     [TestFixture]
     public class StringExtensions
     {
@@ -57,39 +59,39 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void CleanPath_DriveRoot_PreserveTrailingSlash()
+        public void TrimSlashes_DriveRoot_PreserveTrailingSlash()
         {
-            Assert.AreEqual(@"c:\", @"c:\".TrimSlashes());
+            Assert.AreEqual(XFS.Path(@"c:\"), XFS.Path(@"c:\").TrimSlashes());
         }
 
         [Test]
-        public void CleanPath_DriveRoot_AppendsTrailingSlash()
+        public void TrimSlashes_DriveRoot_AppendsTrailingSlash()
         {
-            Assert.AreEqual(@"c:\", @"c:".TrimSlashes());
+            Assert.AreEqual(XFS.Path(@"c:\"), XFS.Path(@"c:").TrimSlashes());
         }
 
         [Test]
-        public void CleanPath_DriveRoot_TrimsExcessTrailingSlash()
+        public void TrimSlashes_DriveRoot_TrimsExcessTrailingSlash()
         {
-            Assert.AreEqual(@"c:\", @"c:\\".TrimSlashes());
+            Assert.AreEqual(XFS.Path(@"c:\"), XFS.Path(@"c:\\").TrimSlashes());
         }
 
         [Test]
-        public void CleanPath_DriveRoot_NormalizeAlternateSlash()
+        public void TrimSlashes_DriveRoot_NormalizeAlternateSlash()
         {
-            Assert.AreEqual(@"c:\", @"c:/".TrimSlashes());
+            Assert.AreEqual(XFS.Path(@"c:\"), XFS.Path(@"c:/").TrimSlashes());
         }
 
         [Test]
-        public void CleanPath_RootedPath_TrimsAllTrailingSlashes()
+        public void TrimSlashes_RootedPath_TrimsAllTrailingSlashes()
         {
-            Assert.AreEqual(@"c:\x", @"c:\x\".TrimSlashes());
+            Assert.AreEqual(XFS.Path(@"c:\x"), XFS.Path(@"c:\x\").TrimSlashes());
         }
 
         [Test]
-        public void CleanPath_RootedPath_DontAlterPathWithoutTrailingSlashes()
+        public void TrimSlashes_RootedPath_DontAlterPathWithoutTrailingSlashes()
         {
-            Assert.AreEqual(@"c:\x", @"c:\x".TrimSlashes());
+            Assert.AreEqual(XFS.Path(@"c:\x"), XFS.Path(@"c:\x").TrimSlashes());
         }
     }
 }
