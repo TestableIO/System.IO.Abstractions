@@ -231,7 +231,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 return false;
             }
 
-            path = FixPath(path);
+            path = FixPath(path).TrimSlashes();
 
             lock (files)
             {
