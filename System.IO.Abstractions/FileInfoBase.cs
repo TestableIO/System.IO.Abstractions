@@ -31,7 +31,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileInfo.GetAccessControl()"/>
         public abstract FileSecurity GetAccessControl();
 
-        /// <inheritdoc cref="FileInfo.GetAccessControl(AccessControlActions)"/>
+        /// <inheritdoc cref="FileInfo.GetAccessControl(AccessControlSections)"/>
         public abstract FileSecurity GetAccessControl(AccessControlSections includeSections);
 
         /// <inheritdoc cref="FileInfo.MoveTo"/>
