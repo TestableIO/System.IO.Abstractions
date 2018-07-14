@@ -35,7 +35,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../System.IO.Abstractions/System.IO.Abstractions.csproj" />
-    <ProjectReference Include="../TestingHelpers/TestingHelpers.csproj" />
+    <ProjectReference Include="../System.IO.Abstractions.TestingHelpers/System.IO.Abstractions.TestingHelpers.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
