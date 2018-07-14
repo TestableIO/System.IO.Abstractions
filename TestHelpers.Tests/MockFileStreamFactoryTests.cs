@@ -9,19 +9,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         [TestCase(FileMode.Create)]
         [TestCase(FileMode.Append)]
-        public void MockFileStreamFactory_Create_string_FileMode__ShouldReturnStreamForExistingFile(FileMode fileMode)
+        public void MockFileStreamFactory_CreateForExistingFile_ShouldReturnStream(FileMode fileMode)
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\a.txt", new MockFileData("Demo text content") },
-                { @"c:\a\b\c.txt", new MockFileData("Demo text content") },
+                { @"c:\existing.txt", MockFileData.NullObject }
             });
 
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
 
             // Act
-            var result = fileStreamFactory.Create(@"c:\a.txt", fileMode);
+            var result = fileStreamFactory.Create(@"c:\existing.txt", fileMode);
 
             // Assert
             Assert.IsNotNull(result);
@@ -30,19 +29,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         [TestCase(FileMode.Create)]
         [TestCase(FileMode.Append)]
-        public void MockFileStreamFactory_Create_string_FileMode__ShouldReturnStreamForNonExistingFile(FileMode fileMode)
+        public void MockFileStreamFactory_CreateForNonExistingFile_ShouldReturnStream(FileMode fileMode)
         {
             // Arrange
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { @"c:\a.txt", new MockFileData("Demo text content") },
-                { @"c:\a\b\c.txt", new MockFileData("Demo text content") },
-            });
-
+            var fileSystem = new MockFileSystem();
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
 
             // Act
-            var result = fileStreamFactory.Create(@"c:\foo.txt", fileMode);
+            var result = fileStreamFactory.Create(@"c:\not_existing.txt", fileMode);
 
             // Assert
             Assert.IsNotNull(result);
