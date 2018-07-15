@@ -26,11 +26,6 @@ namespace System.IO.Abstractions.TestingHelpers
             this.directoryPath = EnsurePathEndsWithDirectorySeparator(directoryPath);
         }
 
-        MockFileData MockFileData
-        {
-            get { return mockFileDataAccessor.GetFile(directoryPath); }
-        }
-
         public override void Delete()
         {
             mockFileDataAccessor.Directory.Delete(directoryPath);
@@ -42,20 +37,20 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileAttributes Attributes
         {
-            get { return MockFileData.Attributes; }
-            set { MockFileData.Attributes = value; }
+            get { return GetMockFileDataForRead().Attributes; }
+            set { GetMockFileDataForWrite().Attributes = value; }
         }
 
         public override DateTime CreationTime
         {
-            get { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
-            set { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
+            get { return GetMockFileDataForRead().CreationTime.DateTime; }
+            set { GetMockFileDataForWrite().CreationTime = value; }
         }
 
         public override DateTime CreationTimeUtc
         {
-            get { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
-            set { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
+            get { return GetMockFileDataForRead().CreationTime.UtcDateTime; }
+            set { GetMockFileDataForWrite().CreationTime = value.ToLocalTime(); }
         }
 
         public override bool Exists
@@ -91,29 +86,26 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime LastAccessTime
         {
-            get { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
-            set { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
+            get { return GetMockFileDataForRead().LastAccessTime.DateTime; }
+            set { GetMockFileDataForWrite().LastAccessTime = value; }
         }
 
         public override DateTime LastAccessTimeUtc
         {
-            get {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", directoryPath);
-                return MockFileData.LastAccessTime.UtcDateTime;
-            }
-            set { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
+            get { return GetMockFileDataForRead().LastAccessTime.UtcDateTime; }
+            set { GetMockFileDataForWrite().LastAccessTime = value.ToLocalTime(); }
         }
 
         public override DateTime LastWriteTime
         {
-            get { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
-            set { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
+            get { return GetMockFileDataForRead().LastWriteTime.DateTime; }
+            set { GetMockFileDataForWrite().LastWriteTime = value; }
         }
 
         public override DateTime LastWriteTimeUtc
         {
-            get { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
-            set { throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION")); }
+            get { return GetMockFileDataForRead().LastWriteTime.UtcDateTime; }
+            set { GetMockFileDataForWrite().LastWriteTime = value.ToLocalTime(); }
         }
 
         public override string Name
@@ -291,6 +283,11 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        public override string ToString()
+        {
+            return FullName;
+        }
+
         private string EnsurePathEndsWithDirectorySeparator(string path)
         {
             if (!path.EndsWith(string.Format(CultureInfo.InvariantCulture, "{0}", mockFileDataAccessor.Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase))
@@ -301,9 +298,15 @@ namespace System.IO.Abstractions.TestingHelpers
             return path;
         }
 
-        public override string ToString()
+        private MockFileData GetMockFileDataForRead()
         {
-            return FullName;
+            return mockFileDataAccessor.GetFile(directoryPath) ?? MockFileData.NullObject;
+        }
+
+        private MockFileData GetMockFileDataForWrite()
+        {
+            return mockFileDataAccessor.GetFile(directoryPath)
+                ?? throw new FileNotFoundException(StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), directoryPath);
         }
     }
 }
