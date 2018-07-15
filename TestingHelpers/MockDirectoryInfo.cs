@@ -26,25 +26,6 @@ namespace System.IO.Abstractions.TestingHelpers
             this.directoryPath = EnsurePathEndsWithDirectorySeparator(directoryPath);
         }
 
-        private MockFileData GetMockFileData(bool returnNullObject)
-        {
-            var file = mockFileDataAccessor.GetFile(directoryPath);
-
-            if (file == null)
-            {
-                if (!returnNullObject)
-                {
-                    throw new FileNotFoundException(StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), directoryPath);
-                }
-                else
-                {
-                    file = MockFileData.NullObject;
-                }
-            }
-
-            return file;
-        }
-
         public override void Delete()
         {
             mockFileDataAccessor.Directory.Delete(directoryPath);
@@ -56,20 +37,20 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileAttributes Attributes
         {
-            get { return GetMockFileData(true).Attributes; }
-            set { GetMockFileData(false).Attributes = value; }
+            get { return GetMockFileDataForRead().Attributes; }
+            set { GetMockFileDataForWrite().Attributes = value; }
         }
 
         public override DateTime CreationTime
         {
-            get { return GetMockFileData(true).CreationTime.DateTime; }
-            set { GetMockFileData(false).CreationTime = value; }
+            get { return GetMockFileDataForRead().CreationTime.DateTime; }
+            set { GetMockFileDataForWrite().CreationTime = value; }
         }
 
         public override DateTime CreationTimeUtc
         {
-            get { return GetMockFileData(true).CreationTime.UtcDateTime; }
-            set { GetMockFileData(false).CreationTime = value.ToLocalTime(); }
+            get { return GetMockFileDataForRead().CreationTime.UtcDateTime; }
+            set { GetMockFileDataForWrite().CreationTime = value.ToLocalTime(); }
         }
 
         public override bool Exists
@@ -105,26 +86,26 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime LastAccessTime
         {
-            get { return GetMockFileData(true).LastAccessTime.DateTime; }
-            set { GetMockFileData(false).LastAccessTime = value; }
+            get { return GetMockFileDataForRead().LastAccessTime.DateTime; }
+            set { GetMockFileDataForWrite().LastAccessTime = value; }
         }
 
         public override DateTime LastAccessTimeUtc
         {
-            get { return GetMockFileData(true).LastAccessTime.UtcDateTime; }
-            set { GetMockFileData(false).LastAccessTime = value.ToLocalTime(); }
+            get { return GetMockFileDataForRead().LastAccessTime.UtcDateTime; }
+            set { GetMockFileDataForWrite().LastAccessTime = value.ToLocalTime(); }
         }
 
         public override DateTime LastWriteTime
         {
-            get { return GetMockFileData(true).LastWriteTime.DateTime; }
-            set { GetMockFileData(false).LastWriteTime = value; }
+            get { return GetMockFileDataForRead().LastWriteTime.DateTime; }
+            set { GetMockFileDataForWrite().LastWriteTime = value; }
         }
 
         public override DateTime LastWriteTimeUtc
         {
-            get { return GetMockFileData(true).LastWriteTime.UtcDateTime; }
-            set { GetMockFileData(false).LastWriteTime = value.ToLocalTime(); }
+            get { return GetMockFileDataForRead().LastWriteTime.UtcDateTime; }
+            set { GetMockFileDataForWrite().LastWriteTime = value.ToLocalTime(); }
         }
 
         public override string Name
@@ -302,6 +283,11 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        public override string ToString()
+        {
+            return FullName;
+        }
+
         private string EnsurePathEndsWithDirectorySeparator(string path)
         {
             if (!path.EndsWith(string.Format(CultureInfo.InvariantCulture, "{0}", mockFileDataAccessor.Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase))
@@ -312,9 +298,15 @@ namespace System.IO.Abstractions.TestingHelpers
             return path;
         }
 
-        public override string ToString()
+        private MockFileData GetMockFileDataForRead()
         {
-            return FullName;
+            return mockFileDataAccessor.GetFile(directoryPath) ?? MockFileData.NullObject;
+        }
+
+        private MockFileData GetMockFileDataForWrite()
+        {
+            return mockFileDataAccessor.GetFile(directoryPath)
+                ?? throw new FileNotFoundException(StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), directoryPath);
         }
     }
 }
