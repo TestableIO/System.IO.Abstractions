@@ -78,7 +78,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="contents"/> is <see langword="null" />.</exception>
         public MockFileData(byte[] contents)
         {
-            Contents = contents ?? throw new ArgumentNullException("contents");
+            Contents = contents ?? throw new ArgumentNullException(nameof(contents));
         }
 
         /// <summary>

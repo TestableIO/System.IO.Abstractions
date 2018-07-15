@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
@@ -6,16 +7,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using XFS = MockUnixSupport;
 
     [TestFixture]
+    [WindowsOnly(WindowsSpecifics.Drives)]
     public class MockDriveInfoFactoryTests
     {
         [Test]
         public void MockDriveInfoFactory_GetDrives_ShouldReturnDrives()
         {
-            if (MockUnixSupport.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix does not have the concept of drives.");
-            }
-            
             // Arrange
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(@"C:\Test"));
@@ -35,11 +32,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfoFactory_GetDrives_ShouldReturnDrivesWithNoDuplicates()
         {
-            if (MockUnixSupport.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix does not have the concept of drives.");
-            }
-
             // Arrange
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(@"C:\Test"));
@@ -61,11 +53,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfoFactory_GetDrives_ShouldReturnOnlyLocalDrives()
         {
-            if (MockUnixSupport.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix does not have the concept of drives.");
-            }
-
             // Arrange
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(@"C:\Test"));
@@ -86,11 +73,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfoFactory_FromDriveName_WithDriveShouldReturnDrive()
         {
-            if (MockUnixSupport.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix does not have the concept of drives.");
-            }
-
             // Arrange
             var fileSystem = new MockFileSystem();
             var factory = new MockDriveInfoFactory(fileSystem);
@@ -105,11 +87,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDriveInfoFactory_FromDriveName_WithPathShouldReturnDrive()
         {
-            if (MockUnixSupport.IsUnixPlatform())
-            {
-                Assert.Inconclusive("Unix does not have the concept of drives.");
-            }
-
             // Arrange
             var fileSystem = new MockFileSystem();
             var factory = new MockDriveInfoFactory(fileSystem);
