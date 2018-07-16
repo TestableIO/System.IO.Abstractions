@@ -259,8 +259,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var fileSystem = new MockFileSystem();
             var path2 = XFS.Path(path);
+
             fileSystem.AddDirectory(path2);
-            fileSystem.FileExists(path2);
+
+            Assert.IsTrue(fileSystem.FileExists(path2));
         }
     }
 }

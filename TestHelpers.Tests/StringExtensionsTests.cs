@@ -5,7 +5,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using XFS = MockUnixSupport;
 
     [TestFixture]
-    public class StringExtensions
+    public class StringExtensionsTests
     {
         [Test]
         public void SplitLines_InputWithOneLine_ShouldReturnOnlyOneLine()
