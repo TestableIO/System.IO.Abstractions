@@ -13,6 +13,12 @@
         <PackageTags>testing</PackageTags>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    </PropertyGroup>
+
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <SignAssembly>False</SignAssembly>
     </PropertyGroup>
@@ -26,7 +32,7 @@
             <Version>4.5.0</Version>
         </PackageReference>
     </ItemGroup>
-  
+
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.4'">
         <PackageReference Include="System.IO.FileSystem.AccessControl">
             <Version>4.5.0</Version>
@@ -45,5 +51,9 @@
     <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
         <Reference Include="System" />
         <Reference Include="Microsoft.CSharp" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-63102-01" PrivateAssets="All"/>
     </ItemGroup>
 </Project>
