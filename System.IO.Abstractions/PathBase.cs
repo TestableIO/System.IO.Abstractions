@@ -1,5 +1,6 @@
 ﻿namespace System.IO.Abstractions
 {
+    /// <inheritdoc cref="Path"/>
     [Serializable]
     public abstract class PathBase
     {
