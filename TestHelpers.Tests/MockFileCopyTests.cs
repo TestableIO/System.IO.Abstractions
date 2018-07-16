@@ -96,7 +96,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenSourceFileNameContainsInvalidChars_Message()
+        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceFileNameContainsInvalidChars_Message()
         {
             if (XFS.IsUnixPlatform())
             {
@@ -120,7 +120,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidChars_Message()
+        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenSourcePathContainsInvalidChars_Message()
         {
             if (XFS.IsUnixPlatform())
             {
@@ -144,7 +144,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenTargetPathContainsInvalidChars_Message()
+        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetPathContainsInvalidChars_Message()
         {
             if (XFS.IsUnixPlatform())
             {
@@ -168,7 +168,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenTargetFileNameContainsInvalidChars_Message()
+        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetFileNameContainsInvalidChars_Message()
         {
             if (XFS.IsUnixPlatform())
             {
