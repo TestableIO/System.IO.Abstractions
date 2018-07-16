@@ -2,6 +2,7 @@
 
 namespace System.IO.Abstractions
 {
+    /// <inheritdoc cref="FileSystemWatcher"/>
     [Serializable]
     public abstract class FileSystemWatcherBase : IDisposable
     {
