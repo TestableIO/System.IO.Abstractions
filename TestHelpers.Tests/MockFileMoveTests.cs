@@ -86,7 +86,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [WindowsOnly(WindowsSpecifics.StrictPathRules + "; Path.GetInvalidChars() does not return anything on Mono")]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenSourceFileNameContainsInvalidChars_Message()
         {
             var destFilePath = XFS.Path(@"c:\something\demo.txt");
@@ -105,7 +105,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [WindowsOnly(WindowsSpecifics.StrictPathRules + "; Path.GetInvalidChars() does not return anything on Mono")]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidChars_Message()
         {
             var destFilePath = XFS.Path(@"c:\something\demo.txt");
@@ -124,7 +124,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [WindowsOnly(WindowsSpecifics.StrictPathRules + "; Path.GetInvalidChars() does not return anything on Mono")]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenTargetPathContainsInvalidChars_Message()
         {
             var sourceFilePath = XFS.Path(@"c:\something\demo.txt");
@@ -143,7 +143,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [WindowsOnly(WindowsSpecifics.StrictPathRules + "; Path.GetInvalidChars() does not return anything on Mono")]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenTargetFileNameContainsInvalidChars_Message()
         {
             var sourceFilePath = XFS.Path(@"c:\something\demo.txt");
