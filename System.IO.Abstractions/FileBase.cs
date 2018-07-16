@@ -4,6 +4,7 @@ using System.Text;
 
 namespace System.IO.Abstractions
 {
+    /// <inheritdoc cref="File"/>
     [Serializable]
     public abstract class FileBase
     {
