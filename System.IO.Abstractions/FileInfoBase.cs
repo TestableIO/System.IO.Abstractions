@@ -2,6 +2,7 @@
 
 namespace System.IO.Abstractions
 {
+    /// <inheritdoc cref="FileInfo"/>
     [Serializable]
     public abstract class FileInfoBase : FileSystemInfoBase
     {
