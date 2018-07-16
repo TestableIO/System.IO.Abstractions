@@ -28,6 +28,16 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"), paramName);
             }
 
+            if (!MockUnixSupport.IsUnixPlatform())
+            {
+                if (path.Length > 0 && path[0] == Path.VolumeSeparatorChar
+                    || path.Length > 1 && path[1] == Path.VolumeSeparatorChar && !char.IsLetter(path[0])
+                    || path.LastIndexOf(Path.VolumeSeparatorChar) > 1)
+                {
+                    throw new NotSupportedException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"));
+                }
+            }
+
             if (ExtractFileName(path).IndexOfAny(_mockFileDataAccessor.Path.GetInvalidFileNameChars()) > -1)
             {
                 throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));

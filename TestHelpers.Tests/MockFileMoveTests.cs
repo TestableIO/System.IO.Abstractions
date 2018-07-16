@@ -96,7 +96,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars().Where(x => x != fileSystem.Path.DirectorySeparatorChar))
+            foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars()
+                .Where(x => x != fileSystem.Path.DirectorySeparatorChar
+                    && x != fileSystem.Path.VolumeSeparatorChar))
             {
                 var sourceFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
 
@@ -168,7 +170,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars().Where(x => x != fileSystem.Path.DirectorySeparatorChar))
+            foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars()
+                .Where(x => x != fileSystem.Path.DirectorySeparatorChar
+                    && x != fileSystem.Path.VolumeSeparatorChar))
             {
                 var destFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
 
@@ -178,6 +182,64 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
                     string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
             }
+        }
+
+        [Test]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules + "; Mono does not raise this exception")]
+        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidUseOfDriveSeparator()
+        {
+            var sourcePath = XFS.Path(@"C:\something\demo.txt");
+            var badSourcePath = XFS.Path(@"C::\something\demo.txt");
+            var destinationFolder = XFS.Path(@"C:\elsewhere");
+            var destinationPath = XFS.Path(@"C:\elsewhere\demo.txt");
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(sourcePath, new MockFileData("1"));
+            fileSystem.AddDirectory(destinationFolder);
+
+            Assert.Throws<NotSupportedException>(() => fileSystem.File.Move(badSourcePath, destinationPath));
+        }
+
+        [Test]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules + "; Mono does not raise this exception")]
+        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidDriveLetter()
+        {
+            var sourcePath = XFS.Path(@"C:\something\demo.txt");
+            var destinationFolder = XFS.Path(@"C:\elsewhere");
+            var destinationPath = XFS.Path(@"C:\elsewhere\demo.txt");
+            var badSourcePath = XFS.Path(@"0:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(sourcePath, new MockFileData("1"));
+            fileSystem.AddDirectory(destinationFolder);
+
+            Assert.Throws<NotSupportedException>(() => fileSystem.File.Move(badSourcePath, destinationPath));
+        }
+
+        [Test]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules + "; Mono does not raise this exception")]
+        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidUseOfDriveSeparator()
+        {
+            var sourcePath = XFS.Path(@"C:\something\demo.txt");
+            var destinationFolder = XFS.Path(@"C:\elsewhere");
+            var badDestinationPath = XFS.Path(@"C:\elsewhere:\demo.txt");
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(sourcePath, new MockFileData("1"));
+            fileSystem.AddDirectory(destinationFolder);
+
+            Assert.Throws<NotSupportedException>(() => fileSystem.File.Move(sourcePath, badDestinationPath));
+        }
+
+        [Test]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules + "; Mono does not raise this exception")]
+        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidDriveLetter()
+        {
+            var sourcePath = XFS.Path(@"C:\something\demo.txt");
+            var destinationFolder = XFS.Path(@"C:\elsewhere");
+            var badDestinationPath = XFS.Path(@"^:\elsewhere\demo.txt");
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(sourcePath, new MockFileData("1"));
+            fileSystem.AddDirectory(destinationFolder);
+
+            Assert.Throws<NotSupportedException>(() => fileSystem.File.Move(sourcePath, badDestinationPath));
         }
 
         [Test]
