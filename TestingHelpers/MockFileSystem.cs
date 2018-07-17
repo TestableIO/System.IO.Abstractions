@@ -10,7 +10,6 @@ namespace System.IO.Abstractions.TestingHelpers
     public class MockFileSystem : IFileSystem, IMockFileDataAccessor
     {
         private readonly IDictionary<string, MockFileData> files;
-
         [NonSerialized]
         private readonly PathVerifier pathVerifier;
 
@@ -26,10 +25,12 @@ namespace System.IO.Abstractions.TestingHelpers
             pathVerifier = new PathVerifier(this);
 
             this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
+            
             Path = new MockPath(this);
             File = new MockFile(this);
             Directory = new MockDirectory(this, File, currentDirectory);
             FileInfo = new MockFileInfoFactory(this);
+            FileStream = new MockFileStreamFactory(this);
             DirectoryInfo = new MockDirectoryInfoFactory(this);
             DriveInfo = new MockDriveInfoFactory(this);
             FileSystemWatcher = new MockFileSystemWatcherFactory();
@@ -48,6 +49,8 @@ namespace System.IO.Abstractions.TestingHelpers
         public DirectoryBase Directory { get; }
 
         public IFileInfoFactory FileInfo { get; }
+
+        public IFileStreamFactory FileStream { get; }
 
         public PathBase Path { get; }
 
