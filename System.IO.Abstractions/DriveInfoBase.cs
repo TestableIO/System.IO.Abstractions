@@ -3,6 +3,7 @@
     [Serializable]
     public abstract class DriveInfoBase
     {
+        /// <inheritdoc cref="DriveInfo.AvailableFreeSpace"/>
         /// <summary>
         /// Gets or sets the amount of available free space on a drive, in bytes.
         /// </summary>
@@ -15,6 +16,7 @@
         /// <exception cref="IOException">Thrown if an I/O error occurred (for example, a disk error or a drive was not ready).</exception>
         public virtual long AvailableFreeSpace { get; protected set; }
 
+        /// <inheritdoc cref="DriveInfo.DriveFormat"/>
         /// <summary>
         /// Gets or sets the name of the file system, such as NTFS or FAT32.
         /// </summary>
@@ -27,6 +29,7 @@
         /// <exception cref="IOException">Thrown if an I/O error occurred (for example, a disk error or a drive was not ready).</exception>
         public virtual string DriveFormat { get; protected set; }
 
+        /// <inheritdoc cref="DriveInfo.DriveType"/>
         /// <summary>
         /// Gets or sets the drive type, such as CD-ROM, removable, network, or fixed.
         /// </summary>
@@ -37,6 +40,7 @@
         /// </remarks>
         public virtual DriveType DriveType { get; protected set; }
 
+        /// <inheritdoc cref="DriveInfo.IsReady"/>
         /// <summary>
         /// Gets or sets a value indicating whether a drive is ready.
         /// </summary>
@@ -53,6 +57,7 @@
         /// </remarks>
         public virtual bool IsReady { get; protected set; }
 
+        /// <inheritdoc cref="DriveInfo.Name"/>
         /// <summary>
         /// Gets or sets the name of a drive, such as C:\.
         /// </summary>
@@ -62,12 +67,14 @@
         /// </remarks>
         public virtual string Name { get; protected set; }
 
+        /// <inheritdoc cref="DriveInfo.RootDirectory"/>
         /// <summary>
         /// Gets or sets the root directory of a drive.
         /// </summary>
         /// <value>An object that contains the root directory of the drive.</value>
         public virtual DirectoryInfoBase RootDirectory { get; protected set; }
 
+        /// <inheritdoc cref="DriveInfo.TotalFreeSpace"/>
         /// <summary>
         /// Gets or sets the total amount of free space available on a drive, in bytes.
         /// </summary>
@@ -78,6 +85,7 @@
         /// <exception cref="IOException">Thrown if an I/O error occurred (for example, a disk error or a drive was not ready).</exception>
         public virtual long TotalFreeSpace { get; protected set; }
 
+        /// <inheritdoc cref="DriveInfo.TotalSize"/>
         /// <summary>
         /// Gets or sets the total size of storage space on a drive, in bytes.
         /// </summary>
@@ -90,6 +98,7 @@
         /// <exception cref="IOException">Thrown if an I/O error occurred (for example, a disk error or a drive was not ready).</exception>
         public virtual long TotalSize { get; protected set; }
 
+        /// <inheritdoc cref="DriveInfo.VolumeLabel"/>
         /// <summary>
         /// Gets or sets the volume label of a drive.
         /// </summary>
