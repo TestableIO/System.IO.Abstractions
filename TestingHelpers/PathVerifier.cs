@@ -52,12 +52,16 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string ExtractFileName(string fullFileName)
         {
-            return fullFileName.Split(_mockFileDataAccessor.Path.DirectorySeparatorChar).Last();
+            return fullFileName.Split(
+                _mockFileDataAccessor.Path.DirectorySeparatorChar,
+                _mockFileDataAccessor.Path.AltDirectorySeparatorChar).Last();
         }
 
         private string ExtractFilePath(string fullFileName)
         {
-            var extractFilePath = fullFileName.Split(_mockFileDataAccessor.Path.DirectorySeparatorChar);
+            var extractFilePath = fullFileName.Split(
+                _mockFileDataAccessor.Path.DirectorySeparatorChar,
+                _mockFileDataAccessor.Path.AltDirectorySeparatorChar);
             return string.Join(_mockFileDataAccessor.Path.DirectorySeparatorChar.ToString(), extractFilePath.Take(extractFilePath.Length - 1));
         }
     }

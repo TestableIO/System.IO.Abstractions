@@ -47,5 +47,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.Throws<FileNotFoundException>(action);
         }
+
+        [Test]
+        public void MockFile_ReadAllBytes_ShouldTolerateAltDirectorySeparatorInPath()
+        {
+            var fileSystem = new MockFileSystem();
+
+            fileSystem.AddFile(XFS.Path(@"C:\test.txt"), new MockFileData("content"));
+
+            Assert.AreEqual("content", fileSystem.File.ReadAllText(XFS.Path("C:/test.txt")));
+        }
     }
 }

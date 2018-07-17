@@ -98,6 +98,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars()
                 .Where(x => x != fileSystem.Path.DirectorySeparatorChar
+                    && x != fileSystem.Path.AltDirectorySeparatorChar
                     && x != fileSystem.Path.VolumeSeparatorChar))
             {
                 var sourceFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
@@ -172,6 +173,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars()
                 .Where(x => x != fileSystem.Path.DirectorySeparatorChar
+                    && x != fileSystem.Path.AltDirectorySeparatorChar
                     && x != fileSystem.Path.VolumeSeparatorChar))
             {
                 var destFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
