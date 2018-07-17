@@ -21,6 +21,14 @@
         <SignAssembly>True</SignAssembly>
     </PropertyGroup>
 
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
+      <DocumentationFile>bin\Debug\net40\System.IO.Abstractions.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|AnyCPU'">
+      <DocumentationFile>bin\Release\net40\System.IO.Abstractions.xml</DocumentationFile>
+    </PropertyGroup>
+
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
         <PackageReference Include="System.IO.FileSystem.AccessControl">
             <Version>4.5.0</Version>
