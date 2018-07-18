@@ -200,12 +200,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override FileSecurity GetAccessControl()
         {
-            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
+            return mockFileSystem.File.GetAccessControl(this.path);
         }
 
         public override FileSecurity GetAccessControl(AccessControlSections includeSections)
         {
-            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
+            return mockFileSystem.File.GetAccessControl(this.path, includeSections);
         }
 
         public override void MoveTo(string destFileName)
@@ -265,7 +265,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void SetAccessControl(FileSecurity fileSecurity)
         {
-            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
+            mockFileSystem.File.SetAccessControl(this.path, fileSecurity);
         }
 
         public override DirectoryInfoBase Directory
