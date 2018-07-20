@@ -11,6 +11,7 @@
         <PackageLicenseUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions/blob/master/License.txt</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
         <PackageTags>testing</PackageTags>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -19,14 +20,6 @@
 
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <SignAssembly>True</SignAssembly>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
-      <DocumentationFile>bin\Debug\net40\System.IO.Abstractions.xml</DocumentationFile>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net40|AnyCPU'">
-      <DocumentationFile>bin\Release\net40\System.IO.Abstractions.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
