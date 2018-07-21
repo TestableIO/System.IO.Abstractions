@@ -64,6 +64,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string FixPath(string path, bool checkCaps = false)
         {
+            if (path == null)
+            {
+                throw new ArgumentNullException(nameof(path), StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
+            }
+            
             var pathSeparatorFixed = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             var fullPath = Path.GetFullPath(pathSeparatorFixed);
 
