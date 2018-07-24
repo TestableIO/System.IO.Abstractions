@@ -1,11 +1,10 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
 using System.Security.AccessControl;
+using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    using XFS = MockUnixSupport;
-
     [TestFixture]
     [WindowsOnly(WindowsSpecifics.AccessControlLists)]
     public class MockFileInfoAccessControlTests
@@ -38,7 +37,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_SetAccessControl_ShouldReturnAccessControlOfFileData()
+        public void MockFile_SetAccessControl_ShouldSetAccessControlOfFileData()
         {
             // Arrange
             var filePath = XFS.Path(@"c:\a.txt");
