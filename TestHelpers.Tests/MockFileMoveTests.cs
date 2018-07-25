@@ -187,7 +187,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [WindowsOnly(WindowsSpecifics.StrictPathRules + "; Mono does not raise this exception")]
+        [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidUseOfDriveSeparator()
         {
             var sourcePath = XFS.Path(@"C:\something\demo.txt");
@@ -202,7 +202,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [WindowsOnly(WindowsSpecifics.StrictPathRules + "; Mono does not raise this exception")]
+        [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidDriveLetter()
         {
             var sourcePath = XFS.Path(@"C:\something\demo.txt");
@@ -217,7 +217,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [WindowsOnly(WindowsSpecifics.StrictPathRules + "; Mono does not raise this exception")]
+        [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidUseOfDriveSeparator()
         {
             var sourcePath = XFS.Path(@"C:\something\demo.txt");
@@ -231,7 +231,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [WindowsOnly(WindowsSpecifics.StrictPathRules + "; Mono does not raise this exception")]
+        [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidDriveLetter()
         {
             var sourcePath = XFS.Path(@"C:\something\demo.txt");
