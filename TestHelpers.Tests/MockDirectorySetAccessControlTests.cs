@@ -45,7 +45,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectory_SetAccessControl_ShouldReturnAccessControlOfDirectoryData()
+        public void MockDirectory_SetAccessControl_ShouldSetAccessControlOfDirectoryData()
         {
             // Arrange
             var filePath = XFS.Path(@"c:\a\");

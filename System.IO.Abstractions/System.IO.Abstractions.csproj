@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFrameworks>net40;netstandard1.4;netstandard2.0;</TargetFrameworks>
@@ -11,6 +11,7 @@
         <PackageLicenseUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions/blob/master/License.txt</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
         <PackageTags>testing</PackageTags>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <PropertyGroup>
