@@ -106,11 +106,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
+            var excludeChars = new []
+            {
+                // These are not allowed in a file name, but
+                // inserting them a path does not make it invalid
+                fileSystem.Path.DirectorySeparatorChar,
+                fileSystem.Path.AltDirectorySeparatorChar,
 
-            foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars()
-                .Where(x => x != fileSystem.Path.DirectorySeparatorChar
-                    && x != fileSystem.Path.AltDirectorySeparatorChar
-                    && x != fileSystem.Path.VolumeSeparatorChar))
+                // Raises a different type of exception from other
+                // invalid chars and is covered by other tests
+                fileSystem.Path.VolumeSeparatorChar
+            };
+
+            foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars().Except(excludeChars))
             {
                 var sourceFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
 
@@ -181,11 +189,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
+            var excludeChars = new[]
+            {
+                // These are not allowed in a file name, but
+                // inserting them a path does not make it invalid
+                fileSystem.Path.DirectorySeparatorChar,
+                fileSystem.Path.AltDirectorySeparatorChar,
 
-            foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars()
-                .Where(x => x != fileSystem.Path.DirectorySeparatorChar
-                    && x != fileSystem.Path.AltDirectorySeparatorChar
-                    && x != fileSystem.Path.VolumeSeparatorChar))
+                // Raises a different type of exception from other
+                // invalid chars and is covered by other tests
+                fileSystem.Path.VolumeSeparatorChar
+            };
+
+            foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars().Except(excludeChars))
             {
                 var destFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
 
