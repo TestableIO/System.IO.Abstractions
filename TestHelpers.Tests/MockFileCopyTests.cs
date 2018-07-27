@@ -217,13 +217,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidUseOfDriveSeparator()
         {
-            var sourcePath = XFS.Path(@"C:\something\demo.txt");
             var badSourcePath = XFS.Path(@"C::\something\demo.txt");
-            var destinationFolder = XFS.Path(@"C:\elsewhere");
             var destinationPath = XFS.Path(@"C:\elsewhere\demo.txt");
             var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(sourcePath, new MockFileData("1"));
-            fileSystem.AddDirectory(destinationFolder);
 
             Assert.Throws<NotSupportedException>(() => fileSystem.File.Copy(badSourcePath, destinationPath));
         }
@@ -232,13 +228,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidDriveLetter()
         {
-            var sourcePath = XFS.Path(@"C:\something\demo.txt");
-            var destinationFolder = XFS.Path(@"C:\elsewhere");
-            var destinationPath = XFS.Path(@"C:\elsewhere\demo.txt");
             var badSourcePath = XFS.Path(@"0:\something\demo.txt");
+            var destinationPath = XFS.Path(@"C:\elsewhere\demo.txt");
             var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(sourcePath, new MockFileData("1"));
-            fileSystem.AddDirectory(destinationFolder);
 
             Assert.Throws<NotSupportedException>(() => fileSystem.File.Copy(badSourcePath, destinationPath));
         }
@@ -248,11 +240,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidUseOfDriveSeparator()
         {
             var sourcePath = XFS.Path(@"C:\something\demo.txt");
-            var destinationFolder = XFS.Path(@"C:\elsewhere");
             var badDestinationPath = XFS.Path(@"C:\elsewhere:\demo.txt");
             var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(sourcePath, new MockFileData("1"));
-            fileSystem.AddDirectory(destinationFolder);
 
             Assert.Throws<NotSupportedException>(() => fileSystem.File.Copy(sourcePath, badDestinationPath));
         }
@@ -262,11 +251,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidDriveLetter()
         {
             var sourcePath = XFS.Path(@"C:\something\demo.txt");
-            var destinationFolder = XFS.Path(@"C:\elsewhere");
             var badDestinationPath = XFS.Path(@"^:\elsewhere\demo.txt");
             var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(sourcePath, new MockFileData("1"));
-            fileSystem.AddDirectory(destinationFolder);
 
             Assert.Throws<NotSupportedException>(() => fileSystem.File.Copy(sourcePath, badDestinationPath));
         }
