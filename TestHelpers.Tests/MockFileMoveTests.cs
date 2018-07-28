@@ -85,27 +85,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceFileNameContainsInvalidChars_Message()
         {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
-                return;
-            }
-
             var destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
-            var excludeChars = new[]
-            {
-                // These are not allowed in a file name, but
-                // inserting them a path does not make it invalid
-                fileSystem.Path.DirectorySeparatorChar,
-                fileSystem.Path.AltDirectorySeparatorChar,
-
-                // Raises a different type of exception from other
-                // invalid chars and is covered by other tests
-                fileSystem.Path.VolumeSeparatorChar
-            };
+            var excludeChars = Shared.SpecialInvalidPathChars(fileSystem);
 
             foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars().Except(excludeChars))
             {
@@ -120,14 +105,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourcePathContainsInvalidChars_Message()
         {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
-                return;
-            }
-
             var destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
@@ -144,14 +124,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetPathContainsInvalidChars_Message()
         {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
-                return;
-            }
-
             var sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
@@ -168,27 +143,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetFileNameContainsInvalidChars_Message()
         {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
-                return;
-            }
-
             var sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
-            var excludeChars = new[]
-            {
-                // These are not allowed in a file name, but
-                // inserting them a path does not make it invalid
-                fileSystem.Path.DirectorySeparatorChar,
-                fileSystem.Path.AltDirectorySeparatorChar,
-
-                // Raises a different type of exception from other
-                // invalid chars and is covered by other tests
-                fileSystem.Path.VolumeSeparatorChar
-            };
+            var excludeChars = Shared.SpecialInvalidPathChars(fileSystem);
 
             foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars().Except(excludeChars))
             {
@@ -210,7 +170,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var destinationPath = XFS.Path(@"C:\elsewhere\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            Assert.Throws<NotSupportedException>(() => fileSystem.File.Move(badSourcePath, destinationPath));
+            TestDelegate action = () => fileSystem.File.Move(badSourcePath, destinationPath);
+
+            Assert.Throws<NotSupportedException>(action);
         }
 
         [Test]
@@ -221,7 +183,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var destinationPath = XFS.Path(@"C:\elsewhere\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            Assert.Throws<NotSupportedException>(() => fileSystem.File.Move(badSourcePath, destinationPath));
+            TestDelegate action = () => fileSystem.File.Move(badSourcePath, destinationPath);
+
+            Assert.Throws<NotSupportedException>(action);
         }
 
         [Test]
@@ -232,7 +196,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var badDestinationPath = XFS.Path(@"C:\elsewhere:\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            Assert.Throws<NotSupportedException>(() => fileSystem.File.Move(sourcePath, badDestinationPath));
+            TestDelegate action = () => fileSystem.File.Move(sourcePath, badDestinationPath);
+
+            Assert.Throws<NotSupportedException>(action);
         }
 
         [Test]
@@ -243,7 +209,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var badDestinationPath = XFS.Path(@"^:\elsewhere\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            Assert.Throws<NotSupportedException>(() => fileSystem.File.Move(sourcePath, badDestinationPath));
+            TestDelegate action = () => fileSystem.File.Move(sourcePath, badDestinationPath);
+
+            Assert.Throws<NotSupportedException>(action);
         }
 
         [Test]
