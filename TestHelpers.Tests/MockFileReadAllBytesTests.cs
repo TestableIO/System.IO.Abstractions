@@ -52,10 +52,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_ReadAllBytes_ShouldTolerateAltDirectorySeparatorInPath()
         {
             var fileSystem = new MockFileSystem();
+            var path = XFS.Path("C:" + fileSystem.Path.DirectorySeparatorChar + "test.dat");
+            var altPath = XFS.Path("C:" + fileSystem.Path.AltDirectorySeparatorChar + "test.dat");
+            var data = new byte[] { 0x12, 0x34, 0x56, 0x78 };
 
-            fileSystem.AddFile(XFS.Path(@"C:\test.txt"), new MockFileData("content"));
+            fileSystem.AddFile(path, new MockFileData(data));
 
-            Assert.AreEqual("content", fileSystem.File.ReadAllText(XFS.Path("C:/test.txt")));
+            Assert.AreEqual(data, fileSystem.File.ReadAllBytes(altPath));
         }
     }
 }
