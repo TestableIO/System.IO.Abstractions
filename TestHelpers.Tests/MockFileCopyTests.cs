@@ -99,13 +99,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceFileNameContainsInvalidChars_Message()
         {
-            var destFilePath = XFS.Path(@"c:\something\demo.txt");
+            var destFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
             var excludeChars = Shared.SpecialInvalidPathChars(fileSystem);
 
             foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars().Except(excludeChars))
             {
-                var sourceFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
+                var sourceFilePath = @"c:\something\demo.txt" + invalidChar;
 
                 var exception =
                     Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
@@ -119,12 +119,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_Copy_ShouldThrowArgumentExceptionWhenSourcePathContainsInvalidChars_Message()
         {
-            var destFilePath = XFS.Path(@"c:\something\demo.txt");
+            var destFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
 
             foreach (var invalidChar in fileSystem.Path.GetInvalidPathChars())
             {
-                var sourceFilePath = XFS.Path(@"c:\some" + invalidChar + @"thing\demo.txt");
+                var sourceFilePath = @"c:\some" + invalidChar + @"thing\demo.txt";
 
                 var exception =
                     Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
@@ -138,12 +138,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetPathContainsInvalidChars_Message()
         {
-            var sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var sourceFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
 
             foreach (var invalidChar in fileSystem.Path.GetInvalidPathChars())
             {
-                var destFilePath = XFS.Path(@"c:\some" + invalidChar + @"thing\demo.txt");
+                var destFilePath = @"c:\some" + invalidChar + @"thing\demo.txt";
 
                 var exception =
                     Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
@@ -157,13 +157,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetFileNameContainsInvalidChars_Message()
         {
-            var sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var sourceFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
             var excludeChars = Shared.SpecialInvalidPathChars(fileSystem);
 
             foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars().Except(excludeChars))
             {
-                var destFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
+                var destFilePath = @"c:\something\demo.txt" + invalidChar;
 
                 var exception =
                     Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
@@ -177,8 +177,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidUseOfDriveSeparator()
         {
-            var badSourcePath = XFS.Path(@"C::\something\demo.txt");
-            var destinationPath = XFS.Path(@"C:\elsewhere\demo.txt");
+            var badSourcePath = @"C::\something\demo.txt";
+            var destinationPath = @"C:\elsewhere\demo.txt";
             var fileSystem = new MockFileSystem();
 
             TestDelegate action = () => fileSystem.File.Copy(badSourcePath, destinationPath);
@@ -190,8 +190,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidDriveLetter()
         {
-            var badSourcePath = XFS.Path(@"0:\something\demo.txt");
-            var destinationPath = XFS.Path(@"C:\elsewhere\demo.txt");
+            var badSourcePath = @"0:\something\demo.txt";
+            var destinationPath = @"C:\elsewhere\demo.txt";
             var fileSystem = new MockFileSystem();
 
             TestDelegate action = () => fileSystem.File.Copy(badSourcePath, destinationPath);
@@ -203,8 +203,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidUseOfDriveSeparator()
         {
-            var sourcePath = XFS.Path(@"C:\something\demo.txt");
-            var badDestinationPath = XFS.Path(@"C:\elsewhere:\demo.txt");
+            var sourcePath = @"C:\something\demo.txt";
+            var badDestinationPath = @"C:\elsewhere:\demo.txt";
             var fileSystem = new MockFileSystem();
 
             TestDelegate action = () => fileSystem.File.Copy(sourcePath, badDestinationPath);
@@ -216,8 +216,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidDriveLetter()
         {
-            var sourcePath = XFS.Path(@"C:\something\demo.txt");
-            var badDestinationPath = XFS.Path(@"^:\elsewhere\demo.txt");
+            var sourcePath = @"C:\something\demo.txt";
+            var badDestinationPath = @"^:\elsewhere\demo.txt";
             var fileSystem = new MockFileSystem();
 
             TestDelegate action = () => fileSystem.File.Copy(sourcePath, badDestinationPath);
