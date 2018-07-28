@@ -685,6 +685,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.IsFalse(stream.CanWrite);
+            Assert.Throws<NotSupportedException>(() => stream.WriteByte(0));
         }
 #endif
     }
