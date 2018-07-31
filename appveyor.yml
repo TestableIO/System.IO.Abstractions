@@ -22,7 +22,7 @@ before_build:
 
 before_package:
 # This step replaces the inheritdoc tags in the xml documentation with documentation from mscorlib.xml
-- ps: \Users\appveyor\.nuget\packages\inheritdoc\1.2.0.1\tools\InheritDoc.exe -b '%APPVEYOR_BUILD_FOLDER%' -g '\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.X\mscorlib.xml' -o
+- ps: \Users\appveyor\.nuget\packages\inheritdoc\1.2.0.1\tools\InheritDoc.exe -b '$env:APPVEYOR_BUILD_FOLDER' -g '\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.X\mscorlib.xml' -o
 
 build:
   publish_nuget: true
