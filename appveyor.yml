@@ -17,7 +17,7 @@ dotnet_csproj:
   version: '{version}'
   package_version: '{version}'
 
-install
+install:
 # Temporarily install InheritDoc
 - nuget install inheritdoc -Version 1.2.0.1
 
