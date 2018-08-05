@@ -413,6 +413,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string filePath = XFS.Path(@"c:\something\demo.txt");
             string fileContent = "this is some content";
             var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(XFS.Path(@"c:\something"));
 
             var bytes = new UTF8Encoding(true).GetBytes(fileContent);
             var stream = fileSystem.File.OpenWrite(filePath);
@@ -421,6 +422,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(fileSystem.FileExists(filePath), Is.True);
             Assert.That(fileSystem.GetFile(filePath).TextContents, Is.EqualTo(fileContent));
+        }
+
+        [Test]
+        public void MockFile_OpenWrite_ShouldNotCreateFolders()
+        {
+            string filePath = XFS.Path(@"c:\something\demo.txt"); // c:\something does not exist: OpenWrite should fail
+            var fileSystem = new MockFileSystem();
+
+            Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.OpenWrite(filePath));
         }
 
         [Test]
@@ -666,6 +676,26 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(path1, new MockFileData("1"));
 
             Assert.Throws<FileNotFoundException>(() => fileSystem.File.Replace(path1, path2, null));
+        }
+
+        [Test]
+        public void MockFile_OpenRead_ShouldReturnReadOnlyStream()
+        {
+            // Tests issue #230
+            // Arrange
+            string filePath = XFS.Path(@"c:\something\demo.txt");
+            string startContent = "hi there";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { filePath, new MockFileData(startContent) }
+            });
+
+            // Act
+            var stream = fileSystem.File.OpenRead(filePath);
+
+            // Assert
+            Assert.IsFalse(stream.CanWrite);
+            Assert.Throws<NotSupportedException>(() => stream.WriteByte(0));
         }
 #endif
     }
