@@ -5,6 +5,7 @@
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string path;
+        private readonly bool canWrite = true;
 
         public enum StreamType
         {
@@ -42,12 +43,7 @@
             canWrite = streamType != StreamType.READ;
         }
 
-        private bool canWrite = true;
-
-        public override bool CanWrite
-        {
-            get { return canWrite; }
-        }
+        public override bool CanWrite => canWrite;
 
 #if NET40
         public override void Close()

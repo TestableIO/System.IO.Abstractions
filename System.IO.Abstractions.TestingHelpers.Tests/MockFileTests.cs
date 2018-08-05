@@ -433,7 +433,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.OpenWrite(filePath));
         }
 
-
         [Test]
         public void MockFile_OpenWrite_ShouldOverwriteExistingFiles()
         {
@@ -680,7 +679,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_OpenRead_ShouldNotReturnWritableStream()
+        public void MockFile_OpenRead_ShouldReturnReadOnlyStream()
         {
             // Tests issue #230
             // Arrange
