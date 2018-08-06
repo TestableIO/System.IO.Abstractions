@@ -8,7 +8,7 @@
         <Description>A set of abstractions to help make file system interactions testable.</Description>
         <Copyright>Copyright © Tatham Oddie 2010</Copyright>
         <AssemblyOriginatorKeyFile>../StrongName.snk</AssemblyOriginatorKeyFile>
-        <PackageLicenseUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions/blob/master/License.txt</PackageLicenseUrl>
+        <PackageLicenseUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions/blob/master/LICENSE</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
         <PackageTags>testing</PackageTags>
     </PropertyGroup>
