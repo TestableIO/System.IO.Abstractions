@@ -399,12 +399,14 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var length = mockFileDataAccessor.GetFile(path).Contents.Length;
-            var stream = OpenWrite(path);
+            
+            MockFileStream.StreamType streamType = MockFileStream.StreamType.WRITE;
+            if (access == FileAccess.Read)
+                streamType = MockFileStream.StreamType.READ;
+            else if (mode == FileMode.Append)
+                streamType = MockFileStream.StreamType.APPEND;
 
-            if (mode == FileMode.Append)
-                stream.Seek(length, SeekOrigin.Begin);
-
-            return stream;
+            return new MockFileStream(mockFileDataAccessor, path, streamType);
         }
 
         public override Stream OpenRead(string path)
@@ -426,7 +428,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-            return new MockFileStream(mockFileDataAccessor, path, MockFileStream.StreamType.WRITE);
+            return Open(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
         }
 
         public override byte[] ReadAllBytes(string path)
@@ -571,7 +573,23 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-            mockFileDataAccessor.GetFile(path).Attributes = fileAttributes;
+            var possibleFileData = mockFileDataAccessor.GetFile(path);
+            if (possibleFileData == null)
+            {
+                var directoryInfo = mockFileDataAccessor.DirectoryInfo.FromDirectoryName(path);
+                if (directoryInfo.Exists)
+                {
+                    directoryInfo.Attributes = fileAttributes;
+                }
+                else
+                {
+                    throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), path), path);
+                }
+            }
+            else
+            {
+                possibleFileData.Attributes = fileAttributes;
+            }
         }
 
         public override void SetCreationTime(string path, DateTime creationTime)
