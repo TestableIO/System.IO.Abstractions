@@ -1171,6 +1171,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.DirectoryInfo.FromDirectoryName(sourceDirName).MoveTo(destDirName);
 
             // Assert
+            Assert.IsFalse(fileSystem.Directory.Exists(sourceSubDirName));
             Assert.IsTrue(fileSystem.FileExists(destSubDirName));
         }
 
