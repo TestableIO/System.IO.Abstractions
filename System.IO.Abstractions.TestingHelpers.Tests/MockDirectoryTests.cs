@@ -1150,6 +1150,31 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_Move_ShouldMoveDirectoryWithReadOnlySubDirectory()
+        {
+            // Arrange
+            var sourceDirName = XFS.Path(@"a:\folder1\");
+            var sourceSubDirName = XFS.Path(@"a:\folder1\sub\");
+
+            var destDirName = XFS.Path(@"a:\folder2\");
+            var destSubDirName = XFS.Path(@"a:\folder2\sub\");
+
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(sourceSubDirName);
+
+            var subDirectoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(sourceSubDirName);
+            subDirectoryInfo.Attributes |= FileAttributes.ReadOnly;
+
+            var sourceDirectoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(sourceDirName);
+
+            // Act
+            fileSystem.DirectoryInfo.FromDirectoryName(sourceDirName).MoveTo(destDirName);
+
+            // Assert
+            Assert.IsTrue(fileSystem.FileExists(destSubDirName));
+        }
+
+        [Test]
         public void MockDirectory_GetCurrentDirectory_ShouldReturnValueFromFileSystemConstructor() {
             string directory = XFS.Path(@"D:\folder1\folder2");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>(), directory);
