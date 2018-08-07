@@ -7,19 +7,25 @@ skip_branch_with_pr: true
 
 pull_requests:
   do_not_increment_build_number: true
+  
+init:
+  ps: |-
+    $env:ASSEMBLY_VERSION = "2.0.0.0"
+    $env:PACKAGE_VERSION = "2.1.0"
 
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
   version: '{version}'
-  package_version: '{version}'
+  assembly_version: $(ASSEMBLY_VERSION)
+  package_version: $(PACKAGE_VERSION)
 
 before_build:
-- nuget restore
+  cmd: nuget restore
 
 build:
   publish_nuget: true
-
+  
 deploy:
 - provider: NuGet
   api_key:
