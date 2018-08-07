@@ -21,6 +21,12 @@
             get { return fileInfoFactory ?? (fileInfoFactory = new FileInfoFactory()); }
         }
 
+        FileStreamFactory fileStreamFactory;
+        public IFileStreamFactory FileStream
+        {
+            get { return fileStreamFactory ?? (fileStreamFactory = new FileStreamFactory()); }
+        }
+
         PathBase path;
         public PathBase Path
         {
@@ -38,6 +44,12 @@
         public IDriveInfoFactory DriveInfo
         {
             get { return driveInfoFactory.Value; }
+        }
+		
+        private IFileSystemWatcherFactory fileSystemWatcherFactory;
+        public IFileSystemWatcherFactory FileSystemWatcher
+        {
+            get { return fileSystemWatcherFactory ?? (fileSystemWatcherFactory = new FileSystemWatcherFactory()); }
         }
     }
 }

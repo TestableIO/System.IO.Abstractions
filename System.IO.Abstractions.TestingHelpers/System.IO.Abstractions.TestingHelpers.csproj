@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net40;netstandard1.4;netstandard2.0;</TargetFrameworks>
+        <PackageId>System.IO.Abstractions.TestingHelpers</PackageId>
+        <Version>0.0.0.1</Version>
+        <Description>A set of pre-built mocks to help when testing file system interactions.</Description>
+        <Company />
+        <Product>System.IO.Abstractions</Product>
+        <Copyright>Copyright © Tatham Oddie 2010</Copyright>
+        <Authors>Tatham Oddie &amp; friends</Authors>
+        <RootNamespace>System.IO.Abstractions.TestingHelpers</RootNamespace>
+        <AssemblyOriginatorKeyFile>../StrongName.snk</AssemblyOriginatorKeyFile>
+        <PackageLicenseUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <SignAssembly>False</SignAssembly>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+        <SignAssembly>True</SignAssembly>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\System.IO.Abstractions\System.IO.Abstractions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
+        <Reference Include="System" />
+        <Reference Include="Microsoft.CSharp" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.4'">
+        <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
+        <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
+        <PackageReference Include="System.Security.AccessControl" Version="4.5.0" />
+    </ItemGroup>
+</Project>
