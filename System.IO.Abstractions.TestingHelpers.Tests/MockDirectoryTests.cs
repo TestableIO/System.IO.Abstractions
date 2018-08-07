@@ -1336,6 +1336,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_Move_ShouldThrowADirectoryNotFoundExceptionIfDesinationDirectoryDoesNotExist()
+        {
+            // Arrange
+            string sourcePath = XFS.Path(@"c:\a");
+            string destPath = XFS.Path(@"c:\b");
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.Directory.Move(sourcePath, destPath);
+
+            // Assert
+            Assert.Throws<DirectoryNotFoundException>(action, "Could not find a part of the path 'c:\a'.");
+        }
+
+        [Test]
         public void MockDirectory_Move_ShouldThrowAnIOExceptionIfDesinationDirectoryExists()
         {
             // Arrange

@@ -355,6 +355,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new IOException("Source and destination path must have identical roots. Move will not work across volumes.");
             }
 
+            if (!mockFileDataAccessor.Directory.Exists(fullSourcePath))
+            {
+                throw new DirectoryNotFoundException($"Could not find a part of the path '{sourceDirName}'.");
+            }
+
             if (mockFileDataAccessor.Directory.Exists(fullDestPath) || mockFileDataAccessor.File.Exists(fullDestPath))
             {
                 throw new IOException($"Cannot create '{fullDestPath}' because a file or directory with the same name already exists.");
