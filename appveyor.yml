@@ -1,4 +1,4 @@
-version: 2.1.0.{build}
+version: 2.2.0.{build}
 
 image: Visual Studio 2017
 configuration: Release
@@ -11,7 +11,7 @@ pull_requests:
 init:
   ps: |-
     $env:ASSEMBLY_VERSION = "2.0.0.0"
-    $env:PACKAGE_VERSION = "2.1.0"
+    $env:PACKAGE_VERSION = "2.2.0"
 
 dotnet_csproj:
   patch: true
