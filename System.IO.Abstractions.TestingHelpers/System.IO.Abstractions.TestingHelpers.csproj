@@ -10,7 +10,7 @@
         <Authors>Tatham Oddie &amp; friends</Authors>
         <RootNamespace>System.IO.Abstractions.TestingHelpers</RootNamespace>
         <AssemblyOriginatorKeyFile>../StrongName.snk</AssemblyOriginatorKeyFile>
-        <PackageLicenseUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions/blob/master/License.txt</PackageLicenseUrl>
+        <PackageLicenseUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions/blob/master/LICENSE</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
     </PropertyGroup>
 
