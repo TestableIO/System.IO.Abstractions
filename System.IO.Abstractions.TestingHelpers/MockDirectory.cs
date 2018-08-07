@@ -365,32 +365,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new IOException($"Cannot create '{fullDestPath}' because a file or directory with the same name already exists.");
             }
 
-            //Make sure that the destination exists
-            mockFileDataAccessor.Directory.CreateDirectory(fullDestPath);
-
-            //Copy over the attributes
-            var sourceDirectoryInfo = mockFileDataAccessor.DirectoryInfo.FromDirectoryName(sourceDirName);
-            var destDirectoryInfo = mockFileDataAccessor.DirectoryInfo.FromDirectoryName(destDirName);
-            destDirectoryInfo.Attributes = sourceDirectoryInfo.Attributes;
-
-            //Recursively move all the subdirectories from the source into the destination directory
-            var subdirectories = GetDirectories(fullSourcePath);
-            foreach (var subdirectory in subdirectories)
-            {
-                var newSubdirPath = subdirectory.Replace(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase);
-                Move(subdirectory, newSubdirPath);
-            }
-
-            //Move the files in destination directory
-            var files = GetFiles(fullSourcePath);
-            foreach (var file in files)
-            {
-                var newFilePath = file.Replace(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase);
-                mockFileDataAccessor.FileInfo.FromFileName(file).MoveTo(newFilePath);
-            }
-
-            //Delete the source directory
-            Delete(fullSourcePath);
+            mockFileDataAccessor.MoveDirectory(fullSourcePath, fullDestPath);
         }
 
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
