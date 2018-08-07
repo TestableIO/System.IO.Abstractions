@@ -1336,6 +1336,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_Move_ShouldThrowAnIOExceptionIfDesinationDirectoryExists()
+        {
+            // Arrange
+            string sourcePath = XFS.Path(@"c:\a");
+            string destPath = XFS.Path(@"c:\b");
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(sourcePath);
+            fileSystem.AddDirectory(destPath);
+
+            // Act
+            TestDelegate action = () => fileSystem.Directory.Move(sourcePath, destPath);
+
+            // Assert
+            Assert.Throws<IOException>(action, "Cannot create 'c:\b\' because a file or directory with the same name already exists.'");
+        }
+
+        [Test]
         public void MockDirectory_EnumerateFiles_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
         {
             // Arrange
