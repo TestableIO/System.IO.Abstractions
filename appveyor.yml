@@ -35,3 +35,11 @@ deploy:
   on:
     branch: master
     APPVEYOR_REPO_TAG: true
+- provider: GitHub
+  tag: v$(PACKAGE_VERSION)
+  artifact: /.*\.nupkg/
+  auth_token:
+    secure: <your encrypted token>
+  on: 
+    branch: master
+    APPVEYOR_REPO_TAG: true
