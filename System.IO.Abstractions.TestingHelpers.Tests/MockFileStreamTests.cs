@@ -57,5 +57,22 @@
 
             // Assert - expect an exception
         }
+
+        [Test]
+        public void MockFileStream_Constructor_ReadTypeNotWritable()
+        {
+            // Arrange
+            var filePath = @"C:\test.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { filePath, new MockFileData("hi") }
+            });
+
+            // Act
+            var stream = new MockFileStream(fileSystem, filePath, MockFileStream.StreamType.READ);
+
+            Assert.IsFalse(stream.CanWrite);
+            Assert.Throws<NotSupportedException>(() => stream.WriteByte(1));
+        }
     }
 }

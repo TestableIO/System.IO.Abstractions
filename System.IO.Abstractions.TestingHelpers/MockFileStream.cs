@@ -5,6 +5,7 @@
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string path;
+        private readonly bool canWrite = true;
 
         public enum StreamType
         {
@@ -38,7 +39,11 @@
                 }
                 mockFileDataAccessor.AddFile(path, new MockFileData(new byte[] { }));
             }
+
+            canWrite = streamType != StreamType.READ;
         }
+
+        public override bool CanWrite => canWrite;
 
 #if NET40
         public override void Close()
