@@ -355,32 +355,17 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new IOException("Source and destination path must have identical roots. Move will not work across volumes.");
             }
 
-            //Make sure that the destination exists
-            mockFileDataAccessor.Directory.CreateDirectory(fullDestPath);
-
-            //Copy over the attributes
-            var sourceDirectoryInfo = mockFileDataAccessor.DirectoryInfo.FromDirectoryName(sourceDirName);
-            var destDirectoryInfo = mockFileDataAccessor.DirectoryInfo.FromDirectoryName(destDirName);
-            destDirectoryInfo.Attributes = sourceDirectoryInfo.Attributes;
-
-            //Recursively move all the subdirectories from the source into the destination directory
-            var subdirectories = GetDirectories(fullSourcePath);
-            foreach (var subdirectory in subdirectories)
+            if (!mockFileDataAccessor.Directory.Exists(fullSourcePath))
             {
-                var newSubdirPath = subdirectory.Replace(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase);
-                Move(subdirectory, newSubdirPath);
+                throw new DirectoryNotFoundException($"Could not find a part of the path '{sourceDirName}'.");
             }
 
-            //Move the files in destination directory
-            var files = GetFiles(fullSourcePath);
-            foreach (var file in files)
+            if (mockFileDataAccessor.Directory.Exists(fullDestPath) || mockFileDataAccessor.File.Exists(fullDestPath))
             {
-                var newFilePath = file.Replace(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase);
-                mockFileDataAccessor.FileInfo.FromFileName(file).MoveTo(newFilePath);
+                throw new IOException($"Cannot create '{fullDestPath}' because a file or directory with the same name already exists.");
             }
 
-            //Delete the source directory
-            Delete(fullSourcePath);
+            mockFileDataAccessor.MoveDirectory(fullSourcePath, fullDestPath);
         }
 
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)

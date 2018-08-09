@@ -211,6 +211,26 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        public void MoveDirectory(string sourcePath, string destPath)
+        {
+            sourcePath = FixPath(sourcePath);
+            destPath = FixPath(destPath);
+
+            lock (files)
+            {
+                var affectedPaths = files.Keys
+                    .Where(p => p.StartsWith(sourcePath, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+                foreach(var path in affectedPaths)
+                {
+                    var newPath = path.Replace(sourcePath, destPath, StringComparison.OrdinalIgnoreCase);
+                    files[newPath] = files[path];
+                    files.Remove(path);
+                }
+            }
+        }
+
         public void RemoveFile(string path)
         {
             path = FixPath(path);
