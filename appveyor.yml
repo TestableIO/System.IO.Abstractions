@@ -18,7 +18,7 @@ dotnet_csproj:
   package_version: '{version}'
 
 environment:
-  INHERITDOC_VERSION: 1.2.2.1
+  INHERITDOC_VERSION: "1.2.2.1"
   TEMP_DIR: c:/temp
 
 install:
