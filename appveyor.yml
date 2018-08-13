@@ -23,7 +23,7 @@ environment:
 
 install:
 # Temporarily install InheritDoc using the NuGet CLI
-- nuget install inheritdoc -Version $env:INHERITDOC_VERSION -OutputDirectory $env:TEMP_DIR
+- nuget install inheritdoc -Version %INHERITDOC_VERSION% -OutputDirectory %TEMP_DIR%
 
 before_build:
 - nuget restore
