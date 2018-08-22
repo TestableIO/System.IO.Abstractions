@@ -74,5 +74,20 @@
             Assert.IsFalse(stream.CanWrite);
             Assert.Throws<NotSupportedException>(() => stream.WriteByte(1));
         }
+
+        [Test]
+        public void MockFileStream_Close_MultipleCallsDontThrow()
+        {
+            var fileSystem = new MockFileSystem();
+            var path = XFS.Path("C:\\test");
+            fileSystem.AddFile(path, new MockFileData("Bla"));
+            var stream = fileSystem.File.OpenRead(path);
+
+            // Act
+            stream.Close();
+
+            // Assert
+            Assert.DoesNotThrow(() => stream.Close());
+        }
     }
 }
