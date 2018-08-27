@@ -18,7 +18,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string currentDirectory;
 
-        public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory)
+        public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory) : base(mockFileDataAccessor?.FileSystem)
         {
             this.currentDirectory = currentDirectory;
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));

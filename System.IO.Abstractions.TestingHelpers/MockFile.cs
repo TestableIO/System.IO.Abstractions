@@ -12,7 +12,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly MockPath mockPath;
 
-        public MockFile(IMockFileDataAccessor mockFileDataAccessor)
+        public MockFile(IMockFileDataAccessor mockFileDataAccessor) : base(mockFileDataAccessor?.FileSystem)
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
             mockPath = new MockPath(mockFileDataAccessor);
@@ -350,7 +350,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     throw new IOException("A file can not be created if it already exists.");
                 }
             }
-                
+
 
             var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
 
@@ -399,7 +399,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var length = mockFileDataAccessor.GetFile(path).Contents.Length;
-            
+
             MockFileStream.StreamType streamType = MockFileStream.StreamType.WRITE;
             if (access == FileAccess.Read)
                 streamType = MockFileStream.StreamType.READ;
@@ -938,7 +938,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             VerifyDirectoryExists(path);
-     
+
             MockFileData data = contents == null ? new MockFileData(new byte[0]) : new MockFileData(contents, encoding);
             mockFileDataAccessor.AddFile(path, data);
         }

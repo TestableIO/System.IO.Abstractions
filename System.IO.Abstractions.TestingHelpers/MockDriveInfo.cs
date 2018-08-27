@@ -5,7 +5,7 @@
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
 
-        public MockDriveInfo(IMockFileDataAccessor mockFileDataAccessor, string name)
+        public MockDriveInfo(IMockFileDataAccessor mockFileDataAccessor, string name) : base(mockFileDataAccessor?.FileSystem)
         {
             if (mockFileDataAccessor == null)
             {

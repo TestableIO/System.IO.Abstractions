@@ -32,7 +32,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var crashingFileSystemInfos = new CrashingEnumerable<FileSystemInfo>();
         
-            Assert.DoesNotThrow(() => Converters.WrapFileSystemInfos(crashingFileSystemInfos));
+            Assert.DoesNotThrow(() => crashingFileSystemInfos.WrapFileSystemInfos(new MockFileSystem()));
         }
 
         [Test]
@@ -40,14 +40,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var crashingFileInfos = new CrashingEnumerable<FileInfo>();
         
-            Assert.DoesNotThrow(() => Converters.WrapFiles(crashingFileInfos));
+            Assert.DoesNotThrow(() => crashingFileInfos.WrapFiles(new MockFileSystem()));
         }
         [Test]
         public void WrapDirectories_with_IEnumerable_is_lazy()
         {
             var crashingDirectoryInfos = new CrashingEnumerable<DirectoryInfo>();
         
-            Assert.DoesNotThrow(() => Converters.WrapDirectories(crashingDirectoryInfos));
+            Assert.DoesNotThrow(() => crashingDirectoryInfos.WrapDirectories(new MockFileSystem()));
         }
 
     }

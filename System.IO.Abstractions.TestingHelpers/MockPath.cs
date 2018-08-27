@@ -14,14 +14,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private static readonly char[] InvalidAdditionalPathChars = { '*', '?' };
 
-        public MockPath(IMockFileDataAccessor mockFileDataAccessor)
+        public MockPath(IMockFileDataAccessor mockFileDataAccessor) : base(mockFileDataAccessor?.FileSystem)
         {
-            if (mockFileDataAccessor == null)
-            {
-                throw new ArgumentNullException(nameof(mockFileDataAccessor));
-            }
-
-            this.mockFileDataAccessor = mockFileDataAccessor;
+            this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
         }
 
         public override string GetFullPath(string path)

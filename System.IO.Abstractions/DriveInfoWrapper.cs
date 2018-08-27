@@ -14,8 +14,9 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="DriveInfoWrapper"/> class, which acts as a wrapper for a drive info.
         /// </summary>
+        /// <param name="fileSystem">The underlying IFileSystem.</param>
         /// <param name="instance">The drive info.</param>
-        public DriveInfoWrapper(DriveInfo instance)
+        public DriveInfoWrapper(IFileSystem fileSystem, DriveInfo instance) : base(fileSystem)
         {
             this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
         }
@@ -128,7 +129,7 @@
         /// <value>An object that contains the root directory of the drive.</value>
         public override DirectoryInfoBase RootDirectory
         {
-            get { return instance.RootDirectory; }
+            get { return new DirectoryInfoWrapper(FileSystem, instance.RootDirectory); }
         }
 
         /// <summary>

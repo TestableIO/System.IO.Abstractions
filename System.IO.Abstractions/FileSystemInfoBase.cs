@@ -4,6 +4,13 @@
     [Serializable]
     public abstract class FileSystemInfoBase
     {
+        protected FileSystemInfoBase(IFileSystem fileSystem)
+        {
+            FileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+        }
+
+        public IFileSystem FileSystem { get; }
+
         /// <inheritdoc cref="FileSystemInfo.Delete"/>
         public abstract void Delete();
 

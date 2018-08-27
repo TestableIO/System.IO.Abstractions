@@ -3,6 +3,13 @@
     [Serializable]
     public abstract class DriveInfoBase
     {
+        protected DriveInfoBase(IFileSystem fileSystem)
+        {
+            FileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+        }
+
+        public IFileSystem FileSystem { get; }
+
         /// <inheritdoc cref="DriveInfo.AvailableFreeSpace"/>
         /// <summary>
         /// Gets or sets the amount of available free space on a drive, in bytes.
@@ -127,7 +134,7 @@
                 return null;
             }
 
-            return new DriveInfoWrapper(driveInfo);
+            return new DriveInfoWrapper(new FileSystem(), driveInfo);
         }
     }
 }

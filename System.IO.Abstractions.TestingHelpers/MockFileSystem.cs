@@ -60,6 +60,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public IFileSystemWatcherFactory FileSystemWatcher { get; }
 
+        public IFileSystem FileSystem => this;
+
         public PathVerifier PathVerifier => pathVerifier;
 
         private string FixPath(string path, bool checkCaps = false)

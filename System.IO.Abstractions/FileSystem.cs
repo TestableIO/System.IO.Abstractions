@@ -3,22 +3,28 @@
     [Serializable]
     public class FileSystem : IFileSystem
     {
-        DirectoryBase directory;
+        public FileSystem()
+        {
+            driveInfoFactory = new Lazy<DriveInfoFactory>(() => new DriveInfoFactory(this));;
+        }
+
+        private DirectoryBase directory;
+
         public DirectoryBase Directory
         {
-            get { return directory ?? (directory = new DirectoryWrapper()); }
+            get { return directory ?? (directory = new DirectoryWrapper(this)); }
         }
 
         FileBase file;
         public FileBase File
         {
-            get { return file ?? (file = new FileWrapper()); }
+            get { return file ?? (file = new FileWrapper(this)); }
         }
 
         FileInfoFactory fileInfoFactory;
         public IFileInfoFactory FileInfo
         {
-            get { return fileInfoFactory ?? (fileInfoFactory = new FileInfoFactory()); }
+            get { return fileInfoFactory ?? (fileInfoFactory = new FileInfoFactory(this)); }
         }
 
         FileStreamFactory fileStreamFactory;
@@ -30,22 +36,21 @@
         PathBase path;
         public PathBase Path
         {
-            get { return path ?? (path = new PathWrapper()); }
+            get { return path ?? (path = new PathWrapper(this)); }
         }
 
         DirectoryInfoFactory directoryInfoFactory;
         public IDirectoryInfoFactory DirectoryInfo
         {
-            get { return directoryInfoFactory ?? (directoryInfoFactory = new DirectoryInfoFactory()); }
+            get { return directoryInfoFactory ?? (directoryInfoFactory = new DirectoryInfoFactory(this)); }
         }
 
-        private readonly Lazy<DriveInfoFactory> driveInfoFactory = new Lazy<DriveInfoFactory>(() => new DriveInfoFactory());
-
+        private readonly Lazy<DriveInfoFactory> driveInfoFactory;
         public IDriveInfoFactory DriveInfo
         {
             get { return driveInfoFactory.Value; }
         }
-		
+
         private IFileSystemWatcherFactory fileSystemWatcherFactory;
         public IFileSystemWatcherFactory FileSystemWatcher
         {

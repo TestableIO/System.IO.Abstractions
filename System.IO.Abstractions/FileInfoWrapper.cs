@@ -7,7 +7,7 @@ namespace System.IO.Abstractions
     {
         private readonly FileInfo instance;
 
-        public FileInfoWrapper(FileInfo instance)
+        public FileInfoWrapper(IFileSystem fileSystem, FileInfo instance) : base(fileSystem)
         {
             this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
         }
@@ -91,12 +91,12 @@ namespace System.IO.Abstractions
 
         public override FileInfoBase CopyTo(string destFileName)
         {
-            return instance.CopyTo(destFileName);
+            return new FileInfoWrapper(FileSystem, instance.CopyTo(destFileName));
         }
 
         public override FileInfoBase CopyTo(string destFileName, bool overwrite)
         {
-            return instance.CopyTo(destFileName, overwrite);
+            return new FileInfoWrapper(FileSystem, instance.CopyTo(destFileName, overwrite));
         }
 
         public override Stream Create()
@@ -169,12 +169,12 @@ namespace System.IO.Abstractions
 #if NET40
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)
         {
-            return instance.Replace(destinationFileName, destinationBackupFileName);
+            return new FileInfoWrapper(FileSystem, instance.Replace(destinationFileName, destinationBackupFileName));
         }
 
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
-            return instance.Replace(destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
+            return new FileInfoWrapper(FileSystem, instance.Replace(destinationFileName, destinationBackupFileName, ignoreMetadataErrors));
         }
 #endif
 
@@ -185,7 +185,7 @@ namespace System.IO.Abstractions
 
         public override DirectoryInfoBase Directory
         {
-            get { return instance.Directory; }
+            get { return new DirectoryInfoWrapper(FileSystem, instance.Directory); }
         }
 
         public override string DirectoryName
