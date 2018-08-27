@@ -28,6 +28,14 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"), paramName);
             }
 
+            if (!MockUnixSupport.IsUnixPlatform())
+            {
+                if (!IsValidUseOfVolumeSeparatorChar(path))
+                {
+                    throw new NotSupportedException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"));
+                }
+            }
+
             if (ExtractFileName(path).IndexOfAny(_mockFileDataAccessor.Path.GetInvalidFileNameChars()) > -1)
             {
                 throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
@@ -40,14 +48,24 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        private static bool IsValidUseOfVolumeSeparatorChar(string path)
+        {
+            var lastVolSepIndex = path.LastIndexOf(Path.VolumeSeparatorChar);
+            return lastVolSepIndex == -1 || lastVolSepIndex == 1 && char.IsLetter(path[0]);
+        }
+
         private string ExtractFileName(string fullFileName)
         {
-            return fullFileName.Split(_mockFileDataAccessor.Path.DirectorySeparatorChar).Last();
+            return fullFileName.Split(
+                _mockFileDataAccessor.Path.DirectorySeparatorChar,
+                _mockFileDataAccessor.Path.AltDirectorySeparatorChar).Last();
         }
 
         private string ExtractFilePath(string fullFileName)
         {
-            var extractFilePath = fullFileName.Split(_mockFileDataAccessor.Path.DirectorySeparatorChar);
+            var extractFilePath = fullFileName.Split(
+                _mockFileDataAccessor.Path.DirectorySeparatorChar,
+                _mockFileDataAccessor.Path.AltDirectorySeparatorChar);
             return string.Join(_mockFileDataAccessor.Path.DirectorySeparatorChar.ToString(), extractFilePath.Take(extractFilePath.Length - 1));
         }
     }
