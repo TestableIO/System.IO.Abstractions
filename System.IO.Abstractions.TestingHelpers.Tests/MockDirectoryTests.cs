@@ -1150,6 +1150,32 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_Move_ShouldMoveDirectoryWithReadOnlySubDirectory()
+        {
+            // Arrange
+            var sourceDirName = XFS.Path(@"a:\folder1\");
+            var sourceSubDirName = XFS.Path(@"a:\folder1\sub\");
+
+            var destDirName = XFS.Path(@"a:\folder2\");
+            var destSubDirName = XFS.Path(@"a:\folder2\sub\");
+
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(sourceSubDirName);
+
+            var subDirectoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(sourceSubDirName);
+            subDirectoryInfo.Attributes |= FileAttributes.ReadOnly;
+
+            var sourceDirectoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(sourceDirName);
+
+            // Act
+            fileSystem.DirectoryInfo.FromDirectoryName(sourceDirName).MoveTo(destDirName);
+
+            // Assert
+            Assert.IsFalse(fileSystem.Directory.Exists(sourceSubDirName));
+            Assert.IsTrue(fileSystem.FileExists(destSubDirName));
+        }
+
+        [Test]
         public void MockDirectory_GetCurrentDirectory_ShouldReturnValueFromFileSystemConstructor() {
             string directory = XFS.Path(@"D:\folder1\folder2");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>(), directory);
@@ -1308,6 +1334,38 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.Throws<IOException>(action, "Source and destination path must have identical roots. Move will not work across volumes.");
+        }
+
+        [Test]
+        public void MockDirectory_Move_ShouldThrowADirectoryNotFoundExceptionIfDesinationDirectoryDoesNotExist()
+        {
+            // Arrange
+            string sourcePath = XFS.Path(@"c:\a");
+            string destPath = XFS.Path(@"c:\b");
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            TestDelegate action = () => fileSystem.Directory.Move(sourcePath, destPath);
+
+            // Assert
+            Assert.Throws<DirectoryNotFoundException>(action, "Could not find a part of the path 'c:\a'.");
+        }
+
+        [Test]
+        public void MockDirectory_Move_ShouldThrowAnIOExceptionIfDesinationDirectoryExists()
+        {
+            // Arrange
+            string sourcePath = XFS.Path(@"c:\a");
+            string destPath = XFS.Path(@"c:\b");
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(sourcePath);
+            fileSystem.AddDirectory(destPath);
+
+            // Act
+            TestDelegate action = () => fileSystem.Directory.Move(sourcePath, destPath);
+
+            // Assert
+            Assert.Throws<IOException>(action, "Cannot create 'c:\b\' because a file or directory with the same name already exists.'");
         }
 
         [Test]
