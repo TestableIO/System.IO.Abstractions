@@ -10,6 +10,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileInfoTests
     {
         [Test]
+        public void MockFileInfo_NullPath_ThrowArgumentNullException()
+        {
+            var fileSystem = new MockFileSystem();
+
+            TestDelegate action = () => new MockFileInfo(fileSystem, null);
+
+            Assert.Throws<ArgumentNullException>(action);
+
+        }
+
+        [Test]
         public void MockFileInfo_Exists_ShouldReturnTrueIfFileExistsInMemoryFileSystem()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>

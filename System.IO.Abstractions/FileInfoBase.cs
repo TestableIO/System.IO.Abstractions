@@ -81,6 +81,11 @@ namespace System.IO.Abstractions
 
         public static implicit operator FileInfoBase(FileInfo fileInfo)
         {
+            if (fileInfo == null)
+            {
+                return null;
+            }
+            
             return new FileInfoWrapper(fileInfo);
         }
     }

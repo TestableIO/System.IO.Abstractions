@@ -21,6 +21,8 @@ namespace System.IO.Abstractions.TestingHelpers
         void AddFileFromEmbeddedResource(string path, Assembly resourceAssembly, string embeddedResourcePath);
         void AddFilesFromEmbeddedNamespace(string path, Assembly resourceAssembly, string embeddedRresourcePath);
 
+        void MoveDirectory(string sourcePath, string destPath);
+
         /// <summary>
         /// Removes the file.
         /// </summary>

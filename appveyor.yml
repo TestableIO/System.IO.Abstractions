@@ -17,11 +17,23 @@ dotnet_csproj:
   version: '{version}'
   package_version: '{version}'
 
+environment:
+  INHERITDOC_VERSION: 1.2.2.1
+  TEMP_DIR: c:\temp
+
+install:
+# Temporarily install InheritDoc using the NuGet CLI
+- nuget install inheritdoc -Version %INHERITDOC_VERSION% -OutputDirectory %TEMP_DIR%
+
 before_build:
 - nuget restore
 
 build:
   publish_nuget: true
+
+before_package:
+# This step replaces the inheritdoc tags in the xml documentation with documentation from mscorlib.xml
+- ps: '& $env:TEMP_DIR\InheritDoc.$env:INHERITDOC_VERSION\tools\InheritDoc.exe -b $env:APPVEYOR_BUILD_FOLDER -g "c:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.X\mscorlib.xml" -o'
 
 deploy:
 - provider: NuGet
