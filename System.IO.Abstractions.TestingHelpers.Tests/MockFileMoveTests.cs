@@ -87,14 +87,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenSourceFileNameContainsInvalidChars_Message()
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceFileNameContainsInvalidChars_Message()
         {
-            var destFilePath = XFS.Path(@"c:\something\demo.txt");
+            var destFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
+            var excludeChars = Shared.SpecialInvalidPathChars(fileSystem);
 
-            foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars().Where(x => x != fileSystem.Path.DirectorySeparatorChar))
+            foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars().Except(excludeChars))
             {
-                var sourceFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
+                var sourceFilePath = @"c:\something\demo.txt" + invalidChar;
 
                 var exception =
                     Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
@@ -106,14 +107,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidChars_Message()
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourcePathContainsInvalidChars_Message()
         {
-            var destFilePath = XFS.Path(@"c:\something\demo.txt");
+            var destFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
 
             foreach (var invalidChar in fileSystem.Path.GetInvalidPathChars())
             {
-                var sourceFilePath = XFS.Path(@"c:\some" + invalidChar + @"thing\demo.txt");
+                var sourceFilePath = @"c:\some" + invalidChar + @"thing\demo.txt";
 
                 var exception =
                     Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
@@ -125,14 +126,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenTargetPathContainsInvalidChars_Message()
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetPathContainsInvalidChars_Message()
         {
-            var sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var sourceFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
 
             foreach (var invalidChar in fileSystem.Path.GetInvalidPathChars())
             {
-                var destFilePath = XFS.Path(@"c:\some" + invalidChar + @"thing\demo.txt");
+                var destFilePath = @"c:\some" + invalidChar + @"thing\demo.txt";
 
                 var exception =
                     Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
@@ -144,14 +145,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenTargetFileNameContainsInvalidChars_Message()
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetFileNameContainsInvalidChars_Message()
         {
-            var sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            var sourceFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
+            var excludeChars = Shared.SpecialInvalidPathChars(fileSystem);
 
-            foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars().Where(x => x != fileSystem.Path.DirectorySeparatorChar))
+            foreach (var invalidChar in fileSystem.Path.GetInvalidFileNameChars().Except(excludeChars))
             {
-                var destFilePath = XFS.Path(@"c:\something\demo.txt") + invalidChar;
+                var destFilePath = @"c:\something\demo.txt" + invalidChar;
 
                 var exception =
                     Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
@@ -159,6 +161,58 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
                     string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
             }
+        }
+
+        [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidUseOfDriveSeparator()
+        {
+            var badSourcePath = @"C::\something\demo.txt";
+            var destinationPath = @"C:\elsewhere\demo.txt";
+            var fileSystem = new MockFileSystem();
+
+            TestDelegate action = () => fileSystem.File.Move(badSourcePath, destinationPath);
+
+            Assert.Throws<NotSupportedException>(action);
+        }
+
+        [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidDriveLetter()
+        {
+            var badSourcePath = @"0:\something\demo.txt";
+            var destinationPath = @"C:\elsewhere\demo.txt";
+            var fileSystem = new MockFileSystem();
+
+            TestDelegate action = () => fileSystem.File.Move(badSourcePath, destinationPath);
+
+            Assert.Throws<NotSupportedException>(action);
+        }
+
+        [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidUseOfDriveSeparator()
+        {
+            var sourcePath = @"C:\something\demo.txt";
+            var badDestinationPath = @"C:\elsewhere:\demo.txt";
+            var fileSystem = new MockFileSystem();
+
+            TestDelegate action = () => fileSystem.File.Move(sourcePath, badDestinationPath);
+
+            Assert.Throws<NotSupportedException>(action);
+        }
+
+        [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidDriveLetter()
+        {
+            var sourcePath = @"C:\something\demo.txt";
+            var badDestinationPath = @"^:\elsewhere\demo.txt";
+            var fileSystem = new MockFileSystem();
+
+            TestDelegate action = () => fileSystem.File.Move(sourcePath, badDestinationPath);
+
+            Assert.Throws<NotSupportedException>(action);
         }
 
         [Test]
