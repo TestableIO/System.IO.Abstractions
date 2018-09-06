@@ -6,6 +6,7 @@
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string path;
         private readonly bool canWrite = true;
+        private bool disposed;
 
         public enum StreamType
         {
@@ -53,8 +54,13 @@
 #else
         protected override void Dispose(bool disposing)
         {
+            if (disposed)
+            {
+                return;
+            }
             InternalFlush();
             base.Dispose(disposing);
+            disposed = true;
         }
 #endif
 
