@@ -89,5 +89,20 @@
             // Assert
             Assert.DoesNotThrow(() => stream.Close());
         }
+
+        [Test]
+        public void MockFileStream_Dispose_MultipleCallsDontThrow()
+        {
+            var fileSystem = new MockFileSystem();
+            var path = XFS.Path("C:\\test");
+            fileSystem.AddFile(path, new MockFileData("Bla"));
+            var stream = fileSystem.File.OpenRead(path);
+
+            // Act
+            stream.Dispose();
+
+            // Assert
+            Assert.DoesNotThrow(() => stream.Dispose());
+        }
     }
 }

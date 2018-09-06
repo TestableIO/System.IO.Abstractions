@@ -50,11 +50,14 @@
         public override void Close()
         {
             InternalFlush();
-            disposed = true;
         }
 #else
         protected override void Dispose(bool disposing)
         {
+            if (disposed)
+            {
+                return;
+            }
             InternalFlush();
             base.Dispose(disposing);
             disposed = true;
@@ -68,11 +71,6 @@
 
         private void InternalFlush()
         {
-            if (disposed)
-            {
-                return;
-            }
-
             if (mockFileDataAccessor.FileExists(path))
             {
                 var mockFileData = mockFileDataAccessor.GetFile(path);
