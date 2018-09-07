@@ -5,56 +5,30 @@
     {
         public FileSystem()
         {
-            driveInfoFactory = new Lazy<DriveInfoFactory>(() => new DriveInfoFactory(this));;
+            DriveInfo = new DriveInfoFactory(this);
+            DirectoryInfo = new DirectoryInfoFactory(this);
+            FileInfo = new FileInfoFactory(this);
+            Path = new PathWrapper(this);
+            File = new FileWrapper(this);
+            Directory = new DirectoryWrapper(this);
+            FileStream = new FileStreamFactory();
+            FileSystemWatcher = new FileSystemWatcherFactory();
         }
 
-        private DirectoryBase directory;
+        public DirectoryBase Directory { get; }
 
-        public DirectoryBase Directory
-        {
-            get { return directory ?? (directory = new DirectoryWrapper(this)); }
-        }
+        public FileBase File { get; }
 
-        FileBase file;
-        public FileBase File
-        {
-            get { return file ?? (file = new FileWrapper(this)); }
-        }
+        public IFileInfoFactory FileInfo { get; }
 
-        FileInfoFactory fileInfoFactory;
-        public IFileInfoFactory FileInfo
-        {
-            get { return fileInfoFactory ?? (fileInfoFactory = new FileInfoFactory(this)); }
-        }
+        public IFileStreamFactory FileStream { get; }
 
-        FileStreamFactory fileStreamFactory;
-        public IFileStreamFactory FileStream
-        {
-            get { return fileStreamFactory ?? (fileStreamFactory = new FileStreamFactory()); }
-        }
+        public PathBase Path { get; }
 
-        PathBase path;
-        public PathBase Path
-        {
-            get { return path ?? (path = new PathWrapper(this)); }
-        }
+        public IDirectoryInfoFactory DirectoryInfo { get; }
 
-        DirectoryInfoFactory directoryInfoFactory;
-        public IDirectoryInfoFactory DirectoryInfo
-        {
-            get { return directoryInfoFactory ?? (directoryInfoFactory = new DirectoryInfoFactory(this)); }
-        }
+        public IDriveInfoFactory DriveInfo { get; }
 
-        private readonly Lazy<DriveInfoFactory> driveInfoFactory;
-        public IDriveInfoFactory DriveInfo
-        {
-            get { return driveInfoFactory.Value; }
-        }
-
-        private IFileSystemWatcherFactory fileSystemWatcherFactory;
-        public IFileSystemWatcherFactory FileSystemWatcher
-        {
-            get { return fileSystemWatcherFactory ?? (fileSystemWatcherFactory = new FileSystemWatcherFactory()); }
-        }
+        public IFileSystemWatcherFactory FileSystemWatcher { get; }
     }
 }
