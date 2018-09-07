@@ -9,7 +9,7 @@ namespace System.IO.Abstractions
     {
         protected DirectoryBase(IFileSystem fileSystem)
         {
-            this.FileSystem = fileSystem;
+            FileSystem = fileSystem;
         }
 
         /// <summary>

@@ -8,6 +8,9 @@
             FileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
         }
 
+        /// <summary>
+        /// Exposes the underlying filesystem implementation. This is useful for implementing extension methods.
+        /// </summary>
         public IFileSystem FileSystem { get; }
 
         /// <inheritdoc cref="DriveInfo.AvailableFreeSpace"/>
