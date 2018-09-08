@@ -3,6 +3,10 @@
     [Serializable]
     public class PathWrapper : PathBase
     {
+        public PathWrapper(IFileSystem fileSystem) : base(fileSystem)
+        {
+        }
+
         public override char AltDirectorySeparatorChar
         {
             get { return Path.AltDirectorySeparatorChar; }

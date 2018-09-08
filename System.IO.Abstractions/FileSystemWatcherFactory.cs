@@ -5,6 +5,7 @@ using System.Text;
 
 namespace System.IO.Abstractions
 {
+    [Serializable]
     public class FileSystemWatcherFactory : IFileSystemWatcherFactory
     {
         public FileSystemWatcherBase CreateNew()

@@ -8,7 +8,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private readonly IMockFileDataAccessor mockFileSystem;
         private string path;
 
-        public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path)
+        public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path) : base(mockFileSystem?.FileSystem)
         {
             this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
             this.path = path ?? throw new ArgumentNullException(nameof(path));
@@ -259,7 +259,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
             mockFileSystem.File.Replace(path, destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
-            return new FileInfo(destinationFileName);
+            return mockFileSystem.FileInfo.FromFileName(destinationFileName);
         }
 #endif
 

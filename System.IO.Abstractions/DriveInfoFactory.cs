@@ -3,6 +3,13 @@
     [Serializable]
     internal class DriveInfoFactory : IDriveInfoFactory
     {
+        private readonly IFileSystem fileSystem;
+
+        public DriveInfoFactory(IFileSystem fileSystem)
+        {
+            this.fileSystem = fileSystem;
+        }
+
         /// <summary>
         /// Retrieves the drive names of all logical drives on a computer.
         /// </summary>
@@ -14,7 +21,7 @@
             for (int index = 0; index < driveInfos.Length; index++)
             {
                 var driveInfo = driveInfos[index];
-                driveInfoWrappers[index] = new DriveInfoWrapper(driveInfo);
+                driveInfoWrappers[index] = new DriveInfoWrapper(fileSystem, driveInfo);
             }
 
             return driveInfoWrappers;
@@ -27,7 +34,7 @@
         public DriveInfoBase FromDriveName(string driveName)
         {
             var realDriveInfo = new DriveInfo(driveName);
-            return new DriveInfoWrapper(realDriveInfo);
+            return new DriveInfoWrapper(fileSystem, realDriveInfo);
         }
     }
 }

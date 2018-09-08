@@ -6,16 +6,20 @@ namespace System.IO.Abstractions
     [Serializable]
     public class DirectoryWrapper : DirectoryBase
     {
+        public DirectoryWrapper(IFileSystem fileSystem) : base(fileSystem)
+        {
+        }
+
         public override DirectoryInfoBase CreateDirectory(string path)
         {
-            return Directory.CreateDirectory(path);
+            return new DirectoryInfoWrapper(FileSystem, Directory.CreateDirectory(path));
         }
 
 #if NET40
         public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
-            return Directory.CreateDirectory(path, directorySecurity);
-        }        
+            return new DirectoryInfoWrapper(FileSystem, Directory.CreateDirectory(path, directorySecurity));
+        }
 #endif
         public override void Delete(string path)
         {
@@ -131,7 +135,7 @@ namespace System.IO.Abstractions
 
         public override DirectoryInfoBase GetParent(string path)
         {
-            return Directory.GetParent(path);
+            return new DirectoryInfoWrapper(FileSystem, Directory.GetParent(path));
         }
 
         public override void Move(string sourceDirName, string destDirName)

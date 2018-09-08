@@ -9,7 +9,7 @@ namespace System.IO.Abstractions
     {
         private readonly DirectoryInfo instance;
 
-        public DirectoryInfoWrapper(DirectoryInfo instance)
+        public DirectoryInfoWrapper(IFileSystem fileSystem, DirectoryInfo instance) : base(fileSystem)
         {
             this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
         }
@@ -100,13 +100,13 @@ namespace System.IO.Abstractions
 
         public override DirectoryInfoBase CreateSubdirectory(string path)
         {
-            return new DirectoryInfoWrapper(instance.CreateSubdirectory(path));
+            return new DirectoryInfoWrapper(FileSystem, instance.CreateSubdirectory(path));
         }
 
 #if NET40
         public override DirectoryInfoBase CreateSubdirectory(string path, DirectorySecurity directorySecurity)
         {
-            return new DirectoryInfoWrapper(instance.CreateSubdirectory(path, directorySecurity));
+            return new DirectoryInfoWrapper(FileSystem, instance.CreateSubdirectory(path, directorySecurity));
         }
 #endif
 
@@ -117,47 +117,47 @@ namespace System.IO.Abstractions
 
         public override IEnumerable<DirectoryInfoBase> EnumerateDirectories()
         {
-            return instance.EnumerateDirectories().Select(directoryInfo => new DirectoryInfoWrapper(directoryInfo));
+            return instance.EnumerateDirectories().Select(directoryInfo => new DirectoryInfoWrapper(FileSystem, directoryInfo));
         }
 
         public override IEnumerable<DirectoryInfoBase> EnumerateDirectories(string searchPattern)
         {
-            return instance.EnumerateDirectories(searchPattern).Select(directoryInfo => new DirectoryInfoWrapper(directoryInfo));
+            return instance.EnumerateDirectories(searchPattern).Select(directoryInfo => new DirectoryInfoWrapper(FileSystem, directoryInfo));
         }
 
         public override IEnumerable<DirectoryInfoBase> EnumerateDirectories(string searchPattern, SearchOption searchOption)
         {
-            return instance.EnumerateDirectories(searchPattern, searchOption).Select(directoryInfo => new DirectoryInfoWrapper(directoryInfo));
+            return instance.EnumerateDirectories(searchPattern, searchOption).Select(directoryInfo => new DirectoryInfoWrapper(FileSystem, directoryInfo));
         }
 
         public override IEnumerable<FileInfoBase> EnumerateFiles()
         {
-            return instance.EnumerateFiles().Select(fileInfo => new FileInfoWrapper(fileInfo));
+            return instance.EnumerateFiles().Select(fileInfo => new FileInfoWrapper(FileSystem, fileInfo));
         }
 
         public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern)
         {
-            return instance.EnumerateFiles(searchPattern).Select(fileInfo => new FileInfoWrapper(fileInfo));
+            return instance.EnumerateFiles(searchPattern).Select(fileInfo => new FileInfoWrapper(FileSystem, fileInfo));
         }
 
         public override IEnumerable<FileInfoBase> EnumerateFiles(string searchPattern, SearchOption searchOption)
         {
-            return instance.EnumerateFiles(searchPattern, searchOption).Select(fileInfo => new FileInfoWrapper(fileInfo));
+            return instance.EnumerateFiles(searchPattern, searchOption).Select(fileInfo => new FileInfoWrapper(FileSystem, fileInfo));
         }
 
         public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos()
         {
-            return instance.EnumerateFileSystemInfos().WrapFileSystemInfos();
+            return instance.EnumerateFileSystemInfos().WrapFileSystemInfos(FileSystem);
         }
 
         public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern)
         {
-            return instance.EnumerateFileSystemInfos(searchPattern).WrapFileSystemInfos();
+            return instance.EnumerateFileSystemInfos(searchPattern).WrapFileSystemInfos(FileSystem);
         }
 
         public override IEnumerable<FileSystemInfoBase> EnumerateFileSystemInfos(string searchPattern, SearchOption searchOption)
         {
-            return instance.EnumerateFileSystemInfos(searchPattern, searchOption).WrapFileSystemInfos();
+            return instance.EnumerateFileSystemInfos(searchPattern, searchOption).WrapFileSystemInfos(FileSystem);
         }
 
         public override DirectorySecurity GetAccessControl()
@@ -172,47 +172,47 @@ namespace System.IO.Abstractions
 
         public override DirectoryInfoBase[] GetDirectories()
         {
-            return instance.GetDirectories().WrapDirectories();
+            return instance.GetDirectories().WrapDirectories(FileSystem);
         }
 
         public override DirectoryInfoBase[] GetDirectories(string searchPattern)
         {
-            return instance.GetDirectories(searchPattern).WrapDirectories();
+            return instance.GetDirectories(searchPattern).WrapDirectories(FileSystem);
         }
 
         public override DirectoryInfoBase[] GetDirectories(string searchPattern, SearchOption searchOption)
         {
-            return instance.GetDirectories(searchPattern, searchOption).WrapDirectories();
+            return instance.GetDirectories(searchPattern, searchOption).WrapDirectories(FileSystem);
         }
 
         public override FileInfoBase[] GetFiles()
         {
-            return instance.GetFiles().WrapFiles();
+            return instance.GetFiles().WrapFiles(FileSystem);
         }
 
         public override FileInfoBase[] GetFiles(string searchPattern)
         {
-            return instance.GetFiles(searchPattern).WrapFiles();
+            return instance.GetFiles(searchPattern).WrapFiles(FileSystem);
         }
 
         public override FileInfoBase[] GetFiles(string searchPattern, SearchOption searchOption)
         {
-            return instance.GetFiles(searchPattern, searchOption).WrapFiles();
+            return instance.GetFiles(searchPattern, searchOption).WrapFiles(FileSystem);
         }
 
         public override FileSystemInfoBase[] GetFileSystemInfos()
         {
-            return instance.GetFileSystemInfos().WrapFileSystemInfos();
+            return instance.GetFileSystemInfos().WrapFileSystemInfos(FileSystem);
         }
 
         public override FileSystemInfoBase[] GetFileSystemInfos(string searchPattern)
         {
-            return instance.GetFileSystemInfos(searchPattern).WrapFileSystemInfos();
+            return instance.GetFileSystemInfos(searchPattern).WrapFileSystemInfos(FileSystem);
         }
 
         public override FileSystemInfoBase[] GetFileSystemInfos(string searchPattern, SearchOption searchOption)
         {
-            return instance.GetFileSystemInfos(searchPattern, searchOption).WrapFileSystemInfos();
+            return instance.GetFileSystemInfos(searchPattern, searchOption).WrapFileSystemInfos(FileSystem);
         }
 
         public override void MoveTo(string destDirName)
@@ -227,12 +227,12 @@ namespace System.IO.Abstractions
 
         public override DirectoryInfoBase Parent
         {
-            get { return instance.Parent; }
+            get { return new DirectoryInfoWrapper(FileSystem, instance.Parent); }
         }
 
         public override DirectoryInfoBase Root
         {
-            get { return instance.Root; }
+            get { return new DirectoryInfoWrapper(FileSystem, instance.Root); }
         }
 
         public override string ToString()

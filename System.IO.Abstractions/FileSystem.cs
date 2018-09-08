@@ -3,53 +3,32 @@
     [Serializable]
     public class FileSystem : IFileSystem
     {
-        DirectoryBase directory;
-        public DirectoryBase Directory
+        public FileSystem()
         {
-            get { return directory ?? (directory = new DirectoryWrapper()); }
+            DriveInfo = new DriveInfoFactory(this);
+            DirectoryInfo = new DirectoryInfoFactory(this);
+            FileInfo = new FileInfoFactory(this);
+            Path = new PathWrapper(this);
+            File = new FileWrapper(this);
+            Directory = new DirectoryWrapper(this);
+            FileStream = new FileStreamFactory();
+            FileSystemWatcher = new FileSystemWatcherFactory();
         }
 
-        FileBase file;
-        public FileBase File
-        {
-            get { return file ?? (file = new FileWrapper()); }
-        }
+        public DirectoryBase Directory { get; }
 
-        FileInfoFactory fileInfoFactory;
-        public IFileInfoFactory FileInfo
-        {
-            get { return fileInfoFactory ?? (fileInfoFactory = new FileInfoFactory()); }
-        }
+        public FileBase File { get; }
 
-        FileStreamFactory fileStreamFactory;
-        public IFileStreamFactory FileStream
-        {
-            get { return fileStreamFactory ?? (fileStreamFactory = new FileStreamFactory()); }
-        }
+        public IFileInfoFactory FileInfo { get; }
 
-        PathBase path;
-        public PathBase Path
-        {
-            get { return path ?? (path = new PathWrapper()); }
-        }
+        public IFileStreamFactory FileStream { get; }
 
-        DirectoryInfoFactory directoryInfoFactory;
-        public IDirectoryInfoFactory DirectoryInfo
-        {
-            get { return directoryInfoFactory ?? (directoryInfoFactory = new DirectoryInfoFactory()); }
-        }
+        public PathBase Path { get; }
 
-        private readonly Lazy<DriveInfoFactory> driveInfoFactory = new Lazy<DriveInfoFactory>(() => new DriveInfoFactory());
+        public IDirectoryInfoFactory DirectoryInfo { get; }
 
-        public IDriveInfoFactory DriveInfo
-        {
-            get { return driveInfoFactory.Value; }
-        }
-		
-        private IFileSystemWatcherFactory fileSystemWatcherFactory;
-        public IFileSystemWatcherFactory FileSystemWatcher
-        {
-            get { return fileSystemWatcherFactory ?? (fileSystemWatcherFactory = new FileSystemWatcherFactory()); }
-        }
+        public IDriveInfoFactory DriveInfo { get; }
+
+        public IFileSystemWatcherFactory FileSystemWatcher { get; }
     }
 }

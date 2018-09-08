@@ -8,6 +8,10 @@ namespace System.IO.Abstractions
     [Serializable]
     public class FileWrapper : FileBase
     {
+        public FileWrapper(FileSystem fileSystem) : base(fileSystem)
+        {
+        }
+
         public override void AppendAllLines(string path, IEnumerable<string> contents)
         {
             File.AppendAllLines(path, contents);
