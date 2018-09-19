@@ -400,19 +400,45 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileInfo_MoveTo_ShouldUpdateFileInfoDirectoryAndFullName()
+        public void MockFileInfo_MoveTo_NonExistentDestination_ShouldUpdateFileInfoDirectoryAndFullName()
         {
             var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(XFS.Path(@"c:\temp\file.txt"), new MockFileData(@"line 1\r\nline 2"));
-            var fileInfo = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file.txt"));
-            string destinationFolder = XFS.Path(@"c:\temp2");
-            string destination = XFS.Path(destinationFolder + @"\file.txt");
-            fileSystem.AddDirectory(destination);
+            var sourcePath = XFS.Path(@"c:\temp\file.txt");
+            var destinationFolder = XFS.Path(@"c:\temp2");
+            var destinationPath = XFS.Path(destinationFolder + @"\file.txt");
+            fileSystem.AddFile(sourcePath, new MockFileData("1"));
+            var fileInfo = fileSystem.FileInfo.FromFileName(sourcePath);
+            fileSystem.AddDirectory(destinationFolder);
 
-            fileInfo.MoveTo(destination);
+            fileInfo.MoveTo(destinationPath);
 
             Assert.AreEqual(fileInfo.DirectoryName, destinationFolder);
-            Assert.AreEqual(fileInfo.FullName, destination);
+            Assert.AreEqual(fileInfo.FullName, destinationPath);
+        }
+
+        [Test]
+        public void MockFileInfo_MoveTo_NonExistentDestinationFolder_ShouldThrowDirectoryNotFoundException()
+        {
+            var fileSystem = new MockFileSystem();
+            var sourcePath = XFS.Path(@"c:\temp\file.txt");
+            var destinationPath = XFS.Path(@"c:\temp2\file.txt");
+            fileSystem.AddFile(sourcePath, new MockFileData("1"));
+            var fileInfo = fileSystem.FileInfo.FromFileName(sourcePath);
+
+            Assert.Throws<DirectoryNotFoundException>(() => fileInfo.MoveTo(destinationPath));
+        }
+
+        [Test]
+        public void MockFileInfo_MoveTo_ExistingDestination_ShouldThrowExceptionAboutFileAlreadyExisting()
+        {
+            var fileSystem = new MockFileSystem();
+            var sourcePath = XFS.Path(@"c:\temp\file.txt");
+            var destinationPath = XFS.Path(@"c:\temp2\file.txt");
+            fileSystem.AddFile(sourcePath, new MockFileData("1"));
+            var fileInfo = fileSystem.FileInfo.FromFileName(sourcePath);
+            fileSystem.AddFile(destinationPath, new MockFileData("2"));
+
+            Assert.Throws<IOException>(() => fileInfo.MoveTo(destinationPath));
         }
 
         [Test]

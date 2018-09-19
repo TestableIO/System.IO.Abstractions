@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Text.RegularExpressions;
@@ -48,7 +47,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentException(StringResources.Manager.GetString("PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE"), "path");
             }
 
-            path = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(path));
+            path = mockFileDataAccessor.Path.GetFullPath(path).TrimSlashes();
 
             if (!Exists(path))
             {
@@ -72,7 +71,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Delete(string path, bool recursive)
         {
-            path = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(path));
+            path = mockFileDataAccessor.Path.GetFullPath(path).TrimSlashes();
             var affectedPaths = mockFileDataAccessor
                 .AllPaths
                 .Where(p => p.StartsWith(path, StringComparison.OrdinalIgnoreCase))
@@ -99,7 +98,7 @@ namespace System.IO.Abstractions.TestingHelpers
             try
             {
 
-                path = EnsurePathEndsWithDirectorySeparator(path);
+                path = path.TrimSlashes();
                 path = mockFileDataAccessor.Path.GetFullPath(path);
                 return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.OrdinalIgnoreCase));
             }
@@ -112,7 +111,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override DirectorySecurity GetAccessControl(string path)
         {           
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-            path = EnsurePathEndsWithDirectorySeparator(path);
+            path = path.TrimSlashes();
             
             if (!mockFileDataAccessor.Directory.Exists(path))
             {
@@ -191,8 +190,14 @@ namespace System.IO.Abstractions.TestingHelpers
         private string[] GetFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
         {
             CheckSearchPattern(searchPattern);
-            path = EnsurePathEndsWithDirectorySeparator(path);
+            path = path.TrimSlashes();
             path = EnsureAbsolutePath(path);
+
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString())
+                && !path.EndsWith(Path.AltDirectorySeparatorChar.ToString()))
+            {
+                path += Path.DirectorySeparatorChar;
+            }
 
             bool isUnix = XFS.IsUnixPlatform();
 
@@ -340,8 +345,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Move(string sourceDirName, string destDirName)
         {
-            var fullSourcePath = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(sourceDirName));
-            var fullDestPath = EnsurePathEndsWithDirectorySeparator(mockFileDataAccessor.Path.GetFullPath(destDirName));
+            var fullSourcePath = mockFileDataAccessor.Path.GetFullPath(sourceDirName).TrimSlashes();
+            var fullDestPath = mockFileDataAccessor.Path.GetFullPath(destDirName).TrimSlashes();
 
             if (string.Equals(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase))
             {
@@ -371,7 +376,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-            path = EnsurePathEndsWithDirectorySeparator(path);
+            path = path.TrimSlashes();
 
             if (!mockFileDataAccessor.Directory.Exists(path))
             {
@@ -435,7 +440,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-            path = EnsurePathEndsWithDirectorySeparator(path);
+            path = path.TrimSlashes();
             path = mockFileDataAccessor.Path.GetFullPath(path);
 
             if (!Exists(path))
@@ -481,13 +486,6 @@ namespace System.IO.Abstractions.TestingHelpers
             var fileSystemEntries = new List<string>(GetFiles(path, searchPattern, searchOption));
             fileSystemEntries.AddRange(GetDirectories(path, searchPattern, searchOption));
             return fileSystemEntries;
-        }
-
-        static string EnsurePathEndsWithDirectorySeparator(string path)
-        {
-            if (!path.EndsWith(string.Format(CultureInfo.InvariantCulture, "{0}", Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase))
-                path += Path.DirectorySeparatorChar;
-            return path;
         }
 
         private string EnsureAbsolutePath(string path)

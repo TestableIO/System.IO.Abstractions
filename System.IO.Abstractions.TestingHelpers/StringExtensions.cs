@@ -55,5 +55,33 @@ namespace System.IO.Abstractions.TestingHelpers
 
             return result.ToString();
         }
+
+        [Pure]
+        public static string TrimSlashes(this string path)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                return path;
+            }
+
+            var trimmed = path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+
+            if (MockUnixSupport.IsUnixPlatform()
+                && (path[0] == Path.DirectorySeparatorChar || path[0] == Path.AltDirectorySeparatorChar)
+                && trimmed == "")
+            {
+                return Path.DirectorySeparatorChar.ToString();
+            }
+
+            if (!MockUnixSupport.IsUnixPlatform()
+                && trimmed.Length == 2
+                && char.IsLetter(trimmed[0])
+                && trimmed[1] == ':')
+            {
+                return trimmed + Path.DirectorySeparatorChar;
+            }
+
+            return trimmed;
+        }
     }
 }

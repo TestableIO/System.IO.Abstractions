@@ -75,7 +75,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenSourceIsNull_ParamName() {
+        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenSourceIsNull_ParamName()
+        {
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 

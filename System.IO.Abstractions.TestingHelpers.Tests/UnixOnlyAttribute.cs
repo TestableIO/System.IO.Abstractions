@@ -1,13 +1,13 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    internal sealed class WindowsOnlyAttribute : Attribute, ITestAction
+    internal sealed class UnixOnlyAttribute : Attribute, ITestAction
     {
         private readonly string reason;
 
-        public WindowsOnlyAttribute(string reason)
+        public UnixOnlyAttribute(string reason)
         {
             this.reason = reason;
         }
@@ -16,7 +16,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         public void BeforeTest(ITest test)
         {
-            if (MockUnixSupport.IsUnixPlatform())
+            if (!MockUnixSupport.IsUnixPlatform())
             {
                 Assert.Inconclusive(reason);
             }

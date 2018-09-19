@@ -2,8 +2,10 @@
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
+    using XFS = MockUnixSupport;
+
     [TestFixture]
-    public class StringExtensions
+    public class StringExtensionsTests
     {
         [Test]
         public void SplitLines_InputWithOneLine_ShouldReturnOnlyOneLine()
@@ -56,5 +58,59 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(result, Is.EquivalentTo(expected));
         }
 
+        [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void TrimSlashes_DriveRoot_PreserveTrailingSlash()
+        {
+            Assert.AreEqual(@"c:\", @"c:\".TrimSlashes());
+        }
+
+        [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void TrimSlashes_DriveRoot_AppendsTrailingSlash()
+        {
+            Assert.AreEqual(@"c:\", @"c:".TrimSlashes());
+        }
+
+        [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void TrimSlashes_DriveRoot_TrimsExcessTrailingSlash()
+        {
+            Assert.AreEqual(@"c:\", @"c:\\".TrimSlashes());
+        }
+
+        [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void TrimSlashes_DriveRoot_NormalizeAlternateSlash()
+        {
+            Assert.AreEqual(@"c:\", @"c:/".TrimSlashes());
+        }
+
+        [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void TrimSlashes_RootedPath_TrimsAllTrailingSlashes()
+        {
+            Assert.AreEqual(@"c:\x", @"c:\x\".TrimSlashes());
+        }
+
+        [Test]
+        public void TrimSlashes_RootedPath_DontAlterPathWithoutTrailingSlashes()
+        {
+            Assert.AreEqual(XFS.Path(@"c:\x"), XFS.Path(@"c:\x").TrimSlashes());
+        }
+
+        [Test]
+        [UnixOnly(UnixSpecifics.SlashRoot)]
+        public void TrimSlashes_SlashRoot_TrimsExcessTrailingSlash()
+        {
+            Assert.AreEqual("/", "//".TrimSlashes());
+        }
+
+        [Test]
+        [UnixOnly(UnixSpecifics.SlashRoot)]
+        public void TrimSlashes_SlashRoot_PreserveSlashRoot()
+        {
+            Assert.AreEqual("/", "/".TrimSlashes());
+        }
     }
 }

@@ -200,7 +200,13 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists(string path)
         {
-            return mockFileDataAccessor.FileExists(path) && !mockFileDataAccessor.AllDirectories.Any(d => d.Equals(path, StringComparison.OrdinalIgnoreCase));
+            if (path == null)
+            {
+                return false;
+            }
+
+            var file = mockFileDataAccessor.GetFile(path);
+            return file != null && !file.IsDirectory;
         }
 
         public override FileSecurity GetAccessControl(string path)
