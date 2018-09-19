@@ -149,6 +149,9 @@ $RECYCLE.BIN/
 # Mac crap
 .DS_Store
 
+# JetBrains Rider IDE files
+.idea/
+
 #System.IO.Abstractions specific ignores
 Releases
 System.IO.Abstractions.*.nupkg

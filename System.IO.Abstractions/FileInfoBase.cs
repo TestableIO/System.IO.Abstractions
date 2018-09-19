@@ -6,6 +6,10 @@ namespace System.IO.Abstractions
     [Serializable]
     public abstract class FileInfoBase : FileSystemInfoBase
     {
+        protected FileInfoBase(IFileSystem fileSystem) : base(fileSystem)
+        {
+        }
+
         /// <inheritdoc cref="FileInfo.AppendText"/>
         public abstract StreamWriter AppendText();
 
@@ -85,8 +89,8 @@ namespace System.IO.Abstractions
             {
                 return null;
             }
-            
-            return new FileInfoWrapper(fileInfo);
+
+            return new FileInfoWrapper(new FileSystem(), fileInfo);
         }
     }
 }

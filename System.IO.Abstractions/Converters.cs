@@ -6,33 +6,33 @@ namespace System.IO.Abstractions
 {
     internal static class Converters
     {
-        internal static IEnumerable<FileSystemInfoBase> WrapFileSystemInfos(this IEnumerable<FileSystemInfo> input)
-            => input.Select(WrapFileSystemInfo);
+        internal static IEnumerable<FileSystemInfoBase> WrapFileSystemInfos(this IEnumerable<FileSystemInfo> input, IFileSystem fileSystem)
+            => input.Select(info => WrapFileSystemInfo(fileSystem, info));
 
-        internal static FileSystemInfoBase[] WrapFileSystemInfos(this FileSystemInfo[] input)
-            => input.Select(WrapFileSystemInfo).ToArray();
+        internal static FileSystemInfoBase[] WrapFileSystemInfos(this FileSystemInfo[] input, IFileSystem fileSystem)
+            => input.Select(info => WrapFileSystemInfo(fileSystem, info)).ToArray();
 
-        internal static IEnumerable<DirectoryInfoBase> WrapDirectories(this IEnumerable<DirectoryInfo> input) 
-            => input.Select(WrapDirectoryInfo);
+        internal static IEnumerable<DirectoryInfoBase> WrapDirectories(this IEnumerable<DirectoryInfo> input, IFileSystem fileSystem)
+            => input.Select(info => WrapDirectoryInfo(fileSystem, info));
 
-        internal static DirectoryInfoBase[] WrapDirectories(this DirectoryInfo[] input)
-            => input.Select(WrapDirectoryInfo).ToArray();
+        internal static DirectoryInfoBase[] WrapDirectories(this DirectoryInfo[] input, IFileSystem fileSystem)
+            => input.Select(info => WrapDirectoryInfo(fileSystem, info)).ToArray();
 
-        internal static IEnumerable<FileInfoBase> WrapFiles(this IEnumerable<FileInfo> input) 
-            => input.Select(WrapFileInfo);
+        internal static IEnumerable<FileInfoBase> WrapFiles(this IEnumerable<FileInfo> input, IFileSystem fileSystem)
+            => input.Select(info => WrapFileInfo(fileSystem, info));
 
-        internal static FileInfoBase[] WrapFiles(this FileInfo[] input) 
-            => input.Select(WrapFileInfo).ToArray();
+        internal static FileInfoBase[] WrapFiles(this FileInfo[] input, IFileSystem fileSystem)
+            => input.Select(info => WrapFileInfo(fileSystem, info)).ToArray();
         
-        private static FileSystemInfoBase WrapFileSystemInfo(FileSystemInfo item)
+        private static FileSystemInfoBase WrapFileSystemInfo(IFileSystem fileSystem, FileSystemInfo item)
         {
             if (item is FileInfo)
             {
-                return WrapFileInfo((FileInfo)item);
+                return WrapFileInfo(fileSystem, (FileInfo)item);
             }
             else if (item is DirectoryInfo)
             {
-                return WrapDirectoryInfo((DirectoryInfo)item);
+                return WrapDirectoryInfo(fileSystem, (DirectoryInfo)item);
             }
             else
             {
@@ -44,8 +44,8 @@ namespace System.IO.Abstractions
             }
         }
 
-        private static FileInfoBase WrapFileInfo(FileInfo f) => (FileInfoBase)f;
-    
-        private static DirectoryInfoBase WrapDirectoryInfo(DirectoryInfo d) => (DirectoryInfoBase)d;
+        private static FileInfoBase WrapFileInfo(IFileSystem fileSystem, FileInfo f) => new FileInfoWrapper(fileSystem, f);
+
+        private static DirectoryInfoBase WrapDirectoryInfo(IFileSystem fileSystem, DirectoryInfo d) => new DirectoryInfoWrapper(fileSystem, d);
     }
 }

@@ -62,5 +62,7 @@ namespace System.IO.Abstractions.TestingHelpers
         IDriveInfoFactory DriveInfo { get; }
 
         PathVerifier PathVerifier { get; }
+
+        IFileSystem FileSystem { get; }
     }
 }

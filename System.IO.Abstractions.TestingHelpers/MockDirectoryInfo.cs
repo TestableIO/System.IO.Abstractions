@@ -17,7 +17,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <param name="mockFileDataAccessor">The mock file data accessor.</param>
         /// <param name="directoryPath">The directory path.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="mockFileDataAccessor"/> or <paramref name="directoryPath"/> is <see langref="null"/>.</exception>
-        public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath)
+        public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath) : base(mockFileDataAccessor?.FileSystem)
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
 

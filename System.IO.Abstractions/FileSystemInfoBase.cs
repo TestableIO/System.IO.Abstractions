@@ -4,6 +4,16 @@
     [Serializable]
     public abstract class FileSystemInfoBase
     {
+        protected FileSystemInfoBase(IFileSystem fileSystem)
+        {
+            FileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+        }
+
+        /// <summary>
+        /// Exposes the underlying filesystem implementation. This is useful for implementing extension methods.
+        /// </summary>
+        public IFileSystem FileSystem { get; }
+
         /// <inheritdoc cref="FileSystemInfo.Delete"/>
         public abstract void Delete();
 

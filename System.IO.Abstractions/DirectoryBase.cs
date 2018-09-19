@@ -7,6 +7,16 @@ namespace System.IO.Abstractions
     [Serializable]
     public abstract class DirectoryBase
     {
+        protected DirectoryBase(IFileSystem fileSystem)
+        {
+            FileSystem = fileSystem;
+        }
+
+        /// <summary>
+        /// Exposes the underlying filesystem implementation. This is useful for implementing extension methods.
+        /// </summary>
+        public IFileSystem FileSystem { get; }
+
         /// <inheritdoc cref="Directory.CreateDirectory(string)"/>
         public abstract DirectoryInfoBase CreateDirectory(string path);
 
