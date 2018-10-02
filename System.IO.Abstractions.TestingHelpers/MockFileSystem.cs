@@ -115,6 +115,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public void AddFile(string path, MockFileData mockFile)
         {
+            mockFile = mockFile ?? new MockFileData(string.Empty);
             var fixedPath = FixPath(path, true);
             lock (files)
             {
