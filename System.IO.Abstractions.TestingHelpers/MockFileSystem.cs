@@ -25,7 +25,7 @@ namespace System.IO.Abstractions.TestingHelpers
             pathVerifier = new PathVerifier(this);
 
             this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
-
+            
             Path = new MockPath(this);
             File = new MockFile(this);
             Directory = new MockDirectory(this, File, currentDirectory);
@@ -70,7 +70,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw new ArgumentNullException(nameof(path), StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
             }
-
+            
             var pathSeparatorFixed = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             var fullPath = Path.GetFullPath(pathSeparatorFixed);
 
@@ -116,7 +116,6 @@ namespace System.IO.Abstractions.TestingHelpers
         public void AddFile(string path, MockFileData mockFile)
         {
             var fixedPath = FixPath(path, true);
-            mockFile = mockFile ?? new MockFileData(string.Empty);
             lock (files)
             {
                 var file = GetFile(fixedPath);
@@ -231,7 +230,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     .Where(p => p.StartsWith(sourcePath, StringComparison.OrdinalIgnoreCase))
                     .ToList();
 
-                foreach (var path in affectedPaths)
+                foreach(var path in affectedPaths)
                 {
                     var newPath = path.Replace(sourcePath, destPath, StringComparison.OrdinalIgnoreCase);
                     files[newPath] = files[path];
