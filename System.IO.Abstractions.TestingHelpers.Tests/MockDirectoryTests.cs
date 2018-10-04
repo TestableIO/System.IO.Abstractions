@@ -11,6 +11,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockDirectoryTests
     {
         [Test]
+        public void MockDirectory_EnumerateDirectories_WithNoData_ShouldReturnDirectory()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Normally one would use `new MockFileData(string.Empty));` but I use `null`.
+            fileSystem.AddFile(XFS.Path(@"C:\Folder\bar"), null);  // <----- there is the culprit
+
+            // Act
+            var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"c:\"), "Folder");
+
+            // Assert
+            // This assertion should succeed but fails.
+            Assert.That(actualResult.Count(), Is.EqualTo(1));
+        }
+
+        [Test]
         public void MockDirectory_GetFiles_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
         {
             // Arrange
