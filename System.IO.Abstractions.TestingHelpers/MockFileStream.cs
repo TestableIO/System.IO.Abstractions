@@ -12,7 +12,8 @@
         {
             READ,
             WRITE,
-            APPEND
+            APPEND,
+            TRUNCATE
         }
 
         public MockFileStream(IMockFileDataAccessor mockFileDataAccessor, string path, StreamType streamType)
@@ -24,7 +25,7 @@
             {
                 /* only way to make an expandable MemoryStream that starts with a particular content */
                 var data = mockFileDataAccessor.GetFile(path).Contents;
-                if (data != null && data.Length > 0)
+                if (data != null && data.Length > 0 && streamType != StreamType.TRUNCATE)
                 {
                     Write(data, 0, data.Length);
                     Seek(0, StreamType.APPEND.Equals(streamType)
