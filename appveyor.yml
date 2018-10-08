@@ -2,6 +2,9 @@ image: Visual Studio 2017
 configuration: Release
 
 skip_branch_with_pr: true
+
+skip_tags: true
+
 branches:
   only:
     - master
