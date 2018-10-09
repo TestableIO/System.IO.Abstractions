@@ -11,22 +11,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileSystemTests
     {
         [Test]
-        public void MockFileSystem_Constructor_ShouldAllowNullForEmptyFile()
-        {
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { @"c:\something\empty.txt", new MockFileData(string.Empty) },
-                { @"c:\something\nullish.txt", null }
-            });
-
-            var emptyFile = fileSystem.GetFile(@"c:\something\empty.txt");
-            var nullishFile = fileSystem.GetFile(@"c:\something\nullish.txt");
-
-            Assert.IsEmpty(emptyFile.TextContents, "Sanity check; empty files can be created.");
-            Assert.IsEmpty(nullishFile.TextContents, "Setting the contents of a file to null should create an empty file.");
-        }
-
-        [Test]
         public void MockFileSystem_GetFile_ShouldReturnNullWhenFileIsNotRegistered()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
