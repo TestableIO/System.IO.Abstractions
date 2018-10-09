@@ -129,8 +129,8 @@ namespace System.IO.Abstractions.TestingHelpers
                 mockFileDataAccessor.RemoveFile(destFileName);
             }
 
-            var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
-            mockFileDataAccessor.AddFile(destFileName, sourceFile);
+            var sourceFileData = mockFileDataAccessor.GetFile(sourceFileName);
+            mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFileData));
         }
 
         public override Stream Create(string path)
