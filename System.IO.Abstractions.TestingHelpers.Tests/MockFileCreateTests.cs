@@ -12,7 +12,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     public class MockFileCreateTests
     {
-
         [Test]
         public void Mockfile_Create_ShouldCreateNewStream()
         {
@@ -164,6 +163,59 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(fileSystem.Directory.Exists("C:\\path"));
             var exception = Assert.Throws<DirectoryNotFoundException>(action);
             Assert.That(exception.Message, Does.StartWith("Could not find a part of the path"));
+        }
+
+        [Test]
+        public void MockFile_Create_TruncateShouldWriteNewContents()
+        {
+            // Arrange
+            const string testFileName = @"c:\someFile.txt";
+            var fileSystem = new MockFileSystem();
+            
+            using (var stream = fileSystem.FileStream.Create(testFileName, FileMode.Create, FileAccess.Write))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write("original_text");
+                }
+            }
+
+            // Act
+            using (var stream = fileSystem.FileStream.Create(testFileName, FileMode.Truncate, FileAccess.Write))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write("new_text");
+                }
+            }
+
+            // Assert
+            Assert.That(fileSystem.File.ReadAllText(testFileName), Is.EqualTo("new_text"));
+        }
+
+        [Test]
+        public void MockFile_Create_TruncateShouldClearFileContentsOnOpen()
+        {
+            // Arrange
+            const string testFileName = @"c:\someFile.txt";
+            var fileSystem = new MockFileSystem();
+
+            using (var stream = fileSystem.FileStream.Create(testFileName, FileMode.Create, FileAccess.Write))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write("original_text");
+                }
+            }
+
+            // Act
+            using (var stream = fileSystem.FileStream.Create(testFileName, FileMode.Truncate, FileAccess.Write))
+            {
+                // Opening the stream is enough to reset the contents
+            }
+
+            // Assert
+            Assert.That(fileSystem.File.ReadAllText(testFileName), Is.EqualTo(string.Empty));
         }
     }
 }

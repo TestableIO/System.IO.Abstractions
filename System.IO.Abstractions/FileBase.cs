@@ -13,6 +13,9 @@ namespace System.IO.Abstractions
             FileSystem = fileSystem;
         }
 
+        [Obsolete("This constructor only exists to support mocking libraries.", error: true)]
+        internal FileBase() { }
+
         /// <summary>
         /// Exposes the underlying filesystem implementation. This is useful for implementing extension methods.
         /// </summary>

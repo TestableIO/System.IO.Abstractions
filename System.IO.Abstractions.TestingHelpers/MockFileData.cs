@@ -81,6 +81,27 @@ namespace System.IO.Abstractions.TestingHelpers
             Contents = contents ?? throw new ArgumentNullException(nameof(contents));
         }
 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MockFileData"/> class by copying the given <see cref="MockFileData"/>.
+        /// </summary>
+        /// <param name="template">The template instance.</param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="template"/> is <see langword="null" />.</exception>
+        public MockFileData(MockFileData template)
+        {
+            if (template == null)
+            {
+                throw new ArgumentNullException(nameof(template));
+            }
+
+            accessControl = template.accessControl;
+            Attributes = template.Attributes;
+            TextContents = template.TextContents;
+            CreationTime = template.CreationTime;
+            LastAccessTime = template.LastAccessTime;
+            LastWriteTime = template.LastWriteTime;
+        }
+
         /// <summary>
         /// Gets or sets the byte contents of the <see cref="MockFileData"/>.
         /// </summary>

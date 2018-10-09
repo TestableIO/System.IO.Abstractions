@@ -74,6 +74,10 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 return MockFileStream.StreamType.APPEND;
             }
+            else if (mode == FileMode.Truncate)
+            {
+                return MockFileStream.StreamType.TRUNCATE;
+            }
             else
             {
                 return MockFileStream.StreamType.WRITE;
