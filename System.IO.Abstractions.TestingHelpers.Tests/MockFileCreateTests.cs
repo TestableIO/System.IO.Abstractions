@@ -223,8 +223,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Create_DeleteOnCloseOption_FileExistsWhileStreamIsOpen()
         {
-            const string root = @"C:\";
-            const string filePath = @"C:\test.txt";
+            var root = XFS.Path(@"C:\");
+            var filePath = XFS.Path(@"C:\test.txt");
             var fileSystem = new MockFileSystem();
             fileSystem.Directory.CreateDirectory(root);
 
@@ -237,8 +237,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Create_DeleteOnCloseOption_FileDeletedWhenStreamIsClosed()
         {
-            const string root = @"C:\";
-            const string filePath = @"C:\test.txt";
+            var root = XFS.Path(@"C:\");
+            var filePath = XFS.Path(@"C:\test.txt");
             var fileSystem = new MockFileSystem();
             fileSystem.Directory.CreateDirectory(root);
 
@@ -253,8 +253,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Create_EncryptedOption_FileNotYetEncryptedsWhenStreamIsOpen()
         {
-            const string root = @"C:\";
-            const string filePath = @"C:\test.txt";
+            var root = XFS.Path(@"C:\");
+            var filePath = XFS.Path(@"C:\test.txt");
             var fileSystem = new MockFileSystem();
             fileSystem.Directory.CreateDirectory(root);
 
@@ -268,8 +268,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Create_EncryptedOption_EncryptsFileWhenStreamIsClose()
         {
-            const string root = @"C:\";
-            const string filePath = @"C:\test.txt";
+            var root = XFS.Path(@"C:\");
+            var filePath = XFS.Path(@"C:\test.txt");
             var fileSystem = new MockFileSystem();
             fileSystem.Directory.CreateDirectory(root);
 
@@ -286,8 +286,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test, Ignore("FileSecurity needs to be mocked out")]
         public void MockFile_Create_WithFileSecurity_AccessControlGetsAssignedToFile()
         {
-            const string root = @"C:\";
-            const string filePath = @"C:\test.txt";
+            var root = XFS.Path(@"C:\");
+            var filePath = XFS.Path(@"C:\test.txt");
             var fileSystem = new MockFileSystem();
             fileSystem.Directory.CreateDirectory(root);
             var groupAccess = new FileSecurity(filePath, AccessControlSections.Group);
