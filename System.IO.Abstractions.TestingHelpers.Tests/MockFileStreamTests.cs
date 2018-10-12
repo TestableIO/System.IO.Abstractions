@@ -15,7 +15,7 @@
             // Arrange
             var filepath = XFS.Path(@"c:\something\foo.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            var cut = new MockFileStream(filesystem, filepath, MockFileStream.StreamType.WRITE);
+            var cut = new MockFileStream(filesystem, filepath, MockFileStream.StreamType.WRITE, FileOptions.None);
 
             // Act
             cut.WriteByte(255);
@@ -53,7 +53,7 @@
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
 
             // Act
-            Assert.Throws<FileNotFoundException>(() => new MockFileStream(filesystem, nonexistentFilePath, MockFileStream.StreamType.READ));
+            Assert.Throws<FileNotFoundException>(() => new MockFileStream(filesystem, nonexistentFilePath, MockFileStream.StreamType.READ, FileOptions.None));
 
             // Assert - expect an exception
         }
@@ -69,7 +69,7 @@
             });
 
             // Act
-            var stream = new MockFileStream(fileSystem, filePath, MockFileStream.StreamType.READ);
+            var stream = new MockFileStream(fileSystem, filePath, MockFileStream.StreamType.READ, FileOptions.None);
 
             Assert.IsFalse(stream.CanWrite);
             Assert.Throws<NotSupportedException>(() => stream.WriteByte(1));
