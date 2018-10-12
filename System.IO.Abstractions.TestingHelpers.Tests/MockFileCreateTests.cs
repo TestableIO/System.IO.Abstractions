@@ -1,3 +1,5 @@
+using System.Security.AccessControl;
+
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using Collections.Generic;
@@ -217,5 +219,87 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.That(fileSystem.File.ReadAllText(testFileName), Is.EqualTo(string.Empty));
         }
+
+        [Test]
+        public void MockFile_Create_DeleteOnCloseOption_FileExistsWhileStreamIsOpen()
+        {
+            const string root = @"C:\";
+            const string filePath = @"C:\test.txt";
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(root);
+
+            using (fileSystem.File.Create(filePath, 4096, FileOptions.DeleteOnClose))
+            {
+                Assert.IsTrue(fileSystem.File.Exists(filePath));
+            }
+        }
+
+        [Test]
+        public void MockFile_Create_DeleteOnCloseOption_FileDeletedWhenStreamIsClosed()
+        {
+            const string root = @"C:\";
+            const string filePath = @"C:\test.txt";
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(root);
+
+            using (fileSystem.File.Create(filePath, 4096, FileOptions.DeleteOnClose))
+            {
+            }
+
+            Assert.IsFalse(fileSystem.File.Exists(filePath));
+        }
+
+#if NET40
+        [Test]
+        public void MockFile_Create_EncryptedOption_FileNotYetEncryptedsWhenStreamIsOpen()
+        {
+            const string root = @"C:\";
+            const string filePath = @"C:\test.txt";
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(root);
+
+            using (var stream = fileSystem.File.Create(filePath, 4096, FileOptions.Encrypted))
+            {
+                var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
+                Assert.IsFalse(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted));
+            }
+        }
+
+        [Test]
+        public void MockFile_Create_EncryptedOption_EncryptsFileWhenStreamIsClose()
+        {
+            const string root = @"C:\";
+            const string filePath = @"C:\test.txt";
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(root);
+
+            using (var stream = fileSystem.File.Create(filePath, 4096, FileOptions.Encrypted))
+            {
+            }
+
+            var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
+            Assert.IsTrue(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted));
+        }
+
+        // TODO: figure out what to do about FileSecurity
+        //       should we just ignore the FileSecurity argument to MockFile.Create?
+        [Test, Ignore("FileSecurity needs to be mocked out")]
+        public void MockFile_Create_WithFileSecurity_AccessControlGetsAssignedToFile()
+        {
+            const string root = @"C:\";
+            const string filePath = @"C:\test.txt";
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(root);
+            var groupAccess = new FileSecurity(filePath, AccessControlSections.Group);
+
+            using (var stream = fileSystem.File.Create(filePath, 4096, FileOptions.None, groupAccess))
+            {
+            }
+
+            var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
+            var ac = fileInfo.GetAccessControl();
+            //Assert.IsTrue(fileInfo.GetAccessControl()...HasGroupAccess?);
+        }
+#endif
     }
 }
