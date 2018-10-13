@@ -62,7 +62,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { @"c:\something\nullish.txt", null }
             });
 
-            var result = fileSystem.GetFile(@"c:\SomeThing\nullish.txt").TextContents;
+            var result = fileSystem.File.ReadAllText(@"c:\SomeThing\nullish.txt");
 
             Assert.IsEmpty(result, "Null MockFileData should be allowed for and result in an empty file.");
         }
