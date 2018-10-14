@@ -20,6 +20,14 @@
         public MockFileStream(
             IMockFileDataAccessor mockFileDataAccessor,
             string path,
+            StreamType streamType)
+            : this(mockFileDataAccessor, path, streamType, FileOptions.None)
+        {
+        }
+
+        public MockFileStream(
+            IMockFileDataAccessor mockFileDataAccessor,
+            string path,
             StreamType streamType,
             FileOptions options)
         {
@@ -68,8 +76,8 @@
             }
             InternalFlush();
             base.Dispose(disposing);
-            disposed = true;
             OnClose();
+            disposed = true;
         }
 #endif
 

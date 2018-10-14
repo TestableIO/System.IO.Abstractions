@@ -150,7 +150,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override StreamWriter AppendText()
         {
             if (MockFileData == null) throw new FileNotFoundException("File not found", path);
-            return new StreamWriter(new MockFileStream(mockFileSystem, FullName, MockFileStream.StreamType.APPEND, FileOptions.None));
+            return new StreamWriter(new MockFileStream(mockFileSystem, FullName, MockFileStream.StreamType.APPEND));
         }
 
         public override FileInfoBase CopyTo(string destFileName)
@@ -237,7 +237,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override Stream OpenRead()
         {
             if (MockFileData == null) throw new FileNotFoundException("File not found", path);
-            return new MockFileStream(mockFileSystem, path, MockFileStream.StreamType.READ, FileOptions.None);
+            return new MockFileStream(mockFileSystem, path, MockFileStream.StreamType.READ);
         }
 
         public override StreamReader OpenText()
@@ -247,7 +247,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream OpenWrite()
         {
-            return new MockFileStream(mockFileSystem, path, MockFileStream.StreamType.WRITE, FileOptions.None);
+            return new MockFileStream(mockFileSystem, path, MockFileStream.StreamType.WRITE);
         }
 
 #if NET40
