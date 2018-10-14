@@ -138,7 +138,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     AddDirectory(directoryPath);
                 }
 
-                SetEntry(fixedPath, mockFile);
+                SetEntry(fixedPath, mockFile ?? new MockFileData(string.Empty));
             }
         }
 
