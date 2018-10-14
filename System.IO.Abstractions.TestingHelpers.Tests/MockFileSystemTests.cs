@@ -55,6 +55,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileSystem_AddFile_ShouldHandleNullFileDataAsEmpty()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\something\nullish.txt", null }
+            });
+
+            var result = fileSystem.File.ReadAllText(@"c:\SomeThing\nullish.txt");
+
+            Assert.IsEmpty(result, "Null MockFileData should be allowed for and result in an empty file.");
+        }
+
+        [Test]
         public void MockFileSystem_AddFile_ShouldRepaceExistingFile()
         {
             const string path = @"c:\some\file.txt";
