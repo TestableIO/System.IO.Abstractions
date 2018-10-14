@@ -65,12 +65,4 @@
         </PackageReference>
     </ItemGroup>
 
-    <Target Name="ConfigureVersion" BeforeTargets="GetAssemblyVersion;GetPackageVersion" DependsOnTargets="GitVersion">
-        <PropertyGroup>
-            <AssemblyVersion>$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)</AssemblyVersion>
-            <AssemblyFileVersion>$(AssemblyVersion)</AssemblyFileVersion>
-            <PackageVersion>$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)$(GitSemVerDashLabel)</PackageVersion>
-            <AssemblyInformationalVersion>$(PackageVersion)</AssemblyInformationalVersion>
-        </PropertyGroup>
-    </Target>
 </Project>
