@@ -14,6 +14,7 @@
         <GitInfoReportImportance>high</GitInfoReportImportance>
         <GitIgnoreBranchVersion>true</GitIgnoreBranchVersion>
         <GitIgnoreTagVersion>true</GitIgnoreTagVersion>
+        <NoWarn>$(NoWarn);CS1591;CS1574</NoWarn>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
