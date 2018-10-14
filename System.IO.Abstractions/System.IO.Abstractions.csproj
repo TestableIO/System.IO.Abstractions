@@ -11,9 +11,6 @@
         <PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
         <PackageTags>testing</PackageTags>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <GitInfoReportImportance>high</GitInfoReportImportance>
-        <GitIgnoreBranchVersion>true</GitIgnoreBranchVersion>
-        <GitIgnoreTagVersion>true</GitIgnoreTagVersion>
         <NoWarn>$(NoWarn);CS1591;CS1574</NoWarn>
     </PropertyGroup>
 
@@ -52,18 +49,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="GitInfo" Version="2.0.18">
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
+      <PackageReference Include="Nerdbank.GitVersioning" Version="2.2.13">
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
     </ItemGroup>
 
-    <Target Name="ConfigureVersion" BeforeTargets="GetAssemblyVersion;GetPackageVersion" DependsOnTargets="GitVersion">
-        <PropertyGroup>
-            <AssemblyVersion>$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)</AssemblyVersion>
-            <AssemblyFileVersion>$(AssemblyVersion)</AssemblyFileVersion>
-            <PackageVersion>$(GitSemVerMajor).$(GitSemVerMinor).$(GitSemVerPatch)$(GitSemVerDashLabel)</PackageVersion>
-            <AssemblyInformationalVersion>$(PackageVersion)</AssemblyInformationalVersion>
-        </PropertyGroup>
-    </Target>
 </Project>
