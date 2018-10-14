@@ -280,26 +280,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
             Assert.IsTrue(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted));
         }
-
-        // TODO: figure out what to do about FileSecurity
-        //       should we just ignore the FileSecurity argument to MockFile.Create?
-        [Test, Ignore("FileSecurity needs to be mocked out")]
-        public void MockFile_Create_WithFileSecurity_AccessControlGetsAssignedToFile()
-        {
-            var root = XFS.Path(@"C:\");
-            var filePath = XFS.Path(@"C:\test.txt");
-            var fileSystem = new MockFileSystem();
-            fileSystem.Directory.CreateDirectory(root);
-            var groupAccess = new FileSecurity(filePath, AccessControlSections.Group);
-
-            using (var stream = fileSystem.File.Create(filePath, 4096, FileOptions.None, groupAccess))
-            {
-            }
-
-            var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
-            var ac = fileInfo.GetAccessControl();
-            //Assert.IsTrue(fileInfo.GetAccessControl()...HasGroupAccess?);
-        }
 #endif
     }
 }
