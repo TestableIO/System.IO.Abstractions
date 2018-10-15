@@ -6,6 +6,7 @@
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string path;
         private readonly bool canWrite = true;
+        private readonly FileOptions options;
         private bool disposed;
 
         public enum StreamType
@@ -16,10 +17,23 @@
             TRUNCATE
         }
 
-        public MockFileStream(IMockFileDataAccessor mockFileDataAccessor, string path, StreamType streamType)
+        public MockFileStream(
+            IMockFileDataAccessor mockFileDataAccessor,
+            string path,
+            StreamType streamType)
+            : this(mockFileDataAccessor, path, streamType, FileOptions.None)
+        {
+        }
+
+        public MockFileStream(
+            IMockFileDataAccessor mockFileDataAccessor,
+            string path,
+            StreamType streamType,
+            FileOptions options)
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
             this.path = path;
+            this.options = options;
 
             if (mockFileDataAccessor.FileExists(path))
             {
@@ -51,6 +65,7 @@
         public override void Close()
         {
             InternalFlush();
+            OnClose();
         }
 #else
         protected override void Dispose(bool disposing)
@@ -61,6 +76,7 @@
             }
             InternalFlush();
             base.Dispose(disposing);
+            OnClose();
             disposed = true;
         }
 #endif
@@ -83,6 +99,21 @@
                 /* .. put it in the mock system */
                 mockFileData.Contents = data;
             }
+        }
+
+        private void OnClose()
+        {
+            if (options.HasFlag(FileOptions.DeleteOnClose) && mockFileDataAccessor.FileExists(path))
+            {
+                mockFileDataAccessor.RemoveFile(path);
+            }
+
+#if NET40
+            if (options.HasFlag(FileOptions.Encrypted) && mockFileDataAccessor.FileExists(path))
+            {
+                mockFileDataAccessor.FileInfo.FromFileName(path).Encrypt();
+            }
+#endif
         }
     }
 }

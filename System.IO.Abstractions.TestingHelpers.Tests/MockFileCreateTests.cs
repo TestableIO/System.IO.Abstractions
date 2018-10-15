@@ -217,5 +217,67 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.That(fileSystem.File.ReadAllText(testFileName), Is.EqualTo(string.Empty));
         }
+
+        [Test]
+        public void MockFile_Create_DeleteOnCloseOption_FileExistsWhileStreamIsOpen()
+        {
+            var root = XFS.Path(@"C:\");
+            var filePath = XFS.Path(@"C:\test.txt");
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(root);
+
+            using (fileSystem.File.Create(filePath, 4096, FileOptions.DeleteOnClose))
+            {
+                Assert.IsTrue(fileSystem.File.Exists(filePath));
+            }
+        }
+
+        [Test]
+        public void MockFile_Create_DeleteOnCloseOption_FileDeletedWhenStreamIsClosed()
+        {
+            var root = XFS.Path(@"C:\");
+            var filePath = XFS.Path(@"C:\test.txt");
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(root);
+
+            using (fileSystem.File.Create(filePath, 4096, FileOptions.DeleteOnClose))
+            {
+            }
+
+            Assert.IsFalse(fileSystem.File.Exists(filePath));
+        }
+
+#if NET40
+        [Test]
+        public void MockFile_Create_EncryptedOption_FileNotYetEncryptedsWhenStreamIsOpen()
+        {
+            var root = XFS.Path(@"C:\");
+            var filePath = XFS.Path(@"C:\test.txt");
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(root);
+
+            using (var stream = fileSystem.File.Create(filePath, 4096, FileOptions.Encrypted))
+            {
+                var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
+                Assert.IsFalse(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted));
+            }
+        }
+
+        [Test]
+        public void MockFile_Create_EncryptedOption_EncryptsFileWhenStreamIsClose()
+        {
+            var root = XFS.Path(@"C:\");
+            var filePath = XFS.Path(@"C:\test.txt");
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(root);
+
+            using (var stream = fileSystem.File.Create(filePath, 4096, FileOptions.Encrypted))
+            {
+            }
+
+            var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
+            Assert.IsTrue(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted));
+        }
+#endif
     }
 }

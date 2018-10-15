@@ -133,41 +133,46 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFileData));
         }
 
-        public override Stream Create(string path)
+        public override Stream Create(string path) =>
+            Create(path, 4096);
+
+        public override Stream Create(string path, int bufferSize) =>
+            Create(path, bufferSize, FileOptions.None);
+
+        public override Stream Create(string path, int bufferSize, FileOptions options) =>
+            CreateInternal(path, bufferSize, options, null);
+
+#if NET40
+        public override Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity) =>
+            CreateInternal(path, bufferSize, options, fileSecurity);
+#endif
+
+        private Stream CreateInternal(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
         {
             if (path == null)
             {
                 throw new ArgumentNullException(nameof(path), "Path cannot be null.");
             }
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, nameof(path));
             var directoryPath = mockPath.GetDirectoryName(path);
+
             if (!mockFileDataAccessor.Directory.Exists(directoryPath))
             {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), path));
+                throw new DirectoryNotFoundException(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"),
+                        path));
             }
 
-            mockFileDataAccessor.AddFile(path, new MockFileData(new byte[0]));
-            var stream = OpenWrite(path);
-            return stream;
+            var mockFileData = new MockFileData(new byte[0])
+            {
+                AccessControl = fileSecurity
+            };
+            mockFileDataAccessor.AddFile(path, mockFileData);
+            return OpenWriteInternal(path, options);
         }
-
-        public override Stream Create(string path, int bufferSize)
-        {
-            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
-        }
-
-        public override Stream Create(string path, int bufferSize, FileOptions options)
-        {
-            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
-        }
-
-#if NET40
-        public override Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
-        {
-            throw new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
-        }
-#endif
 
         public override StreamWriter CreateText(string path)
         {
@@ -383,7 +388,15 @@ namespace System.IO.Abstractions.TestingHelpers
             return Open(path, mode, access, FileShare.None);
         }
 
-        public override Stream Open(string path, FileMode mode, FileAccess access, FileShare share)
+        public override Stream Open(string path, FileMode mode, FileAccess access, FileShare share) =>
+            OpenInternal(path, mode, access, share, FileOptions.None);
+
+        private Stream OpenInternal(
+            string path,
+            FileMode mode,
+            FileAccess access,
+            FileShare share,
+            FileOptions options)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
@@ -412,7 +425,7 @@ namespace System.IO.Abstractions.TestingHelpers
             else if (mode == FileMode.Append)
                 streamType = MockFileStream.StreamType.APPEND;
 
-            return new MockFileStream(mockFileDataAccessor, path, streamType);
+            return new MockFileStream(mockFileDataAccessor, path, streamType, options);
         }
 
         public override Stream OpenRead(string path)
@@ -430,11 +443,12 @@ namespace System.IO.Abstractions.TestingHelpers
                 OpenRead(path));
         }
 
-        public override Stream OpenWrite(string path)
+        public override Stream OpenWrite(string path) => OpenWriteInternal(path, FileOptions.None);
+
+        private Stream OpenWriteInternal(string path, FileOptions options)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-
-            return Open(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+            return OpenInternal(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, options);
         }
 
         public override byte[] ReadAllBytes(string path)
