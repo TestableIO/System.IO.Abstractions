@@ -1,5 +1,3 @@
-using System.Security.AccessControl;
-
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using Collections.Generic;
