@@ -13,7 +13,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileSystemWatcherFactory_CreateNew_ShouldReturnNonNullMockWatcher()
         {
             // Arrange
-            var factory = new MockFileSystemWatcherFactory();
+            var fs = new MockFileSystem();
+            var factory = new MockFileSystemWatcherFactory(fs);
 
             // Act
             var result = factory.CreateNew();
@@ -26,7 +27,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileSystemWatcherFactory_FromPath_ShouldReturnNonNullMockWatcher()
         {
             // Arrange
-            var factory = new MockFileSystemWatcherFactory();
+            var fs = new MockFileSystem();
+            var factory = new MockFileSystemWatcherFactory(fs);
 
             // Act
             var result = factory.FromPath(@"y:\test");
@@ -40,7 +42,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             const string path = @"z:\test";
-            var factory = new MockFileSystemWatcherFactory();
+            var fs = new MockFileSystem();
+            var factory = new MockFileSystemWatcherFactory(fs);
 
             // Act
             var result = factory.FromPath(path);

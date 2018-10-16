@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace System.IO.Abstractions.TestingHelpers
+﻿namespace System.IO.Abstractions.TestingHelpers
 {
     [Serializable]
     public class MockFileSystemWatcherFactory : IFileSystemWatcherFactory
     {
-        public FileSystemWatcherBase CreateNew()
-        {
-            return new MockFileSystemWatcher();
-        }
+        private readonly IMockFileDataAccessor mockFileDataAccessor;
 
-        public FileSystemWatcherBase FromPath(string path)
-        {
-            return new MockFileSystemWatcher {Path = path};
-        }
+        public MockFileSystemWatcherFactory(IMockFileDataAccessor mockFileDataAccessor) =>
+            this.mockFileDataAccessor = mockFileDataAccessor;
+
+        public FileSystemWatcherBase CreateNew() =>
+            new MockFileSystemWatcher(mockFileDataAccessor.Listen());
+
+        public FileSystemWatcherBase FromPath(string path) =>
+            new MockFileSystemWatcher(mockFileDataAccessor.Listen()) {Path = path};
     }
 }

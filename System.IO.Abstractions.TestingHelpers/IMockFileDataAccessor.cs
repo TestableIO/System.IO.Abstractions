@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -21,6 +22,7 @@ namespace System.IO.Abstractions.TestingHelpers
         void AddFileFromEmbeddedResource(string path, Assembly resourceAssembly, string embeddedResourcePath);
         void AddFilesFromEmbeddedNamespace(string path, Assembly resourceAssembly, string embeddedRresourcePath);
 
+        void MoveFile(string sourcePath, string destPath);
         void MoveDirectory(string sourcePath, string destPath);
 
         /// <summary>
@@ -60,9 +62,9 @@ namespace System.IO.Abstractions.TestingHelpers
         PathBase Path { get; }
         IDirectoryInfoFactory DirectoryInfo { get; }
         IDriveInfoFactory DriveInfo { get; }
-
         PathVerifier PathVerifier { get; }
-
         IFileSystem FileSystem { get; }
+
+        ConcurrentQueue<FileSystemEventArgs> Listen();
     }
 }

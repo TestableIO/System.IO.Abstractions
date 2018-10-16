@@ -362,16 +362,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 }
             }
 
-
-            var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
-
-            if (sourceFile == null)
+            if (!mockFileDataAccessor.FileExists(sourceFileName))
                 throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, "The file \"{0}\" could not be found.", sourceFileName), sourceFileName);
 
             VerifyDirectoryExists(destFileName);
-
-            mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile.Contents));
-            mockFileDataAccessor.RemoveFile(sourceFileName);
+            mockFileDataAccessor.MoveFile(sourceFileName, destFileName);
         }
 
         public override Stream Open(string path, FileMode mode)

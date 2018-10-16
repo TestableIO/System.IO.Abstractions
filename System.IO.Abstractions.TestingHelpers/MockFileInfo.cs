@@ -217,6 +217,11 @@ namespace System.IO.Abstractions.TestingHelpers
             }
             Delete();
             path = movedFileInfo.FullName;
+
+            // TODO: use File.Move instead
+            //var destPath = mockFileSystem.Path.GetFullPath(destFileName);
+            //mockFileSystem.MoveFile(path, destPath);
+            //path = destPath;
         }
 
         public override Stream Open(FileMode mode)

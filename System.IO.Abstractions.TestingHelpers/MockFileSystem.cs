@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -10,8 +11,12 @@ namespace System.IO.Abstractions.TestingHelpers
     public class MockFileSystem : IFileSystem, IMockFileDataAccessor
     {
         private readonly IDictionary<string, MockFileData> files;
+
         [NonSerialized]
         private readonly PathVerifier pathVerifier;
+
+        [NonSerialized]
+        private readonly List<ConcurrentQueue<FileSystemEventArgs>> queues;
 
         public MockFileSystem() : this(null) { }
 
@@ -23,9 +28,9 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             pathVerifier = new PathVerifier(this);
-
+            queues = new List<ConcurrentQueue<FileSystemEventArgs>>();
             this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
-            
+
             Path = new MockPath(this);
             File = new MockFile(this);
             Directory = new MockDirectory(this, File, currentDirectory);
@@ -33,7 +38,7 @@ namespace System.IO.Abstractions.TestingHelpers
             FileStream = new MockFileStreamFactory(this);
             DirectoryInfo = new MockDirectoryInfoFactory(this);
             DriveInfo = new MockDriveInfoFactory(this);
-            FileSystemWatcher = new MockFileSystemWatcherFactory();
+            FileSystemWatcher = new MockFileSystemWatcherFactory(this);
 
             if (files != null)
             {
@@ -140,6 +145,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
                 SetEntry(fixedPath, mockFile ?? new MockFileData(string.Empty));
             }
+
+            DispatchCreated(fixedPath);
         }
 
         public void AddDirectory(string path)
@@ -219,6 +226,19 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        public void MoveFile(string sourcePath, string destPath)
+        {
+            sourcePath = FixPath(sourcePath);
+            destPath = FixPath(destPath);
+            var entry = files[destPath] = files[sourcePath];
+            files.Remove(sourcePath);
+
+            if (!entry.IsDirectory)
+            {
+                DispatchMoved(sourcePath, destPath);
+            }
+        }
+
         public void MoveDirectory(string sourcePath, string destPath)
         {
             sourcePath = FixPath(sourcePath);
@@ -233,8 +253,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 foreach(var path in affectedPaths)
                 {
                     var newPath = path.Replace(sourcePath, destPath, StringComparison.OrdinalIgnoreCase);
-                    files[newPath] = files[path];
-                    files.Remove(path);
+                    MoveFile(path, newPath);
                 }
             }
         }
@@ -250,7 +269,15 @@ namespace System.IO.Abstractions.TestingHelpers
                     throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("ACCESS_TO_THE_PATH_IS_DENIED"), path));
                 }
 
-                files.Remove(path);
+                if (files.TryGetValue(path, out var entry))
+                {
+                    files.Remove(path);
+
+                    if (!entry.IsDirectory)
+                    {
+                        DispatchDeleted(path);
+                    }
+                }
             }
         }
 
@@ -326,5 +353,58 @@ namespace System.IO.Abstractions.TestingHelpers
                 return result;
             }
         }
+
+        public ConcurrentQueue<FileSystemEventArgs> Listen()
+        {
+            lock (queues)
+            {
+                var queue = new ConcurrentQueue<FileSystemEventArgs>();
+                queues.Add(queue);
+                return queue;
+            }
+        }
+
+        private void Dispatch(FileSystemEventArgs e)
+        {
+            lock (queues)
+            {
+                foreach (var queue in queues)
+                {
+                    queue.Enqueue(e);
+                }
+            }
+        }
+
+        private void DispatchCreated(string path) =>
+            Dispatch(new FileSystemEventArgs(
+                WatcherChangeTypes.Created,
+                Path.GetDirectoryName(path),
+                Path.GetFileName(path)));
+
+        private void DispatchDeleted(string path) =>
+            Dispatch(new FileSystemEventArgs(
+                WatcherChangeTypes.Deleted,
+                Path.GetDirectoryName(path),
+                Path.GetFileName(path)));
+
+        private void DispatchMoved(string oldPath, string newPath)
+        {
+            if (Path.GetDirectoryName(oldPath) == Path.GetDirectoryName(newPath))
+            {
+                DispatchRenamed(oldPath, newPath);
+            }
+            else
+            {
+                DispatchDeleted(oldPath);
+                DispatchCreated(newPath);
+            }
+        }
+
+        private void DispatchRenamed(string oldPath, string newPath) =>
+            Dispatch(new RenamedEventArgs(
+                WatcherChangeTypes.Renamed,
+                Path.GetDirectoryName(newPath),
+                Path.GetFileName(newPath),
+                Path.GetFileName(oldPath)));
     }
 }

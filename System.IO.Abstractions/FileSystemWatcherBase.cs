@@ -52,6 +52,7 @@ namespace System.IO.Abstractions
         public abstract void BeginInit();
 #endif
 
+        /// <inheritdoc cref="FileSystemWatcher.Dispose" />
         public void Dispose()
         {
             Dispose(true);
@@ -69,6 +70,10 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileSystemWatcher.WaitForChanged(WatcherChangeTypes,int)"/>
         public abstract WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout);
 
+        /// <summary>
+        /// Converts a standard <see cref="FileSystemWatcher"/> to a
+        /// compatible <see cref="FileSystemWatcherBase"/>.
+        /// </summary>
         public static implicit operator FileSystemWatcherBase(FileSystemWatcher watcher)
         {
             if (watcher == null)
@@ -79,31 +84,37 @@ namespace System.IO.Abstractions
             return new FileSystemWatcherWrapper(watcher);
         }
 
+        /// <inheritdoc cref="FileSystemWatcher.Dispose(bool)" />
         public virtual void Dispose(bool disposing)
         {
             // do nothing
         }
 
+        /// <inheritdoc cref="FileSystemWatcher.OnCreated(FileSystemEventArgs)" />
         protected void OnCreated(object sender, FileSystemEventArgs args)
         {
             Created?.Invoke(sender, args);
         }
 
+        /// <inheritdoc cref="FileSystemWatcher.OnChanged(FileSystemEventArgs)" />
         protected void OnChanged(object sender, FileSystemEventArgs args)
         {
             Changed?.Invoke(sender, args);
         }
 
+        /// <inheritdoc cref="FileSystemWatcher.OnDeleted(FileSystemEventArgs)" />
         protected void OnDeleted(object sender, FileSystemEventArgs args)
         {
             Deleted?.Invoke(sender, args);
         }
 
+        /// <inheritdoc cref="FileSystemWatcher.OnRenamed(RenamedEventArgs)" />
         protected void OnRenamed(object sender, RenamedEventArgs args)
         {
             Renamed?.Invoke(sender, args);
         }
 
+        /// <inheritdoc cref="FileSystemWatcher.OnError(ErrorEventArgs)" />
         protected void OnError(object sender, ErrorEventArgs args)
         {
             Error?.Invoke(sender, args);
