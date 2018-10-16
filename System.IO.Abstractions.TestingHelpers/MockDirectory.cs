@@ -97,7 +97,6 @@ namespace System.IO.Abstractions.TestingHelpers
 
             try
             {
-
                 path = path.TrimSlashes();
                 path = mockFileDataAccessor.Path.GetFullPath(path);
                 return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.OrdinalIgnoreCase));
@@ -176,8 +175,15 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
         {
-            if(path == null)
+            if (path == null)
+            {
                 throw new ArgumentNullException();
+            }
+            
+            if (path.Any(c => Path.GetInvalidPathChars().Contains(c)))
+            {
+                throw new ArgumentException();
+            }
 
             if (!Exists(path))
             {
