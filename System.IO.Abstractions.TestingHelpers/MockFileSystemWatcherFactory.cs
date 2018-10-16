@@ -9,9 +9,9 @@
             this.mockFileDataAccessor = mockFileDataAccessor;
 
         public FileSystemWatcherBase CreateNew() =>
-            new MockFileSystemWatcher(mockFileDataAccessor.Listen());
+            new MockFileSystemWatcher(mockFileDataAccessor);
 
         public FileSystemWatcherBase FromPath(string path) =>
-            new MockFileSystemWatcher(mockFileDataAccessor.Listen()) {Path = path};
+            new MockFileSystemWatcher(mockFileDataAccessor, path);
     }
 }

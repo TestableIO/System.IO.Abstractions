@@ -1,5 +1,8 @@
 ﻿using System.Security.AccessControl;
 
+// TODO: make sure mock file system events are
+//       fired for operations on MockFileInfo
+
 namespace System.IO.Abstractions.TestingHelpers
 {
     [Serializable]

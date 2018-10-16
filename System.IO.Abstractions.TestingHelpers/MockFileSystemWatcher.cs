@@ -1,23 +1,55 @@
-﻿using System.Collections.Concurrent;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
     public class MockFileSystemWatcher : FileSystemWatcherBase
     {
-        private bool running = true;
+        private readonly CancellationTokenSource cancel;
         private readonly Task task;
+        private readonly Dictionary<WatcherChangeTypes, WaitableRef<FileSystemEventArgs>> waiters;
 
-        public MockFileSystemWatcher(ConcurrentQueue<FileSystemEventArgs> queue)
+        public MockFileSystemWatcher(IMockFileDataAccessor mockFileDataAccessor, string root = null)
         {
-            task = Task.Factory.StartNew(() =>
+            Path = root;
+            cancel = new CancellationTokenSource();
+            waiters = new Dictionary<WatcherChangeTypes, WaitableRef<FileSystemEventArgs>>();
+            var queue = mockFileDataAccessor.Listen();
+            var pathBase = mockFileDataAccessor.Path;
+
+            void ConsumeEvents()
             {
-                while (running)
+                while (!cancel.IsCancellationRequested)
                 {
-                    // TODO: filter on root path
-                    if (queue.TryDequeue(out var e))
+                    if (queue.TryDequeue(out var e) &&
+                        (root == null || pathBase.GetFullPath(e.FullPath).StartsWith(root)))
                     {
+                        lock (waiters)
+                        {
+                            var keysToRemove = new List<WatcherChangeTypes>();
+
+                            foreach (var keyChangeType in waiters.Keys)
+                            {
+                                // if event has all the change type
+                                // flags as dictionary entry
+                                if ((keyChangeType & e.ChangeType) == keyChangeType)
+                                {
+                                    foreach (var waiter in waiters)
+                                    {
+                                        waiter.Value.Send(e);
+                                    }
+
+                                    keysToRemove.Add(keyChangeType);
+                                }
+                            }
+
+                            foreach (var keyToRemove in keysToRemove)
+                            {
+                                waiters.Remove(keyToRemove);
+                            }
+                        }
+
                         if (e.ChangeType.HasFlag(WatcherChangeTypes.Created))
                         {
                             OnCreated(this, e);
@@ -39,7 +71,9 @@ namespace System.IO.Abstractions.TestingHelpers
                         }
                     }
                 }
-            });
+            }
+
+            task = Task.Factory.StartNew(ConsumeEvents);
         }
 
         public override bool IncludeSubdirectories { get; set; }
@@ -49,11 +83,9 @@ namespace System.IO.Abstractions.TestingHelpers
         public override NotifyFilters NotifyFilter { get; set; }
         public override string Path { get; set; }
 #if NET40
-        public override ISite Site { get; set; }
-        public override ISynchronizeInvoke SynchronizingObject { get; set; }
-#endif
+        public override ComponentModel.ISite Site { get; set; }
+        public override ComponentModel.ISynchronizeInvoke SynchronizingObject { get; set; }
 
-#if NET40
         public override void BeginInit()
         {
         }
@@ -66,20 +98,40 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            running = false;
+            cancel.Cancel();
             task.Wait();
         }
 
-        // TODO: notify threads blocked waiting for event
-
-        public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
-        {
-            throw new NotImplementedException();
-        }
+        public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType) =>
+            WaitForChanged(changeType, int.MaxValue);
 
         public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
         {
-            throw new NotImplementedException();
+            var waiter = new WaitableRef<FileSystemEventArgs>();
+
+            lock (waiters)
+            {
+                waiters.Add(changeType, waiter);
+            }
+
+            try
+            {
+                var e = waiter.Wait(timeout);
+
+                return new WaitForChangedResult
+                {
+                    ChangeType = e.ChangeType,
+                    Name = e.Name,
+                    OldName = (e as RenamedEventArgs)?.OldName
+                };
+            }
+            catch (TimeoutException)
+            {
+                return new WaitForChangedResult
+                {
+                    TimedOut = true
+                };
+            }
         }
     }
 }
