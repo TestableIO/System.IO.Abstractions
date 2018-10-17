@@ -12,10 +12,6 @@
         <PackageTags>testing</PackageTags>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);CS1591;CS1574</NoWarn>
-        <GitInfoReportImportance>high</GitInfoReportImportance>
-        <GitIgnoreBranchVersion>true</GitIgnoreBranchVersion>
-        <GitIgnoreTagVersion>true</GitIgnoreTagVersion>
-        <NoWarn>$(NoWarn);CS1591;CS1574</NoWarn>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -57,12 +53,6 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>
-    </ItemGroup>
-
-        <PackageReference Include="GitInfo" Version="2.0.18">
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
     </ItemGroup>
 
 </Project>
