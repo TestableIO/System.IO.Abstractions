@@ -35,3 +35,13 @@ deploy:
   artifact: /.*\.nupkg/
   on:
     branch: master
+
+- provider: GitHub
+   tag: v$(GitBuildVersion)
+   artifact: /.*\.nupkg/
+   auth_token:
+     secure: <your encrypted token>
+   on: 
+     branch: master
+
+    
