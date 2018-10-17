@@ -40,7 +40,7 @@ deploy:
    tag: v$(GitBuildVersion)
    artifact: /.*\.nupkg/
    auth_token:
-     secure: <your encrypted token>
+     secure: 4ejpp3dzvpOwfD7TOcypCsT0z8j+qYiihiZszS3uVI78vZpAtM+P+A8NK2JZmYMo
    on: 
      branch: master
 
