@@ -2,7 +2,7 @@
 
 ## Versioning
 
-This library uses `Nerdbank.GitVersioning` for generating reproducible version numbers. 
+This library uses [Nerdbank.GitVersioning](https://github.com/AArnott/Nerdbank.GitVersioning) for generating stable and reproducible version numbers.
 
 The so-called base version is manually maintained in [the version config](version.json). Every build calculates its final version number based on the base version and the number of changes that occured since the last change to the version config.
 
