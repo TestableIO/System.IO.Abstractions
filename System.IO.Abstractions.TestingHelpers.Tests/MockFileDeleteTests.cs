@@ -35,5 +35,24 @@
             // Assert
             Assert.Throws<ArgumentException>(action);
         }
+
+        [Test]
+        public void MockFile_Delete_ShouldThrowDirectoryNotFoundExceptionIfParentFolderAbsent()
+        {
+            var fileSystem = new MockFileSystem();
+            var path = XFS.Path("C:\\test\\somefile.txt");
+
+            Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Delete(path));
+        }
+
+        [Test]
+        public void MockFile_Delete_ShouldThrowSilentlyReturnIfNonExistingFileInExistingParentFolder()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("c:\\temp");
+
+            //Delete() returns void, so there is nothing to check here beside absense of an exception
+            fileSystem.File.Delete("C:\\temp\\somefile.txt");
+        }
     }
 }
