@@ -177,12 +177,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (path == null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(path));
             }
             
             if (path.Any(c => Path.GetInvalidPathChars().Contains(c)))
             {
-                throw new ArgumentException();
+                throw new ArgumentException("Invalid character(s) in path", nameof(path));
             }
 
             if (!Exists(path))

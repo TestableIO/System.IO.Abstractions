@@ -279,7 +279,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileSystem_GetFiles_ThrowsCorrectExceptionForInvalidCharacters()
+        public void MockFileSystem_GetFiles_ThrowsArgumentExceptionForInvalidCharacters()
         {
             // Arrange
             const string path = @"c:\";
@@ -287,10 +287,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(XFS.Path(path));
             
             // Act
-            TestDelegate wrapped = () => fileSystem.Directory.GetFiles($"{path}{'\0'}.txt");
+            TestDelegate getFilesWithInvalidCharacterInPath = () => fileSystem.Directory.GetFiles($"{path}{'\0'}.txt");
 
             // Assert
-            Assert.Throws<ArgumentException>(wrapped);
+            Assert.Throws<ArgumentException>(getFilesWithInvalidCharacterInPath);
         }
     }
 }
