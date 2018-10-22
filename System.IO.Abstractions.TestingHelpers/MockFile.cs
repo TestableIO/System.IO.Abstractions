@@ -186,6 +186,11 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
+            // We mimic exact behavior of the standard File.Delete() method
+            // which throws exception only if the folder does not exist,
+            // but silently returns if deliting a non-existing file in an existing folder.
+            VerifyDirectoryExists(path);
+
             mockFileDataAccessor.RemoveFile(path);
         }
 

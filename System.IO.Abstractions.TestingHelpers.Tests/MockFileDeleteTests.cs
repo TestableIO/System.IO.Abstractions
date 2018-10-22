@@ -46,7 +46,7 @@
         }
 
         [Test]
-        public void MockFile_Delete_ShouldThrowSilentlyReturnIfNonExistingFileInExistingParentFolder()
+        public void MockFile_Delete_ShouldSilentlyReturnIfNonExistingFileInExistingFolder()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.Directory.CreateDirectory("c:\\temp");
