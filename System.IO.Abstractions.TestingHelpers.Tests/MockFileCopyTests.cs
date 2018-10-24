@@ -49,6 +49,28 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_Copy_ShouldCloneBinaryContents()
+        {
+            var sourceFileName = XFS.Path(@"c:\source\demo.bin");
+            var destFileName = XFS.Path(@"c:\source\demo_copy.bin");
+
+            byte[] original = new byte[] { 0xC0 };
+            var mockFileSystem = new MockFileSystem();
+            mockFileSystem.AddFile(sourceFileName, new MockFileData(original));
+            mockFileSystem.File.Copy(sourceFileName, destFileName);
+
+            using (var stream = mockFileSystem.File.Open(sourceFileName, FileMode.Open, FileAccess.ReadWrite))
+            {
+                var binaryWriter = new System.IO.BinaryWriter(stream);
+
+                binaryWriter.Seek(0, SeekOrigin.Begin);
+                binaryWriter.Write("Modified");
+            }
+
+            CollectionAssert.AreEqual(original, mockFileSystem.File.ReadAllBytes(destFileName));
+        }
+
+        [Test]
         public void MockFile_Copy_ShouldCreateFileAtNewDestination()
         {
             string sourceFileName = XFS.Path(@"c:\source\demo.txt");
