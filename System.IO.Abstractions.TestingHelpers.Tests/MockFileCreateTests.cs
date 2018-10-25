@@ -12,7 +12,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     public class MockFileCreateTests
     {
-
         [Test]
         public void Mockfile_Create_ShouldCreateNewStream()
         {
@@ -165,5 +164,120 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var exception = Assert.Throws<DirectoryNotFoundException>(action);
             Assert.That(exception.Message, Does.StartWith("Could not find a part of the path"));
         }
+
+        [Test]
+        public void MockFile_Create_TruncateShouldWriteNewContents()
+        {
+            // Arrange
+            const string testFileName = @"c:\someFile.txt";
+            var fileSystem = new MockFileSystem();
+            
+            using (var stream = fileSystem.FileStream.Create(testFileName, FileMode.Create, FileAccess.Write))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write("original_text");
+                }
+            }
+
+            // Act
+            using (var stream = fileSystem.FileStream.Create(testFileName, FileMode.Truncate, FileAccess.Write))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write("new_text");
+                }
+            }
+
+            // Assert
+            Assert.That(fileSystem.File.ReadAllText(testFileName), Is.EqualTo("new_text"));
+        }
+
+        [Test]
+        public void MockFile_Create_TruncateShouldClearFileContentsOnOpen()
+        {
+            // Arrange
+            const string testFileName = @"c:\someFile.txt";
+            var fileSystem = new MockFileSystem();
+
+            using (var stream = fileSystem.FileStream.Create(testFileName, FileMode.Create, FileAccess.Write))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write("original_text");
+                }
+            }
+
+            // Act
+            using (var stream = fileSystem.FileStream.Create(testFileName, FileMode.Truncate, FileAccess.Write))
+            {
+                // Opening the stream is enough to reset the contents
+            }
+
+            // Assert
+            Assert.That(fileSystem.File.ReadAllText(testFileName), Is.EqualTo(string.Empty));
+        }
+
+        [Test]
+        public void MockFile_Create_DeleteOnCloseOption_FileExistsWhileStreamIsOpen()
+        {
+            var root = XFS.Path(@"C:\");
+            var filePath = XFS.Path(@"C:\test.txt");
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(root);
+
+            using (fileSystem.File.Create(filePath, 4096, FileOptions.DeleteOnClose))
+            {
+                Assert.IsTrue(fileSystem.File.Exists(filePath));
+            }
+        }
+
+        [Test]
+        public void MockFile_Create_DeleteOnCloseOption_FileDeletedWhenStreamIsClosed()
+        {
+            var root = XFS.Path(@"C:\");
+            var filePath = XFS.Path(@"C:\test.txt");
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(root);
+
+            using (fileSystem.File.Create(filePath, 4096, FileOptions.DeleteOnClose))
+            {
+            }
+
+            Assert.IsFalse(fileSystem.File.Exists(filePath));
+        }
+
+#if NET40
+        [Test]
+        public void MockFile_Create_EncryptedOption_FileNotYetEncryptedsWhenStreamIsOpen()
+        {
+            var root = XFS.Path(@"C:\");
+            var filePath = XFS.Path(@"C:\test.txt");
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(root);
+
+            using (var stream = fileSystem.File.Create(filePath, 4096, FileOptions.Encrypted))
+            {
+                var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
+                Assert.IsFalse(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted));
+            }
+        }
+
+        [Test]
+        public void MockFile_Create_EncryptedOption_EncryptsFileWhenStreamIsClose()
+        {
+            var root = XFS.Path(@"C:\");
+            var filePath = XFS.Path(@"C:\test.txt");
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(root);
+
+            using (var stream = fileSystem.File.Create(filePath, 4096, FileOptions.Encrypted))
+            {
+            }
+
+            var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
+            Assert.IsTrue(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted));
+        }
+#endif
     }
 }

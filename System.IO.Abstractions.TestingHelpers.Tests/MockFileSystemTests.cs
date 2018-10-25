@@ -55,6 +55,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileSystem_AddFile_ShouldHandleNullFileDataAsEmpty()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\something\nullish.txt", null }
+            });
+
+            var result = fileSystem.File.ReadAllText(@"c:\SomeThing\nullish.txt");
+
+            Assert.IsEmpty(result, "Null MockFileData should be allowed for and result in an empty file.");
+        }
+
+        [Test]
         public void MockFileSystem_AddFile_ShouldRepaceExistingFile()
         {
             const string path = @"c:\some\file.txt";
@@ -263,6 +276,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(path2);
 
             Assert.IsTrue(fileSystem.FileExists(path2));
+        }
+
+        [Test]
+        public void MockFileSystem_GetFiles_ThrowsArgumentExceptionForInvalidCharacters()
+        {
+            // Arrange
+            const string path = @"c:\";
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(XFS.Path(path));
+            
+            // Act
+            TestDelegate getFilesWithInvalidCharacterInPath = () => fileSystem.Directory.GetFiles($"{path}{'\0'}.txt");
+
+            // Assert
+            Assert.Throws<ArgumentException>(getFilesWithInvalidCharacterInPath);
         }
     }
 }

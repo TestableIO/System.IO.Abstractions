@@ -11,6 +11,9 @@ namespace System.IO.Abstractions
         {
         }
 
+        [Obsolete("This constructor only exists to support mocking libraries.", error: true)]
+        internal DirectoryInfoBase() { }
+
         /// <inheritdoc cref="DirectoryInfo.Create()"/>
         public abstract void Create();
 #if NET40
