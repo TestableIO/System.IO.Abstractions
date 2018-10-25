@@ -2,7 +2,6 @@
     <PropertyGroup>
         <TargetFrameworks>net40;netstandard1.4;netstandard2.0;</TargetFrameworks>
         <PackageId>System.IO.Abstractions.TestingHelpers</PackageId>
-        <Version>0.0.0.1</Version>
         <Description>A set of pre-built mocks to help when testing file system interactions.</Description>
         <Company />
         <Product>System.IO.Abstractions</Product>
@@ -36,4 +35,12 @@
         <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
         <PackageReference Include="System.Security.AccessControl" Version="4.5.0" />
     </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Nerdbank.GitVersioning" Version="2.2.13">
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        <PrivateAssets>all</PrivateAssets>
+      </PackageReference>
+    </ItemGroup>
+
 </Project>
