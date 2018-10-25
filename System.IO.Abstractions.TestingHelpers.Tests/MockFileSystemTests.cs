@@ -277,5 +277,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.IsTrue(fileSystem.FileExists(path2));
         }
+
+        [Test]
+        public void MockFileSystem_GetFiles_ThrowsArgumentExceptionForInvalidCharacters()
+        {
+            // Arrange
+            const string path = @"c:\";
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(XFS.Path(path));
+            
+            // Act
+            TestDelegate getFilesWithInvalidCharacterInPath = () => fileSystem.Directory.GetFiles($"{path}{'\0'}.txt");
+
+            // Assert
+            Assert.Throws<ArgumentException>(getFilesWithInvalidCharacterInPath);
+        }
     }
 }

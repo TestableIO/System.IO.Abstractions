@@ -96,7 +96,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             accessControl = template.accessControl;
             Attributes = template.Attributes;
-            TextContents = template.TextContents;
+            Contents = template.Contents.ToArray();
             CreationTime = template.CreationTime;
             LastAccessTime = template.LastAccessTime;
             LastWriteTime = template.LastWriteTime;
