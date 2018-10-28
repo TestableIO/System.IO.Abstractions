@@ -4,7 +4,7 @@ using static System.IO.Abstractions.TestingHelpers.MockFileStream;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
-    internal class MockStreamWriter : IStreamWriter
+    public class MockStreamWriter : IStreamWriter
     {
         internal const int DefaultBufferSize = 1024;
 
