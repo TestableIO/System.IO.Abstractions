@@ -10,5 +10,6 @@
         IDirectoryInfoFactory DirectoryInfo { get; }
         IDriveInfoFactory DriveInfo { get; }
         IFileSystemWatcherFactory FileSystemWatcher { get; }
+        IStreamWriterFactory StreamWriter { get; }
     }
 }

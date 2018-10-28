@@ -33,6 +33,8 @@ namespace System.IO.Abstractions.TestingHelpers
             FileStream = new MockFileStreamFactory(this);
             DirectoryInfo = new MockDirectoryInfoFactory(this);
             DriveInfo = new MockDriveInfoFactory(this);
+            StreamWriter = new MockStreamWriterFactory(this);
+
             FileSystemWatcher = new MockFileSystemWatcherFactory();
 
             if (files != null)
@@ -57,6 +59,11 @@ namespace System.IO.Abstractions.TestingHelpers
         public IDirectoryInfoFactory DirectoryInfo { get; }
 
         public IDriveInfoFactory DriveInfo { get; }
+
+        public IStreamWriterFactory StreamWriter
+        {
+            get;
+        }
 
         public IFileSystemWatcherFactory FileSystemWatcher { get; }
 

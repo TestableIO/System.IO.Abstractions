@@ -16,7 +16,7 @@
             var filepath = XFS.Path(@"c:\something\foo.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
 
-            using (var writer = new MockStreamWriter(filesystem, filepath))
+            using (var writer = filesystem.StreamWriter.FromPath(filepath))
             {
                 writer.WriteLine("Test");
             }
@@ -24,7 +24,7 @@
             var file = filesystem.GetFile(filepath);
 
             // TextContents should contain new line and "Test"-string
-            Assert.AreEqual(file.TextContents, "Test\r\n");
+            Assert.AreEqual(file.TextContents, string.Format("Test{0}", Environment.NewLine));
         }
 
         [Test]
@@ -34,7 +34,7 @@
             var filepath = XFS.Path(@"c:\something\foo.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
 
-            using (var writer = new MockStreamWriter(filesystem, filepath))
+            using (var writer = filesystem.StreamWriter.FromPath(filepath))
             {
                 writer.WriteLine("Test");
                 writer.WriteLine("SecondLine");
@@ -44,7 +44,7 @@
             var file = filesystem.GetFile(filepath);
 
             // TextContents should contain all lines seperated by '\r\n'
-            Assert.AreEqual(file.TextContents, "Test\r\nSecondLine\r\nLastLine\r\n");
+            Assert.AreEqual(file.TextContents, string.Format("Test{0}SecondLine{0}LastLine{0}", Environment.NewLine));
         }
 
         [Test]
