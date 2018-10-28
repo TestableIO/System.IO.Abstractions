@@ -24,7 +24,7 @@
             var file = filesystem.GetFile(filepath);
 
             // TextContents should contain new line and "Test"-string
-            Assert.IsTrue(file.TextContents == "Test\r\n");
+            Assert.AreEqual(file.TextContents, "Test\r\n");
         }
 
         [Test]
@@ -44,7 +44,7 @@
             var file = filesystem.GetFile(filepath);
 
             // TextContents should contain all lines seperated by '\r\n'
-            Assert.IsTrue(file.TextContents == "Test\r\nSecondLine\r\nLastLine\r\n");
+            Assert.AreEqual(file.TextContents, "Test\r\nSecondLine\r\nLastLine\r\n");
         }
 
         [Test]
@@ -62,7 +62,7 @@
             var file = filesystem.GetFile(filepath);
 
             // TextContents should just contain "Test"-string
-            Assert.IsTrue(file.TextContents == "Test");
+            Assert.AreEqual(file.TextContents, "Test");
         }
 
         [Test]
@@ -82,9 +82,8 @@
             var file = filesystem.GetFile(filepath);
 
             // TextContents should just contain "Test"-string
-            Assert.IsTrue(file.TextContents == testInt.ToString());
+            Assert.AreEqual(file.TextContents, testInt.ToString());
         }
-
 
         [Test]
         public void MockStreamWriter_OnlyMemoryStreams()
