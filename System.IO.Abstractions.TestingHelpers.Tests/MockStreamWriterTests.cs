@@ -93,13 +93,8 @@
             var filepath = Path.Combine(TestContext.CurrentContext.TestDirectory, "test.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
             Assert.Throws<InvalidOperationException>(
-                () => CreateMockStreamWriter(filesystem, new System.IO.FileStream(filepath, FileMode.Create)), 
+                () => new MockStreamWriter(filesystem, new System.IO.FileStream(filepath, FileMode.Create)), 
                 "Using MockStreamWriter with no MemoryStream should throw an exception");
-        }
-
-        private MockStreamWriter CreateMockStreamWriter(MockFileSystem fileSystem, Stream stream)
-        {
-            return new MockStreamWriter(fileSystem, stream);
         }
     }
 }
