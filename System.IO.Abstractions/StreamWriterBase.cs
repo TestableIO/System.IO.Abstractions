@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="StreamWriter"/>
-    public abstract class StreamWriterBase : TextWriter, IStreamWriterBase
+    [CLSCompliant(false)]
+    public abstract class StreamWriterBase : TextWriter, IStreamWriter
     {
         protected StreamWriterBase(IFileSystem fileSystem)
         {
@@ -105,7 +106,26 @@ namespace System.IO.Abstractions
 
         public override abstract void Flush();
 
+#if NET40
         public override abstract void Close();
+#endif
 
+#if !NET40
+        public override abstract Task WriteAsync(char value);
+
+        public override abstract Task WriteAsync(char[] buffer, int index, int count);
+
+        public override abstract Task WriteAsync(string value);
+
+        public override abstract Task WriteLineAsync();
+
+        public override abstract Task WriteLineAsync(char value);
+
+        public override abstract Task WriteLineAsync(char[] buffer, int index, int count);
+
+        public override abstract Task WriteLineAsync(string value);
+
+        public override abstract Task FlushAsync();
+#endif
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System.Text;
+using System.Threading.Tasks;
 
 namespace System.IO.Abstractions
 {
     [Serializable]
+    [CLSCompliant(false)]
     public class StreamWriterWrapper : StreamWriterBase
     {
         private readonly StreamWriter _writer;
@@ -41,16 +43,24 @@ namespace System.IO.Abstractions
             }
         }
 
+#if NET40
         public override void Close()
         {
             _writer.Close();
         }
+#endif
 
         public override void Flush()
         {
             _writer.Flush();
         }
 
+#if !NET40
+        public override Task FlushAsync()
+        {
+            return _writer.FlushAsync();
+        }
+#endif
         public override void Write(bool value)
         {
             _writer.Write(value);
@@ -93,7 +103,7 @@ namespace System.IO.Abstractions
 
         public override void Write(string format, object arg0, object arg1)
         {
-            throw new NotImplementedException();
+            _writer.Write(format, arg0, arg1);
         }
 
         public override void Write(ulong value)
@@ -136,6 +146,23 @@ namespace System.IO.Abstractions
             _writer.Write(value);
         }
 
+#if !NET40
+        public override Task WriteAsync(char value)
+        {
+            return _writer.WriteAsync(value);
+        }
+
+        public override Task WriteAsync(char[] buffer, int index, int count)
+        {
+            return _writer.WriteAsync(buffer, index, count);
+        }
+
+        public override Task WriteAsync(string value)
+        {
+            return _writer.WriteAsync(value);
+        }
+#endif
+
         public override void WriteLine(string value)
         {
             _writer.WriteLine(value);
@@ -148,82 +175,104 @@ namespace System.IO.Abstractions
 
         public override void WriteLine(string format, params object[] arg)
         {
-            throw new NotImplementedException();
+            _writer.Write(format, arg);
         }
 
         public override void WriteLine(string format, object arg0, object arg1)
         {
-            throw new NotImplementedException();
+            _writer.Write(format, arg0, arg1);
         }
 
         public override void WriteLine(string format, object arg0, object arg1, object arg2)
         {
-            throw new NotImplementedException();
+            _writer.Write(format, arg0, arg1, arg2);
         }
 
         public override void WriteLine(decimal value)
         {
-            _writer.WriteLine(value);
+            _writer.Write(value);
         }
 
         public override void WriteLine(string format, object arg0)
         {
-            throw new NotImplementedException();
+            _writer.WriteLine(format, arg0);
         }
 
         public override void WriteLine(double value)
         {
-            throw new NotImplementedException();
+            _writer.WriteLine(value);
         }
 
         public override void WriteLine(uint value)
         {
-            throw new NotImplementedException();
+            _writer.WriteLine(value);
         }
 
         public override void WriteLine(long value)
         {
-            throw new NotImplementedException();
+            _writer.WriteLine(value);
         }
 
         public override void WriteLine(int value)
         {
-            throw new NotImplementedException();
+            _writer.WriteLine(value);
         }
 
         public override void WriteLine(ulong value)
         {
-            throw new NotImplementedException();
+            _writer.WriteLine(value);
         }
 
         public override void WriteLine(bool value)
         {
-            throw new NotImplementedException();
+            _writer.WriteLine(value);
         }
 
         public override void WriteLine(char[] buffer, int index, int count)
         {
-            throw new NotImplementedException();
+            _writer.WriteLine(buffer, index, count);
         }
 
         public override void WriteLine(char[] buffer)
         {
-            throw new NotImplementedException();
+            _writer.WriteLine(buffer);
         }
 
         public override void WriteLine(char value)
         {
-            throw new NotImplementedException();
+            _writer.WriteLine(value);
         }
 
         public override void WriteLine(float value)
         {
-            throw new NotImplementedException();
+            _writer.WriteLine(value);
         }
 
         public override void WriteLine()
         {
-            throw new NotImplementedException();
+            _writer.WriteLine();
         }
+
+#if !NET40
+        public override Task WriteLineAsync()
+        {
+            return _writer.WriteLineAsync();
+        }
+
+        public override Task WriteLineAsync(char value)
+        {
+            return _writer.WriteLineAsync(value);
+        }
+
+        public override Task WriteLineAsync(char[] buffer, int index, int count)
+        {
+            return _writer.WriteLineAsync(buffer, index, count);
+        }
+
+        public override Task WriteLineAsync(string value)
+        {
+            return _writer.WriteLineAsync(value);
+        }
+#endif
     }
 }

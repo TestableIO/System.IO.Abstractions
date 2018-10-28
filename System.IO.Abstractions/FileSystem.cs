@@ -13,6 +13,7 @@
             Directory = new DirectoryWrapper(this);
             FileStream = new FileStreamFactory();
             FileSystemWatcher = new FileSystemWatcherFactory();
+            StreamWriter = new StreamWriterFactory(this);
         }
 
         public DirectoryBase Directory { get; }
@@ -30,5 +31,7 @@
         public IDriveInfoFactory DriveInfo { get; }
 
         public IFileSystemWatcherFactory FileSystemWatcher { get; }
+
+        public IStreamWriterFactory StreamWriter { get; }
     }
 }

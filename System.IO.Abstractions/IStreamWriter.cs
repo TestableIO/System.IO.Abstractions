@@ -1,6 +1,9 @@
-﻿namespace System.IO.Abstractions
+﻿using System.Threading.Tasks;
+
+namespace System.IO.Abstractions
 {
-    public interface IStreamWriterBase
+    [CLSCompliant(false)]
+    public interface IStreamWriter
     {
         bool AutoFlush
         {
@@ -16,7 +19,10 @@
             get;
         }
 
+#if NET40
         void Close();
+#endif
+
         void Flush();
         void Write(bool value);
         void Write(char value);
@@ -53,5 +59,16 @@
         void WriteLine(string format, params object[] arg);
         void WriteLine(uint value);
         void WriteLine(ulong value);
+
+#if !NET40
+        Task FlushAsync();
+        Task WriteAsync(char value);
+        Task WriteAsync(char[] buffer, int index, int count);
+        Task WriteAsync(string value);
+        Task WriteLineAsync();
+        Task WriteLineAsync(char value);
+        Task WriteLineAsync(char[] buffer, int index, int count);
+        Task WriteLineAsync(string value);
+#endif
     }
 }
