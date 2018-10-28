@@ -13,6 +13,7 @@
         {
             READ,
             WRITE,
+            CREATE,
             APPEND,
             TRUNCATE
         }

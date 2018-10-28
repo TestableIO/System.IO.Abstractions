@@ -1,25 +1,27 @@
-﻿using System.Threading.Tasks;
+﻿using System.Text;
+using System.Threading.Tasks;
 
 namespace System.IO.Abstractions
 {
-    [CLSCompliant(false)]
-    public interface IStreamWriter
+    public interface IStreamWriter : IDisposable
     {
         bool AutoFlush
         {
             get;
             set;
         }
+
         Stream BaseStream
         {
             get;
         }
-        IFileSystem FileSystem
+
+        Encoding Encoding
         {
             get;
         }
 
-#if NET40
+#if !NETSTANDARD1_4
         void Close();
 #endif
 
@@ -39,8 +41,12 @@ namespace System.IO.Abstractions
         void Write(string format, object arg0, object arg1);
         void Write(string format, object arg0, object arg1, object arg2);
         void Write(string format, params object[] arg);
+#pragma warning disable CS3001 // Argument type is not CLS-compliant
         void Write(uint value);
         void Write(ulong value);
+        void WriteLine(uint value);
+        void WriteLine(ulong value);
+#pragma warning restore CS3001 // Argument type is not CLS-compliant
         void WriteLine();
         void WriteLine(bool value);
         void WriteLine(char value);
@@ -57,8 +63,6 @@ namespace System.IO.Abstractions
         void WriteLine(string format, object arg0, object arg1);
         void WriteLine(string format, object arg0, object arg1, object arg2);
         void WriteLine(string format, params object[] arg);
-        void WriteLine(uint value);
-        void WriteLine(ulong value);
 
 #if !NET40
         Task FlushAsync();
