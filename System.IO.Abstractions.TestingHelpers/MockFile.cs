@@ -996,7 +996,11 @@ namespace System.IO.Abstractions.TestingHelpers
             DirectoryInfoBase dir = mockFileDataAccessor.Directory.GetParent(path);
             if (!dir.Exists)
             {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), dir));
+                throw new DirectoryNotFoundException(
+                    string.Format(
+                        CultureInfo.InvariantCulture, 
+                        StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), 
+                        dir));
             }
         }
     }
