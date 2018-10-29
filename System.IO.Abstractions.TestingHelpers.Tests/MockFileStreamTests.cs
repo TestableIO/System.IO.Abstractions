@@ -29,7 +29,7 @@
         public void MockFileStream_Dispose_ShouldNotResurrectFile()
         {
             var fileSystem = new MockFileSystem();
-            var path = XFS.Path("C:\\test");
+            var path = XFS.Path("C:\\some_folder\\test");
             var directory = fileSystem.Path.GetDirectoryName(path);
             fileSystem.AddFile(path, new MockFileData("Bla"));
             var stream = fileSystem.File.Open(path, FileMode.Open, FileAccess.ReadWrite, FileShare.Delete);

@@ -484,9 +484,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_Delete_No_File_Does_Nothing()
         {            
             var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(@"c:\something");
+            fileSystem.AddDirectory(@"c:\something\test_folder");
 
-            string filePath = XFS.Path(@"c:\something\demo.txt");
+            string filePath = XFS.Path(@"c:\something\test_folder\demo.txt");
 
             fileSystem.File.Delete(filePath);
         }

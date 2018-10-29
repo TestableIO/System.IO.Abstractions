@@ -10,7 +10,7 @@
         public void MockFile_Delete_ShouldDeleteFile()
         {
             var fileSystem = new MockFileSystem();
-            var path = XFS.Path("C:\\test");
+            var path = XFS.Path("C:\\some_folder\\test");
             var directory = fileSystem.Path.GetDirectoryName(path);
             fileSystem.AddFile(path, new MockFileData("Bla"));
 
