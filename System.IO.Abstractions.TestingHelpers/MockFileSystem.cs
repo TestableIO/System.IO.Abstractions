@@ -9,6 +9,8 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockFileSystem : IFileSystem, IMockFileDataAccessor
     {
+        private const string DEFAULT_CURRENT_DIRECTORY = @"C:\";
+
         private readonly IDictionary<string, MockFileData> files;
         [NonSerialized]
         private readonly PathVerifier pathVerifier;
@@ -19,7 +21,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (string.IsNullOrEmpty(currentDirectory))
             {
-                currentDirectory = IO.Path.GetTempPath();
+                currentDirectory = XFS.Path(DEFAULT_CURRENT_DIRECTORY);
             }
 
             pathVerifier = new PathVerifier(this);
@@ -41,6 +43,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 {
                     AddFile(entry.Key, entry.Value);
                 }
+            }
+
+            if (!FileExists(currentDirectory))
+            {
+                AddDirectory(currentDirectory);
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -291,6 +291,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.Throws<ArgumentException>(getFilesWithInvalidCharacterInPath);
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase(@"C:\somepath")]
+        public void MockFileSystem_DefaultState_CurrentDirectoryExists(string currentDirectory)
+        {
+            var fs = new MockFileSystem(null, currentDirectory);
+
+            var actualCurrentDirectory = fs.DirectoryInfo.FromDirectoryName(".");
+
+            Assert.IsTrue(actualCurrentDirectory.Exists);
         }
     }
 }

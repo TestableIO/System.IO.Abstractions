@@ -1184,11 +1184,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.AreEqual(directory, actual);
         }
-
-
+        
         [Test]
-        public void MockDirectory_GetCurrentDirectory_ShouldReturnDefaultPathWhenNotSet() {
-            string directory = Path.GetTempPath();
+        public void MockDirectory_GetCurrentDirectory_ShouldReturnDefaultPathWhenNotSet() 
+        {
+            string directory = XFS.Path(@"C:\");
+
             var fileSystem = new MockFileSystem();
 
             var actual = fileSystem.Directory.GetCurrentDirectory();
