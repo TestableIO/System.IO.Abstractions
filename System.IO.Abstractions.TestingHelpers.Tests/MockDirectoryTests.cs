@@ -1184,8 +1184,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.AreEqual(directory, actual);
         }
-
-
+        
         [Test]
         public void MockDirectory_GetCurrentDirectory_ShouldReturnDefaultPathWhenNotSet() 
         {

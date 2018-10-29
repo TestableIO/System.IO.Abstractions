@@ -277,5 +277,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.IsTrue(fileSystem.FileExists(path2));
         }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase(@"C:\path\")]
+        public void MockFileSystem_DefaultState_CurrentDirectoryExists(string currentDirectory)
+        {
+            var fs = new MockFileSystem(null, currentDirectory);
+
+            var actualCurrentDirectory = fs.DirectoryInfo.FromDirectoryName(".");
+
+            Assert.IsTrue(actualCurrentDirectory.Exists);
+        }
     }
 }

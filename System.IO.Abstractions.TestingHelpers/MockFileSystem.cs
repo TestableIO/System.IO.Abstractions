@@ -44,6 +44,11 @@ namespace System.IO.Abstractions.TestingHelpers
                     AddFile(entry.Key, entry.Value);
                 }
             }
+
+            if (!FileExists(currentDirectory))
+            {
+                AddDirectory(currentDirectory);
+            }
         }
 
         public FileBase File { get; }
