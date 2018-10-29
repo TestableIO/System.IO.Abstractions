@@ -10,6 +10,9 @@ namespace System.IO.Abstractions
         {
         }
 
+        [Obsolete("This constructor only exists to support mocking libraries.", error: true)]
+        internal FileInfoBase() { }
+
         /// <inheritdoc cref="FileInfo.AppendText"/>
         public abstract StreamWriter AppendText();
 

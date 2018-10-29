@@ -24,17 +24,17 @@ namespace System.IO.Abstractions.TestingHelpers
             => new MockFileStream(mockFileSystem, path, GetStreamType(mode, access));
 
         public Stream Create(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize, FileOptions options)
-            => new MockFileStream(mockFileSystem, path, GetStreamType(mode, access));
+            => new MockFileStream(mockFileSystem, path, GetStreamType(mode, access), options);
 
         public Stream Create(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize, bool useAsync)
             => new MockFileStream(mockFileSystem, path, GetStreamType(mode, access));
 
 #if NET40
         public Stream Create(string path, FileMode mode, FileSystemRights rights, FileShare share, int bufferSize, FileOptions options, FileSecurity fileSecurity)
-            => new MockFileStream(mockFileSystem, path, GetStreamType(mode));
+            => new MockFileStream(mockFileSystem, path, GetStreamType(mode), options);
 
         public Stream Create(string path, FileMode mode, FileSystemRights rights, FileShare share, int bufferSize, FileOptions options)
-            => new MockFileStream(mockFileSystem, path, GetStreamType(mode));
+            => new MockFileStream(mockFileSystem, path, GetStreamType(mode), options);
 #endif
 
 #if NET40 || NETSTANDARD_20
@@ -73,6 +73,10 @@ namespace System.IO.Abstractions.TestingHelpers
             else if (mode == FileMode.Append) 
             {
                 return MockFileStream.StreamType.APPEND;
+            }
+            else if (mode == FileMode.Truncate)
+            {
+                return MockFileStream.StreamType.TRUNCATE;
             }
             else
             {
