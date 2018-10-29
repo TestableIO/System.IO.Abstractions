@@ -3,50 +3,53 @@ image:
 - Ubuntu
 
 configuration: Release
-
 skip_branch_with_pr: true
-
 skip_tags: true
-
 branches:
   only:
     - master
 
-environment:
-  INHERITDOC_VERSION: 1.2.2.1
-  TEMP_DIR: c:\temp
-  APPVEYOR_YML_DISABLE_PS_LINUX: true
+for:
+-
+  matrix:
+    only:
+      - image: Visual Studio 2017
+      
+  environment:
+    INHERITDOC_VERSION: 1.2.2.1
+    TEMP_DIR: c:\temp
+    APPVEYOR_YML_DISABLE_PS_LINUX: true
 
-install:
-# Temporarily install InheritDoc using the NuGet CLI
-- cmd: nuget install inheritdoc -Version %INHERITDOC_VERSION% -OutputDirectory %TEMP_DIR%
+  install:
+  # Temporarily install InheritDoc using the NuGet CLI
+  - cmd: nuget install inheritdoc -Version %INHERITDOC_VERSION% -OutputDirectory %TEMP_DIR%
 
-before_build:
-- nuget restore
+  before_build:
+  - nuget restore
 
-build:
-  publish_nuget: true
+  build:
+    publish_nuget: true
 
-before_package:
-# This step replaces the inheritdoc tags in the xml documentation with documentation from mscorlib.xml
-- ps: '& $env:TEMP_DIR\InheritDoc.$env:INHERITDOC_VERSION\tools\InheritDoc.exe -b $env:APPVEYOR_BUILD_FOLDER -g "c:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.X\mscorlib.xml" -o'
+  before_package:
+  # This step replaces the inheritdoc tags in the xml documentation with documentation from mscorlib.xml
+  - ps: '& $env:TEMP_DIR\InheritDoc.$env:INHERITDOC_VERSION\tools\InheritDoc.exe -b $env:APPVEYOR_BUILD_FOLDER -g "c:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.X\mscorlib.xml" -o'
 
-deploy:
-- provider: NuGet
-  api_key:
-    secure: z0Zh4VyDdeKlFrTEnYbhqDc0xw9M5ahv/fQJsShk3HqmUWjQ/bh4M/r6ZWZgY/ZB
-  skip_symbols: false
-  artifact: /.*\.nupkg/
-  on:
-    branch: master
+  deploy:
+  - provider: NuGet
+    api_key:
+      secure: z0Zh4VyDdeKlFrTEnYbhqDc0xw9M5ahv/fQJsShk3HqmUWjQ/bh4M/r6ZWZgY/ZB
+    skip_symbols: false
+    artifact: /.*\.nupkg/
+    on:
+      branch: master
 
-- provider: GitHub
-  tag: v$(GitBuildVersion)
-  prerelease: true
-  artifact: /.*\.nupkg/
-  auth_token:
-    secure: 4ejpp3dzvpOwfD7TOcypCsT0z8j+qYiihiZszS3uVI78vZpAtM+P+A8NK2JZmYMo
-  on: 
-    branch: master
+  - provider: GitHub
+    tag: v$(GitBuildVersion)
+    prerelease: true
+    artifact: /.*\.nupkg/
+    auth_token:
+      secure: 4ejpp3dzvpOwfD7TOcypCsT0z8j+qYiihiZszS3uVI78vZpAtM+P+A8NK2JZmYMo
+    on: 
+      branch: master
 
     
