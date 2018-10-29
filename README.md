@@ -1,7 +1,5 @@
 [![NuGet](https://img.shields.io/nuget/v/System.IO.Abstractions.svg)](https://www.nuget.org/packages/System.IO.Abstractions)
-
 [![Windows build status](https://ci.appveyor.com/api/projects/status/em172apw1v5k70vq/branch/master?svg=true)](https://ci.appveyor.com/project/tathamoddie/system-io-abstractions/branch/master) on Windows
-
 [![Linux build status](https://travis-ci.org/System-IO-Abstractions/System.IO.Abstractions.svg?branch=master)](https://travis-ci.org/System-IO-Abstractions/System.IO.Abstractions) on Linux
 
 ---
