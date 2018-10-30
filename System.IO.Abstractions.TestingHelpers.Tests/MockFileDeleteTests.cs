@@ -1,6 +1,7 @@
 ﻿namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    using NUnit.Framework;
+  using System.Collections.Generic;
+  using NUnit.Framework;
 
     using XFS = MockUnixSupport;
 
@@ -48,11 +49,15 @@
         [Test]
         public void MockFile_Delete_ShouldSilentlyReturnIfNonExistingFileInExistingFolder()
         {
-            var fileSystem = new MockFileSystem();
-            fileSystem.Directory.CreateDirectory("c:\\temp");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
+            {
+                { XFS.Path("C:\\temp\\exist.txt"), new MockFileData("foobar") },
+            });
 
-            //Delete() returns void, so there is nothing to check here beside absense of an exception
-            fileSystem.File.Delete("C:\\temp\\somefile.txt");
+            string filePath = XFS.Path("C:\\temp\\somefile.txt");
+
+            // Delete() returns void, so there is nothing to check here beside absense of an exception
+            fileSystem.File.Delete(filePath);
         }
     }
 }
