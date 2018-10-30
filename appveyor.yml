@@ -41,7 +41,7 @@ deploy:
   prerelease: true
   artifact: /.*\.nupkg/
   auth_token:
-    secure: 4ejpp3dzvpOwfD7TOcypCsT0z8j+qYiihiZszS3uVI78vZpAtM+P+A8NK2JZmYMo
+    secure: Rrk1zp93EpCyxec/GXKnRnJjX7vU+ClNZEBnxbM+1j6l+C56qSV7B/fUrVsJuZYV
   on: 
     branch: master
 
