@@ -1,6 +1,10 @@
 ﻿using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
+#if NET40 || NETSTANDARD_20
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+#endif
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -78,7 +82,36 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="contents"/> is <see langword="null" />.</exception>
         public MockFileData(byte[] contents)
         {
-            Contents = contents ?? throw new ArgumentNullException(nameof(contents));
+            SetByteBuffer(contents);
+        }
+
+#if NET40 || NETSTANDARD_20
+
+        ///// <summary>
+        ///// Initializes a new instance of the <see cref="MockFileData"/> class with the serialized content of <paramref name="contents"/>.
+        ///// </summary>
+        ///// <param name="contents">The actual content as an object.</param>
+        ///// <exception cref="ArgumentNullException">Thrown if <paramref name="contents"/> is <see langword="null" />.</exception>
+        public MockFileData(object contents)
+        {
+            //Copy the object into byte array
+            MemoryStream stream = new MemoryStream();
+            IFormatter formatter = new BinaryFormatter();
+            formatter.Serialize(stream, contents);
+
+            //Add the byte array as file data
+            SetByteBuffer(stream.GetBuffer());
+        }
+#endif
+
+        /// <summary>
+        /// Unified method for setting byte buffer
+        /// </summary>
+        /// <param name="bufferContents"></param>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="bufferContents"/> is <see langword="null" />.</exception>
+        private void SetByteBuffer(byte[] bufferContents)
+        {
+            Contents = bufferContents ?? throw new ArgumentNullException(nameof(bufferContents));
         }
 
 
