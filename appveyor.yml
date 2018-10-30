@@ -37,7 +37,7 @@ deploy:
     branch: master
 
 - provider: GitHub
-  tag: v$(GitBuildVersion)
+  tag: v$(GitBuildVersionSimple)
   prerelease: true
   artifact: /.*\.nupkg/
   auth_token:
