@@ -16,7 +16,7 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions.TestingHelpers", "System.IO.Abstractions.TestingHelpers\System.IO.Abstractions.TestingHelpers.csproj", "{0103D32A-6124-4A1A-AD6C-30EB957F09B0}"
 EndProject
 Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+	GlobalSection(SolutionConfigurationPlatforms)=preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
