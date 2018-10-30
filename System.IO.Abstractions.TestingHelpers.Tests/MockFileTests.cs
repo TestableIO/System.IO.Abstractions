@@ -475,19 +475,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string filePath = XFS.Path(@"c:\something\demo.txt");
             string fileContent = "this is some content";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { { filePath, new MockFileData(fileContent) } });
-
             Assert.AreEqual(1, fileSystem.AllFiles.Count());
             fileSystem.File.Delete(filePath);
             Assert.AreEqual(0, fileSystem.AllFiles.Count());
         }
 
         [Test]
-        public void MockFile_Deletion_of_Absent_File_Silently_Exits()
+        public void MockFile_Delete_No_File_Does_Nothing()
         {            
-            var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(@"c:\something\demo1.txt", new MockFileData("some content"));
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
+            {
+                { XFS.Path(@"c:\something\exist.txt"), new MockFileData("Demo text content") },
+            });
 
-            string filePath = XFS.Path(@"c:\something\demo2.txt");
+            string filePath = XFS.Path(@"c:\something\not_exist.txt");
+            Console.WriteLine(filePath);
 
             fileSystem.File.Delete(filePath);
         }
