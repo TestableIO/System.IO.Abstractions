@@ -57,7 +57,7 @@
             string filePath = XFS.Path("C:\\temp\\somefile.txt");
 
             // Delete() returns void, so there is nothing to check here beside absense of an exception
-            fileSystem.File.Delete(filePath);
+            Assert.DoesNotThrow(() => fileSystem.File.Delete(filePath));
         }
     }
 }
