@@ -482,9 +482,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         public void MockFile_Delete_No_File_Does_Nothing()
-        {
-            string filePath = XFS.Path(@"c:\something\demo.txt");
-            var fileSystem = new MockFileSystem();
+        {            
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
+            {
+                { XFS.Path(@"c:\something\exist.txt"), new MockFileData("Demo text content") },
+            });
+
+            string filePath = XFS.Path(@"c:\something\not_exist.txt");
+
             fileSystem.File.Delete(filePath);
         }
 

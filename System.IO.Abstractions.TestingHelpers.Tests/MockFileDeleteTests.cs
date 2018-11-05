@@ -1,6 +1,7 @@
 ﻿namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    using NUnit.Framework;
+  using System.Collections.Generic;
+  using NUnit.Framework;
 
     using XFS = MockUnixSupport;
 
@@ -10,7 +11,7 @@
         public void MockFile_Delete_ShouldDeleteFile()
         {
             var fileSystem = new MockFileSystem();
-            var path = XFS.Path("C:\\test");
+            var path = XFS.Path("C:\\some_folder\\test");
             var directory = fileSystem.Path.GetDirectoryName(path);
             fileSystem.AddFile(path, new MockFileData("Bla"));
 
@@ -34,6 +35,29 @@
 
             // Assert
             Assert.Throws<ArgumentException>(action);
+        }
+
+        [Test]
+        public void MockFile_Delete_ShouldThrowDirectoryNotFoundExceptionIfParentFolderAbsent()
+        {
+            var fileSystem = new MockFileSystem();
+            var path = XFS.Path("C:\\test\\somefile.txt");
+
+            Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Delete(path));
+        }
+
+        [Test]
+        public void MockFile_Delete_ShouldSilentlyReturnIfNonExistingFileInExistingFolder()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
+            {
+                { XFS.Path("C:\\temp\\exist.txt"), new MockFileData("foobar") },
+            });
+
+            string filePath = XFS.Path("C:\\temp\\somefile.txt");
+
+            // Delete() returns void, so there is nothing to check here beside absense of an exception
+            Assert.DoesNotThrow(() => fileSystem.File.Delete(filePath));
         }
     }
 }
