@@ -66,6 +66,7 @@
         {
             InternalFlush();
             OnClose();
+            base.Close();
         }
 #else
         protected override void Dispose(bool disposing)
