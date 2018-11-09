@@ -65,13 +65,13 @@
 #if NET40
         public override void Close()
         {
-            if(closed)
+            if (closed)
             {
                 return;
             }
             InternalFlush();
-            OnClose();
             base.Close();
+            OnClose();
             closed = true;
         }
 #else
