@@ -106,5 +106,20 @@
             // Assert
             Assert.DoesNotThrow(() => stream.Dispose());
         }
+
+        [Test]
+        public void MockFileStream_Dispose_OperationsAfterDisposeThrow()
+        {
+            var fileSystem = new MockFileSystem();
+            var path = XFS.Path("C:\\test");
+            fileSystem.AddFile(path, new MockFileData(new byte[0]));
+            var stream = fileSystem.FileInfo.FromFileName(path).OpenWrite();
+
+            // Act
+            stream.Dispose();
+
+            // Assert
+            Assert.Throws<ObjectDisposedException>(() => stream.WriteByte(0));
+        }
     }
 }
