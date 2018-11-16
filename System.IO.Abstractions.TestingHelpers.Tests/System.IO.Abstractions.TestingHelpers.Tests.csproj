@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net40;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net40</TargetFrameworks>
     <Version>0.0.0.1</Version>
     <Description>The unit tests for our pre-built mocks</Description>
     <Company />
@@ -10,6 +11,7 @@
     <RootNamespace>System.IO.Abstractions.TestingHelpers.Tests</RootNamespace>
     <AssemblyOriginatorKeyFile>../StrongName.snk</AssemblyOriginatorKeyFile>
     <IsPackable>false</IsPackable>
+    <IsTestable>true</IsTestable>
 
     <!-- Workaround for https://github.com/nunit/nunit3-vs-adapter/issues/296 -->
     <DebugType>Full</DebugType>

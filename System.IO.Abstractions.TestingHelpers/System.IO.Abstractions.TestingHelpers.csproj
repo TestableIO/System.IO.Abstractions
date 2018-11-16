@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net40;netstandard1.4;netstandard2.0;</TargetFrameworks>
+        <TargetFrameworks>netstandard1.4;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net40</TargetFrameworks>
         <PackageId>System.IO.Abstractions.TestingHelpers</PackageId>
         <Description>A set of pre-built mocks to help when testing file system interactions.</Description>
         <Company />
@@ -37,7 +38,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Nerdbank.GitVersioning" Version="2.2.13">
+      <PackageReference Include="Nerdbank.GitVersioning" Version="2.2.33">
         <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>
