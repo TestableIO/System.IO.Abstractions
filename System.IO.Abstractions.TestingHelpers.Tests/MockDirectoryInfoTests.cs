@@ -273,9 +273,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectoryInfo_ToString_ShouldReturnDirectoryName()
+        [TestCase(@"c:\temp\folder\folder")]
+        [TestCase(@"..\..\..\Desktop")]
+        public void MockDirectoryInfo_ToString_ShouldReturnDirectoryName(string directoryName)
         {
-            var directoryPath = XFS.Path(@"c:\temp\folder\folder");
+            var directoryPath = XFS.Path(directoryName);
 
             // Arrange
             var fileSystem = new MockFileSystem();
