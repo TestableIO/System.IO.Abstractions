@@ -279,5 +279,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted));
         }
 #endif
+
+        [Test]
+        public void MockFile_Create_ShouldWorkWithRelativePath()
+        {
+            var relativeFile = "file.txt";
+            var fileSystem = new MockFileSystem();
+
+            fileSystem.File.Create(relativeFile).Close();
+
+            Assert.That(fileSystem.File.Exists(relativeFile));
+        }
     }
 }

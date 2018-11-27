@@ -143,5 +143,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 expected,
                 file.ReadAllBytes(path));
         }
+        
+        [Test]
+        public void MockFile_AppendAllText_ShouldWorkWithRelativePath()
+        {
+            var file = "file.txt";
+            var fileSystem = new MockFileSystem();
+
+            fileSystem.File.AppendAllText(file, "Foo");
+            
+            Assert.That(fileSystem.File.Exists(file));
+        }
     }
 }
