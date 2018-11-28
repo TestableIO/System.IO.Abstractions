@@ -41,12 +41,12 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="Moq" Version="4.10.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="nunit" Version="3.8.1" />
+    <PackageReference Include="nunit" Version="3.11.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.11.2" />
   </ItemGroup>
 

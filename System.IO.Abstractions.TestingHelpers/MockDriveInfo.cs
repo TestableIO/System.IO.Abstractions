@@ -20,15 +20,15 @@
             const string DRIVE_SEPARATOR = @":\";
             if (name.Length == 1)
             {
-                name = char.ToUpperInvariant(name[0]) + DRIVE_SEPARATOR;
+                name = name[0] + DRIVE_SEPARATOR;
             }
             else if (name.Length == 2 && name[1] == ':')
             {
-                name = char.ToUpperInvariant(name[0]) + DRIVE_SEPARATOR;
+                name = name[0] + DRIVE_SEPARATOR;
             }
             else if (name.Length == 3 && name.EndsWith(DRIVE_SEPARATOR, StringComparison.Ordinal))
             {
-                name = char.ToUpperInvariant(name[0]) + DRIVE_SEPARATOR;
+                name = name[0] + DRIVE_SEPARATOR;
             }
             else
             {

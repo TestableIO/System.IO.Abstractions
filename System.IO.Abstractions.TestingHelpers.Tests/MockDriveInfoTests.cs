@@ -67,5 +67,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(expectedDirectory, actualDirectory.FullName);
         }
+
+        [TestCase("c:","c:\\")]
+        [TestCase("d:","d:\\")]
+        [TestCase("e:","e:\\")]
+        [TestCase("f:","f:\\")]
+        public void MockDriveInfo_ToString_ShouldReturnTheDrivePath(string path, string expectedPath)
+        {
+            // Arrange
+            var directoryPath = XFS.Path(path);
+            
+            // Act
+            var mockDriveInfo = new MockDriveInfo(new MockFileSystem(), directoryPath);
+            var realDriveInfo = new DriveInfo(directoryPath);
+
+            // Assert
+            Assert.AreEqual(expectedPath, mockDriveInfo.ToString());
+            Assert.AreEqual(expectedPath, realDriveInfo.ToString());
+        }
     }
 }

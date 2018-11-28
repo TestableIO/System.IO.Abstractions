@@ -491,12 +491,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<FileNotFoundException>(action);
         }
 
-        [Test]
-        public void MockFileInfo_ToString_ShouldReturnOriginalFilePath()
+        [TestCase(@"..\..\..\c.txt")]
+        [TestCase(@"c:\a\b\c.txt")]
+        [TestCase(@"c:\a\c.txt")]
+        [TestCase(@"c:\c.txt")]
+        public void MockFileInfo_ToString_ShouldReturnOriginalFilePath(string path)
         {
             //Arrange
-            var filePath = XFS.Path(@"..\..\..\c.txt");
-            
+            var filePath = XFS.Path(path);
+
             //Act
             var mockFileInfo = new MockFileInfo(new MockFileSystem(), filePath);
             var realFileInfo = new FileInfo(filePath);

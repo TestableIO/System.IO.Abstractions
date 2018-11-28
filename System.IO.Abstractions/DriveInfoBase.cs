@@ -142,5 +142,12 @@
 
             return new DriveInfoWrapper(new FileSystem(), driveInfo);
         }
+
+        /// <summary>Returns a drive name as a string.</summary>
+        /// <returns>The name of the drive.</returns>
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }
