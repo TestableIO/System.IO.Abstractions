@@ -10,8 +10,7 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string directoryPath;
-        //private readonly string originalPath;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="MockDirectoryInfo"/> class.
         /// </summary>
@@ -21,8 +20,6 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath) : base(mockFileDataAccessor?.FileSystem, directoryPath)
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
-
-            //originalPath = directoryPath;
 
             directoryPath = mockFileDataAccessor.Path.GetFullPath(directoryPath);
 
@@ -285,11 +282,6 @@ namespace System.IO.Abstractions.TestingHelpers
                 return new MockDirectoryInfo(mockFileDataAccessor, mockFileDataAccessor.Directory.GetDirectoryRoot(FullName));
             }
         }
-
-        //public override string ToString()
-        //{
-        //    return originalPath;
-        //}
 
         private MockFileData GetMockFileDataForRead()
         {
