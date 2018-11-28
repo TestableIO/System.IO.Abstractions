@@ -368,5 +368,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.Throws<FileNotFoundException>(action);
         }
+        
+        [Test]
+        public void MockFile_Copy_ShouldWorkWithRelativePaths()
+        {
+            var sourceFile = "source_file.txt";
+            var destinationFile = "destination_file.txt";
+            var fileSystem = new MockFileSystem();
+
+            fileSystem.File.Create(sourceFile).Close();
+            fileSystem.File.Copy(sourceFile, destinationFile);
+
+            Assert.That(fileSystem.File.Exists(destinationFile));
+        }
     }
 }
