@@ -68,7 +68,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileSystem_AddFile_ShouldRepaceExistingFile()
+        public void MockFileSystem_AddFile_ShouldReplaceExistingFile()
         {
             const string path = @"c:\some\file.txt";
             const string existingContent = "Existing content";
