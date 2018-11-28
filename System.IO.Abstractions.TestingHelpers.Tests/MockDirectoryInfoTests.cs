@@ -289,7 +289,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
         
         [Test]
-        public void MockDirectoryInfo_FromDirectoryName_RootName_ReturnsDriveName_WhenTopLevelDirectory()
+        public void MockDirectoryInfo_FromDirectoryName_RootName_ReturnsRoot_WhenTopLevelDirectory()
         {
             var testDir = XFS.Path(@"c:\temp");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -297,11 +297,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { testDir,  new MockDirectoryData() }
             });
 
-            Assert.AreEqual(@"c:\", fileSystem.DirectoryInfo.FromDirectoryName(testDir).Root.Name);
+            Assert.AreEqual(XFS.Path(@"c:\"), fileSystem.DirectoryInfo.FromDirectoryName(testDir).Root.Name);
         }
         
         [Test]
-        public void MockDirectoryInfo_FromDirectoryName_RootName_ReturnsDriveName_WhenRoot()
+        public void MockDirectoryInfo_FromDirectoryName_RootName_ReturnsRoot_WhenRoot()
         {
             var testDir = XFS.Path(@"d:\");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -309,7 +309,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { testDir,  new MockDirectoryData() }
             });
 
-            Assert.AreEqual(@"d:\", fileSystem.DirectoryInfo.FromDirectoryName(testDir).Root.Name);
+            Assert.AreEqual(testDir, fileSystem.DirectoryInfo.FromDirectoryName(testDir).Root.Name);
         }
     }
 }
