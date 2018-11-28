@@ -7,7 +7,7 @@ namespace System.IO.Abstractions
     [Serializable]
     public abstract class DirectoryInfoBase : FileSystemInfoBase
     {
-        protected DirectoryInfoBase(IFileSystem fileSystem) : base(fileSystem)
+        protected DirectoryInfoBase(IFileSystem fileSystem, string path) : base(fileSystem, path)
         {
         }
 

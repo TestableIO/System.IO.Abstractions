@@ -10,7 +10,7 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string directoryPath;
-        private readonly string originalPath;
+        //private readonly string originalPath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MockDirectoryInfo"/> class.
@@ -18,11 +18,11 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <param name="mockFileDataAccessor">The mock file data accessor.</param>
         /// <param name="directoryPath">The directory path.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="mockFileDataAccessor"/> or <paramref name="directoryPath"/> is <see langref="null"/>.</exception>
-        public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath) : base(mockFileDataAccessor?.FileSystem)
+        public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath) : base(mockFileDataAccessor?.FileSystem, directoryPath)
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
 
-            originalPath = directoryPath;
+            //originalPath = directoryPath;
 
             directoryPath = mockFileDataAccessor.Path.GetFullPath(directoryPath);
 
@@ -286,10 +286,10 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
-        public override string ToString()
-        {
-            return originalPath;
-        }
+        //public override string ToString()
+        //{
+        //    return originalPath;
+        //}
 
         private MockFileData GetMockFileDataForRead()
         {

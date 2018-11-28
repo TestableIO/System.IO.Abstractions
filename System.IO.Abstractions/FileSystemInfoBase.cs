@@ -4,9 +4,12 @@
     [Serializable]
     public abstract class FileSystemInfoBase
     {
-        protected FileSystemInfoBase(IFileSystem fileSystem)
+        private readonly string originalPath;
+
+        protected FileSystemInfoBase(IFileSystem fileSystem, string path)
         {
             FileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
+            originalPath = path ?? throw new ArgumentNullException(nameof(path));
         }
 
         [Obsolete("This constructor only exists to support mocking libraries.", error: true)]
@@ -55,5 +58,10 @@
 
         /// <inheritdoc cref="FileSystemInfo.Name"/>
         public abstract string Name { get; }
+
+        public override string ToString()
+        {
+            return originalPath;
+        }
     }
 }

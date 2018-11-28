@@ -8,7 +8,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private readonly IMockFileDataAccessor mockFileSystem;
         private string path;
 
-        public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path) : base(mockFileSystem?.FileSystem)
+        public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path) : base(mockFileSystem?.FileSystem, path)
         {
             this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
             this.path = path ?? throw new ArgumentNullException(nameof(path));
@@ -242,7 +242,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override StreamReader OpenText()
         {
-          return new StreamReader(OpenRead());
+            return new StreamReader(OpenRead());
         }
 
         public override Stream OpenWrite()
@@ -296,7 +296,7 @@ namespace System.IO.Abstractions.TestingHelpers
             set
             {
                 if (MockFileData == null) throw new FileNotFoundException("File not found", path);
-                if(value)
+                if (value)
                     MockFileData.Attributes |= FileAttributes.ReadOnly;
                 else
                     MockFileData.Attributes &= ~FileAttributes.ReadOnly;

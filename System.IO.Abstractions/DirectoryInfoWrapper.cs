@@ -9,7 +9,7 @@ namespace System.IO.Abstractions
     {
         private readonly DirectoryInfo instance;
 
-        public DirectoryInfoWrapper(IFileSystem fileSystem, DirectoryInfo instance) : base(fileSystem)
+        public DirectoryInfoWrapper(IFileSystem fileSystem, DirectoryInfo instance) : base(fileSystem, instance.ToString())
         {
             this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
         }
