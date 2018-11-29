@@ -57,7 +57,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!mockFileDataAccessor.FileExists(path))
             {
-                var dir = mockFileDataAccessor.Path.GetDirectoryName(path);
+                var mockPath = mockFileDataAccessor.Path;
+                var dir = mockPath.GetDirectoryName(mockPath.GetFullPath(path));
                 if (!mockFileDataAccessor.Directory.Exists(dir))
                 {
                     throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), path));
@@ -112,7 +113,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), sourceFileName));
             }
 
-            var directoryNameOfDestination = mockPath.GetDirectoryName(destFileName);
+            var directoryNameOfDestination = mockPath.GetDirectoryName(mockPath.GetFullPath(destFileName));
             if (!mockFileDataAccessor.Directory.Exists(directoryNameOfDestination))
             {
                 throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), destFileName));
@@ -155,7 +156,8 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, nameof(path));
-            var directoryPath = mockPath.GetDirectoryName(path);
+
+            var directoryPath = mockPath.GetDirectoryName(mockPath.GetFullPath(path));
 
             if (!mockFileDataAccessor.Directory.Exists(directoryPath))
             {
