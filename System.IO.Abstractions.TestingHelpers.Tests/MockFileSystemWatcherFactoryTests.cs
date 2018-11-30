@@ -14,7 +14,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileSystemWatcherFactory_FromPath_ShouldReturnNonNullMockWatcher()
+        public void MockFileSystemWatcherFactory_FromPath_ShouldThrowNotImplementedException()
         {
             var path = XFS.Path(@"y:\test");
             var factory = new MockFileSystemWatcherFactory();
