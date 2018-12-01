@@ -21,6 +21,9 @@ install:
 # Temporarily install InheritDoc using the NuGet CLI
 - cmd: nuget install inheritdoc -Version %INHERITDOC_VERSION% -OutputDirectory %TEMP_DIR%
 
+before_build:		
+- nuget restore
+ 
 build:
   publish_nuget: true
 
