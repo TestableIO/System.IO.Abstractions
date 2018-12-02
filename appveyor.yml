@@ -1,4 +1,7 @@
-image: Visual Studio 2017
+image: 
+- Visual Studio 2017
+- Ubuntu
+
 configuration: Release
 
 skip_branch_with_pr: true
@@ -12,14 +15,15 @@ branches:
 environment:
   INHERITDOC_VERSION: 1.2.2.1
   TEMP_DIR: c:\temp
+  APPVEYOR_YML_DISABLE_PS_LINUX: true
 
 install:
 # Temporarily install InheritDoc using the NuGet CLI
-- nuget install inheritdoc -Version %INHERITDOC_VERSION% -OutputDirectory %TEMP_DIR%
+- cmd: nuget install inheritdoc -Version %INHERITDOC_VERSION% -OutputDirectory %TEMP_DIR%
 
-before_build:
+before_build:		
 - nuget restore
-
+ 
 build:
   publish_nuget: true
 
@@ -27,22 +31,25 @@ before_package:
 # This step replaces the inheritdoc tags in the xml documentation with documentation from mscorlib.xml
 - ps: '& $env:TEMP_DIR\InheritDoc.$env:INHERITDOC_VERSION\tools\InheritDoc.exe -b $env:APPVEYOR_BUILD_FOLDER -g "c:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.X\mscorlib.xml" -o'
 
-deploy:
-- provider: NuGet
-  api_key:
-    secure: z0Zh4VyDdeKlFrTEnYbhqDc0xw9M5ahv/fQJsShk3HqmUWjQ/bh4M/r6ZWZgY/ZB
-  skip_symbols: false
-  artifact: /.*\.nupkg/
-  on:
-    branch: release
+for:
+-
+  matrix:
+    only:
+      - image: Visual Studio 2017
+  deploy:
+  - provider: NuGet
+    api_key:
+      secure: z0Zh4VyDdeKlFrTEnYbhqDc0xw9M5ahv/fQJsShk3HqmUWjQ/bh4M/r6ZWZgY/ZB
+    skip_symbols: false
+    artifact: /.*\.nupkg/
+    on:
+      branch: release
 
-- provider: GitHub
-  tag: v$(appveyor_build_version)
-  prerelease: false
-  artifact: /.*\.nupkg/
-  auth_token:
-    secure: Rrk1zp93EpCyxec/GXKnRnJjX7vU+ClNZEBnxbM+1j6l+C56qSV7B/fUrVsJuZYV
-  on: 
-    branch: release
-
-    
+  - provider: GitHub
+    tag: v$(appveyor_build_version)
+    prerelease: false
+    artifact: /.*\.nupkg/
+    auth_token:
+      secure: Rrk1zp93EpCyxec/GXKnRnJjX7vU+ClNZEBnxbM+1j6l+C56qSV7B/fUrVsJuZYV
+    on: 
+      branch: release
