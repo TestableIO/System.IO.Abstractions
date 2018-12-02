@@ -16,7 +16,7 @@ The base version represents the MAJOR and MINOR parts of [SemVer](https://semver
 
 ### Release workflow
 
-1. Create a PR from `master` (or a specific commit on `master`) to `release` and wait for CI to finish. 
+1. Create a [PR from `master` to `release`](https://github.com/System-IO-Abstractions/System.IO.Abstractions/compare/release...master?expand=1) and wait for CI to finish. 
 1. Inspect CI run (test results, version number)
 1. Merge PR and wait for deployment
 1. Inspect newly created package versions on NuGet.org and newly created GitHub release
