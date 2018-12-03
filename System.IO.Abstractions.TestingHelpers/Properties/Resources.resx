@@ -144,4 +144,7 @@
   <data name="COULD_NOT_FIND_FILE_EXCEPTION" xml:space="preserve">
     <value>Could not find file '{0}'.</value>
   </data>
+  <data name="FILE_SYSTEM_WATCHER_NOT_IMPLEMENTED_EXCEPTION" xml:space="preserve">
+    <value>MockFileSystem does not have a built-in FileSystemWatcher implementation. You must provide your own mock or implementation of IFileSystemWatcherFactory and assign it to MockFileSystem.FileSystemWatcher.</value>
+  </data>
 </root>

@@ -65,7 +65,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public IDriveInfoFactory DriveInfo { get; }
 
-        public IFileSystemWatcherFactory FileSystemWatcher { get; }
+        public IFileSystemWatcherFactory FileSystemWatcher { get; set; }
 
         public IFileSystem FileSystem => this;
 
