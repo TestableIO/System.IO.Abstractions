@@ -281,11 +281,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Act
             var mockDirectoryInfo = new MockDirectoryInfo(new MockFileSystem(), directoryPath);
-            var realDirectoryInfo = new DirectoryInfo(directoryPath);
 
             // Assert
             Assert.AreEqual(directoryPath, mockDirectoryInfo.ToString());
-            Assert.AreEqual(directoryPath, realDirectoryInfo.ToString());
         }
     }
 }
