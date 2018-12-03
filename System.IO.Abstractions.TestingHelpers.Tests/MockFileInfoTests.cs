@@ -502,11 +502,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             //Act
             var mockFileInfo = new MockFileInfo(new MockFileSystem(), filePath);
-            var realFileInfo = new FileInfo(filePath);
 
             //Assert
             Assert.AreEqual(filePath, mockFileInfo.ToString());
-            Assert.AreEqual(filePath, realFileInfo.ToString());
         }
 
 #if NET40

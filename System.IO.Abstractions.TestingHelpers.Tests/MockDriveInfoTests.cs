@@ -80,11 +80,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             
             // Act
             var mockDriveInfo = new MockDriveInfo(new MockFileSystem(), directoryPath);
-            var realDriveInfo = new DriveInfo(directoryPath);
 
             // Assert
             Assert.AreEqual(expectedPath, mockDriveInfo.ToString());
-            Assert.AreEqual(expectedPath, realDriveInfo.ToString());
         }
     }
 }
