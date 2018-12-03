@@ -8,7 +8,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private readonly IMockFileDataAccessor mockFileSystem;
         private string path;
 
-        public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path) : base(mockFileSystem?.FileSystem, path)
+        public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path) : base(mockFileSystem?.FileSystem)
         {
             this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
             this.path = path ?? throw new ArgumentNullException(nameof(path));
@@ -310,6 +310,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 if (MockFileData == null) throw new FileNotFoundException("File not found", path);
                 return MockFileData.Contents.Length;
             }
+        }
+
+        public override string ToString()
+        {
+            return path;
         }
     }
 }

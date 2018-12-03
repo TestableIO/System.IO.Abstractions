@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Security.AccessControl;
 
@@ -10,17 +9,19 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string directoryPath;
-        
+        private readonly string originalPath;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MockDirectoryInfo"/> class.
         /// </summary>
         /// <param name="mockFileDataAccessor">The mock file data accessor.</param>
         /// <param name="directoryPath">The directory path.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="mockFileDataAccessor"/> or <paramref name="directoryPath"/> is <see langref="null"/>.</exception>
-        public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath) : base(mockFileDataAccessor?.FileSystem, directoryPath)
+        public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath) : base(mockFileDataAccessor?.FileSystem)
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
 
+            originalPath = directoryPath;
             directoryPath = mockFileDataAccessor.Path.GetFullPath(directoryPath);
 
             this.directoryPath = directoryPath.TrimSlashes();
@@ -292,6 +293,11 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             return mockFileDataAccessor.GetFile(directoryPath)
                 ?? throw new FileNotFoundException(StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), directoryPath);
+        }
+
+        public override string ToString()
+        {
+            return originalPath;
         }
     }
 }

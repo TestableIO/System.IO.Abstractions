@@ -7,7 +7,7 @@ namespace System.IO.Abstractions
     {
         private readonly FileInfo instance;
 
-        public FileInfoWrapper(IFileSystem fileSystem, FileInfo instance) : base(fileSystem, instance.ToString())
+        public FileInfoWrapper(IFileSystem fileSystem, FileInfo instance) : base(fileSystem)
         {
             this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
         }
