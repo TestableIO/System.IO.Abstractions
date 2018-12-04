@@ -599,6 +599,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.CaseInsensitivity)]
         public void MockDirectory_Delete_ShouldDeleteDirectoryCaseInsensitively()
         {
             // Arrange
@@ -612,6 +613,40 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.IsFalse(fileSystem.Directory.Exists(XFS.Path(@"c:\bar")));
+        }
+
+        [Test]
+        [UnixOnly(UnixSpecifics.CaseSensitivity)]
+        public void MockDirectory_Delete_ShouldThrowDirectoryNotFoundException_WhenSpecifiedWithInDifferentCase()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { "/bar/foo.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            TestDelegate action = () => fileSystem.Directory.Delete("/BAR", true);
+
+            // Assert
+            Assert.Throws<DirectoryNotFoundException>(action);
+        }
+
+        [Test]
+        [UnixOnly(UnixSpecifics.CaseSensitivity)]
+        public void MockDirectory_Delete_ShouldDeleteDirectoryCaseSensitively()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { "/bar/foo.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            fileSystem.Directory.Delete("/bar", true);
+
+            // Assert
+            Assert.IsFalse(fileSystem.Directory.Exists("/bar"));
         }
 
         [Test]

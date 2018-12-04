@@ -3,5 +3,7 @@
     internal static class UnixSpecifics
     {
         public const string SlashRoot = "Filesystem root is just '/' in Unix";
+
+        public const string CaseSensitivity = "Paths are case-sensitivity in Unix";
     }
 }

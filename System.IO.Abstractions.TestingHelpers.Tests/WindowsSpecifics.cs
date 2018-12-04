@@ -11,5 +11,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public const string StrictPathRules = "Windows has stricter path rules than other platforms";
 
         public const string EmptyInvalidPathChars = "Path.GetInvalidPathChars() doesn't return anything on Mono";
+
+        public const string CaseInsensitivity = "Windows paths are case-insensitivity";
     }
 }
