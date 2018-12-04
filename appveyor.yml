@@ -4,13 +4,17 @@ image:
 
 configuration: Release
 
+# Don't start CI for branches that already have a PR
 skip_branch_with_pr: true
 
+# Don't start CI when tags are pushed
 skip_tags: true
 
+# Limit CI to master/release branches (and PRs targeting them)
 branches:
   only:
     - master
+    - release
 
 environment:
   INHERITDOC_VERSION: 1.2.2.1
@@ -31,6 +35,7 @@ before_package:
 # This step replaces the inheritdoc tags in the xml documentation with documentation from mscorlib.xml
 - ps: '& $env:TEMP_DIR\InheritDoc.$env:INHERITDOC_VERSION\tools\InheritDoc.exe -b $env:APPVEYOR_BUILD_FOLDER -g "c:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.X\mscorlib.xml" -o'
 
+# Perform deployments only for Windows job
 for:
 -
   matrix:
@@ -43,13 +48,13 @@ for:
     skip_symbols: false
     artifact: /.*\.nupkg/
     on:
-      branch: master
+      branch: release
 
   - provider: GitHub
     tag: v$(appveyor_build_version)
-    prerelease: true
+    prerelease: false
     artifact: /.*\.nupkg/
     auth_token:
       secure: Rrk1zp93EpCyxec/GXKnRnJjX7vU+ClNZEBnxbM+1j6l+C56qSV7B/fUrVsJuZYV
     on: 
-      branch: master
+      branch: release
