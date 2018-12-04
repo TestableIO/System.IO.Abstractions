@@ -69,7 +69,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.GetFile("/SomeThing/DEMO.txt");
 
-            Assert.AreEqual(file1, result);
+            Assert.IsNull(result);
         }
 
         [Test]
