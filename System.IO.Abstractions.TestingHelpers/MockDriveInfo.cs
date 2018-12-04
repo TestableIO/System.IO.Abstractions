@@ -20,7 +20,7 @@
                 || (name.Length == 2 && name[1] == ':')
                 || (name.Length == 3 && name.EndsWith(DRIVE_SEPARATOR, mockFileDataAccessor.Comparison)))
             {
-                name = ToUpper(name[0]) + DRIVE_SEPARATOR;
+                name = name[0] + DRIVE_SEPARATOR;
             }
             else
             {
@@ -36,11 +36,6 @@
 
             Name = name;
             IsReady = true;
-        }
-
-        private char ToUpper(char c)
-        {
-            return mockFileDataAccessor.CaseSensitive ? c : char.ToUpperInvariant(c);
         }
 
         public new long AvailableFreeSpace { get; set; }
