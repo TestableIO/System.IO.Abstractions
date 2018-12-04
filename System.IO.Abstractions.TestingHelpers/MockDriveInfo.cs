@@ -57,6 +57,11 @@
             }
         }
 
+        public override string ToString()
+        {
+            return Name;
+        }
+
         public new long TotalFreeSpace { get; protected set; }
         public new long TotalSize { get; protected set; }
         public override string VolumeLabel { get; set; }
