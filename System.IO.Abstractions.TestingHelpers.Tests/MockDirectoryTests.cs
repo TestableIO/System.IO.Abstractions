@@ -1312,6 +1312,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsNull(actualResult);
         }
 
+        [Test]
+        [UnixOnly(UnixSpecifics.SlashRoot)]
+        public void MockDirectory_GetParent_ShouldReturnRootIfDirectoryIsInRoot()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory("/bar");
+
+            // Act
+            var parent = fileSystem.Directory.GetParent("/bar");
+
+            // Assert
+            Assert.AreEqual("/", parent.FullName);
+        }
+
         public static IEnumerable<string[]> MockDirectory_GetParent_Cases
         {
             get

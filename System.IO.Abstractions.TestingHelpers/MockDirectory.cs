@@ -323,13 +323,16 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var absolutePath = mockFileDataAccessor.Path.GetFullPath(path);
-            var sepAsString = string.Format(CultureInfo.InvariantCulture, "{0}", mockFileDataAccessor.Path.DirectorySeparatorChar);
-
+            var sepAsString = mockFileDataAccessor.Path.DirectorySeparatorChar.ToString();
             var lastIndex = 0;
+
             if (absolutePath != sepAsString)
             {
-                var startIndex = absolutePath.EndsWith(sepAsString, mockFileDataAccessor.Comparison) ? absolutePath.Length - 1 : absolutePath.Length;
+                var startIndex = absolutePath.EndsWith(sepAsString, mockFileDataAccessor.Comparison)
+                    ? absolutePath.Length - 1
+                    : absolutePath.Length;
                 lastIndex = absolutePath.LastIndexOf(mockFileDataAccessor.Path.DirectorySeparatorChar, startIndex - 1);
+
                 if (lastIndex < 0)
                 {
                     return null;
@@ -337,8 +340,21 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var parentPath = absolutePath.Substring(0, lastIndex);
+
             if (string.IsNullOrEmpty(parentPath))
             {
+                // On the Unix platform, the parent of a path consisting of a slash followed by
+                // non-slashes is the root, '/'.
+                if (XFS.IsUnixPlatform())
+                {
+                    absolutePath = absolutePath.TrimSlashes();
+
+                    if (absolutePath.Length > 1 && absolutePath.LastIndexOf(mockFileDataAccessor.Path.DirectorySeparatorChar) == 0)
+                    {
+                        return new MockDirectoryInfo(mockFileDataAccessor, mockFileDataAccessor.Path.DirectorySeparatorChar.ToString());
+                    }
+                }
+
                 return null;
             }
 
