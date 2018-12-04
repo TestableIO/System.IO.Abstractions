@@ -168,7 +168,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 return this;
             }
-            new MockFile(mockFileSystem).Copy(FullName, destFileName, overwrite);
+            mockFileSystem.File.Copy(FullName, destFileName, overwrite);
             return mockFileSystem.FileInfo.FromFileName(destFileName);
         }
 

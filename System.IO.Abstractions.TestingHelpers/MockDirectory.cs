@@ -11,17 +11,13 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockDirectory : DirectoryBase
     {
-        private readonly FileBase fileBase;
-
         private readonly IMockFileDataAccessor mockFileDataAccessor;
-
         private string currentDirectory;
 
-        public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory) : base(mockFileDataAccessor?.FileSystem)
+        public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, string currentDirectory) : base(mockFileDataAccessor?.FileSystem)
         {
             this.currentDirectory = currentDirectory;
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
-            this.fileBase = fileBase;
         }
 
         public override DirectoryInfoBase CreateDirectory(string path)
@@ -35,6 +31,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return CreateDirectoryInternal(path, directorySecurity);
         }
 #endif
+
         private DirectoryInfoBase CreateDirectoryInternal(string path, DirectorySecurity directorySecurity)
         {
             if (path == null)
@@ -74,7 +71,7 @@ namespace System.IO.Abstractions.TestingHelpers
             path = mockFileDataAccessor.Path.GetFullPath(path).TrimSlashes();
             var affectedPaths = mockFileDataAccessor
                 .AllPaths
-                .Where(p => p.StartsWith(path, StringComparison.OrdinalIgnoreCase))
+                .Where(p => p.StartsWith(path, mockFileDataAccessor.Comparison))
                 .ToList();
 
             if (!affectedPaths.Any())
@@ -99,7 +96,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 path = path.TrimSlashes();
                 path = mockFileDataAccessor.Path.GetFullPath(path);
-                return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, StringComparison.OrdinalIgnoreCase));
+                return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, mockFileDataAccessor.Comparison));
             }
             catch (Exception)
             {
@@ -128,12 +125,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime GetCreationTime(string path)
         {
-            return fileBase.GetCreationTime(path);
+            return mockFileDataAccessor.File.GetCreationTime(path);
         }
 
         public override DateTime GetCreationTimeUtc(string path)
         {
-            return fileBase.GetCreationTimeUtc(path);
+            return mockFileDataAccessor.File.GetCreationTimeUtc(path);
         }
 
         public override string GetCurrentDirectory()
@@ -278,22 +275,22 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override DateTime GetLastAccessTime(string path)
         {
-            return fileBase.GetLastAccessTime(path);
+            return mockFileDataAccessor.File.GetLastAccessTime(path);
         }
 
         public override DateTime GetLastAccessTimeUtc(string path)
         {
-            return fileBase.GetLastAccessTimeUtc(path);
+            return mockFileDataAccessor.File.GetLastAccessTimeUtc(path);
         }
 
         public override DateTime GetLastWriteTime(string path)
         {
-            return fileBase.GetLastWriteTime(path);
+            return mockFileDataAccessor.File.GetLastWriteTime(path);
         }
 
         public override DateTime GetLastWriteTimeUtc(string path)
         {
-            return fileBase.GetLastWriteTimeUtc(path);
+            return mockFileDataAccessor.File.GetLastWriteTimeUtc(path);
         }
 
 #if NET40
@@ -302,7 +299,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return mockFileDataAccessor
                 .AllDirectories
                 .Select(d => new MockDirectoryInfo(mockFileDataAccessor, d).Root.FullName)
-                .Select(r => r.ToLowerInvariant())
+                .Select(r => mockFileDataAccessor.CaseSensitive ? r : r.ToLowerInvariant())
                 .Distinct()
                 .ToArray();
         }
@@ -320,7 +317,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentException(StringResources.Manager.GetString("PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE"), "path");
             }
 
-            if (MockPath.HasIllegalCharacters(path, false))
+            if (mockFileDataAccessor.PathVerifier.HasIllegalCharacters(path, false))
             {
                 throw new ArgumentException("Path contains invalid path characters.", "path");
             }
@@ -331,7 +328,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var lastIndex = 0;
             if (absolutePath != sepAsString)
             {
-                var startIndex = absolutePath.EndsWith(sepAsString, StringComparison.OrdinalIgnoreCase) ? absolutePath.Length - 1 : absolutePath.Length;
+                var startIndex = absolutePath.EndsWith(sepAsString, mockFileDataAccessor.Comparison) ? absolutePath.Length - 1 : absolutePath.Length;
                 lastIndex = absolutePath.LastIndexOf(mockFileDataAccessor.Path.DirectorySeparatorChar, startIndex - 1);
                 if (lastIndex < 0)
                 {
@@ -345,8 +342,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 return null;
             }
 
-            var parent = new MockDirectoryInfo(mockFileDataAccessor, parentPath);
-            return parent;
+            return new MockDirectoryInfo(mockFileDataAccessor, parentPath);
         }
 
         public override void Move(string sourceDirName, string destDirName)
@@ -354,14 +350,14 @@ namespace System.IO.Abstractions.TestingHelpers
             var fullSourcePath = mockFileDataAccessor.Path.GetFullPath(sourceDirName).TrimSlashes();
             var fullDestPath = mockFileDataAccessor.Path.GetFullPath(destDirName).TrimSlashes();
 
-            if (string.Equals(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(fullSourcePath, fullDestPath, mockFileDataAccessor.Comparison))
             {
                 throw new IOException("Source and destination path must be different.");
             }
 
             var sourceRoot = mockFileDataAccessor.Path.GetPathRoot(fullSourcePath);
             var destinationRoot = mockFileDataAccessor.Path.GetPathRoot(fullDestPath);
-            if (!string.Equals(sourceRoot, destinationRoot, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(sourceRoot, destinationRoot, mockFileDataAccessor.Comparison))
             {
                 throw new IOException("Source and destination path must have identical roots. Move will not work across volumes.");
             }
@@ -395,12 +391,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void SetCreationTime(string path, DateTime creationTime)
         {
-            fileBase.SetCreationTime(path, creationTime);
+            mockFileDataAccessor.File.SetCreationTime(path, creationTime);
         }
 
         public override void SetCreationTimeUtc(string path, DateTime creationTimeUtc)
         {
-            fileBase.SetCreationTimeUtc(path, creationTimeUtc);
+            mockFileDataAccessor.File.SetCreationTimeUtc(path, creationTimeUtc);
         }
 
         public override void SetCurrentDirectory(string path)
@@ -410,22 +406,22 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void SetLastAccessTime(string path, DateTime lastAccessTime)
         {
-            fileBase.SetLastAccessTime(path, lastAccessTime);
+            mockFileDataAccessor.File.SetLastAccessTime(path, lastAccessTime);
         }
 
         public override void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc)
         {
-            fileBase.SetLastAccessTimeUtc(path, lastAccessTimeUtc);
+            mockFileDataAccessor.File.SetLastAccessTimeUtc(path, lastAccessTimeUtc);
         }
 
         public override void SetLastWriteTime(string path, DateTime lastWriteTime)
         {
-            fileBase.SetLastWriteTime(path, lastWriteTime);
+            mockFileDataAccessor.File.SetLastWriteTime(path, lastWriteTime);
         }
 
         public override void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc)
         {
-            fileBase.SetLastWriteTimeUtc(path, lastWriteTimeUtc);
+            mockFileDataAccessor.File.SetLastWriteTimeUtc(path, lastWriteTimeUtc);
         }
 
         public override IEnumerable<string> EnumerateDirectories(string path)
@@ -455,7 +451,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
-            return dirs.Where(p => string.Compare(p, path, StringComparison.OrdinalIgnoreCase) != 0);
+            return dirs.Where(p => mockFileDataAccessor.Comparer.Compare(p, path) != 0);
         }
 
         public override IEnumerable<string> EnumerateFiles(string path)
@@ -501,7 +497,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 : Path.Combine(GetCurrentDirectory(), path);
         }
 
-        static void CheckSearchPattern(string searchPattern)
+        private void CheckSearchPattern(string searchPattern)
         {
             if (searchPattern == null)
             {
@@ -511,13 +507,13 @@ namespace System.IO.Abstractions.TestingHelpers
             const string TWO_DOTS = "..";
             Func<ArgumentException> createException = () => new ArgumentException(@"Search pattern cannot contain "".."" to move up directories and can be contained only internally in file/directory names, as in ""a..b"".", searchPattern);
 
-            if (searchPattern.EndsWith(TWO_DOTS, StringComparison.OrdinalIgnoreCase))
+            if (searchPattern.EndsWith(TWO_DOTS, mockFileDataAccessor.Comparison))
             {
                 throw createException();
             }
 
             int position;
-            if ((position = searchPattern.IndexOf(TWO_DOTS, StringComparison.OrdinalIgnoreCase)) >= 0)
+            if ((position = searchPattern.IndexOf(TWO_DOTS, mockFileDataAccessor.Comparison)) >= 0)
             {
                 var characterAfterTwoDots = searchPattern[position + 2];
                 if (characterAfterTwoDots == Path.DirectorySeparatorChar || characterAfterTwoDots == Path.AltDirectorySeparatorChar)

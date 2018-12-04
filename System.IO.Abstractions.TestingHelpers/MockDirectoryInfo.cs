@@ -73,7 +73,7 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 var root = mockFileDataAccessor.Path.GetPathRoot(directoryPath);
-                if (string.Equals(directoryPath, root, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(directoryPath, root, mockFileDataAccessor.Comparison))
                 {
                     // drives have the trailing slash
                     return directoryPath;

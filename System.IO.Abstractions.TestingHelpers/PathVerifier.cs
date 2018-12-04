@@ -2,6 +2,8 @@
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using XFS = MockUnixSupport;
+
     public class PathVerifier
     {
         private readonly IMockFileDataAccessor _mockFileDataAccessor;
@@ -28,12 +30,9 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"), paramName);
             }
 
-            if (!MockUnixSupport.IsUnixPlatform())
+            if (XFS.IsWindowsPlatform() && !IsValidUseOfVolumeSeparatorChar(path))
             {
-                if (!IsValidUseOfVolumeSeparatorChar(path))
-                {
-                    throw new NotSupportedException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"));
-                }
+                throw new NotSupportedException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"));
             }
 
             if (ExtractFileName(path).IndexOfAny(_mockFileDataAccessor.Path.GetInvalidFileNameChars()) > -1)
@@ -42,7 +41,8 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var filePath = ExtractFilePath(path);
-            if (MockPath.HasIllegalCharacters(filePath, false))
+
+            if (HasIllegalCharacters(filePath, false))
             {
                 throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
             }
@@ -67,6 +67,38 @@ namespace System.IO.Abstractions.TestingHelpers
                 _mockFileDataAccessor.Path.DirectorySeparatorChar,
                 _mockFileDataAccessor.Path.AltDirectorySeparatorChar);
             return string.Join(_mockFileDataAccessor.Path.DirectorySeparatorChar.ToString(), extractFilePath.Take(extractFilePath.Length - 1));
+        }
+
+        private readonly char[] AdditionalInvalidPathChars = { '*', '?' };
+
+        public bool HasIllegalCharacters(string path, bool checkAdditional)
+        {
+            if (path == null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            var invalidPathChars = _mockFileDataAccessor.Path.GetInvalidPathChars();
+
+            if (checkAdditional)
+            {
+                return path.IndexOfAny(invalidPathChars.Concat(AdditionalInvalidPathChars).ToArray()) >= 0;
+            }
+
+            return path.IndexOfAny(invalidPathChars) >= 0;
+        }
+
+        public void CheckInvalidPathChars(string path, bool checkAdditional = false)
+        {
+            if (path == null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (HasIllegalCharacters(path, checkAdditional))
+            {
+                throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
+            }
         }
     }
 }

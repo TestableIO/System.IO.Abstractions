@@ -547,10 +547,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             // Act
-            fileSystem.Directory.CreateDirectory(XFS.Path(@"\\server\share\path\to\create", () => false));
+            fileSystem.Directory.CreateDirectory(@"\\server\share\path\to\create");
 
             // Assert
-            Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"\\server\share\path\to\create\", () => false)));
+            Assert.IsTrue(fileSystem.Directory.Exists(@"\\server\share\path\to\create\"));
         }
 
         [Test]
@@ -561,7 +561,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             // Act
-            var ex = Assert.Throws<ArgumentException>(() => fileSystem.Directory.CreateDirectory(XFS.Path(@"\\server", () => false)));
+            var ex = Assert.Throws<ArgumentException>(() => fileSystem.Directory.CreateDirectory(@"\\server"));
 
             // Assert
             StringAssert.StartsWith("The UNC path should be of the form \\\\server\\share.", ex.Message);
@@ -576,10 +576,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             // Act
-            fileSystem.Directory.CreateDirectory(XFS.Path(@"\\server\share", () => false));
+            fileSystem.Directory.CreateDirectory(@"\\server\share");
 
             // Assert
-            Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"\\server\share\", () => false)));
+            Assert.IsTrue(fileSystem.Directory.Exists(@"\\server\share\"));
         }
 
         [Test]
@@ -1250,14 +1250,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.EmptyInvalidPathChars)]
         public void MockDirectory_GetParent_ShouldThrowArgumentExceptionIfPathHasIllegalCharacters()
         {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
-                return;
-            }
-
             // Arrange
             var fileSystem = new MockFileSystem();
 

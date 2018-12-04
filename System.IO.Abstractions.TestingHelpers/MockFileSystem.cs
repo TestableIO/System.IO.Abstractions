@@ -2,10 +2,11 @@
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using XFS = MockUnixSupport;
+
     [Serializable]
     public class MockFileSystem : IFileSystem, IMockFileDataAccessor
     {
@@ -24,13 +25,15 @@ namespace System.IO.Abstractions.TestingHelpers
                 currentDirectory = XFS.Path(DEFAULT_CURRENT_DIRECTORY);
             }
 
+            CaseSensitive = XFS.IsUnixPlatform();
+            Comparer = CaseSensitive ? StringComparer.Ordinal : StringComparer.OrdinalIgnoreCase;
+            Comparison = CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
             pathVerifier = new PathVerifier(this);
+            this.files = new Dictionary<string, MockFileData>(Comparer);
 
-            this.files = new Dictionary<string, MockFileData>(StringComparer.OrdinalIgnoreCase);
-            
             Path = new MockPath(this);
             File = new MockFile(this);
-            Directory = new MockDirectory(this, File, currentDirectory);
+            Directory = new MockDirectory(this, currentDirectory);
             FileInfo = new MockFileInfoFactory(this);
             FileStream = new MockFileStreamFactory(this);
             DirectoryInfo = new MockDirectoryInfoFactory(this);
@@ -51,24 +54,18 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        public bool CaseSensitive { get; }
+        public StringComparer Comparer { get; }
+        public StringComparison Comparison { get; }
         public FileBase File { get; }
-
         public DirectoryBase Directory { get; }
-
         public IFileInfoFactory FileInfo { get; }
-
         public IFileStreamFactory FileStream { get; }
-
         public PathBase Path { get; }
-
         public IDirectoryInfoFactory DirectoryInfo { get; }
-
         public IDriveInfoFactory DriveInfo { get; }
-
         public IFileSystemWatcherFactory FileSystemWatcher { get; set; }
-
         public IFileSystem FileSystem => this;
-
         public PathVerifier PathVerifier => pathVerifier;
 
         private string FixPath(string path, bool checkCaps = false)
@@ -100,7 +97,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 if (Directory.Exists(leftHalf))
                 {
                     leftHalf = Path.GetFullPath(leftHalf).TrimSlashes();
-                    string baseDirectory = AllDirectories.First(dir => dir.Equals(leftHalf, StringComparison.OrdinalIgnoreCase));
+                    string baseDirectory = AllDirectories.First(dir => dir.Equals(leftHalf, Comparison));
                     return baseDirectory + Path.DirectorySeparatorChar + rightHalf;
                 }
             }
@@ -152,7 +149,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public void AddDirectory(string path)
         {
             var fixedPath = FixPath(path, true);
-            var separator = XFS.Separator();
+            var separator = Path.DirectorySeparatorChar.ToString();
 
             lock (files)
             {
@@ -163,13 +160,13 @@ namespace System.IO.Abstractions.TestingHelpers
                 var lastIndex = 0;
 
                 bool isUnc =
-                    fixedPath.StartsWith(@"\\", StringComparison.OrdinalIgnoreCase) ||
-                    fixedPath.StartsWith(@"//", StringComparison.OrdinalIgnoreCase);
+                    fixedPath.StartsWith(@"\\", Comparison) ||
+                    fixedPath.StartsWith(@"//", Comparison);
 
                 if (isUnc)
                 {
                     //First, confirm they aren't trying to create '\\server\'
-                    lastIndex = fixedPath.IndexOf(separator, 2, StringComparison.OrdinalIgnoreCase);
+                    lastIndex = fixedPath.IndexOf(separator, 2, Comparison);
                     if (lastIndex < 0)
                         throw new ArgumentException(@"The UNC path should be of the form \\server\share.", "path");
 
@@ -179,7 +176,7 @@ namespace System.IO.Abstractions.TestingHelpers
                      */
                 }
 
-                while ((lastIndex = fixedPath.IndexOf(separator, lastIndex + 1, StringComparison.OrdinalIgnoreCase)) > -1)
+                while ((lastIndex = fixedPath.IndexOf(separator, lastIndex + 1, Comparison)) > -1)
                 {
                     var segment = fixedPath.Substring(0, lastIndex + 1);
                     if (!Directory.Exists(segment))
@@ -188,7 +185,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     }
                 }
 
-                var s = fixedPath.EndsWith(separator, StringComparison.OrdinalIgnoreCase) ? fixedPath : fixedPath + separator;
+                var s = fixedPath.EndsWith(separator, Comparison) ? fixedPath : fixedPath + separator;
                 SetEntry(s, new MockDirectoryData());
             }
         }
@@ -234,12 +231,12 @@ namespace System.IO.Abstractions.TestingHelpers
             lock (files)
             {
                 var affectedPaths = files.Keys
-                    .Where(p => p.StartsWith(sourcePath, StringComparison.OrdinalIgnoreCase))
+                    .Where(p => p.StartsWith(sourcePath, Comparison))
                     .ToList();
 
                 foreach(var path in affectedPaths)
                 {
-                    var newPath = path.Replace(sourcePath, destPath, StringComparison.OrdinalIgnoreCase);
+                    var newPath = path.Replace(sourcePath, destPath, Comparison);
                     files[newPath] = files[path];
                     files.Remove(path);
                 }

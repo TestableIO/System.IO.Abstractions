@@ -7,10 +7,7 @@
 
         public MockDriveInfo(IMockFileDataAccessor mockFileDataAccessor, string name) : base(mockFileDataAccessor?.FileSystem)
         {
-            if (mockFileDataAccessor == null)
-            {
-                throw new ArgumentNullException(nameof(mockFileDataAccessor));
-            }
+            this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
 
             if (name == null)
             {
@@ -18,34 +15,32 @@
             }
 
             const string DRIVE_SEPARATOR = @":\";
-            if (name.Length == 1)
+
+            if (name.Length == 1
+                || (name.Length == 2 && name[1] == ':')
+                || (name.Length == 3 && name.EndsWith(DRIVE_SEPARATOR, mockFileDataAccessor.Comparison)))
             {
-                name = char.ToUpperInvariant(name[0]) + DRIVE_SEPARATOR;
-            }
-            else if (name.Length == 2 && name[1] == ':')
-            {
-                name = char.ToUpperInvariant(name[0]) + DRIVE_SEPARATOR;
-            }
-            else if (name.Length == 3 && name.EndsWith(DRIVE_SEPARATOR, StringComparison.Ordinal))
-            {
-                name = char.ToUpperInvariant(name[0]) + DRIVE_SEPARATOR;
+                name = ToUpper(name[0]) + DRIVE_SEPARATOR;
             }
             else
             {
-                MockPath.CheckInvalidPathChars(name);
+                mockFileDataAccessor.PathVerifier.CheckInvalidPathChars(name);
                 name = mockFileDataAccessor.Path.GetPathRoot(name);
 
-                if (string.IsNullOrEmpty(name) || name.StartsWith(@"\\", StringComparison.Ordinal))
+                if (string.IsNullOrEmpty(name) || name.StartsWith(@"\\", mockFileDataAccessor.Comparison))
                 {
                     throw new ArgumentException(
                         @"Object must be a root directory (""C:\"") or a drive letter (""C"").");
                 }
             }
 
-            this.mockFileDataAccessor = mockFileDataAccessor;
-
             Name = name;
             IsReady = true;
+        }
+
+        private char ToUpper(char c)
+        {
+            return mockFileDataAccessor.CaseSensitive ? c : char.ToUpperInvariant(c);
         }
 
         public new long AvailableFreeSpace { get; set; }
@@ -58,8 +53,7 @@
         {
             get
             {
-                var directory = mockFileDataAccessor.DirectoryInfo.FromDirectoryName(Name);
-                return directory;
+                return mockFileDataAccessor.DirectoryInfo.FromDirectoryName(Name);
             }
         }
 

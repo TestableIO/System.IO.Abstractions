@@ -4,6 +4,8 @@ using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using XFS = MockUnixSupport;
+
     public static class StringExtensions
     {
         [Pure]
@@ -66,14 +68,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
             var trimmed = path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
-            if (MockUnixSupport.IsUnixPlatform()
+            if (XFS.IsUnixPlatform()
                 && (path[0] == Path.DirectorySeparatorChar || path[0] == Path.AltDirectorySeparatorChar)
                 && trimmed == "")
             {
                 return Path.DirectorySeparatorChar.ToString();
             }
 
-            if (!MockUnixSupport.IsUnixPlatform()
+            if (XFS.IsWindowsPlatform()
                 && trimmed.Length == 2
                 && char.IsLetter(trimmed[0])
                 && trimmed[1] == ':')

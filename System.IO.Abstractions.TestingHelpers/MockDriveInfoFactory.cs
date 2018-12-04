@@ -14,7 +14,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public DriveInfoBase[] GetDrives()
         {
-            var driveLetters = new HashSet<string>(new DriveEqualityComparer());
+            var driveLetters = new HashSet<string>(new DriveEqualityComparer(mockFileSystem));
             foreach (var path in mockFileSystem.AllPaths)
             {
                 var pathRoot = mockFileSystem.Path.GetPathRoot(path);
@@ -47,12 +47,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string NormalizeDriveName(string driveName)
         {
-            if (driveName.Length == 3 && driveName.EndsWith(@":\", StringComparison.OrdinalIgnoreCase))
+            if (driveName.Length == 3 && driveName.EndsWith(@":\", mockFileSystem.Comparison))
             {
-                return char.ToUpperInvariant(driveName[0]) + @":\";
+                return (mockFileSystem.CaseSensitive ? driveName[0] : char.ToUpperInvariant(driveName[0])) + @":\";
             }
 
-            if (driveName.StartsWith(@"\\", StringComparison.OrdinalIgnoreCase))
+            if (driveName.StartsWith(@"\\", mockFileSystem.Comparison))
             {
                 return null;
             }
@@ -62,6 +62,13 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private class DriveEqualityComparer : IEqualityComparer<string>
         {
+            private readonly IMockFileDataAccessor mockFileSystem;
+
+            public DriveEqualityComparer(IMockFileDataAccessor mockFileSystem)
+            {
+                this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
+            }
+
             public bool Equals(string x, string y)
             {
                 if (ReferenceEquals(x, y))
@@ -81,7 +88,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
                 if (x[1] == ':' && y[1] == ':')
                 {
-                    return char.ToUpperInvariant(x[0]) == char.ToUpperInvariant(y[0]);
+                    return mockFileSystem.Comparer.Compare(x.Substring(0, 1), y.Substring(0, 1)) == 0;
                 }
 
                 return false;
@@ -89,7 +96,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             public int GetHashCode(string obj)
             {
-                return obj.ToUpperInvariant().GetHashCode();
+                return (mockFileSystem.CaseSensitive ? obj : obj.ToUpperInvariant()).GetHashCode();
             }
         }
     }
