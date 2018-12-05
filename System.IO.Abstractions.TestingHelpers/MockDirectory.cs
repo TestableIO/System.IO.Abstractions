@@ -194,22 +194,23 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             CheckSearchPattern(searchPattern);
             path = path.TrimSlashes();
+            path = path.NormalizeSlashes();
             path = EnsureAbsolutePath(path);
 
-            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString())
-                && !path.EndsWith(Path.AltDirectorySeparatorChar.ToString()))
+            if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
             {
                 path += Path.DirectorySeparatorChar;
             }
 
-            bool isUnix = XFS.IsUnixPlatform();
+            var isUnix = XFS.IsUnixPlatform();
 
-            string allDirectoriesPattern = isUnix
+            var allDirectoriesPattern = isUnix
                 ? @"([^<>:""/|?*]*/)*"
                 : @"([^<>:""/\\|?*]*\\)*";
 
             string fileNamePattern;
             string pathPatternSpecial = null;
+
             if (searchPattern == "*")
             {
                 fileNamePattern = isUnix ? @"[^/]*?/?" : @"[^\\]*?\\?";
@@ -241,22 +242,9 @@ namespace System.IO.Abstractions.TestingHelpers
                 searchOption == SearchOption.AllDirectories ? allDirectoriesPattern : string.Empty,
                 fileNamePattern);
 
-
             return files
-                .Where(p =>
-                    {
-                        if (Regex.IsMatch(p, pathPattern))
-                        {
-                            return true;
-                        }
-
-                        if (pathPatternSpecial != null && Regex.IsMatch(p, pathPatternSpecial))
-                        {
-                            return true;
-                        }
-
-                        return false;
-                    })
+                .Where(p => Regex.IsMatch(p, pathPattern)
+                    || (pathPatternSpecial != null && Regex.IsMatch(p, pathPatternSpecial)))
                 .ToArray();
         }
 

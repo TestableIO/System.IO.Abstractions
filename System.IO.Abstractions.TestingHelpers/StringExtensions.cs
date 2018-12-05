@@ -85,5 +85,25 @@ namespace System.IO.Abstractions.TestingHelpers
 
             return trimmed;
         }
+
+        [Pure]
+        public static string NormalizeSlashes(this string path)
+        {
+            path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            var sep = Path.DirectorySeparatorChar.ToString();
+            var doubleSep = sep + sep;
+
+            while (true)
+            {
+                var newPath = path.Replace(doubleSep, sep);
+
+                if (path == newPath)
+                {
+                    return path;
+                }
+
+                path = newPath;
+            }
+        }
     }
 }

@@ -73,6 +73,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileSystem_AddFile_ShouldHandleUnnormalizedSlashes()
+        {
+            var path = XFS.Path(@"c:\d1\d2\file.txt");
+            var altPath = XFS.Path("c:/d1/d2/file.txt");
+            var altParentPath = XFS.Path("c://d1//d2/");
+            var fs = new MockFileSystem();
+            fs.AddFile(path, new MockFileData("Hello"));
+
+            var fileCount = fs.Directory.GetFiles(altParentPath).Length;
+            var fileExists = fs.File.Exists(altPath);
+
+            Assert.AreEqual(1, fileCount);
+            Assert.IsTrue(fileExists);
+        }
+
+        [Test]
         public void MockFileSystem_AddFile_ShouldHandleNullFileDataAsEmpty()
         {
             var path = XFS.Path(@"c:\something\nullish.txt");
