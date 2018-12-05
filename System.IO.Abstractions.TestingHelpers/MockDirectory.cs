@@ -172,29 +172,38 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string[] GetFiles(string path, string searchPattern, SearchOption searchOption)
         {
+            return GetFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
+        }
+
+        private string[] GetFilesInternal(
+            IEnumerable<string> files,
+            string path,
+            string searchPattern,
+            SearchOption searchOption)
+        {
             if (path == null)
             {
                 throw new ArgumentNullException(nameof(path));
             }
-            
+
             if (path.Any(c => Path.GetInvalidPathChars().Contains(c)))
             {
                 throw new ArgumentException("Invalid character(s) in path", nameof(path));
             }
 
-            if (!Exists(path))
-            {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), path));
-            }
-
-            return GetFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
-        }
-
-        private string[] GetFilesInternal(IEnumerable<string> files, string path, string searchPattern, SearchOption searchOption)
-        {
             CheckSearchPattern(searchPattern);
             path = path.TrimSlashes();
             path = path.NormalizeSlashes();
+
+            if (!Exists(path))
+            {
+                throw new DirectoryNotFoundException(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"),
+                        path));
+            }
+
             path = EnsureAbsolutePath(path);
 
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
@@ -445,17 +454,10 @@ namespace System.IO.Abstractions.TestingHelpers
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-
             path = path.TrimSlashes();
             path = mockFileDataAccessor.Path.GetFullPath(path);
-
-            if (!Exists(path))
-            {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), path));
-            }
-
-            var dirs = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption);
-            return dirs.Where(p => mockFileDataAccessor.Comparer.Compare(p, path) != 0);
+            return GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption)
+                .Where(p => mockFileDataAccessor.Comparer.Compare(p, path) != 0);
         }
 
         public override IEnumerable<string> EnumerateFiles(string path)
