@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -93,13 +94,27 @@ namespace System.IO.Abstractions.TestingHelpers
             var sep = Path.DirectorySeparatorChar.ToString();
             var doubleSep = sep + sep;
 
+            var prefixSeps = new string(path.TakeWhile(c => c == Path.DirectorySeparatorChar).ToArray());
+            path = path.Substring(prefixSeps.Length);
+
+            // UNC Paths start with double slash but no reason
+            // to have more than 2 slashes at the start of a path
+            if (XFS.IsWindowsPlatform() && prefixSeps.Length > 2)
+            {
+                prefixSeps = prefixSeps.Substring(0, 2);
+            }
+            else if (prefixSeps.Length > 1)
+            {
+                prefixSeps = prefixSeps.Substring(0, 1);
+            }
+
             while (true)
             {
                 var newPath = path.Replace(doubleSep, sep);
 
                 if (path == newPath)
                 {
-                    return path;
+                    return prefixSeps + path;
                 }
 
                 path = newPath;
