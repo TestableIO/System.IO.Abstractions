@@ -32,8 +32,8 @@ namespace System.IO.Abstractions.TestingHelpers
             path = path.Replace(AltDirectorySeparatorChar, DirectorySeparatorChar);
 
             bool isUnc =
-                path.StartsWith(@"\\", mockFileDataAccessor.Comparison) ||
-                path.StartsWith(@"//", mockFileDataAccessor.Comparison);
+                mockFileDataAccessor.StringOperations.StartsWith(path, @"\\") ||
+                mockFileDataAccessor.StringOperations.StartsWith(path, @"//");
 
             string root = GetPathRoot(path);
 
@@ -56,7 +56,8 @@ namespace System.IO.Abstractions.TestingHelpers
                     throw new ArgumentException(@"The UNC path should be of the form \\server\share.", "path");
                 }
             }
-            else if (@"\".Equals(root, mockFileDataAccessor.Comparison) || @"/".Equals(root, mockFileDataAccessor.Comparison))
+            else if (mockFileDataAccessor.StringOperations.Equals(@"\", root) ||
+                     mockFileDataAccessor.StringOperations.Equals(@"/", root))
             {
                 // absolute path on the current drive or volume
                 pathSegments = GetSegments(GetPathRoot(mockFileDataAccessor.Directory.GetCurrentDirectory()), path);
@@ -67,9 +68,9 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             // unc paths need at least two segments, the others need one segment
-            bool isUnixRooted =
-                mockFileDataAccessor.Directory.GetCurrentDirectory()
-                    .StartsWith(string.Format(CultureInfo.InvariantCulture, "{0}", DirectorySeparatorChar), mockFileDataAccessor.Comparison);
+            var isUnixRooted = mockFileDataAccessor.StringOperations.StartsWith(
+                mockFileDataAccessor.Directory.GetCurrentDirectory(),
+                string.Format(CultureInfo.InvariantCulture, "{0}", DirectorySeparatorChar));
 
             var minPathSegments = isUnc
                 ? 2
@@ -78,7 +79,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var stack = new Stack<string>();
             foreach (var segment in pathSegments)
             {
-                if ("..".Equals(segment, mockFileDataAccessor.Comparison))
+                if (mockFileDataAccessor.StringOperations.Equals("..", segment))
                 {
                     // only pop, if afterwards are at least the minimal amount of path segments
                     if (stack.Count > minPathSegments)
@@ -86,7 +87,7 @@ namespace System.IO.Abstractions.TestingHelpers
                         stack.Pop();
                     }
                 }
-                else if (".".Equals(segment, mockFileDataAccessor.Comparison))
+                else if (mockFileDataAccessor.StringOperations.Equals(".", segment))
                 {
                     // ignore .
                 }

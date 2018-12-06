@@ -17,7 +17,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { @"c:\something\demo.txt", new MockFileData("Demo\r\ntext\ncontent\rvalue") },
-                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { @"c:\something\other.gif", new MockFileData("gif content") }
             });
 
             var result = fileSystem.GetFile(@"c:\something\else.txt");
@@ -32,7 +32,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { @"c:\something\demo.txt", file1 },
-                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { @"c:\something\other.gif", new MockFileData("gif content") }
             });
 
             var result = fileSystem.GetFile(@"c:\something\demo.txt");
@@ -48,7 +48,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { @"c:\something\demo.txt", file1 },
-                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { @"c:\something\other.gif", new MockFileData("gif content") }
             });
 
             var result = fileSystem.GetFile(@"c:\SomeThing\DEMO.txt");
@@ -60,11 +60,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [UnixOnly(UnixSpecifics.CaseSensitivity)]
         public void MockFileSystem_GetFile_ShouldNotReturnFileRegisteredInConstructorWhenPathsDifferByCase()
         {
-            var file1 = new MockFileData("Demo\r\ntext\ncontent\rvalue");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { "/something/demo.txt", file1 },
-                { "/something/other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { "/something/demo.txt", new MockFileData("Demo\r\ntext\ncontent\rvalue") },
+                { "/something/other.gif", new MockFileData("gif content") }
             });
 
             var result = fileSystem.GetFile("/SomeThing/DEMO.txt");
@@ -76,13 +75,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileSystem_AddFile_ShouldHandleUnnormalizedSlashes()
         {
             var path = XFS.Path(@"c:\d1\d2\file.txt");
-            var altPath = XFS.Path("c:/d1/d2/file.txt");
-            var altParentPath = XFS.Path("c://d1//d2/");
+            var alternatePath = XFS.Path("c:/d1/d2/file.txt");
+            var alternateParentPath = XFS.Path("c://d1//d2/");
             var fs = new MockFileSystem();
             fs.AddFile(path, new MockFileData("Hello"));
 
-            var fileCount = fs.Directory.GetFiles(altParentPath).Length;
-            var fileExists = fs.File.Exists(altPath);
+            var fileCount = fs.Directory.GetFiles(alternateParentPath).Length;
+            var fileExists = fs.File.Exists(alternatePath);
 
             Assert.AreEqual(1, fileCount);
             Assert.IsTrue(fileExists);

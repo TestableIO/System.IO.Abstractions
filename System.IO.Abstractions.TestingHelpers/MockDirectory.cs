@@ -14,6 +14,12 @@ namespace System.IO.Abstractions.TestingHelpers
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private string currentDirectory;
 
+        // This constructor is retained to avoid breaking change
+        public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory) :
+            this(mockFileDataAccessor, currentDirectory)
+        {
+        }
+
         public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, string currentDirectory) : base(mockFileDataAccessor?.FileSystem)
         {
             this.currentDirectory = currentDirectory;
@@ -71,7 +77,7 @@ namespace System.IO.Abstractions.TestingHelpers
             path = mockFileDataAccessor.Path.GetFullPath(path).TrimSlashes();
             var affectedPaths = mockFileDataAccessor
                 .AllPaths
-                .Where(p => p.StartsWith(path, mockFileDataAccessor.Comparison))
+                .Where(p => mockFileDataAccessor.StringOperations.StartsWith(p, path))
                 .ToList();
 
             if (!affectedPaths.Any())
@@ -96,7 +102,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 path = path.TrimSlashes();
                 path = mockFileDataAccessor.Path.GetFullPath(path);
-                return mockFileDataAccessor.AllDirectories.Any(p => p.Equals(path, mockFileDataAccessor.Comparison));
+                return mockFileDataAccessor.AllDirectories.Any(p => mockFileDataAccessor.StringOperations.Equals(p, path));
             }
             catch (Exception)
             {
@@ -296,7 +302,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return mockFileDataAccessor
                 .AllDirectories
                 .Select(d => new MockDirectoryInfo(mockFileDataAccessor, d).Root.FullName)
-                .Select(r => mockFileDataAccessor.CaseSensitive ? r : r.ToUpperInvariant())
+                .Select(r => mockFileDataAccessor.StringOperations.ToUpper(r))
                 .Distinct()
                 .ToArray();
         }
@@ -325,7 +331,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (absolutePath != sepAsString)
             {
-                var startIndex = absolutePath.EndsWith(sepAsString, mockFileDataAccessor.Comparison)
+                var startIndex = mockFileDataAccessor.StringOperations.EndsWith(absolutePath, sepAsString)
                     ? absolutePath.Length - 1
                     : absolutePath.Length;
                 lastIndex = absolutePath.LastIndexOf(mockFileDataAccessor.Path.DirectorySeparatorChar, startIndex - 1);
@@ -363,14 +369,15 @@ namespace System.IO.Abstractions.TestingHelpers
             var fullSourcePath = mockFileDataAccessor.Path.GetFullPath(sourceDirName).TrimSlashes();
             var fullDestPath = mockFileDataAccessor.Path.GetFullPath(destDirName).TrimSlashes();
 
-            if (string.Equals(fullSourcePath, fullDestPath, mockFileDataAccessor.Comparison))
+            if (mockFileDataAccessor.StringOperations.Equals(fullSourcePath, fullDestPath))
             {
                 throw new IOException("Source and destination path must be different.");
             }
 
             var sourceRoot = mockFileDataAccessor.Path.GetPathRoot(fullSourcePath);
             var destinationRoot = mockFileDataAccessor.Path.GetPathRoot(fullDestPath);
-            if (!string.Equals(sourceRoot, destinationRoot, mockFileDataAccessor.Comparison))
+
+            if (!mockFileDataAccessor.StringOperations.Equals(sourceRoot, destinationRoot))
             {
                 throw new IOException("Source and destination path must have identical roots. Move will not work across volumes.");
             }
@@ -457,7 +464,7 @@ namespace System.IO.Abstractions.TestingHelpers
             path = path.TrimSlashes();
             path = mockFileDataAccessor.Path.GetFullPath(path);
             return GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption)
-                .Where(p => mockFileDataAccessor.Comparer.Compare(p, path) != 0);
+                .Where(p => !mockFileDataAccessor.StringOperations.Equals(p, path));
         }
 
         public override IEnumerable<string> EnumerateFiles(string path)
@@ -513,15 +520,17 @@ namespace System.IO.Abstractions.TestingHelpers
             const string TWO_DOTS = "..";
             Func<ArgumentException> createException = () => new ArgumentException(@"Search pattern cannot contain "".."" to move up directories and can be contained only internally in file/directory names, as in ""a..b"".", searchPattern);
 
-            if (searchPattern.EndsWith(TWO_DOTS, mockFileDataAccessor.Comparison))
+            if (mockFileDataAccessor.StringOperations.EndsWith(searchPattern, TWO_DOTS))
             {
                 throw createException();
             }
 
-            int position;
-            if ((position = searchPattern.IndexOf(TWO_DOTS, mockFileDataAccessor.Comparison)) >= 0)
+            var position = mockFileDataAccessor.StringOperations.IndexOf(searchPattern, TWO_DOTS);
+
+            if (position >= 0)
             {
                 var characterAfterTwoDots = searchPattern[position + 2];
+
                 if (characterAfterTwoDots == Path.DirectorySeparatorChar || characterAfterTwoDots == Path.AltDirectorySeparatorChar)
                 {
                     throw createException();

@@ -47,12 +47,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string NormalizeDriveName(string driveName)
         {
-            if (driveName.Length == 3 && driveName.EndsWith(@":\", mockFileSystem.Comparison))
+            if (driveName.Length == 3 && mockFileSystem.StringOperations.EndsWith(driveName, @":\"))
             {
-                return (mockFileSystem.CaseSensitive ? driveName[0] : char.ToUpperInvariant(driveName[0])) + @":\";
+                return mockFileSystem.StringOperations.ToUpper(driveName[0]) + @":\";
             }
 
-            if (driveName.StartsWith(@"\\", mockFileSystem.Comparison))
+            if (mockFileSystem.StringOperations.StartsWith(driveName, @"\\"))
             {
                 return null;
             }
@@ -71,32 +71,18 @@ namespace System.IO.Abstractions.TestingHelpers
 
             public bool Equals(string x, string y)
             {
-                if (ReferenceEquals(x, y))
-                {
-                    return true;
-                }
+                return ReferenceEquals(x, y) ||
+                       (HasDrivePrefix(x) && HasDrivePrefix(y) && mockFileSystem.StringOperations.Equals(x[0], y[0]));
+            }
 
-                if (ReferenceEquals(x, null))
-                {
-                    return false;
-                }
-
-                if (ReferenceEquals(y, null))
-                {
-                    return false;
-                }
-
-                if (x[1] == ':' && y[1] == ':')
-                {
-                    return mockFileSystem.Comparer.Compare(x.Substring(0, 1), y.Substring(0, 1)) == 0;
-                }
-
-                return false;
+            private static bool HasDrivePrefix(string x)
+            {
+                return x != null && x.Length >= 2 && x[1] == ':';
             }
 
             public int GetHashCode(string obj)
             {
-                return (mockFileSystem.CaseSensitive ? obj : obj.ToUpperInvariant()).GetHashCode();
+                return mockFileSystem.StringOperations.ToUpper(obj).GetHashCode();
             }
         }
     }

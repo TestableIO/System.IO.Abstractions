@@ -54,9 +54,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </summary>
         IEnumerable<string> AllDirectories { get; }
 
-        bool CaseSensitive { get; }
-        StringComparer Comparer { get; }
-        StringComparison Comparison { get; }
+        StringOperations StringOperations { get; }
 
         FileBase File { get; }
         DirectoryBase Directory { get; }

@@ -6,6 +6,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
     public class PathVerifier
     {
+        private static readonly char[] AdditionalInvalidPathChars = { '*', '?' };
         private readonly IMockFileDataAccessor _mockFileDataAccessor;
 
         internal PathVerifier(IMockFileDataAccessor mockFileDataAccessor)
@@ -42,7 +43,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             var filePath = ExtractFilePath(path);
 
-            if (HasIllegalCharacters(filePath, false))
+            if (HasIllegalCharacters(filePath, checkAdditional: false))
             {
                 throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
             }
@@ -68,8 +69,6 @@ namespace System.IO.Abstractions.TestingHelpers
                 _mockFileDataAccessor.Path.AltDirectorySeparatorChar);
             return string.Join(_mockFileDataAccessor.Path.DirectorySeparatorChar.ToString(), extractFilePath.Take(extractFilePath.Length - 1));
         }
-
-        private readonly char[] AdditionalInvalidPathChars = { '*', '?' };
 
         public bool HasIllegalCharacters(string path, bool checkAdditional)
         {

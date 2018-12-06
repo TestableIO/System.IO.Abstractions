@@ -18,7 +18,7 @@
 
             if (name.Length == 1
                 || (name.Length == 2 && name[1] == ':')
-                || (name.Length == 3 && name.EndsWith(DRIVE_SEPARATOR, mockFileDataAccessor.Comparison)))
+                || (name.Length == 3 && mockFileDataAccessor.StringOperations.EndsWith(name, DRIVE_SEPARATOR)))
             {
                 name = name[0] + DRIVE_SEPARATOR;
             }
@@ -27,7 +27,7 @@
                 mockFileDataAccessor.PathVerifier.CheckInvalidPathChars(name);
                 name = mockFileDataAccessor.Path.GetPathRoot(name);
 
-                if (string.IsNullOrEmpty(name) || name.StartsWith(@"\\", mockFileDataAccessor.Comparison))
+                if (string.IsNullOrEmpty(name) || mockFileDataAccessor.StringOperations.StartsWith(name, @"\\"))
                 {
                     throw new ArgumentException(
                         @"Object must be a root directory (""C:\"") or a drive letter (""C"").");

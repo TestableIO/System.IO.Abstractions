@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.AccessControl;
@@ -551,7 +551,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (destinationBackupFileName != null)
             {
-                Copy(destinationFileName, destinationBackupFileName, true);
+                Copy(destinationFileName, destinationBackupFileName, overwrite: true);
             }
 
             Delete(destinationFileName);
