@@ -296,7 +296,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return mockFileDataAccessor
                 .AllDirectories
                 .Select(d => new MockDirectoryInfo(mockFileDataAccessor, d).Root.FullName)
-                .Select(r => mockFileDataAccessor.CaseSensitive ? r : r.ToLowerInvariant())
+                .Select(r => mockFileDataAccessor.CaseSensitive ? r : r.ToUpperInvariant())
                 .Distinct()
                 .ToArray();
         }
