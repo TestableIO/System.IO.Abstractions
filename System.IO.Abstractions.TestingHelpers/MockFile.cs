@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.AccessControl;
@@ -55,14 +55,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!mockFileDataAccessor.FileExists(path))
             {
-                var dir = mockFileDataAccessor.Path.GetDirectoryName(
-                    mockFileDataAccessor.Path.GetFullPath(path));
-
-                if (!mockFileDataAccessor.Directory.Exists(dir))
-                {
-                    throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), path));
-                }
-
+                CheckDirectoryExists(path);
                 mockFileDataAccessor.AddFile(path, new MockFileData(contents, encoding));
             }
             else
@@ -112,13 +105,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new FileNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), sourceFileName));
             }
 
-            var directoryNameOfDestination = mockFileDataAccessor.Path.GetDirectoryName(
-                mockFileDataAccessor.Path.GetFullPath(destFileName));
-
-            if (!mockFileDataAccessor.Directory.Exists(directoryNameOfDestination))
-            {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), destFileName));
-            }
+            CheckDirectoryExists(destFileName);
 
             var fileExists = mockFileDataAccessor.FileExists(destFileName);
             if (fileExists)
@@ -157,18 +144,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, nameof(path));
-
-            var directoryPath = mockFileDataAccessor.Path.GetDirectoryName(
-                mockFileDataAccessor.Path.GetFullPath(path));
-
-            if (!mockFileDataAccessor.Directory.Exists(directoryPath))
-            {
-                throw new DirectoryNotFoundException(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"),
-                        path));
-            }
+            CheckDirectoryExists(path);
 
             var mockFileData = new MockFileData(new byte[0])
             {
@@ -976,6 +952,21 @@ namespace System.IO.Abstractions.TestingHelpers
             using (var sr = new StreamReader(ms, encoding))
             {
                 return sr.ReadToEnd();
+            }
+        }
+
+        private void CheckDirectoryExists(string path)
+        {
+            var pathOps = mockFileDataAccessor.Path;
+            var dir = pathOps.GetDirectoryName(pathOps.GetFullPath(path));
+
+            if (!mockFileDataAccessor.Directory.Exists(dir))
+            {
+                throw new DirectoryNotFoundException(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"),
+                        path));
             }
         }
 
