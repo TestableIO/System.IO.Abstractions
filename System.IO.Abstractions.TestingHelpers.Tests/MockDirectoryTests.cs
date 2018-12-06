@@ -884,8 +884,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             else
             {
                 Assert.AreEqual(2, drives.Length);
-                Assert.IsTrue(drives.Contains("c:\\"));
-                Assert.IsTrue(drives.Contains("d:\\"));
+                Assert.IsTrue(drives.Contains(@"C:\"));
+                Assert.IsTrue(drives.Contains(@"D:\"));
             }
         }
 #endif
