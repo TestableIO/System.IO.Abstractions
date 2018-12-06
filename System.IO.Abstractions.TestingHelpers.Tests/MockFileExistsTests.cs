@@ -14,7 +14,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { XFS.Path(@"C:\something\demo.txt"), new MockFileData("Demo text content") },
                 { XFS.Path(@"C:\something\other.gif"), new MockFileData("gif content") }
             });
 
@@ -53,7 +52,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            var result = fileSystem.File.Exists("/SomeThing/Other.gif");
+            var result = fileSystem.File.Exists("/SomeThing/DEMO.txt");
 
             // Assert
             Assert.IsFalse(result);
