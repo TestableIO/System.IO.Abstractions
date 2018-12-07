@@ -6,43 +6,56 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     using XFS = MockUnixSupport;
 
-    public class MockFileExistsTests {
+    public class MockFileExistsTests
+    {
         [Test]
         public void MockFile_Exists_ShouldReturnTrueForSamePath()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { XFS.Path(@"c:\something\demo.txt"), new MockFileData("Demo text content") },
-                { XFS.Path(@"c:\something\other.gif"), new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { XFS.Path(@"C:\something\other.gif"), new MockFileData("gif content") }
             });
 
-            var file = new MockFile(fileSystem);
-
             // Act
-            var result = file.Exists(XFS.Path(@"c:\something\other.gif"));
+            var result = fileSystem.File.Exists(XFS.Path(@"C:\something\other.gif"));
 
             // Assert
             Assert.IsTrue(result);
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.CaseInsensitivity)]
         public void MockFile_Exists_ShouldReturnTrueForPathVaryingByCase()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { XFS.Path(@"c:\something\demo.txt"), new MockFileData("Demo text content") },
-                { XFS.Path(@"c:\something\other.gif"), new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { @"C:\something\demo.txt", new MockFileData("Demo text content") }
             });
 
-            var file = new MockFile(fileSystem);
-
             // Act
-            var result = file.Exists(XFS.Path(@"c:\SomeThing\Other.gif"));
+            var result = fileSystem.File.Exists(@"C:\SomeThing\DEMO.txt");
 
             // Assert
             Assert.IsTrue(result);
+        }
+
+        [Test]
+        [UnixOnly(UnixSpecifics.CaseSensitivity)]
+        public void MockFile_Exists_ShouldReturnFalseForPathVaryingByCase()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { "/something/demo.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            var result = fileSystem.File.Exists("/SomeThing/DEMO.txt");
+
+            // Assert
+            Assert.IsFalse(result);
         }
 
         [Test]
@@ -51,14 +64,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { XFS.Path(@"c:\something\demo.txt"), new MockFileData("Demo text content") },
-                { XFS.Path(@"c:\something\other.gif"), new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { XFS.Path(@"C:\something\demo.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"C:\something\other.gif"), new MockFileData("gif content") }
             });
 
-            var file = new MockFile(fileSystem);
-
             // Act
-            var result = file.Exists(XFS.Path(@"c:\SomeThing\DoesNotExist.gif"));
+            var result = fileSystem.File.Exists(XFS.Path(@"C:\SomeThing\DoesNotExist.gif"));
 
             // Assert
             Assert.IsFalse(result);
@@ -67,9 +78,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_Exists_ShouldReturnFalseForNullPath()
         {
-            var file = new MockFile(new MockFileSystem());
+            // Arrange
+            var fileSystem = new MockFileSystem();
 
-            Assert.That(file.Exists(null), Is.False);
+            // Act
+            var result = fileSystem.File.Exists(null);
+
+            // Assert
+            Assert.IsFalse(result);
         }
 
         [Test]
@@ -78,14 +94,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { XFS.Path(@"c:\something\demo.txt"), new MockFileData("Demo text content") },
-                { XFS.Path(@"c:\something\other.gif"), new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { XFS.Path(@"C:\something\demo.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"C:\something\other.gif"), new MockFileData("gif content") }
             });
 
-            var file = new MockFile(fileSystem);
-
             // Act
-            var result = file.Exists(XFS.Path(@"c:\SomeThing\"));
+            var result = fileSystem.File.Exists(XFS.Path(@"C:\something\"));
 
             // Assert
             Assert.IsFalse(result);

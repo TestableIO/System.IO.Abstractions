@@ -547,10 +547,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             // Act
-            fileSystem.Directory.CreateDirectory(XFS.Path(@"\\server\share\path\to\create", () => false));
+            fileSystem.Directory.CreateDirectory(@"\\server\share\path\to\create");
 
             // Assert
-            Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"\\server\share\path\to\create\", () => false)));
+            Assert.IsTrue(fileSystem.Directory.Exists(@"\\server\share\path\to\create\"));
         }
 
         [Test]
@@ -561,7 +561,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             // Act
-            var ex = Assert.Throws<ArgumentException>(() => fileSystem.Directory.CreateDirectory(XFS.Path(@"\\server", () => false)));
+            var ex = Assert.Throws<ArgumentException>(() => fileSystem.Directory.CreateDirectory(@"\\server"));
 
             // Assert
             StringAssert.StartsWith("The UNC path should be of the form \\\\server\\share.", ex.Message);
@@ -576,10 +576,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             // Act
-            fileSystem.Directory.CreateDirectory(XFS.Path(@"\\server\share", () => false));
+            fileSystem.Directory.CreateDirectory(@"\\server\share");
 
             // Assert
-            Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"\\server\share\", () => false)));
+            Assert.IsTrue(fileSystem.Directory.Exists(@"\\server\share\"));
         }
 
         [Test]
@@ -599,6 +599,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.CaseInsensitivity)]
         public void MockDirectory_Delete_ShouldDeleteDirectoryCaseInsensitively()
         {
             // Arrange
@@ -612,6 +613,40 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.IsFalse(fileSystem.Directory.Exists(XFS.Path(@"c:\bar")));
+        }
+
+        [Test]
+        [UnixOnly(UnixSpecifics.CaseSensitivity)]
+        public void MockDirectory_Delete_ShouldThrowDirectoryNotFoundException_WhenSpecifiedWithInDifferentCase()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { "/bar/foo.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            TestDelegate action = () => fileSystem.Directory.Delete("/BAR", true);
+
+            // Assert
+            Assert.Throws<DirectoryNotFoundException>(action);
+        }
+
+        [Test]
+        [UnixOnly(UnixSpecifics.CaseSensitivity)]
+        public void MockDirectory_Delete_ShouldDeleteDirectoryCaseSensitively()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { "/bar/foo.txt", new MockFileData("Demo text content") }
+            });
+
+            // Act
+            fileSystem.Directory.Delete("/bar", true);
+
+            // Assert
+            Assert.IsFalse(fileSystem.Directory.Exists("/bar"));
         }
 
         [Test]
@@ -849,8 +884,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             else
             {
                 Assert.AreEqual(2, drives.Length);
-                Assert.IsTrue(drives.Contains("c:\\"));
-                Assert.IsTrue(drives.Contains("d:\\"));
+                Assert.IsTrue(drives.Contains(@"C:\"));
+                Assert.IsTrue(drives.Contains(@"D:\"));
             }
         }
 #endif
@@ -1250,14 +1285,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockDirectory_GetParent_ShouldThrowArgumentExceptionIfPathHasIllegalCharacters()
         {
-            if (XFS.IsUnixPlatform())
-            {
-                Assert.Pass("Path.GetInvalidChars() does not return anything on Mono");
-                return;
-            }
-
             // Arrange
             var fileSystem = new MockFileSystem();
 
@@ -1280,6 +1310,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.IsNull(actualResult);
+        }
+
+        [Test]
+        [UnixOnly(UnixSpecifics.SlashRoot)]
+        public void MockDirectory_GetParent_ShouldReturnRootIfDirectoryIsInRoot()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory("/bar");
+
+            // Act
+            var parent = fileSystem.Directory.GetParent("/bar");
+
+            // Assert
+            Assert.AreEqual("/", parent.FullName);
         }
 
         public static IEnumerable<string[]> MockDirectory_GetParent_Cases
