@@ -7,8 +7,12 @@
         private readonly string path;
         private readonly bool canWrite = true;
         private readonly FileOptions options;
-        private bool disposed;
+
+#if NET40
         private bool closed;
+#else
+        private bool disposed;
+#endif
 
         public enum StreamType
         {
