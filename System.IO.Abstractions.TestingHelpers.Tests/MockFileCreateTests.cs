@@ -155,12 +155,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
+            var file = XFS.Path("C:\\path\\NotFound.ext");
 
             // Act
-            TestDelegate action = () => fileSystem.File.Create("C:\\Path\\NotFound.ext");
+            TestDelegate action = () => fileSystem.File.Create(file);
 
             // Assert
-            Assert.IsFalse(fileSystem.Directory.Exists("C:\\path"));
             var exception = Assert.Throws<DirectoryNotFoundException>(action);
             Assert.That(exception.Message, Does.StartWith("Could not find a part of the path"));
         }
@@ -279,5 +279,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted));
         }
 #endif
+
+        [Test]
+        public void MockFile_Create_ShouldWorkWithRelativePath()
+        {
+            var relativeFile = "file.txt";
+            var fileSystem = new MockFileSystem();
+
+            fileSystem.File.Create(relativeFile).Close();
+
+            Assert.That(fileSystem.File.Exists(relativeFile));
+        }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using XFS = MockUnixSupport;
+
     public static class StringExtensions
     {
         [Pure]
@@ -66,14 +69,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
             var trimmed = path.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
-            if (MockUnixSupport.IsUnixPlatform()
+            if (XFS.IsUnixPlatform()
                 && (path[0] == Path.DirectorySeparatorChar || path[0] == Path.AltDirectorySeparatorChar)
                 && trimmed == "")
             {
                 return Path.DirectorySeparatorChar.ToString();
             }
 
-            if (!MockUnixSupport.IsUnixPlatform()
+            if (XFS.IsWindowsPlatform()
                 && trimmed.Length == 2
                 && char.IsLetter(trimmed[0])
                 && trimmed[1] == ':')
@@ -82,6 +85,40 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             return trimmed;
+        }
+
+        [Pure]
+        public static string NormalizeSlashes(this string path)
+        {
+            path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+            var sep = Path.DirectorySeparatorChar.ToString();
+            var doubleSep = sep + sep;
+
+            var prefixSeps = new string(path.TakeWhile(c => c == Path.DirectorySeparatorChar).ToArray());
+            path = path.Substring(prefixSeps.Length);
+
+            // UNC Paths start with double slash but no reason
+            // to have more than 2 slashes at the start of a path
+            if (XFS.IsWindowsPlatform() && prefixSeps.Length > 2)
+            {
+                prefixSeps = prefixSeps.Substring(0, 2);
+            }
+            else if (prefixSeps.Length > 1)
+            {
+                prefixSeps = prefixSeps.Substring(0, 1);
+            }
+
+            while (true)
+            {
+                var newPath = path.Replace(doubleSep, sep);
+
+                if (path == newPath)
+                {
+                    return prefixSeps + path;
+                }
+
+                path = newPath;
+            }
         }
     }
 }

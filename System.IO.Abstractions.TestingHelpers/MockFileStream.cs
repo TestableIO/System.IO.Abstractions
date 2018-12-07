@@ -7,7 +7,12 @@
         private readonly string path;
         private readonly bool canWrite = true;
         private readonly FileOptions options;
+
+#if NET40
+        private bool closed;
+#else
         private bool disposed;
+#endif
 
         public enum StreamType
         {
@@ -64,8 +69,14 @@
 #if NET40
         public override void Close()
         {
+            if (closed)
+            {
+                return;
+            }
             InternalFlush();
+            base.Close();
             OnClose();
+            closed = true;
         }
 #else
         protected override void Dispose(bool disposing)

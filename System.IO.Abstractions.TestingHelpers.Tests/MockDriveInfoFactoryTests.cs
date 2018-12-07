@@ -26,7 +26,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualNames = actualResults.Select(d => d.Name);
 
             // Assert
-            Assert.That(actualNames, Is.EquivalentTo(new[] { @"C:\", @"Z:\", @"D:\" }));
+            Assert.That(actualNames, Is.EquivalentTo(new[] { @"C:\", @"Z:\", @"d:\" }));
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualNames = actualResults.Select(d => d.Name);
 
             // Assert
-            Assert.That(actualNames, Is.EquivalentTo(new[] { @"C:\", @"Z:\", @"D:\" }));
+            Assert.That(actualNames, Is.EquivalentTo(new[] { @"C:\", @"Z:\", @"d:\" }));
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualNames = actualResults.Select(d => d.Name);
 
             // Assert
-            Assert.That(actualNames, Is.EquivalentTo(new[] { @"C:\", @"Z:\", @"D:\" }));
+            Assert.That(actualNames, Is.EquivalentTo(new[] { @"C:\", @"Z:\", @"d:\" }));
         }
 
         [Test]

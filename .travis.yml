@@ -1,7 +1,0 @@
-language: csharp
-mono: none
-dotnet: 2.1.4
-script:
-  - dotnet build System.IO.Abstractions --framework netstandard1.4
-  - dotnet build System.IO.Abstractions.TestingHelpers --framework netstandard1.4
-  - dotnet test System.IO.Abstractions.TestingHelpers.Tests --framework netcoreapp2.0

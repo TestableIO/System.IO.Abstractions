@@ -167,7 +167,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFileInfo_IsReadOnly_ShouldSetNotReadOnlyAttributeOfFileInMemoryFileSystem()
         {
-            var fileData = new MockFileData("Demo text content") {Attributes = FileAttributes.ReadOnly};
+            var fileData = new MockFileData("Demo text content") { Attributes = FileAttributes.ReadOnly };
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { XFS.Path(@"c:\a.txt"), fileData }
@@ -210,7 +210,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { XFS.Path(@"c:\a.txt"), fileData }
             });
             var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
-            var bytesToAdd = new byte[] {65, 66, 67, 68, 69};
+            var bytesToAdd = new byte[] { 65, 66, 67, 68, 69 };
 
 
             using (var file = fileInfo.OpenWrite())
@@ -489,6 +489,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             TestDelegate action = () => fileInfo.CopyTo(destination);
 
             Assert.Throws<FileNotFoundException>(action);
+        }
+
+        [TestCase(@"..\..\..\c.txt")]
+        [TestCase(@"c:\a\b\c.txt")]
+        [TestCase(@"c:\a\c.txt")]
+        [TestCase(@"c:\c.txt")]
+        public void MockFileInfo_ToString_ShouldReturnOriginalFilePath(string path)
+        {
+            //Arrange
+            var filePath = XFS.Path(path);
+
+            //Act
+            var mockFileInfo = new MockFileInfo(new MockFileSystem(), filePath);
+
+            //Assert
+            Assert.AreEqual(filePath, mockFileInfo.ToString());
         }
 
 #if NET40
