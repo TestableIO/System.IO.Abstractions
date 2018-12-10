@@ -17,7 +17,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { @"c:\something\demo.txt", new MockFileData("Demo\r\ntext\ncontent\rvalue") },
-                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { @"c:\something\other.gif", new MockFileData("gif content") }
             });
 
             var result = fileSystem.GetFile(@"c:\something\else.txt");
@@ -32,7 +32,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { @"c:\something\demo.txt", file1 },
-                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { @"c:\something\other.gif", new MockFileData("gif content") }
             });
 
             var result = fileSystem.GetFile(@"c:\something\demo.txt");
@@ -41,13 +41,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.CaseInsensitivity)]
         public void MockFileSystem_GetFile_ShouldReturnFileRegisteredInConstructorWhenPathsDifferByCase()
         {
             var file1 = new MockFileData("Demo\r\ntext\ncontent\rvalue");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { @"c:\something\demo.txt", file1 },
-                { @"c:\something\other.gif", new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+                { @"c:\something\other.gif", new MockFileData("gif content") }
             });
 
             var result = fileSystem.GetFile(@"c:\SomeThing\DEMO.txt");
@@ -56,14 +57,46 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileSystem_AddFile_ShouldHandleNullFileDataAsEmpty()
+        [UnixOnly(UnixSpecifics.CaseSensitivity)]
+        public void MockFileSystem_GetFile_ShouldNotReturnFileRegisteredInConstructorWhenPathsDifferByCase()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\something\nullish.txt", null }
+                { "/something/demo.txt", new MockFileData("Demo\r\ntext\ncontent\rvalue") },
+                { "/something/other.gif", new MockFileData("gif content") }
             });
 
-            var result = fileSystem.File.ReadAllText(@"c:\SomeThing\nullish.txt");
+            var result = fileSystem.GetFile("/SomeThing/DEMO.txt");
+
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void MockFileSystem_AddFile_ShouldHandleUnnormalizedSlashes()
+        {
+            var path = XFS.Path(@"c:\d1\d2\file.txt");
+            var alternatePath = XFS.Path("c:/d1/d2/file.txt");
+            var alternateParentPath = XFS.Path("c://d1//d2/");
+            var fs = new MockFileSystem();
+            fs.AddFile(path, new MockFileData("Hello"));
+
+            var fileCount = fs.Directory.GetFiles(alternateParentPath).Length;
+            var fileExists = fs.File.Exists(alternatePath);
+
+            Assert.AreEqual(1, fileCount);
+            Assert.IsTrue(fileExists);
+        }
+
+        [Test]
+        public void MockFileSystem_AddFile_ShouldHandleNullFileDataAsEmpty()
+        {
+            var path = XFS.Path(@"c:\something\nullish.txt");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, null }
+            });
+
+            var result = fileSystem.File.ReadAllText(path);
 
             Assert.IsEmpty(result, "Null MockFileData should be allowed for and result in an empty file.");
         }
@@ -71,7 +104,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFileSystem_AddFile_ShouldReplaceExistingFile()
         {
-            const string path = @"c:\some\file.txt";
+            var path = XFS.Path(@"c:\some\file.txt");
             const string existingContent = "Existing content";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
@@ -157,6 +190,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.CaseInsensitivity)]
         public void MockFileSystem_AddFile_ShouldMatchCapitalization_PartialMatch()
         {
             var fileSystem = new MockFileSystem();
@@ -175,6 +209,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.CaseInsensitivity)]
         public void MockFileSystem_AddFile_ShouldMatchCapitalization_PartialMatch_FurtherLeft()
         {
             var fileSystem = new MockFileSystem();

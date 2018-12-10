@@ -36,8 +36,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             get
             {
-                yield return new object[]{ XFS.Path(@"c:\temp\folder"), true };
-                yield return new object[]{ XFS.Path(@"c:\temp\folder\notExistant"), false };
+                yield return new object[] { XFS.Path(@"c:\temp\folder"), true };
+                yield return new object[] { XFS.Path(@"c:\temp\folder\notExistant"), false };
             }
         }
 
@@ -152,8 +152,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectoryInfo_EnumerateFiles_ShouldReturnAllFiles()
         {
-          // Arrange
-          var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 //Files "above" in folder we're querying
                 { XFS.Path(@"c:\temp\a.txt"), "" },
@@ -166,11 +166,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { XFS.Path(@"c:\temp\folder\deeper\d.txt"), "" }
             });
 
-          // Act
-          var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
+            // Act
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
 
-          // Assert
-          Assert.AreEqual(new[]{"b.txt", "c.txt"}, directoryInfo.EnumerateFiles().ToList().Select(x => x.Name).ToArray());
+            // Assert
+            Assert.AreEqual(new[] { "b.txt", "c.txt" }, directoryInfo.EnumerateFiles().ToList().Select(x => x.Name).ToArray());
         }
 
         [Test]
@@ -238,7 +238,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             // Act
-           TestDelegate action = () => new MockDirectoryInfo(fileSystem, null);
+            TestDelegate action = () => new MockDirectoryInfo(fileSystem, null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
@@ -272,20 +272,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.Message, Does.StartWith("The path is not of a legal form."));
         }
 
-        [Test]
-        public void MockDirectoryInfo_ToString_ShouldReturnDirectoryName()
+        [TestCase(@"c:\temp\folder\folder")]
+        [TestCase(@"..\..\..\Desktop")]
+        public void MockDirectoryInfo_ToString_ShouldReturnDirectoryName(string directoryName)
         {
-            var directoryPath = XFS.Path(@"c:\temp\folder\folder");
-
             // Arrange
-            var fileSystem = new MockFileSystem();
-            var directoryInfo = new MockDirectoryInfo(fileSystem, directoryPath);
+            var directoryPath = XFS.Path(directoryName);
 
             // Act
-            var str = directoryInfo.ToString();
+            var mockDirectoryInfo = new MockDirectoryInfo(new MockFileSystem(), directoryPath);
 
             // Assert
-            Assert.AreEqual(directoryPath, str);
+            Assert.AreEqual(directoryPath, mockDirectoryInfo.ToString());
         }
         
         [Test]

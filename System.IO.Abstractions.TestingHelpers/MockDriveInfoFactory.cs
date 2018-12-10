@@ -14,7 +14,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public DriveInfoBase[] GetDrives()
         {
-            var driveLetters = new HashSet<string>(new DriveEqualityComparer());
+            var driveLetters = new HashSet<string>(new DriveEqualityComparer(mockFileSystem));
             foreach (var path in mockFileSystem.AllPaths)
             {
                 var pathRoot = mockFileSystem.Path.GetPathRoot(path);
@@ -47,12 +47,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string NormalizeDriveName(string driveName)
         {
-            if (driveName.Length == 3 && driveName.EndsWith(@":\", StringComparison.OrdinalIgnoreCase))
+            if (driveName.Length == 3 && mockFileSystem.StringOperations.EndsWith(driveName, @":\"))
             {
-                return char.ToUpperInvariant(driveName[0]) + @":\";
+                return mockFileSystem.StringOperations.ToUpper(driveName[0]) + @":\";
             }
 
-            if (driveName.StartsWith(@"\\", StringComparison.OrdinalIgnoreCase))
+            if (mockFileSystem.StringOperations.StartsWith(driveName, @"\\"))
             {
                 return null;
             }
@@ -62,34 +62,27 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private class DriveEqualityComparer : IEqualityComparer<string>
         {
+            private readonly IMockFileDataAccessor mockFileSystem;
+
+            public DriveEqualityComparer(IMockFileDataAccessor mockFileSystem)
+            {
+                this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
+            }
+
             public bool Equals(string x, string y)
             {
-                if (ReferenceEquals(x, y))
-                {
-                    return true;
-                }
+                return ReferenceEquals(x, y) ||
+                       (HasDrivePrefix(x) && HasDrivePrefix(y) && mockFileSystem.StringOperations.Equals(x[0], y[0]));
+            }
 
-                if (ReferenceEquals(x, null))
-                {
-                    return false;
-                }
-
-                if (ReferenceEquals(y, null))
-                {
-                    return false;
-                }
-
-                if (x[1] == ':' && y[1] == ':')
-                {
-                    return char.ToUpperInvariant(x[0]) == char.ToUpperInvariant(y[0]);
-                }
-
-                return false;
+            private static bool HasDrivePrefix(string x)
+            {
+                return x != null && x.Length >= 2 && x[1] == ':';
             }
 
             public int GetHashCode(string obj)
             {
-                return obj.ToUpperInvariant().GetHashCode();
+                return mockFileSystem.StringOperations.ToUpper(obj).GetHashCode();
             }
         }
     }

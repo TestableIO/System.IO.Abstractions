@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Security.AccessControl;
 
@@ -10,6 +9,7 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string directoryPath;
+        private readonly string originalPath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MockDirectoryInfo"/> class.
@@ -21,6 +21,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
 
+            originalPath = directoryPath;
             directoryPath = mockFileDataAccessor.Path.GetFullPath(directoryPath);
 
             this.directoryPath = directoryPath.TrimSlashes();
@@ -73,7 +74,8 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 var root = mockFileDataAccessor.Path.GetPathRoot(directoryPath);
-                if (string.Equals(directoryPath, root, StringComparison.OrdinalIgnoreCase))
+
+                if (mockFileDataAccessor.StringOperations.Equals(directoryPath, root))
                 {
                     // drives have the trailing slash
                     return directoryPath;
@@ -287,11 +289,6 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
-        public override string ToString()
-        {
-            return FullName;
-        }
-
         private MockFileData GetMockFileDataForRead()
         {
             return mockFileDataAccessor.GetFile(directoryPath) ?? MockFileData.NullObject;
@@ -301,6 +298,11 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             return mockFileDataAccessor.GetFile(directoryPath)
                 ?? throw new FileNotFoundException(StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), directoryPath);
+        }
+
+        public override string ToString()
+        {
+            return originalPath;
         }
     }
 }
