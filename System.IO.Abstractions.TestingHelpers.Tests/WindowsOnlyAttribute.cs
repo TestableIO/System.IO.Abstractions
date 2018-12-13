@@ -16,7 +16,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         public void BeforeTest(ITest test)
         {
-            if (MockUnixSupport.IsUnixPlatform())
+            if (!MockUnixSupport.IsWindowsPlatform())
             {
                 Assert.Inconclusive(reason);
             }

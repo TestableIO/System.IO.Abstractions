@@ -4,28 +4,13 @@ namespace System.IO.Abstractions.TestingHelpers
 {
     public static class MockUnixSupport
     {
-        public static string Path(string path, Func<bool> isUnixF = null)
-        {
-            var isUnix = isUnixF ?? IsUnixPlatform;
+        private static readonly Regex pathTransform = new Regex(@"^[a-zA-Z]:(?<path>.*)$");
 
-            if (isUnix())
-            {
-                path = Regex.Replace(path, @"^[a-zA-Z]:(?<path>.*)$", "${path}");
-                path = path.Replace(@"\", "/");
-            }
+        public static string Path(string path) => IsUnixPlatform()
+            ? pathTransform.Replace(path, "${path}").Replace(@"\", "/")
+            : path;
 
-            return path;
-        }
-
-        public static string Separator(Func<bool> isUnixF = null)
-        {
-            var isUnix = isUnixF ?? IsUnixPlatform;
-            return isUnix() ? "/" : @"\";
-        }
-
-        public static bool IsUnixPlatform()
-        {
-            return IO.Path.DirectorySeparatorChar == '/';
-        }
+        public static bool IsUnixPlatform() => IO.Path.DirectorySeparatorChar == '/';
+        public static bool IsWindowsPlatform() => IO.Path.DirectorySeparatorChar == '\\';
     }
 }
