@@ -22,7 +22,14 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 var pathRoot = mockFileSystem.Path.GetPathRoot(path);
                 if (!_drives.ContainsKey(pathRoot))
-                    _drives.Add(pathRoot, new MockDriveInfo(mockFileSystem, pathRoot));
+                    try
+                    {
+                        _drives.Add(pathRoot, new MockDriveInfo(mockFileSystem, pathRoot));
+                    }
+                    catch (ArgumentException)
+                    {
+                        // invalid drives should be ignored
+                    }
             }
 
             return _drives.Values.ToArray();
