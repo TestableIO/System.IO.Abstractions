@@ -112,5 +112,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             Assert.AreEqual("/", "/".TrimSlashes());
         }
+
+        [TestCase(@"\\unc\folder\file.txt", @"\\unc\folder\file.txt")]
+        [TestCase(@"//unc/folder/file.txt", @"\\unc\folder\file.txt")]
+        [WindowsOnly(WindowsSpecifics.UNCPaths)]
+        public void NormalizeSlashes_KeepsUNCPathPrefix(string path, string expectedValue)
+        {
+            Assert.AreEqual(expectedValue, path.NormalizeSlashes());
+        }
     }
 }
