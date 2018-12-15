@@ -57,6 +57,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return driveName;
         }
 
+        [Serializable]
         private class DriveEqualityComparer : IEqualityComparer<string>
         {
             private readonly IMockFileDataAccessor mockFileSystem;
