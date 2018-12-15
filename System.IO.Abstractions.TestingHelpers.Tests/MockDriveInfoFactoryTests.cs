@@ -97,5 +97,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.That(actualResult.Name, Is.EquivalentTo(@"Z:\"));
         }
+
+        [Test]
+        public void MockDriveInfoFactory_GetDrives_Persists_DriveInfo_Properties()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(@"C:\path\to\file.txt", MockFileData.NullObject);
+            
+            var availableSpace = 1024 * 1024;
+            (fileSystem.DriveInfo.GetDrives().First() as MockDriveInfo).AvailableFreeSpace = availableSpace;
+            (fileSystem.DriveInfo.GetDrives().First() as MockDriveInfo).DriveType = DriveType.Fixed;
+            
+            Assert.AreEqual(availableSpace, (fileSystem.DriveInfo.GetDrives().First() as MockDriveInfo).AvailableFreeSpace);
+            Assert.AreEqual(DriveType.Fixed, (fileSystem.DriveInfo.GetDrives().First() as MockDriveInfo).DriveType);
+        }
     }
 }

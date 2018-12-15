@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -10,32 +11,21 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockDriveInfoFactory(IMockFileDataAccessor mockFileSystem)
         {
             this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
+            _drives = new Dictionary<string, DriveInfoBase>(new DriveEqualityComparer(mockFileSystem));
         }
+
+        private Dictionary<string, DriveInfoBase> _drives;
 
         public DriveInfoBase[] GetDrives()
         {
-            var driveLetters = new HashSet<string>(new DriveEqualityComparer(mockFileSystem));
             foreach (var path in mockFileSystem.AllPaths)
             {
                 var pathRoot = mockFileSystem.Path.GetPathRoot(path);
-                driveLetters.Add(pathRoot);
+                if (!_drives.ContainsKey(pathRoot))
+                    _drives.Add(pathRoot, new MockDriveInfo(mockFileSystem, pathRoot));
             }
 
-            var result = new List<DriveInfoBase>();
-            foreach (string driveLetter in driveLetters)
-            {
-                try
-                {
-                    var mockDriveInfo = new MockDriveInfo(mockFileSystem, driveLetter);
-                    result.Add(mockDriveInfo);
-                }
-                catch (ArgumentException)
-                {
-                    // invalid drives should be ignored
-                }
-            }
-
-            return result.ToArray();
+            return _drives.Values.ToArray();
         }
 
         public DriveInfoBase FromDriveName(string driveName)
