@@ -32,7 +32,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
                 return MockFileData.Attributes;
             }
             set { MockFileData.Attributes = value; }
@@ -42,12 +42,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
                 return MockFileData.CreationTime.DateTime;
             }
             set
             {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
                 MockFileData.CreationTime = value;
             }
         }
@@ -56,12 +56,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
                 return MockFileData.CreationTime.UtcDateTime;
             }
             set
             {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
                 MockFileData.CreationTime = value.ToLocalTime();
             }
         }
@@ -90,12 +90,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
                 return MockFileData.LastAccessTime.DateTime;
             }
             set
             {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
                 MockFileData.LastAccessTime = value;
             }
         }
@@ -104,12 +104,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
                 return MockFileData.LastAccessTime.UtcDateTime;
             }
             set
             {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
                 MockFileData.LastAccessTime = value;
             }
         }
@@ -118,12 +118,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
                 return MockFileData.LastWriteTime.DateTime;
             }
             set
             {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
                 MockFileData.LastWriteTime = value;
             }
         }
@@ -132,12 +132,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
                 return MockFileData.LastWriteTime.UtcDateTime;
             }
             set
             {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
                 MockFileData.LastWriteTime = value.ToLocalTime();
             }
         }
@@ -149,7 +149,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override StreamWriter AppendText()
         {
-            if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+            if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
             return new StreamWriter(new MockFileStream(mockFileSystem, FullName, MockFileStream.StreamType.APPEND));
         }
 
@@ -162,7 +162,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (!Exists)
             {
-                throw new FileNotFoundException("The file does not exist and can't be moved or copied.", FullName);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(FullName);
             }
             if (destFileName == FullName)
             {
@@ -185,14 +185,14 @@ namespace System.IO.Abstractions.TestingHelpers
 #if NET40
         public override void Decrypt()
         {
-            if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
 
             MockFileData.Attributes &= ~FileAttributes.Encrypted;
         }
 
         public override void Encrypt()
         {
-            if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
 
             MockFileData.Attributes |= FileAttributes.Encrypted;
         }
@@ -236,7 +236,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override Stream OpenRead()
         {
-            if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+            if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
             return new MockFileStream(mockFileSystem, path, MockFileStream.StreamType.READ);
         }
 
@@ -290,12 +290,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
                 return (MockFileData.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
             }
             set
             {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
                 if (value)
                     MockFileData.Attributes |= FileAttributes.ReadOnly;
                 else
@@ -307,7 +307,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null) throw new FileNotFoundException("File not found", path);
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
                 return MockFileData.Contents.Length;
             }
         }
