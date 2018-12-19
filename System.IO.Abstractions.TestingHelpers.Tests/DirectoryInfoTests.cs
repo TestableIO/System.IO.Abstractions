@@ -13,8 +13,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var wrapperFilesystem = new FileSystem();
 
-            var directoryInfo = wrapperFilesystem.DirectoryInfo.FromDirectoryName("C:\\");
-            var rootsParent = directoryInfo.Parent;
+            var current = wrapperFilesystem.Directory.GetCurrentDirectory();
+            var root = wrapperFilesystem.DirectoryInfo.FromDirectoryName(current).Root;
+            var rootsParent = root.Parent;
             Assert.IsNull(rootsParent);
         }
     }

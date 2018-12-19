@@ -230,9 +230,13 @@ namespace System.IO.Abstractions
             get
             {
                 if (instance.Parent == null)
+                {
                     return null;
+                }
                 else
+                {
                     return new DirectoryInfoWrapper(FileSystem, instance.Parent);
+                }
             }
         }
 
