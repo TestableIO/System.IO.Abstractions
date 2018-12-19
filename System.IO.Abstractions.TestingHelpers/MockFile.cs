@@ -939,7 +939,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (mockFileDataAccessor.Directory.Exists(path))
             {
-                throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("ACCESS_TO_THE_PATH_IS_DENIED"), path));
+                throw CommonExceptions.AccessDenied(path);
             }
 
             VerifyDirectoryExists(path);
@@ -978,11 +978,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!mockFileDataAccessor.Directory.Exists(dir))
             {
-                throw new DirectoryNotFoundException(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"),
-                        path));
+                throw CommonExceptions.CouldNotFindPartOfPath(path);
             }
         }
     }

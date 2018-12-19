@@ -127,7 +127,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
                     if (isReadOnly || isHidden)
                     {
-                        throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("ACCESS_TO_THE_PATH_IS_DENIED"), path));
+                        throw CommonExceptions.AccessDenied(path);
                     }
                 }
 
@@ -151,7 +151,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 if (FileExists(fixedPath) &&
                     (GetFile(fixedPath).Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-                    throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("ACCESS_TO_THE_PATH_IS_DENIED"), fixedPath));
+                        throw CommonExceptions.AccessDenied(fixedPath);
 
                 var lastIndex = 0;
                 var isUnc =
@@ -247,7 +247,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 if (FileExists(path) && (GetFile(path).Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
                 {
-                    throw new UnauthorizedAccessException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("ACCESS_TO_THE_PATH_IS_DENIED"), path));
+                    throw CommonExceptions.AccessDenied(path);
                 }
 
                 files.Remove(path);
