@@ -227,7 +227,13 @@ namespace System.IO.Abstractions
 
         public override DirectoryInfoBase Parent
         {
-            get { return new DirectoryInfoWrapper(FileSystem, instance.Parent); }
+            get
+            {
+                if (instance.Parent == null)
+                    return null;
+                else
+                    return new DirectoryInfoWrapper(FileSystem, instance.Parent);
+            }
         }
 
         public override DirectoryInfoBase Root
