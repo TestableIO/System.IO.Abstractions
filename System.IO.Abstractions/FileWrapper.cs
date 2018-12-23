@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Security.AccessControl;
 using System.Text;
-using System.IO;
 
 namespace System.IO.Abstractions
 {
     [Serializable]
     public class FileWrapper : FileBase
     {
-        public FileWrapper(FileSystem fileSystem) : base(fileSystem)
+        public FileWrapper(IFileSystem fileSystem) : base(fileSystem)
         {
         }
 
