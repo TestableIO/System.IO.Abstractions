@@ -536,7 +536,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var invalidPathChars = Path.GetInvalidPathChars();
             if (searchPattern.IndexOfAny(invalidPathChars) > -1)
             {
-                throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"), "searchPattern");
+                throw CommonExceptions.IllegalCharactersInPath(nameof(searchPattern));
             }
         }
     }

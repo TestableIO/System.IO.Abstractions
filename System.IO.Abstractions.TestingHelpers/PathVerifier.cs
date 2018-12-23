@@ -38,14 +38,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (ExtractFileName(path).IndexOfAny(_mockFileDataAccessor.Path.GetInvalidFileNameChars()) > -1)
             {
-                throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
+                throw CommonExceptions.IllegalCharactersInPath();
             }
 
             var filePath = ExtractFilePath(path);
 
             if (HasIllegalCharacters(filePath, checkAdditional: false))
             {
-                throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
+                throw CommonExceptions.IllegalCharactersInPath();
             }
         }
 
@@ -96,7 +96,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (HasIllegalCharacters(path, checkAdditional))
             {
-                throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
+                throw CommonExceptions.IllegalCharactersInPath();
             }
         }
     }

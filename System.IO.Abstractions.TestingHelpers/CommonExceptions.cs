@@ -4,7 +4,7 @@ namespace System.IO.Abstractions.TestingHelpers
 {
     internal static class CommonExceptions
     {
-        public static Exception FileNotFound(string path) =>
+        public static FileNotFoundException FileNotFound(string path) =>
             new FileNotFoundException(
                 string.Format(
                     CultureInfo.InvariantCulture,
@@ -14,7 +14,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 path
             );
 
-        public static Exception CouldNotFindPartOfPath(string path) =>
+        public static DirectoryNotFoundException CouldNotFindPartOfPath(string path) =>
             new DirectoryNotFoundException(
                 string.Format(
                     CultureInfo.InvariantCulture,
@@ -23,7 +23,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 )
             );
 
-        public static Exception AccessDenied(string path) =>
+        public static UnauthorizedAccessException AccessDenied(string path) =>
             new UnauthorizedAccessException(
                 string.Format(
                     CultureInfo.InvariantCulture,
@@ -31,5 +31,15 @@ namespace System.IO.Abstractions.TestingHelpers
                     path
                 )
             );
+        public static ArgumentNullException FilenameCannotBeNull(string paramName) =>
+            new ArgumentNullException(
+                paramName,
+                StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL")
+            );
+
+        public static ArgumentException IllegalCharactersInPath(string paramName = null) =>
+            paramName != null 
+                ? new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"), paramName)
+                : new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));          
     }
 }

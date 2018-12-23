@@ -89,16 +89,16 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (sourceFileName == null)
             {
-                throw new ArgumentNullException(nameof(sourceFileName), StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
+                throw CommonExceptions.FilenameCannotBeNull(nameof(sourceFileName));
             }
 
             if (destFileName == null)
             {
-                throw new ArgumentNullException(nameof(destFileName), StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
+                throw CommonExceptions.FilenameCannotBeNull(nameof(destFileName));
             }
 
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, "sourceFileName");
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(destFileName, "destFileName");
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, nameof(sourceFileName));
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(destFileName, nameof(destFileName));
 
             if (!Exists(sourceFileName))
             {
@@ -324,16 +324,16 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (sourceFileName == null)
             {
-                throw new ArgumentNullException(nameof(sourceFileName), StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
+                throw CommonExceptions.FilenameCannotBeNull(nameof(sourceFileName));
             }
 
             if (destFileName == null)
             {
-                throw new ArgumentNullException(nameof(destFileName), StringResources.Manager.GetString("FILENAME_CANNOT_BE_NULL"));
+                throw CommonExceptions.FilenameCannotBeNull(nameof(destFileName));
             }
 
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, "sourceFileName");
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(destFileName, "destFileName");
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, nameof(sourceFileName));
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(destFileName, nameof(destFileName));
 
             if (mockFileDataAccessor.GetFile(destFileName) != null)
             {
