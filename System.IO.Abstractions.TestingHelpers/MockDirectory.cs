@@ -75,10 +75,20 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void Delete(string path, bool recursive)
         {
             path = mockFileDataAccessor.Path.GetFullPath(path).TrimSlashes();
+            //var affectedPaths = mockFileDataAccessor
+            //    .AllPaths
+            //    .Where(p => mockFileDataAccessor.StringOperations.StartsWith(p, path))
+            //    .ToList();
+
+
+            var pathWithDirectorySeparatorChar = path.Insert(path.Length, Path.DirectorySeparatorChar.ToString());
+
             var affectedPaths = mockFileDataAccessor
                 .AllPaths
-                .Where(p => mockFileDataAccessor.StringOperations.StartsWith(p, path))
+                .Where(p => p == path || mockFileDataAccessor.StringOperations.StartsWith(p, pathWithDirectorySeparatorChar))
                 .ToList();
+
+            //Path.DirectorySeparatorChar
 
             if (!affectedPaths.Any())
                 throw new DirectoryNotFoundException(path + " does not exist or could not be found.");
@@ -93,7 +103,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists(string path)
         {
-            if (path == "/" && XFS.IsUnixPlatform()) 
+            if (path == "/" && XFS.IsUnixPlatform())
             {
                 return true;
             }
@@ -111,16 +121,16 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         public override DirectorySecurity GetAccessControl(string path)
-        {           
+        {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
             path = path.TrimSlashes();
-            
+
             if (!mockFileDataAccessor.Directory.Exists(path))
             {
                 throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), path));
             }
 
-            var directoryData = (MockDirectoryData) mockFileDataAccessor.GetFile(path);
+            var directoryData = (MockDirectoryData)mockFileDataAccessor.GetFile(path);
             return directoryData.AccessControl;
         }
 
@@ -421,7 +431,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void SetCurrentDirectory(string path)
         {
-          currentDirectory = path;
+            currentDirectory = path;
         }
 
         public override void SetLastAccessTime(string path, DateTime lastAccessTime)
