@@ -599,6 +599,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.CaseInsensitivity)]
         public void MockDirectory_Delete_ShouldNotDeleteAllDirectories()
         {
             // Arrange
