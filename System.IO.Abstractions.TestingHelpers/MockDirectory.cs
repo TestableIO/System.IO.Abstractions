@@ -75,20 +75,13 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void Delete(string path, bool recursive)
         {
             path = mockFileDataAccessor.Path.GetFullPath(path).TrimSlashes();
-            //var affectedPaths = mockFileDataAccessor
-            //    .AllPaths
-            //    .Where(p => mockFileDataAccessor.StringOperations.StartsWith(p, path))
-            //    .ToList();
-
 
             var pathWithDirectorySeparatorChar = path.Insert(path.Length, Path.DirectorySeparatorChar.ToString());
 
             var affectedPaths = mockFileDataAccessor
                 .AllPaths
-                .Where(p => p == path || mockFileDataAccessor.StringOperations.StartsWith(p, pathWithDirectorySeparatorChar))
+                .Where(p => mockFileDataAccessor.StringOperations.Equals(p,path)|| mockFileDataAccessor.StringOperations.StartsWith(p, pathWithDirectorySeparatorChar))
                 .ToList();
-
-            //Path.DirectorySeparatorChar
 
             if (!affectedPaths.Any())
                 throw new DirectoryNotFoundException(path + " does not exist or could not be found.");
