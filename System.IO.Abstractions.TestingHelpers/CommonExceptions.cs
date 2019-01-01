@@ -31,6 +31,16 @@ namespace System.IO.Abstractions.TestingHelpers
                     path
                 )
             );
+
+        public static Exception InvalidUseOfVolumeSeparator() =>
+            new NotSupportedException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"));
+
+        public static Exception PathIsNotOfALegalForm(string paramName) => 
+            new ArgumentException(
+                StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"), 
+                paramName
+            );
+
         public static ArgumentNullException FilenameCannotBeNull(string paramName) =>
             new ArgumentNullException(
                 paramName,
@@ -40,6 +50,9 @@ namespace System.IO.Abstractions.TestingHelpers
         public static ArgumentException IllegalCharactersInPath(string paramName = null) =>
             paramName != null 
                 ? new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"), paramName)
-                : new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));          
+                : new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
+
+        public static Exception InvalidUncPath(string paramName) => 
+            new ArgumentException(@"The UNC path should be of the form \\server\share.", paramName);
     }
 }

@@ -233,7 +233,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (path != null && path.Length == 0)
             {
-                throw new ArgumentException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"), "path");
+                throw CommonExceptions.PathIsNotOfALegalForm(nameof(path));
             }
 
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");

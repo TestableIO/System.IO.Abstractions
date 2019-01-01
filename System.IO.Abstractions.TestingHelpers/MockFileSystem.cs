@@ -164,7 +164,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     lastIndex = StringOperations.IndexOf(fixedPath, separator, 2);
 
                     if (lastIndex < 0)
-                        throw new ArgumentException(@"The UNC path should be of the form \\server\share.", "path");
+                        throw CommonExceptions.InvalidUncPath(nameof(path));
 
                     /*
                      * Although CreateDirectory(@"\\server\share\") is not going to work in real code, we allow it here for the purposes of setting up test doubles.
