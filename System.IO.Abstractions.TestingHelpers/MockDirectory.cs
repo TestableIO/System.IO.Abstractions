@@ -125,7 +125,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!mockFileDataAccessor.Directory.Exists(path))
             {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), path));
+                throw CommonExceptions.CouldNotFindPartOfPath(path);
             }
 
             var directoryData = (MockDirectoryData)mockFileDataAccessor.GetFile(path);
@@ -211,11 +211,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!Exists(path))
             {
-                throw new DirectoryNotFoundException(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"),
-                        path));
+                throw CommonExceptions.CouldNotFindPartOfPath(path);
             }
 
             path = EnsureAbsolutePath(path);
@@ -410,7 +406,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!mockFileDataAccessor.Directory.Exists(path))
             {
-                throw new DirectoryNotFoundException(string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("COULD_NOT_FIND_PART_OF_PATH_EXCEPTION"), path));
+                throw CommonExceptions.CouldNotFindPartOfPath(path);
             }
 
             var directoryData = (MockDirectoryData)mockFileDataAccessor.GetFile(path);
@@ -548,7 +544,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var invalidPathChars = Path.GetInvalidPathChars();
             if (searchPattern.IndexOfAny(invalidPathChars) > -1)
             {
-                throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"), "searchPattern");
+                throw CommonExceptions.IllegalCharactersInPath(nameof(searchPattern));
             }
         }
     }
