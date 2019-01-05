@@ -605,24 +605,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var folder1Path = XFS.Path(@"D:\Test\Program");
             var folder1SubFolderPath = XFS.Path(@"D:\Test\Program\Subfolder");
             var folder2Path = XFS.Path(@"D:\Test\Program_bak");
-            var folder3Path = XFS.Path(@"D:\Test\Program_old");
 
             var fileSystem = new MockFileSystem();
 
             fileSystem.AddDirectory(folder1Path);
             fileSystem.AddDirectory(folder2Path);
-            fileSystem.AddDirectory(folder3Path);
             fileSystem.AddDirectory(folder1SubFolderPath);
-
-            var preDeleteCount = fileSystem.AllDirectories.Count();
-            Assert.AreEqual(7, preDeleteCount);
 
             // Act
             fileSystem.Directory.Delete(folder1Path, recursive: true);
-            var postDeleteCount = fileSystem.AllDirectories.Count();
 
             // Assert
-            Assert.AreEqual(5, postDeleteCount);
+            Assert.IsFalse(fileSystem.Directory.Exists(folder1Path));
+            Assert.IsFalse(fileSystem.Directory.Exists(folder1SubFolderPath));
+            Assert.IsTrue(fileSystem.Directory.Exists(folder2Path));
         }
 
         [Test]
