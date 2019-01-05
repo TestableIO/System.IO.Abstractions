@@ -25,27 +25,28 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw new ArgumentException("Empty file name is not legal.", paramName);
             }
-
+            
             if (path.Trim() == string.Empty)
             {
-                throw new ArgumentException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"), paramName);
+                throw CommonExceptions.PathIsNotOfALegalForm(paramName);
             }
 
             if (XFS.IsWindowsPlatform() && !IsValidUseOfVolumeSeparatorChar(path))
             {
-                throw new NotSupportedException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"));
+                
+                throw CommonExceptions.InvalidUseOfVolumeSeparator();
             }
 
             if (ExtractFileName(path).IndexOfAny(_mockFileDataAccessor.Path.GetInvalidFileNameChars()) > -1)
             {
-                throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
+                throw CommonExceptions.IllegalCharactersInPath();
             }
 
             var filePath = ExtractFilePath(path);
 
             if (HasIllegalCharacters(filePath, checkAdditional: false))
             {
-                throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
+                throw CommonExceptions.IllegalCharactersInPath();
             }
         }
 
@@ -96,7 +97,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (HasIllegalCharacters(path, checkAdditional))
             {
-                throw new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
+                throw CommonExceptions.IllegalCharactersInPath();
             }
         }
     }

@@ -56,7 +56,7 @@
             {
                 if (StreamType.READ.Equals(streamType))
                 {
-                    throw new FileNotFoundException("File not found.", path);
+                    throw CommonExceptions.FileNotFound(path);
                 }
                 mockFileDataAccessor.AddFile(path, new MockFileData(new byte[] { }));
             }

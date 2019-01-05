@@ -99,7 +99,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             // UNC Paths start with double slash but no reason
             // to have more than 2 slashes at the start of a path
-            if (XFS.IsWindowsPlatform() && prefixSeps.Length > 2)
+            if (XFS.IsWindowsPlatform() && prefixSeps.Length >= 2)
             {
                 prefixSeps = prefixSeps.Substring(0, 2);
             }

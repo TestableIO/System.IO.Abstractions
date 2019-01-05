@@ -56,6 +56,29 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.UNCPaths)]
+        public void MockDirectoryInfo_GetFiles_ShouldWorkWithUNCPath()
+        {
+            var fileName = XFS.Path(@"\\unc\folder\file.txt");
+            var directoryName = XFS.Path(@"\\unc\folder");
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {fileName, ""}
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, directoryName);
+
+            // Act
+            var files = directoryInfo.GetFiles();
+
+            // Assert
+            Assert.AreEqual(fileName, files[0].FullName);
+        }
+
+
+
+        [Test]
         public void MockDirectoryInfo_FullName_ShouldReturnFullNameWithoutIncludingTrailingPathDelimiter()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
