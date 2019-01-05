@@ -312,7 +312,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var exception = Assert.Throws<FileNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
 
-            Assert.That(exception.Message, Is.EqualTo("The file \"" + XFS.Path("c:\\something\\demo.txt") + "\" could not be found."));
+            Assert.That(exception.Message, Is.EqualTo("Could not find file '" + XFS.Path("c:\\something\\demo.txt") + "'."));
         }
 
         [Test]

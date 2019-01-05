@@ -51,5 +51,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 new [] { "Hello", "there", "Bob", "Bob!" },
                 result);
         }
+
+        [Test]
+        public void MockFile_ReadAllLines_NotExistingFile_ThrowsCorrectFileNotFoundException()
+        {
+            var absentFileNameFullPath = XFS.Path(@"c:\you surely don't have such file.hope-so");
+            var mockFileSystem = new MockFileSystem();
+
+            var act = new TestDelegate(() => 
+                mockFileSystem.File.ReadAllText(absentFileNameFullPath)
+            );
+
+            var exception = Assert.Catch<FileNotFoundException>(act);
+            Assert.That(exception.FileName, Is.EqualTo(absentFileNameFullPath));
+            Assert.That(exception.Message, Is.EqualTo("Could not find file '" + absentFileNameFullPath + "'."));
+        }
     }
 }

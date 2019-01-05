@@ -8,7 +8,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     using XFS = MockUnixSupport;
 
-    public class MockFileReadLinesTests {
+    public class MockFileReadLinesTests
+    {
         [Test]
         public void MockFile_ReadLines_ShouldReturnOriginalTextData()
         {
@@ -48,7 +49,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             CollectionAssert.AreEqual(
-                new [] { "Hello", "there", "Bob", "Bob!" },
+                new[] { "Hello", "there", "Bob", "Bob!" },
                 result);
         }
     }
