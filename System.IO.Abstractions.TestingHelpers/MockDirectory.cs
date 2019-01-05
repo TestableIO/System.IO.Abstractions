@@ -14,7 +14,6 @@ namespace System.IO.Abstractions.TestingHelpers
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private string currentDirectory;
 
-        // This constructor is retained to avoid breaking change
         public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory) :
             this(mockFileDataAccessor, currentDirectory)
         {
@@ -76,22 +75,28 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             path = mockFileDataAccessor.Path.GetFullPath(path).TrimSlashes();
 
-            var pathWithDirectorySeparatorChar = path.Insert(path.Length, Path.DirectorySeparatorChar.ToString());
-
+            var stringOps = mockFileDataAccessor.StringOperations;
+            var pathWithDirectorySeparatorChar = $"{path}{Path.DirectorySeparatorChar}";
+            
             var affectedPaths = mockFileDataAccessor
                 .AllPaths
-                .Where(p => mockFileDataAccessor.StringOperations.Equals(p,path)|| mockFileDataAccessor.StringOperations.StartsWith(p, pathWithDirectorySeparatorChar))
+                .Where(p => stringOps.Equals(p, path) || stringOps.StartsWith(p, pathWithDirectorySeparatorChar))
                 .ToList();
 
             if (!affectedPaths.Any())
+            {
                 throw new DirectoryNotFoundException(path + " does not exist or could not be found.");
-
-            if (!recursive &&
-                affectedPaths.Count > 1)
+            }
+            
+            if (!recursive && affectedPaths.Count > 1)
+            {
                 throw new IOException("The directory specified by " + path + " is read-only, or recursive is false and " + path + " is not an empty directory.");
-
+            }
+            
             foreach (var affectedPath in affectedPaths)
+            {
                 mockFileDataAccessor.RemoveFile(affectedPath);
+            }
         }
 
         public override bool Exists(string path)
