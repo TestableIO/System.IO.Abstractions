@@ -599,14 +599,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        [WindowsOnly(WindowsSpecifics.CaseInsensitivity)]
         public void MockDirectory_Delete_ShouldNotDeleteAllDirectories()
         {
             // Arrange
-            var folder1Path = @"D:\Test\Program";
-            var folder1SubFolderPath = @"D:\Test\Program\Subfolder";
-            var folder2Path = @"D:\Test\Program_bak";
-            var folder3Path = @"D:\Test\Program_old";
+            var folder1Path = XFS.Path(@"D:\Test\Program");
+            var folder1SubFolderPath = XFS.Path(@"D:\Test\Program\Subfolder");
+            var folder2Path = XFS.Path(@"D:\Test\Program_bak");
+            var folder3Path = XFS.Path(@"D:\Test\Program_old");
 
             var fileSystem = new MockFileSystem();
 
