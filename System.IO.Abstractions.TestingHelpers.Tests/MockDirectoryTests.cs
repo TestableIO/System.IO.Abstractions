@@ -1164,7 +1164,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [TestCaseSource("GetPathsForMoving")]
-        public void MockDirectory_Move_ShouldMove(string sourceDirName, string destDirName, string filePathOne, string filePathTwo)
+        public void MockDirectory_Move_ShouldMoveDirectories(string sourceDirName, string destDirName, string filePathOne, string filePathTwo)
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -1180,6 +1180,27 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(fileSystem.Directory.Exists(sourceDirName));
             Assert.IsTrue(fileSystem.File.Exists(XFS.Path(destDirName + filePathOne)));
             Assert.IsTrue(fileSystem.File.Exists(XFS.Path(destDirName + filePathTwo)));
+        }
+
+        [Test]
+        public void MockDirectory_Move_ShouldMoveFiles()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            string sourceFileContent = "this is some content";
+            
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { sourceFilePath, new MockFileData(sourceFileContent) },
+                { XFS.Path(@"c:\somethingelse\dummy.txt"), MockFileData.NullObject }
+            });
+
+            string destFilePath = XFS.Path(@"c:\somethingelse\demo1.txt");
+
+            fileSystem.Directory.Move(sourceFilePath, destFilePath);
+
+            Assert.That(fileSystem.FileExists(destFilePath), Is.True);
+            Assert.That(fileSystem.GetFile(destFilePath).TextContents, Is.EqualTo(sourceFileContent));
+            Assert.That(fileSystem.FileExists(sourceFilePath), Is.False);
         }
 
         [Test]
