@@ -380,7 +380,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             //if we're moving a file, not a directory, call the appropriate file moving function.
             var fileData = mockFileDataAccessor.GetFile(fullSourcePath);
-            if (fileData != null && (fileData.Attributes & FileAttributes.Directory) == 0)
+            if (fileData?.Attributes.HasFlag(FileAttributes.Directory) == false)
             {
                 mockFileDataAccessor.File.Move(fullSourcePath, fullDestPath);
                 return;

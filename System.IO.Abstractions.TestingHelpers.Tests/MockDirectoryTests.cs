@@ -1185,22 +1185,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_Move_ShouldMoveFiles()
         {
-            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            string sourceFilePath = XFS.Path(@"c:\demo.txt");
             string sourceFileContent = "this is some content";
             
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { sourceFilePath, new MockFileData(sourceFileContent) },
-                { XFS.Path(@"c:\somethingelse\dummy.txt"), MockFileData.NullObject }
+                { sourceFilePath, new MockFileData(sourceFileContent) }
             });
 
-            string destFilePath = XFS.Path(@"c:\somethingelse\demo1.txt");
+            string destFilePath = XFS.Path(@"c:\demo1.txt");
 
             fileSystem.Directory.Move(sourceFilePath, destFilePath);
 
             Assert.That(fileSystem.FileExists(destFilePath), Is.True);
-            Assert.That(fileSystem.GetFile(destFilePath).TextContents, Is.EqualTo(sourceFileContent));
             Assert.That(fileSystem.FileExists(sourceFilePath), Is.False);
+            Assert.That(fileSystem.GetFile(destFilePath).TextContents, Is.EqualTo(sourceFileContent));
         }
 
         [Test]
