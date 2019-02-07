@@ -77,7 +77,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             var stringOps = mockFileDataAccessor.StringOperations;
             var pathWithDirectorySeparatorChar = $"{path}{Path.DirectorySeparatorChar}";
-            
+
             var affectedPaths = mockFileDataAccessor
                 .AllPaths
                 .Where(p => stringOps.Equals(p, path) || stringOps.StartsWith(p, pathWithDirectorySeparatorChar))
@@ -87,12 +87,12 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw new DirectoryNotFoundException(path + " does not exist or could not be found.");
             }
-            
+
             if (!recursive && affectedPaths.Count > 1)
             {
                 throw new IOException("The directory specified by " + path + " is read-only, or recursive is false and " + path + " is not an empty directory.");
             }
-            
+
             foreach (var affectedPath in affectedPaths)
             {
                 mockFileDataAccessor.RemoveFile(affectedPath);
@@ -376,6 +376,14 @@ namespace System.IO.Abstractions.TestingHelpers
             if (mockFileDataAccessor.StringOperations.Equals(fullSourcePath, fullDestPath))
             {
                 throw new IOException("Source and destination path must be different.");
+            }
+
+            //if we're moving a file, not a directory, call the appropriate file moving function.
+            var fileData = mockFileDataAccessor.GetFile(fullSourcePath);
+            if (fileData?.Attributes.HasFlag(FileAttributes.Directory) == false)
+            {
+                mockFileDataAccessor.File.Move(fullSourcePath, fullDestPath);
+                return;
             }
 
             var sourceRoot = mockFileDataAccessor.Path.GetPathRoot(fullSourcePath);
