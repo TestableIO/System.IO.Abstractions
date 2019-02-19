@@ -129,6 +129,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     {
                         throw CommonExceptions.AccessDenied(path);
                     }
+                    file.CheckFileAccess(fixedPath, FileAccess.Write);
                 }
 
                 var directoryPath = Path.GetDirectoryName(fixedPath);
