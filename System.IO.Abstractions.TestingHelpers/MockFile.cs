@@ -61,6 +61,7 @@ namespace System.IO.Abstractions.TestingHelpers
             else
             {
                 var file = mockFileDataAccessor.GetFile(path);
+                file.CheckFileAccess(path, FileAccess.Write);
                 var bytesToAppend = encoding.GetBytes(contents);
                 file.Contents = file.Contents.Concat(bytesToAppend).ToArray();
             }
@@ -354,7 +355,10 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw CommonExceptions.FileNotFound(sourceFileName);
             }
-
+            if (!sourceFile.AllowedFileShare.HasFlag(FileShare.Delete))
+            {
+                throw new IOException("The process cannot access the file because it is being used by another process.");
+            }
             VerifyDirectoryExists(destFileName);
 
             mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile.Contents));
@@ -404,8 +408,10 @@ namespace System.IO.Abstractions.TestingHelpers
                 return Create(path);
             }
 
-            var length = mockFileDataAccessor.GetFile(path).Contents.Length;
+            var mockFileData = mockFileDataAccessor.GetFile(path);
+            mockFileData.CheckFileAccess(path, access);
 
+            var length = mockFileData.Contents.Length;
             MockFileStream.StreamType streamType = MockFileStream.StreamType.WRITE;
             if (access == FileAccess.Read)
                 streamType = MockFileStream.StreamType.READ;
@@ -446,7 +452,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw CommonExceptions.FileNotFound(path);
             }
-
+            mockFileDataAccessor.GetFile(path).CheckFileAccess(path, FileAccess.Read);
             return mockFileDataAccessor.GetFile(path).Contents;
         }
 
@@ -458,6 +464,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw CommonExceptions.FileNotFound(path);
             }
+            mockFileDataAccessor.GetFile(path).CheckFileAccess(path, FileAccess.Read);
 
             return mockFileDataAccessor
                 .GetFile(path)
@@ -479,6 +486,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw CommonExceptions.FileNotFound(path);
             }
 
+            mockFileDataAccessor.GetFile(path).CheckFileAccess(path, FileAccess.Read);
             return encoding
                 .GetString(mockFileDataAccessor.GetFile(path).Contents)
                 .SplitLines();
@@ -960,6 +968,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private string ReadAllTextInternal(string path, Encoding encoding)
         {
             var mockFileData = mockFileDataAccessor.GetFile(path);
+            mockFileData.CheckFileAccess(path, FileAccess.Read);
             return ReadAllBytes(mockFileData.Contents, encoding);
         }
 
