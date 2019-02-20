@@ -162,5 +162,28 @@
 
             Assert.DoesNotThrow(() => filesystem.File.Move(filepath, target));
         }
+        [Test]
+        public void MockFile_Lock_FileShareNoneThrowsDelete()
+        {
+            string filepath = XFS.Path(@"c:\something\does\exist.txt");
+            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { filepath, new MockFileData("I'm here") { AllowedFileShare = FileShare.None }}
+            });
+
+            var exception = Assert.Throws(typeof(IOException), () => filesystem.File.Delete(filepath));
+            Assert.That(exception.Message, Is.EqualTo($"The process cannot access the file '{filepath}' because it is being used by another process."));
+        }
+        [Test]
+        public void MockFile_Lock_FileShareDeleteDoesNotThrowDelete()
+        {
+            string filepath = XFS.Path(@"c:\something\does\exist.txt");
+            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { filepath, new MockFileData("I'm here") { AllowedFileShare = FileShare.Delete }}
+            });
+
+            Assert.DoesNotThrow(() => filesystem.File.Delete(filepath));
+        }
     }
 }

@@ -177,6 +177,12 @@ namespace System.IO.Abstractions.TestingHelpers
             // but silently returns if deleting a non-existing file in an existing folder.
             VerifyDirectoryExists(path);
 
+            var file = mockFileDataAccessor.GetFile(path);
+            if (file != null && !file.AllowedFileShare.HasFlag(FileShare.Delete))
+            {
+                throw new IOException($"The process cannot access the file '{path}' because it is being used by another process.");
+            }
+
             mockFileDataAccessor.RemoveFile(path);
         }
 
