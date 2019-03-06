@@ -352,8 +352,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         private class TestFileSystemWatcherFactory : IFileSystemWatcherFactory
         {
-            public FileSystemWatcherBase CreateNew() => new TestFileSystemWatcher(null);
-            public FileSystemWatcherBase FromPath(string path) => new TestFileSystemWatcher(path);
+            public IFileSystemWatcher CreateNew() => new TestFileSystemWatcher(null);
+            public IFileSystemWatcher FromPath(string path) => new TestFileSystemWatcher(path);
         }
 
         private class TestFileSystemWatcher : FileSystemWatcherBase
