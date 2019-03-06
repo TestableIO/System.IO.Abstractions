@@ -26,7 +26,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (path.Length == 0)
             {
-                throw new ArgumentException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"), "path");
+                throw CommonExceptions.PathIsNotOfALegalForm(nameof(path));
             }
 
             path = path.Replace(AltDirectorySeparatorChar, DirectorySeparatorChar);
@@ -53,7 +53,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 pathSegments = GetSegments(path);
                 if (pathSegments.Length < 2)
                 {
-                    throw new ArgumentException(@"The UNC path should be of the form \\server\share.", "path");
+                    throw CommonExceptions.InvalidUncPath(nameof(path));
                 }
             }
             else if (mockFileDataAccessor.StringOperations.Equals(@"\", root) ||

@@ -293,7 +293,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private MockFileData GetMockFileDataForWrite()
         {
             return mockFileDataAccessor.GetFile(directoryPath)
-                ?? throw new FileNotFoundException(StringResources.Manager.GetString("COULD_NOT_FIND_FILE_EXCEPTION"), directoryPath);
+                ?? throw CommonExceptions.FileNotFound(directoryPath);
         }
 
         public override string ToString()
