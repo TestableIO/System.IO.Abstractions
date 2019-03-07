@@ -5,7 +5,7 @@ namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="Directory"/>
     [Serializable]
-    public abstract class DirectoryBase
+    public abstract class DirectoryBase : IDirectory
     {
         protected DirectoryBase(IFileSystem fileSystem)
         {

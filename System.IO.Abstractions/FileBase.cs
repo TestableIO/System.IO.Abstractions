@@ -6,7 +6,7 @@ namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="File"/>
     [Serializable]
-    public abstract class FileBase
+    public abstract class FileBase : IFile
     {
         protected FileBase(IFileSystem fileSystem)
         {
