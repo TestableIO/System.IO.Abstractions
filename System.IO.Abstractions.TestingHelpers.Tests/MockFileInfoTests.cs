@@ -51,6 +51,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileInfo_Exists_ShouldRetunFalseIfPathLeadsToDirectory()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\a\b\c.txt"), new MockFileData("Demo text content") },
+            });
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a\b"));
+
+            var result = fileInfo.Exists;
+
+            Assert.IsFalse(result);
+        }
+
+        [Test]
         public void MockFileInfo_Length_ShouldReturnLengthOfFileInMemoryFileSystem()
         {
             const string fileContent = "Demo text content";
@@ -80,6 +94,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var ex = Assert.Throws<FileNotFoundException>(() => fileInfo.Length.ToString(CultureInfo.InvariantCulture));
 
             Assert.AreEqual(XFS.Path(@"c:\foo.txt"), ex.FileName);
+        }
+
+        [Test]
+        public void MockFileInfo_Length_ShouldThrowFileNotFoundExceptionIfPathLeadsToDirectory()
+        {
+            const string fileContent = "Demo text content";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\a\b\c.txt"), new MockFileData(fileContent) },
+            });
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a\b"));
+
+            var ex = Assert.Throws<FileNotFoundException>(() => fileInfo.Length.ToString(CultureInfo.InvariantCulture));
+
+            Assert.AreEqual(XFS.Path(@"c:\a\b"), ex.FileName);
         }
 
         [Test]
