@@ -68,7 +68,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override bool Exists
         {
-            get { return MockFileData != null; }
+            get { return MockFileData != null && !MockFileData.IsDirectory; }
         }
 
         public override string Extension
@@ -307,7 +307,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
+                if (MockFileData == null || MockFileData.IsDirectory) throw CommonExceptions.FileNotFound(path);
                 return MockFileData.Contents.Length;
             }
         }
