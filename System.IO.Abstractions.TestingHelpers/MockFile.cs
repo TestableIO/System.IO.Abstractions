@@ -363,7 +363,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
             if (!sourceFile.AllowedFileShare.HasFlag(FileShare.Delete))
             {
-                throw new IOException("The process cannot access the file because it is being used by another process.");
+                throw CommonExceptions.ProcessCannotAccessFileInUse();
             }
             VerifyDirectoryExists(destFileName);
 
