@@ -150,4 +150,7 @@
   <data name="PROCESS_CANNOT_ACCESS_FILE_IN_USE" xml:space="preserve">
     <value>The process cannot access the file because it is being used by another process.</value>
   </data>
+  <data name="PROCESS_CANNOT_ACCESS_FILE_IN_USE_WITH_FILENAME" xml:space="preserve">
+    <value>The process cannot access the file '{0}' because it is being used by another process.</value>
+  </data>
 </root>
