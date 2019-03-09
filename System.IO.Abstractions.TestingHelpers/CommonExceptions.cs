@@ -55,7 +55,9 @@ namespace System.IO.Abstractions.TestingHelpers
         public static Exception InvalidUncPath(string paramName) => 
             new ArgumentException(@"The UNC path should be of the form \\server\share.", paramName);
 
-        public static IOException ProcessCannotAccessFileInUse() =>
-            new IOException(StringResources.Manager.GetString("PROCESS_CANNOT_ACCESS_FILE_IN_USE"));
+        public static IOException ProcessCannotAccessFileInUse(string paramName = null) =>
+            paramName != null
+            ? new IOException(string.Format(StringResources.Manager.GetString("PROCESS_CANNOT_ACCESS_FILE_IN_USE_WITH_FILENAME"), paramName))
+            : new IOException(StringResources.Manager.GetString("PROCESS_CANNOT_ACCESS_FILE_IN_USE"));
     }
 }
