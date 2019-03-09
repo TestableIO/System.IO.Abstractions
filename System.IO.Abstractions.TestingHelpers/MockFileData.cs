@@ -177,7 +177,7 @@ namespace System.IO.Abstractions.TestingHelpers
         internal void CheckFileAccess(string path, FileAccess access)
         {
             if (!AllowedFileShare.HasFlag((FileShare)access))
-                throw new IOException($"The process cannot access the file '{path}' because it is being used by another process.");
+                throw CommonExceptions.ProcessCannotAccessFileInUse(path);
         }
     }
 }

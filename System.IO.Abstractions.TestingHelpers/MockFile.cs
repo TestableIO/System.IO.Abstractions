@@ -180,7 +180,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var file = mockFileDataAccessor.GetFile(path);
             if (file != null && !file.AllowedFileShare.HasFlag(FileShare.Delete))
             {
-                throw new IOException($"The process cannot access the file '{path}' because it is being used by another process.");
+                throw CommonExceptions.ProcessCannotAccessFileInUse(path);
             }
 
             mockFileDataAccessor.RemoveFile(path);
