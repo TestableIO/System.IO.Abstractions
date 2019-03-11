@@ -39,11 +39,14 @@
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
             this.path = path;
             this.options = options;
-
+            
             if (mockFileDataAccessor.FileExists(path))
             {
+                var fileData = mockFileDataAccessor.GetFile(path);
+                fileData.CheckFileAccess(path, streamType != StreamType.READ ? FileAccess.Write : FileAccess.Read);
+                
                 /* only way to make an expandable MemoryStream that starts with a particular content */
-                var data = mockFileDataAccessor.GetFile(path).Contents;
+                var data = fileData.Contents;
                 if (data != null && data.Length > 0 && streamType != StreamType.TRUNCATE)
                 {
                     Write(data, 0, data.Length);
@@ -60,7 +63,7 @@
                 }
                 mockFileDataAccessor.AddFile(path, new MockFileData(new byte[] { }));
             }
-
+            
             canWrite = streamType != StreamType.READ;
         }
 

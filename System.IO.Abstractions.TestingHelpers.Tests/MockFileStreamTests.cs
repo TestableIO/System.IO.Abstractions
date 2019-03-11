@@ -76,6 +76,46 @@
             Assert.IsFalse(stream.CanWrite);
             Assert.Throws<NotSupportedException>(() => stream.WriteByte(1));
         }
+        
+        [Test]
+        [TestCase(FileShare.None, MockFileStream.StreamType.READ)]
+        [TestCase(FileShare.None, MockFileStream.StreamType.WRITE)]
+        [TestCase(FileShare.None, MockFileStream.StreamType.APPEND)]
+        [TestCase(FileShare.None, MockFileStream.StreamType.TRUNCATE)]
+        [TestCase(FileShare.Read, MockFileStream.StreamType.WRITE)]
+        [TestCase(FileShare.Read, MockFileStream.StreamType.APPEND)]
+        [TestCase(FileShare.Read, MockFileStream.StreamType.TRUNCATE)]
+        [TestCase(FileShare.Write, MockFileStream.StreamType.READ)]
+        public void MockFileStream_Constructor_Insufficient_FileShare_Throws_Exception(FileShare allowedFileShare, MockFileStream.StreamType streamType)
+        {
+            var filePath = @"C:\locked.txt";            
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { filePath, new MockFileData("cannot access") { AllowedFileShare = allowedFileShare } }
+            });
+            
+            Assert.Throws<IOException>(() => new MockFileStream(fileSystem, filePath, streamType));
+        }
+        
+        [Test]
+        [TestCase(FileShare.Read, MockFileStream.StreamType.READ)]
+        [TestCase(FileShare.Read | FileShare.Write, MockFileStream.StreamType.READ)]
+        [TestCase(FileShare.Read | FileShare.Write, MockFileStream.StreamType.APPEND)]
+        [TestCase(FileShare.Read | FileShare.Write, MockFileStream.StreamType.TRUNCATE)]
+        [TestCase(FileShare.ReadWrite, MockFileStream.StreamType.READ)]
+        [TestCase(FileShare.ReadWrite, MockFileStream.StreamType.WRITE)]
+        [TestCase(FileShare.ReadWrite, MockFileStream.StreamType.APPEND)]
+        [TestCase(FileShare.ReadWrite, MockFileStream.StreamType.TRUNCATE)]
+        public void MockFileStream_Constructor_Sufficient_FileShare_Does_Not_Throw_Exception(FileShare allowedFileShare, MockFileStream.StreamType streamType)
+        {
+            var filePath = @"C:\locked.txt";       
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { filePath, new MockFileData("cannot access") { AllowedFileShare = allowedFileShare } }
+            });
+            
+            Assert.DoesNotThrow(() => new MockFileStream(fileSystem, filePath, streamType));
+        }
 
         [Test]
         public void MockFileStream_Close_MultipleCallsDontThrow()
