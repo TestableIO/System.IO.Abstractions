@@ -161,5 +161,23 @@ namespace System.IO.Abstractions.TestingHelpers
             }
             set { accessControl = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the File sharing mode for this file, this allows you to lock a file for reading or writing.
+        /// </summary>
+        public FileShare AllowedFileShare { get; set; } = FileShare.ReadWrite | FileShare.Delete;
+        /// <summary>
+        /// Checks whether the file is accessible for this type of FileAccess. 
+        /// MockfileData can be configured to have FileShare.None, which indicates it is locked by a 'different process'.
+        /// 
+        /// If the file is 'locked by a different process', an IOException will be thrown.
+        /// </summary>
+        /// <param name="path">The path is used in the IOException message to match the message in real life situations</param>
+        /// <param name="access">The access type to check</param>
+        internal void CheckFileAccess(string path, FileAccess access)
+        {
+            if (!AllowedFileShare.HasFlag((FileShare)access))
+                throw CommonExceptions.ProcessCannotAccessFileInUse(path);
+        }
     }
 }
