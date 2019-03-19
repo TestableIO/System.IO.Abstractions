@@ -147,4 +147,10 @@
   <data name="FILE_SYSTEM_WATCHER_NOT_IMPLEMENTED_EXCEPTION" xml:space="preserve">
     <value>MockFileSystem does not have a built-in FileSystemWatcher implementation. You must provide your own mock or implementation of IFileSystemWatcherFactory and assign it to MockFileSystem.FileSystemWatcher.</value>
   </data>
+  <data name="PROCESS_CANNOT_ACCESS_FILE_IN_USE" xml:space="preserve">
+    <value>The process cannot access the file because it is being used by another process.</value>
+  </data>
+  <data name="PROCESS_CANNOT_ACCESS_FILE_IN_USE_WITH_FILENAME" xml:space="preserve">
+    <value>The process cannot access the file '{0}' because it is being used by another process.</value>
+  </data>
 </root>
