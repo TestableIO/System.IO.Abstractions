@@ -88,3 +88,50 @@ void MyFancyMethod()
     ...
 }
 ```
+
+### New in 4.0:
+In version 4.0, the api introduces yet another layer of abstraction; instead of using abstract base classes (these  still exist, though), things were changed to use interfaces instead.
+
+Using these allows you to completely mock the file system using your mocking library of choice. Here's a small example (using Moq):
+
+```csharp
+using Moq;
+using NUnit.Framework;
+using System.IO.Abstractions;
+
+namespace Tests
+{
+    public class Tests
+    {
+        [Test]
+        public void Test1()
+        {
+            var watcher = Mock.Of<IFileSystemWatcher>();
+
+            var unitUnderTest = new SomeClassUsingFileSystemWatcher(watcher);
+
+            Mock.Get(watcher).Raise(w => w.Created += null, new System.IO.FileSystemEventArgs(System.IO.WatcherChangeTypes.Created, @"C:\Some\Directory", "Some.File"));
+
+            Assert.True(unitUnderTest.FileWasCreated);
+        }
+    }
+
+    public class SomeClassUsingFileSystemWatcher
+    {
+        private readonly IFileSystemWatcher watcher;
+
+        public bool FileWasCreated { get; private set; }
+
+        public SomeClassUsingFileSystemWatcher(IFileSystemWatcher watcher)
+        {
+            this.watcher = watcher;
+            this.watcher.Created += Watcher_Created;
+        }
+
+        private void Watcher_Created(object sender, System.IO.FileSystemEventArgs e)
+        {
+            FileWasCreated = true;
+        }
+    }
+}
+```
