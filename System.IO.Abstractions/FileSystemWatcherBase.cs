@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿#if NET40
+using System.ComponentModel;
+#endif
 
 namespace System.IO.Abstractions
 {

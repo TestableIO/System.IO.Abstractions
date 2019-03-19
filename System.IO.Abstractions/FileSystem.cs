@@ -23,7 +23,7 @@
 
         public IFileStreamFactory FileStream { get; }
 
-        public PathBase Path { get; }
+        public IPath Path { get; }
 
         public IDirectoryInfoFactory DirectoryInfo { get; }
 

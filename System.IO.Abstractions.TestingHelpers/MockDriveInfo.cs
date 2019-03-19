@@ -44,7 +44,7 @@
         public new bool IsReady { get; protected set; }
         public override string Name { get; protected set; }
 
-        public override DirectoryInfoBase RootDirectory
+        public override IDirectoryInfo RootDirectory
         {
             get
             {

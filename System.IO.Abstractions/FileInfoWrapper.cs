@@ -89,12 +89,12 @@ namespace System.IO.Abstractions
             return instance.AppendText();
         }
 
-        public override FileInfoBase CopyTo(string destFileName)
+        public override IFileInfo CopyTo(string destFileName)
         {
             return new FileInfoWrapper(FileSystem, instance.CopyTo(destFileName));
         }
 
-        public override FileInfoBase CopyTo(string destFileName, bool overwrite)
+        public override IFileInfo CopyTo(string destFileName, bool overwrite)
         {
             return new FileInfoWrapper(FileSystem, instance.CopyTo(destFileName, overwrite));
         }
@@ -167,12 +167,12 @@ namespace System.IO.Abstractions
         }
 
 #if NET40
-        public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)
+        public override IFileInfo Replace(string destinationFileName, string destinationBackupFileName)
         {
             return new FileInfoWrapper(FileSystem, instance.Replace(destinationFileName, destinationBackupFileName));
         }
 
-        public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
+        public override IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
             return new FileInfoWrapper(FileSystem, instance.Replace(destinationFileName, destinationBackupFileName, ignoreMetadataErrors));
         }
@@ -183,7 +183,7 @@ namespace System.IO.Abstractions
             instance.SetAccessControl(fileSecurity);
         }
 
-        public override DirectoryInfoBase Directory
+        public override IDirectoryInfo Directory
         {
             get { return new DirectoryInfoWrapper(FileSystem, instance.Directory); }
         }

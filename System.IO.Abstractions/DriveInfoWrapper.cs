@@ -127,7 +127,7 @@
         /// Gets or sets the root directory of a drive.
         /// </summary>
         /// <value>An object that contains the root directory of the drive.</value>
-        public override DirectoryInfoBase RootDirectory
+        public override IDirectoryInfo RootDirectory
         {
             get { return new DirectoryInfoWrapper(FileSystem, instance.RootDirectory); }
         }

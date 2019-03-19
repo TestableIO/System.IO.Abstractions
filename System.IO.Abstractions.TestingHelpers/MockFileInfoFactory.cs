@@ -10,7 +10,7 @@
             this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
         }
 
-        public FileInfoBase FromFileName(string fileName)
+        public IFileInfo FromFileName(string fileName)
         {
             return new MockFileInfo(mockFileSystem, fileName);
         }

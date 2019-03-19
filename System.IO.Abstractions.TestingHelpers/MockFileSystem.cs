@@ -57,7 +57,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public IDirectory Directory { get; }
         public IFileInfoFactory FileInfo { get; }
         public IFileStreamFactory FileStream { get; }
-        public PathBase Path { get; }
+        public IPath Path { get; }
         public IDirectoryInfoFactory DirectoryInfo { get; }
         public IDriveInfoFactory DriveInfo { get; }
         public IFileSystemWatcherFactory FileSystemWatcher { get; set; }

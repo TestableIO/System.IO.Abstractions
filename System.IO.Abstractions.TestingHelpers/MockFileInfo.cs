@@ -153,12 +153,12 @@ namespace System.IO.Abstractions.TestingHelpers
             return new StreamWriter(new MockFileStream(mockFileSystem, FullName, MockFileStream.StreamType.APPEND));
         }
 
-        public override FileInfoBase CopyTo(string destFileName)
+        public override IFileInfo CopyTo(string destFileName)
         {
             return CopyTo(destFileName, false);
         }
 
-        public override FileInfoBase CopyTo(string destFileName, bool overwrite)
+        public override IFileInfo CopyTo(string destFileName, bool overwrite)
         {
             if (!Exists)
             {
@@ -210,7 +210,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void MoveTo(string destFileName)
         {
-            var movedFileInfo = CopyTo(destFileName);
+            var movedFileInfo = CopyTo(destFileName) as MockFileInfo;
             if (destFileName == FullName)
             {
                 return;
@@ -251,12 +251,12 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
 #if NET40
-        public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName)
+        public override IFileInfo Replace(string destinationFileName, string destinationBackupFileName)
         {
             return Replace(destinationFileName, destinationBackupFileName, false);
         }
 
-        public override FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
+        public override IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
             mockFileSystem.File.Replace(path, destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
             return mockFileSystem.FileInfo.FromFileName(destinationFileName);
@@ -268,7 +268,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileSystem.File.SetAccessControl(this.path, fileSecurity);
         }
 
-        public override DirectoryInfoBase Directory
+        public override IDirectoryInfo Directory
         {
             get
             {

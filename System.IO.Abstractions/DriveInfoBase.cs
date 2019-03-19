@@ -1,7 +1,7 @@
 ﻿namespace System.IO.Abstractions
 {
     [Serializable]
-    public abstract class DriveInfoBase
+    public abstract class DriveInfoBase : IDriveInfo
     {
         protected DriveInfoBase(IFileSystem fileSystem)
         {
@@ -85,7 +85,7 @@
         /// Gets or sets the root directory of a drive.
         /// </summary>
         /// <value>An object that contains the root directory of the drive.</value>
-        public virtual DirectoryInfoBase RootDirectory { get; protected set; }
+        public virtual IDirectoryInfo RootDirectory { get; protected set; }
 
         /// <inheritdoc cref="DriveInfo.TotalFreeSpace"/>
         /// <summary>
