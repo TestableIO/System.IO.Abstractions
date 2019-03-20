@@ -97,6 +97,7 @@ Using these allows you to completely mock the file system using your mocking lib
 ```csharp
 using Moq;
 using NUnit.Framework;
+using System;
 using System.IO.Abstractions;
 
 namespace Tests
@@ -107,10 +108,18 @@ namespace Tests
         public void Test1()
         {
             var watcher = Mock.Of<IFileSystemWatcher>();
+            var file = Mock.Of<IFile>();
 
-            var unitUnderTest = new SomeClassUsingFileSystemWatcher(watcher);
+            Mock.Get(file).Setup(f => f.Exists(It.IsAny<string>())).Returns(true);
+            Mock.Get(file).Setup(f => f.ReadAllText(It.IsAny<string>())).Throws<OutOfMemoryException>();
 
-            Mock.Get(watcher).Raise(w => w.Created += null, new System.IO.FileSystemEventArgs(System.IO.WatcherChangeTypes.Created, @"C:\Some\Directory", "Some.File"));
+            var unitUnderTest = new SomeClassUsingFileSystemWatcher(watcher, file);
+
+            Assert.Throws<OutOfMemoryException>(() => {
+                Mock.Get(watcher).Raise(w => w.Created += null, new System.IO.FileSystemEventArgs(System.IO.WatcherChangeTypes.Created, @"C:\Some\Directory", "Some.File"));
+            });
+
+            Mock.Get(file).Verify(f => f.Exists(It.IsAny<string>()), Times.Once);
 
             Assert.True(unitUnderTest.FileWasCreated);
         }
@@ -118,20 +127,28 @@ namespace Tests
 
     public class SomeClassUsingFileSystemWatcher
     {
-        private readonly IFileSystemWatcher watcher;
+        private readonly IFileSystemWatcher _watcher;
+        private readonly IFile _file;
 
         public bool FileWasCreated { get; private set; }
 
-        public SomeClassUsingFileSystemWatcher(IFileSystemWatcher watcher)
+        public SomeClassUsingFileSystemWatcher(IFileSystemWatcher watcher, IFile file)
         {
-            this.watcher = watcher;
-            this.watcher.Created += Watcher_Created;
+            this._file = file;
+            this._watcher = watcher;
+            this._watcher.Created += Watcher_Created;
         }
 
         private void Watcher_Created(object sender, System.IO.FileSystemEventArgs e)
         {
             FileWasCreated = true;
+
+            if(_file.Exists(e.FullPath))
+            {
+                var text = _file.ReadAllText(e.FullPath);
+            }
         }
     }
 }
+
 ```
