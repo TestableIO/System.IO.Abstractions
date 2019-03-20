@@ -210,7 +210,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void MoveTo(string destFileName)
         {
-            var movedFileInfo = CopyTo(destFileName) as MockFileInfo;
+            var movedFileInfo = CopyTo(destFileName);
             if (destFileName == FullName)
             {
                 return;
