@@ -7,7 +7,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     public class MockFileArgumentPathTests
     {
-        private static IEnumerable<Action<FileBase>> GetFileSystemActionsForArgumentNullException()
+        private static IEnumerable<Action<IFile>> GetFileSystemActionsForArgumentNullException()
         {
             yield return fs => fs.AppendAllLines(null, new[] { "does not matter" });
             yield return fs => fs.AppendAllLines(null, new[] { "does not matter" }, Encoding.ASCII);
@@ -57,7 +57,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [TestCaseSource("GetFileSystemActionsForArgumentNullException")]
-        public void Operations_ShouldThrowArgumentNullExceptionIfPathIsNull(Action<FileBase> action)
+        public void Operations_ShouldThrowArgumentNullExceptionIfPathIsNull(Action<IFile> action)
         {
             // Arrange
             var fileSystem = new MockFileSystem();

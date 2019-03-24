@@ -6,7 +6,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     public class MockDirectoryArgumentPathTests
     {
-        private static IEnumerable<Action<DirectoryBase>> GetFileSystemActionsForArgumentNullException()
+        private static IEnumerable<Action<IDirectory>> GetFileSystemActionsForArgumentNullException()
         {
             yield return ds => ds.Delete(null);
             yield return ds => ds.Delete(null, true);
@@ -26,7 +26,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [TestCaseSource("GetFileSystemActionsForArgumentNullException")]
-        public void Operations_ShouldThrowArgumentNullExceptionIfPathIsNull(Action<DirectoryBase> action)
+        public void Operations_ShouldThrowArgumentNullExceptionIfPathIsNull(Action<IDirectory> action)
         {
             // Arrange
             var fileSystem = new MockFileSystem();

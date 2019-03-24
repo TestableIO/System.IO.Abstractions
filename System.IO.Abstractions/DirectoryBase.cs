@@ -5,7 +5,7 @@ namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="Directory"/>
     [Serializable]
-    public abstract class DirectoryBase
+    public abstract class DirectoryBase : IDirectory
     {
         protected DirectoryBase(IFileSystem fileSystem)
         {
@@ -21,11 +21,11 @@ namespace System.IO.Abstractions
         public IFileSystem FileSystem { get; }
 
         /// <inheritdoc cref="Directory.CreateDirectory(string)"/>
-        public abstract DirectoryInfoBase CreateDirectory(string path);
+        public abstract IDirectoryInfo CreateDirectory(string path);
 
 #if NET40
         /// <inheritdoc cref="Directory.CreateDirectory(string,DirectorySecurity)"/>
-        public abstract DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity);
+        public abstract IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity);
 #endif
 
         /// <inheritdoc cref="Directory.Delete(string)"/>
@@ -97,7 +97,7 @@ namespace System.IO.Abstractions
 #endif
 
         /// <inheritdoc cref="Directory.GetParent"/>
-        public abstract DirectoryInfoBase GetParent(string path);
+        public abstract IDirectoryInfo GetParent(string path);
 
         /// <inheritdoc cref="Directory.Move"/>
         public abstract void Move(string sourceDirName, string destDirName);
@@ -127,13 +127,13 @@ namespace System.IO.Abstractions
         public abstract void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc);
 
         /// <inheritdoc cref="Directory.EnumerateDirectories(string)"/>
-        public abstract IEnumerable<String> EnumerateDirectories(String path);
+        public abstract IEnumerable<string> EnumerateDirectories(string path);
 
         /// <inheritdoc cref="Directory.EnumerateDirectories(string,string)"/>
-        public abstract IEnumerable<String> EnumerateDirectories(String path, String searchPattern);
+        public abstract IEnumerable<string> EnumerateDirectories(string path, string searchPattern);
 
         /// <inheritdoc cref="Directory.EnumerateDirectories(string,string,SearchOption)"/>
-        public abstract IEnumerable<String> EnumerateDirectories(String path, String searchPattern, SearchOption searchOption);
+        public abstract IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
 
         /// <inheritdoc cref="Directory.EnumerateFiles(string)"/>
         public abstract IEnumerable<string> EnumerateFiles(string path);

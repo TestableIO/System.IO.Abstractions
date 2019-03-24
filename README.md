@@ -13,7 +13,7 @@ and/or:
 
     Install-Package System.IO.Abstractions.TestingHelpers
 
-At the core of the library is IFileSystem and FileSystem. Instead of calling methods like `File.ReadAllText` directly, use `IFileSystem.File.ReadAllText`. We have exactly the same API, except that ours is injectable and testable.
+At the core of the library is `IFileSystem` and `FileSystem`. Instead of calling methods like `File.ReadAllText` directly, use `IFileSystem.File.ReadAllText`. We have exactly the same API, except that ours is injectable and testable.
 
 ```csharp
 public class MyComponent
@@ -28,7 +28,7 @@ public class MyComponent
     /// <summary>Create MyComponent</summary>
     public MyComponent() : this( 
         fileSystem: new FileSystem() //use default implementation which calls System.IO
-    ) 
+    )
     {
     }
 
@@ -74,17 +74,67 @@ public void MyComponent_Validate_ShouldThrowNotSupportedExceptionIfTestingIsNotA
     Assert.Fail("The expected exception was not thrown.");
 }
 ```
+
 We even support casting from the .NET Framework's untestable types to our testable wrappers:
 
 ```csharp
-FileInfo SomeBadApiMethodThatReturnsFileInfo()
+FileInfo SomeApiMethodThatReturnsFileInfo()
 {
     return new FileInfo("a");
 }
 
 void MyFancyMethod()
 {
-    var testableFileInfo = (FileInfoBase)SomeBadApiMethodThatReturnsFileInfo();
+    var testableFileInfo = (FileInfoBase)SomeApiMethodThatReturnsFileInfo();
     ...
+}
+```
+
+Since version 4.0 the top-level APIs expose interfaces instead of abstract base classes (these still exist, though), allowing you to completely mock the file system. Here's a small example, using [Moq](https://github.com/moq/moq4):
+
+```csharp
+[Test]
+public void Test1()
+{
+    var watcher = Mock.Of<IFileSystemWatcher>();
+    var file = Mock.Of<IFile>();
+
+    Mock.Get(file).Setup(f => f.Exists(It.IsAny<string>())).Returns(true);
+    Mock.Get(file).Setup(f => f.ReadAllText(It.IsAny<string>())).Throws<OutOfMemoryException>();
+
+    var unitUnderTest = new SomeClassUsingFileSystemWatcher(watcher, file);
+
+    Assert.Throws<OutOfMemoryException>(() => {
+        Mock.Get(watcher).Raise(w => w.Created += null, new System.IO.FileSystemEventArgs(System.IO.WatcherChangeTypes.Created, @"C:\Some\Directory", "Some.File"));
+    });
+
+    Mock.Get(file).Verify(f => f.Exists(It.IsAny<string>()), Times.Once);
+
+    Assert.True(unitUnderTest.FileWasCreated);
+}
+
+public class SomeClassUsingFileSystemWatcher
+{
+    private readonly IFileSystemWatcher _watcher;
+    private readonly IFile _file;
+
+    public bool FileWasCreated { get; private set; }
+
+    public SomeClassUsingFileSystemWatcher(IFileSystemWatcher watcher, IFile file)
+    {
+        this._file = file;
+        this._watcher = watcher;
+        this._watcher.Created += Watcher_Created;
+    }
+
+    private void Watcher_Created(object sender, System.IO.FileSystemEventArgs e)
+    {
+        FileWasCreated = true;
+
+        if(_file.Exists(e.FullPath))
+        {
+            var text = _file.ReadAllText(e.FullPath);
+        }
+    }
 }
 ```

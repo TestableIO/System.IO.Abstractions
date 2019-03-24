@@ -8,12 +8,12 @@ namespace System.IO.Abstractions
     [Serializable]
     public class FileSystemWatcherFactory : IFileSystemWatcherFactory
     {
-        public FileSystemWatcherBase CreateNew()
+        public IFileSystemWatcher CreateNew()
         {
             return new FileSystemWatcherWrapper();
         }
 
-        public FileSystemWatcherBase FromPath(string path)
+        public IFileSystemWatcher FromPath(string path)
         {
             return new FileSystemWatcherWrapper(path);
         }

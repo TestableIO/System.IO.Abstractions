@@ -15,15 +15,15 @@
             FileSystemWatcher = new FileSystemWatcherFactory();
         }
 
-        public DirectoryBase Directory { get; }
+        public IDirectory Directory { get; }
 
-        public FileBase File { get; }
+        public IFile File { get; }
 
         public IFileInfoFactory FileInfo { get; }
 
         public IFileStreamFactory FileStream { get; }
 
-        public PathBase Path { get; }
+        public IPath Path { get; }
 
         public IDirectoryInfoFactory DirectoryInfo { get; }
 

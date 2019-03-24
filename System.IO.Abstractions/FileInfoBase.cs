@@ -4,7 +4,7 @@ namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="FileInfo"/>
     [Serializable]
-    public abstract class FileInfoBase : FileSystemInfoBase
+    public abstract class FileInfoBase : FileSystemInfoBase, IFileInfo
     {
         protected FileInfoBase(IFileSystem fileSystem) : base(fileSystem)
         {
@@ -17,10 +17,10 @@ namespace System.IO.Abstractions
         public abstract StreamWriter AppendText();
 
         /// <inheritdoc cref="FileInfo.CopyTo(string)"/>
-        public abstract FileInfoBase CopyTo(string destFileName);
+        public abstract IFileInfo CopyTo(string destFileName);
 
         /// <inheritdoc cref="FileInfo.CopyTo(string,bool)"/>
-        public abstract FileInfoBase CopyTo(string destFileName, bool overwrite);
+        public abstract IFileInfo CopyTo(string destFileName, bool overwrite);
 
         /// <inheritdoc cref="FileInfo.Create"/>
         public abstract Stream Create();
@@ -65,17 +65,17 @@ namespace System.IO.Abstractions
 
 #if NET40
         /// <inheritdoc cref="FileInfo.Replace(string,string)"/>
-        public abstract FileInfoBase Replace(string destinationFileName, string destinationBackupFileName);
+        public abstract IFileInfo Replace(string destinationFileName, string destinationBackupFileName);
 
         /// <inheritdoc cref="FileInfo.Replace(string,string,bool)"/>
-        public abstract FileInfoBase Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
+        public abstract IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
 #endif
 
         /// <inheritdoc cref="FileInfo.SetAccessControl(FileSecurity)"/>
         public abstract void SetAccessControl(FileSecurity fileSecurity);
 
         /// <inheritdoc cref="FileInfo.Directory"/>
-        public abstract DirectoryInfoBase Directory { get; }
+        public abstract IDirectoryInfo Directory { get; }
 
         /// <inheritdoc cref="FileInfo.DirectoryName"/>
         public abstract string DirectoryName { get; }

@@ -56,10 +56,10 @@ namespace System.IO.Abstractions.TestingHelpers
 
         StringOperations StringOperations { get; }
 
-        FileBase File { get; }
-        DirectoryBase Directory { get; }
+        IFile File { get; }
+        IDirectory Directory { get; }
         IFileInfoFactory FileInfo {get; }
-        PathBase Path { get; }
+        IPath Path { get; }
         IDirectoryInfoFactory DirectoryInfo { get; }
         IDriveInfoFactory DriveInfo { get; }
 

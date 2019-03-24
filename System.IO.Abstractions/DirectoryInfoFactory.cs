@@ -10,7 +10,7 @@ namespace System.IO.Abstractions
             this.fileSystem = fileSystem;
         }
 
-        public DirectoryInfoBase FromDirectoryName(string directoryName)
+        public IDirectoryInfo FromDirectoryName(string directoryName)
         {
             var realDirectoryInfo = new DirectoryInfo(directoryName);
             return new DirectoryInfoWrapper(fileSystem, realDirectoryInfo);

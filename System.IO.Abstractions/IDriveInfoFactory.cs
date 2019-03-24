@@ -9,12 +9,12 @@
         /// Retrieves the drive names of all logical drives on a computer.
         /// </summary>
         /// <returns>An array of type <see cref="DriveInfoBase"/> that represents the logical drives on a computer.</returns>
-        DriveInfoBase[] GetDrives();
+        IDriveInfo[] GetDrives();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DriveInfoBase"/> class, which acts as a wrapper for a logical drive.
         /// </summary>
         /// <param name="driveName">A valid drive path or drive letter.</param>
-        DriveInfoBase FromDriveName(string driveName);
+        IDriveInfo FromDriveName(string driveName);
     }
 }

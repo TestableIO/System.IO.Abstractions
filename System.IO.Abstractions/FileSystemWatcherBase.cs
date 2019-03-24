@@ -1,10 +1,12 @@
-﻿using System.ComponentModel;
+﻿#if NET40
+using System.ComponentModel;
+#endif
 
 namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="FileSystemWatcher"/>
     [Serializable]
-    public abstract class FileSystemWatcherBase : IDisposable
+    public abstract class FileSystemWatcherBase : IDisposable, IFileSystemWatcher
     {
         /// <inheritdoc cref="FileSystemWatcher.IncludeSubdirectories"/>
         public abstract bool IncludeSubdirectories { get; set; }

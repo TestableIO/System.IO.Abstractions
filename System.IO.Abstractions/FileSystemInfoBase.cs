@@ -2,7 +2,7 @@
 {
     /// <inheritdoc cref="FileSystemInfo"/>
     [Serializable]
-    public abstract class FileSystemInfoBase
+    public abstract class FileSystemInfoBase : IFileSystemInfo
     {
         protected FileSystemInfoBase(IFileSystem fileSystem)
         {

@@ -10,7 +10,7 @@ namespace System.IO.Abstractions.TestingHelpers
             this.mockFileSystem = mockFileSystem;
         }
 
-        public DirectoryInfoBase FromDirectoryName(string directoryName)
+        public IDirectoryInfo FromDirectoryName(string directoryName)
         {
             return new MockDirectoryInfo(mockFileSystem, directoryName);
         }

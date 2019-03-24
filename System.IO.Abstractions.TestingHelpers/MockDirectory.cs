@@ -25,19 +25,19 @@ namespace System.IO.Abstractions.TestingHelpers
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
         }
 
-        public override DirectoryInfoBase CreateDirectory(string path)
+        public override IDirectoryInfo CreateDirectory(string path)
         {
             return CreateDirectoryInternal(path, null);
         }
 
 #if NET40
-        public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
+        public override IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
             return CreateDirectoryInternal(path, directorySecurity);
         }
 #endif
 
-        private DirectoryInfoBase CreateDirectoryInternal(string path, DirectorySecurity directorySecurity)
+        private IDirectoryInfo CreateDirectoryInternal(string path, DirectorySecurity directorySecurity)
         {
             if (path == null)
             {
@@ -312,7 +312,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 #endif
 
-        public override DirectoryInfoBase GetParent(string path)
+        public override IDirectoryInfo GetParent(string path)
         {
             if (path == null)
             {

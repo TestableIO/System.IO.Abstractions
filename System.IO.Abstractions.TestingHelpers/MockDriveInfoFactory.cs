@@ -12,7 +12,7 @@ namespace System.IO.Abstractions.TestingHelpers
             this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
         }
 
-        public DriveInfoBase[] GetDrives()
+        public IDriveInfo[] GetDrives()
         {
             var driveLetters = new HashSet<string>(new DriveEqualityComparer(mockFileSystem));
             foreach (var path in mockFileSystem.AllPaths)
@@ -38,7 +38,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return result.ToArray();
         }
 
-        public DriveInfoBase FromDriveName(string driveName)
+        public IDriveInfo FromDriveName(string driveName)
         {
             var drive = mockFileSystem.Path.GetPathRoot(driveName);
 

@@ -10,13 +10,13 @@ namespace System.IO.Abstractions
         {
         }
 
-        public override DirectoryInfoBase CreateDirectory(string path)
+        public override IDirectoryInfo CreateDirectory(string path)
         {
             return new DirectoryInfoWrapper(FileSystem, Directory.CreateDirectory(path));
         }
 
 #if NET40
-        public override DirectoryInfoBase CreateDirectory(string path, DirectorySecurity directorySecurity)
+        public override IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
             return new DirectoryInfoWrapper(FileSystem, Directory.CreateDirectory(path, directorySecurity));
         }
@@ -133,7 +133,7 @@ namespace System.IO.Abstractions
         }
 #endif
 
-        public override DirectoryInfoBase GetParent(string path)
+        public override IDirectoryInfo GetParent(string path)
         {
             return new DirectoryInfoWrapper(FileSystem, Directory.GetParent(path));
         }

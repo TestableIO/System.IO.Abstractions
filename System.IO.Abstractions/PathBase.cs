@@ -2,7 +2,7 @@
 {
     /// <inheritdoc cref="Path"/>
     [Serializable]
-    public abstract class PathBase
+    public abstract class PathBase : IPath
     {
         protected PathBase(IFileSystem fileSystem)
         {

@@ -2,11 +2,11 @@
 {
     public interface IFileSystem
     {
-        FileBase File { get; }
-        DirectoryBase Directory { get; }
+        IFile File { get; }
+        IDirectory Directory { get; }
         IFileInfoFactory FileInfo { get; }
         IFileStreamFactory FileStream { get; }
-        PathBase Path { get; }
+        IPath Path { get; }
         IDirectoryInfoFactory DirectoryInfo { get; }
         IDriveInfoFactory DriveInfo { get; }
         IFileSystemWatcherFactory FileSystemWatcher { get; }

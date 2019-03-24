@@ -10,7 +10,7 @@
             this.fileSystem = fileSystem;
         }
 
-        public FileInfoBase FromFileName(string fileName)
+        public IFileInfo FromFileName(string fileName)
         {
             var realFileInfo = new FileInfo(fileName);
             return new FileInfoWrapper(fileSystem, realFileInfo);
