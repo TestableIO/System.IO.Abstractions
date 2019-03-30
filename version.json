@@ -1,21 +1,18 @@
 {
-    "$schema": "https://raw.githubusercontent.com/AArnott/Nerdbank.GitVersioning/master/src/NerdBank.GitVersioning/version.schema.json",
-    "version": "4.0-alpha",
-    "assemblyVersion": {
-      "precision": "major"
-    },
-    "publicReleaseRefSpec": [
-      "^refs/heads/release/v.*$"
-    ],
-    "release": {
-      "branchName" : "release/v{version}",
-      "versionIncrement" : "minor",
-      "firstUnstableTag" : "alpha"
-    },
-    "cloudBuild": {
-      "buildNumber": {
-        "enabled": true,
-        "setVersionVariables": true
-      }
+  "$schema": "https://raw.githubusercontent.com/AArnott/Nerdbank.GitVersioning/master/src/NerdBank.GitVersioning/version.schema.json",
+  "version": "4.0",
+  "assemblyVersion": {
+    "precision": "major"
+  },
+  "publicReleaseRefSpec": [
+    "^refs/heads/release/v.*$"
+  ],
+  "cloudBuild": {
+    "buildNumber": {
+      "enabled": true
     }
+  },
+  "release": {
+    "branchName": "release/v{version}"
+  }
 }
