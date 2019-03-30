@@ -48,7 +48,7 @@ for:
     skip_symbols: false
     artifact: /.*\.nupkg/
     on:
-      branch: release
+      branch: /release/v.*$/
 
   - provider: GitHub
     tag: v$(appveyor_build_version)
@@ -57,4 +57,4 @@ for:
     auth_token:
       secure: Rrk1zp93EpCyxec/GXKnRnJjX7vU+ClNZEBnxbM+1j6l+C56qSV7B/fUrVsJuZYV
     on: 
-      branch: release
+      branch: /release/v.*$/
