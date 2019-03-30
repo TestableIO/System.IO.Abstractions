@@ -14,7 +14,7 @@ skip_tags: true
 branches:
   only:
     - master
-    - release
+    - /release/v.*$/
 
 environment:
   INHERITDOC_VERSION: 1.2.2.1
