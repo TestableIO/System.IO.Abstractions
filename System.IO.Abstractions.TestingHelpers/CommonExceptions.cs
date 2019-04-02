@@ -4,6 +4,8 @@ namespace System.IO.Abstractions.TestingHelpers
 {
     internal static class CommonExceptions
     {
+        private const int _fileLockHResult = unchecked((int) 0x80070020);
+
         public static FileNotFoundException FileNotFound(string path) =>
             new FileNotFoundException(
                 string.Format(
@@ -57,7 +59,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public static IOException ProcessCannotAccessFileInUse(string paramName = null) =>
             paramName != null
-            ? new IOException(string.Format(StringResources.Manager.GetString("PROCESS_CANNOT_ACCESS_FILE_IN_USE_WITH_FILENAME"), paramName))
-            : new IOException(StringResources.Manager.GetString("PROCESS_CANNOT_ACCESS_FILE_IN_USE"));
+            ? new IOException(string.Format(StringResources.Manager.GetString("PROCESS_CANNOT_ACCESS_FILE_IN_USE_WITH_FILENAME"), paramName), _fileLockHResult)
+            : new IOException(StringResources.Manager.GetString("PROCESS_CANNOT_ACCESS_FILE_IN_USE"), _fileLockHResult);
     }
 }
