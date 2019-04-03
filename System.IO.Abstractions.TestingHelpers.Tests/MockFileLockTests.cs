@@ -3,7 +3,7 @@
     using Collections.Generic;
 
     using NUnit.Framework;
-
+    using NUnit.Framework.Constraints;
     using XFS = MockUnixSupport;
     class MockFileLockTests
     {
@@ -16,7 +16,7 @@
                 { filepath, new MockFileData("I'm here") { AllowedFileShare = FileShare.None }}
             });
 
-            Assert.Throws(typeof(IOException), () => filesystem.File.Open(filepath, FileMode.Open, FileAccess.Read, FileShare.Read));
+            Assert.Throws(IOException(), () => filesystem.File.Open(filepath, FileMode.Open, FileAccess.Read, FileShare.Read));
         }
         [Test]
         public void MockFile_Lock_FileShareReadDoesNotThrowOnRead()
@@ -38,7 +38,7 @@
                 { filepath, new MockFileData("I'm here") { AllowedFileShare = FileShare.Read }}
             });
 
-            Assert.Throws(typeof(IOException), () => filesystem.File.Open(filepath, FileMode.Open, FileAccess.Write, FileShare.Read));
+            Assert.Throws(IOException(), () => filesystem.File.Open(filepath, FileMode.Open, FileAccess.Write, FileShare.Read));
         }
         [Test]
         public void MockFile_Lock_FileShareWriteThrowsOnRead()
@@ -49,7 +49,7 @@
                 { filepath, new MockFileData("I'm here") { AllowedFileShare = FileShare.Write }}
             });
 
-            Assert.Throws(typeof(IOException), () => filesystem.File.Open(filepath, FileMode.Open, FileAccess.Read, FileShare.Read));
+            Assert.Throws(IOException(), () => filesystem.File.Open(filepath, FileMode.Open, FileAccess.Read, FileShare.Read));
         }
         [Test]
         public void MockFile_Lock_FileShareWriteDoesNotThrowOnWrite()
@@ -73,7 +73,7 @@
                 { filepath, new MockFileData("I'm here") { AllowedFileShare = FileShare.None }}
             });
 
-            var exception = Assert.Throws(typeof(IOException), () => filesystem.File.OpenRead(filepath));
+            var exception = Assert.Throws(IOException(), () => filesystem.File.OpenRead(filepath));
             Assert.That(exception.Message, Is.EqualTo($"The process cannot access the file '{filepath}' because it is being used by another process."));
         }
         [Test]
@@ -85,7 +85,7 @@
                 { filepath, new MockFileData("I'm here") { AllowedFileShare = FileShare.None }}
             });
 
-            var exception = Assert.Throws(typeof(IOException), () => filesystem.File.WriteAllLines(filepath, new string[] { "hello", "world" }));
+            var exception = Assert.Throws(IOException(), () => filesystem.File.WriteAllLines(filepath, new string[] { "hello", "world" }));
             Assert.That(exception.Message, Is.EqualTo($"The process cannot access the file '{filepath}' because it is being used by another process."));
         }
         [Test]
@@ -97,7 +97,7 @@
                 { filepath, new MockFileData("I'm here") { AllowedFileShare = FileShare.None }}
             });
 
-            var exception = Assert.Throws(typeof(IOException), () => filesystem.File.ReadAllLines(filepath));
+            var exception = Assert.Throws(IOException(), () => filesystem.File.ReadAllLines(filepath));
             Assert.That(exception.Message, Is.EqualTo($"The process cannot access the file '{filepath}' because it is being used by another process."));
         }
         [Test]
@@ -109,7 +109,7 @@
                 { filepath, new MockFileData("I'm here") { AllowedFileShare = FileShare.None }}
             });
 
-            var exception = Assert.Throws(typeof(IOException), () => filesystem.File.ReadAllText(filepath));
+            var exception = Assert.Throws(IOException(), () => filesystem.File.ReadAllText(filepath));
             Assert.That(exception.Message, Is.EqualTo($"The process cannot access the file '{filepath}' because it is being used by another process."));
         }
         [Test]
@@ -121,7 +121,7 @@
                 { filepath, new MockFileData("I'm here") { AllowedFileShare = FileShare.None }}
             });
 
-            var exception = Assert.Throws(typeof(IOException), () => filesystem.File.ReadAllBytes(filepath));
+            var exception = Assert.Throws(IOException(), () => filesystem.File.ReadAllBytes(filepath));
             Assert.That(exception.Message, Is.EqualTo($"The process cannot access the file '{filepath}' because it is being used by another process."));
         }
         [Test]
@@ -133,7 +133,7 @@
                 { filepath, new MockFileData("I'm here") { AllowedFileShare = FileShare.None }}
             });
 
-            var exception = Assert.Throws(typeof(IOException), () => filesystem.File.AppendAllLines(filepath, new string[] { "hello", "world" }));
+            var exception = Assert.Throws(IOException(), () => filesystem.File.AppendAllLines(filepath, new string[] { "hello", "world" }));
             Assert.That(exception.Message, Is.EqualTo($"The process cannot access the file '{filepath}' because it is being used by another process."));
         }
 
@@ -147,7 +147,7 @@
                 { filepath, new MockFileData("I'm here") { AllowedFileShare = FileShare.None }}
             });
 
-            var exception = Assert.Throws(typeof(IOException), () => filesystem.File.Move(filepath, target));
+            var exception = Assert.Throws(IOException(), () => filesystem.File.Move(filepath, target));
             Assert.That(exception.Message, Is.EqualTo("The process cannot access the file because it is being used by another process."));
         }
         [Test]
@@ -171,7 +171,7 @@
                 { filepath, new MockFileData("I'm here") { AllowedFileShare = FileShare.None }}
             });
 
-            var exception = Assert.Throws(typeof(IOException), () => filesystem.File.Delete(filepath));
+            var exception = Assert.Throws(IOException(), () => filesystem.File.Delete(filepath));
             Assert.That(exception.Message, Is.EqualTo($"The process cannot access the file '{filepath}' because it is being used by another process."));
         }
         [Test]
@@ -185,5 +185,7 @@
 
             Assert.DoesNotThrow(() => filesystem.File.Delete(filepath));
         }
+
+        private static IResolveConstraint IOException() => Is.TypeOf<IOException>().And.Property("HResult").EqualTo(unchecked((int) 0x80070020));
     }
 }
