@@ -38,7 +38,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
 
             // Act
-            var result = fileStreamFactory.Create(@"c:\not_existing.txt", fileMode);
+            var result = fileStreamFactory.Create(XFS.Path(@"c:\not_existing.txt"), fileMode);
 
             // Assert
             Assert.IsNotNull(result);
