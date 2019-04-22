@@ -57,10 +57,16 @@
             }
             else
             {
+                if (!mockFileDataAccessor.Directory.Exists(Path.GetDirectoryName(path)))
+                {
+                    throw CommonExceptions.CouldNotFindPartOfPath(path);
+                }
+
                 if (StreamType.READ.Equals(streamType))
                 {
                     throw CommonExceptions.FileNotFound(path);
                 }
+
                 mockFileDataAccessor.AddFile(path, new MockFileData(new byte[] { }));
             }
             

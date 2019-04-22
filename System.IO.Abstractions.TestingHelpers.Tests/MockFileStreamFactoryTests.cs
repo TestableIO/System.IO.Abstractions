@@ -3,6 +3,8 @@ using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
+    using XFS = MockUnixSupport;
+
     [TestFixture]
     public class MockFileStreamFactoryTests
     {
@@ -40,6 +42,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.IsNotNull(result);
+        }
+
+        [Test]
+        [TestCase(FileMode.Create)]
+        [TestCase(FileMode.Open)]
+        public void MockFileStreamFactory_CreateInNonExistingDirectory_ShouldThrowDirectoryNotFoundException(FileMode fileMode)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(XFS.Path(@"C:\Test"));
+
+            // Act
+            var fileStreamFactory = new MockFileStreamFactory(fileSystem);
+
+            // Assert
+            Assert.Throws<DirectoryNotFoundException>(() => fileStreamFactory.Create(@"C:\Test\NonExistingDirectory\some_random_file.txt", fileMode));
         }
     }
 }
