@@ -13,16 +13,18 @@
         public void MockFileStream_Flush_WritesByteToFile()
         {
             // Arrange
-            var filepath = XFS.Path(@"c:\something\foo.txt");
-            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            var cut = new MockFileStream(filesystem, filepath, MockFileStream.StreamType.WRITE);
+            var filepath = XFS.Path(@"C:\something\foo.txt");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            fileSystem.AddFile(@"C:\something\foo.txt", new MockFileData(""));
+
+            var cut = new MockFileStream(fileSystem, filepath, MockFileStream.StreamType.WRITE);
 
             // Act
             cut.WriteByte(255);
             cut.Flush();
 
             // Assert
-            CollectionAssert.AreEqual(new byte[]{255}, filesystem.GetFile(filepath).Contents);
+            CollectionAssert.AreEqual(new byte[]{255}, fileSystem.GetFile(filepath).Contents);
         }
 
         [Test]
@@ -52,10 +54,11 @@
         {
             // Arrange
             var nonexistentFilePath = XFS.Path(@"c:\something\foo.txt");
-            var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            fileSystem.AddDirectory(XFS.Path(@"C:\something"));
 
             // Act
-            Assert.Throws<FileNotFoundException>(() => new MockFileStream(filesystem, nonexistentFilePath, MockFileStream.StreamType.READ));
+            Assert.Throws<FileNotFoundException>(() => new MockFileStream(fileSystem, nonexistentFilePath, MockFileStream.StreamType.READ));
 
             // Assert - expect an exception
         }
