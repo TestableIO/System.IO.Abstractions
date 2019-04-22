@@ -169,7 +169,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_Create_TruncateShouldWriteNewContents()
         {
             // Arrange
-            const string testFileName = @"c:\someFile.txt";
+            string testFileName = XFS.Path(@"c:\someFile.txt");
             var fileSystem = new MockFileSystem();
             
             using (var stream = fileSystem.FileStream.Create(testFileName, FileMode.Create, FileAccess.Write))
@@ -197,7 +197,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_Create_TruncateShouldClearFileContentsOnOpen()
         {
             // Arrange
-            const string testFileName = @"c:\someFile.txt";
+            string testFileName = XFS.Path(@"c:\someFile.txt");
             var fileSystem = new MockFileSystem();
 
             using (var stream = fileSystem.FileStream.Create(testFileName, FileMode.Create, FileAccess.Write))
