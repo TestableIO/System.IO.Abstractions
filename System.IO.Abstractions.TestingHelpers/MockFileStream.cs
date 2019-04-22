@@ -57,7 +57,7 @@
             }
             else
             {
-                if (!mockFileDataAccessor.Directory.Exists(Path.GetDirectoryName(path)))
+                if (!mockFileDataAccessor.Directory.Exists(mockFileDataAccessor.Path.GetDirectoryName(path)))
                 {
                     throw CommonExceptions.CouldNotFindPartOfPath(path);
                 }
