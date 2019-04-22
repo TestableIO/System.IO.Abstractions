@@ -15,7 +15,7 @@
             // Arrange
             var filepath = XFS.Path(@"C:\something\foo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
-            fileSystem.AddFile(@"C:\something\foo.txt", new MockFileData(""));
+            fileSystem.AddDirectory(@"C:\something");
 
             var cut = new MockFileStream(fileSystem, filepath, MockFileStream.StreamType.WRITE);
 
