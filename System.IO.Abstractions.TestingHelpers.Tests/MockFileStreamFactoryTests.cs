@@ -46,6 +46,34 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         [TestCase(FileMode.Create)]
+        [TestCase(FileMode.CreateNew)]
+        public void TW___MockFileStreamFactory_CreateForAnExistingFile_ShouldTruncateExistingFile(FileMode fileMode)
+        {
+            var fileSystem = new MockFileSystem();
+            string FilePath = XFS.Path("C:\\File.txt");
+
+            using(var stream = fileSystem.FileStream.Create(FilePath, fileMode, System.IO.FileAccess.Write))
+            {
+                using(var writer = new System.IO.StreamWriter(stream, System.Text.Encoding.UTF8, 4096, leaveOpen: true))
+                {
+                    writer.Write("1234567890");
+                }
+            }
+
+            using(var stream = fileSystem.FileStream.Create(FilePath, fileMode, System.IO.FileAccess.Write))
+            {
+                using(var writer = new System.IO.StreamWriter(stream, System.Text.Encoding.UTF8, 4096, leaveOpen: true))
+                {
+                    writer.Write("AAAAA");
+                }
+            }
+
+            string text = fileSystem.File.ReadAllText(FilePath);
+            Assert.AreEqual("AAAAA", text); 
+        }
+
+        [Test]
+        [TestCase(FileMode.Create)]
         [TestCase(FileMode.Open)]
         public void MockFileStreamFactory_CreateInNonExistingDirectory_ShouldThrowDirectoryNotFoundException(FileMode fileMode)
         {
