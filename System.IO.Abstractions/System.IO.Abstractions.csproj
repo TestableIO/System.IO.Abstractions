@@ -50,7 +50,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.138">
+      <PackageReference Include="Nerdbank.GitVersioning" Version="2.3.151">
         <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         <PrivateAssets>all</PrivateAssets>
       </PackageReference>
