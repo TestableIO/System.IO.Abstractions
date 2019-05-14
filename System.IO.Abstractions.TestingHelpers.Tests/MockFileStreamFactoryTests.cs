@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework; 
+using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -47,28 +48,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         [TestCase(FileMode.Create)]
         [TestCase(FileMode.CreateNew)]
-        public void TW___MockFileStreamFactory_CreateForAnExistingFile_ShouldTruncateExistingFile(FileMode fileMode)
+        public void MockFileStreamFactory_CreateForAnExistingFile_ShouldTruncateExistingFile(FileMode fileMode)
         {
             var fileSystem = new MockFileSystem();
             string FilePath = XFS.Path("C:\\File.txt");
 
             using(var stream = fileSystem.FileStream.Create(FilePath, fileMode, System.IO.FileAccess.Write))
             {
-                using(var writer = new System.IO.StreamWriter(stream, System.Text.Encoding.UTF8, 4096, leaveOpen: true))
-                {
-                    writer.Write("1234567890");
-                }
+                var data = Encoding.UTF8.GetBytes("1234567890");
+                stream.Write(data, 0, data.Length);
             }
 
             using(var stream = fileSystem.FileStream.Create(FilePath, fileMode, System.IO.FileAccess.Write))
             {
-                using(var writer = new System.IO.StreamWriter(stream, System.Text.Encoding.UTF8, 4096, leaveOpen: true))
-                {
-                    writer.Write("AAAAA");
-                }
+                var data = Encoding.UTF8.GetBytes("AAAAA");
+                stream.Write(data, 0, data.Length);
             }
 
-            string text = fileSystem.File.ReadAllText(FilePath);
+            var text = fileSystem.File.ReadAllText(FilePath);
             Assert.AreEqual("AAAAA", text); 
         }
 
