@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework; 
+using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -42,6 +43,30 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.IsNotNull(result);
+        }
+
+        [Test]
+        [TestCase(FileMode.Create)]
+        [TestCase(FileMode.CreateNew)]
+        public void MockFileStreamFactory_CreateForAnExistingFile_ShouldTruncateExistingFile(FileMode fileMode)
+        {
+            var fileSystem = new MockFileSystem();
+            string FilePath = XFS.Path("C:\\File.txt");
+
+            using(var stream = fileSystem.FileStream.Create(FilePath, fileMode, System.IO.FileAccess.Write))
+            {
+                var data = Encoding.UTF8.GetBytes("1234567890");
+                stream.Write(data, 0, data.Length);
+            }
+
+            using(var stream = fileSystem.FileStream.Create(FilePath, fileMode, System.IO.FileAccess.Write))
+            {
+                var data = Encoding.UTF8.GetBytes("AAAAA");
+                stream.Write(data, 0, data.Length);
+            }
+
+            var text = fileSystem.File.ReadAllText(FilePath);
+            Assert.AreEqual("AAAAA", text); 
         }
 
         [Test]
