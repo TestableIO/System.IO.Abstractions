@@ -6,7 +6,7 @@ namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="FileSystemWatcher"/>
     [Serializable]
-    public abstract class FileSystemWatcherBase : IDisposable, IFileSystemWatcher
+    public abstract class FileSystemWatcherBase : IFileSystemWatcher
     {
         /// <inheritdoc cref="FileSystemWatcher.IncludeSubdirectories"/>
         public abstract bool IncludeSubdirectories { get; set; }
