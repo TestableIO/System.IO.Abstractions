@@ -536,14 +536,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(filePath, mockFileInfo.ToString());
         }
 
-        
+
         /// <summary>
         /// Normalize, tested with Path.GetFullPath and new FileInfo().FullName;
         /// </summary>
-        [Test]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         [TestCase(@"c:\top\..\most\file", @"c:\most\file")]
         [TestCase(@"c:\top\..\most\..\dir\file", @"c:\dir\file")]
-        [TestCase(@"\file", @"C:\file")] 
+        [TestCase(@"\file", @"C:\file")]
         [TestCase(@"c:\top\../..\most\file", @"c:\most\file")]
         public void FromFileName_Paths_NormalizePaths(string input, string expected)
         {
