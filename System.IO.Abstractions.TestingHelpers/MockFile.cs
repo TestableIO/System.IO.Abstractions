@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Linq;
 using System.Security.AccessControl;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -37,6 +39,28 @@ namespace System.IO.Abstractions.TestingHelpers
             AppendAllText(path, concatContents, encoding);
         }
 
+#if NETCOREAPP2_0
+        public async override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken = default)
+        {
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+            VerifyValueIsNotNull(contents, "contents");
+
+            await AppendAllLinesAsync(path, contents, MockFileData.DefaultEncoding, cancellationToken);
+        }
+
+        public async override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken = default)
+        {
+            if (encoding == null)
+            {
+                throw new ArgumentNullException(nameof(encoding));
+            }
+
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            var concatContents = contents.Aggregate("", (a, b) => a + b + Environment.NewLine);
+            await AppendAllTextAsync(path, concatContents, encoding, cancellationToken);
+        }
+#endif
         public override void AppendAllText(string path, string contents)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -66,6 +90,18 @@ namespace System.IO.Abstractions.TestingHelpers
                 file.Contents = file.Contents.Concat(bytesToAppend).ToArray();
             }
         }
+
+#if NETCOREAPP2_0
+        public async override Task AppendAllTextAsync(string path, string contents, CancellationToken cancellationToken = default)
+        {
+            AppendAllText(path, contents);
+        }
+
+        public async override Task AppendAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken = default)
+        {
+            AppendAllText(path, contents, encoding);
+        }
+#endif
 
         public override StreamWriter AppendText(string path)
         {
@@ -462,6 +498,20 @@ namespace System.IO.Abstractions.TestingHelpers
             return mockFileDataAccessor.GetFile(path).Contents;
         }
 
+#if NETCOREAPP2_0
+        public async override Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken = default)
+        {
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                throw CommonExceptions.FileNotFound(path);
+            }
+            mockFileDataAccessor.GetFile(path).CheckFileAccess(path, FileAccess.Read);
+            return mockFileDataAccessor.GetFile(path).Contents;
+        }
+#endif
+
         public override string[] ReadAllLines(string path)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -498,6 +548,18 @@ namespace System.IO.Abstractions.TestingHelpers
                 .SplitLines();
         }
 
+#if NETCOREAPP2_0
+        public async override Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken = default)
+        {
+            return ReadAllLines(path);
+        }
+
+        public async override Task<string[]> ReadAllLinesAsync(string path, Encoding encoding, CancellationToken cancellationToken = default)
+        {
+            return ReadAllLines(path, encoding);
+        }
+#endif
+
         public override string ReadAllText(string path)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -521,6 +583,18 @@ namespace System.IO.Abstractions.TestingHelpers
 
             return ReadAllTextInternal(path, encoding);
         }
+
+#if NETCOREAPP2_0
+        public async override Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken)
+        {
+            return ReadAllText(path);
+        }
+
+        public async override Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken cancellationToken)
+        {
+            return ReadAllText(path, encoding);
+        }
+#endif
 
         public override IEnumerable<string> ReadLines(string path)
         {
@@ -691,6 +765,13 @@ namespace System.IO.Abstractions.TestingHelpers
 
             mockFileDataAccessor.AddFile(path, new MockFileData(bytes));
         }
+
+#if NETCOREAPP2_0
+        public async override Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken)
+        {
+            WriteAllBytes(path, bytes);
+        }
+#endif
 
         /// <summary>
         /// Creates a new file, writes a collection of strings to the file, and then closes the file.
@@ -879,6 +960,28 @@ namespace System.IO.Abstractions.TestingHelpers
             WriteAllLines(path, new List<string>(contents), encoding);
         }
 
+#if NETCOREAPP2_0
+        public async override Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken)
+        {
+            WriteAllLines(path, contents);
+        }
+
+        public async override Task WriteAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken)
+        {
+            WriteAllLines(path, contents, encoding);
+        }
+
+        public async override Task WriteAllLinesAsync(string path, string[] contents, CancellationToken cancellationToken)
+        {
+            WriteAllLines(path, contents);
+        }
+
+        public async override Task WriteAllLinesAsync(string path, string[] contents, Encoding encoding, CancellationToken cancellationToken)
+        {
+            WriteAllLines(path, contents, encoding);
+        }
+#endif
+
         /// <summary>
         /// Creates a new file, writes the specified string to the file using the specified encoding, and then closes the file. If the target file already exists, it is overwritten.
         /// </summary>
@@ -961,6 +1064,19 @@ namespace System.IO.Abstractions.TestingHelpers
             MockFileData data = contents == null ? new MockFileData(new byte[0]) : new MockFileData(contents, encoding);
             mockFileDataAccessor.AddFile(path, data);
         }
+
+#if NETCOREAPP2_0
+        public async override Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken)
+        {
+            WriteAllText(path, contents);
+        }
+
+        public async override Task WriteAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken)
+        {
+            WriteAllText(path, contents, encoding);
+        }
+#endif
+
 
         internal static string ReadAllBytes(byte[] contents, Encoding encoding)
         {

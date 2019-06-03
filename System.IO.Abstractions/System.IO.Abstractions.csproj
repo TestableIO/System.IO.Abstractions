@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>netstandard1.4;netstandard2.0</TargetFrameworks>
+        <TargetFrameworks>netstandard1.4;netstandard2.0;netcoreapp2.0</TargetFrameworks>
         <TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net40</TargetFrameworks>
         <Authors>Tatham Oddie</Authors>
         <Company />
@@ -22,6 +22,12 @@
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
         <SignAssembly>True</SignAssembly>
     </PropertyGroup>
+
+    <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0'">
+        <PackageReference Include="System.IO.FileSystem.AccessControl">
+            <Version>4.5.0</Version>
+        </PackageReference>
+    </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
         <PackageReference Include="System.IO.FileSystem.AccessControl">

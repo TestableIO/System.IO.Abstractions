@@ -2,6 +2,12 @@
 using System.Security.AccessControl;
 using System.Text;
 
+#if NETCOREAPP2_0
+using System.Threading.Tasks;
+using System.Threading;
+#endif
+
+
 namespace System.IO.Abstractions
 {
     [Serializable]
@@ -21,6 +27,18 @@ namespace System.IO.Abstractions
             File.AppendAllLines(path, contents, encoding);
         }
 
+#if NETCOREAPP2_0
+        public override async Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken)
+        {
+            await File.AppendAllLinesAsync(path, contents, cancellationToken);
+        }
+
+        public override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+#endif
+
         public override void AppendAllText(string path, string contents)
         {
             File.AppendAllText(path, contents);
@@ -30,6 +48,18 @@ namespace System.IO.Abstractions
         {
             File.AppendAllText(path, contents, encoding);
         }
+
+#if NETCOREAPP2_0
+        public override Task AppendAllTextAsync(string path, string contents, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task AppendAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+#endif
 
         public override StreamWriter AppendText(string path)
         {
@@ -194,6 +224,13 @@ namespace System.IO.Abstractions
             return File.ReadAllBytes(path);
         }
 
+#if NETCOREAPP2_0
+        public override Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+#endif
+
         public override string[] ReadAllLines(string path)
         {
             return File.ReadAllLines(path);
@@ -204,6 +241,18 @@ namespace System.IO.Abstractions
             return File.ReadAllLines(path, encoding);
         }
 
+#if NETCOREAPP2_0
+        public override Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<string[]> ReadAllLinesAsync(string path, Encoding encoding, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+#endif
+
         public override string ReadAllText(string path)
         {
             return File.ReadAllText(path);
@@ -213,6 +262,18 @@ namespace System.IO.Abstractions
         {
             return File.ReadAllText(path, encoding);
         }
+
+#if NETCOREAPP2_0
+        public override Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+#endif
 
         public override IEnumerable<string> ReadLines(string path)
         {
@@ -309,6 +370,13 @@ namespace System.IO.Abstractions
         {
             File.WriteAllBytes(path, bytes);
         }
+
+#if NETCOREAPP2_0
+        public override Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+#endif
 
         /// <summary>
         /// Creates a new file, writes a collection of strings to the file, and then closes the file.
@@ -477,6 +545,28 @@ namespace System.IO.Abstractions
             File.WriteAllLines(path, contents, encoding);
         }
 
+#if NETCOREAPP2_0
+        public override Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task WriteAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task WriteAllLinesAsync(string path, string[] contents, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task WriteAllLinesAsync(string path, string[] contents, Encoding encoding, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+#endif
+
         /// <summary>
         /// Creates a new file, writes the specified string to the file using the specified encoding, and then closes the file. If the target file already exists, it is overwritten.
         /// </summary>
@@ -548,5 +638,17 @@ namespace System.IO.Abstractions
         {
             File.WriteAllText(path, contents, encoding);
         }
+
+#if NETCOREAPP2_0
+        public override Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task WriteAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+#endif
     }
 }
