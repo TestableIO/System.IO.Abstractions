@@ -321,7 +321,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             const string path = @"c:\";
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(path));
-            
+
             // Act
             TestDelegate getFilesWithInvalidCharacterInPath = () => fileSystem.Directory.GetFiles($"{path}{'\0'}.txt");
 
