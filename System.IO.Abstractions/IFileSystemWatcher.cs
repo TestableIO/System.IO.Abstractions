@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace System.IO.Abstractions
 {
-    public interface IFileSystemWatcher
+    public interface IFileSystemWatcher : IDisposable
     {
         /// <inheritdoc cref="FileSystemWatcher.IncludeSubdirectories"/>
         bool IncludeSubdirectories { get; set; }
