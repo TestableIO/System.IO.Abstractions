@@ -40,7 +40,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
 #if NETCOREAPP2_0
-        public async override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken = default)
+        public async override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken = default(CancellationToken))
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
             VerifyValueIsNotNull(contents, "contents");
@@ -48,7 +48,7 @@ namespace System.IO.Abstractions.TestingHelpers
             await AppendAllLinesAsync(path, contents, MockFileData.DefaultEncoding, cancellationToken);
         }
 
-        public async override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken = default)
+        public async override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (encoding == null)
             {
@@ -92,12 +92,12 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
 #if NETCOREAPP2_0
-        public async override Task AppendAllTextAsync(string path, string contents, CancellationToken cancellationToken = default)
+        public async override Task AppendAllTextAsync(string path, string contents, CancellationToken cancellationToken = default(CancellationToken))
         {
             AppendAllText(path, contents);
         }
 
-        public async override Task AppendAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken = default)
+        public async override Task AppendAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken))
         {
             AppendAllText(path, contents, encoding);
         }
@@ -499,7 +499,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
 #if NETCOREAPP2_0
-        public async override Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken = default)
+        public async override Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken = default(CancellationToken))
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
@@ -549,12 +549,12 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
 #if NETCOREAPP2_0
-        public async override Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken = default)
+        public async override Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken = default(CancellationToken))
         {
             return ReadAllLines(path);
         }
 
-        public async override Task<string[]> ReadAllLinesAsync(string path, Encoding encoding, CancellationToken cancellationToken = default)
+        public async override Task<string[]> ReadAllLinesAsync(string path, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken))
         {
             return ReadAllLines(path, encoding);
         }
