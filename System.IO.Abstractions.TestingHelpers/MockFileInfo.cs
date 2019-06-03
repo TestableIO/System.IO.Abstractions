@@ -7,11 +7,14 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         private readonly IMockFileDataAccessor mockFileSystem;
         private string path;
+        private string originalPath;
 
         public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path) : base(mockFileSystem?.FileSystem)
         {
             this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
-            this.path = path ?? throw new ArgumentNullException(nameof(path));
+            this.originalPath = path ?? throw new ArgumentNullException(nameof(path));
+            this.path = mockFileSystem.FixPath(path);
+
         }
 
         MockFileData MockFileData
@@ -314,7 +317,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string ToString()
         {
-            return path;
+            return originalPath;
         }
     }
 }
