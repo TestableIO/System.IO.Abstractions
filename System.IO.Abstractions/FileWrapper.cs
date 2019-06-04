@@ -33,9 +33,9 @@ namespace System.IO.Abstractions
             await File.AppendAllLinesAsync(path, contents, cancellationToken);
         }
 
-        public override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken)
+        public override async Task AppendAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await File.AppendAllLinesAsync(path, contents, encoding, cancellationToken);
         }
 #endif
 
@@ -50,14 +50,14 @@ namespace System.IO.Abstractions
         }
 
 #if NETCOREAPP2_0
-        public override Task AppendAllTextAsync(string path, string contents, CancellationToken cancellationToken)
+        public override async Task AppendAllTextAsync(string path, string contents, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await File.AppendAllTextAsync(path, contents, cancellationToken);
         }
 
-        public override Task AppendAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken)
+        public override async Task AppendAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await File.AppendAllTextAsync(path, contents, encoding, cancellationToken);
         }
 #endif
 
@@ -225,9 +225,9 @@ namespace System.IO.Abstractions
         }
 
 #if NETCOREAPP2_0
-        public override Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken)
+        public override async Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await File.ReadAllBytesAsync(path, cancellationToken);
         }
 #endif
 
@@ -242,14 +242,14 @@ namespace System.IO.Abstractions
         }
 
 #if NETCOREAPP2_0
-        public override Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken)
+        public override async Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await File.ReadAllLinesAsync(path, cancellationToken);
         }
 
-        public override Task<string[]> ReadAllLinesAsync(string path, Encoding encoding, CancellationToken cancellationToken)
+        public override async Task<string[]> ReadAllLinesAsync(string path, Encoding encoding, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await File.ReadAllLinesAsync(path, encoding, cancellationToken);
         }
 #endif
 
@@ -264,14 +264,14 @@ namespace System.IO.Abstractions
         }
 
 #if NETCOREAPP2_0
-        public override Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken)
+        public override async Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await File.ReadAllTextAsync(path, cancellationToken);
         }
 
-        public override Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken cancellationToken)
+        public override async Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await File.ReadAllTextAsync(path, encoding, cancellationToken);
         }
 #endif
 
@@ -372,9 +372,9 @@ namespace System.IO.Abstractions
         }
 
 #if NETCOREAPP2_0
-        public override Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken)
+        public override async Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await File.WriteAllBytesAsync(path, bytes, cancellationToken);
         }
 #endif
 
@@ -546,24 +546,24 @@ namespace System.IO.Abstractions
         }
 
 #if NETCOREAPP2_0
-        public override Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken)
+        public override async Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await File.WriteAllLinesAsync(path, contents, cancellationToken);
         }
 
-        public override Task WriteAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken)
+        public override async Task WriteAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await File.WriteAllLinesAsync(path, contents, encoding, cancellationToken);
         }
 
-        public override Task WriteAllLinesAsync(string path, string[] contents, CancellationToken cancellationToken)
+        public override async Task WriteAllLinesAsync(string path, string[] contents, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await File.WriteAllLinesAsync(path, contents, cancellationToken);
         }
 
-        public override Task WriteAllLinesAsync(string path, string[] contents, Encoding encoding, CancellationToken cancellationToken)
+        public override async Task WriteAllLinesAsync(string path, string[] contents, Encoding encoding, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await File.WriteAllLinesAsync(path, contents, encoding, cancellationToken);
         }
 #endif
 
@@ -640,14 +640,14 @@ namespace System.IO.Abstractions
         }
 
 #if NETCOREAPP2_0
-        public override Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken)
+        public override async Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await File.WriteAllTextAsync(path, contents, cancellationToken);
         }
 
-        public override Task WriteAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken)
+        public override async Task WriteAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await File.WriteAllTextAsync(path, contents, encoding, cancellationToken);
         }
 #endif
     }
