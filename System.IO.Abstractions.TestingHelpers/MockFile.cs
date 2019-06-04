@@ -40,25 +40,16 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
 #if NETCOREAPP2_0
-        public async override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken = default(CancellationToken))
+        public override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken = default(CancellationToken))
         {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-            VerifyValueIsNotNull(contents, "contents");
-
-            await AppendAllLinesAsync(path, contents, MockFileData.DefaultEncoding, cancellationToken);
+            AppendAllLines(path, contents);
+            return Task.CompletedTask;
         }
 
-        public async override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken))
+        public override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (encoding == null)
-            {
-                throw new ArgumentNullException(nameof(encoding));
-            }
-
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-
-            var concatContents = contents.Aggregate("", (a, b) => a + b + Environment.NewLine);
-            await AppendAllTextAsync(path, concatContents, encoding, cancellationToken);
+            AppendAllLines(path, contents, encoding);
+            return Task.CompletedTask;
         }
 #endif
         public override void AppendAllText(string path, string contents)
@@ -92,14 +83,16 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
 #if NETCOREAPP2_0
-        public async override Task AppendAllTextAsync(string path, string contents, CancellationToken cancellationToken = default(CancellationToken))
+        public override Task AppendAllTextAsync(string path, string contents, CancellationToken cancellationToken = default(CancellationToken))
         {
             AppendAllText(path, contents);
+            return Task.CompletedTask;
         }
 
-        public async override Task AppendAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken))
+        public override Task AppendAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken))
         {
             AppendAllText(path, contents, encoding);
+            return Task.CompletedTask;
         }
 #endif
 
@@ -499,16 +492,9 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
 #if NETCOREAPP2_0
-        public async override Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken = default(CancellationToken))
+        public override Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken = default(CancellationToken))
         {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-
-            if (!mockFileDataAccessor.FileExists(path))
-            {
-                throw CommonExceptions.FileNotFound(path);
-            }
-            mockFileDataAccessor.GetFile(path).CheckFileAccess(path, FileAccess.Read);
-            return mockFileDataAccessor.GetFile(path).Contents;
+            return Task.FromResult(ReadAllBytes(path));
         }
 #endif
 
@@ -549,14 +535,14 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
 #if NETCOREAPP2_0
-        public async override Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken = default(CancellationToken))
+        public override Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return ReadAllLines(path);
+            return Task.FromResult(ReadAllLines(path));
         }
 
-        public async override Task<string[]> ReadAllLinesAsync(string path, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken))
+        public override Task<string[]> ReadAllLinesAsync(string path, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return ReadAllLines(path, encoding);
+            return Task.FromResult(ReadAllLines(path, encoding));
         }
 #endif
 
@@ -585,14 +571,14 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
 #if NETCOREAPP2_0
-        public async override Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken)
+        public override Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken)
         {
-            return ReadAllText(path);
+            return Task.FromResult(ReadAllText(path));
         }
 
-        public async override Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken cancellationToken)
+        public override Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken cancellationToken)
         {
-            return ReadAllText(path, encoding);
+            return Task.FromResult(ReadAllText(path, encoding));
         }
 #endif
 
@@ -767,9 +753,10 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
 #if NETCOREAPP2_0
-        public async override Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken)
+        public override Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken)
         {
             WriteAllBytes(path, bytes);
+            return Task.CompletedTask;
         }
 #endif
 
@@ -961,24 +948,28 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
 #if NETCOREAPP2_0
-        public async override Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken)
+        public override Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken)
         {
             WriteAllLines(path, contents);
+            return Task.CompletedTask;
         }
 
-        public async override Task WriteAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken)
+        public override Task WriteAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken)
         {
             WriteAllLines(path, contents, encoding);
+            return Task.CompletedTask;
         }
 
-        public async override Task WriteAllLinesAsync(string path, string[] contents, CancellationToken cancellationToken)
+        public override Task WriteAllLinesAsync(string path, string[] contents, CancellationToken cancellationToken)
         {
             WriteAllLines(path, contents);
+            return Task.CompletedTask;
         }
 
-        public async override Task WriteAllLinesAsync(string path, string[] contents, Encoding encoding, CancellationToken cancellationToken)
+        public override Task WriteAllLinesAsync(string path, string[] contents, Encoding encoding, CancellationToken cancellationToken)
         {
             WriteAllLines(path, contents, encoding);
+            return Task.CompletedTask;
         }
 #endif
 
@@ -1066,14 +1057,16 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
 #if NETCOREAPP2_0
-        public async override Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken)
+        public override Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken)
         {
             WriteAllText(path, contents);
+            return Task.CompletedTask;
         }
 
-        public async override Task WriteAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken)
+        public override Task WriteAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken)
         {
             WriteAllText(path, contents, encoding);
+            return Task.CompletedTask;
         }
 #endif
 
