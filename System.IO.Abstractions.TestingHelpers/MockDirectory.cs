@@ -49,7 +49,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentException(StringResources.Manager.GetString("PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE"), "path");
             }
 
-            path = mockFileDataAccessor.Path.GetFullPath(path).TrimSlashes();
+            path = XFS.IsWindowsPlatform() ? mockFileDataAccessor.Path.GetFullPath(path).TrimSlashes().TrimEnd(' ') : mockFileDataAccessor.Path.GetFullPath(path).TrimSlashes();
 
             if (!Exists(path))
             {
