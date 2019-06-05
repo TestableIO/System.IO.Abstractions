@@ -28,14 +28,16 @@ namespace System.IO.Abstractions
         }
 
 #if NETCOREAPP2_0
-        public override async Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken)
+        public override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken)
         {
-            await File.AppendAllLinesAsync(path, contents, cancellationToken);
+            File.AppendAllLinesAsync(path, contents, cancellationToken);
+            return Task.CompletedTask;
         }
 
-        public override async Task AppendAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken)
+        public override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken)
         {
-            await File.AppendAllLinesAsync(path, contents, encoding, cancellationToken);
+            File.AppendAllLinesAsync(path, contents, encoding, cancellationToken);
+            return Task.CompletedTask;
         }
 #endif
 
@@ -50,14 +52,16 @@ namespace System.IO.Abstractions
         }
 
 #if NETCOREAPP2_0
-        public override async Task AppendAllTextAsync(string path, string contents, CancellationToken cancellationToken)
+        public override Task AppendAllTextAsync(string path, string contents, CancellationToken cancellationToken)
         {
-            await File.AppendAllTextAsync(path, contents, cancellationToken);
+            File.AppendAllTextAsync(path, contents, cancellationToken);
+            return Task.CompletedTask;
         }
 
-        public override async Task AppendAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken)
+        public override Task AppendAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken)
         {
-            await File.AppendAllTextAsync(path, contents, encoding, cancellationToken);
+            File.AppendAllTextAsync(path, contents, encoding, cancellationToken);
+            return Task.CompletedTask;
         }
 #endif
 
@@ -372,9 +376,10 @@ namespace System.IO.Abstractions
         }
 
 #if NETCOREAPP2_0
-        public override async Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken)
+        public override Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken)
         {
-            await File.WriteAllBytesAsync(path, bytes, cancellationToken);
+            File.WriteAllBytesAsync(path, bytes, cancellationToken);
+            return Task.CompletedTask;
         }
 #endif
 
@@ -546,24 +551,28 @@ namespace System.IO.Abstractions
         }
 
 #if NETCOREAPP2_0
-        public override async Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken)
+        public override Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken)
         {
-            await File.WriteAllLinesAsync(path, contents, cancellationToken);
+            File.WriteAllLinesAsync(path, contents, cancellationToken);
+            return Task.CompletedTask;
         }
 
-        public override async Task WriteAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken)
+        public override Task WriteAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken)
         {
-            await File.WriteAllLinesAsync(path, contents, encoding, cancellationToken);
+            File.WriteAllLinesAsync(path, contents, encoding, cancellationToken);
+            return Task.CompletedTask;
         }
 
-        public override async Task WriteAllLinesAsync(string path, string[] contents, CancellationToken cancellationToken)
+        public override Task WriteAllLinesAsync(string path, string[] contents, CancellationToken cancellationToken)
         {
-            await File.WriteAllLinesAsync(path, contents, cancellationToken);
+            File.WriteAllLinesAsync(path, contents, cancellationToken);
+            return Task.CompletedTask;
         }
 
-        public override async Task WriteAllLinesAsync(string path, string[] contents, Encoding encoding, CancellationToken cancellationToken)
+        public override Task WriteAllLinesAsync(string path, string[] contents, Encoding encoding, CancellationToken cancellationToken)
         {
-            await File.WriteAllLinesAsync(path, contents, encoding, cancellationToken);
+            File.WriteAllLinesAsync(path, contents, encoding, cancellationToken);
+            return Task.CompletedTask;
         }
 #endif
 
@@ -640,14 +649,16 @@ namespace System.IO.Abstractions
         }
 
 #if NETCOREAPP2_0
-        public override async Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken)
+        public override Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken)
         {
-            await File.WriteAllTextAsync(path, contents, cancellationToken);
+            File.WriteAllTextAsync(path, contents, cancellationToken);
+            return Task.CompletedTask;
         }
 
-        public override async Task WriteAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken)
+        public override Task WriteAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken)
         {
-            await File.WriteAllTextAsync(path, contents, encoding, cancellationToken);
+            File.WriteAllTextAsync(path, contents, encoding, cancellationToken);
+            return Task.CompletedTask;
         }
 #endif
     }
