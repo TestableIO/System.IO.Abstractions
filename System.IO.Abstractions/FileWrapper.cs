@@ -229,9 +229,9 @@ namespace System.IO.Abstractions
         }
 
 #if NETCOREAPP2_0
-        public override async Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken)
+        public override Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken)
         {
-            return await File.ReadAllBytesAsync(path, cancellationToken);
+            return File.ReadAllBytesAsync(path, cancellationToken);
         }
 #endif
 
@@ -246,14 +246,14 @@ namespace System.IO.Abstractions
         }
 
 #if NETCOREAPP2_0
-        public override async Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken)
+        public override Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken)
         {
-            return await File.ReadAllLinesAsync(path, cancellationToken);
+            return File.ReadAllLinesAsync(path, cancellationToken);
         }
 
-        public override async Task<string[]> ReadAllLinesAsync(string path, Encoding encoding, CancellationToken cancellationToken)
+        public override Task<string[]> ReadAllLinesAsync(string path, Encoding encoding, CancellationToken cancellationToken)
         {
-            return await File.ReadAllLinesAsync(path, encoding, cancellationToken);
+            return File.ReadAllLinesAsync(path, encoding, cancellationToken);
         }
 #endif
 
@@ -268,14 +268,14 @@ namespace System.IO.Abstractions
         }
 
 #if NETCOREAPP2_0
-        public override async Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken)
+        public override Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken)
         {
-            return await File.ReadAllTextAsync(path, cancellationToken);
+            return File.ReadAllTextAsync(path, cancellationToken);
         }
 
-        public override async Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken cancellationToken)
+        public override Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken cancellationToken)
         {
-            return await File.ReadAllTextAsync(path, encoding, cancellationToken);
+            return File.ReadAllTextAsync(path, encoding, cancellationToken);
         }
 #endif
 
