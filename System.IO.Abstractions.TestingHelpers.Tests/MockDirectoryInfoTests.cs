@@ -239,7 +239,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(@"c:\temp\\folder", @"c:\temp\folder")]
         [TestCase(@"c:\temp//folder", @"c:\temp\folder")]
         [TestCase(@"c:\temp//\\///folder", @"c:\temp\folder")]
-        [TestCase(@"c:\temp\folder  ", @"c:\temp\folder")]
         public void MockDirectoryInfo_FullName_ShouldReturnNormalizedPath(string directoryPath, string expectedFullName)
         {
             // Arrange
@@ -255,9 +254,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(expectedFullName, actualFullName);
         }
 
+        [TestCase(@"c:\temp\folder  ", @"c:\temp\folder")]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void MockDirectoryInfo_FullName_ShouldReturnPathWithTrimmedTrailingSpaces(string directoryPath, string expectedFullName)
+        {
+            // Arrange
+            directoryPath = XFS.Path(directoryPath);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var directoryInfo = new MockDirectoryInfo(fileSystem, directoryPath);
+
+            // Act
+            var actualFullName = directoryInfo.FullName;
+
+            // Assert
+            Assert.AreEqual(expectedFullName, actualFullName);
+        }
+
         [TestCase(@"c:\temp\\folder ", @"folder")]
         [WindowsOnly(WindowsSpecifics.Drives)]
-        public void MockDirectoryInfo_Name_ShouldReturnNormalizedName(string directoryPath, string expectedName)
+        public void MockDirectoryInfo_Name_ShouldReturnNameWithTrimmedTrailingSpaces(string directoryPath, string expectedName)
         {
             // Arrange
             directoryPath = XFS.Path(directoryPath);
