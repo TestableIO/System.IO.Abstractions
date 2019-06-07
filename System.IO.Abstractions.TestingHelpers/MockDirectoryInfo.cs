@@ -26,7 +26,12 @@ namespace System.IO.Abstractions.TestingHelpers
             originalPath = directoryPath;
             directoryPath = mockFileDataAccessor.Path.GetFullPath(directoryPath);
 
-            this.directoryPath = XFS.IsWindowsPlatform() ? directoryPath.TrimSlashes().TrimEnd(' ') : directoryPath.TrimSlashes();
+            directoryPath = directoryPath.TrimSlashes();
+            if (XFS.IsWindowsPlatform())
+            {
+                directoryPath = directoryPath.TrimEnd(' ');
+            }
+            this.directoryPath = directoryPath;
         }
 
         public override void Delete()
