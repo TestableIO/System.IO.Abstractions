@@ -259,7 +259,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectoryInfo_FullName_ShouldReturnPathWithTrimmedTrailingSpaces(string directoryPath, string expectedFullName)
         {
             // Arrange
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
             var directoryInfo = new MockDirectoryInfo(fileSystem, directoryPath);
 
             // Act
@@ -274,7 +274,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectoryInfo_Name_ShouldReturnNameWithTrimmedTrailingSpaces(string directoryPath, string expectedName)
         {
             // Arrange
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            var fileSystem = new MockFileSystem();
             var directoryInfo = new MockDirectoryInfo(fileSystem, directoryPath);
 
             // Act
