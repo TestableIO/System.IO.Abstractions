@@ -9,6 +9,7 @@ strategy:
       imageName: "macos-10.13"
     windows:
       imageName: "vs2017-win2016"
+      doPack: true
   maxParallel: 3
 
 pool:
@@ -37,6 +38,7 @@ steps:
     nobuild: true
 - task: DotNetCoreCLI@2
   displayName: 'Pack'
+  condition: $(doPack)
   inputs:
     command: 'pack'
     configuration: $(buildConfiguration)
