@@ -2,6 +2,11 @@
 using System.Security.AccessControl;
 using System.Text;
 
+#if NETCOREAPP2_0
+using System.Threading.Tasks;
+using System.Threading;
+#endif
+
 namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="File"/>
@@ -27,11 +32,27 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="File.AppendAllLines(string,IEnumerable{string},Encoding)"/>
         public abstract void AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding);
 
+#if NETCOREAPP2_0
+        /// <inheritdoc cref="File.AppendAllLinesAsync(string,IEnumerable{string},CancellationToken)"/>
+        public abstract Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken);
+
+        /// <inheritdoc cref="File.AppendAllLinesAsync(string,IEnumerable{string},Encoding,CancellationToken)"/>
+        public abstract Task AppendAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken);
+#endif
+
         /// <inheritdoc cref="File.AppendAllText(string,string)"/>
         public abstract void AppendAllText(string path, string contents);
 
         /// <inheritdoc cref="File.AppendAllText(string,string,Encoding)"/>
         public abstract void AppendAllText(string path, string contents, Encoding encoding);
+
+#if NETCOREAPP2_0
+        /// <inheritdoc cref="File.AppendAllTextAsync(string,string,CancellationToken)"/>
+        public abstract Task AppendAllTextAsync(String path, String contents, CancellationToken cancellationToken);
+
+        /// <inheritdoc cref="File.AppendAllTextAsync(string,string,Encoding,CancellationToken)"/>
+        public abstract Task AppendAllTextAsync(String path, String contents, Encoding encoding, CancellationToken cancellationToken);
+#endif
 
         /// <inheritdoc cref="File.AppendText"/>
         public abstract StreamWriter AppendText(string path);
@@ -287,17 +308,38 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="File.ReadAllBytes"/>
         public abstract byte[] ReadAllBytes(string path);
 
+#if NETCOREAPP2_0
+        /// <inheritdoc cref="File.ReadAllBytesAsync"/>
+        public abstract Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken);
+#endif
+
         /// <inheritdoc cref="File.ReadAllLines(string)"/>
         public abstract string[] ReadAllLines(string path);
 
         /// <inheritdoc cref="File.ReadAllLines(string,Encoding)"/>
         public abstract string[] ReadAllLines(string path, Encoding encoding);
 
+#if NETCOREAPP2_0
+        /// <inheritdoc cref="File.ReadAllLinesAsync(string,CancellationToken)"/>
+        public abstract Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken);
+
+        /// <inheritdoc cref="File.ReadAllLinesAsync(string,Encoding,CancellationToken)"/>
+        public abstract Task<string[]> ReadAllLinesAsync(string path, Encoding encoding, CancellationToken cancellationToken);
+#endif
+
         /// <inheritdoc cref="File.ReadAllText(string)"/>
         public abstract string ReadAllText(string path);
 
         /// <inheritdoc cref="File.ReadAllText(string,Encoding)"/>
         public abstract string ReadAllText(string path, Encoding encoding);
+
+#if NETCOREAPP2_0
+        ///<inheritdoc cref="File.ReadAllTextAsync(string,CancellationToken)"/>
+        public abstract Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken);
+
+        ///<inheritdoc cref="File.ReadAllTextAsync(string,Encoding,CancellationToken)"/>
+        public abstract Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken cancellationToken);
+#endif
 
         /// <inheritdoc cref="File.ReadLines(string)"/>
         public abstract IEnumerable<string> ReadLines(string path);
@@ -403,6 +445,12 @@ namespace System.IO.Abstractions
         ///     You can use this method to create the contents for a collection class that takes an <see cref="IEnumerable{T}"/> in its constructor, such as a <see cref="List{T}"/>, <see cref="HashSet{T}"/>, or a <see cref="SortedSet{T}"/> class.
         /// </para>
         /// </remarks>
+
+#if NETCOREAPP2_0
+        /// <inheritdoc cref="File.WriteAllBytesAsync"/>
+        public abstract Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken);
+#endif
+
         public abstract void WriteAllLines(string path, IEnumerable<string> contents);
 
         /// <inheritdoc cref="File.WriteAllLines(string,IEnumerable{string},Encoding)"/>
@@ -561,6 +609,20 @@ namespace System.IO.Abstractions
         /// Given a string and a file path, this method opens the specified file, writes the string to the file, and then closes the file.
         /// </para>
         /// </remarks>
+
+#if NETCOREAPP2_0
+        /// <inheritdoc cref="File.WriteAllLinesAsync(string,IEnumerable{string},CancellationToken)"/>
+        public abstract Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken);
+
+        /// <inheritdoc cref="File.WriteAllLinesAsync(string,IEnumerable{string},Encoding,CancellationToken)"/>
+        public abstract Task WriteAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken);
+
+        /// <inheritdoc cref="File.WriteAllLinesAsync(string,string[],CancellationToken)"/>
+        public abstract Task WriteAllLinesAsync(string path, string[] contents, CancellationToken cancellationToken);
+
+        /// <inheritdoc cref="File.WriteAllLinesAsync(string,string[],Encoding,CancellationToken)"/>
+        public abstract Task WriteAllLinesAsync(string path, string[] contents, Encoding encoding, CancellationToken cancellationToken);
+#endif
         public abstract void WriteAllText(string path, string contents);
 
         /// <inheritdoc cref="File.WriteAllText(string,string,Encoding)"/>
@@ -595,5 +657,13 @@ namespace System.IO.Abstractions
         /// The file handle is guaranteed to be closed by this method, even if exceptions are raised.
         /// </remarks>
         public abstract void WriteAllText(string path, string contents, Encoding encoding);
+        
+#if NETCOREAPP2_0
+        /// <inheritdoc cref="File.WriteAllTextAsync(string,string,CancellationToken)"/>
+        public abstract Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken);
+        
+        /// <inheritdoc cref="File.WriteAllTextAsync(string,string,Encoding,CancellationToken)"/>
+        public abstract Task WriteAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken);
+#endif
     }
 }
