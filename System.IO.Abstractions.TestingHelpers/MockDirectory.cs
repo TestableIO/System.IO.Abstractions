@@ -50,6 +50,10 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             path = mockFileDataAccessor.Path.GetFullPath(path).TrimSlashes();
+            if (XFS.IsWindowsPlatform())
+            {
+                path = path.TrimEnd(' ');
+            }
 
             if (!Exists(path))
             {

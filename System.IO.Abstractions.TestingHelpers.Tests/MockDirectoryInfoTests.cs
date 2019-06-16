@@ -254,6 +254,36 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(expectedFullName, actualFullName);
         }
 
+        [TestCase(@"c:\temp\folder  ", @"c:\temp\folder")]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void MockDirectoryInfo_FullName_ShouldReturnPathWithTrimmedTrailingSpaces(string directoryPath, string expectedFullName)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, directoryPath);
+
+            // Act
+            var actualFullName = directoryInfo.FullName;
+
+            // Assert
+            Assert.AreEqual(expectedFullName, actualFullName);
+        }
+
+        [TestCase(@"c:\temp\\folder ", @"folder")]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void MockDirectoryInfo_Name_ShouldReturnNameWithTrimmedTrailingSpaces(string directoryPath, string expectedName)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, directoryPath);
+
+            // Act
+            var actualName = directoryInfo.Name;
+
+            // Assert
+            Assert.AreEqual(expectedName, actualName);
+        }
+
         [Test]
         public void MockDirectoryInfo_Constructor_ShouldThrowArgumentNullException_IfArgumentDirectoryIsNull()
         {
