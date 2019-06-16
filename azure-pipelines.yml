@@ -19,14 +19,17 @@ variables:
 
 steps:
 - task: DotNetCoreCLI@2
+  displayName: 'Build'
   inputs:
     command: 'build'
     arguments: '--configuration $(buildConfiguration)'
 - task: DotNetCoreCLI@2
+  displayName: 'Test'
   inputs:
     command: 'test'
     arguments: '--configuration $(buildConfiguration)'
 - task: DotNetCoreCLI@2
+  displayName: 'Pack'
   inputs:
     command: 'pack'
     arguments: '--configuration $(buildConfiguration)'
