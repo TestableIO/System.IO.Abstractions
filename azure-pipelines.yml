@@ -41,7 +41,6 @@ steps:
   inputs:
     command: 'pack'
     configuration: $(buildConfiguration)
-    nobuild: true
     packagesToPack: '**/*.csproj'
     packDirectory: $env:BUILD_ARTIFACTSTAGINGDIRECTORY
     includesymbols: true
