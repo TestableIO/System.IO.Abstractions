@@ -50,6 +50,6 @@ steps:
     verbosityRestore: 'Minimal'
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    PathtoPublish: $(Build.ArtifactStagingDirectory)
     ArtifactName: 'NuGet Packages'
     publishLocation: 'Container'
