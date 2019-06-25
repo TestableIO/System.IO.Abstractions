@@ -42,7 +42,7 @@ steps:
     command: 'pack'
     configuration: $(buildConfiguration)
     packagesToPack: '**/*.csproj'
-    packDirectory: $env:BUILD_ARTIFACTSTAGINGDIRECTORY
+    packDirectory: $(Build.ArtifactStagingDirectory)
     includesymbols: true
     includesource: true
     versioningScheme: 'off'
