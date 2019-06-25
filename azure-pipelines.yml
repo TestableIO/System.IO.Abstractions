@@ -38,7 +38,6 @@ steps:
     nobuild: true
 - task: DotNetCoreCLI@2
   displayName: 'Pack'
-  condition: $[variables.doPack]
   inputs:
     command: 'pack'
     configuration: $(buildConfiguration)
