@@ -536,6 +536,35 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(filePath, mockFileInfo.ToString());
         }
 
+
+        /// <summary>
+        /// Normalize, tested with Path.GetFullPath and new FileInfo().FullName;
+        /// </summary>
+        [TestCaseSource(nameof(FromFileName_Paths_NormalizePaths_Cases))]
+        public void FromFileName_Paths_NormalizePaths(string input, string expected)
+        {
+            // Arrange
+            var mockFs = new MockFileSystem();
+
+            // Act
+            var mockFileInfo = mockFs.FileInfo.FromFileName(input);
+            var result = mockFileInfo.FullName;
+
+            // Assert
+            Assert.AreEqual(expected, result);
+        }
+
+        public static IEnumerable<string[]> FromFileName_Paths_NormalizePaths_Cases
+        {
+            get
+            {
+                yield return new[] { XFS.Path(@"c:\top\..\most\file"), XFS.Path(@"c:\most\file") };
+                yield return new[] { XFS.Path(@"c:\top\..\most\..\dir\file"), XFS.Path(@"c:\dir\file") };
+                yield return new[] { XFS.Path(@"\file"), XFS.Path(@"C:\file") };
+                yield return new[] { XFS.Path(@"c:\top\../..\most\file"), XFS.Path(@"c:\most\file") };
+            }
+        }
+
 #if NET40
         [Test]
         public void MockFileInfo_Replace_ShouldReplaceFileContents()
