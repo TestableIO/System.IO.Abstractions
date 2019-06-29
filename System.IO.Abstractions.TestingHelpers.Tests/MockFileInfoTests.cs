@@ -540,7 +540,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         /// <summary>
         /// Normalize, tested with Path.GetFullPath and new FileInfo().FullName;
         /// </summary>
-        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
+        [WindowsOnly(WindowsSpecifics.Drives)]
         [TestCase(@"c:\top\..\most\file", @"c:\most\file")]
         [TestCase(@"c:\top\..\most\..\dir\file", @"c:\dir\file")]
         [TestCase(@"\file", @"C:\file")]
