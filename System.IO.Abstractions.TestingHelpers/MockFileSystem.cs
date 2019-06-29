@@ -64,7 +64,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public IFileSystem FileSystem => this;
         public PathVerifier PathVerifier => pathVerifier;
 
-        public string FixPath(string path, bool checkCaps = false)
+        private string FixPath(string path, bool checkCaps = false)
         {
             if (path == null)
             {

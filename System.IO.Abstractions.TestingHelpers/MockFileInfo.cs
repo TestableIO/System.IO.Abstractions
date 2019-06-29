@@ -13,7 +13,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
             this.originalPath = path ?? throw new ArgumentNullException(nameof(path));
-            this.path = mockFileSystem.FixPath(path);
+            this.path = mockFileSystem.Path.GetFullPath(path);
 
         }
 

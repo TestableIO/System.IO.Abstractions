@@ -66,6 +66,5 @@ namespace System.IO.Abstractions.TestingHelpers
         PathVerifier PathVerifier { get; }
 
         IFileSystem FileSystem { get; }
-        string FixPath(string path, bool checkCaps = false);
     }
 }
