@@ -524,6 +524,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void MockDirectory_CreateDirectory_ShouldTrimTrailingSpaces()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\temp\folder "));
+
+            // Assert
+            Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"c:\temp\folder")));
+        }
+
+        [Test]
         public void MockDirectory_CreMockDirectory_CreateDirectory_ShouldReturnDirectoryInfoBaseWhenDirectoryExists()
         {
             // Arrange

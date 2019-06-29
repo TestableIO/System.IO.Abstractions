@@ -4,6 +4,8 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using XFS = MockUnixSupport;
+
     [Serializable]
     public class MockDirectoryInfo : DirectoryInfoBase
     {
@@ -24,7 +26,12 @@ namespace System.IO.Abstractions.TestingHelpers
             originalPath = directoryPath;
             directoryPath = mockFileDataAccessor.Path.GetFullPath(directoryPath);
 
-            this.directoryPath = directoryPath.TrimSlashes();
+            directoryPath = directoryPath.TrimSlashes();
+            if (XFS.IsWindowsPlatform())
+            {
+                directoryPath = directoryPath.TrimEnd(' ');
+            }
+            this.directoryPath = directoryPath;
         }
 
         public override void Delete()
