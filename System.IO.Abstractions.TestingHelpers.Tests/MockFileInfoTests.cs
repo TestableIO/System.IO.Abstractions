@@ -540,11 +540,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         /// <summary>
         /// Normalize, tested with Path.GetFullPath and new FileInfo().FullName;
         /// </summary>
-        [WindowsOnly(WindowsSpecifics.Drives)]
-        [TestCase(@"c:\top\..\most\file", @"c:\most\file")]
-        [TestCase(@"c:\top\..\most\..\dir\file", @"c:\dir\file")]
-        [TestCase(@"\file", @"C:\file")]
-        [TestCase(@"c:\top\../..\most\file", @"c:\most\file")]
+        [TestCaseSource(nameof(FromFileName_Paths_NormalizePaths_Cases))]
         public void FromFileName_Paths_NormalizePaths(string input, string expected)
         {
             // Arrange
@@ -556,6 +552,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.AreEqual(expected, result);
+        }
+
+        public static IEnumerable<string[]> FromFileName_Paths_NormalizePaths_Cases
+        {
+            get
+            {
+                yield return new[] { XFS.Path(@"c:\top\..\most\file"), XFS.Path(@"c:\most\file") };
+                yield return new[] { XFS.Path(@"c:\top\..\most\..\dir\file"), XFS.Path(@"c:\dir\file") };
+                yield return new[] { XFS.Path(@"\file"), XFS.Path(@"C:\file") };
+                yield return new[] { XFS.Path(@"c:\top\../..\most\file"), XFS.Path(@"c:\most\file") };
+            }
         }
 
 #if NET40
