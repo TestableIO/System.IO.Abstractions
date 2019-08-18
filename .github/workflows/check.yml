@@ -20,7 +20,7 @@ jobs:
     - name: Update XML comments
       if: 
       run: |
-        dotnet tool install --tool-path ./tools InheritDocTool 
-        .tools/InheritDoc -o -g "c:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.X\mscorlib.xml"
+        dotnet tool install --tool-path ./.tools InheritDocTool 
+        ./.tools/InheritDoc -o -g "c:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.X\mscorlib.xml"
     - name: Pack
       run: dotnet pack --no-build --configuration Release
