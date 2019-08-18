@@ -13,6 +13,10 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.2.108
+    - name: Update XML comments
+      run: |
+        dotnet tool install -g InheritDocTool 
+        InheritDoc
     - name: Build
       run: dotnet build --configuration Release
     - name: Test
