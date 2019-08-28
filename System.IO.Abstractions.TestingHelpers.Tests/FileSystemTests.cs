@@ -20,7 +20,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 #endif
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         [Test]
         public void Mock_File_Succeeds()
         {

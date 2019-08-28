@@ -8,7 +8,7 @@
 
     using XFS = MockUnixSupport;
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
     using System.Threading.Tasks;
 #endif
 
@@ -227,7 +227,7 @@
                 fileSystem.GetFile(path).TextContents);
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         [Test]
         public async Task MockFile_WriteAllTextAsync_ShouldWriteTextFileToMemoryFileSystem()
         {
