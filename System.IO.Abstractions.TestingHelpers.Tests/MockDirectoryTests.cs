@@ -789,6 +789,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_GetFiles_Returns_Files_WithRelativePath()
+        {
+            // arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+
+            const string dir = @"C:\foo";
+            fileSystem.Directory.SetCurrentDirectory(dir);
+            fileSystem.AddFile($@"C:\test.txt", new MockFileData("Some ASCII text."));
+
+            Assert.AreEqual(fileSystem.Directory.GetFiles(@"C:\").Length, 1); // Assert with absolute path
+            Assert.AreEqual(fileSystem.Directory.GetFiles(@"..\").Length, 1); // Assert with relative path
+        }
+
+        [Test]
         public void MockDirectory_GetFiles_ShouldThrowAnArgumentNullException_IfSearchPatternIsNull()
         {
             // Arrange
