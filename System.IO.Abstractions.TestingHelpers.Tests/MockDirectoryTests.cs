@@ -797,7 +797,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string directory = XFS.Path(@"C:\foo");
 
             fileSystem.Directory.SetCurrentDirectory(directory);
-            fileSystem.AddFile($@"C:\test.txt", new MockFileData("Some ASCII text."));
+            fileSystem.AddFile(XFS.Path(@"C:\test.txt"), new MockFileData("Some ASCII text."));
 
             Assert.AreEqual(fileSystem.Directory.GetFiles(XFS.Path(@"..\")).Length, 1); // Assert with relative path
         }
