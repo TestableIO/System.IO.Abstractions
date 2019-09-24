@@ -40,7 +40,7 @@
     <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.4'">
         <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
         <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.0" />
-        <PackageReference Include="System.Security.AccessControl" Version="4.5.0" />
+        <PackageReference Include="System.Security.AccessControl" Version="4.6.0" />
     </ItemGroup>
 
     <ItemGroup>
