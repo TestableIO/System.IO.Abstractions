@@ -28,7 +28,7 @@
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0'">
         <PackageReference Include="System.IO.FileSystem.AccessControl">
-            <Version>4.5.0</Version>
+            <Version>4.6.0</Version>
         </PackageReference>
     </ItemGroup>
 
