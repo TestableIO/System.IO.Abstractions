@@ -212,13 +212,12 @@ namespace System.IO.Abstractions.TestingHelpers
             CheckSearchPattern(searchPattern);
             path = path.TrimSlashes();
             path = path.NormalizeSlashes();
+            path = mockFileDataAccessor.Path.GetFullPath(path);
 
             if (!Exists(path))
             {
                 throw CommonExceptions.CouldNotFindPartOfPath(path);
             }
-
-            path = EnsureAbsolutePath(path);
 
             if (!path.EndsWith(Path.DirectorySeparatorChar.ToString()))
             {
