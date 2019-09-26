@@ -2,7 +2,7 @@
 using System.Security.AccessControl;
 using System.Text;
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
 using System.Threading.Tasks;
 using System.Threading;
 #endif
@@ -32,7 +32,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="File.AppendAllLines(string,IEnumerable{string},Encoding)"/>
         public abstract void AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding);
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         /// <inheritdoc cref="File.AppendAllLinesAsync(string,IEnumerable{string},CancellationToken)"/>
         public abstract Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken);
 
@@ -46,7 +46,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="File.AppendAllText(string,string,Encoding)"/>
         public abstract void AppendAllText(string path, string contents, Encoding encoding);
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         /// <inheritdoc cref="File.AppendAllTextAsync(string,string,CancellationToken)"/>
         public abstract Task AppendAllTextAsync(String path, String contents, CancellationToken cancellationToken);
 
@@ -308,7 +308,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="File.ReadAllBytes"/>
         public abstract byte[] ReadAllBytes(string path);
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         /// <inheritdoc cref="File.ReadAllBytesAsync"/>
         public abstract Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken);
 #endif
@@ -319,7 +319,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="File.ReadAllLines(string,Encoding)"/>
         public abstract string[] ReadAllLines(string path, Encoding encoding);
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         /// <inheritdoc cref="File.ReadAllLinesAsync(string,CancellationToken)"/>
         public abstract Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken);
 
@@ -333,7 +333,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="File.ReadAllText(string,Encoding)"/>
         public abstract string ReadAllText(string path, Encoding encoding);
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         ///<inheritdoc cref="File.ReadAllTextAsync(string,CancellationToken)"/>
         public abstract Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken);
 
@@ -446,7 +446,7 @@ namespace System.IO.Abstractions
         /// </para>
         /// </remarks>
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         /// <inheritdoc cref="File.WriteAllBytesAsync"/>
         public abstract Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken);
 #endif
@@ -610,7 +610,7 @@ namespace System.IO.Abstractions
         /// </para>
         /// </remarks>
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         /// <inheritdoc cref="File.WriteAllLinesAsync(string,IEnumerable{string},CancellationToken)"/>
         public abstract Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken);
 
@@ -658,7 +658,7 @@ namespace System.IO.Abstractions
         /// </remarks>
         public abstract void WriteAllText(string path, string contents, Encoding encoding);
         
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         /// <inheritdoc cref="File.WriteAllTextAsync(string,string,CancellationToken)"/>
         public abstract Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken);
         

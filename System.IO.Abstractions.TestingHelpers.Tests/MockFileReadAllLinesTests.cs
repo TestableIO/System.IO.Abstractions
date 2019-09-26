@@ -8,7 +8,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     using XFS = MockUnixSupport;
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
     using System.Threading.Tasks;
 #endif
 
@@ -71,7 +71,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.Message, Is.EqualTo("Could not find file '" + absentFileNameFullPath + "'."));
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         [Test]
         public async Task MockFile_ReadAllLinesAsync_ShouldReturnOriginalTextData()
         {

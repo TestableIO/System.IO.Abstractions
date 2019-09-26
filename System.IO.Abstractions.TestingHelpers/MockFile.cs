@@ -39,7 +39,7 @@ namespace System.IO.Abstractions.TestingHelpers
             AppendAllText(path, concatContents, encoding);
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         public override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken = default(CancellationToken))
         {
             AppendAllLines(path, contents);
@@ -82,7 +82,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         public override Task AppendAllTextAsync(string path, string contents, CancellationToken cancellationToken = default(CancellationToken))
         {
             AppendAllText(path, contents);
@@ -491,7 +491,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return mockFileDataAccessor.GetFile(path).Contents;
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         public override Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken = default(CancellationToken))
         {
             return Task.FromResult(ReadAllBytes(path));
@@ -534,7 +534,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 .SplitLines();
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         public override Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken = default(CancellationToken))
         {
             return Task.FromResult(ReadAllLines(path));
@@ -570,7 +570,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return ReadAllTextInternal(path, encoding);
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         public override Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken)
         {
             return Task.FromResult(ReadAllText(path));
@@ -752,7 +752,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.AddFile(path, new MockFileData(bytes));
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         public override Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken)
         {
             WriteAllBytes(path, bytes);
@@ -947,7 +947,7 @@ namespace System.IO.Abstractions.TestingHelpers
             WriteAllLines(path, new List<string>(contents), encoding);
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         public override Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken)
         {
             WriteAllLines(path, contents);
@@ -1056,7 +1056,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.AddFile(path, data);
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         public override Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken)
         {
             WriteAllText(path, contents);

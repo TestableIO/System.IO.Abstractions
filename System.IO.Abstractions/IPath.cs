@@ -25,21 +25,21 @@
         string Combine(string path1, string path2, string path3);
         /// <inheritdoc cref="Path.Combine(string,string,string,string)"/>
         string Combine(string path1, string path2, string path3, string path4);
-        /// <inheritdoc cref="Path.GetDirectoryName"/>
+        /// <inheritdoc cref="Path.GetDirectoryName(string)"/>
         string GetDirectoryName(string path);
-        /// <inheritdoc cref="Path.GetExtension"/>
+        /// <inheritdoc cref="Path.GetExtension(string)"/>
         string GetExtension(string path);
-        /// <inheritdoc cref="Path.GetFileName"/>
+        /// <inheritdoc cref="Path.GetFileName(string)"/>
         string GetFileName(string path);
-        /// <inheritdoc cref="Path.GetFileNameWithoutExtension"/>
+        /// <inheritdoc cref="Path.GetFileNameWithoutExtension(string)"/>
         string GetFileNameWithoutExtension(string path);
-        /// <inheritdoc cref="Path.GetFullPath"/>
+        /// <inheritdoc cref="Path.GetFullPath(string)"/>
         string GetFullPath(string path);
         /// <inheritdoc cref="Path.GetInvalidFileNameChars"/>
         char[] GetInvalidFileNameChars();
         /// <inheritdoc cref="Path.GetInvalidPathChars"/>
         char[] GetInvalidPathChars();
-        /// <inheritdoc cref="Path.GetPathRoot"/>
+        /// <inheritdoc cref="Path.GetPathRoot(string)"/>
         string GetPathRoot(string path);
         /// <inheritdoc cref="Path.GetRandomFileName"/>
         string GetRandomFileName();
@@ -47,9 +47,9 @@
         string GetTempFileName();
         /// <inheritdoc cref="Path.GetTempPath"/>
         string GetTempPath();
-        /// <inheritdoc cref="Path.HasExtension"/>
+        /// <inheritdoc cref="Path.HasExtension(string)"/>
         bool HasExtension(string path);
-        /// <inheritdoc cref="Path.IsPathRooted"/>
+        /// <inheritdoc cref="Path.IsPathRooted(string)"/>
         bool IsPathRooted(string path);
     }
 }

@@ -2,7 +2,7 @@
 using System.Security.AccessControl;
 using System.Text;
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
 using System.Threading.Tasks;
 using System.Threading;
 #endif
@@ -20,7 +20,7 @@ namespace System.IO.Abstractions
         void AppendAllLines(string path, IEnumerable<string> contents);
         /// <inheritdoc cref="File.AppendAllLines(string,IEnumerable{string},Encoding)"/>
         void AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding);
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         /// <inheritdoc cref="File.AppendAllLinesAsync(string,IEnumerable{string},CancellationToken)"/>
         Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken = default(CancellationToken));
         /// <inheritdoc cref="File.AppendAllLinesAsync(string,IEnumerable{string},Encoding,CancellationToken)"/>
@@ -30,7 +30,7 @@ namespace System.IO.Abstractions
         void AppendAllText(string path, string contents);
         /// <inheritdoc cref="File.AppendAllText(string,string,Encoding)"/>
         void AppendAllText(string path, string contents, Encoding encoding);
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         /// <inheritdoc cref="File.AppendAllTextAsync(string,string,CancellationToken)"/>
         Task AppendAllTextAsync(String path, String contents, CancellationToken cancellationToken = default(CancellationToken));
         /// <inheritdoc cref="File.AppendAllTextAsync(string,string,Encoding,CancellationToken)"/>
@@ -100,7 +100,7 @@ namespace System.IO.Abstractions
         Stream OpenWrite(string path);
         /// <inheritdoc cref="File.ReadAllBytes"/>
         byte[] ReadAllBytes(string path);
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         /// <inheritdoc cref="File.ReadAllBytesAsync"/>
         Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken = default(CancellationToken));
 #endif
@@ -108,7 +108,7 @@ namespace System.IO.Abstractions
         string[] ReadAllLines(string path);
         /// <inheritdoc cref="File.ReadAllLines(string,Encoding)"/>
         string[] ReadAllLines(string path, Encoding encoding);
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         /// <inheritdoc cref="File.ReadAllLinesAsync(string,CancellationToken)"/>
         Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken = default(CancellationToken));
         /// <inheritdoc cref="File.ReadAllLinesAsync(string,Encoding,CancellationToken)"/>
@@ -118,7 +118,7 @@ namespace System.IO.Abstractions
         string ReadAllText(string path);
         /// <inheritdoc cref="File.ReadAllText(string,Encoding)"/>
         string ReadAllText(string path, Encoding encoding);
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         ///<inheritdoc cref="File.ReadAllTextAsync(string,CancellationToken)"/>
         Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken = default(CancellationToken));
         ///<inheritdoc cref="File.ReadAllTextAsync(string,Encoding,CancellationToken)"/>
@@ -152,7 +152,7 @@ namespace System.IO.Abstractions
         void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc);
         /// <inheritdoc cref="File.WriteAllBytes"/>
         void WriteAllBytes(string path, byte[] bytes);
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         /// <inheritdoc cref="File.WriteAllBytesAsync"/>
         Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken = default(CancellationToken));
 #endif
@@ -164,7 +164,7 @@ namespace System.IO.Abstractions
         void WriteAllLines(string path, string[] contents);
         /// <inheritdoc cref="File.WriteAllLines(string,string[],Encoding)"/>
         void WriteAllLines(string path, string[] contents, Encoding encoding);
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         /// <inheritdoc cref="File.WriteAllLinesAsync(string,IEnumerable{string},CancellationToken)"/>
         Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken = default(CancellationToken));
         /// <inheritdoc cref="File.WriteAllLinesAsync(string,IEnumerable{string},Encoding,CancellationToken)"/>
@@ -178,7 +178,7 @@ namespace System.IO.Abstractions
         void WriteAllText(string path, string contents);
         /// <inheritdoc cref="File.WriteAllText(string,string,Encoding)"/>
         void WriteAllText(string path, string contents, Encoding encoding);
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         /// <inheritdoc cref="File.WriteAllTextAsync(string,string,CancellationToken)"/>
         Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken = default(CancellationToken));
         /// <inheritdoc cref="File.WriteAllTextAsync(string,string,Encoding,CancellationToken)"/>

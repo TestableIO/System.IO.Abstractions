@@ -2,7 +2,7 @@
 using System.Security.AccessControl;
 using System.Text;
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
 using System.Threading.Tasks;
 using System.Threading;
 #endif
@@ -27,7 +27,7 @@ namespace System.IO.Abstractions
             File.AppendAllLines(path, contents, encoding);
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         public override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken)
         {
             return File.AppendAllLinesAsync(path, contents, cancellationToken);
@@ -49,7 +49,7 @@ namespace System.IO.Abstractions
             File.AppendAllText(path, contents, encoding);
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         public override Task AppendAllTextAsync(string path, string contents, CancellationToken cancellationToken)
         {
             return File.AppendAllTextAsync(path, contents, cancellationToken);
@@ -224,7 +224,7 @@ namespace System.IO.Abstractions
             return File.ReadAllBytes(path);
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         public override Task<byte[]> ReadAllBytesAsync(string path, CancellationToken cancellationToken)
         {
             return File.ReadAllBytesAsync(path, cancellationToken);
@@ -241,7 +241,7 @@ namespace System.IO.Abstractions
             return File.ReadAllLines(path, encoding);
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         public override Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken)
         {
             return File.ReadAllLinesAsync(path, cancellationToken);
@@ -263,7 +263,7 @@ namespace System.IO.Abstractions
             return File.ReadAllText(path, encoding);
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         public override Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken)
         {
             return File.ReadAllTextAsync(path, cancellationToken);
@@ -371,7 +371,7 @@ namespace System.IO.Abstractions
             File.WriteAllBytes(path, bytes);
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         public override Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken)
         {
             return File.WriteAllBytesAsync(path, bytes, cancellationToken);
@@ -545,7 +545,7 @@ namespace System.IO.Abstractions
             File.WriteAllLines(path, contents, encoding);
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         public override Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken)
         {
             return File.WriteAllLinesAsync(path, contents, cancellationToken);
@@ -639,7 +639,7 @@ namespace System.IO.Abstractions
             File.WriteAllText(path, contents, encoding);
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         public override Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken)
         {
             return File.WriteAllTextAsync(path, contents, cancellationToken);

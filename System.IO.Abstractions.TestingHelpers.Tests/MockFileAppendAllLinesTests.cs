@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
 using System.Threading.Tasks;
 #endif
 
@@ -123,7 +123,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.ParamName, Is.EqualTo("encoding"));
         }
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         [Test]
         public async Task MockFile_AppendAllLinesAsync_ShouldPersistNewLinesToExistingFile()
         {

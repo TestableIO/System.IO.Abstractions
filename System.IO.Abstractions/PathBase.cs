@@ -50,19 +50,19 @@
         /// <inheritdoc cref="Path.Combine(string,string,string,string)"/>
         public abstract string Combine(string path1, string path2, string path3, string path4);
 
-        /// <inheritdoc cref="Path.GetDirectoryName"/>
+        /// <inheritdoc cref="Path.GetDirectoryName(string)"/>
         public abstract string GetDirectoryName(string path);
 
-        /// <inheritdoc cref="Path.GetExtension"/>
+        /// <inheritdoc cref="Path.GetExtension(string)"/>
         public abstract string GetExtension(string path);
 
-        /// <inheritdoc cref="Path.GetFileName"/>
+        /// <inheritdoc cref="Path.GetFileName(string)"/>
         public abstract string GetFileName(string path);
 
-        /// <inheritdoc cref="Path.GetFileNameWithoutExtension"/>
+        /// <inheritdoc cref="Path.GetFileNameWithoutExtension(string)"/>
         public abstract string GetFileNameWithoutExtension(string path);
 
-        /// <inheritdoc cref="Path.GetFullPath"/>
+        /// <inheritdoc cref="Path.GetFullPath(string)"/>
         public abstract string GetFullPath(string path);
 
         /// <inheritdoc cref="Path.GetInvalidFileNameChars"/>
@@ -71,7 +71,7 @@
         /// <inheritdoc cref="Path.GetInvalidPathChars"/>
         public abstract char[] GetInvalidPathChars();
 
-        /// <inheritdoc cref="Path.GetPathRoot"/>
+        /// <inheritdoc cref="Path.GetPathRoot(string)"/>
         public abstract string GetPathRoot(string path);
 
         /// <inheritdoc cref="Path.GetRandomFileName"/>
@@ -83,10 +83,10 @@
         /// <inheritdoc cref="Path.GetTempPath"/>
         public abstract string GetTempPath();
 
-        /// <inheritdoc cref="Path.HasExtension"/>
+        /// <inheritdoc cref="Path.HasExtension(string)"/>
         public abstract bool HasExtension(string path);
 
-        /// <inheritdoc cref="Path.IsPathRooted"/>
+        /// <inheritdoc cref="Path.IsPathRooted(string)"/>
         public abstract bool IsPathRooted(string path);
     }
 }

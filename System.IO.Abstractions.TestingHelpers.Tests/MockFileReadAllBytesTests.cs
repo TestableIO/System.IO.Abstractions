@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
 using System.Threading.Tasks;
 #endif
 
@@ -64,7 +64,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.AreEqual(data, fileSystem.File.ReadAllBytes(altPath));
         }
-#if NETCOREAPP2_0
+#if NETCOREAPP2_0 || NETSTANDARD2_1
         [Test]
         public async Task MockFile_ReadAllBytesAsync_ShouldReturnOriginalByteData()
         {

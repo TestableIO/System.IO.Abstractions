@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netstandard1.4;netstandard2.0;netcoreapp2.0</TargetFrameworks>
+        <TargetFrameworks>netstandard1.4;netstandard2.0;netstandard2.1;netcoreapp2.0</TargetFrameworks>
         <TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net40</TargetFrameworks>
         <PackageId>System.IO.Abstractions.TestingHelpers</PackageId>
         <Description>A set of pre-built mocks to help when testing file system interactions.</Description>
@@ -26,7 +26,7 @@
         <ProjectReference Include="..\System.IO.Abstractions\System.IO.Abstractions.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0'">
+    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netstandard2.1' Or '$(TargetFramework)' == 'netcoreapp2.0'">
         <PackageReference Include="System.IO.FileSystem.AccessControl">
             <Version>4.6.0</Version>
         </PackageReference>
