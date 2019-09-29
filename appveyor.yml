@@ -39,7 +39,7 @@ for:
 -
   matrix:
     only:
-      - image: Visual Studio 2017
+      - image: Visual Studio 2019
   deploy:
   - provider: NuGet
     api_key:
