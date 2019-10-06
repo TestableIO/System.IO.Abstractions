@@ -237,6 +237,10 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 fileNamePattern = isUnix ? @"[^/]*?/?" : @"[^\\]*?\\?";
             }
+            else if (searchPattern == "*.")
+            {
+                fileNamePattern = isUnix ? @"[^/.]*?/?" : @"[^\\.]*?\\?";
+            }
             else
             {
                 fileNamePattern = Regex.Escape(searchPattern)
