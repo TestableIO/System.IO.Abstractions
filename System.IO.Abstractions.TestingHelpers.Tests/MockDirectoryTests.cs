@@ -20,9 +20,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 XFS.Path(@"c:\a\a.txt"),
                 XFS.Path(@"c:\a\b.gif"),
                 XFS.Path(@"c:\a\c.txt"),
+                XFS.Path(@"c:\a\d"),
                 XFS.Path(@"c:\a\a\a.txt"),
                 XFS.Path(@"c:\a\a\b.txt"),
-                XFS.Path(@"c:\a\a\c.gif")
+                XFS.Path(@"c:\a\a\c.gif"),
+                XFS.Path(@"c:\a\a\d")
             };
 
             // Act
@@ -43,6 +45,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { XFS.Path(@"c:\a\a.txt"), new MockFileData("Demo text content") },
                 { XFS.Path(@"c:\a\b.gif"), new MockFileData("Demo text content") },
                 { XFS.Path(@"c:\a\c.txt"), new MockFileData("Demo text content") },
+                { XFS.Path(@"c:\a\d"), new MockFileData("Demo text content") },
                 { XFS.Path(@"c:\a\a\a.txt"), new MockFileData("Demo text content") },
                 { XFS.Path(@"c:\a\a\b.txt"), new MockFileData("Demo text content") },
                 { XFS.Path(@"c:\a\a\c.gif"), new MockFileData("Demo text content") },
@@ -60,7 +63,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             {
                 XFS.Path(@"c:\a\a.txt"),
                 XFS.Path(@"c:\a\b.gif"),
-                XFS.Path(@"c:\a\c.txt")
+                XFS.Path(@"c:\a\c.txt"),
+                XFS.Path(@"c:\a\d")
             };
 
             // Act
@@ -245,6 +249,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var expected = new[]
             {
                 XFS.Path(@"c:\d"),
+                XFS.Path(@"c:\a\d"),
                 XFS.Path(@"c:\a\a\d")
             };
 
@@ -1531,9 +1536,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 XFS.Path(@"c:\a\a.txt"),
                 XFS.Path(@"c:\a\b.gif"),
                 XFS.Path(@"c:\a\c.txt"),
+                XFS.Path(@"c:\a\d"),
                 XFS.Path(@"c:\a\a\a.txt"),
                 XFS.Path(@"c:\a\a\b.txt"),
-                XFS.Path(@"c:\a\a\c.gif")
+                XFS.Path(@"c:\a\a\c.gif"),
+                XFS.Path(@"c:\a\a\d")
             };
 
             // Act
@@ -1623,9 +1630,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 XFS.Path(@"c:\a\a.txt"),
                 XFS.Path(@"c:\a\b.gif"),
                 XFS.Path(@"c:\a\c.txt"),
+                XFS.Path(@"c:\a\d"),
                 XFS.Path(@"c:\a\a\a.txt"),
                 XFS.Path(@"c:\a\a\b.txt"),
                 XFS.Path(@"c:\a\a\c.gif"),
+                XFS.Path(@"c:\a\a\d"),
                 XFS.Path(@"c:\a\a")
             };
 
