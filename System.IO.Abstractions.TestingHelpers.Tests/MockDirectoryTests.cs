@@ -241,7 +241,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var expected = new[]
             {
-                XFS.Path(@"C:\d"),
+                XFS.Path(@"c:\d"),
                 XFS.Path(@"C:\mytestfilename"),
                 XFS.Path(@"C:\mytestfilename."),
                 XFS.Path(@"C:\mytestfile.name."),
@@ -269,9 +269,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var expected = new[]
             {
-                XFS.Path(@"C:\d"),
-                XFS.Path(@"C:\a\d"),
-                XFS.Path(@"C:\a\a\d"),
+                XFS.Path(@"c:\d"),
+                XFS.Path(@"c:\a\d"),
+                XFS.Path(@"c:\a\a\d"),
                 XFS.Path(@"C:\specialNameFormats\mytestfilename"),
                 XFS.Path(@"C:\specialNameFormats\mytestfilename."),
                 XFS.Path(@"C:\specialNameFormats\mytestfile.name."),
