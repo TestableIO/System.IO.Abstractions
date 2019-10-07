@@ -230,16 +230,16 @@ namespace System.IO.Abstractions.TestingHelpers
                 ? @"([^<>:""/|?*]*/)*"
                 : @"([^<>:""/\\|?*]*\\)*";
 
+            var searchEndInStarDot = searchPattern.EndsWith(@"*.");
+
             string fileNamePattern;
+            string pathPatternNoExtension = string.Empty;
+            string pathPatternEndsInDot = string.Empty;
             string pathPatternSpecial = null;
 
             if (searchPattern == "*")
             {
                 fileNamePattern = isUnix ? @"[^/]*?/?" : @"[^\\]*?\\?";
-            }
-            else if (searchPattern == "*.")
-            {
-                fileNamePattern = isUnix ? @"[^/.]*?/?" : @"[^\\.]*?\\?";
             }
             else
             {
@@ -268,9 +268,17 @@ namespace System.IO.Abstractions.TestingHelpers
                 searchOption == SearchOption.AllDirectories ? allDirectoriesPattern : string.Empty,
                 fileNamePattern);
 
-            return files
-                .Where(p => Regex.IsMatch(p, pathPattern)
-                    || (pathPatternSpecial != null && Regex.IsMatch(p, pathPatternSpecial)))
+            if (searchEndInStarDot)
+            {
+                pathPatternNoExtension = ReplaceLastOccurrence(pathPattern, @"]*?\.", @"\.]*?[.]*");
+                pathPatternEndsInDot = ReplaceLastOccurrence(pathPattern, @"]*?\.", @"]*?[.]{1,}");
+            }
+
+            return files.Where(p =>
+                    !searchEndInStarDot ?
+                    (Regex.IsMatch(p, pathPattern) || (pathPatternSpecial != null && Regex.IsMatch(p, pathPatternSpecial)))
+                    : (Regex.IsMatch(p, pathPatternNoExtension) || Regex.IsMatch(p, pathPatternEndsInDot))
+                )
                 .ToArray();
         }
 
@@ -561,6 +569,24 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw CommonExceptions.IllegalCharactersInPath(nameof(searchPattern));
             }
+        }
+
+        private string ReplaceLastOccurrence(string source, string find, string replace)
+        {
+            if (source == null)
+            {
+                return source;
+            }
+
+            var place = source.LastIndexOf(find);
+
+            if (place == -1)
+            {
+                return source;
+            }
+
+            var result = source.Remove(place, find.Length).Insert(place, replace);
+            return result;
         }
     }
 }

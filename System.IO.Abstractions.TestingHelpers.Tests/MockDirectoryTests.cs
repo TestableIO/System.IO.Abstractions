@@ -228,33 +228,139 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldFilterForFilesWithNoExtensionsAndSearchOptionTopDirectoryOnly()
+        public void MockDirectory_GetFiles_ShouldFilterForAllFilesWithNoExtensionsAndSearchOptionTopDirectoryOnly()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
-            var expected = new[] { XFS.Path(@"c:\d") };
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfilename"), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfilename."), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfile.name"), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfile.name."), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfile.name.again"), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfile.name.again."), new MockFileData("some content"));
+
+            var expected = new[]
+            {
+                XFS.Path(@"C:\d"),
+                XFS.Path(@"C:\mytestfilename"),
+                XFS.Path(@"C:\mytestfilename."),
+                XFS.Path(@"C:\mytestfile.name."),
+                XFS.Path(@"C:\mytestfile.name.again.")
+            };
 
             // Act
-            var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), "*.", SearchOption.TopDirectoryOnly);
+            var result = fileSystem.Directory.GetFiles(XFS.Path(@"C:\"), "*.", SearchOption.TopDirectoryOnly);
 
             // Assert
             Assert.That(result, Is.EquivalentTo(expected));
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldFilterForFilesWithNoExtensionsAndSearchOptionAllDirectories()
+        public void MockDirectory_GetFiles_ShouldFilterForAllFilesWithNoExtensionsAndSearchOptionAllDirectories()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
+            fileSystem.AddFile(XFS.Path(@"C:\specialNameFormats\mytestfilename"), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\specialNameFormats\mytestfilename."), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\specialNameFormats\mytestfile.name"), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\specialNameFormats\mytestfile.name."), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\specialNameFormats\mytestfile.name.again"), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\specialNameFormats\mytestfile.name.again."), new MockFileData("some content"));
+
             var expected = new[]
             {
-                XFS.Path(@"c:\d"),
-                XFS.Path(@"c:\a\d"),
-                XFS.Path(@"c:\a\a\d")
+                XFS.Path(@"C:\d"),
+                XFS.Path(@"C:\a\d"),
+                XFS.Path(@"C:\a\a\d"),
+                XFS.Path(@"C:\specialNameFormats\mytestfilename"),
+                XFS.Path(@"C:\specialNameFormats\mytestfilename."),
+                XFS.Path(@"C:\specialNameFormats\mytestfile.name."),
+                XFS.Path(@"C:\specialNameFormats\mytestfile.name.again.")
             };
 
             // Act
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), "*.", SearchOption.AllDirectories);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        [Test]
+        public void MockDirectory_GetFiles_ShouldFilterForFilesWithNoExtensionsAndNonTrivialFilterAndSearchOptionTopDirectoryOnly()
+        {
+            // Arrange
+            var fileSystem = SetupFileSystem();
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfilename"), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfilename."), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfile.name"), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfile.name."), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfile.name.again"), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfile.name.again."), new MockFileData("some content"));
+
+            var expected = new[]
+            {
+                XFS.Path(@"C:\mytestfilename"),
+                XFS.Path(@"C:\mytestfilename."),
+                XFS.Path(@"C:\mytestfile.name."),
+                XFS.Path(@"C:\mytestfile.name.again.")
+
+            };
+
+            // Act
+            var result = fileSystem.Directory.GetFiles(XFS.Path(@"C:\"), "my??s*.", SearchOption.TopDirectoryOnly);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        [Test]
+        public void MockDirectory_GetFiles_ShouldFilterForFilesWithNoExtensionsAndNonTrivialFilter2AndSearchOptionTopDirectoryOnly()
+        {
+            // Arrange
+            var fileSystem = SetupFileSystem();
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfilename"), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfilename."), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfile.name"), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfile.name."), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfile.name.again"), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfile.name.again."), new MockFileData("some content"));
+
+            var expected = new[]
+            {
+                XFS.Path(@"C:\mytestfile.name"),
+                XFS.Path(@"C:\mytestfile.name."),
+                XFS.Path(@"C:\mytestfile.name.again.")
+
+            };
+
+            // Act
+            var result = fileSystem.Directory.GetFiles(XFS.Path(@"C:\"), "my*.n*.", SearchOption.TopDirectoryOnly);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        [Test]
+        public void MockDirectory_GetFiles_ShouldFilterForFilesWithNoExtensionsAndFilterThatIncludesDotAndSearchOptionTopDirectoryOnly()
+        {
+            // Arrange
+            var fileSystem = SetupFileSystem();
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfilename"), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfilename."), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfile.name"), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfile.name."), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfile.name.again"), new MockFileData("some content"));
+            fileSystem.AddFile(XFS.Path(@"C:\mytestfile.name.again."), new MockFileData("some content"));
+
+            var expected = new[]
+            {
+                XFS.Path(@"C:\mytestfile.name"),
+                XFS.Path(@"C:\mytestfile.name."),
+                XFS.Path(@"C:\mytestfile.name.again.")
+            };
+
+            // Act
+            var result = fileSystem.Directory.GetFiles(XFS.Path(@"C:\"), "my*.n*.", SearchOption.TopDirectoryOnly);
 
             // Assert
             Assert.That(result, Is.EquivalentTo(expected));
