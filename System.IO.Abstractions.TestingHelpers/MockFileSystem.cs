@@ -18,7 +18,13 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public MockFileSystem() : this(null) { }
 
-        public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = "")
+        public MockFileSystem(IDictionary<string, MockFileData> files,
+            string currentDirectory = "",
+            IFileInfoFactory fileInfoFactory = null,
+            IFileStreamFactory fileStreamFactory = null,
+            IDirectoryInfoFactory directoryInfoFactory = null,
+            IDriveInfoFactory driveInfoFactory = null,
+            IFileSystemWatcherFactory fileSystemWatcher = null)
         {
             if (string.IsNullOrEmpty(currentDirectory))
             {
@@ -32,11 +38,11 @@ namespace System.IO.Abstractions.TestingHelpers
             Path = new MockPath(this);
             File = new MockFile(this);
             Directory = new MockDirectory(this, currentDirectory);
-            FileInfo = new MockFileInfoFactory(this);
-            FileStream = new MockFileStreamFactory(this);
-            DirectoryInfo = new MockDirectoryInfoFactory(this);
-            DriveInfo = new MockDriveInfoFactory(this);
-            FileSystemWatcher = new MockFileSystemWatcherFactory();
+            FileInfo = fileInfoFactory ?? new MockFileInfoFactory(this);
+            FileStream = fileStreamFactory ?? new MockFileStreamFactory(this);
+            DirectoryInfo = directoryInfoFactory ?? new MockDirectoryInfoFactory(this);
+            DriveInfo = driveInfoFactory ?? new MockDriveInfoFactory(this);
+            FileSystemWatcher = fileSystemWatcher ?? new MockFileSystemWatcherFactory();
 
             if (files != null)
             {
