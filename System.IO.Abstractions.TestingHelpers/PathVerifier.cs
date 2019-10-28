@@ -4,6 +4,7 @@ namespace System.IO.Abstractions.TestingHelpers
 {
     using XFS = MockUnixSupport;
 
+    [Serializable]
     public class PathVerifier
     {
         private static readonly char[] AdditionalInvalidPathChars = { '*', '?' };

@@ -1,7 +1,6 @@
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using NUnit.Framework;
-    using System.Reflection;
     using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
     using Text;
@@ -27,7 +26,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             //Act
             SaveFileSystem(fileSystem);
-            fileSystem = (MockFileSystem) LoadFileSystem();
+            fileSystem = (MockFileSystem)LoadFileSystem();
 
             //Clear
             ClearFileSystem();
