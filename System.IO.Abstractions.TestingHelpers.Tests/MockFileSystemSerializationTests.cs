@@ -8,38 +8,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     [TestFixture]
     class MockFileSystemSerializationTests
     {
-
-        const string FS_FILENAME = @"test.fs";
-
-        [Test]
-        public void SerializationTexts()
-        {
-            // Arrange
-            string path = XFS.Path(@"c:\something\demo.txt");
-
-            var content = "Hello there!" + Environment.NewLine + "Second line!" + Environment.NewLine;
-
-            var fileSystem = new MockFileSystem();
-            fileSystem.AddDirectory(XFS.Path(@"c:\something"));
-
-            fileSystem.File.WriteAllText(path, content);
-
-            //Act
-            SaveFileSystem(fileSystem);
-            fileSystem = (MockFileSystem)LoadFileSystem();
-
-            //Clear
-            ClearFileSystem();
-
-            // Assert
-            Assert.AreEqual(
-                content,
-                fileSystem.GetFile(path).Contents);
-            Assert.AreEqual(
-                content,
-                fileSystem.File.ReadAllText(path));
-
-        }
         [Test]
         public void SerializationBytes()
         {
