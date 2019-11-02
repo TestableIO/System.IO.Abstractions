@@ -1,8 +1,6 @@
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using NUnit.Framework;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
     using Text;
     using XFS = MockUnixSupport;
     [TestFixture]
@@ -23,11 +21,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.WriteAllBytes(path, expected);
 
             //Act
-            SaveFileSystem(fileSystem);
-            fileSystem = (MockFileSystem)LoadFileSystem();
-
-            //Clear
-            ClearFileSystem();
+            var memoryStream = new MemoryStream();
+            var serializer = new Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            serializer.Serialize(memoryStream, fileSystem);
+            memoryStream.Flush();
+            memoryStream.Position = 0; 
+            fileSystem = (MockFileSystem)serializer.Deserialize(memoryStream);
+            memoryStream.Dispose();
 
             // Assert
             Assert.AreEqual(
@@ -36,27 +36,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(
                 content,
                 fileSystem.File.ReadAllBytes(path));
-        }
-        private void SaveFileSystem(MockFileSystem fileSystem)
-        {
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(Path.GetTempPath() + FS_FILENAME, FileMode.Create, FileAccess.Write);
-            formatter.Serialize(stream, fileSystem);
-            stream.Close();
-        }
-        private IFileSystem LoadFileSystem()
-        {
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(Path.GetTempPath() + FS_FILENAME, FileMode.Open, FileAccess.Read);
-            IFileSystem fileSystem = (MockFileSystem)formatter.Deserialize(stream);
-            stream.Close();
-            return fileSystem;
-        }
-        private void ClearFileSystem()
-        {
-            string temp = Path.GetTempPath() + FS_FILENAME;
-            if (File.Exists(temp))
-                File.Delete(temp);
         }
     }
 }
