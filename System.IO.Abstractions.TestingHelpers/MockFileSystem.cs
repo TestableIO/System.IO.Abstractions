@@ -13,7 +13,6 @@ namespace System.IO.Abstractions.TestingHelpers
         private const string DEFAULT_CURRENT_DIRECTORY = @"C:\";
 
         private readonly IDictionary<string, MockFileData> files;
-        [NonSerialized]
         private readonly PathVerifier pathVerifier;
 
         public MockFileSystem() : this(null) { }
