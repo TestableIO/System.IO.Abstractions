@@ -597,7 +597,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return ReadAllLines(path, encoding);
         }
 
-#if NET40
+#if !NETSTANDARD1_4
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
         {
             Replace(sourceFileName, destinationFileName, destinationBackupFileName, false);

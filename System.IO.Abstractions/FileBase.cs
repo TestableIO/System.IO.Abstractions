@@ -347,7 +347,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="File.ReadLines(string,Encoding)"/>
         public abstract IEnumerable<string> ReadLines(string path, Encoding encoding);
 
-#if NET40
+#if !NETSTANDARD1_4
         /// <inheritdoc cref="File.Replace(string,string,string)"/>
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName);
 
@@ -657,11 +657,11 @@ namespace System.IO.Abstractions
         /// The file handle is guaranteed to be closed by this method, even if exceptions are raised.
         /// </remarks>
         public abstract void WriteAllText(string path, string contents, Encoding encoding);
-        
+
 #if NETCOREAPP2_0 || NETSTANDARD2_1
         /// <inheritdoc cref="File.WriteAllTextAsync(string,string,CancellationToken)"/>
         public abstract Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken);
-        
+
         /// <inheritdoc cref="File.WriteAllTextAsync(string,string,Encoding,CancellationToken)"/>
         public abstract Task WriteAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken);
 #endif

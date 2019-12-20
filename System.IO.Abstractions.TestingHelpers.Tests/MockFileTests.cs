@@ -610,7 +610,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 #endif
 
-#if NET40
         [Test]
         public void MockFile_Replace_ShouldReplaceFileContents()
         {
@@ -683,6 +682,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<FileNotFoundException>(() => fileSystem.File.Replace(path1, path2, null));
         }
 
+#if NET40
         [Test]
         public void MockFile_OpenRead_ShouldReturnReadOnlyStream()
         {
