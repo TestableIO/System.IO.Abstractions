@@ -128,7 +128,7 @@ namespace System.IO.Abstractions
         IEnumerable<string> ReadLines(string path);
         /// <inheritdoc cref="File.ReadLines(string,Encoding)"/>
         IEnumerable<string> ReadLines(string path, Encoding encoding);
-#if NET40
+#if !NETSTANDARD1_4
         /// <inheritdoc cref="File.Replace(string,string,string)"/>
         void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName);
         /// <inheritdoc cref="File.Replace(string,string,string,bool)"/>

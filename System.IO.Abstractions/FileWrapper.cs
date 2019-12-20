@@ -285,7 +285,7 @@ namespace System.IO.Abstractions
             return File.ReadLines(path, encoding);
         }
 
-#if NET40
+#if !NETSTANDARD1_4
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
         {
             File.Replace(sourceFileName, destinationFileName, destinationBackupFileName);
