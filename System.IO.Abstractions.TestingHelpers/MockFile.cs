@@ -159,14 +159,22 @@ namespace System.IO.Abstractions.TestingHelpers
             Create(path, bufferSize, FileOptions.None);
 
         public override Stream Create(string path, int bufferSize, FileOptions options) =>
+#if !NETCOREAPP2_1
             CreateInternal(path, bufferSize, options, null);
+#else
+            CreateInternal(path, bufferSize, options);
+#endif
 
 #if NET40
         public override Stream Create(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity) =>
             CreateInternal(path, bufferSize, options, fileSecurity);
 #endif
 
+#if !NETCOREAPP2_1
         private Stream CreateInternal(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
+#else
+        private Stream CreateInternal(string path, int bufferSize, FileOptions options)
+#endif
         {
             if (path == null)
             {
@@ -178,7 +186,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
             var mockFileData = new MockFileData(new byte[0])
             {
+#if !NETCOREAPP2_1
                 AccessControl = fileSecurity
+#endif
             };
             mockFileDataAccessor.AddFile(path, mockFileData);
             return OpenWriteInternal(path, options);
@@ -235,6 +245,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return file != null && !file.IsDirectory;
         }
 
+#if !NETCOREAPP2_1
         public override FileSecurity GetAccessControl(string path)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -252,6 +263,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             return GetAccessControl(path);
         }
+#endif
 
         /// <summary>
         /// Gets the <see cref="FileAttributes"/> of the file on the path.
@@ -635,6 +647,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 #endif
 
+#if !NETCOREAPP2_1
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -647,6 +660,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var fileData = mockFileDataAccessor.GetFile(path);
             fileData.AccessControl = fileSecurity;
         }
+#endif
 
         public override void SetAttributes(string path, FileAttributes fileAttributes)
         {

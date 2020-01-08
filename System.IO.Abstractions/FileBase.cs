@@ -119,11 +119,15 @@ namespace System.IO.Abstractions
         /// </remarks>
         public abstract bool Exists(string path);
 
+#if !NETCOREAPP2_1
+
         /// <inheritdoc cref="File.GetAccessControl(string)"/>
         public abstract FileSecurity GetAccessControl(string path);
 
         /// <inheritdoc cref="File.GetAccessControl(string,AccessControlSections)"/>
         public abstract FileSecurity GetAccessControl(string path, AccessControlSections includeSections);
+
+#endif
 
         /// <inheritdoc cref="File.GetAttributes"/>
         /// <summary>
@@ -355,8 +359,10 @@ namespace System.IO.Abstractions
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
 #endif
 
+#if !NETCOREAPP2_1
         /// <inheritdoc cref="File.SetAccessControl(string,FileSecurity)"/>
         public abstract void SetAccessControl(string path, FileSecurity fileSecurity);
+#endif
 
         /// <inheritdoc cref="File.SetAttributes"/>
         public abstract void SetAttributes(string path, FileAttributes fileAttributes);

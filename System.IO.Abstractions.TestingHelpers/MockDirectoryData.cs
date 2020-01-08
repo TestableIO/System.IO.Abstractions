@@ -5,8 +5,11 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockDirectoryData : MockFileData
     {
+
+#if !NETCOREAPP2_1
         [NonSerialized]
         private DirectorySecurity accessControl;
+#endif
         
         public override bool IsDirectory { get { return true; } }
 
@@ -15,6 +18,7 @@ namespace System.IO.Abstractions.TestingHelpers
             Attributes = FileAttributes.Directory;
         }
 
+#if !NETCOREAPP2_1
         public new DirectorySecurity AccessControl
         {
             get
@@ -25,5 +29,6 @@ namespace System.IO.Abstractions.TestingHelpers
             }
             set { accessControl = value; }
         }
+#endif
     }
 }

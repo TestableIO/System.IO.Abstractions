@@ -27,7 +27,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override IDirectoryInfo CreateDirectory(string path)
         {
+#if !NETCOREAPP2_1
             return CreateDirectoryInternal(path, null);
+#else
+            return CreateDirectoryInternal(path);
+#endif
         }
 
 #if NET40
@@ -37,7 +41,11 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 #endif
 
+#if !NETCOREAPP2_1
         private IDirectoryInfo CreateDirectoryInternal(string path, DirectorySecurity directorySecurity)
+#else
+        private IDirectoryInfo CreateDirectoryInternal(string path)
+#endif
         {
             if (path == null)
             {
@@ -62,10 +70,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
 
+#if !NETCOREAPP2_1
             if (directorySecurity != null)
             {
                 created.SetAccessControl(directorySecurity);
             }
+#endif
 
             return created;
         }
@@ -122,6 +132,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+#if !NETCOREAPP2_1
         public override DirectorySecurity GetAccessControl(string path)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -141,6 +152,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetAccessControl(path);
         }
 
+#endif
         public override DateTime GetCreationTime(string path)
         {
             return mockFileDataAccessor.File.GetCreationTime(path);
@@ -422,6 +434,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.MoveDirectory(fullSourcePath, fullDestPath);
         }
 
+#if !NETCOREAPP2_1
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -435,6 +448,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var directoryData = (MockDirectoryData)mockFileDataAccessor.GetFile(path);
             directoryData.AccessControl = directorySecurity;
         }
+#endif
 
         public override void SetCreationTime(string path, DateTime creationTime)
         {

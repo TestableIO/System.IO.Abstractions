@@ -37,11 +37,13 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Directory.Exists"/>
         public abstract bool Exists(string path);
 
+#if !NETCOREAPP2_1
         /// <inheritdoc cref="Directory.GetAccessControl(string)"/>
         public abstract DirectorySecurity GetAccessControl(string path);
 
         /// <inheritdoc cref="Directory.GetAccessControl(string,AccessControlSections)"/>
         public abstract DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections);
+#endif
 
         /// <inheritdoc cref="Directory.GetCreationTime"/>
         public abstract DateTime GetCreationTime(string path);
@@ -102,8 +104,10 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Directory.Move"/>
         public abstract void Move(string sourceDirName, string destDirName);
 
+#if !NETCOREAPP2_1
         /// <inheritdoc cref="Directory.SetAccessControl"/>
         public abstract void SetAccessControl(string path, DirectorySecurity directorySecurity);
+#endif
 
         /// <inheritdoc cref="Directory.SetCreationTime"/>
         public abstract void SetCreationTime(string path, DateTime creationTime);

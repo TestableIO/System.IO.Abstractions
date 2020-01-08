@@ -20,10 +20,12 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileInfo.Encrypt"/>
         void Encrypt();
 #endif
+#if !NETCOREAPP2_1
         /// <inheritdoc cref="FileInfo.GetAccessControl()"/>
         FileSecurity GetAccessControl();
         /// <inheritdoc cref="FileInfo.GetAccessControl(AccessControlSections)"/>
         FileSecurity GetAccessControl(AccessControlSections includeSections);
+#endif
         /// <inheritdoc cref="FileInfo.MoveTo"/>
         void MoveTo(string destFileName);
         /// <inheritdoc cref="FileInfo.Open(FileMode)"/>
@@ -44,8 +46,10 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileInfo.Replace(string,string,bool)"/>
         IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
 #endif
+#if !NETCOREAPP2_1
         /// <inheritdoc cref="FileInfo.SetAccessControl(FileSecurity)"/>
         void SetAccessControl(FileSecurity fileSecurity);
+#endif
         /// <inheritdoc cref="FileInfo.Directory"/>
         IDirectoryInfo Directory { get; }
         /// <inheritdoc cref="FileInfo.DirectoryName"/>

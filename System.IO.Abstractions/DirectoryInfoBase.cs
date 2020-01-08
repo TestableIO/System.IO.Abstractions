@@ -58,11 +58,13 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="DirectoryInfo.EnumerateFileSystemInfos(string,SearchOption)"/>
         public abstract IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, SearchOption searchOption);
 
+#if !NETCOREAPP2_1
         /// <inheritdoc cref="DirectoryInfo.GetAccessControl()"/>
         public abstract DirectorySecurity GetAccessControl();
 
         /// <inheritdoc cref="DirectoryInfo.GetAccessControl(AccessControlSections)"/>
         public abstract DirectorySecurity GetAccessControl(AccessControlSections includeSections);
+#endif
 
         /// <inheritdoc cref="DirectoryInfo.GetDirectories()"/>
         public abstract IDirectoryInfo[] GetDirectories();
@@ -94,8 +96,10 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="DirectoryInfo.MoveTo"/>
         public abstract void MoveTo(string destDirName);
 
+#if !NETCOREAPP2_1
         /// <inheritdoc cref="DirectoryInfo.SetAccessControl"/>
         public abstract void SetAccessControl(DirectorySecurity directorySecurity);
+#endif
 
         /// <inheritdoc cref="DirectoryInfo.Parent"/>
         public abstract IDirectoryInfo Parent { get; }

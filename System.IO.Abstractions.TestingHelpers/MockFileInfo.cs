@@ -201,6 +201,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 #endif
 
+#if !NETCOREAPP2_1
         public override FileSecurity GetAccessControl()
         {
             return mockFileSystem.File.GetAccessControl(this.path);
@@ -210,6 +211,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             return mockFileSystem.File.GetAccessControl(this.path, includeSections);
         }
+#endif
 
         public override void MoveTo(string destFileName)
         {
@@ -266,10 +268,12 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 #endif
 
+#if !NETCOREAPP2_1
         public override void SetAccessControl(FileSecurity fileSecurity)
         {
             mockFileSystem.File.SetAccessControl(this.path, fileSecurity);
         }
+#endif
 
         public override IDirectoryInfo Directory
         {

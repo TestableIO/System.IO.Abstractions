@@ -127,6 +127,7 @@ namespace System.IO.Abstractions
             return File.Exists(path);
         }
 
+#if !NETCOREAPP2_1
         public override FileSecurity GetAccessControl(string path)
         {
             return new FileInfo(path).GetAccessControl();
@@ -136,6 +137,7 @@ namespace System.IO.Abstractions
         {
             return new FileInfo(path).GetAccessControl(includeSections);
         }
+#endif
 
         /// <summary>
         /// Gets the <see cref="FileAttributes"/> of the file on the path.
@@ -297,10 +299,13 @@ namespace System.IO.Abstractions
         }
 #endif
 
+#if !NETCOREAPP2_1
+
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
             new FileInfo(path).SetAccessControl(fileSecurity);
         }
+#endif
 
         public override void SetAttributes(string path, FileAttributes fileAttributes)
         {

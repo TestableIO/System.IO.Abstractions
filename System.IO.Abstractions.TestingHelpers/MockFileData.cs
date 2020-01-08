@@ -32,11 +32,13 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </summary>
         public static readonly DateTimeOffset DefaultDateTimeOffset = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc);
 
+#if !NETCOREAPP2_1
         /// <summary>
         /// The access control of the <see cref="MockFileData"/>.
         /// </summary>
         [NonSerialized]
         private FileSecurity accessControl;
+#endif
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="MockFileData"/> is a directory or not.
@@ -94,7 +96,9 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentNullException(nameof(template));
             }
 
+#if !NETCOREAPP2_1
             accessControl = template.accessControl;
+#endif
             Attributes = template.Attributes;
             Contents = template.Contents.ToArray();
             CreationTime = template.CreationTime;
@@ -148,6 +152,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </summary>
         public FileAttributes Attributes { get; set; } = FileAttributes.Normal;
 
+#if !NETCOREAPP2_1
         /// <summary>
         /// Gets or sets <see cref="FileSecurity"/> of the <see cref="MockFileData"/>. This is the object that is returned for this <see cref="MockFileData"/> when calling <see cref="FileBase.GetAccessControl(string)"/>.
         /// </summary>
@@ -161,6 +166,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
             set { accessControl = value; }
         }
+#endif
 
         /// <summary>
         /// Gets or sets the File sharing mode for this file, this allows you to lock a file for reading or writing.

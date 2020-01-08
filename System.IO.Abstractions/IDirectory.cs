@@ -23,10 +23,14 @@ namespace System.IO.Abstractions
         void Delete(string path, bool recursive);
         /// <inheritdoc cref="Directory.Exists"/>
         bool Exists(string path);
+
+#if !NETCOREAPP2_1
         /// <inheritdoc cref="Directory.GetAccessControl(string)"/>
         DirectorySecurity GetAccessControl(string path);
+
         /// <inheritdoc cref="Directory.GetAccessControl(string,AccessControlSections)"/>
         DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections);
+#endif
         /// <inheritdoc cref="Directory.GetCreationTime"/>
         DateTime GetCreationTime(string path);
         /// <inheritdoc cref="Directory.GetCreationTimeUtc"/>
@@ -67,8 +71,11 @@ namespace System.IO.Abstractions
         IDirectoryInfo GetParent(string path);
         /// <inheritdoc cref="Directory.Move"/>
         void Move(string sourceDirName, string destDirName);
+
+#if !NETCOREAPP2_1
         /// <inheritdoc cref="Directory.SetAccessControl"/>
         void SetAccessControl(string path, DirectorySecurity directorySecurity);
+#endif
         /// <inheritdoc cref="Directory.SetCreationTime"/>
         void SetCreationTime(string path, DateTime creationTime);
         /// <inheritdoc cref="Directory.SetCreationTimeUtc"/>
