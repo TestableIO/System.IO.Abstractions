@@ -494,6 +494,18 @@ namespace System.IO.Abstractions.TestingHelpers
                 .Where(p => !mockFileDataAccessor.StringOperations.Equals(p, path));
         }
 
+#if NETSTANDARD2_1
+        public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            var searchOption = enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+            path = path.TrimSlashes();
+            path = mockFileDataAccessor.Path.GetFullPath(path);
+            return GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption)
+                .Where(p => !mockFileDataAccessor.StringOperations.Equals(p, path));
+        }
+#endif
+
         public override IEnumerable<string> EnumerateFiles(string path)
         {
             return GetFiles(path);
@@ -508,6 +520,14 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             return GetFiles(path, searchPattern, searchOption);
         }
+
+#if NETSTANDARD2_1
+        public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            var searchOption = enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            return GetFiles(path, searchPattern, searchOption);
+        }
+#endif
 
         public override IEnumerable<string> EnumerateFileSystemEntries(string path)
         {
@@ -529,6 +549,16 @@ namespace System.IO.Abstractions.TestingHelpers
             fileSystemEntries.AddRange(GetDirectories(path, searchPattern, searchOption));
             return fileSystemEntries;
         }
+
+#if NETSTANDARD2_1
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            var searchOption = enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            var fileSystemEntries = new List<string>(GetFiles(path, searchPattern, searchOption));
+            fileSystemEntries.AddRange(GetDirectories(path, searchPattern, searchOption));
+            return fileSystemEntries;
+        }
+#endif
 
         private string EnsureAbsolutePath(string path)
         {
