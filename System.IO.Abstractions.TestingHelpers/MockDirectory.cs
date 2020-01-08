@@ -494,7 +494,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 .Where(p => !mockFileDataAccessor.StringOperations.Equals(p, path));
         }
 
-#if NETSTANDARD2_1
+#if NETSTANDARD2_1 || NETCOREAPP2_1
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
             var searchOption = enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
@@ -521,7 +521,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetFiles(path, searchPattern, searchOption);
         }
 
-#if NETSTANDARD2_1
+#if NETSTANDARD2_1 || NETCOREAPP2_1
         public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
             var searchOption = enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
@@ -550,7 +550,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return fileSystemEntries;
         }
 
-#if NETSTANDARD2_1
+#if NETSTANDARD2_1 || NETCOREAPP2_1
         public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
             var searchOption = enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
