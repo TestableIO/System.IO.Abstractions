@@ -8,7 +8,7 @@ using System.Security.AccessControl;
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using XFS = MockUnixSupport;
-
+#if !NETCOREAPP2_1
     [TestFixture]
     [WindowsOnly(WindowsSpecifics.AccessControlLists)]
     public class MockFileGetAccessControlTests
@@ -67,4 +67,5 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(fileSecurity, Is.EqualTo(expectedFileSecurity));
         }
     }
+#endif
 }

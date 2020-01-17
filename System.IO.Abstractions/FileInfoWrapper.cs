@@ -121,6 +121,7 @@ namespace System.IO.Abstractions
         }
 #endif
 
+#if !NETCOREAPP2_1
         public override FileSecurity GetAccessControl()
         {
             return instance.GetAccessControl();
@@ -130,6 +131,7 @@ namespace System.IO.Abstractions
         {
             return instance.GetAccessControl(includeSections);
         }
+#endif
 
         public override void MoveTo(string destFileName)
         {
@@ -178,10 +180,12 @@ namespace System.IO.Abstractions
         }
 #endif
 
+#if !NETCOREAPP2_1
         public override void SetAccessControl(FileSecurity fileSecurity)
         {
             instance.SetAccessControl(fileSecurity);
         }
+#endif
 
         public override IDirectoryInfo Directory
         {

@@ -66,10 +66,14 @@ namespace System.IO.Abstractions
 #endif
         /// <inheritdoc cref="File.Exists"/>
         bool Exists(string path);
+
+#if !NETCOREAPP2_1
         /// <inheritdoc cref="File.GetAccessControl(string)"/>
         FileSecurity GetAccessControl(string path);
         /// <inheritdoc cref="File.GetAccessControl(string,AccessControlSections)"/>
         FileSecurity GetAccessControl(string path, AccessControlSections includeSections);
+#endif
+
         /// <inheritdoc cref="File.GetAttributes"/>
         FileAttributes GetAttributes(string path);
         /// <inheritdoc cref="File.GetCreationTime"/>
@@ -134,8 +138,12 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="File.Replace(string,string,string,bool)"/>
         void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
 #endif
+
+#if !NETCOREAPP2_1
         /// <inheritdoc cref="File.SetAccessControl(string,FileSecurity)"/>
         void SetAccessControl(string path, FileSecurity fileSecurity);
+#endif
+
         /// <inheritdoc cref="File.SetAttributes"/>
         void SetAttributes(string path, FileAttributes fileAttributes);
         /// <inheritdoc cref="File.SetCreationTime"/>

@@ -27,7 +27,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override IDirectoryInfo CreateDirectory(string path)
         {
+#if !NETCOREAPP2_1
             return CreateDirectoryInternal(path, null);
+#else
+            return CreateDirectoryInternal(path);
+#endif
         }
 
 #if NET40
@@ -37,7 +41,11 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 #endif
 
+#if !NETCOREAPP2_1
         private IDirectoryInfo CreateDirectoryInternal(string path, DirectorySecurity directorySecurity)
+#else
+        private IDirectoryInfo CreateDirectoryInternal(string path)
+#endif
         {
             if (path == null)
             {
@@ -62,10 +70,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
 
+#if !NETCOREAPP2_1
             if (directorySecurity != null)
             {
                 created.SetAccessControl(directorySecurity);
             }
+#endif
 
             return created;
         }
@@ -122,6 +132,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+#if !NETCOREAPP2_1
         public override DirectorySecurity GetAccessControl(string path)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -141,6 +152,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetAccessControl(path);
         }
 
+#endif
         public override DateTime GetCreationTime(string path)
         {
             return mockFileDataAccessor.File.GetCreationTime(path);
@@ -422,6 +434,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.MoveDirectory(fullSourcePath, fullDestPath);
         }
 
+#if !NETCOREAPP2_1
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -435,6 +448,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var directoryData = (MockDirectoryData)mockFileDataAccessor.GetFile(path);
             directoryData.AccessControl = directorySecurity;
         }
+#endif
 
         public override void SetCreationTime(string path, DateTime creationTime)
         {
@@ -494,6 +508,18 @@ namespace System.IO.Abstractions.TestingHelpers
                 .Where(p => !mockFileDataAccessor.StringOperations.Equals(p, path));
         }
 
+#if NETSTANDARD2_1 || NETCOREAPP2_1
+        public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            var searchOption = enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+            path = path.TrimSlashes();
+            path = mockFileDataAccessor.Path.GetFullPath(path);
+            return GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption)
+                .Where(p => !mockFileDataAccessor.StringOperations.Equals(p, path));
+        }
+#endif
+
         public override IEnumerable<string> EnumerateFiles(string path)
         {
             return GetFiles(path);
@@ -508,6 +534,14 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             return GetFiles(path, searchPattern, searchOption);
         }
+
+#if NETSTANDARD2_1 || NETCOREAPP2_1
+        public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            var searchOption = enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            return GetFiles(path, searchPattern, searchOption);
+        }
+#endif
 
         public override IEnumerable<string> EnumerateFileSystemEntries(string path)
         {
@@ -529,6 +563,16 @@ namespace System.IO.Abstractions.TestingHelpers
             fileSystemEntries.AddRange(GetDirectories(path, searchPattern, searchOption));
             return fileSystemEntries;
         }
+
+#if NETSTANDARD2_1 || NETCOREAPP2_1
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            var searchOption = enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            var fileSystemEntries = new List<string>(GetFiles(path, searchPattern, searchOption));
+            fileSystemEntries.AddRange(GetDirectories(path, searchPattern, searchOption));
+            return fileSystemEntries;
+        }
+#endif
 
         private string EnsureAbsolutePath(string path)
         {

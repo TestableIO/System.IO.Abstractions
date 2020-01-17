@@ -37,11 +37,13 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Directory.Exists"/>
         public abstract bool Exists(string path);
 
+#if !NETCOREAPP2_1
         /// <inheritdoc cref="Directory.GetAccessControl(string)"/>
         public abstract DirectorySecurity GetAccessControl(string path);
 
         /// <inheritdoc cref="Directory.GetAccessControl(string,AccessControlSections)"/>
         public abstract DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections);
+#endif
 
         /// <inheritdoc cref="Directory.GetCreationTime"/>
         public abstract DateTime GetCreationTime(string path);
@@ -102,8 +104,10 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Directory.Move"/>
         public abstract void Move(string sourceDirName, string destDirName);
 
+#if !NETCOREAPP2_1
         /// <inheritdoc cref="Directory.SetAccessControl"/>
         public abstract void SetAccessControl(string path, DirectorySecurity directorySecurity);
+#endif
 
         /// <inheritdoc cref="Directory.SetCreationTime"/>
         public abstract void SetCreationTime(string path, DateTime creationTime);
@@ -135,6 +139,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Directory.EnumerateDirectories(string,string,SearchOption)"/>
         public abstract IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
 
+#if NETSTANDARD2_1 || NETCOREAPP2_1
+        /// <inheritdoc cref="Directory.EnumerateDirectories(string,string,EnumerationOptions)"/>
+        public abstract IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions);
+#endif
+
         /// <inheritdoc cref="Directory.EnumerateFiles(string)"/>
         public abstract IEnumerable<string> EnumerateFiles(string path);
 
@@ -144,6 +153,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Directory.EnumerateFiles(string,string,SearchOption)"/>
         public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
 
+#if NETSTANDARD2_1 || NETCOREAPP2_1
+        /// <inheritdoc cref="Directory.EnumerateFiles(string,string,EnumerationOptions)"/>
+        public abstract IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions);
+#endif
+
         /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string)"/>
         public abstract IEnumerable<string> EnumerateFileSystemEntries(string path);
 
@@ -152,5 +166,10 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string,string,SearchOption)"/>
         public abstract IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
+
+#if NETSTANDARD2_1 || NETCOREAPP2_1
+        /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string,string,EnumerationOptions)"/>
+        public abstract IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions);
+#endif
     }
 }

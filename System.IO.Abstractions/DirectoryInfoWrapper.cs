@@ -160,6 +160,7 @@ namespace System.IO.Abstractions
             return instance.EnumerateFileSystemInfos(searchPattern, searchOption).WrapFileSystemInfos(FileSystem);
         }
 
+#if !NETCOREAPP2_1
         public override DirectorySecurity GetAccessControl()
         {
             return instance.GetAccessControl();
@@ -169,6 +170,7 @@ namespace System.IO.Abstractions
         {
             return instance.GetAccessControl(includeSections);
         }
+#endif
 
         public override IDirectoryInfo[] GetDirectories()
         {
@@ -220,10 +222,12 @@ namespace System.IO.Abstractions
             instance.MoveTo(destDirName);
         }
 
+#if !NETCOREAPP2_1
         public override void SetAccessControl(DirectorySecurity directorySecurity)
         {
             instance.SetAccessControl(directorySecurity);
         }
+#endif
 
         public override IDirectoryInfo Parent
         {

@@ -8,7 +8,7 @@ using System.Security.AccessControl;
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using XFS = MockUnixSupport;
-
+#if !NETCOREAPP2_1
     [TestFixture]
     [WindowsOnly(WindowsSpecifics.AccessControlLists)]
     public class MockDirectoryGetAccessControlTests
@@ -67,4 +67,5 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(directorySecurity, Is.EqualTo(expectedDirectorySecurity));
         }
     }
+#endif
 }

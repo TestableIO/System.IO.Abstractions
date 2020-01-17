@@ -196,6 +196,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetFileSystemInfos(searchPattern, searchOption);
         }
 
+#if !NETCOREAPP2_1
         public override DirectorySecurity GetAccessControl()
         {
             return mockFileDataAccessor.Directory.GetAccessControl(directoryPath);
@@ -205,6 +206,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             return mockFileDataAccessor.Directory.GetAccessControl(directoryPath, includeSections);
         }
+#endif
 
         public override IDirectoryInfo[] GetDirectories()
         {
@@ -271,10 +273,12 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
         }
 
+#if !NETCOREAPP2_1
         public override void SetAccessControl(DirectorySecurity directorySecurity)
         {
             mockFileDataAccessor.Directory.SetAccessControl(directoryPath, directorySecurity);
         }
+#endif
 
         public override IDirectoryInfo Parent
         {
