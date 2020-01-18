@@ -1,0 +1,7 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <PackageId>System.IO.Abstractions</PackageId>
+    <RootNamespace>System.IO.Abstractions</RootNamespace>
+    <Description>A set of abstractions to help make file system interactions testable.</Description>
+  </PropertyGroup>
+</Project>

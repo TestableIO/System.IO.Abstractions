@@ -1,16 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project>
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
-    <Authors>Tatham Oddie</Authors>
-    <Company />
-    <Description>A set of abstractions to help make file system interactions testable.</Description>
+    <Product>System.IO.Abstractions</Product>
     <Copyright>Copyright © Tatham Oddie 2010</Copyright>
-    <PackageLicenseUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions/blob/master/LICENSE</PackageLicenseUrl>
+    <Authors>Tatham Oddie &amp; friends</Authors>
     <PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions/blob/master/LICENSE</PackageLicenseUrl>
     <PackageTags>testing</PackageTags>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>$(NoWarn);CS1591;CS1574</NoWarn>
     <SignAssembly Condition="'$(Configuration)' == 'Release'">True</SignAssembly>
     <AssemblyOriginatorKeyFile>../StrongName.snk</AssemblyOriginatorKeyFile>
     <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.1'">$(DefineConstants);FEATURE_ASYNC_FILE;FEATURE_ENUMERATION_OPTIONS</DefineConstants>
@@ -18,10 +15,6 @@
 
   <ItemGroup>
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0"/>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.0.28">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.0.50">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
