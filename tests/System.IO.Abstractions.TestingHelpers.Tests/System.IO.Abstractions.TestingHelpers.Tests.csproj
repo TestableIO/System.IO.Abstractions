@@ -11,8 +11,6 @@
     <RootNamespace>System.IO.Abstractions.TestingHelpers.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
     <IsTestable>true</IsTestable>
-    <!-- Workaround for https://github.com/nunit/nunit3-vs-adapter/issues/296 -->
-    <DebugType>Full</DebugType>
     <DefineConstants Condition="'$(TargetFramework)' == 'netcoreapp3.0'">$(DefineConstants);FEATURE_ASYNC_FILE;FEATURE_ENUMERATION_OPTIONS</DefineConstants>
   </PropertyGroup>
 
