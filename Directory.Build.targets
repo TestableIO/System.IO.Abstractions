@@ -1,5 +1,0 @@
-<Project>
-  <Target Name="VSTestIfTestProject">
-    <CallTarget Targets="VSTest" Condition="'$(IsTestable)' == 'true'" />
-  </Target>
-</Project>

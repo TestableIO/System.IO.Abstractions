@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net472</TargetFrameworks>
+    <Description>The unit tests for our pre-built mocks</Description>
+    <RootNamespace>System.IO.Abstractions.TestingHelpers.Tests</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <IsTestable>true</IsTestable>
+    <DefineConstants Condition="'$(TargetFramework)' == 'netcoreapp3.0'">$(DefineConstants);FEATURE_ASYNC_FILE;FEATURE_ENUMERATION_OPTIONS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="TestFiles\SecondTestFile.txt" />
+    <None Remove="TestFiles\TestFile.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestFiles\SecondTestFile.txt" />
+    <EmbeddedResource Include="TestFiles\TestFile.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/System.IO.Abstractions/System.IO.Abstractions.csproj" />
+    <ProjectReference Include="../../src/System.IO.Abstractions.TestingHelpers/System.IO.Abstractions.TestingHelpers.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+    <PackageReference Include="Moq" Version="4.13.1" />
+    <PackageReference Include="nunit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+  </ItemGroup>
+</Project>
