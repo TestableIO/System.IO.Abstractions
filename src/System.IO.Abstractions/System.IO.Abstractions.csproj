@@ -3,5 +3,7 @@
     <PackageId>System.IO.Abstractions</PackageId>
     <RootNamespace>System.IO.Abstractions</RootNamespace>
     <Description>A set of abstractions to help make file system interactions testable.</Description>
+    <PackageLicenseUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions/blob/master/LICENSE</PackageLicenseUrl>		
+    <PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
   </PropertyGroup>
 </Project>
