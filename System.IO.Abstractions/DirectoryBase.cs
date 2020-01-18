@@ -23,6 +23,9 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Directory.CreateDirectory(string)"/>
         public abstract IDirectoryInfo CreateDirectory(string path);
 
+        /// <inheritdoc cref="Directory.CreateDirectory(string,DirectorySecurity)"/>
+        public abstract IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity);
+
         /// <inheritdoc cref="Directory.Delete(string)"/>
         public abstract void Delete(string path);
 

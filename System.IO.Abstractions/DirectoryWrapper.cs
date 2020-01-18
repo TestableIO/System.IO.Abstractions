@@ -12,7 +12,16 @@ namespace System.IO.Abstractions
 
         public override IDirectoryInfo CreateDirectory(string path)
         {
-            return new DirectoryInfoWrapper(FileSystem, Directory.CreateDirectory(path));
+            var directoryInfo = new DirectoryInfo(path);
+            directoryInfo.Create();
+            return new DirectoryInfoWrapper(FileSystem, directoryInfo);
+        }
+
+        public override IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity)
+        {
+            var directoryInfo = new DirectoryInfo(path);
+            directoryInfo.Create(directorySecurity);
+            return new DirectoryInfoWrapper(FileSystem, directoryInfo);
         }
 
         public override void Delete(string path)

@@ -13,8 +13,7 @@
         <NoWarn>$(NoWarn);CS1591;CS1574</NoWarn>
         <SignAssembly Condition="'$(Configuration)' == 'Release'">True</SignAssembly>
         <AssemblyOriginatorKeyFile>../StrongName.snk</AssemblyOriginatorKeyFile>
-        <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.0'">$(DefineContstants);</DefineConstants>
-        <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.1'">$(DefineContstants);FEATURE_ASYNC_FILE</DefineConstants>
+        <DefineConstants Condition="'$(TargetFramework)' != 'netstandard2.0'">$(DefineContstants);FEATURE_ASYNC_FILE</DefineConstants>
     </PropertyGroup>
 
     <ItemGroup>

@@ -185,21 +185,19 @@ namespace System.IO.Abstractions.TestingHelpers
             return new MockFile(mockFileSystem).CreateText(FullName);
         }
 
-#if NET40
         public override void Decrypt()
         {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
+            if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
 
             MockFileData.Attributes &= ~FileAttributes.Encrypted;
         }
 
         public override void Encrypt()
         {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
+            if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
 
             MockFileData.Attributes |= FileAttributes.Encrypted;
         }
-#endif
 
         public override FileSecurity GetAccessControl()
         {
@@ -253,7 +251,6 @@ namespace System.IO.Abstractions.TestingHelpers
             return new MockFileStream(mockFileSystem, path, MockFileStream.StreamType.WRITE);
         }
 
-#if NET40
         public override IFileInfo Replace(string destinationFileName, string destinationBackupFileName)
         {
             return Replace(destinationFileName, destinationBackupFileName, false);
@@ -264,7 +261,6 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileSystem.File.Replace(path, destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
             return mockFileSystem.FileInfo.FromFileName(destinationFileName);
         }
-#endif
 
         public override void SetAccessControl(FileSecurity fileSecurity)
         {

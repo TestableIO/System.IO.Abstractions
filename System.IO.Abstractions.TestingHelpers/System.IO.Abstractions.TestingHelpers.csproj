@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>netstandard1.4;netstandard2.0;netstandard2.1;netcoreapp2.0</TargetFrameworks>
-        <TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net40</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
         <PackageId>System.IO.Abstractions.TestingHelpers</PackageId>
         <Description>A set of pre-built mocks to help when testing file system interactions.</Description>
         <Company />
@@ -12,6 +11,7 @@
         <AssemblyOriginatorKeyFile>../StrongName.snk</AssemblyOriginatorKeyFile>
         <PackageLicenseUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions/blob/master/LICENSE</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
+        <DefineConstants Condition="'$(TargetFramework)' != 'netstandard2.0'">$(DefineContstants);FEATURE_ASYNC_FILE</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -44,10 +44,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Nerdbank.GitVersioning" Version="3.0.28">
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-        <PrivateAssets>all</PrivateAssets>
-      </PackageReference>
+        <PackageReference Include="Nerdbank.GitVersioning" Version="3.0.28">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
     </ItemGroup>
 
 </Project>

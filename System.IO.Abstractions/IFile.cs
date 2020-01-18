@@ -15,11 +15,11 @@ namespace System.IO.Abstractions
         void AppendAllLines(string path, IEnumerable<string> contents);
         /// <inheritdoc cref="File.AppendAllLines(string,IEnumerable{string},Encoding)"/>
         void AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding);
-        /// <inheritdoc cref="File.AppendAllLinesAsync(string,IEnumerable{string},CancellationToken)"/>
-               void AppendAllText(string path, string contents);
+        /// <inheritdoc cref="File.AppendAllText(string,string)"/>
+        void AppendAllText(string path, string contents);
         /// <inheritdoc cref="File.AppendAllText(string,string,Encoding)"/>
         void AppendAllText(string path, string contents, Encoding encoding);
-       /// <inheritdoc cref="File.AppendText"/>
+        /// <inheritdoc cref="File.AppendText"/>
         StreamWriter AppendText(string path);
         /// <inheritdoc cref="File.Copy(string,string)"/>
         void Copy(string sourceFileName, string destFileName);
@@ -75,11 +75,11 @@ namespace System.IO.Abstractions
         Stream OpenWrite(string path);
         /// <inheritdoc cref="File.ReadAllBytes"/>
         byte[] ReadAllBytes(string path);
-         /// <inheritdoc cref="File.ReadAllLines(string)"/>
+        /// <inheritdoc cref="File.ReadAllLines(string)"/>
         string[] ReadAllLines(string path);
         /// <inheritdoc cref="File.ReadAllLines(string,Encoding)"/>
         string[] ReadAllLines(string path, Encoding encoding);
-         /// <inheritdoc cref="File.ReadAllText(string)"/>
+        /// <inheritdoc cref="File.ReadAllText(string)"/>
         string ReadAllText(string path);
         /// <inheritdoc cref="File.ReadAllText(string,Encoding)"/>
         string ReadAllText(string path, Encoding encoding);
@@ -109,7 +109,7 @@ namespace System.IO.Abstractions
         void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc);
         /// <inheritdoc cref="File.WriteAllBytes"/>
         void WriteAllBytes(string path, byte[] bytes);
-         /// <inheritdoc cref="File.WriteAllLines(string,IEnumerable{string})"/>
+        /// <inheritdoc cref="File.WriteAllLines(string,IEnumerable{string})"/>
         void WriteAllLines(string path, IEnumerable<string> contents);
         /// <inheritdoc cref="File.WriteAllLines(string,IEnumerable{string},Encoding)"/>
         void WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding);
@@ -117,9 +117,9 @@ namespace System.IO.Abstractions
         void WriteAllLines(string path, string[] contents);
         /// <inheritdoc cref="File.WriteAllLines(string,string[],Encoding)"/>
         void WriteAllLines(string path, string[] contents, Encoding encoding);
-       /// <inheritdoc cref="File.WriteAllText(string,string)"/>
+        /// <inheritdoc cref="File.WriteAllText(string,string)"/>
         void WriteAllText(string path, string contents);
         /// <inheritdoc cref="File.WriteAllText(string,string,Encoding)"/>
         void WriteAllText(string path, string contents, Encoding encoding);
-        }
+    }
 }

@@ -127,24 +127,15 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.Directory.CreateDirectory(FullName);
         }
 
-#if NET40
         public override void Create(DirectorySecurity directorySecurity)
         {
             mockFileDataAccessor.Directory.CreateDirectory(FullName, directorySecurity);
         }
-#endif
 
         public override IDirectoryInfo CreateSubdirectory(string path)
         {
             return mockFileDataAccessor.Directory.CreateDirectory(Path.Combine(FullName, path));
         }
-
-#if NET40
-        public override IDirectoryInfo CreateSubdirectory(string path, DirectorySecurity directorySecurity)
-        {
-            return mockFileDataAccessor.Directory.CreateDirectory(Path.Combine(FullName, path), directorySecurity);
-        }
-#endif
 
         public override void Delete(bool recursive)
         {

@@ -30,12 +30,10 @@ namespace System.IO.Abstractions.TestingHelpers
             return CreateDirectoryInternal(path, null);
         }
 
-#if NET40
         public override IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
             return CreateDirectoryInternal(path, directorySecurity);
         }
-#endif
 
         private IDirectoryInfo CreateDirectoryInternal(string path, DirectorySecurity directorySecurity)
         {
@@ -315,7 +313,6 @@ namespace System.IO.Abstractions.TestingHelpers
             return mockFileDataAccessor.File.GetLastWriteTimeUtc(path);
         }
 
-#if NET40
         public override string[] GetLogicalDrives()
         {
             return mockFileDataAccessor
@@ -325,7 +322,6 @@ namespace System.IO.Abstractions.TestingHelpers
                 .Distinct()
                 .ToArray();
         }
-#endif
 
         public override IDirectoryInfo GetParent(string path)
         {
