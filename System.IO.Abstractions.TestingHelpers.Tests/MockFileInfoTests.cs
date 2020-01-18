@@ -255,7 +255,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.AreEqual("ABCDEtext content", newcontents);
         }
-#if NET40
+
         [Test]
         public void MockFileInfo_Encrypt_ShouldSetEncryptedAttributeOfFileInMemoryFileSystem()
         {
@@ -286,7 +286,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.AreNotEqual(FileAttributes.Encrypted, fileData.Attributes & FileAttributes.Encrypted);
         }
-#endif
 
         [Test]
         public void MockFileInfo_LastAccessTimeUtc_ShouldReturnLastAccessTimeUtcOfFileInMemoryFileSystem()
@@ -565,7 +564,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-#if NET40
         [Test]
         public void MockFileInfo_Replace_ShouldReplaceFileContents()
         {
@@ -662,6 +660,5 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.Throws<FileNotFoundException>(() => fileInfo.Replace(path2, null));
         }
-#endif
     }
 }

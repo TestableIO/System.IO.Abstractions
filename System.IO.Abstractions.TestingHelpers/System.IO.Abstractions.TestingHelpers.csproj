@@ -11,7 +11,7 @@
         <AssemblyOriginatorKeyFile>../StrongName.snk</AssemblyOriginatorKeyFile>
         <PackageLicenseUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions/blob/master/LICENSE</PackageLicenseUrl>
         <PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
-        <DefineConstants Condition="'$(TargetFramework)' != 'netstandard2.0'">$(DefineContstants);FEATURE_ASYNC_FILE</DefineConstants>
+        <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.1'">$(DefineConstants);FEATURE_ASYNC_FILE</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

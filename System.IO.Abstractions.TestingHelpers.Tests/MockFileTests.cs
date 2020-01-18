@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-#if NET40
 using System.Runtime.Serialization.Formatters.Binary;
-#endif
 using System.Text;
 using NUnit.Framework;
 
@@ -186,17 +184,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_GetLastWriteTimeUtcOfNonExistantFile_ShouldReturnDefaultValue() {
+        public void MockFile_GetLastWriteTimeUtcOfNonExistantFile_ShouldReturnDefaultValue()
+        {
             ExecuteDefaultValueTest((f, p) => f.GetLastWriteTimeUtc(p));
         }
 
         [Test]
-        public void MockFile_GetLastAccessTimeUtcOfNonExistantFile_ShouldReturnDefaultValue() {
+        public void MockFile_GetLastAccessTimeUtcOfNonExistantFile_ShouldReturnDefaultValue()
+        {
             ExecuteDefaultValueTest((f, p) => f.GetLastAccessTimeUtc(p));
         }
 
         [Test]
-        public void MockFile_GetLastAccessTimeOfNonExistantFile_ShouldReturnDefaultValue() {
+        public void MockFile_GetLastAccessTimeOfNonExistantFile_ShouldReturnDefaultValue()
+        {
             ExecuteDefaultValueTest((f, p) => f.GetLastAccessTime(p));
         }
 
@@ -287,12 +288,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_GetCreationTimeOfNonExistantFile_ShouldReturnDefaultValue() {
+        public void MockFile_GetCreationTimeOfNonExistantFile_ShouldReturnDefaultValue()
+        {
             ExecuteDefaultValueTest((f, p) => f.GetCreationTime(p));
         }
 
         [Test]
-        public void MockFile_GetCreationTimeUtcOfNonExistantFile_ShouldReturnDefaultValue() {
+        public void MockFile_GetCreationTimeUtcOfNonExistantFile_ShouldReturnDefaultValue()
+        {
             ExecuteDefaultValueTest((f, p) => f.GetCreationTimeUtc(p));
         }
 
@@ -409,7 +412,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_OpenWrite_ShouldCreateNewFiles() {
+        public void MockFile_OpenWrite_ShouldCreateNewFiles()
+        {
             string filePath = XFS.Path(@"c:\something\demo.txt");
             string fileContent = "this is some content";
             var fileSystem = new MockFileSystem();
@@ -482,7 +486,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         public void MockFile_Delete_No_File_Does_Nothing()
-        {            
+        {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
             {
                 { XFS.Path(@"c:\something\exist.txt"), new MockFileData("Demo text content") },
@@ -530,7 +534,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(filesystem.FileExists(filepath));
         }
 
-#if NET40
         [Test]
         public void Serializable_works()
         {
@@ -566,9 +569,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             //Assert
             Assert.That(deserialized.TextContents, Is.EqualTo(textContentStr));
         }
-#endif
 
-#if NET40
         [Test]
         public void MockFile_Encrypt_ShouldSetEncryptedAttribute()
         {
@@ -608,7 +609,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreNotEqual(FileAttributes.Encrypted, attributes & FileAttributes.Encrypted);
         }
-#endif
 
         [Test]
         public void MockFile_Replace_ShouldReplaceFileContents()
@@ -682,7 +682,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<FileNotFoundException>(() => fileSystem.File.Replace(path1, path2, null));
         }
 
-#if NET40
         [Test]
         public void MockFile_OpenRead_ShouldReturnReadOnlyStream()
         {
@@ -702,6 +701,5 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(stream.CanWrite);
             Assert.Throws<NotSupportedException>(() => stream.WriteByte(0));
         }
-#endif
     }
 }

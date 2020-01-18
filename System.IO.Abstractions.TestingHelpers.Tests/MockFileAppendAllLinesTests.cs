@@ -1,10 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
-
-#if NETCOREAPP2_0 || NETSTANDARD2_1
 using System.Threading.Tasks;
-#endif
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -116,14 +113,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.AppendAllLines("foo.txt", new [] { "bar" }, null);
+            TestDelegate action = () => fileSystem.File.AppendAllLines("foo.txt", new[] { "bar" }, null);
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(action);
             Assert.That(exception.ParamName, Is.EqualTo("encoding"));
         }
 
-#if NETCOREAPP2_0 || NETSTANDARD2_1
+#if FEATURE_ASYNC_FILE
         [Test]
         public async Task MockFile_AppendAllLinesAsync_ShouldPersistNewLinesToExistingFile()
         {

@@ -9,9 +9,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     using XFS = MockUnixSupport;
 
-#if NETCOREAPP2_0 || NETSTANDARD2_1
     using System.Threading.Tasks;
-#endif
 
     public class MockFileAppendAllTextTests
     {
@@ -53,7 +51,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             CollectionAssert.AreEqual(
-                new byte[] {255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66},
+                new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66 },
                 fileSystem.GetFile(Path).Contents);
         }
 
@@ -89,7 +87,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             CollectionAssert.AreEqual(
-                new byte[] {255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0},
+                new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0 },
                 fileSystem.GetFile(path).Contents);
         }
 
@@ -146,7 +144,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 expected,
                 file.ReadAllBytes(path));
         }
-        
+
         [Test]
         public void MockFile_AppendAllText_ShouldWorkWithRelativePath()
         {
@@ -154,11 +152,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             fileSystem.File.AppendAllText(file, "Foo");
-            
+
             Assert.That(fileSystem.File.Exists(file));
         }
 
-#if NETCOREAPP2_0 || NETSTANDARD2_1
+#if FEATURE_ASYNC_FILE
         [Test]
         public async Task MockFile_AppendAllTextAsync_ShouldPersistNewText()
         {

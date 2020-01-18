@@ -8,11 +8,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
     using XFS = MockUnixSupport;
 
-#if NETCOREAPP2_0 || NETSTANDARD2_1
     using System.Threading.Tasks;
-#endif
 
-    public class MockFileReadAllLinesTests {
+    public class MockFileReadAllLinesTests
+    {
         [Test]
         public void MockFile_ReadAllLines_ShouldReturnOriginalTextData()
         {
@@ -52,7 +51,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             CollectionAssert.AreEqual(
-                new [] { "Hello", "there", "Bob", "Bob!" },
+                new[] { "Hello", "there", "Bob", "Bob!" },
                 result);
         }
 
@@ -62,7 +61,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var absentFileNameFullPath = XFS.Path(@"c:\you surely don't have such file.hope-so");
             var mockFileSystem = new MockFileSystem();
 
-            var act = new TestDelegate(() => 
+            var act = new TestDelegate(() =>
                 mockFileSystem.File.ReadAllText(absentFileNameFullPath)
             );
 
@@ -71,7 +70,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.Message, Is.EqualTo("Could not find file '" + absentFileNameFullPath + "'."));
         }
 
-#if NETCOREAPP2_0 || NETSTANDARD2_1
+#if FEATURE_ASYNC_FILE
         [Test]
         public async Task MockFile_ReadAllLinesAsync_ShouldReturnOriginalTextData()
         {

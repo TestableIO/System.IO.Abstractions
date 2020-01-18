@@ -1,4 +1,8 @@
-﻿#if FEATURE_ASYNC_FILE
+﻿#if NETCORE 
+bla
+#endif
+
+#if FEATURE_ASYNC_FILE
 
 using System.Collections.Generic;
 using System.Text;

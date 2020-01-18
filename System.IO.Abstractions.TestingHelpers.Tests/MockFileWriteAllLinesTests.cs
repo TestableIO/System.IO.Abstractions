@@ -195,7 +195,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 }
             }
 
-#if NETCOREAPP2_0 || NETSTANDARD2_1
+#if FEATURE_ASYNC_FILE
             public static IEnumerable ForDifferentEncodingAsync
             {
                 get
@@ -485,7 +485,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.ParamName, Is.EqualTo("contents"));
         }
 
-#if NETCOREAPP2_0 || NETSTANDARD2_1
+#if FEATURE_ASYNC_FILE
         [TestCaseSource(typeof(TestDataForWriteAllLines), "ForDifferentEncodingAsync")]
         public void MockFile_WriteAllLinesAsyncGeneric_ShouldWriteTheCorrectContent(IMockFileDataAccessor fileSystem, Action action, string expectedContent)
         {

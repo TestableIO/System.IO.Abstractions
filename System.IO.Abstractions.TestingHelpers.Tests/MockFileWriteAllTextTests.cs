@@ -8,11 +8,10 @@
 
     using XFS = MockUnixSupport;
 
-#if NETCOREAPP2_0 || NETSTANDARD2_1
     using System.Threading.Tasks;
-#endif
 
-    public class MockFileWriteAllTextTests {
+    public class MockFileWriteAllTextTests
+    {
         [Test]
         public void MockFile_WriteAllText_ShouldWriteTextFileToMemoryFileSystem()
         {
@@ -158,7 +157,7 @@
                     0, 108, 0, 108, 0, 111, 0, 32, 0, 116, 0, 104, 0, 101, 0, 114,
                     0, 101, 0, 33, 0, 32, 0, 68, 0, 122, 0, 105, 1, 25, 0, 107, 0, 105, 0, 46 } },
 
-#if NET40
+#if !WASNET40
                 // Default encoding does not need a BOM
                 { Encoding.Default, new byte [] { 72, 101, 108, 108, 111, 32, 116,
                     104, 101, 114, 101, 33, 32, 68, 122, 105, 101, 107, 105, 46 } },
@@ -212,7 +211,7 @@
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
 
-            var fileContent = new List<string> {"Hello there!", "Second line!"};
+            var fileContent = new List<string> { "Hello there!", "Second line!" };
             var expected = "Hello there!" + Environment.NewLine + "Second line!" + Environment.NewLine;
 
             var fileSystem = new MockFileSystem();
@@ -227,7 +226,7 @@
                 fileSystem.GetFile(path).TextContents);
         }
 
-#if NETCOREAPP2_0 || NETSTANDARD2_1
+#if FEATURE_ASYNC_FILE
         [Test]
         public async Task MockFile_WriteAllTextAsync_ShouldWriteTextFileToMemoryFileSystem()
         {

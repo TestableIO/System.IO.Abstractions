@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
 using NUnit.Framework;
 using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
-
-#if NETCOREAPP2_0 || NETSTANDARD2_1
 using System.Threading.Tasks;
-#endif
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -85,7 +82,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.ParamName, Is.EqualTo("bytes"));
         }
 
-#if NETCOREAPP2_0 || NETSTANDARD2_1
+#if FEATURE_ASYNC_FILE
         [Test]
         public void MockFile_WriteAllBytesAsync_ShouldThrowDirectoryNotFoundExceptionIfPathDoesNotExists()
         {

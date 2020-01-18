@@ -117,7 +117,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(newContent));
         }
-#if NET40
+
         [Test]
         public void MockFileSystem_ByDefault_IsSerializable()
         {
@@ -134,7 +134,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(memoryStream.Length > 0, "Length didn't increase after serialization task.");
         }
-#endif
 
         [Test]
         public void MockFileSystem_AddDirectory_ShouldCreateDirectory()
@@ -345,7 +344,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileSystem_FileSystemWatcher_ShouldBeAssignable()
         {
             var path = XFS.Path(@"C:\root");
-            var fileSystem = new MockFileSystem {FileSystemWatcher = new TestFileSystemWatcherFactory()};
+            var fileSystem = new MockFileSystem { FileSystemWatcher = new TestFileSystemWatcherFactory() };
             var watcher = fileSystem.FileSystemWatcher.FromPath(path);
             Assert.AreEqual(path, watcher.Path);
         }
@@ -365,12 +364,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             public override string Filter { get; set; }
             public override int InternalBufferSize { get; set; }
             public override NotifyFilters NotifyFilter { get; set; }
-#if NET40
             public override ISite Site { get; set; }
             public override ISynchronizeInvoke SynchronizingObject { get; set; }
-            public override void BeginInit() {}
-            public override void EndInit() {}
-#endif
+            public override void BeginInit() { }
+            public override void EndInit() { }
             public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType) => default(WaitForChangedResult);
             public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout) => default(WaitForChangedResult);
         }

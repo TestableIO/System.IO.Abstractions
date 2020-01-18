@@ -6,7 +6,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     [TestFixture]
     public class FileSystemTests
     {
-#if NET40
         [Test]
         public void Is_Serializable()
         {
@@ -18,9 +17,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(memoryStream.Length > 0, "Length didn't increase after serialization task.");
         }
-#endif
 
-#if NETCOREAPP2_0 || NETSTANDARD2_1
         [Test]
         public void Mock_File_Succeeds()
         {
@@ -30,7 +27,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 fileSystemMock.Setup(x => x.File.ToString()).Returns("")
             );
         }
-       
+
         [Test]
         public void Mock_Directory_Succeeds()
         {
@@ -40,7 +37,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 fileSystemMock.Setup(x => x.Directory.ToString()).Returns("")
             );
         }
-       
+
         [Test]
         public void Mock_FileInfo_Succeeds()
         {
@@ -50,7 +47,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 fileSystemMock.Setup(x => x.FileInfo.ToString()).Returns("")
             );
         }
-       
+
         [Test]
         public void Mock_FileStream_Succeeds()
         {
@@ -100,7 +97,5 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 fileSystemMock.Setup(x => x.FileSystemWatcher.ToString()).Returns("")
             );
         }
-#endif
-
     }
 }

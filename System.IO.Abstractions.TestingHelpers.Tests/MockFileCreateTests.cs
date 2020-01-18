@@ -88,7 +88,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             mockFile.SetAttributes(path, FileAttributes.ReadOnly);
 
             // Assert
-            var exception =  Assert.Throws<UnauthorizedAccessException>(() => mockFile.Create(path).Dispose());
+            var exception = Assert.Throws<UnauthorizedAccessException>(() => mockFile.Create(path).Dispose());
             Assert.That(exception.Message, Is.EqualTo(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path)));
         }
 
@@ -171,7 +171,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             string testFileName = XFS.Path(@"c:\someFile.txt");
             var fileSystem = new MockFileSystem();
-            
+
             using (var stream = fileSystem.FileStream.Create(testFileName, FileMode.Create, FileAccess.Write))
             {
                 using (var writer = new StreamWriter(stream))
@@ -247,7 +247,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(fileSystem.File.Exists(filePath));
         }
 
-#if NET40
         [Test]
         public void MockFile_Create_EncryptedOption_FileNotYetEncryptedsWhenStreamIsOpen()
         {
@@ -278,7 +277,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
             Assert.IsTrue(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted));
         }
-#endif
 
         [Test]
         public void MockFile_Create_ShouldWorkWithRelativePath()
