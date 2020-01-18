@@ -1,6 +1,4 @@
-﻿#if NET40
-using System.ComponentModel;
-#endif
+﻿using System.ComponentModel;
 
 namespace System.IO.Abstractions
 {
@@ -26,13 +24,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileSystemWatcher.Path"/>
         public abstract string Path { get; set; }
 
-#if NET40
         /// <inheritdoc cref="FileSystemWatcher.Site"/>
         public abstract ISite Site { get; set; }
 
         /// <inheritdoc cref="FileSystemWatcher.SynchronizingObject"/>
         public abstract ISynchronizeInvoke SynchronizingObject { get; set; }
-#endif
 
         /// <inheritdoc cref="FileSystemWatcher.Changed"/>
         public virtual event FileSystemEventHandler Changed;
@@ -49,10 +45,8 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileSystemWatcher.Renamed"/>
         public virtual event RenamedEventHandler Renamed;
 
-#if NET40
         /// <inheritdoc cref="FileSystemWatcher.BeginInit"/>
         public abstract void BeginInit();
-#endif
 
         public void Dispose()
         {
@@ -60,10 +54,8 @@ namespace System.IO.Abstractions
             GC.SuppressFinalize(this);
         }
 
-#if NET40
         /// <inheritdoc cref="FileSystemWatcher.EndInit"/>
         public abstract void EndInit();
-#endif
 
         /// <inheritdoc cref="FileSystemWatcher.WaitForChanged(WatcherChangeTypes)"/>
         public abstract WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType);

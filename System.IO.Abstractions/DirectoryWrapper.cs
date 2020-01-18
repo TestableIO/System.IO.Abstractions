@@ -15,12 +15,6 @@ namespace System.IO.Abstractions
             return new DirectoryInfoWrapper(FileSystem, Directory.CreateDirectory(path));
         }
 
-#if NET40
-        public override IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity)
-        {
-            return new DirectoryInfoWrapper(FileSystem, Directory.CreateDirectory(path, directorySecurity));
-        }
-#endif
         public override void Delete(string path)
         {
             Directory.Delete(path);
@@ -126,12 +120,10 @@ namespace System.IO.Abstractions
             return Directory.GetLastWriteTimeUtc(path);
         }
 
-#if NET40
         public override string[] GetLogicalDrives()
         {
             return Directory.GetLogicalDrives();
         }
-#endif
 
         public override IDirectoryInfo GetParent(string path)
         {
@@ -200,9 +192,9 @@ namespace System.IO.Abstractions
 
         public override IEnumerable<string> EnumerateFiles(string path)
         {
-           return Directory.EnumerateFiles(path);
+            return Directory.EnumerateFiles(path);
         }
- 
+
         public override IEnumerable<string> EnumerateFiles(string path, string searchPattern)
         {
             return Directory.EnumerateFiles(path, searchPattern);

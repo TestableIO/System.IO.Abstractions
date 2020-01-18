@@ -8,28 +8,19 @@ namespace System.IO.Abstractions
         Stream Create(string path, FileMode mode);
 
         Stream Create(string path, FileMode mode, FileAccess access);
-        
+
         Stream Create(string path, FileMode mode, FileAccess access, FileShare share);
-        
+
         Stream Create(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize);
-        
-        Stream Create(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize, FileOptions options);
-        
+
         Stream Create(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize, bool useAsync);
 
         Stream Create(SafeFileHandle handle, FileAccess access);
-        
+
         Stream Create(SafeFileHandle handle, FileAccess access, int bufferSize);
-        
+
         Stream Create(SafeFileHandle handle, FileAccess access, int bufferSize, bool isAsync);
 
-#if NET40
-        Stream Create(string path, FileMode mode, FileSystemRights rights, FileShare share, int bufferSize, FileOptions options, FileSecurity fileSecurity);
-
-        Stream Create(string path, FileMode mode, FileSystemRights rights, FileShare share, int bufferSize, FileOptions options);
-#endif
-
-#if NET40 || NETSTANDARD_20
         [Obsolete("This method has been deprecated. Please use new Create(SafeFileHandle handle, FileAccess access) instead. http://go.microsoft.com/fwlink/?linkid=14202")]
         Stream Create(IntPtr handle, FileAccess access);
 
@@ -41,6 +32,5 @@ namespace System.IO.Abstractions
 
         [Obsolete("This method has been deprecated. Please use new Create(SafeFileHandle handle, FileAccess access, int bufferSize, bool isAsync) instead, and optionally make a new SafeFileHandle with ownsHandle=false if needed. http://go.microsoft.com/fwlink/?linkid=14202")]
         Stream Create(IntPtr handle, FileAccess access, bool ownsHandle, int bufferSize, bool isAsync);
-#endif
     }
 }

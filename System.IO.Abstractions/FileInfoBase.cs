@@ -28,13 +28,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileInfo.CreateText"/>
         public abstract StreamWriter CreateText();
 
-#if NET40
         /// <inheritdoc cref="FileInfo.Decrypt"/>
         public abstract void Decrypt();
 
         /// <inheritdoc cref="FileInfo.Encrypt"/>
         public abstract void Encrypt();
-#endif
 
         /// <inheritdoc cref="FileInfo.GetAccessControl()"/>
         public abstract FileSecurity GetAccessControl();
@@ -63,13 +61,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileInfo.OpenWrite"/>
         public abstract Stream OpenWrite();
 
-#if NET40
         /// <inheritdoc cref="FileInfo.Replace(string,string)"/>
         public abstract IFileInfo Replace(string destinationFileName, string destinationBackupFileName);
 
         /// <inheritdoc cref="FileInfo.Replace(string,string,bool)"/>
         public abstract IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
-#endif
 
         /// <inheritdoc cref="FileInfo.SetAccessControl(FileSecurity)"/>
         public abstract void SetAccessControl(FileSecurity fileSecurity);

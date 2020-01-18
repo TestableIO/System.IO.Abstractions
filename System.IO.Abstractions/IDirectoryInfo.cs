@@ -3,20 +3,15 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
-    public interface IDirectoryInfo: IFileSystemInfo
+    public interface IDirectoryInfo : IFileSystemInfo
     {
         /// <inheritdoc cref="DirectoryInfo.Create()"/>
         void Create();
-#if NET40
+
         /// <inheritdoc cref="DirectoryInfo.Create(DirectorySecurity)"/>
         void Create(DirectorySecurity directorySecurity);
-#endif
         /// <inheritdoc cref="DirectoryInfo.CreateSubdirectory(string)"/>
         IDirectoryInfo CreateSubdirectory(string path);
-#if NET40
-        /// <inheritdoc cref="DirectoryInfo.CreateSubdirectory(string,DirectorySecurity)"/>
-        IDirectoryInfo CreateSubdirectory(string path, DirectorySecurity directorySecurity);
-#endif
         /// <inheritdoc cref="DirectoryInfo.Delete(bool)"/>
         void Delete(bool recursive);
         /// <inheritdoc cref="DirectoryInfo.EnumerateDirectories()"/>

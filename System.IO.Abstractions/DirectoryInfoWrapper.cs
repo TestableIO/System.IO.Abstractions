@@ -91,24 +91,15 @@ namespace System.IO.Abstractions
             instance.Create();
         }
 
-#if NET40
         public override void Create(DirectorySecurity directorySecurity)
         {
             instance.Create(directorySecurity);
         }
-#endif
 
         public override IDirectoryInfo CreateSubdirectory(string path)
         {
             return new DirectoryInfoWrapper(FileSystem, instance.CreateSubdirectory(path));
         }
-
-#if NET40
-        public override IDirectoryInfo CreateSubdirectory(string path, DirectorySecurity directorySecurity)
-        {
-            return new DirectoryInfoWrapper(FileSystem, instance.CreateSubdirectory(path, directorySecurity));
-        }
-#endif
 
         public override void Delete(bool recursive)
         {

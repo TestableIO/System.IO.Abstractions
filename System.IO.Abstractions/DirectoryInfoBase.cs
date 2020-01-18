@@ -16,17 +16,11 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="DirectoryInfo.Create()"/>
         public abstract void Create();
-#if NET40
         /// <inheritdoc cref="DirectoryInfo.Create(DirectorySecurity)"/>
         public abstract void Create(DirectorySecurity directorySecurity);
-#endif
 
         /// <inheritdoc cref="DirectoryInfo.CreateSubdirectory(string)"/>
         public abstract IDirectoryInfo CreateSubdirectory(string path);
-#if NET40
-        /// <inheritdoc cref="DirectoryInfo.CreateSubdirectory(string,DirectorySecurity)"/>
-        public abstract IDirectoryInfo CreateSubdirectory(string path, DirectorySecurity directorySecurity);
-#endif
 
         /// <inheritdoc cref="DirectoryInfo.Delete(bool)"/>
         public abstract void Delete(bool recursive);

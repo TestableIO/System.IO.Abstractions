@@ -23,11 +23,9 @@
         /// <inheritdoc cref="Path.DirectorySeparatorChar"/>
         public abstract char DirectorySeparatorChar { get; }
 
-#if NET40
         /// <inheritdoc cref="Path.InvalidPathChars"/>
         [Obsolete("Please use GetInvalidPathChars or GetInvalidFileNameChars instead.")]
         public abstract char[] InvalidPathChars { get; }
-#endif
 
         /// <inheritdoc cref="Path.PathSeparator"/>
         public abstract char PathSeparator { get; }

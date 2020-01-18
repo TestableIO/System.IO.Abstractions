@@ -14,12 +14,10 @@ namespace System.IO.Abstractions
         Stream Create();
         /// <inheritdoc cref="FileInfo.CreateText"/>
         StreamWriter CreateText();
-#if NET40
         /// <inheritdoc cref="FileInfo.Decrypt"/>
         void Decrypt();
         /// <inheritdoc cref="FileInfo.Encrypt"/>
         void Encrypt();
-#endif
         /// <inheritdoc cref="FileInfo.GetAccessControl()"/>
         FileSecurity GetAccessControl();
         /// <inheritdoc cref="FileInfo.GetAccessControl(AccessControlSections)"/>
@@ -38,12 +36,10 @@ namespace System.IO.Abstractions
         StreamReader OpenText();
         /// <inheritdoc cref="FileInfo.OpenWrite"/>
         Stream OpenWrite();
-#if NET40
         /// <inheritdoc cref="FileInfo.Replace(string,string)"/>
         IFileInfo Replace(string destinationFileName, string destinationBackupFileName);
         /// <inheritdoc cref="FileInfo.Replace(string,string,bool)"/>
         IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
-#endif
         /// <inheritdoc cref="FileInfo.SetAccessControl(FileSecurity)"/>
         void SetAccessControl(FileSecurity fileSecurity);
         /// <inheritdoc cref="FileInfo.Directory"/>

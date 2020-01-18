@@ -13,10 +13,6 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Directory.CreateDirectory(string)"/>
         IDirectoryInfo CreateDirectory(string path);
 
-#if NET40
-        /// <inheritdoc cref="Directory.CreateDirectory(string,DirectorySecurity)"/>
-        IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity);
-#endif
         /// <inheritdoc cref="Directory.Delete(string)"/>
         void Delete(string path);
         /// <inheritdoc cref="Directory.Delete(string,bool)"/>
@@ -59,10 +55,8 @@ namespace System.IO.Abstractions
         DateTime GetLastWriteTime(string path);
         /// <inheritdoc cref="Directory.GetLastWriteTimeUtc"/>
         DateTime GetLastWriteTimeUtc(string path);
-#if NET40
         /// <inheritdoc cref="Directory.GetLogicalDrives"/>
         string[] GetLogicalDrives();
-#endif
         /// <inheritdoc cref="Directory.GetParent"/>
         IDirectoryInfo GetParent(string path);
         /// <inheritdoc cref="Directory.Move"/>
