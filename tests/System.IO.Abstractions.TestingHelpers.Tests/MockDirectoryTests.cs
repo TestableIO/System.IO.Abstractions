@@ -1028,7 +1028,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(actualResult, Is.EquivalentTo(new[] { testPath }));
         }
 
-        [TestCase(@"""")]
         [TestCase("aa\t")]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternHasIllegalCharacters(string searchPattern)
