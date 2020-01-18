@@ -11,6 +11,7 @@
     <RootNamespace>System.IO.Abstractions.TestingHelpers.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
     <IsTestable>true</IsTestable>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)../../StrongName.snk</AssemblyOriginatorKeyFile>
     <DefineConstants Condition="'$(TargetFramework)' == 'netcoreapp3.0'">$(DefineConstants);FEATURE_ASYNC_FILE;FEATURE_ENUMERATION_OPTIONS</DefineConstants>
   </PropertyGroup>
 
