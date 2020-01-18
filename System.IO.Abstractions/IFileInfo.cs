@@ -2,7 +2,7 @@
 
 namespace System.IO.Abstractions
 {
-    public interface IFileInfo: IFileSystemInfo
+    public interface IFileInfo : IFileSystemInfo
     {
         /// <inheritdoc cref="FileInfo.AppendText"/>
         StreamWriter AppendText();

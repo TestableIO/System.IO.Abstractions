@@ -1264,6 +1264,30 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo") }));
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        [Test]
+        public void MockDirectory_EnumerateDirectories_WithEnumerationOptionsTopDirectories_ShouldOnlyReturnTopDirectories()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(XFS.Path(@"C:\Folder\.foo\"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\Folder\foo"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\Folder\foo.foo"));
+            fileSystem.AddDirectory(XFS.Path(@"C:\Folder\.foo\.foo"));
+            fileSystem.AddFile(XFS.Path(@"C:\Folder\.foo\bar"), new MockFileData(string.Empty));
+
+            var enumerationOptions = new EnumerationOptions
+            {
+                RecurseSubdirectories = false
+            };
+
+            // Act
+            var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"c:\Folder\"), "*.foo", enumerationOptions);
+
+            // Assert
+            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo") }));
+        }
+#endif
         [Test]
         public void MockDirectory_EnumerateDirectories_WithAllDirectories_ShouldReturnsAllMatchingSubFolders()
         {
@@ -1652,6 +1676,38 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(result, Is.EquivalentTo(expected));
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        [Test]
+        public void MockDirectory_EnumerateFiles_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndEnumerationOptionsIsAllDirectories()
+        {
+            // Arrange
+            var fileSystem = SetupFileSystem();
+            IEnumerable<string> expected = new[]
+            {
+                XFS.Path(@"c:\a\a.txt"),
+                XFS.Path(@"c:\a\b.gif"),
+                XFS.Path(@"c:\a\c.txt"),
+                XFS.Path(@"c:\a\d"),
+                XFS.Path(@"c:\a\a\a.txt"),
+                XFS.Path(@"c:\a\a\b.txt"),
+                XFS.Path(@"c:\a\a\c.gif"),
+                XFS.Path(@"c:\a\a\d")
+            };
+
+            var enumerationOptions = new EnumerationOptions
+            {
+                RecurseSubdirectories = true
+            };
+
+            // Act
+            var result = fileSystem.Directory.EnumerateFiles(XFS.Path(@"c:\a"), "*", enumerationOptions);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+#endif
+
         [Test]
         public void MockDirectory_EnumerateFiles_ShouldFilterByExtensionBasedSearchPattern()
         {
@@ -1765,6 +1821,38 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.That(result, Is.EquivalentTo(expected));
         }
+
+#if FEATURE_ENUMERATION_OPTIONS
+        [Test]
+        public void MockDirectory_EnumerateFileSystemEntries_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndEnumerationOptionsIsAllDirectories()
+        {
+            // Arrange
+            var fileSystem = SetupFileSystem();
+            IEnumerable<string> expected = new[]
+            {
+                XFS.Path(@"c:\a\a.txt"),
+                XFS.Path(@"c:\a\b.gif"),
+                XFS.Path(@"c:\a\c.txt"),
+                XFS.Path(@"c:\a\d"),
+                XFS.Path(@"c:\a\a\a.txt"),
+                XFS.Path(@"c:\a\a\b.txt"),
+                XFS.Path(@"c:\a\a\c.gif"),
+                XFS.Path(@"c:\a\a\d"),
+                XFS.Path(@"c:\a\a")
+            };
+
+            var enumerationOptions = new EnumerationOptions
+            {
+                RecurseSubdirectories = true
+            };
+
+            // Act
+            var result = fileSystem.Directory.EnumerateFileSystemEntries(XFS.Path(@"c:\a"), "*", enumerationOptions);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+#endif
 
         [Test]
         public void MockDirectory_GetAccessControl_ShouldThrowExceptionOnDirectoryNotFound()

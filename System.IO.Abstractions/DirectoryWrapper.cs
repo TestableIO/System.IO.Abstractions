@@ -199,6 +199,13 @@ namespace System.IO.Abstractions
             return Directory.EnumerateDirectories(path, searchPattern, searchOption);
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return Directory.EnumerateDirectories(path, searchPattern, enumerationOptions);
+        }
+#endif
+
         public override IEnumerable<string> EnumerateFiles(string path)
         {
             return Directory.EnumerateFiles(path);
@@ -214,6 +221,13 @@ namespace System.IO.Abstractions
             return Directory.EnumerateFiles(path, searchPattern, searchOption);
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return Directory.EnumerateFiles(path, searchPattern, enumerationOptions);
+        }
+#endif
+
         public override IEnumerable<string> EnumerateFileSystemEntries(string path)
         {
             return Directory.EnumerateFileSystemEntries(path);
@@ -228,5 +242,12 @@ namespace System.IO.Abstractions
         {
             return Directory.EnumerateFileSystemEntries(path, searchPattern, searchOption);
         }
+
+#if FEATURE_ENUMERATION_OPTIONS
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return Directory.EnumerateFileSystemEntries(path, searchPattern, enumerationOptions);
+        }
+#endif
     }
 }

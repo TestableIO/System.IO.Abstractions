@@ -5,9 +5,10 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockDirectoryData : MockFileData
     {
+
         [NonSerialized]
         private DirectorySecurity accessControl;
-        
+
         public override bool IsDirectory { get { return true; } }
 
         public MockDirectoryData() : base(string.Empty)

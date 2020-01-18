@@ -90,11 +90,13 @@ namespace System.IO.Abstractions
         /// </remarks>
         public abstract bool Exists(string path);
 
+
         /// <inheritdoc cref="File.GetAccessControl(string)"/>
         public abstract FileSecurity GetAccessControl(string path);
 
         /// <inheritdoc cref="File.GetAccessControl(string,AccessControlSections)"/>
         public abstract FileSecurity GetAccessControl(string path, AccessControlSections includeSections);
+
 
         /// <inheritdoc cref="File.GetAttributes"/>
         /// <summary>
@@ -556,7 +558,6 @@ namespace System.IO.Abstractions
         /// Given a string and a file path, this method opens the specified file, writes the string to the file, and then closes the file.
         /// </para>
         /// </remarks>
-
         public abstract void WriteAllText(string path, string contents);
 
         /// <inheritdoc cref="File.WriteAllText(string,string,Encoding)"/>

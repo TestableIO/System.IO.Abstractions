@@ -11,9 +11,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return ds => ds.Delete(null);
             yield return ds => ds.Delete(null, true);
             yield return ds => ds.CreateDirectory(null);
-#if NET472
-            yield return ds => ds.CreateDirectory(null, new DirectorySecurity());
-#endif
+            if (MockUnixSupport.IsWindowsPlatform())
+                yield return ds => ds.CreateDirectory(null, new DirectorySecurity());
             yield return ds => ds.SetCreationTime(null, DateTime.Now);
             yield return ds => ds.SetCreationTimeUtc(null, DateTime.Now);
             yield return ds => ds.SetLastAccessTime(null, DateTime.Now);

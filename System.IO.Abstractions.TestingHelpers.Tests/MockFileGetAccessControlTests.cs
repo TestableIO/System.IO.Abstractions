@@ -8,7 +8,6 @@ using System.Security.AccessControl;
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using XFS = MockUnixSupport;
-
     [TestFixture]
     [WindowsOnly(WindowsSpecifics.AccessControlLists)]
     public class MockFileGetAccessControlTests
@@ -30,7 +29,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         public void MockFile_GetAccessControl_ShouldThrowFileNotFoundExceptionIfFileDoesNotExistInMockData()
-        {   
+        {
             // Arrange
             var fileSystem = new MockFileSystem();
             var expectedFileName = XFS.Path(@"c:\a.txt");

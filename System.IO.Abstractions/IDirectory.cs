@@ -20,10 +20,13 @@ namespace System.IO.Abstractions
         void Delete(string path, bool recursive);
         /// <inheritdoc cref="Directory.Exists"/>
         bool Exists(string path);
+
         /// <inheritdoc cref="Directory.GetAccessControl(string)"/>
         DirectorySecurity GetAccessControl(string path);
+
         /// <inheritdoc cref="Directory.GetAccessControl(string,AccessControlSections)"/>
         DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections);
+
         /// <inheritdoc cref="Directory.GetCreationTime"/>
         DateTime GetCreationTime(string path);
         /// <inheritdoc cref="Directory.GetCreationTimeUtc"/>
@@ -84,17 +87,30 @@ namespace System.IO.Abstractions
         IEnumerable<string> EnumerateDirectories(string path, string searchPattern);
         /// <inheritdoc cref="Directory.EnumerateDirectories(string,string,SearchOption)"/>
         IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
+
+#if FEATURE_ENUMERATION_OPTIONS
+        /// <inheritdoc cref="Directory.EnumerateDirectories(string,string,EnumerationOptions)"/>
+        IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions);
+#endif
         /// <inheritdoc cref="Directory.EnumerateFiles(string)"/>
         IEnumerable<string> EnumerateFiles(string path);
         /// <inheritdoc cref="Directory.EnumerateFiles(string,string)"/>
         IEnumerable<string> EnumerateFiles(string path, string searchPattern);
         /// <inheritdoc cref="Directory.EnumerateFiles(string,string,SearchOption)"/>
         IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
+#if FEATURE_ENUMERATION_OPTIONS
+        /// <inheritdoc cref="Directory.EnumerateFiles(string,string,EnumerationOptions)"/>
+        IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions);
+#endif
         /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string)"/>
         IEnumerable<string> EnumerateFileSystemEntries(string path);
         /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string,string)"/>
         IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern);
         /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string,string,SearchOption)"/>
         IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
+#if FEATURE_ENUMERATION_OPTIONS
+        /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string,string,EnumerationOptions)"/>
+        IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions);
+#endif
     }
 }

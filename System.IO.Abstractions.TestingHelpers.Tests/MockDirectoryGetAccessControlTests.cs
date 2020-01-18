@@ -8,7 +8,6 @@ using System.Security.AccessControl;
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using XFS = MockUnixSupport;
-
     [TestFixture]
     [WindowsOnly(WindowsSpecifics.AccessControlLists)]
     public class MockDirectoryGetAccessControlTests

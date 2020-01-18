@@ -132,9 +132,9 @@ namespace System.IO.Abstractions.TestingHelpers
             Create(path, bufferSize, FileOptions.None);
 
         public override Stream Create(string path, int bufferSize, FileOptions options) =>
-            CreateInternal(path, bufferSize, options);
+            CreateInternal(path, bufferSize, options, null);
 
-        private Stream CreateInternal(string path, int bufferSize, FileOptions options)
+        private Stream CreateInternal(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
         {
             if (path == null)
             {
@@ -146,6 +146,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             var mockFileData = new MockFileData(new byte[0])
             {
+                AccessControl = fileSecurity
             };
             mockFileDataAccessor.AddFile(path, mockFileData);
             return OpenWriteInternal(path, options);

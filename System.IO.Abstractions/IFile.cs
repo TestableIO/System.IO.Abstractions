@@ -41,10 +41,12 @@ namespace System.IO.Abstractions
         void Encrypt(string path);
         /// <inheritdoc cref="File.Exists"/>
         bool Exists(string path);
+
         /// <inheritdoc cref="File.GetAccessControl(string)"/>
         FileSecurity GetAccessControl(string path);
         /// <inheritdoc cref="File.GetAccessControl(string,AccessControlSections)"/>
         FileSecurity GetAccessControl(string path, AccessControlSections includeSections);
+
         /// <inheritdoc cref="File.GetAttributes"/>
         FileAttributes GetAttributes(string path);
         /// <inheritdoc cref="File.GetCreationTime"/>
