@@ -9,7 +9,7 @@
     <PackageLicenseUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions/blob/master/LICENSE</PackageLicenseUrl>
     <PackageTags>testing</PackageTags>
     <SignAssembly Condition="'$(Configuration)' == 'Release'">True</SignAssembly>
-    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)../build/StrongName.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)../StrongName.snk</AssemblyOriginatorKeyFile>
     <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.1'">$(DefineConstants);FEATURE_ASYNC_FILE;FEATURE_ENUMERATION_OPTIONS</DefineConstants>
   </PropertyGroup>
 
