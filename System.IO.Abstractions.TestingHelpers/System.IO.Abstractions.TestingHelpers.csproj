@@ -3,6 +3,11 @@
         <AssemblyName>System.IO.Abstractions.TestingHelpers</AssemblyName>
         <RootNamespace>System.IO.Abstractions.TestingHelpers</RootNamespace>
         <Description>A set of pre-built mocks to help when testing file system interactions.</Description>
+        <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+        <PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageTags>testing</PackageTags>
+        <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.1'">$(DefineConstants);FEATURE_ASYNC_FILE;FEATURE_ENUMERATION_OPTIONS</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\System.IO.Abstractions\System.IO.Abstractions.csproj" />
