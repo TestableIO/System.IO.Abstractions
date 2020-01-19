@@ -9,11 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		StrongName.snk = StrongName.snk
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.IO.Abstractions.TestingHelpers.Tests", "tests/System.IO.Abstractions.TestingHelpers.Tests\System.IO.Abstractions.TestingHelpers.Tests.csproj", "{20B02738-952A-40F5-9C10-E2F83013E9FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.IO.Abstractions.TestingHelpers.Tests", "System.IO.Abstractions.TestingHelpers.Tests\System.IO.Abstractions.TestingHelpers.Tests.csproj", "{20B02738-952A-40F5-9C10-E2F83013E9FC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions", "src/System.IO.Abstractions\System.IO.Abstractions.csproj", "{B7DA254D-496F-4C50-969C-CF925758E2ED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions", "System.IO.Abstractions\System.IO.Abstractions.csproj", "{B7DA254D-496F-4C50-969C-CF925758E2ED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions.TestingHelpers", "src/System.IO.Abstractions.TestingHelpers\System.IO.Abstractions.TestingHelpers.csproj", "{0103D32A-6124-4A1A-AD6C-30EB957F09B0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions.TestingHelpers", "System.IO.Abstractions.TestingHelpers\System.IO.Abstractions.TestingHelpers.csproj", "{0103D32A-6124-4A1A-AD6C-30EB957F09B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
