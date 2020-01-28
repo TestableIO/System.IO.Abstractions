@@ -637,6 +637,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(fileSystem.AllDirectories.Any(d => d == XFS.Path(@"c:\bar")));
         }
 
+        [Test]
+        public void MockDirectory_CreateDirectory_ShouldThrowIfIllegalCharacterInPath()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\foo.txt"), new MockFileData("Demo text content") }
+            });
+
+            // Act
+            TestDelegate createDelegate = () => fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\bar_?_"));
+
+            // Assert
+            Assert.Throws<ArgumentException>(createDelegate);
+        }
+
         // Issue #210
         [Test]
         public void MockDirectory_CreateDirectory_ShouldIgnoreExistingDirectoryRegardlessOfTrailingSlash()
