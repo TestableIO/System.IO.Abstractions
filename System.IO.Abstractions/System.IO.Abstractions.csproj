@@ -9,7 +9,4 @@
     <PackageTags>testing</PackageTags>
     <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.1'">$(DefineConstants);FEATURE_ASYNC_FILE;FEATURE_ENUMERATION_OPTIONS</DefineConstants>
   </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0"/>
-  </ItemGroup>
 </Project>
