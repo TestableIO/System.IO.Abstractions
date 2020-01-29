@@ -47,6 +47,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentException(StringResources.Manager.GetString("PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE"), "path");
             }
 
+            if (mockFileDataAccessor.PathVerifier.HasIllegalCharacters(path, true))
+            {
+                throw CommonExceptions.IllegalCharactersInPath(nameof(path));
+            }
+
             path = mockFileDataAccessor.Path.GetFullPath(path).TrimSlashes();
             if (XFS.IsWindowsPlatform())
             {
