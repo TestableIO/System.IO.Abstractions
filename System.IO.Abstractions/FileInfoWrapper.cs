@@ -199,5 +199,10 @@ namespace System.IO.Abstractions
         {
             get { return instance.Length; }
         }
+
+        public override string ToString()
+        {
+            return instance.ToString();
+        }
     }
 }
