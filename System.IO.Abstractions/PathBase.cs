@@ -86,5 +86,13 @@
 
         /// <inheritdoc cref="Path.IsPathRooted(string)"/>
         public abstract bool IsPathRooted(string path);
+
+#if FEATURE_ADVANCED_PATH_OPERATIONS
+        /// <inheritdoc />
+        public abstract bool IsPathFullyQualified(string path);
+        
+        /// <inheritdoc />
+        public abstract string GetRelativePath(string relativeTo, string path);
+#endif
     }
 }
