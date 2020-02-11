@@ -7,7 +7,6 @@
         <PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageTags>testing</PackageTags>
-        <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.1'">$(DefineConstants);FEATURE_ASYNC_FILE;FEATURE_ENUMERATION_OPTIONS</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\System.IO.Abstractions\System.IO.Abstractions.csproj" />

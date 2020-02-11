@@ -118,6 +118,13 @@
             return Path.HasExtension(path);
         }
 
+#if FEATURE_ADVANCED_PATH_OPERATIONS
+        public override bool IsPathFullyQualified(string path)
+        {
+            return Path.IsPathFullyQualified(path);
+        }
+#endif
+
         public override bool IsPathRooted(string path)
         {
             return Path.IsPathRooted(path);

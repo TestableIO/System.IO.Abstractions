@@ -143,13 +143,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             get
             {
-                yield return new [] { XFS.Path(@"c:\a"), "b", XFS.Path(@"c:\a\b") };
-                yield return new [] { XFS.Path(@"c:\a\b"), "c", XFS.Path(@"c:\a\b\c") };
-                yield return new [] { XFS.Path(@"c:\a\b"), XFS.Path(@"c\"), XFS.Path(@"c:\a\b\c\") };
-                yield return new [] { XFS.Path(@"c:\a\b"), XFS.Path(@"..\c"), XFS.Path(@"c:\a\c") };
-                yield return new [] { XFS.Path(@"c:\a\b\c"), XFS.Path(@"..\c\..\"), XFS.Path(@"c:\a\b\") };
-                yield return new [] { XFS.Path(@"c:\a\b\c"), XFS.Path(@"..\..\..\..\..\d"), XFS.Path(@"c:\d") };
-                yield return new [] { XFS.Path(@"c:\a\b\c"), XFS.Path(@"..\..\..\..\..\d\"), XFS.Path(@"c:\d\") };
+                yield return new[] { XFS.Path(@"c:\a"), "b", XFS.Path(@"c:\a\b") };
+                yield return new[] { XFS.Path(@"c:\a\b"), "c", XFS.Path(@"c:\a\b\c") };
+                yield return new[] { XFS.Path(@"c:\a\b"), XFS.Path(@"c\"), XFS.Path(@"c:\a\b\c\") };
+                yield return new[] { XFS.Path(@"c:\a\b"), XFS.Path(@"..\c"), XFS.Path(@"c:\a\c") };
+                yield return new[] { XFS.Path(@"c:\a\b\c"), XFS.Path(@"..\c\..\"), XFS.Path(@"c:\a\b\") };
+                yield return new[] { XFS.Path(@"c:\a\b\c"), XFS.Path(@"..\..\..\..\..\d"), XFS.Path(@"c:\d") };
+                yield return new[] { XFS.Path(@"c:\a\b\c"), XFS.Path(@"..\..\..\..\..\d\"), XFS.Path(@"c:\d\") };
             }
         }
 
@@ -172,11 +172,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             get
             {
-                yield return new [] { XFS.Path(@"c:\a\b\..\c"), XFS.Path(@"c:\a\c") };
-                yield return new [] { XFS.Path(@"c:\a\b\.\.\..\.\c"), XFS.Path(@"c:\a\c") };
-                yield return new [] { XFS.Path(@"c:\a\b\.\c"), XFS.Path(@"c:\a\b\c") };
-                yield return new [] { XFS.Path(@"c:\a\b\.\.\.\.\c"), XFS.Path(@"c:\a\b\c") };
-                yield return new [] { XFS.Path(@"c:\a\..\..\c"), XFS.Path(@"c:\c") };
+                yield return new[] { XFS.Path(@"c:\a\b\..\c"), XFS.Path(@"c:\a\c") };
+                yield return new[] { XFS.Path(@"c:\a\b\.\.\..\.\c"), XFS.Path(@"c:\a\c") };
+                yield return new[] { XFS.Path(@"c:\a\b\.\c"), XFS.Path(@"c:\a\b\c") };
+                yield return new[] { XFS.Path(@"c:\a\b\.\.\.\.\c"), XFS.Path(@"c:\a\b\c") };
+                yield return new[] { XFS.Path(@"c:\a\..\..\c"), XFS.Path(@"c:\c") };
             }
         }
 
@@ -198,14 +198,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             get
             {
-                yield return new [] { XFS.Path(@"c:\a"), XFS.Path(@"/b"), XFS.Path(@"c:\b") };
-                yield return new [] { XFS.Path(@"c:\a"), XFS.Path(@"/b\"), XFS.Path(@"c:\b\") };
-                yield return new [] { XFS.Path(@"c:\a"), XFS.Path(@"\b"), XFS.Path(@"c:\b") };
-                yield return new [] { XFS.Path(@"c:\a"), XFS.Path(@"\b\..\c"), XFS.Path(@"c:\c") };
-                yield return new [] { XFS.Path(@"z:\a"), XFS.Path(@"\b\..\c"), XFS.Path(@"z:\c") };
-                yield return new [] { XFS.Path(@"z:\a"), XFS.Path(@"\\computer\share\c"), XFS.Path(@"\\computer\share\c") };
-                yield return new [] { XFS.Path(@"z:\a"), XFS.Path(@"\\computer\share\c\..\d"), XFS.Path(@"\\computer\share\d") };
-                yield return new [] { XFS.Path(@"z:\a"), XFS.Path(@"\\computer\share\c\..\..\d"), XFS.Path(@"\\computer\share\d") };
+                yield return new[] { XFS.Path(@"c:\a"), XFS.Path(@"/b"), XFS.Path(@"c:\b") };
+                yield return new[] { XFS.Path(@"c:\a"), XFS.Path(@"/b\"), XFS.Path(@"c:\b\") };
+                yield return new[] { XFS.Path(@"c:\a"), XFS.Path(@"\b"), XFS.Path(@"c:\b") };
+                yield return new[] { XFS.Path(@"c:\a"), XFS.Path(@"\b\..\c"), XFS.Path(@"c:\c") };
+                yield return new[] { XFS.Path(@"z:\a"), XFS.Path(@"\b\..\c"), XFS.Path(@"z:\c") };
+                yield return new[] { XFS.Path(@"z:\a"), XFS.Path(@"\\computer\share\c"), XFS.Path(@"\\computer\share\c") };
+                yield return new[] { XFS.Path(@"z:\a"), XFS.Path(@"\\computer\share\c\..\d"), XFS.Path(@"\\computer\share\d") };
+                yield return new[] { XFS.Path(@"z:\a"), XFS.Path(@"\\computer\share\c\..\..\d"), XFS.Path(@"\\computer\share\d") };
             }
         }
 
@@ -274,7 +274,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockPath = new MockPath(mockFileSystem);
 
             //Act
-            var actualFullPath =  mockPath.GetFullPath(XFS.Path(@"c:\foo\\//bar\file.dat"));
+            var actualFullPath = mockPath.GetFullPath(XFS.Path(@"c:\foo\\//bar\file.dat"));
 
             //Assert
             Assert.AreEqual(XFS.Path(@"c:\foo\bar\file.dat"), actualFullPath);
@@ -397,5 +397,46 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             //Assert
             Assert.AreEqual(true, result);
         }
+
+#if FEATURE_ADVANCED_PATH_OPERATIONS
+        [Test]
+        public void IsPathFullyQualified_WithAbsolutePath_ReturnsTrue()
+        {
+            //Arrange
+            var mockPath = new MockPath(new MockFileSystem());
+
+            //Act
+            var result = mockPath.IsPathFullyQualified(XFS.Path("C:\\directory\\file.txt"));
+
+            //Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void IsPathFullyQualified_WithRelativePath_ReturnsFalse()
+        {
+            //Arrange
+            var mockPath = new MockPath(new MockFileSystem());
+
+            //Act
+            var result = mockPath.IsPathRooted(XFS.Path("directory\\file.txt"));
+
+            //Assert
+            Assert.IsFalse(result);
+        }
+        
+        [Test]
+        public void IsPathFullyQualified_WithRelativePathParts_ReturnsFalse()
+        {
+            //Arrange
+            var mockPath = new MockPath(new MockFileSystem());
+
+            //Act
+            var result = mockPath.IsPathRooted(XFS.Path("directory\\..\\file.txt"));
+
+            //Assert
+            Assert.IsFalse(result);
+        }
+#endif
     }
 }
