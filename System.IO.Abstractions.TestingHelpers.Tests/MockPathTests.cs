@@ -437,6 +437,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             //Assert
             Assert.IsFalse(result);
         }
+
+        
+        
+        [Test]
+        public void GetRelativePath_Works()
+        {
+            //Arrange
+            var mockPath = new MockPath(new MockFileSystem());
+
+            //Act
+            var result = mockPath.GetRelativePath(XFS.Path("c:\\d"), XFS.Path("c:\\d\\e\\f.txt"));
+
+            //Assert
+            Assert.AreEqual(XFS.Path("e\\f.txt"), result);
+        }
 #endif
     }
 }

@@ -123,6 +123,11 @@
         {
             return Path.IsPathFullyQualified(path);
         }
+
+        public override string GetRelativePath(string relativeTo, string path)
+        {
+            return Path.GetRelativePath(relativeTo, path);
+        }
 #endif
 
         public override bool IsPathRooted(string path)

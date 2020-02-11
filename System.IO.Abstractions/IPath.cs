@@ -51,9 +51,13 @@
         bool HasExtension(string path);
         /// <inheritdoc cref="Path.IsPathRooted(string)"/>
         bool IsPathRooted(string path);
+
 #if FEATURE_ADVANCED_PATH_OPERATIONS
         /// <inheritdoc cref="Path.IsPathFullyQualified(string)"/>
         bool IsPathFullyQualified(string path);
+        
+        /// <inheritdoc cref="Path.GetRelativePath(string,string)"/>
+        string GetRelativePath(string relativeTo, string path);
 #endif
     }
 }
