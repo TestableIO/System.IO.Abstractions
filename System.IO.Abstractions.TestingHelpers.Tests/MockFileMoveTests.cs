@@ -362,5 +362,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.Throws<FileNotFoundException>(action);
         }
+
+        [Test]
+        public void MockFile_Move_ShouldRetainMetadata()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            string sourceFileContent = "this is some content";
+            DateTimeOffset creationTime = DateTimeOffset.Now;
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {sourceFilePath, new MockFileData(sourceFileContent){CreationTime = creationTime}},
+                {XFS.Path(@"c:\somethingelse\dummy.txt"), new MockFileData(new byte[] {0})}
+            });
+
+            string destFilePath = XFS.Path(@"c:\somethingelse\demo1.txt");
+
+            fileSystem.File.Move(sourceFilePath, destFilePath);
+
+            Assert.That(fileSystem.File.GetCreationTimeUtc(@"c:\somethingelse\demo1.txt"), Is.EqualTo(creationTime.UtcDateTime));
+        }
     }
 }
