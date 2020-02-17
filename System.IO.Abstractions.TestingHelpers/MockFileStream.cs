@@ -94,10 +94,13 @@
             {
                 var mockFileData = mockFileDataAccessor.GetFile(path);
                 /* reset back to the beginning .. */
+                var position = Position;
                 Seek(0, SeekOrigin.Begin);
                 /* .. read everything out */
                 var data = new byte[Length];
                 Read(data, 0, (int)Length);
+                /* restore to original position */
+                Seek(position, SeekOrigin.Begin);
                 /* .. put it in the mock system */
                 mockFileData.Contents = data;
             }
