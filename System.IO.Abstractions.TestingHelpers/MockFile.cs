@@ -360,7 +360,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
             VerifyDirectoryExists(destFileName);
 
-            mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile.Contents));
+            mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile));
             mockFileDataAccessor.RemoveFile(sourceFileName);
         }
 
