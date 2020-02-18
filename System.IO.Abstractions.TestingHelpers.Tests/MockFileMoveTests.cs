@@ -379,7 +379,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.File.Move(sourceFilePath, destFilePath);
 
-            Assert.That(fileSystem.File.GetCreationTimeUtc(@"c:\somethingelse\demo1.txt"), Is.EqualTo(creationTime.UtcDateTime));
+            Assert.That(fileSystem.File.GetCreationTimeUtc(destFilePath), Is.EqualTo(creationTime.UtcDateTime));
         }
     }
 }
