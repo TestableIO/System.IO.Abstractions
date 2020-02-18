@@ -164,5 +164,25 @@
             // Assert
             Assert.Throws<ObjectDisposedException>(() => stream.WriteByte(0));
         }
+
+        [Test]
+        public void MockFileStream_Flush_ShouldNotChangePosition()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path = XFS.Path("C:\\test");
+            fileSystem.AddFile(path, new MockFileData(new byte[0]));
+
+            using (var stream = fileSystem.FileInfo.FromFileName(path).OpenWrite())
+            {
+                // Act
+                stream.Write(new byte[400], 0, 400);
+                stream.Seek(200, SeekOrigin.Begin);
+                stream.Flush();
+
+                // Assert
+                Assert.AreEqual(200, stream.Position);
+            }
+        }
     }
 }
