@@ -9,7 +9,7 @@
 
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.0.50">
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.1.71">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
