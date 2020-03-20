@@ -13,6 +13,8 @@ namespace System.IO.Abstractions
 
         Stream Create(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize);
 
+        Stream Create(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize, FileOptions options);
+
         Stream Create(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize, bool useAsync);
 
         Stream Create(SafeFileHandle handle, FileAccess access);
