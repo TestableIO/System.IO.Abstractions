@@ -231,6 +231,26 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileInfo_AppendText_ShouldCreateFileIfMissing()
+        {
+            var fileSystem = new MockFileSystem();
+            var targetFile = XFS.Path(@"c:\a.txt");
+            var fileInfo = new MockFileInfo(fileSystem, targetFile);
+
+            using (var file = fileInfo.AppendText())
+                file.WriteLine("This should be the contents");
+
+            string newcontents;
+            using (var newfile = fileInfo.OpenText())
+            {
+                newcontents = newfile.ReadToEnd();
+            }
+
+            Assert.That(fileSystem.File.Exists(targetFile), Is.True);
+            Assert.AreEqual($"This should be the contents{Environment.NewLine}", newcontents);
+        }
+
+        [Test]
         public void MockFileInfo_OpenWrite_ShouldAddDataToFileInMemoryFileSystem()
         {
             var fileData = new MockFileData("Demo text content");

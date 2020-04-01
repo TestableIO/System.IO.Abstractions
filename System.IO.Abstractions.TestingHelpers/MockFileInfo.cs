@@ -152,7 +152,6 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override StreamWriter AppendText()
         {
-            if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
             return new StreamWriter(new MockFileStream(mockFileSystem, FullName, MockFileStream.StreamType.APPEND));
         }
 
