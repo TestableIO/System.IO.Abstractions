@@ -1903,5 +1903,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fs.Directory.SetCreationTime(path, DateTime.Now);
             fs.Directory.Delete(path);
         }
+
+        [Test]
+        public void Move_Directory_Throws_When_Target_Directory_Is_Missing()
+        {
+            // Arange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        {
+            { XFS.Path(@"c:\temp\exists\foldertomove"), new MockDirectoryData()}
+        });
+
+            string folderToMove = XFS.Path(@"c:\temp\exists\foldertomove");
+            string targetDirName = XFS.Path(@"c:\temp\doesnotexist\foldertomove");
+
+            // Act
+            Assert.Throws<DirectoryNotFoundException>(() =>
+                fileSystem.Directory.Move(folderToMove, targetDirName));
+
+            // Assert
+            Assert.IsFalse(fileSystem.Directory.Exists(XFS.Path(@"c:\temp\doesnotexist\foldertomove")));
+        }
     }
 }
