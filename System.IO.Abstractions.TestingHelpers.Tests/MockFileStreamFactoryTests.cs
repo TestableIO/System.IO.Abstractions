@@ -85,6 +85,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [TestCase(FileMode.Open)]
+        [TestCase(FileMode.Truncate)]
+        public void MockFileStreamFactory_OpenNonExistingFile_ShouldThrowFileNotFoundException(FileMode fileMode)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(XFS.Path(@"C:\Test"));
+
+            // Act
+            var fileStreamFactory = new MockFileStreamFactory(fileSystem);
+
+            // Assert
+            Assert.Throws<FileNotFoundException>(() => fileStreamFactory.Create(XFS.Path(@"C:\Test\some_random_file.txt"), fileMode));
+        }
+
+        [Test]
         [TestCase(FileMode.CreateNew)]
         public void MockFileStreamFactory_CreateExistingFile_Should_Throw_IOException(FileMode fileMode)
         {
