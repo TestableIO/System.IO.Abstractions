@@ -71,6 +71,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         [TestCase(FileMode.Create)]
         [TestCase(FileMode.Open)]
+        [TestCase(FileMode.CreateNew)]
+        [TestCase(FileMode.Append)]
         public void MockFileStreamFactory_CreateInNonExistingDirectory_ShouldThrowDirectoryNotFoundException(FileMode fileMode)
         {
             // Arrange
