@@ -12,28 +12,28 @@ namespace System.IO.Abstractions.TestingHelpers
             => this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
 
         public Stream Create(string path, FileMode mode)
-            => new MockFileStream(mockFileSystem, path, GetStreamType(mode));
+            => new MockFileStream(mockFileSystem, path, GetStreamType(mode), mode);
 
         public Stream Create(string path, FileMode mode, FileAccess access)
-            => new MockFileStream(mockFileSystem, path, GetStreamType(mode, access));
+            => new MockFileStream(mockFileSystem, path, GetStreamType(mode, access), mode);
 
         public Stream Create(string path, FileMode mode, FileAccess access, FileShare share)
-            => new MockFileStream(mockFileSystem, path, GetStreamType(mode, access));
+            => new MockFileStream(mockFileSystem, path, GetStreamType(mode, access), mode);
 
         public Stream Create(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize)
-            => new MockFileStream(mockFileSystem, path, GetStreamType(mode, access));
+            => new MockFileStream(mockFileSystem, path, GetStreamType(mode, access), mode);
 
         public Stream Create(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize, FileOptions options)
-            => new MockFileStream(mockFileSystem, path, GetStreamType(mode, access), options);
+            => new MockFileStream(mockFileSystem, path, GetStreamType(mode, access), options, mode);
 
         public Stream Create(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize, bool useAsync)
-            => new MockFileStream(mockFileSystem, path, GetStreamType(mode, access));
+            => new MockFileStream(mockFileSystem, path, GetStreamType(mode, access), mode);
 
         public Stream Create(string path, FileMode mode, FileSystemRights rights, FileShare share, int bufferSize, FileOptions options, FileSecurity fileSecurity)
-            => new MockFileStream(mockFileSystem, path, GetStreamType(mode), options);
+            => new MockFileStream(mockFileSystem, path, GetStreamType(mode), options, mode);
 
         public Stream Create(string path, FileMode mode, FileSystemRights rights, FileShare share, int bufferSize, FileOptions options)
-            => new MockFileStream(mockFileSystem, path, GetStreamType(mode), options);
+            => new MockFileStream(mockFileSystem, path, GetStreamType(mode), options, mode);
 
         [Obsolete("This method has been deprecated. Please use new Create(SafeFileHandle handle, FileAccess access) instead. http://go.microsoft.com/fwlink/?linkid=14202")]
         public Stream Create(IntPtr handle, FileAccess access)

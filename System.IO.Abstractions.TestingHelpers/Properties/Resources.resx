@@ -153,4 +153,7 @@
   <data name="PROCESS_CANNOT_ACCESS_FILE_IN_USE_WITH_FILENAME" xml:space="preserve">
     <value>The process cannot access the file '{0}' because it is being used by another process.</value>
   </data>
+  <data name="FILE_ALREADY_EXISTS" xml:space="preserve">
+    <value>The file '{0}' already exists.</value>
+  </data>
 </root>
