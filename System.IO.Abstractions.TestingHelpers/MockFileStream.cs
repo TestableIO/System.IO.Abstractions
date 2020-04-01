@@ -73,7 +73,9 @@
                     throw CommonExceptions.CouldNotFindPartOfPath(path);
                 }
 
-                if (StreamType.READ.Equals(streamType))
+                if (StreamType.READ.Equals(streamType)
+                    || fileMode.Equals(FileMode.Open)
+                    || fileMode.Equals(FileMode.Truncate))
                 {
                     throw CommonExceptions.FileNotFound(path);
                 }

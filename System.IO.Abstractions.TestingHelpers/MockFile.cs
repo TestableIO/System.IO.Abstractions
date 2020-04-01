@@ -417,7 +417,7 @@ namespace System.IO.Abstractions.TestingHelpers
             else if (mode == FileMode.Append)
                 streamType = MockFileStream.StreamType.APPEND;
 
-            return new MockFileStream(mockFileDataAccessor, path, streamType, options);
+            return new MockFileStream(mockFileDataAccessor, path, streamType, options, mode);
         }
 
         public override Stream OpenRead(string path)
