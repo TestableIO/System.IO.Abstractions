@@ -47,8 +47,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         [TestCase(FileMode.Create)]
-        [TestCase(FileMode.CreateNew)]
-        public void MockFileStreamFactory_CreateForAnExistingFile_ShouldTruncateExistingFile(FileMode fileMode)
+        public void MockFileStreamFactory_CreateForAnExistingFile_ShouldReplaceFileContents(FileMode fileMode)
         {
             var fileSystem = new MockFileSystem();
             string FilePath = XFS.Path("C:\\File.txt");
@@ -82,7 +81,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
 
             // Assert
-            Assert.Throws<DirectoryNotFoundException>(() => fileStreamFactory.Create(@"C:\Test\NonExistingDirectory\some_random_file.txt", fileMode));
+            Assert.Throws<DirectoryNotFoundException>(() => fileStreamFactory.Create(XFS.Path(@"C:\Test\NonExistingDirectory\some_random_file.txt"), fileMode));
+        }
+
+        [Test]
+        [TestCase(FileMode.CreateNew)]
+        public void MockFileStreamFactory_CreateExistingFile_Should_Throw_IOException(FileMode fileMode)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(XFS.Path(@"C:\Test\some_random_file.txt"), MockFileData.NullObject);
+
+            // Act
+            var fileStreamFactory = new MockFileStreamFactory(fileSystem);
+
+            // Assert
+            Assert.Throws<IOException>(() => fileStreamFactory.Create(XFS.Path(@"C:\Test\some_random_file.txt"), fileMode));
+
         }
     }
 }
