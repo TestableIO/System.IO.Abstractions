@@ -381,5 +381,39 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(fileSystem.File.GetCreationTimeUtc(destFilePath), Is.EqualTo(creationTime.UtcDateTime));
         }
+
+        [Test]
+        public void MockFile_Move_ShouldThrowExceptionWhenSourceFileShare_Is_Not_Delete()
+        {
+            string sourceFileReadDelete = XFS.Path(@"c:\something\IHaveReadDelete.txt");
+            string sourceFileDelete = XFS.Path(@"c:\something\IHaveDelete.txt");
+            string sourceFileRead = XFS.Path(@"c:\something\IHaveRead.txt");
+            string sourceFileNone = XFS.Path(@"c:\something\IHaveNone.txt");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { sourceFileDelete, new MockFileData("") { AllowedFileShare = FileShare.Delete } },
+                { sourceFileRead, new MockFileData("") { AllowedFileShare = FileShare.Read } },
+                { sourceFileReadDelete, new MockFileData("") { AllowedFileShare = FileShare.Delete | FileShare.Read } },
+                { sourceFileNone, new MockFileData("") { AllowedFileShare = FileShare.None } },
+            });
+
+            AssertMoveSuccess(sourceFileReadDelete);
+            AssertMoveSuccess(sourceFileDelete);
+            AssertMoveThrowsIOException(sourceFileRead);
+            AssertMoveThrowsIOException(sourceFileNone);
+
+            void AssertMoveThrowsIOException(string sourceFile)
+            {
+                var target = sourceFile + ".moved";
+                Assert.Throws<IOException>(() => fileSystem.File.Move(sourceFile, target));
+            }
+
+            void AssertMoveSuccess(string sourceFile)
+            {
+                var target = sourceFile + ".moved";
+                fileSystem.File.Move(sourceFile, target);
+                Assert.That(fileSystem.File.Exists(target), Is.True);
+            }
+        }
     }
 }

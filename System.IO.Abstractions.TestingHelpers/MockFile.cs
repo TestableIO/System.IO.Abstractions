@@ -122,6 +122,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var sourceFileData = mockFileDataAccessor.GetFile(sourceFileName);
+            sourceFileData.CheckFileAccess(sourceFileName, FileAccess.Read);
             mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFileData));
         }
 
