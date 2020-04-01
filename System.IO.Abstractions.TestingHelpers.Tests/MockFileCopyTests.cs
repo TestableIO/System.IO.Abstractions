@@ -381,5 +381,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(fileSystem.File.Exists(destinationFile));
         }
+
+        [Test]
+        public void MockFile_Copy_ShouldThrowIOExceptionForInvalidFileShare()
+        {
+            string sourceFileName = XFS.Path(@"c:\source\demo.txt");
+            var sourceContents = new MockFileData("Source content")
+            {
+                AllowedFileShare = FileShare.None
+            };
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {sourceFileName, sourceContents}
+            });
+            fileSystem.AddDirectory(XFS.Path(@"c:\something"));
+
+            TestDelegate action = () => fileSystem.File.Copy(sourceFileName, XFS.Path(@"c:\something\demo.txt"));
+
+            Assert.Throws<IOException>(action);
+        }
     }
 }

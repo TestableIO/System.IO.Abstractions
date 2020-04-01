@@ -21,8 +21,17 @@
         public MockFileStream(
             IMockFileDataAccessor mockFileDataAccessor,
             string path,
+            StreamType streamType,
+            FileMode fileMode)
+            : this(mockFileDataAccessor, path, streamType, FileOptions.None, fileMode)
+        {
+        }
+
+        public MockFileStream(
+            IMockFileDataAccessor mockFileDataAccessor,
+            string path,
             StreamType streamType)
-            : this(mockFileDataAccessor, path, streamType, FileOptions.None)
+            : this(mockFileDataAccessor, path, streamType, FileOptions.None, FileMode.Append)
         {
         }
 
@@ -30,7 +39,8 @@
             IMockFileDataAccessor mockFileDataAccessor,
             string path,
             StreamType streamType,
-            FileOptions options)
+            FileOptions options,
+            FileMode fileMode = FileMode.Append)
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
             this.path = path;
@@ -38,6 +48,11 @@
 
             if (mockFileDataAccessor.FileExists(path))
             {
+                if (fileMode.Equals(FileMode.CreateNew))
+                {
+                    throw CommonExceptions.FileAlreadyExists(path);
+                }
+
                 var fileData = mockFileDataAccessor.GetFile(path);
                 fileData.CheckFileAccess(path, streamType != StreamType.READ ? FileAccess.Write : FileAccess.Read);
 
@@ -58,7 +73,9 @@
                     throw CommonExceptions.CouldNotFindPartOfPath(path);
                 }
 
-                if (StreamType.READ.Equals(streamType))
+                if (StreamType.READ.Equals(streamType)
+                    || fileMode.Equals(FileMode.Open)
+                    || fileMode.Equals(FileMode.Truncate))
                 {
                     throw CommonExceptions.FileNotFound(path);
                 }
