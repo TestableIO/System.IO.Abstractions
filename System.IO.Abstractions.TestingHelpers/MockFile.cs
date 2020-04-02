@@ -122,6 +122,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var sourceFileData = mockFileDataAccessor.GetFile(sourceFileName);
+            sourceFileData.CheckFileAccess(sourceFileName, FileAccess.Read);
             mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFileData));
         }
 
@@ -417,7 +418,7 @@ namespace System.IO.Abstractions.TestingHelpers
             else if (mode == FileMode.Append)
                 streamType = MockFileStream.StreamType.APPEND;
 
-            return new MockFileStream(mockFileDataAccessor, path, streamType, options);
+            return new MockFileStream(mockFileDataAccessor, path, streamType, options, mode);
         }
 
         public override Stream OpenRead(string path)

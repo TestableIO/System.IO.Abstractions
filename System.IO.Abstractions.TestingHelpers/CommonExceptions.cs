@@ -61,5 +61,8 @@ namespace System.IO.Abstractions.TestingHelpers
             paramName != null
             ? new IOException(string.Format(StringResources.Manager.GetString("PROCESS_CANNOT_ACCESS_FILE_IN_USE_WITH_FILENAME"), paramName), _fileLockHResult)
             : new IOException(StringResources.Manager.GetString("PROCESS_CANNOT_ACCESS_FILE_IN_USE"), _fileLockHResult);
+
+        public static IOException FileAlreadyExists(string paramName) =>
+            new IOException(string.Format(StringResources.Manager.GetString("FILE_ALREADY_EXISTS"), paramName));
     }
 }
