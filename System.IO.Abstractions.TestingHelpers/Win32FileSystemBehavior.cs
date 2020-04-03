@@ -2,7 +2,7 @@
 {
     internal static class Win32FileSystemBehavior
     {
-        internal static bool MoveFileCanParsePath(string fullPath)
+        public static bool MoveFileCanParsePath(string fullPath)
         {
             fullPath = fullPath.Trim(Path.DirectorySeparatorChar);
             var dir = Path.IsPathRooted(fullPath)
