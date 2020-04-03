@@ -1804,5 +1804,69 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fs.Directory.SetCreationTime(path, DateTime.Now);
             fs.Directory.Delete(path);
         }
+
+        [Test]
+        [TestCase(@"c:\temp2\fd\df")]
+        [TestCase(@"c:\temp2\fd\")]
+        [TestCase(@"c:\temp2\fd\..\fd")]
+        [TestCase(@"c:\temp2\fd")]
+        [TestCase(@".\..\temp2\fd\df")]
+        [TestCase(@".\..\temp2\fd\df\..")]
+        [TestCase(@".\..\temp2\fd\df\..\")]
+        [TestCase(@"..\temp2\fd\")]
+        [TestCase(@".\temp2\fd")]
+        [TestCase(@"\temp2\fd")]
+        [TestCase(@"temp2\fd")]
+        public void Move_Directory_Throws_When_Target_Directory_Without_First_Order_Path_Is_Missing(
+            string targetDirName)
+        {
+            // Arange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {XFS.Path(@"c:\temp\exists\foldertomove"), new MockDirectoryData()}
+            });
+
+            string folderToMove = XFS.Path(@"c:\temp\exists\foldertomove");
+            targetDirName = XFS.Path(targetDirName);
+
+            // Act
+            Assert.Throws<DirectoryNotFoundException>(() =>
+                fileSystem.Directory.Move(folderToMove, targetDirName));
+
+            // Assert
+            Assert.IsFalse(fileSystem.Directory.Exists(targetDirName));
+        }
+
+        [Test]
+        [TestCase(@"c:\temp2\")]
+        [TestCase(@"c:\temp2")]
+        [TestCase(@"c:\temp2\..\temp2")]
+        [TestCase(@".\..\temp2")]
+        [TestCase(@".\..\temp2\..\temp2")]
+        [TestCase(@".\..\temp2\fd\df\..\..")]
+        [TestCase(@".\..\temp2\fd\df\..\..\")]
+        [TestCase(@"..\temp2")]
+        [TestCase(@".\temp2")]
+        [TestCase(@"\temp2")]
+        [TestCase(@"temp2")]
+        public void Move_Directory_DoesNotThrow_When_Target_Directory_With_First_Order_Path_Is_Missing(
+            string targetDirName)
+        {
+            // Arange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {XFS.Path(@"c:\temp\exists\foldertomove"), new MockDirectoryData()}
+            });
+
+            string folderToMove = XFS.Path(@"c:\temp\exists\foldertomove");
+            targetDirName = XFS.Path(targetDirName);
+
+            // Act
+            Assert.DoesNotThrow(() =>
+                fileSystem.Directory.Move(folderToMove, targetDirName));
+
+            // Assert
+            Assert.IsTrue(fileSystem.Directory.Exists(targetDirName));
+        }
     }
 }
