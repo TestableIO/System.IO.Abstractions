@@ -1,6 +1,6 @@
 ﻿namespace System.IO.Abstractions.TestingHelpers
 {
-    public static class Win32FileSystemBehavior
+    internal static class Win32FileSystemBehavior
     {
         internal static bool MoveFileCanParsePath(string fullPath)
         {
