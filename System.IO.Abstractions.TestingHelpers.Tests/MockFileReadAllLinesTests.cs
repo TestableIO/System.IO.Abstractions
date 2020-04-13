@@ -70,6 +70,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.Message, Is.EqualTo("Could not find file '" + absentFileNameFullPath + "'."));
         }
 
+        [Test]
+        public void MockFile_ReadAllLines_ShouldNotReturnBom()
+        {
+            // Arrange
+            var testFilePath = XFS.Path(@"c:\a test file.txt");
+            const string testText = "Hello World";
+            var fileSystem = new MockFileSystem();
+            fileSystem.File.WriteAllLines(testFilePath, new[] { testText }, Encoding.UTF8);
+
+            // Act
+            var result = fileSystem.File.ReadAllLines(testFilePath, Encoding.UTF8);
+
+            // Assert
+            Assert.That(result.Length, Is.EqualTo(1));
+            Assert.That(result[0], Is.EqualTo(testText));
+        }
 #if FEATURE_ASYNC_FILE
         [Test]
         public async Task MockFile_ReadAllLinesAsync_ShouldReturnOriginalTextData()
