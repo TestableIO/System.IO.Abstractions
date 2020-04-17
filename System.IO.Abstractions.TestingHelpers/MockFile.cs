@@ -490,7 +490,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
             using (var ms = new MemoryStream(mockFileDataAccessor.GetFile(path).Contents))
             using (var sr = new StreamReader(ms, encoding))
+           {
                 return sr.ReadToEnd().SplitLines();
+           }
         }
 
         public override string ReadAllText(string path)
