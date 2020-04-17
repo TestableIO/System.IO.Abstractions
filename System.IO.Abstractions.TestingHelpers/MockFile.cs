@@ -487,9 +487,12 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             mockFileDataAccessor.GetFile(path).CheckFileAccess(path, FileAccess.Read);
-            return encoding
-                .GetString(mockFileDataAccessor.GetFile(path).Contents)
-                .SplitLines();
+
+            using (var ms = new MemoryStream(mockFileDataAccessor.GetFile(path).Contents))
+            using (var sr = new StreamReader(ms, encoding))
+           {
+                return sr.ReadToEnd().SplitLines();
+           }
         }
 
         public override string ReadAllText(string path)
