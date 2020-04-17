@@ -1371,6 +1371,31 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(fileSystem.File.Exists(XFS.Path(@"C:\NewLocation\Data\someFile.txt")));
         }
 
+        public enum FileSystemType
+        {
+            RealFileSystem,
+            MockFileSystem
+        }
+
+        [TestCase(FileSystemType.RealFileSystem)]
+        [TestCase(FileSystemType.MockFileSystem)]
+        public void Move_Works(FileSystemType fileSystemType)
+        {
+            var tempDir = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            var sourceDir = Path.Combine(tempDir, "Foo", "Bar");
+            var targetDir = Path.Combine(tempDir, "Foo", "Baz");
+
+            var fileSystem = fileSystemType == FileSystemType.RealFileSystem
+                ? (IFileSystem)new FileSystem()
+                : new MockFileSystem();
+
+            fileSystem.Directory.CreateDirectory(sourceDir);
+
+            Assert.DoesNotThrow(() =>
+                fileSystem.Directory.Move(sourceDir, targetDir)
+            );
+        }
+
         [TestCaseSource("GetPathsForMoving")]
         public void MockDirectory_Move_ShouldMoveDirectories(string sourceDirName, string destDirName, string filePathOne, string filePathTwo)
         {
