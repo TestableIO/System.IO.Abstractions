@@ -1903,5 +1903,82 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fs.Directory.SetCreationTime(path, DateTime.Now);
             fs.Directory.Delete(path);
         }
+
+        private static IEnumerable<TestCaseData> Failing_DirectoryMoveFromToPaths
+        {
+            get
+            {
+                var testTargetDirs = new[]
+                {
+                    @"c:\temp2\fd\df", @"c:\temp2\fd\", @"c:\temp2\fd\..\fd", @"c:\temp2\fd", @".\..\temp2\fd\df",
+                    @".\..\temp2\fd\df\..", @".\..\temp2\fd\df\..\", @"..\temp2\fd\", @".\temp2\fd", @"temp2\fd",
+                    @"c:\temp3\exists2\d3", @"c:\temp4\exists"
+                };
+
+                var testSourceDirs = new[] {@"c:\temp\exists\foldertomove", @"c:\temp3\exists", @"c:\temp3"};
+
+                return
+                    from s in testSourceDirs
+                    from t in testTargetDirs
+                    select new TestCaseData(XFS.Path(s), XFS.Path(t));
+            }
+        }
+
+        [Test]
+        [TestCaseSource(nameof(Failing_DirectoryMoveFromToPaths))]
+        public void Move_Directory_Throws_When_Target_Directory_Parent_Does_Not_Exist(
+            string sourceDirName,
+            string targetDirName)
+        {
+            // Arange
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(sourceDirName);
+
+            // Act
+            Assert.Throws<DirectoryNotFoundException>(() =>
+                fileSystem.Directory.Move(sourceDirName, targetDirName));
+
+            // Assert
+            Assert.IsFalse(fileSystem.Directory.Exists(targetDirName));
+            Assert.IsTrue(fileSystem.Directory.Exists(sourceDirName));
+        }
+
+        private static IEnumerable<TestCaseData> Success_DirectoryMoveFromToPaths
+        {
+            get
+            {
+                var testTargetDirs = new[]
+                {
+                    @"c:\temp2\", @"c:\temp2", @"c:\temp2\..\temp2", @".\..\temp2", @".\..\temp2\..\temp2",
+                    @".\..\temp2\fd\df\..\..", @".\..\temp2\fd\df\..\..\", @"..\temp2", @".\temp2", @"\temp2", @"temp2",
+                };
+
+                var testSourceDirs = new[] { @"c:\temp3\exists\foldertomove",@"c:\temp3\exists", @"c:\temp4" };
+
+                return
+                    from s in testSourceDirs
+                    from t in testTargetDirs
+                    select new TestCaseData(XFS.Path(s), XFS.Path(t));
+            }
+        }
+
+        [Test]
+        [TestCaseSource(nameof(Success_DirectoryMoveFromToPaths))]
+        public void Move_Directory_DoesNotThrow_When_Target_Directory_Parent_Exists(
+            string sourceDirName,
+            string targetDirName)
+        {
+            // Arange
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(sourceDirName);
+
+            // Act
+            Assert.DoesNotThrow(() =>
+                fileSystem.Directory.Move(sourceDirName, targetDirName));
+
+            // Assert
+            Assert.IsTrue(fileSystem.Directory.Exists(targetDirName));
+            Assert.IsFalse(fileSystem.Directory.Exists(sourceDirName));
+        }
     }
 }
