@@ -13,10 +13,5 @@
 
         public IFileSystemWatcher CreateNew(string path, string filter)
             => new FileSystemWatcherWrapper(path, filter);
-
-        public IFileSystemWatcher FromPath(string path)
-        {
-            return new FileSystemWatcherWrapper(path);
-        }
     }
 }

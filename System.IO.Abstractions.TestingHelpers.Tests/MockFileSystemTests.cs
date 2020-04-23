@@ -360,15 +360,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(filter, watcher.Filter);
         }
 
-        [Test]
-        public void MockFileSystem_FileSystemWatcher_ShouldBeAssignable()
-        {
-            var path = XFS.Path(@"C:\root");
-            var fileSystem = new MockFileSystem { FileSystemWatcher = new TestFileSystemWatcherFactory() };
-            var watcher = fileSystem.FileSystemWatcher.FromPath(path);
-            Assert.AreEqual(path, watcher.Path);
-        }
-
         private class TestFileSystemWatcherFactory : IFileSystemWatcherFactory
         {
             public IFileSystemWatcher CreateNew() => new TestFileSystemWatcher(null);

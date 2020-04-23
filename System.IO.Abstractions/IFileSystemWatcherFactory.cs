@@ -22,12 +22,5 @@
         /// <param name="filter">The type of files to watch. For example, "*.txt" watches for changes to all text files.</param>
         /// <returns></returns>
         IFileSystemWatcher CreateNew(string path, string filter);
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FileSystemWatcherBase"/> class, which acts as a wrapper for a FileSystemWatcher
-        /// </summary>
-        /// <param name="path">Path to generate the FileSystemWatcherBase for</param>
-        /// <returns></returns>
-        IFileSystemWatcher FromPath(string path);
     }
 }
