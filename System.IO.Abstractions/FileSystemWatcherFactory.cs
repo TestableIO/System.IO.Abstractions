@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace System.IO.Abstractions
+﻿namespace System.IO.Abstractions
 {
     [Serializable]
     public class FileSystemWatcherFactory : IFileSystemWatcherFactory
@@ -13,9 +8,10 @@ namespace System.IO.Abstractions
             return new FileSystemWatcherWrapper();
         }
 
-        public IFileSystemWatcher FromPath(string path)
-        {
-            return new FileSystemWatcherWrapper(path);
-        }
+        public IFileSystemWatcher CreateNew(string path) =>
+            new FileSystemWatcherWrapper(path);
+
+        public IFileSystemWatcher CreateNew(string path, string filter)
+            => new FileSystemWatcherWrapper(path, filter);
     }
 }

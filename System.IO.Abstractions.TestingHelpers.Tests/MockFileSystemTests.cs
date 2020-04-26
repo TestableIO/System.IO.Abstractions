@@ -341,23 +341,43 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileSystem_FileSystemWatcher_ShouldBeAssignable()
+        public void MockFileSystem_FileSystemWatcher_PathShouldBeAssignable()
         {
             var path = XFS.Path(@"C:\root");
             var fileSystem = new MockFileSystem { FileSystemWatcher = new TestFileSystemWatcherFactory() };
-            var watcher = fileSystem.FileSystemWatcher.FromPath(path);
+            var watcher = fileSystem.FileSystemWatcher.CreateNew(path);
             Assert.AreEqual(path, watcher.Path);
+        }
+
+        [Test]
+        public void MockFileSystem_FileSystemWatcher_PathAndFilterShouldBeAssignable()
+        {
+            var path = XFS.Path(@"C:\root");
+            var filter = "*.txt";
+            var fileSystem = new MockFileSystem { FileSystemWatcher = new TestFileSystemWatcherFactory() };
+            var watcher = fileSystem.FileSystemWatcher.CreateNew(path, filter);
+            Assert.AreEqual(path, watcher.Path);
+            Assert.AreEqual(filter, watcher.Filter);
         }
 
         private class TestFileSystemWatcherFactory : IFileSystemWatcherFactory
         {
             public IFileSystemWatcher CreateNew() => new TestFileSystemWatcher(null);
+            public IFileSystemWatcher CreateNew(string path) => new TestFileSystemWatcher(path);
+            public IFileSystemWatcher CreateNew(string path, string filter) => new TestFileSystemWatcher(path, filter);
             public IFileSystemWatcher FromPath(string path) => new TestFileSystemWatcher(path);
         }
 
         private class TestFileSystemWatcher : FileSystemWatcherBase
         {
             public TestFileSystemWatcher(string path) => Path = path;
+
+            public TestFileSystemWatcher(string path, string filter)
+            {
+                Path = path;
+                Filter = filter;
+            }
+
             public override string Path { get; set; }
             public override bool IncludeSubdirectories { get; set; }
             public override bool EnableRaisingEvents { get; set; }

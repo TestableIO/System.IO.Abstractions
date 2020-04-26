@@ -14,6 +14,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileSystemWatcherFactory_CreateNewWithPath_ShouldThrowNotImplementedException()
+        {
+            var path = XFS.Path(@"y:\test");
+            var factory = new MockFileSystemWatcherFactory();
+            Assert.Throws<NotImplementedException>(() => factory.CreateNew(path));
+        }
+
+        [Test]
+        public void MockFileSystemWatcherFactory_CreateNewWithPathAndFilter_ShouldThrowNotImplementedException()
+        {
+            var path = XFS.Path(@"y:\test");
+            var filter = "*.txt";
+            var factory = new MockFileSystemWatcherFactory();
+            Assert.Throws<NotImplementedException>(() => factory.CreateNew(path, filter));
+        }
+
+        [Test]
         public void MockFileSystemWatcherFactory_FromPath_ShouldThrowNotImplementedException()
         {
             var path = XFS.Path(@"y:\test");
