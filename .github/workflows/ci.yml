@@ -13,7 +13,7 @@ jobs:
           matrix:
             os: [ ubuntu-latest, windows-latest, macos-latest ]
             dotnet: [ 3.1.101, 5.0.100-preview.3.20216.6 ]
-    runs-on: ${{ matrix.dotnet }}
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Core
