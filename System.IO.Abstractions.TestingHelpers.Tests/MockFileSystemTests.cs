@@ -342,6 +342,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileSystem_DefaultState_DefaultTempDirectoryExists()
+        {
+            var tempDirectory = @"C:\temp";
+
+            var mockFileSystem = new MockFileSystem();
+            var mockFileSystemOverload = new MockFileSystem(null, string.Empty);
+            
+            Assert.IsTrue(mockFileSystem.Directory.Exists(tempDirectory));
+            Assert.IsTrue(mockFileSystemOverload.Directory.Exists(tempDirectory));
+        }
+
+        [Test]
         public void MockFileSystem_FileSystemWatcher_PathShouldBeAssignable()
         {
             var path = XFS.Path(@"C:\root");
