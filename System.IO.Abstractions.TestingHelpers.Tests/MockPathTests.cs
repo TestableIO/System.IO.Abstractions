@@ -378,7 +378,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(@"C:\temp")]
         public void GetTempPath_Called_ReturnsStringLengthGreaterThanZero(string tempDirectory) {
             //Arrange
-            var mockPath = new MockPath(new MockFileSystem(), XFS.Path(tempDirectory));
+            var mockPath = new MockPath(new MockFileSystem(), string.IsNullOrEmpty(tempDirectory)? tempDirectory: XFS.Path(tempDirectory));
 
             //Act
             var result = mockPath.GetTempPath();
