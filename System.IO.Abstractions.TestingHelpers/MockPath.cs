@@ -18,7 +18,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockPath(IMockFileDataAccessor mockFileDataAccessor,string defaultTempDirectory) : base(mockFileDataAccessor?.FileSystem)
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
-            this.defaultTempDirectory = defaultTempDirectory;
+            this.defaultTempDirectory = !string.IsNullOrEmpty(defaultTempDirectory) ? defaultTempDirectory : base.GetTempPath();
         }
 
         public override string GetFullPath(string path)
@@ -141,9 +141,6 @@ namespace System.IO.Abstractions.TestingHelpers
             return fullPath;
         }
 
-        public override string GetTempPath()
-        {
-            return !string.IsNullOrEmpty(defaultTempDirectory) ? defaultTempDirectory : base.GetTempPath();
-        }
+        public override string GetTempPath() => defaultTempDirectory;
     }
 }

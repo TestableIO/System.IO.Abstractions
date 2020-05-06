@@ -11,7 +11,7 @@ namespace System.IO.Abstractions.TestingHelpers
     public class MockFileSystem : IFileSystem, IMockFileDataAccessor
     {
         private const string DEFAULT_CURRENT_DIRECTORY = @"C:\";
-        private const string DEFAULT_TEMP_DIRECTORY = @"C:\temp";
+        private const string TEMP_DIRECTORY = @"C:\temp";
 
         private readonly IDictionary<string, MockFileData> files;
         private readonly PathVerifier pathVerifier;
@@ -25,7 +25,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 currentDirectory = XFS.Path(DEFAULT_CURRENT_DIRECTORY);
             }
 
-            var defaultTempDirectory = XFS.Path(DEFAULT_TEMP_DIRECTORY);
+            var defaultTempDirectory = XFS.Path(TEMP_DIRECTORY);
 
             StringOperations = new StringOperations(XFS.IsUnixPlatform());
             pathVerifier = new PathVerifier(this);
