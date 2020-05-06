@@ -11,6 +11,7 @@ namespace System.IO.Abstractions.TestingHelpers
     public class MockFileSystem : IFileSystem, IMockFileDataAccessor
     {
         private const string DEFAULT_CURRENT_DIRECTORY = @"C:\";
+        private const string TEMP_DIRECTORY = @"C:\temp";
 
         private readonly IDictionary<string, MockFileData> files;
         private readonly PathVerifier pathVerifier;
@@ -24,11 +25,13 @@ namespace System.IO.Abstractions.TestingHelpers
                 currentDirectory = XFS.Path(DEFAULT_CURRENT_DIRECTORY);
             }
 
+            var defaultTempDirectory = XFS.Path(TEMP_DIRECTORY);
+
             StringOperations = new StringOperations(XFS.IsUnixPlatform());
             pathVerifier = new PathVerifier(this);
             this.files = new Dictionary<string, MockFileData>(StringOperations.Comparer);
 
-            Path = new MockPath(this);
+            Path = new MockPath(this,defaultTempDirectory);
             File = new MockFile(this);
             Directory = new MockDirectory(this, currentDirectory);
             FileInfo = new MockFileInfoFactory(this);
@@ -48,6 +51,11 @@ namespace System.IO.Abstractions.TestingHelpers
             if (!FileExists(currentDirectory))
             {
                 AddDirectory(currentDirectory);
+            }
+
+            if (!FileExists(defaultTempDirectory)) 
+            {
+                AddDirectory(defaultTempDirectory);
             }
         }
 

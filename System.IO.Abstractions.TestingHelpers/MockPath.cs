@@ -11,10 +11,14 @@ namespace System.IO.Abstractions.TestingHelpers
     public class MockPath : PathWrapper
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
+        private readonly string defaultTempDirectory;
 
-        public MockPath(IMockFileDataAccessor mockFileDataAccessor) : base(mockFileDataAccessor?.FileSystem)
+        public MockPath(IMockFileDataAccessor mockFileDataAccessor) : this(mockFileDataAccessor,string.Empty) { }
+
+        public MockPath(IMockFileDataAccessor mockFileDataAccessor,string defaultTempDirectory) : base(mockFileDataAccessor?.FileSystem)
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
+            this.defaultTempDirectory = !string.IsNullOrEmpty(defaultTempDirectory) ? defaultTempDirectory : base.GetTempPath();
         }
 
         public override string GetFullPath(string path)
@@ -128,7 +132,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override string GetTempFileName()
         {
             string fileName = mockFileDataAccessor.Path.GetRandomFileName();
-            string tempDir = mockFileDataAccessor.Path.GetTempPath();
+            string tempDir = this.GetTempPath();
 
             string fullPath = mockFileDataAccessor.Path.Combine(tempDir, fileName);
 
@@ -136,5 +140,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             return fullPath;
         }
+
+        public override string GetTempPath() => defaultTempDirectory;
     }
 }
