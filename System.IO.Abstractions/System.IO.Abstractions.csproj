@@ -3,7 +3,7 @@
         <AssemblyName>System.IO.Abstractions</AssemblyName>
         <RootNamespace>System.IO.Abstractions</RootNamespace>
         <Description>A set of abstractions to help make file system interactions testable.</Description>
-        <TargetFrameworks>netstandard2.0;netstandard2.1;net461;net5.0</TargetFrameworks>
+        <TargetFrameworks>netstandard2.0;netstandard2.1;net461;netcoreapp5.0</TargetFrameworks>
         <PackageTags>testing</PackageTags>
     </PropertyGroup>
     <ItemGroup Condition="'$(TargetFramework)' != 'net461'">
