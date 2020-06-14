@@ -16,25 +16,11 @@ branches:
   only:
     - master
 
-environment:
-  INHERITDOC_VERSION: 1.2.2.1
-  TEMP_DIR: c:\temp
-  APPVEYOR_YML_DISABLE_PS_LINUX: true
-
-install:
-  # Temporarily install InheritDoc using the NuGet CLI
-  - cmd: nuget install inheritdoc -Version %INHERITDOC_VERSION% -OutputDirectory %TEMP_DIR%
-
-before_build:
-  - nuget restore
-
+# Publish NuGet packages and symbols
 build:
   publish_nuget: true
   publish_nuget_symbols: true
-
-before_package:
-  # This step replaces the inheritdoc tags in the xml documentation with documentation from mscorlib.xml
-  - ps: '& $env:TEMP_DIR\InheritDoc.$env:INHERITDOC_VERSION\tools\InheritDoc.exe -b $env:APPVEYOR_BUILD_FOLDER -g "c:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.X\mscorlib.xml" -o'
+  use_snupkg_format: true
 
 # Perform deployments only for Windows job
 for:
