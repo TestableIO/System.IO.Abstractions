@@ -22,6 +22,10 @@ build:
   publish_nuget_symbols: true
   use_snupkg_format: true
 
+before_build:
+  - dotnet --version
+  - dotnet --list-sdks
+
 # Perform deployments only for Windows job
 for:
   - matrix:
