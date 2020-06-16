@@ -334,11 +334,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(@"C:\somepath")]
         public void MockFileSystem_DefaultState_CurrentDirectoryExists(string currentDirectory)
         {
-            var fs = new MockFileSystem(null, currentDirectory);
+            var fs = new MockFileSystem(null, XFS.Path(currentDirectory));
 
             var actualCurrentDirectory = fs.DirectoryInfo.FromDirectoryName(".");
 
             Assert.IsTrue(actualCurrentDirectory.Exists);
+        }
+
+        [Test]
+        public void MockFileSystem_Constructor_ThrowsForNonRootedCurrentDirectory()
+        {
+            var ae = Assert.Throws<ArgumentException>(() =>
+                new MockFileSystem(null, "non-rooted")
+            );
+            Assert.AreEqual("currentDirectory", ae.ParamName);
         }
 
         [Test]
@@ -348,7 +357,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var mockFileSystem = new MockFileSystem();
             var mockFileSystemOverload = new MockFileSystem(null, string.Empty);
-            
+
             Assert.IsTrue(mockFileSystem.Directory.Exists(tempDirectory));
             Assert.IsTrue(mockFileSystemOverload.Directory.Exists(tempDirectory));
         }
