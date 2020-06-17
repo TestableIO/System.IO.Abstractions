@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "yapm": {
+      "commandName": "Project",
+      "commandLineArgs": "apply"
+    }
+  }
+}
