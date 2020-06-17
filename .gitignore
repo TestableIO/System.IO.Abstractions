@@ -45,6 +45,9 @@ build/
 *.log
 *.scc
 
+# Benchmarks results
+BenchmarkDotNet.Artifacts
+
 # Visual C++ cache files
 ipch/
 *.aps
