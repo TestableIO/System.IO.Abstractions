@@ -29,8 +29,8 @@ before_build:
 
 build:
   publish_nuget: true
-  # Disable symbol publishing until https://twitter.com/fgreinacher/status/1273314597584416768 is resolved.
-  # publish_nuget_symbols: true
+  publish_nuget_symbols: true
+  use_snupkg_format: true
 
 before_package:
   # This step replaces the inheritdoc tags in the xml documentation with documentation from mscorlib.xml
