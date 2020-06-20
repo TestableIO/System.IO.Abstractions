@@ -134,5 +134,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.True(fileSystem.File.Exists(XFS.Path("./some_random_file.txt")));
         }
+
+        [Test]
+        public void MockFileStream_CanRead_ReturnsFalseForAWriteOnlyStream()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            var fileStream = fileSystem.FileStream.Create("file.txt", FileMode.CreateNew, FileAccess.Write);
+
+            // Assert
+            Assert.IsFalse(fileStream.CanRead);
+        }
     }
 }
