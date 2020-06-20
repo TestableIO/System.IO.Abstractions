@@ -369,7 +369,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-            return Open(path, mode, (mode == FileMode.Append ? FileAccess.Write : FileAccess.ReadWrite), FileShare.None);
+            return Open(path, mode, FileAccess.ReadWrite, FileShare.None);
         }
 
         public override Stream Open(string path, FileMode mode, FileAccess access)
@@ -412,13 +412,8 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileData.CheckFileAccess(path, access);
 
             var length = mockFileData.Contents.Length;
-            MockFileStream.StreamType streamType = MockFileStream.StreamType.WRITE;
-            if (access == FileAccess.Read)
-                streamType = MockFileStream.StreamType.READ;
-            else if (mode == FileMode.Append)
-                streamType = MockFileStream.StreamType.APPEND;
 
-            return new MockFileStream(mockFileDataAccessor, path, streamType, options, mode);
+            return new MockFileStream(mockFileDataAccessor, path, mode, access, options);
         }
 
         public override Stream OpenRead(string path)
@@ -490,9 +485,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
             using (var ms = new MemoryStream(mockFileDataAccessor.GetFile(path).Contents))
             using (var sr = new StreamReader(ms, encoding))
-           {
+            {
                 return sr.ReadToEnd().SplitLines();
-           }
+            }
         }
 
         public override string ReadAllText(string path)
