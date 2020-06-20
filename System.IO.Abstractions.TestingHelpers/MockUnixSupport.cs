@@ -6,7 +6,7 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         private static readonly Regex pathTransform = new Regex(@"^[a-zA-Z]:(?<path>.*)$");
 
-        public static string Path(string path) => IsUnixPlatform()
+        public static string Path(string path) => path != null && IsUnixPlatform()
             ? pathTransform.Replace(path, "${path}").Replace(@"\", "/")
             : path;
 

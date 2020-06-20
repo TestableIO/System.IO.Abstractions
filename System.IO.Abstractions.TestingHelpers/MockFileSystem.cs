@@ -24,6 +24,10 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 currentDirectory = XFS.Path(DEFAULT_CURRENT_DIRECTORY);
             }
+            else if (!System.IO.Path.IsPathRooted(currentDirectory))
+            {
+                throw new ArgumentException("Current directory needs to be rooted.", nameof(currentDirectory));
+            }
 
             var defaultTempDirectory = XFS.Path(TEMP_DIRECTORY);
 
@@ -31,7 +35,7 @@ namespace System.IO.Abstractions.TestingHelpers
             pathVerifier = new PathVerifier(this);
             this.files = new Dictionary<string, MockFileData>(StringOperations.Comparer);
 
-            Path = new MockPath(this,defaultTempDirectory);
+            Path = new MockPath(this, defaultTempDirectory);
             File = new MockFile(this);
             Directory = new MockDirectory(this, currentDirectory);
             FileInfo = new MockFileInfoFactory(this);
@@ -53,7 +57,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 AddDirectory(currentDirectory);
             }
 
-            if (!FileExists(defaultTempDirectory)) 
+            if (!FileExists(defaultTempDirectory))
             {
                 AddDirectory(defaultTempDirectory);
             }
@@ -77,7 +81,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw new ArgumentNullException(nameof(path), StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
             }
-            
+
             var pathSeparatorFixed = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             var fullPath = Path.GetFullPath(pathSeparatorFixed);
 
@@ -159,7 +163,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 if (FileExists(fixedPath) &&
                     (GetFile(fixedPath).Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
-                        throw CommonExceptions.AccessDenied(fixedPath);
+                    throw CommonExceptions.AccessDenied(fixedPath);
 
                 var lastIndex = 0;
                 var isUnc =
@@ -238,7 +242,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     .Where(p => StringOperations.StartsWith(p, sourcePath))
                     .ToList();
 
-                foreach(var path in affectedPaths)
+                foreach (var path in affectedPaths)
                 {
                     var newPath = StringOperations.Replace(path, sourcePath, destPath);
                     files[newPath] = files[path];
