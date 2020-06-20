@@ -5,42 +5,18 @@
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string path;
-        private readonly bool canWrite = true;
+        private readonly FileAccess access = FileAccess.ReadWrite;
         private readonly FileOptions options;
 
         private bool disposed;
 
-        public enum StreamType
-        {
-            READ,
-            WRITE,
-            APPEND,
-            TRUNCATE
-        }
-
         public MockFileStream(
             IMockFileDataAccessor mockFileDataAccessor,
             string path,
-            StreamType streamType,
-            FileMode fileMode)
-            : this(mockFileDataAccessor, path, streamType, FileOptions.None, fileMode)
-        {
-        }
+            FileMode mode,
+            FileAccess access = FileAccess.ReadWrite,
+            FileOptions options = FileOptions.None)
 
-        public MockFileStream(
-            IMockFileDataAccessor mockFileDataAccessor,
-            string path,
-            StreamType streamType)
-            : this(mockFileDataAccessor, path, streamType, FileOptions.None, FileMode.Append)
-        {
-        }
-
-        public MockFileStream(
-            IMockFileDataAccessor mockFileDataAccessor,
-            string path,
-            StreamType streamType,
-            FileOptions options,
-            FileMode fileMode = FileMode.Append)
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
             this.path = path;
@@ -48,20 +24,22 @@
 
             if (mockFileDataAccessor.FileExists(path))
             {
-                if (fileMode.Equals(FileMode.CreateNew))
+                if (mode.Equals(FileMode.CreateNew))
                 {
                     throw CommonExceptions.FileAlreadyExists(path);
                 }
 
                 var fileData = mockFileDataAccessor.GetFile(path);
-                fileData.CheckFileAccess(path, streamType != StreamType.READ ? FileAccess.Write : FileAccess.Read);
+                fileData.CheckFileAccess(path, access);
 
-                /* only way to make an expandable MemoryStream that starts with a particular content */
-                var data = fileData.Contents;
-                if (data != null && data.Length > 0 && streamType != StreamType.TRUNCATE)
+                var existingContents = fileData.Contents;
+                var keepExistingContents =
+                    existingContents?.Length > 0 &&
+                    mode != FileMode.Truncate && mode != FileMode.Create;
+                if (keepExistingContents)
                 {
-                    Write(data, 0, data.Length);
-                    Seek(0, StreamType.APPEND.Equals(streamType)
+                    Write(existingContents, 0, existingContents.Length);
+                    Seek(0, mode == FileMode.Append
                         ? SeekOrigin.End
                         : SeekOrigin.Begin);
                 }
@@ -74,9 +52,7 @@
                     throw CommonExceptions.CouldNotFindPartOfPath(path);
                 }
 
-                if (StreamType.READ.Equals(streamType)
-                    || fileMode.Equals(FileMode.Open)
-                    || fileMode.Equals(FileMode.Truncate))
+                if (mode.Equals(FileMode.Open) || mode.Equals(FileMode.Truncate))
                 {
                     throw CommonExceptions.FileNotFound(path);
                 }
@@ -84,10 +60,11 @@
                 mockFileDataAccessor.AddFile(path, new MockFileData(new byte[] { }));
             }
 
-            canWrite = streamType != StreamType.READ;
+            this.access = access;
         }
 
-        public override bool CanWrite => canWrite;
+        public override bool CanRead => access.HasFlag(FileAccess.Read);
+        public override bool CanWrite => access.HasFlag(FileAccess.Write);
 
         protected override void Dispose(bool disposing)
         {

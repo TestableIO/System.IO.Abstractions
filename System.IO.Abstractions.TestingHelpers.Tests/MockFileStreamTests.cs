@@ -17,14 +17,14 @@
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
             fileSystem.AddDirectory(XFS.Path(@"C:\something"));
 
-            var cut = new MockFileStream(fileSystem, filepath, MockFileStream.StreamType.WRITE);
+            var cut = new MockFileStream(fileSystem, filepath, FileMode.Create);
 
             // Act
             cut.WriteByte(255);
             cut.Flush();
 
             // Assert
-            CollectionAssert.AreEqual(new byte[]{255}, fileSystem.GetFile(filepath).Contents);
+            CollectionAssert.AreEqual(new byte[] { 255 }, fileSystem.GetFile(filepath).Contents);
         }
 
         [Test]
@@ -58,7 +58,7 @@
             fileSystem.AddDirectory(XFS.Path(@"C:\something"));
 
             // Act
-            Assert.Throws<FileNotFoundException>(() => new MockFileStream(fileSystem, nonexistentFilePath, MockFileStream.StreamType.READ));
+            Assert.Throws<FileNotFoundException>(() => new MockFileStream(fileSystem, nonexistentFilePath, FileMode.Open));
 
             // Assert - expect an exception
         }
@@ -74,50 +74,50 @@
             });
 
             // Act
-            var stream = new MockFileStream(fileSystem, filePath, MockFileStream.StreamType.READ);
+            var stream = new MockFileStream(fileSystem, filePath, FileMode.Open, FileAccess.Read);
 
             Assert.IsFalse(stream.CanWrite);
             Assert.Throws<NotSupportedException>(() => stream.WriteByte(1));
         }
-        
+
         [Test]
-        [TestCase(FileShare.None, MockFileStream.StreamType.READ)]
-        [TestCase(FileShare.None, MockFileStream.StreamType.WRITE)]
-        [TestCase(FileShare.None, MockFileStream.StreamType.APPEND)]
-        [TestCase(FileShare.None, MockFileStream.StreamType.TRUNCATE)]
-        [TestCase(FileShare.Read, MockFileStream.StreamType.WRITE)]
-        [TestCase(FileShare.Read, MockFileStream.StreamType.APPEND)]
-        [TestCase(FileShare.Read, MockFileStream.StreamType.TRUNCATE)]
-        [TestCase(FileShare.Write, MockFileStream.StreamType.READ)]
-        public void MockFileStream_Constructor_Insufficient_FileShare_Throws_Exception(FileShare allowedFileShare, MockFileStream.StreamType streamType)
+        [TestCase(FileShare.None, FileAccess.Read)]
+        [TestCase(FileShare.None, FileAccess.ReadWrite)]
+        [TestCase(FileShare.None, FileAccess.Write)]
+        [TestCase(FileShare.Read, FileAccess.Write)]
+        [TestCase(FileShare.Read, FileAccess.ReadWrite)]
+        [TestCase(FileShare.Write, FileAccess.Read)]
+        public void MockFileStream_Constructor_Insufficient_FileShare_Throws_Exception(
+            FileShare allowedFileShare,
+            FileAccess fileAccess)
         {
-            var filePath = @"C:\locked.txt";            
+            var filePath = @"C:\locked.txt";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { filePath, new MockFileData("cannot access") { AllowedFileShare = allowedFileShare } }
             });
-            
-            Assert.Throws<IOException>(() => new MockFileStream(fileSystem, filePath, streamType));
+
+            Assert.Throws<IOException>(() => new MockFileStream(fileSystem, filePath, FileMode.Open, fileAccess));
         }
-        
+
         [Test]
-        [TestCase(FileShare.Read, MockFileStream.StreamType.READ)]
-        [TestCase(FileShare.Read | FileShare.Write, MockFileStream.StreamType.READ)]
-        [TestCase(FileShare.Read | FileShare.Write, MockFileStream.StreamType.APPEND)]
-        [TestCase(FileShare.Read | FileShare.Write, MockFileStream.StreamType.TRUNCATE)]
-        [TestCase(FileShare.ReadWrite, MockFileStream.StreamType.READ)]
-        [TestCase(FileShare.ReadWrite, MockFileStream.StreamType.WRITE)]
-        [TestCase(FileShare.ReadWrite, MockFileStream.StreamType.APPEND)]
-        [TestCase(FileShare.ReadWrite, MockFileStream.StreamType.TRUNCATE)]
-        public void MockFileStream_Constructor_Sufficient_FileShare_Does_Not_Throw_Exception(FileShare allowedFileShare, MockFileStream.StreamType streamType)
+        [TestCase(FileShare.Read, FileAccess.Read)]
+        [TestCase(FileShare.Read | FileShare.Write, FileAccess.Read)]
+        [TestCase(FileShare.Read | FileShare.Write, FileAccess.ReadWrite)]
+        [TestCase(FileShare.ReadWrite, FileAccess.Read)]
+        [TestCase(FileShare.ReadWrite, FileAccess.ReadWrite)]
+        [TestCase(FileShare.ReadWrite, FileAccess.Write)]
+        public void MockFileStream_Constructor_Sufficient_FileShare_Does_Not_Throw_Exception(
+            FileShare allowedFileShare,
+            FileAccess fileAccess)
         {
-            var filePath = @"C:\locked.txt";       
+            var filePath = @"C:\locked.txt";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { filePath, new MockFileData("cannot access") { AllowedFileShare = allowedFileShare } }
             });
-            
-            Assert.DoesNotThrow(() => new MockFileStream(fileSystem, filePath, streamType));
+
+            Assert.DoesNotThrow(() => new MockFileStream(fileSystem, filePath, FileMode.Open, fileAccess));
         }
 
         [Test]
