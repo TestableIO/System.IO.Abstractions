@@ -234,21 +234,11 @@ namespace System.IO.Abstractions.TestingHelpers
             return new MockFile(mockFileSystem).Open(FullName, mode, access, share);
         }
 
-        public override Stream OpenRead()
-        {
-            if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
-            return new MockFileStream(mockFileSystem, path, FileMode.Open, FileAccess.Read);
-        }
+        public override Stream OpenRead() => mockFileSystem.File.OpenRead(path);
 
-        public override StreamReader OpenText()
-        {
-            return new StreamReader(OpenRead());
-        }
+        public override StreamReader OpenText() => mockFileSystem.File.OpenText(path);
 
-        public override Stream OpenWrite()
-        {
-            return new MockFileStream(mockFileSystem, path, FileMode.Open);
-        }
+        public override Stream OpenWrite()  => mockFileSystem.File.OpenWrite(path);
 
         public override IFileInfo Replace(string destinationFileName, string destinationBackupFileName)
         {
