@@ -12,25 +12,24 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        dotnet: [2.1.x, 3.1.x, 5.0.100-preview.3.20216.6]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: 🔨 Use .NET Core 2.1 SDK
+      - name: Install .NET Core 2.1 SDK
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: "2.1.x"
-      - name: 🔨 Use .NET Core 3.1 SDK
+      - name: Install .NET Core 3.1 SDK
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: "3.1.x"
-      - name: 🔨 Use .NET Core 3.1 SDK
+      - name: Install .NET 5 SDK
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: "5.0.100-preview.3.20216.6"
-      - name: 🪓 **DOTNET HACK** 🪓
+      - name: Merge .NET SDKs
         shell: pwsh
         run: |
           $version = Split-Path (Split-Path $ENV:DOTNET_ROOT -Parent) -Leaf;
