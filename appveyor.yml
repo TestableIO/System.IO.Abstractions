@@ -30,6 +30,7 @@ before_build:
 build:
   publish_nuget: true
   publish_nuget_symbols: true
+  use_snupkg_format: true
 
 before_package:
   # This step replaces the inheritdoc tags in the xml documentation with documentation from mscorlib.xml
@@ -44,15 +45,13 @@ for:
       - provider: NuGet
         api_key:
           secure: dZ2lowWe8KkDiUSXgKS/SulxjuKVSN6t7Jfzfx6co664SRxoXnX+3nsVpYZAJtla
-        skip_symbols: false
-        artifact: /.*\.nupkg/
+        skip_symbols: false        
         on:
           branch: master
 
       - provider: GitHub
         tag: v$(appveyor_build_version)
-        prerelease: false
-        artifact: /.*\.nupkg/
+        prerelease: false        
         auth_token:
           secure: Rrk1zp93EpCyxec/GXKnRnJjX7vU+ClNZEBnxbM+1j6l+C56qSV7B/fUrVsJuZYV
         on:

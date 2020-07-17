@@ -373,6 +373,49 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase(@"C:\temp")]
+        public void GetTempPath_Called_ReturnsStringLengthGreaterThanZero(string tempDirectory) {
+            //Arrange
+            var mockPath = new MockPath(new MockFileSystem(), string.IsNullOrEmpty(tempDirectory)? tempDirectory: XFS.Path(tempDirectory));
+
+            //Act
+            var result = mockPath.GetTempPath();
+
+            //Assert
+            Assert.IsTrue(result.Length > 0);
+        }
+
+        [Test]
+        public void GetTempPath_Called_WithNonNullVirtualTempDirectory_ReturnsVirtualTempDirectory() {
+            //Arrange
+            var tempDirectory = XFS.Path(@"C:\temp");
+
+            var mockPath = new MockPath(new MockFileSystem(), tempDirectory);
+
+            //Act
+            var result = mockPath.GetTempPath();
+
+            //Assert
+            Assert.AreEqual(tempDirectory,result);
+        }
+
+        [Test]
+        [TestCase(null)]
+        [TestCase("")]
+        public void GetTempPath_Called_WithNullOrEmptyVirtualTempDirectory_ReturnsFallbackTempDirectory(string tempDirectory) {
+            //Arrange
+            var mockPath = new MockPath(new MockFileSystem(), tempDirectory);
+
+            //Act
+            var result = mockPath.GetTempPath();
+
+            //Assert
+            Assert.IsTrue(result.Length > 0);
+        }
+
+        [Test]
         public void HasExtension_PathSentIn_DeterminesExtension()
         {
             //Arrange

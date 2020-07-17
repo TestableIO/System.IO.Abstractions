@@ -152,7 +152,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override StreamWriter AppendText()
         {
-            return new StreamWriter(new MockFileStream(mockFileSystem, FullName, MockFileStream.StreamType.APPEND));
+            return new StreamWriter(new MockFileStream(mockFileSystem, FullName, FileMode.Append));
         }
 
         public override IFileInfo CopyTo(string destFileName)
@@ -234,21 +234,11 @@ namespace System.IO.Abstractions.TestingHelpers
             return new MockFile(mockFileSystem).Open(FullName, mode, access, share);
         }
 
-        public override Stream OpenRead()
-        {
-            if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
-            return new MockFileStream(mockFileSystem, path, MockFileStream.StreamType.READ);
-        }
+        public override Stream OpenRead() => mockFileSystem.File.OpenRead(path);
 
-        public override StreamReader OpenText()
-        {
-            return new StreamReader(OpenRead());
-        }
+        public override StreamReader OpenText() => mockFileSystem.File.OpenText(path);
 
-        public override Stream OpenWrite()
-        {
-            return new MockFileStream(mockFileSystem, path, MockFileStream.StreamType.WRITE);
-        }
+        public override Stream OpenWrite()  => mockFileSystem.File.OpenWrite(path);
 
         public override IFileInfo Replace(string destinationFileName, string destinationBackupFileName)
         {

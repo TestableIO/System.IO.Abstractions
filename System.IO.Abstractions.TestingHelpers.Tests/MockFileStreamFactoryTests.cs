@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework; 
+using NUnit.Framework;
 using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
@@ -52,20 +52,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
             string FilePath = XFS.Path("C:\\File.txt");
 
-            using(var stream = fileSystem.FileStream.Create(FilePath, fileMode, System.IO.FileAccess.Write))
+            using (var stream = fileSystem.FileStream.Create(FilePath, fileMode, System.IO.FileAccess.Write))
             {
                 var data = Encoding.UTF8.GetBytes("1234567890");
                 stream.Write(data, 0, data.Length);
             }
 
-            using(var stream = fileSystem.FileStream.Create(FilePath, fileMode, System.IO.FileAccess.Write))
+            using (var stream = fileSystem.FileStream.Create(FilePath, fileMode, System.IO.FileAccess.Write))
             {
                 var data = Encoding.UTF8.GetBytes("AAAAA");
                 stream.Write(data, 0, data.Length);
             }
 
             var text = fileSystem.File.ReadAllText(FilePath);
-            Assert.AreEqual("AAAAA", text); 
+            Assert.AreEqual("AAAAA", text);
         }
 
         [Test]
@@ -116,6 +116,36 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.Throws<IOException>(() => fileStreamFactory.Create(XFS.Path(@"C:\Test\some_random_file.txt"), fileMode));
 
+        }
+
+        [Test]
+        [TestCase(FileMode.Create)]
+        [TestCase(FileMode.CreateNew)]
+        [TestCase(FileMode.OpenOrCreate)]
+        public void MockFileStreamFactory_CreateWithRelativePath_CreatesFileInCurrentDirectory(FileMode fileMode)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            var fileStreamFactory = new MockFileStreamFactory(fileSystem);
+            fileStreamFactory.Create("some_random_file.txt", fileMode);
+
+            // Assert
+            Assert.True(fileSystem.File.Exists(XFS.Path("./some_random_file.txt")));
+        }
+
+        [Test]
+        public void MockFileStream_CanRead_ReturnsFalseForAWriteOnlyStream()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            var fileStream = fileSystem.FileStream.Create("file.txt", FileMode.CreateNew, FileAccess.Write);
+
+            // Assert
+            Assert.IsFalse(fileStream.CanRead);
         }
     }
 }

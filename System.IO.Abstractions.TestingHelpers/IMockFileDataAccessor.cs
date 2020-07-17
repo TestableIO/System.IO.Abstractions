@@ -19,7 +19,7 @@ namespace System.IO.Abstractions.TestingHelpers
         void AddDirectory(string path);
 
         void AddFileFromEmbeddedResource(string path, Assembly resourceAssembly, string embeddedResourcePath);
-        void AddFilesFromEmbeddedNamespace(string path, Assembly resourceAssembly, string embeddedRresourcePath);
+        void AddFilesFromEmbeddedNamespace(string path, Assembly resourceAssembly, string embeddedResourcePath);
 
         void MoveDirectory(string sourcePath, string destPath);
 

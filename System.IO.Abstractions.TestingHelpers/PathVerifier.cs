@@ -10,7 +10,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private static readonly char[] AdditionalInvalidPathChars = { '*', '?' };
         private readonly IMockFileDataAccessor _mockFileDataAccessor;
 
-        internal PathVerifier(IMockFileDataAccessor mockFileDataAccessor)
+        public PathVerifier(IMockFileDataAccessor mockFileDataAccessor)
         {
             _mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
         }

@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<AssemblyName>System.IO.Abstractions.Benchmarks</AssemblyName>
+		<RootNamespace>System.IO.Abstractions.Benchmarks</RootNamespace>
+		<Description>Bencharmks comparisons.</Description>
+		<TargetFrameworks>netcoreapp3.1;net461</TargetFrameworks>
+		<PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageTags>testing</PackageTags>
+		<IsPackable>false</IsPackable>
+		<IsTestable>false</IsTestable>
+		<OutputType>Exe</OutputType>		
+		<OutputType>Exe</OutputType>		
+	</PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\System.IO.Abstractions\System.IO.Abstractions.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net461" Version="1.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
+	</ItemGroup>
+</Project>

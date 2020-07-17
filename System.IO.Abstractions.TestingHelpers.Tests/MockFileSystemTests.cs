@@ -292,7 +292,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 XFS.Path(@"c:\something\demo.txt"),
                 XFS.Path(@"c:\something\other.gif"),
                 XFS.Path(@"d:\foobar"),
-                XFS.Path(@"d:\foo\bar")
+                XFS.Path(@"d:\foo\bar"),
+                XFS.Path(@"C:\temp")
             };
 
             var result = fileSystem.AllNodes;
@@ -333,11 +334,32 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(@"C:\somepath")]
         public void MockFileSystem_DefaultState_CurrentDirectoryExists(string currentDirectory)
         {
-            var fs = new MockFileSystem(null, currentDirectory);
+            var fs = new MockFileSystem(null, XFS.Path(currentDirectory));
 
             var actualCurrentDirectory = fs.DirectoryInfo.FromDirectoryName(".");
 
             Assert.IsTrue(actualCurrentDirectory.Exists);
+        }
+
+        [Test]
+        public void MockFileSystem_Constructor_ThrowsForNonRootedCurrentDirectory()
+        {
+            var ae = Assert.Throws<ArgumentException>(() =>
+                new MockFileSystem(null, "non-rooted")
+            );
+            Assert.AreEqual("currentDirectory", ae.ParamName);
+        }
+
+        [Test]
+        public void MockFileSystem_DefaultState_DefaultTempDirectoryExists()
+        {
+            var tempDirectory = XFS.Path(@"C:\temp");
+
+            var mockFileSystem = new MockFileSystem();
+            var mockFileSystemOverload = new MockFileSystem(null, string.Empty);
+
+            Assert.IsTrue(mockFileSystem.Directory.Exists(tempDirectory));
+            Assert.IsTrue(mockFileSystemOverload.Directory.Exists(tempDirectory));
         }
 
         [Test]
