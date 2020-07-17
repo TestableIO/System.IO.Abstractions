@@ -2,29 +2,49 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-        dotnet: [ 2.2.103, 3.1.100, 5.0.100-preview.3.20216.6 ]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        dotnet: [2.1.x, 3.1.x, 5.0.100-preview.3.20216.6]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ matrix.dotnet }}
-    - name: Install dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: 🔨 Use .NET Core 2.1 SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "2.1.x"
+      - name: 🔨 Use .NET Core 3.1 SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "3.1.x"
+      - name: 🔨 Use .NET Core 3.1 SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "5.0.100-preview.3.20216.6"
+      - name: 🪓 **DOTNET HACK** 🪓
+        shell: pwsh
+        run: |
+          $version = Split-Path (Split-Path $ENV:DOTNET_ROOT -Parent) -Leaf;
+          $root = Split-Path (Split-Path $ENV:DOTNET_ROOT -Parent) -Parent;
+          $directories = Get-ChildItem $root | Where-Object { $_.Name -ne $version };
+          foreach ($dir in $directories) {
+            $from = $dir.FullName;
+            $to = "$root/$version";
+            Write-Host Copying from $from to $to;
+            Copy-Item "$from\*" $to -Recurse -Force;
+          }
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+      - name: Test
+        run: dotnet test --no-restore --verbosity normal
