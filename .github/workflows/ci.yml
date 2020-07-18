@@ -6,6 +6,7 @@ on:
     branches: [master]
 jobs:
   build:
+    name: Build and test
     strategy:
       fail-fast: false
       matrix:
