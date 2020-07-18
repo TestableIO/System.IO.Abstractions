@@ -7,6 +7,12 @@ on:
     branches: [master]
 
 jobs:
+  deploy:
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push' 
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy package
   build:
     strategy:
       fail-fast: false
@@ -14,7 +20,8 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout sources
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0
       - name: Install .NET Core 2.1 SDK
@@ -29,7 +36,7 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: "5.0.100-preview.3.20216.6"
-      - name: Merge .NET SDKs
+      - name: Merge installed .NET SDKs
         shell: pwsh
         run: |
           $version = Split-Path (Split-Path $ENV:DOTNET_ROOT -Parent) -Leaf;
@@ -43,7 +50,14 @@ jobs:
           }
       - name: Install dependencies
         run: dotnet restore
-      - name: Build
-        run: dotnet build --configuration Release --no-restore
-      - name: Test
-        run: dotnet test --no-restore --verbosity normal
+      - name: Build projects
+        run: dotnet build --no-restore --verbosity normal
+      - name: Run tests
+        run: dotnet test --no-build --verbosity normal
+      - name: Generate packages
+        run: dotnet pack --configuration Release --no-restore
+      - name: Upload packages
+        uses: actions/upload-artifact@v2
+        with:
+          name: packages
+          path: "**/*.nupkg"
