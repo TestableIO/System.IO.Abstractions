@@ -1,4 +1,4 @@
-name: ci
+name: Continuous Integration
 on:
   push:
     branches: [master]
@@ -61,6 +61,8 @@ jobs:
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2
         with:
+          name: NuGet packages
+          key: nuget-packages
           path: packages/*.*
   deploy: 
     name: Deploy
@@ -68,6 +70,10 @@ jobs:
     needs: [pack]
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/download-artifact@v2
+        with:
+          key: nuget-packages
+          path: packages
       - name: Push packages
         run: |
           ls packages
