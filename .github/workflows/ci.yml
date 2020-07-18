@@ -62,7 +62,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: NuGet packages
-          key: nuget-packages
           path: packages/*.*
   deploy: 
     name: Deploy
@@ -72,9 +71,9 @@ jobs:
     steps:
       - uses: actions/download-artifact@v2
         with:
-          key: nuget-packages
+          name: NuGet packages
           path: packages
       - name: Push packages
         run: |
-          ls packages
-          dotnet nuget push packages/*.nupkg --api-key BOGUS
+          ls
+          dotnet nuget push **/*.nupkg --api-key {{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
