@@ -47,9 +47,10 @@ jobs:
       - name: Run tests
         run: dotnet test --no-build --verbosity normal
       - name: Generate packages
+        if: matrix.os == 'ubuntu-latest'
         run: dotnet pack --configuration Release --no-restore --output packages
   deploy: 
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push' 
+    # if: github.ref == 'refs/heads/master' && github.event_name == 'push' 
     needs: [build]
     runs-on: ubuntu-latest
     steps:
