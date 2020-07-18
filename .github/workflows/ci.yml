@@ -4,9 +4,8 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
-defaults:
-  env:
-    DOTNET_NOLOGO: true
+env:
+  DOTNET_NOLOGO: true
 jobs:
   test:
     name: Test
