@@ -5,8 +5,8 @@ on:
   pull_request:
     branches: [master]
 jobs:
-  build:
-    name: Build and test
+  test:
+    name: Test
     strategy:
       fail-fast: false
       matrix:
@@ -41,26 +41,34 @@ jobs:
             Write-Host Copying from $from to $to;
             Copy-Item "$from\*" $to -Recurse -Force;
           }
-      - name: Install dependencies
-        run: dotnet restore
-      - name: Build projects
-        run: dotnet build --no-restore --verbosity normal
       - name: Run tests
         run: dotnet test --no-build --verbosity normal
   pack:
     name: Pack
-    needs: [build]
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Install .NET 5 SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "5.0.100-preview.3.20216.6"
       - name: Create packages
         run: dotnet pack --configuration Release --no-restore --output ./packages
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          path: packages/*.*
   deploy: 
     name: Deploy
     # if: github.ref == 'refs/heads/master' && github.event_name == 'push' 
     needs: [pack]
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy packages
+      - name: Push packages
         run: |
           ls packages
           dotnet nuget push packages/*.nupkg --api-key BOGUS
