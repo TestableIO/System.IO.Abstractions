@@ -42,7 +42,7 @@ jobs:
             Copy-Item "$from\*" $to -Recurse -Force;
           }
       - name: Run tests
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test --verbosity normal
   pack:
     name: Pack
     needs: [test]
@@ -57,7 +57,7 @@ jobs:
         with:
           dotnet-version: "5.0.100-preview.3.20216.6"
       - name: Create packages
-        run: dotnet pack --configuration Release --no-restore --output ./packages
+        run: dotnet pack --configuration Release --output ./packages
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2
         with:
