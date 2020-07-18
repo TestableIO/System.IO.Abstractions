@@ -61,7 +61,7 @@
       "Microsoft.NETCore.Platforms": {
         "type": "Transitive",
         "resolved": "1.1.0",
-        "contentHash": "+OdPzTxEcB2t/5432NkXRT9VALO27rvo6qsNhvCBZuk+2LbtTiqgfGhA4gn3NrmG6nPiyyXsKjRDvZObZtwIYA=="
+        "contentHash": "kz0PEW2lhqygehI/d6XsPCQzD7ff7gUJaVGPVETX611eadGsA3A877GdSlU0LRVMCTH/+P3o2iDTak+S08V2+A=="
       },
       "System.Buffers": {
         "type": "Transitive",
