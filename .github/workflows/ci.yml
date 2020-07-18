@@ -7,12 +7,6 @@ on:
     branches: [master]
 
 jobs:
-  deploy:
-    if: github.ref == 'refs/heads/master' && github.event_name == 'push' 
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy package
   build:
     strategy:
       fail-fast: false
@@ -55,9 +49,12 @@ jobs:
       - name: Run tests
         run: dotnet test --no-build --verbosity normal
       - name: Generate packages
-        run: dotnet pack --configuration Release --no-restore
-      - name: Upload packages
-        uses: actions/upload-artifact@v2
-        with:
-          name: packages
-          path: "**/*.nupkg"
+        run: dotnet pack --configuration Release --no-restore --output packages
+  deploy: 
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push' 
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy packages
+        run: |
+          ls packages
