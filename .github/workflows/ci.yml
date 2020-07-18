@@ -56,3 +56,4 @@ jobs:
       - name: Deploy packages
         run: |
           ls packages
+          dotnet nuget push packages/*.nupkg --api-key BOGUS
