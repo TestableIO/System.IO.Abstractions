@@ -4,9 +4,6 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
-env:
-  DOTNET_NOLOGO: true
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 jobs:
   test:
     name: Test
@@ -78,3 +75,10 @@ jobs:
           path: packages
       - name: Push packages
         run: dotnet nuget push packages/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      - uses: dotnet/nbgv@v0.3.1
+        id: nbgv
+      - name: Create GitHub release
+        uses: actions/create-release@v1
+        with:
+          tag_name: v${{ steps.nbgv.outputs.SemVer2 }}
+          release_name: v${{ steps.nbgv.outputs.SemVer2 }}
