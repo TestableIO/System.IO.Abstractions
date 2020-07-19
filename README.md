@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2e777fa545c94767acccd6345b1ed9b7)](https://app.codacy.com/gh/System-IO-Abstractions/System.IO.Abstractions?utm_source=github.com&utm_medium=referral&utm_content=System-IO-Abstractions/System.IO.Abstractions&utm_campaign=Badge_Grade_Dashboard)
 [![NuGet](https://img.shields.io/nuget/v/System.IO.Abstractions.svg)](https://www.nuget.org/packages/System.IO.Abstractions)
 [![Build status](https://ci.appveyor.com/api/projects/status/em172apw1v5k70vq/branch/master?svg=true)](https://ci.appveyor.com/project/tathamoddie/system-io-abstractions/branch/master) [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=System-IO-Abstractions/System.IO.Abstractions)](https://dependabot.com)
 
