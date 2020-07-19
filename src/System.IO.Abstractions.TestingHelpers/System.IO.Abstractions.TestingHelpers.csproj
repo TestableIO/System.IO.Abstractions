@@ -9,7 +9,7 @@
         <PackageTags>testing</PackageTags>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\System.IO.Abstractions\System.IO.Abstractions.csproj" />
+        <ProjectReference Include="../System.IO.Abstractions/System.IO.Abstractions.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net461" Version="1.0.0">
