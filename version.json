@@ -4,7 +4,7 @@
   "assemblyVersion": {
     "precision": "major"
   },
-  "publicReleaseRefSpec": ["^refs/heads/master$"],
+  "publicReleaseRefSpec": ["^refs/heads/main$"],
   "cloudBuild": {
     "buildNumber": {
       "enabled": true

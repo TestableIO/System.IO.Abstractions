@@ -1,19 +1,13 @@
 [![NuGet](https://img.shields.io/nuget/v/System.IO.Abstractions.svg)](https://www.nuget.org/packages/System.IO.Abstractions)
-[![Build status](https://ci.appveyor.com/api/projects/status/em172apw1v5k70vq/branch/master?svg=true)](https://ci.appveyor.com/project/tathamoddie/system-io-abstractions/branch/master) [![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=System-IO-Abstractions/System.IO.Abstractions)](https://dependabot.com)
+![Continuous Integration](https://github.com/System-IO-Abstractions/System.IO.Abstractions/workflows/Continuous%20Integration/badge.svg)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2e777fa545c94767acccd6345b1ed9b7)](https://app.codacy.com/gh/System-IO-Abstractions/System.IO.Abstractions?utm_source=github.com&utm_medium=referral&utm_content=System-IO-Abstractions/System.IO.Abstractions&utm_campaign=Badge_Grade_Dashboard)
+[![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 
----
-
-Just like System.Web.Abstractions, but for System.IO. Yay for testable IO access!
-
-NuGet only:
-
-    Install-Package System.IO.Abstractions
-
-and/or:
-
-    Install-Package System.IO.Abstractions.TestingHelpers
+### Just like `System.Web.Abstractions`, but for `System.IO`. Yay for testable IO access!
 
 At the core of the library is `IFileSystem` and `FileSystem`. Instead of calling methods like `File.ReadAllText` directly, use `IFileSystem.File.ReadAllText`. We have exactly the same API, except that ours is injectable and testable.
+
+    dotnet add package System.IO.Abstractions
 
 ```csharp
 public class MyComponent
@@ -26,7 +20,7 @@ public class MyComponent
         this.fileSystem = fileSystem;
     }
     /// <summary>Create MyComponent</summary>
-    public MyComponent() : this( 
+    public MyComponent() : this(
         fileSystem: new FileSystem() //use default implementation which calls System.IO
     )
     {
@@ -45,6 +39,8 @@ public class MyComponent
 ```
 
 The library also ships with a series of test helpers to save you from having to mock out every call, for basic scenarios. They are not a complete copy of a real-life file system, but they'll get you most of the way there.
+
+    dotnet add package System.IO.Abstractions.TestingHelpers
 
 ```csharp
 [Test]

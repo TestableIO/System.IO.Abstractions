@@ -10,5 +10,5 @@ The base version represents the MAJOR and MINOR parts of [SemVer](https://semver
 
 ## Branches / tags
 
-* `master` contains the latest sources. Each merge there triggers a deploy to `nuget.org`.
-* All versions on `nuget.org` have a matching GitHub release/tag.
+- `main` contains the latest sources. Each merge there triggers a deploy to `nuget.org`.
+- All versions on `nuget.org` have a matching GitHub release/tag.
