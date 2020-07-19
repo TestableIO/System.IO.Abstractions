@@ -79,6 +79,8 @@ jobs:
         id: nbgv
       - name: Create GitHub release
         uses: actions/create-release@v1
-        with:
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:  
           tag_name: v${{ steps.nbgv.outputs.SemVer2 }}
           release_name: v${{ steps.nbgv.outputs.SemVer2 }}
