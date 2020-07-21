@@ -73,8 +73,9 @@ jobs:
         with:
           name: NuGet packages
           path: packages
-      - name: Push packages
-        run: dotnet nuget push packages/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      - name: Push packages        
+        # The find,xargs chain below seems unnecessarily complex, but is required to work around https://github.com/NuGet/Home/issues/4393 :/
+        run: find packages -name '*.nupkg' | xargs -i dotnet nuget push --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json {}
       - uses: dotnet/nbgv@v0.3.1
         id: nbgv
       - name: Create GitHub release
