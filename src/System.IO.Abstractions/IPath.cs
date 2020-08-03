@@ -14,7 +14,8 @@
         char PathSeparator { get; }
         /// <inheritdoc cref="Path.VolumeSeparatorChar"/>
         char VolumeSeparatorChar { get; }
-
+        /// <inheritdoc cref="Path.InvalidPathChars"/>
+        char[] InvalidPathChars { get; }
         /// <inheritdoc cref="Path.ChangeExtension"/>
         string ChangeExtension(string path, string extension);
         /// <inheritdoc cref="Path.Combine(string[])"/>
@@ -58,6 +59,20 @@
         
         /// <inheritdoc cref="Path.GetRelativePath(string,string)"/>
         string GetRelativePath(string relativeTo, string path);
+#endif
+
+#if FEATURE_PATH_JOIN_WITH_SPAN
+        /// <inheritdoc cref="Path.Join(ReadOnlySpan<char>,ReadOnlySpan<char>)"/>
+        string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2);
+
+        /// <inheritdoc cref="Path.Join(ReadOnlySpan<char>,ReadOnlySpan<char>)"/>
+        string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3);
+        
+        /// <inheritdoc cref="Path.Join(ReadOnlySpan<char>,ReadOnlySpan<char>,ReadOnlySpan<char>,Span<char>,int)"/>
+        bool TryJoin(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3, Span<char> destination, out int charsWritten);
+        
+        /// <inheritdoc cref="Path.Join(ReadOnlySpan<char>,ReadOnlySpan<char>,Span<char>,int)"/>
+        bool TryJoin(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, Span<char> destination, out int charsWritten);
 #endif
     }
 }

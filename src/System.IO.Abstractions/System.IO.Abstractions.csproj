@@ -3,11 +3,11 @@
     <AssemblyName>System.IO.Abstractions</AssemblyName>
     <RootNamespace>System.IO.Abstractions</RootNamespace>
     <Description>A set of abstractions to help make file system interactions testable.</Description>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;netstandard2.0;net461</TargetFrameworks>
     <PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>testing</PackageTags>
-    <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.1'">$(DefineConstants);FEATURE_ASYNC_FILE;FEATURE_ENUMERATION_OPTIONS;FEATURE_ADVANCED_PATH_OPERATIONS</DefineConstants>
+    <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.1'">$(DefineConstants);FEATURE_ASYNC_FILE;FEATURE_ENUMERATION_OPTIONS;FEATURE_ADVANCED_PATH_OPERATIONS;FEATURE_PATH_JOIN_WITH_SPAN</DefineConstants>
   </PropertyGroup>
   <ItemGroup Condition="'$(TargetFramework)' != 'net461'">
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0"/>

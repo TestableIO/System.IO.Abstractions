@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace System.IO.Abstractions.TestingHelpers.Tests
+namespace System.IO.Abstractions.Tests
 {
     [TestFixture]
     public class ConvertersTests
@@ -21,7 +21,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
                 public void Dispose() { }
             }
-            
+
             public IEnumerator<T> GetEnumerator() => new CrashingEnumerator();
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
@@ -31,23 +31,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void WrapFileSystemInfos_with_IEnumerable_is_lazy()
         {
             var crashingFileSystemInfos = new CrashingEnumerable<FileSystemInfo>();
-        
-            Assert.DoesNotThrow(() => crashingFileSystemInfos.WrapFileSystemInfos(new MockFileSystem()));
+
+            Assert.DoesNotThrow(() => crashingFileSystemInfos.WrapFileSystemInfos(new FileSystem()));
         }
 
         [Test]
         public void WrapFiles_with_IEnumerable_is_lazy()
         {
             var crashingFileInfos = new CrashingEnumerable<FileInfo>();
-        
-            Assert.DoesNotThrow(() => crashingFileInfos.WrapFiles(new MockFileSystem()));
+
+            Assert.DoesNotThrow(() => crashingFileInfos.WrapFiles(new FileSystem()));
         }
         [Test]
         public void WrapDirectories_with_IEnumerable_is_lazy()
         {
             var crashingDirectoryInfos = new CrashingEnumerable<DirectoryInfo>();
-        
-            Assert.DoesNotThrow(() => crashingDirectoryInfos.WrapDirectories(new MockFileSystem()));
+
+            Assert.DoesNotThrow(() => crashingDirectoryInfos.WrapDirectories(new FileSystem()));
         }
 
     }

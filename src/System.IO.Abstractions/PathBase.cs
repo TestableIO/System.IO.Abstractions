@@ -94,5 +94,19 @@
         /// <inheritdoc />
         public abstract string GetRelativePath(string relativeTo, string path);
 #endif
+
+#if FEATURE_PATH_JOIN_WITH_SPAN
+        /// <inheritdoc />
+        public abstract string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2);
+
+        /// <inheritdoc />
+        public abstract string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3);
+        
+        /// <inheritdoc />
+        public abstract bool TryJoin(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3, Span<char> destination, out int charsWritten);
+        
+        /// <inheritdoc />
+        public abstract bool TryJoin(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, Span<char> destination, out int charsWritten);
+#endif
     }
 }
