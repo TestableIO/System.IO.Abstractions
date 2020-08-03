@@ -130,6 +130,24 @@
         }
 #endif
 
+#if FEATURE_PATH_JOIN_WITH_SPAN
+        /// <inheritdoc />
+        public override string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2) =>
+            Path.Join(path2, path2);
+
+        /// <inheritdoc />
+        public override string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3) =>
+            Path.Join(path2, path2, path3);
+        
+        /// <inheritdoc />
+        public override bool TryJoin(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, Span<char> destination, out int charsWritten) =>
+            Path.TryJoin(path2, path2, destination, out charsWritten);
+        
+        /// <inheritdoc />
+        public override bool TryJoin(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3, Span<char> destination, out int charsWritten) =>
+            Path.TryJoin(path2, path2, path3, destination, out charsWritten);
+#endif
+
         public override bool IsPathRooted(string path)
         {
             return Path.IsPathRooted(path);
