@@ -136,7 +136,14 @@ namespace System.IO.Abstractions
 
         public override IDirectoryInfo GetParent(string path)
         {
-            return new DirectoryInfoWrapper(FileSystem, Directory.GetParent(path));
+            var parent = Directory.GetParent(path);
+
+            if (parent == null)
+            {
+                return null;
+            }
+
+            return new DirectoryInfoWrapper(FileSystem, parent);
         }
 
         public override void Move(string sourceDirName, string destDirName)
