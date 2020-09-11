@@ -380,13 +380,12 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         public override Stream Open(string path, FileMode mode, FileAccess access, FileShare share) =>
-            OpenInternal(path, mode, access, share, FileOptions.None);
+            OpenInternal(path, mode, access, FileOptions.None);
 
         private Stream OpenInternal(
             string path,
             FileMode mode,
             FileAccess access,
-            FileShare share,
             FileOptions options)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -434,7 +433,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private Stream OpenWriteInternal(string path, FileOptions options)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-            return OpenInternal(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, options);
+            return OpenInternal(path, FileMode.OpenOrCreate, FileAccess.Write, options);
         }
 
         public override byte[] ReadAllBytes(string path)
