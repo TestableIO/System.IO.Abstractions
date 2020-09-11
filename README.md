@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2e777fa545c94767acccd6345b1ed9b7)](https://app.codacy.com/gh/System-IO-Abstractions/System.IO.Abstractions?utm_source=github.com&utm_medium=referral&utm_content=System-IO-Abstractions/System.IO.Abstractions&utm_campaign=Badge_Grade_Settings)
 [![NuGet](https://img.shields.io/nuget/v/System.IO.Abstractions.svg)](https://www.nuget.org/packages/System.IO.Abstractions)
 ![Continuous Integration](https://github.com/System-IO-Abstractions/System.IO.Abstractions/workflows/Continuous%20Integration/badge.svg)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2e777fa545c94767acccd6345b1ed9b7)](https://app.codacy.com/gh/System-IO-Abstractions/System.IO.Abstractions?utm_source=github.com&utm_medium=referral&utm_content=System-IO-Abstractions/System.IO.Abstractions&utm_campaign=Badge_Grade_Dashboard)
