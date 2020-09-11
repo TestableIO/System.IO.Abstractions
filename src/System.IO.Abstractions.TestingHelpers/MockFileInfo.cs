@@ -29,28 +29,45 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Refresh()
         {
+            // Nothing to do here. Mock file system is always up-to-date.
         }
 
         public override FileAttributes Attributes
         {
             get
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
+                if (MockFileData == null)
+                {
+                    throw CommonExceptions.FileNotFound(path);
+                }
                 return MockFileData.Attributes;
             }
-            set { MockFileData.Attributes = value; }
+            set
+            {
+                if (MockFileData == null)
+                {
+                    throw CommonExceptions.FileNotFound(path);
+                }
+                MockFileData.Attributes = value;
+            }
         }
 
         public override DateTime CreationTime
         {
             get
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
+                if (MockFileData == null)
+                {
+                    throw CommonExceptions.FileNotFound(path);
+                }
                 return MockFileData.CreationTime.DateTime;
             }
             set
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
+                if (MockFileData == null)
+                {
+                    throw CommonExceptions.FileNotFound(path);
+                }
                 MockFileData.CreationTime = value;
             }
         }
@@ -238,7 +255,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override StreamReader OpenText() => mockFileSystem.File.OpenText(path);
 
-        public override Stream OpenWrite()  => mockFileSystem.File.OpenWrite(path);
+        public override Stream OpenWrite() => mockFileSystem.File.OpenWrite(path);
 
         public override IFileInfo Replace(string destinationFileName, string destinationBackupFileName)
         {
@@ -278,16 +295,26 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
+                if (MockFileData == null)
+                {
+                    throw CommonExceptions.FileNotFound(path);
+                }
                 return (MockFileData.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
             }
             set
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
+                if (MockFileData == null)
+                {
+                    throw CommonExceptions.FileNotFound(path);
+                }
                 if (value)
+                {
                     MockFileData.Attributes |= FileAttributes.ReadOnly;
+                }
                 else
+                {
                     MockFileData.Attributes &= ~FileAttributes.ReadOnly;
+                }
             }
         }
 
@@ -295,7 +322,10 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null || MockFileData.IsDirectory) throw CommonExceptions.FileNotFound(path);
+                if (MockFileData == null || MockFileData.IsDirectory)
+                {
+                    throw CommonExceptions.FileNotFound(path);
+                }
                 return MockFileData.Contents.Length;
             }
         }
