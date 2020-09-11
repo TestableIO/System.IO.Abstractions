@@ -204,7 +204,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 if (embeddedResourceStream == null)
                 {
-                    throw new Exception("Resource not found in assembly");
+                    throw new ArgumentException("Resource not found in assembly", nameof(embeddedResourcePath));
                 }
 
                 using (var streamReader = new BinaryReader(embeddedResourceStream))
