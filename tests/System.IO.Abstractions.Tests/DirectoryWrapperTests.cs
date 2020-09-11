@@ -10,27 +10,44 @@ namespace System.IO.Abstractions.Tests
         {
             // Arrange
             var wrapperFilesystem = new FileSystem();
+            var root = wrapperFilesystem.Directory.GetDirectoryRoot(".");
 
             // Act
-            var result = wrapperFilesystem.Directory.GetParent(@"C:\");
+            var result = wrapperFilesystem.Directory.GetParent(root);
 
             // Assert
             Assert.IsNull(result);
         }
 
         [Test]
-        public void GetParent_ForSimpleDirectory_ShouldReturnParent()
+        public void GetParent_ForSimpleSubfolderPath_ShouldReturnRoot()
         {
             // Arrange
-            var expectedBaseDirectory = @"C:\directory1";
-
             var wrapperFilesystem = new FileSystem();
+            var root = wrapperFilesystem.Directory.GetDirectoryRoot(".");
+            var subfolder = wrapperFilesystem.Path.Combine(root, "some-folder");
 
             // Act
-            var result = wrapperFilesystem.Directory.GetParent($@"{expectedBaseDirectory}\file1.txt");
+            var result = wrapperFilesystem.Directory.GetParent(subfolder);
 
             // Assert
-            Assert.AreEqual(expectedBaseDirectory, result.FullName);
+            Assert.AreEqual(root, result.FullName);
+        }
+
+        [Test]
+        public void GetParent_ForSimpleFilePath_ShouldReturnSubfolder()
+        {
+            // Arrange
+            var wrapperFilesystem = new FileSystem();
+            var root = wrapperFilesystem.Directory.GetDirectoryRoot(".");
+            var subfolder = wrapperFilesystem.Path.Combine(root, "some-folder");
+            var file = wrapperFilesystem.Path.Combine(subfolder, "some-file.txt");
+
+            // Act
+            var result = wrapperFilesystem.Directory.GetParent(file);
+
+            // Assert
+            Assert.AreEqual(subfolder, result.FullName);
         }
     }
 }
