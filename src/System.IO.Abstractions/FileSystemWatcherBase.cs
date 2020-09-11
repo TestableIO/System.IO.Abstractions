@@ -67,7 +67,7 @@ namespace System.IO.Abstractions
         {
             if (watcher == null)
             {
-                throw new ArgumentNullException(nameof(watcher));
+                return null;
             }
 
             return new FileSystemWatcherWrapper(watcher);

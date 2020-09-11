@@ -393,13 +393,19 @@ namespace System.IO.Abstractions.TestingHelpers
             bool exists = mockFileDataAccessor.FileExists(path);
 
             if (mode == FileMode.CreateNew && exists)
+            {
                 throw new IOException(string.Format(CultureInfo.InvariantCulture, "The file '{0}' already exists.", path));
+            }
 
             if ((mode == FileMode.Open || mode == FileMode.Truncate) && !exists)
+            {
                 throw CommonExceptions.FileNotFound(path);
+            }
 
             if (!exists || mode == FileMode.CreateNew)
+            {
                 return Create(path);
+            }
 
             if (mode == FileMode.Create || mode == FileMode.Truncate)
             {
@@ -424,8 +430,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-            return new StreamReader(
-                OpenRead(path));
+            return new StreamReader(OpenRead(path));
         }
 
         public override Stream OpenWrite(string path) => OpenWriteInternal(path, FileOptions.None);
