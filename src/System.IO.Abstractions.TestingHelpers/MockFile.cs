@@ -411,8 +411,6 @@ namespace System.IO.Abstractions.TestingHelpers
             var mockFileData = mockFileDataAccessor.GetFile(path);
             mockFileData.CheckFileAccess(path, access);
 
-            var length = mockFileData.Contents.Length;
-
             return new MockFileStream(mockFileDataAccessor, path, mode, access, options);
         }
 
