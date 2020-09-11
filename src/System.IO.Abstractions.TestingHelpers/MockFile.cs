@@ -133,9 +133,9 @@ namespace System.IO.Abstractions.TestingHelpers
             Create(path, bufferSize, FileOptions.None);
 
         public override Stream Create(string path, int bufferSize, FileOptions options) =>
-            CreateInternal(path, bufferSize, options, null);
+            CreateInternal(path, options, null);
 
-        private Stream CreateInternal(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
+        private Stream CreateInternal(string path, FileOptions options, FileSecurity fileSecurity)
         {
             if (path == null)
             {
