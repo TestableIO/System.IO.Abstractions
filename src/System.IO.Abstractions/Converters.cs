@@ -23,16 +23,16 @@ namespace System.IO.Abstractions
 
         internal static FileInfoBase[] WrapFiles(this FileInfo[] input, IFileSystem fileSystem)
             => input.Select(info => WrapFileInfo(fileSystem, info)).ToArray();
-        
+
         private static FileSystemInfoBase WrapFileSystemInfo(IFileSystem fileSystem, FileSystemInfo item)
         {
-            if (item is FileInfo)
+            if (item is FileInfo fileInfo)
             {
-                return WrapFileInfo(fileSystem, (FileInfo)item);
+                return WrapFileInfo(fileSystem, fileInfo);
             }
-            else if (item is DirectoryInfo)
+            else if (item is DirectoryInfo directoryInfo)
             {
-                return WrapDirectoryInfo(fileSystem, (DirectoryInfo)item);
+                return WrapDirectoryInfo(fileSystem, directoryInfo);
             }
             else
             {
