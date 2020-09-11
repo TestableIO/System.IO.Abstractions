@@ -41,6 +41,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Refresh()
         {
+            // Nothing to do here. Mock file system is always up-to-date.
         }
 
         public override FileAttributes Attributes
