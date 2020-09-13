@@ -121,6 +121,13 @@ namespace System.IO.Abstractions
             return instance.EnumerateDirectories(searchPattern, searchOption).Select(directoryInfo => new DirectoryInfoWrapper(FileSystem, directoryInfo));
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        public override IEnumerable<IDirectoryInfo> EnumerateDirectories(string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return instance.EnumerateDirectories(searchPattern, enumerationOptions).Select(directoryInfo => new DirectoryInfoWrapper(FileSystem, directoryInfo));
+        }
+#endif
+
         public override IEnumerable<IFileInfo> EnumerateFiles()
         {
             return instance.EnumerateFiles().Select(fileInfo => new FileInfoWrapper(FileSystem, fileInfo));
@@ -136,6 +143,13 @@ namespace System.IO.Abstractions
             return instance.EnumerateFiles(searchPattern, searchOption).Select(fileInfo => new FileInfoWrapper(FileSystem, fileInfo));
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        public override IEnumerable<IFileInfo> EnumerateFiles(string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return instance.EnumerateFiles(searchPattern, enumerationOptions).Select(fileInfo => new FileInfoWrapper(FileSystem, fileInfo));
+        }
+#endif
+
         public override IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos()
         {
             return instance.EnumerateFileSystemInfos().WrapFileSystemInfos(FileSystem);
@@ -150,6 +164,13 @@ namespace System.IO.Abstractions
         {
             return instance.EnumerateFileSystemInfos(searchPattern, searchOption).WrapFileSystemInfos(FileSystem);
         }
+
+#if FEATURE_ENUMERATION_OPTIONS
+        public override IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return instance.EnumerateFileSystemInfos(searchPattern, enumerationOptions).WrapFileSystemInfos(FileSystem);
+        }
+#endif
 
         public override DirectorySecurity GetAccessControl()
         {
@@ -176,6 +197,13 @@ namespace System.IO.Abstractions
             return instance.GetDirectories(searchPattern, searchOption).WrapDirectories(FileSystem);
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        public override IDirectoryInfo[] GetDirectories(string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return instance.GetDirectories(searchPattern, enumerationOptions).WrapDirectories(FileSystem);
+        }
+#endif
+
         public override IFileInfo[] GetFiles()
         {
             return instance.GetFiles().WrapFiles(FileSystem);
@@ -191,6 +219,13 @@ namespace System.IO.Abstractions
             return instance.GetFiles(searchPattern, searchOption).WrapFiles(FileSystem);
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        public override IFileInfo[] GetFiles(string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return instance.GetFiles(searchPattern, enumerationOptions).WrapFiles(FileSystem);
+        }
+#endif
+
         public override IFileSystemInfo[] GetFileSystemInfos()
         {
             return instance.GetFileSystemInfos().WrapFileSystemInfos(FileSystem);
@@ -205,6 +240,13 @@ namespace System.IO.Abstractions
         {
             return instance.GetFileSystemInfos(searchPattern, searchOption).WrapFileSystemInfos(FileSystem);
         }
+
+#if FEATURE_ENUMERATION_OPTIONS
+        public override IFileSystemInfo[] GetFileSystemInfos(string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return instance.GetFileSystemInfos(searchPattern, enumerationOptions).WrapFileSystemInfos(FileSystem);
+        }
+#endif
 
         public override void MoveTo(string destDirName)
         {
