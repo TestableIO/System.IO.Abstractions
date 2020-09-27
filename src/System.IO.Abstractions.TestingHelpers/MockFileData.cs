@@ -10,6 +10,8 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockFileData
     {
+        public const long LengthIsNotFaked = -1;
+
         /// <summary>
         /// The default encoding.
         /// </summary>
@@ -37,6 +39,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </summary>
         [NonSerialized]
         private FileSecurity accessControl;
+        private long length = LengthIsNotFaked;
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="MockFileData"/> is a directory or not.
@@ -49,6 +52,16 @@ namespace System.IO.Abstractions.TestingHelpers
         private MockFileData()
         {
             // empty
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MockFileData"/> class with content of a specific size.
+        /// </summary>
+        /// <param name="fileLength">Length of file in bytes</param>
+        public MockFileData(long fileLength)
+            : this(DefaultEncoding.GetBytes("dummy content"))
+        {
+            this.length = fileLength;
         }
 
         /// <summary>
@@ -100,6 +113,22 @@ namespace System.IO.Abstractions.TestingHelpers
             CreationTime = template.CreationTime;
             LastAccessTime = template.LastAccessTime;
             LastWriteTime = template.LastWriteTime;
+        }
+
+
+        public long Length
+        {
+            get
+            {
+                if (length == LengthIsNotFaked)
+                {
+                    return Contents.Length;
+                }
+                else
+                {
+                    return length;
+                }
+            }
         }
 
         /// <summary>

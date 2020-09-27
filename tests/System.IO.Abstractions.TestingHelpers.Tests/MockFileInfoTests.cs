@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
@@ -70,7 +71,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             const string fileContent = "Demo text content";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { XFS.Path(@"c:\a.txt"), new MockFileData(fileContent) },
+                { XFS.Path(@"c:\a.txt"), new MockFileData(fileContent)},
                 { XFS.Path(@"c:\a\b\c.txt"), new MockFileData(fileContent) },
             });
             var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
@@ -78,6 +79,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileInfo.Length;
 
             Assert.AreEqual(fileContent.Length, result);
+        }
+
+        [Test]
+        public void MockFileInfo_Length_ShouldReturnFakedLength()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\a.txt"), new MockFileData(200L)},
+                { XFS.Path(@"c:\a\b\c.txt"), new MockFileData(300_000_000L) },
+            });
+            var fileInfo1 = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
+
+            var file2 = fileSystem.DirectoryInfo.FromDirectoryName(XFS.Path(@"c:\a\b\")).GetFiles().First();
+            var result2 = file2.Length;
+
+            var result1 = fileInfo1.Length;
+
+            Assert.AreEqual(200, result1);
+            Assert.AreEqual(300_000_000, result2);
         }
 
         [Test]

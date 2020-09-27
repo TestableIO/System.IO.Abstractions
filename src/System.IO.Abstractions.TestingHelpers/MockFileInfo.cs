@@ -326,7 +326,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 {
                     throw CommonExceptions.FileNotFound(path);
                 }
-                return MockFileData.Contents.Length;
+                return MockFileData.Length;
             }
         }
 
