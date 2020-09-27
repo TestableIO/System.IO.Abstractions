@@ -59,6 +59,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Directory.GetDirectories(string,string,SearchOption)"/>
         public abstract string[] GetDirectories(string path, string searchPattern, SearchOption searchOption);
 
+#if FEATURE_ENUMERATION_OPTIONS
+        /// <inheritdoc cref="Directory.GetDirectories(string,string,EnumerationOptions)"/>
+        public abstract string[] GetDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions);
+#endif
+
         /// <inheritdoc cref="Directory.GetDirectoryRoot"/>
         public abstract string GetDirectoryRoot(string path);
 
@@ -70,6 +75,11 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="Directory.GetFiles(string,string,SearchOption)"/>
         public abstract string[] GetFiles(string path, string searchPattern, SearchOption searchOption);
+
+#if FEATURE_ENUMERATION_OPTIONS
+        /// <inheritdoc cref="Directory.GetFiles(string,string,EnumerationOptions)"/>
+        public abstract string[] GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions);
+#endif
 
         /// <inheritdoc cref="Directory.GetFileSystemEntries(string)"/>
         public abstract string[] GetFileSystemEntries(string path);
