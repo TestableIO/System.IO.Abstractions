@@ -10,7 +10,7 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockFileData
     {
-        public const long LengthIsNotFaked = -1;
+        private static readonly long LengthIsNotFaked = -1;
 
         /// <summary>
         /// The default encoding.
