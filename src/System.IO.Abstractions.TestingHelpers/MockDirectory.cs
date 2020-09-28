@@ -174,6 +174,13 @@ namespace System.IO.Abstractions.TestingHelpers
             return EnumerateDirectories(path, searchPattern, searchOption).ToArray();
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        public override string[] GetDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return GetDirectories(path, "*");
+        }
+#endif
+
         public override string GetDirectoryRoot(string path)
         {
             return Path.GetPathRoot(path);
@@ -195,6 +202,13 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             return GetFilesInternal(mockFileDataAccessor.AllFiles, path, searchPattern, searchOption);
         }
+
+#if FEATURE_ENUMERATION_OPTIONS
+        public override string[] GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return GetFiles(path, "*");
+        }
+#endif
 
         private string[] GetFilesInternal(
             IEnumerable<string> files,

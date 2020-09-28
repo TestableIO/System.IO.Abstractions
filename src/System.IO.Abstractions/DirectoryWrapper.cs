@@ -79,6 +79,13 @@ namespace System.IO.Abstractions
             return Directory.GetDirectories(path, searchPattern, searchOption);
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        public override string[] GetDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return Directory.GetDirectories(path, searchPattern, enumerationOptions);
+        }
+#endif
+
         public override string GetDirectoryRoot(string path)
         {
             return Directory.GetDirectoryRoot(path);
@@ -98,6 +105,13 @@ namespace System.IO.Abstractions
         {
             return Directory.GetFiles(path, searchPattern, searchOption);
         }
+
+#if FEATURE_ENUMERATION_OPTIONS
+        public override string[] GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return Directory.GetFiles(path, searchPattern, enumerationOptions);
+        }
+#endif
 
         public override string[] GetFileSystemEntries(string path)
         {
