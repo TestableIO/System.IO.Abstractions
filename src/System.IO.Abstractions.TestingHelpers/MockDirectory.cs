@@ -177,7 +177,7 @@ namespace System.IO.Abstractions.TestingHelpers
 #if FEATURE_ENUMERATION_OPTIONS
         public override string[] GetDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
-            return GetDirectories(path, "*");
+            return GetDirectories(path, "*", enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
         }
 #endif
 
@@ -206,7 +206,7 @@ namespace System.IO.Abstractions.TestingHelpers
 #if FEATURE_ENUMERATION_OPTIONS
         public override string[] GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
-            return GetFiles(path, "*");
+            return GetFiles(path, "*", enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
         }
 #endif
 
