@@ -177,7 +177,7 @@ namespace System.IO.Abstractions.TestingHelpers
 #if FEATURE_ENUMERATION_OPTIONS
         public override string[] GetDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
-            return GetDirectories(path, "*", enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+            return GetDirectories(path, "*", EnumerationOptionsToSearchOption(enumerationOptions));
         }
 #endif
 
@@ -206,7 +206,7 @@ namespace System.IO.Abstractions.TestingHelpers
 #if FEATURE_ENUMERATION_OPTIONS
         public override string[] GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
-            return GetFiles(path, "*", enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+            return GetFiles(path, "*", EnumerationOptionsToSearchOption(enumerationOptions));
         }
 #endif
 
@@ -638,5 +638,42 @@ namespace System.IO.Abstractions.TestingHelpers
             var result = source.Remove(place, find.Length).Insert(place, replace);
             return result;
         }
+
+#if FEATURE_ENUMERATION_OPTIONS
+        private SearchOption EnumerationOptionsToSearchOption(EnumerationOptions enumerationOptions)
+        {
+            static Exception CreateExceptionForUnsupportedProperty(string propertyName)
+            {
+                return new NotSupportedException(
+                    $"Changing EnumerationOptions.{propertyName} is not yet implemented for the mock file system."
+                );
+            }
+
+            if (enumerationOptions.AttributesToSkip != (FileAttributes.System | FileAttributes.Hidden))
+            {
+                throw CreateExceptionForUnsupportedProperty("AttributesToSkip");
+            }
+            if (!enumerationOptions.IgnoreInaccessible)
+            {
+                throw CreateExceptionForUnsupportedProperty("IgnoreInaccessible");
+            }
+            if (enumerationOptions.MatchCasing != MatchCasing.PlatformDefault)
+            {
+                throw CreateExceptionForUnsupportedProperty("MatchCasing");
+            }
+            if (enumerationOptions.MatchType != MatchType.Simple)
+            {
+                throw CreateExceptionForUnsupportedProperty("MatchType");
+            }
+            if (enumerationOptions.ReturnSpecialDirectories)
+            {
+                throw CreateExceptionForUnsupportedProperty("ReturnSpecialDirectories");
+            }
+
+            return enumerationOptions.RecurseSubdirectories
+                ? SearchOption.AllDirectories
+                : SearchOption.TopDirectoryOnly;
+        }
+#endif
     }
 }

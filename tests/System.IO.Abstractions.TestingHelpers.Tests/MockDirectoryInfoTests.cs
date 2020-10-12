@@ -188,12 +188,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var enumerationOptions = new EnumerationOptions()
             {
-                MatchType = MatchType.Win32,
                 RecurseSubdirectories = true,
-                IgnoreInaccessible = true,
-                ReturnSpecialDirectories = false,
-                AttributesToSkip = FileAttributes.Hidden,
-                MatchCasing = MatchCasing.PlatformDefault,
             };
 
             var result = directoryInfo.EnumerateFileSystemInfos("*", enumerationOptions).ToArray();
