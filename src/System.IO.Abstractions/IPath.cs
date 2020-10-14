@@ -36,6 +36,10 @@
         string GetFileNameWithoutExtension(string path);
         /// <inheritdoc cref="Path.GetFullPath(string)"/>
         string GetFullPath(string path);
+#if NETSTANDARD2_1
+        /// <inheritdoc cref="Path.GetFullPath(string, string)"/>
+        string GetFullPath(string path, string basePath);
+#endif
         /// <inheritdoc cref="Path.GetInvalidFileNameChars"/>
         char[] GetInvalidFileNameChars();
         /// <inheritdoc cref="Path.GetInvalidPathChars"/>

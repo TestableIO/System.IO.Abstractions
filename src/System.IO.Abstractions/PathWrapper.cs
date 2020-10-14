@@ -83,6 +83,13 @@
             return Path.GetFullPath(path);
         }
 
+# if NETSTANDARD2_1
+        public override string GetFullPath(string path, string basePath)
+        {
+            return Path.GetFullPath(path, basePath);
+        }
+#endif
+
         public override char[] GetInvalidFileNameChars()
         {
             return Path.GetInvalidFileNameChars();
