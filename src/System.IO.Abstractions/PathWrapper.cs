@@ -83,6 +83,13 @@
             return Path.GetFullPath(path);
         }
 
+# if FEATURE_ADVANCED_PATH_OPERATIONS
+        public override string GetFullPath(string path, string basePath)
+        {
+            return Path.GetFullPath(path, basePath);
+        }
+#endif
+
         public override char[] GetInvalidFileNameChars()
         {
             return Path.GetInvalidFileNameChars();

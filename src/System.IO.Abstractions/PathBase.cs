@@ -63,6 +63,11 @@
         /// <inheritdoc cref="Path.GetFullPath(string)"/>
         public abstract string GetFullPath(string path);
 
+#if FEATURE_ADVANCED_PATH_OPERATIONS
+        /// <inheritdoc cref="Path.GetFullPath(string, string)"/>
+        public abstract string GetFullPath(string path, string basePath);
+#endif
+
         /// <inheritdoc cref="Path.GetInvalidFileNameChars"/>
         public abstract char[] GetInvalidFileNameChars();
 
