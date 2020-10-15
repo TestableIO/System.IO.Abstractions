@@ -163,6 +163,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public async Task MockFile_AppendAllLinesAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
+        {
+            // Arrange
+            const string path = "test.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, new MockFileData("line 1") }
+            });
+            
+            // Act
+            Assert.ThrowsAsync<>(() =>
+                await fileSystem.File.AppendAllLinesAsync(path, new[] { "line 2" })
+            );
+
+            // Assert
+            Assert.AreEqual("line 1", file.ReadAllText(path));
+        }
+
+        [Test]
         public void MockFile_AppendAllLinesAsync_ShouldThrowArgumentExceptionIfPathIsZeroLength()
         {
             // Arrange

@@ -1,0 +1,18 @@
+{
+    "name": "C# (.NET Core)",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "VARIANT": "3.1",
+            "INSTALL_NODE": "false",
+            "INSTALL_AZURE_CLI": "false"
+        }
+    },
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "extensions": [
+        "ms-dotnettools.csharp"
+    ],
+    "postCreateCommand": "dotnet restore",
+}
