@@ -41,19 +41,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void AppendAllText(string path, string contents)
         {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-
             AppendAllText(path, contents, MockFileData.DefaultEncoding);
         }
 
         public override void AppendAllText(string path, string contents, Encoding encoding)
         {
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
             if (encoding == null)
             {
                 throw new ArgumentNullException(nameof(encoding));
             }
-
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
             if (!mockFileDataAccessor.FileExists(path))
             {
