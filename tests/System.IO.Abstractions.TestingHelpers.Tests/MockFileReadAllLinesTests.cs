@@ -9,6 +9,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using XFS = MockUnixSupport;
 
     using System.Threading.Tasks;
+    using System.Threading;
 
     public class MockFileReadAllLinesTests
     {
@@ -128,6 +129,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             CollectionAssert.AreEqual(
                 new[] { "Hello", "there", "Bob", "Bob!" },
                 result);
+        }
+
+        [Test]
+        public void MockFile_ReadAllLinesAsync_ShouldThrowOperationCanceledExceptionIfCanceled()
+        {
+            var fileSystem = new MockFileSystem();
+            
+            AsyncTestDelegate action = async () => 
+                await fileSystem.File.ReadAllLinesAsync(@"C:\a.txt", new CancellationToken(canceled: true));
+
+            Assert.ThrowsAsync<OperationCanceledException>(action);
         }
 
         [Test]

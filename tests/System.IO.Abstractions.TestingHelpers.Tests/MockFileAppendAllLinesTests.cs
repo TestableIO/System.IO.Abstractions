@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -159,11 +160,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(
                 "line 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine,
-                file.ReadAllText(path));
+                file.ReadAllText(path)
+            );
         }
 
         [Test]
-        public async Task MockFile_AppendAllLinesAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
+        public void MockFile_AppendAllLinesAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
         {
             // Arrange
             const string path = "test.txt";
@@ -173,12 +175,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
             
             // Act
-            Assert.ThrowsAsync<>(() =>
-                await fileSystem.File.AppendAllLinesAsync(path, new[] { "line 2" })
+            Assert.ThrowsAsync<OperationCanceledException>(async () =>
+                await fileSystem.File.AppendAllLinesAsync(
+                    path, 
+                    new[] { "line 2" },
+                    new CancellationToken(canceled: true))
             );
 
             // Assert
-            Assert.AreEqual("line 1", file.ReadAllText(path));
+            Assert.AreEqual("line 1", fileSystem.File.ReadAllText(path));
         }
 
         [Test]

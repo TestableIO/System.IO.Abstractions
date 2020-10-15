@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Threading;
 using NUnit.Framework;
 using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 
@@ -377,6 +378,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                         .SetName("WriteAllLinesAsync(string, string[], Encoding.UTF32)");
                 }
             }
+
+        [Test]
+        public void MockFile_WriteAllLinesAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
+        {
+            // Arrange
+            const string path = "test.txt";
+            var fileSystem = new MockFileSystem();
+            
+            // Act
+            Assert.ThrowsAsync<OperationCanceledException>(async () =>
+                await fileSystem.File.WriteAllLinesAsync(
+                    path, 
+                    new [] { "line 1", "line 2" },
+                    new CancellationToken(canceled: true))
+            );
+
+            // Assert
+            Assert.IsFalse(fileSystem.File.Exists(path));
+        }
 #endif
 
         }
