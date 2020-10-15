@@ -5,7 +5,7 @@
         "terminal.integrated.shell.linux": "/bin/bash"
     },
     "extensions": [
-        "ms-dotnettools.csharp",
+        "ms-dotnettools.csharp"
     ],
-    "postCreateCommand": "dotnet restore",
+    "postCreateCommand": "dotnet restore"
 }
