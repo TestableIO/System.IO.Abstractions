@@ -63,7 +63,7 @@
         /// <inheritdoc cref="Path.GetFullPath(string)"/>
         public abstract string GetFullPath(string path);
 
-#if NETSTANDARD2_1
+#if FEATURE_ADVANCED_PATH_OPERATIONS
         /// <inheritdoc cref="Path.GetFullPath(string, string)"/>
         public abstract string GetFullPath(string path, string basePath);
 #endif

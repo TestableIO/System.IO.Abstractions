@@ -83,7 +83,7 @@
             return Path.GetFullPath(path);
         }
 
-# if NETSTANDARD2_1
+# if FEATURE_ADVANCED_PATH_OPERATIONS
         public override string GetFullPath(string path, string basePath)
         {
             return Path.GetFullPath(path, basePath);
