@@ -236,10 +236,12 @@ namespace System.IO.Abstractions.TestingHelpers
             sourcePath = FixPath(sourcePath);
             destPath = FixPath(destPath);
 
+            var sourcePathSequence = sourcePath.Split(new[] {Path.DirectorySeparatorChar}, StringSplitOptions.RemoveEmptyEntries);
+
             lock (files)
             {
                 var affectedPaths = files.Keys
-                    .Where(p => StringOperations.StartsWith(p, sourcePath))
+                    .Where(p => PathStartsWith(p, sourcePathSequence))
                     .ToList();
 
                 foreach (var path in affectedPaths)
@@ -248,6 +250,25 @@ namespace System.IO.Abstractions.TestingHelpers
                     files[newPath] = files[path];
                     files.Remove(path);
                 }
+            }
+
+            bool PathStartsWith(string path, string[] minMatch)
+            {
+                var pathSequence = path.Split(new[] {Path.DirectorySeparatorChar}, StringSplitOptions.RemoveEmptyEntries);
+                if (pathSequence.Length < minMatch.Length)
+                {
+                    return false;
+                }
+
+                for (var i = 0; i < minMatch.Length; i++)
+                {
+                    if (!StringOperations.Equals(minMatch[i], pathSequence[i]))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
             }
         }
 
