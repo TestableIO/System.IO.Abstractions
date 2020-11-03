@@ -10,6 +10,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using XFS = MockUnixSupport;
 
     using System.Threading.Tasks;
+    using System.Threading;
 
     public class MockFileAppendAllTextTests
     {
@@ -176,6 +177,28 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(
                 "Demo text content+ some text",
                 file.ReadAllText(path));
+        }
+
+        [Test]
+        public void MockFile_AppendAllTextAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
+        {
+            // Arrange
+            const string path = "test.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, new MockFileData("line 1") }
+            });
+            
+            // Act
+            Assert.ThrowsAsync<OperationCanceledException>(async () =>
+                await fileSystem.File.AppendAllTextAsync(
+                    path, 
+                    "line 2",
+                    new CancellationToken(canceled: true))
+            );
+
+            // Assert
+            Assert.AreEqual("line 1", fileSystem.File.ReadAllText(path));
         }
 
         [Test]

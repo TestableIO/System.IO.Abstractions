@@ -1,10 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/AArnott/Nerdbank.GitVersioning/master/src/NerdBank.GitVersioning/version.schema.json",
-  "version": "12.0",
+  "version": "12.2",
   "assemblyVersion": {
     "precision": "major"
   },
-  "publicReleaseRefSpec": ["^refs/heads/master$"],
+  "publicReleaseRefSpec": ["^refs/heads/main$"],
   "cloudBuild": {
     "buildNumber": {
       "enabled": true

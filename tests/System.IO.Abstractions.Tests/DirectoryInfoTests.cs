@@ -1,9 +1,6 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace System.IO.Abstractions.TestingHelpers.Tests
+namespace System.IO.Abstractions.Tests
 {
     [TestFixture]
     public class DirectoryInfoTests

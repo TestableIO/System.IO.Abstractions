@@ -1,4 +1,4 @@
-﻿namespace System.IO.Abstractions.TestingHelpers.Tests
+﻿namespace System.IO.Abstractions.Tests
 {
     using NUnit.Framework;
 

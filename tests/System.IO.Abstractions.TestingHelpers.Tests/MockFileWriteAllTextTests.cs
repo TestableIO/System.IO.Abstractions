@@ -9,6 +9,7 @@
     using XFS = MockUnixSupport;
 
     using System.Threading.Tasks;
+    using System.Threading;
 
     public class MockFileWriteAllTextTests
     {
@@ -238,6 +239,25 @@
             Assert.AreEqual(
                 fileContent,
                 fileSystem.GetFile(path).TextContents);
+        }
+
+        [Test]
+        public void MockFile_WriteAllTextAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
+        {
+            // Arrange
+            const string path = "test.txt";
+            var fileSystem = new MockFileSystem();
+            
+            // Act
+            Assert.ThrowsAsync<OperationCanceledException>(async () =>
+                await fileSystem.File.WriteAllTextAsync(
+                    path, 
+                    "line",
+                    new CancellationToken(canceled: true))
+            );
+
+            // Assert
+            Assert.IsFalse(fileSystem.File.Exists(path));
         }
 
         [Test]

@@ -177,7 +177,9 @@ namespace System.IO.Abstractions.TestingHelpers
         internal void CheckFileAccess(string path, FileAccess access)
         {
             if (!AllowedFileShare.HasFlag((FileShare)access))
+            {
                 throw CommonExceptions.ProcessCannotAccessFileInUse(path);
+            }
         }
     }
 }

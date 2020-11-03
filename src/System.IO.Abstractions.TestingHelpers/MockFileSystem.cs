@@ -163,8 +163,9 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 if (FileExists(fixedPath) &&
                     (GetFile(fixedPath).Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                {
                     throw CommonExceptions.AccessDenied(fixedPath);
-
+                }
                 var lastIndex = 0;
                 var isUnc =
                     StringOperations.StartsWith(fixedPath, @"\\") ||
@@ -176,7 +177,9 @@ namespace System.IO.Abstractions.TestingHelpers
                     lastIndex = StringOperations.IndexOf(fixedPath, separator, 2);
 
                     if (lastIndex < 0)
+                    {
                         throw CommonExceptions.InvalidUncPath(nameof(path));
+                    }
 
                     /*
                      * Although CreateDirectory(@"\\server\share\") is not going to work in real code, we allow it here for the purposes of setting up test doubles.
@@ -204,7 +207,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 if (embeddedResourceStream == null)
                 {
-                    throw new Exception("Resource not found in assembly");
+                    throw new ArgumentException("Resource not found in assembly", nameof(embeddedResourcePath));
                 }
 
                 using (var streamReader = new BinaryReader(embeddedResourceStream))

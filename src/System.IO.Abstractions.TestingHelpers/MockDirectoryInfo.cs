@@ -41,6 +41,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void Refresh()
         {
+            // Nothing to do here. Mock file system is always up-to-date.
         }
 
         public override FileAttributes Attributes
@@ -157,6 +158,13 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetDirectories(searchPattern, searchOption);
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        public override IEnumerable<IDirectoryInfo> EnumerateDirectories(string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return GetDirectories(searchPattern, enumerationOptions);
+        }
+#endif
+
         public override IEnumerable<IFileInfo> EnumerateFiles()
         {
             return GetFiles();
@@ -172,6 +180,13 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetFiles(searchPattern, searchOption);
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        public override IEnumerable<IFileInfo> EnumerateFiles(string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return GetFiles(searchPattern, enumerationOptions);
+        }
+#endif
+
         public override IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos()
         {
             return GetFileSystemInfos();
@@ -186,6 +201,13 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             return GetFileSystemInfos(searchPattern, searchOption);
         }
+
+#if FEATURE_ENUMERATION_OPTIONS
+        public override IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return GetFileSystemInfos(searchPattern, enumerationOptions);
+        }
+#endif
 
         public override DirectorySecurity GetAccessControl()
         {
@@ -212,6 +234,13 @@ namespace System.IO.Abstractions.TestingHelpers
             return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath, searchPattern, searchOption));
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        public override IDirectoryInfo[] GetDirectories(string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath, searchPattern, enumerationOptions));
+        }
+#endif
+
         private DirectoryInfoBase[] ConvertStringsToDirectories(IEnumerable<string> paths)
         {
             return paths
@@ -235,6 +264,13 @@ namespace System.IO.Abstractions.TestingHelpers
             return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName, searchPattern, searchOption));
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        public override IFileInfo[] GetFiles(string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName, searchPattern, enumerationOptions));
+        }
+#endif
+
         IFileInfo[] ConvertStringsToFiles(IEnumerable<string> paths)
         {
             return paths
@@ -256,6 +292,13 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             return GetDirectories(searchPattern, searchOption).OfType<IFileSystemInfo>().Concat(GetFiles(searchPattern, searchOption)).ToArray();
         }
+
+#if FEATURE_ENUMERATION_OPTIONS
+        public override IFileSystemInfo[] GetFileSystemInfos(string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return GetDirectories(searchPattern, enumerationOptions).OfType<IFileSystemInfo>().Concat(GetFiles(searchPattern, enumerationOptions)).ToArray();
+        }
+#endif
 
         public override void MoveTo(string destDirName)
         {

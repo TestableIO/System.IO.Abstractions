@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions.Benchmarks", "benchmarks\System.IO.Abstractions.Benchmarks\System.IO.Abstractions.Benchmarks.csproj", "{015B3812-E01D-479C-895D-BDDF16E798CA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{BCEC61BD-4941-41EC-975A-ACEFC7AC1780}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.IO.Abstractions.Tests", "tests\System.IO.Abstractions.Tests\System.IO.Abstractions.Tests.csproj", "{7105D748-1253-409F-A624-4879412EF3C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,11 +43,18 @@ Global
 		{015B3812-E01D-479C-895D-BDDF16E798CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{015B3812-E01D-479C-895D-BDDF16E798CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{015B3812-E01D-479C-895D-BDDF16E798CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7105D748-1253-409F-A624-4879412EF3C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7105D748-1253-409F-A624-4879412EF3C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7105D748-1253-409F-A624-4879412EF3C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7105D748-1253-409F-A624-4879412EF3C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8885C59C-F6A0-4C2F-A3BC-B720E9BD161F}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7105D748-1253-409F-A624-4879412EF3C2} = {BCEC61BD-4941-41EC-975A-ACEFC7AC1780}
 	EndGlobalSection
 EndGlobal

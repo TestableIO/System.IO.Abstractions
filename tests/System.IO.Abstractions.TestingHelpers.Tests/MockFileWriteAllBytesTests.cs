@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -93,6 +94,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             AsyncTestDelegate action = () => fileSystem.File.WriteAllBytesAsync(path, fileContent);
 
             Assert.ThrowsAsync<DirectoryNotFoundException>(action);
+        }
+
+        [Test]
+        public void MockFile_WriteAllTextAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
+        {
+            // Arrange
+            const string path = "test.txt";
+            var fileSystem = new MockFileSystem();
+            
+            // Act
+            Assert.ThrowsAsync<OperationCanceledException>(async () =>
+                await fileSystem.File.WriteAllTextAsync(
+                    path, 
+                    "content",
+                    new CancellationToken(canceled: true))
+            );
+
+            // Assert
+            Assert.IsFalse(fileSystem.File.Exists(path));
         }
 
         [Test]

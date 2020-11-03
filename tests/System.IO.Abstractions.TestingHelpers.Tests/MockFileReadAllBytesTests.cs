@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -102,6 +103,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             AsyncTestDelegate action = async () => await file.ReadAllBytesAsync(@"C:\a.txt");
 
             Assert.ThrowsAsync<FileNotFoundException>(action);
+        }
+
+        [Test]
+        public void MockFile_ReadAllBytesAsync_ShouldThrowOperationCanceledExceptionIfCanceled()
+        {
+            var fileSystem = new MockFileSystem();
+            
+            AsyncTestDelegate action = async () => 
+                await fileSystem.File.ReadAllBytesAsync(@"C:\a.txt", new CancellationToken(canceled: true));
+
+            Assert.ThrowsAsync<OperationCanceledException>(action);
         }
 
         [Test]

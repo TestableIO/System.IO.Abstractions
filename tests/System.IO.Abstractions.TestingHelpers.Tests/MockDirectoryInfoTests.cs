@@ -158,6 +158,46 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectoryInfo_EnumerateFileSystemInfos_ShouldReturnDirectoriesAndNamesWithSearchPatternRecursive()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\file.txt"), new MockFileData("") },
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
+                { XFS.Path(@"c:\temp\folder\older"), new MockDirectoryData() }
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\"));
+            var result = directoryInfo.EnumerateFileSystemInfos("*", SearchOption.AllDirectories).ToArray();
+
+            Assert.That(result.Length, Is.EqualTo(5));
+        }
+
+#if FEATURE_ENUMERATION_OPTIONS
+        [Test]
+        public void MockDirectoryInfo_EnumerateFileSystemInfos_ShouldReturnDirectoriesAndNamesWithSearchPatternRecursiveEnumerateOptions()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\temp\folder\file.txt"), new MockFileData("") },
+                { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
+                { XFS.Path(@"c:\temp\folder\older"), new MockDirectoryData() }
+            });
+
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\"));
+
+            var enumerationOptions = new EnumerationOptions()
+            {
+                RecurseSubdirectories = true,
+            };
+
+            var result = directoryInfo.EnumerateFileSystemInfos("*", enumerationOptions).ToArray();
+
+            Assert.That(result.Length, Is.EqualTo(5));
+        }
+#endif
+
+        [Test]
         public void MockDirectoryInfo_GetParent_ShouldReturnDirectoriesAndNamesWithSearchPattern()
         {
             // Arrange

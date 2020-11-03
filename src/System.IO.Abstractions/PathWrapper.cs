@@ -83,6 +83,13 @@
             return Path.GetFullPath(path);
         }
 
+# if FEATURE_ADVANCED_PATH_OPERATIONS
+        public override string GetFullPath(string path, string basePath)
+        {
+            return Path.GetFullPath(path, basePath);
+        }
+#endif
+
         public override char[] GetInvalidFileNameChars()
         {
             return Path.GetInvalidFileNameChars();
@@ -128,6 +135,24 @@
         {
             return Path.GetRelativePath(relativeTo, path);
         }
+#endif
+
+#if FEATURE_PATH_JOIN_WITH_SPAN
+        /// <inheritdoc />
+        public override string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2) =>
+            Path.Join(path1, path2);
+
+        /// <inheritdoc />
+        public override string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3) =>
+            Path.Join(path1, path2, path3);
+        
+        /// <inheritdoc />
+        public override bool TryJoin(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, Span<char> destination, out int charsWritten) =>
+            Path.TryJoin(path1, path2, destination, out charsWritten);
+        
+        /// <inheritdoc />
+        public override bool TryJoin(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3, Span<char> destination, out int charsWritten) =>
+            Path.TryJoin(path1, path2, path3, destination, out charsWritten);
 #endif
 
         public override bool IsPathRooted(string path)

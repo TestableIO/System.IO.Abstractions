@@ -41,19 +41,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void AppendAllText(string path, string contents)
         {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-
             AppendAllText(path, contents, MockFileData.DefaultEncoding);
         }
 
         public override void AppendAllText(string path, string contents, Encoding encoding)
         {
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
             if (encoding == null)
             {
                 throw new ArgumentNullException(nameof(encoding));
             }
-
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
             if (!mockFileDataAccessor.FileExists(path))
             {
@@ -133,9 +131,9 @@ namespace System.IO.Abstractions.TestingHelpers
             Create(path, bufferSize, FileOptions.None);
 
         public override Stream Create(string path, int bufferSize, FileOptions options) =>
-            CreateInternal(path, bufferSize, options, null);
+            CreateInternal(path, options, null);
 
-        private Stream CreateInternal(string path, int bufferSize, FileOptions options, FileSecurity fileSecurity)
+        private Stream CreateInternal(string path, FileOptions options, FileSecurity fileSecurity)
         {
             if (path == null)
             {
@@ -380,13 +378,12 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         public override Stream Open(string path, FileMode mode, FileAccess access, FileShare share) =>
-            OpenInternal(path, mode, access, share, FileOptions.None);
+            OpenInternal(path, mode, access, FileOptions.None);
 
         private Stream OpenInternal(
             string path,
             FileMode mode,
             FileAccess access,
-            FileShare share,
             FileOptions options)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -394,13 +391,19 @@ namespace System.IO.Abstractions.TestingHelpers
             bool exists = mockFileDataAccessor.FileExists(path);
 
             if (mode == FileMode.CreateNew && exists)
+            {
                 throw new IOException(string.Format(CultureInfo.InvariantCulture, "The file '{0}' already exists.", path));
+            }
 
             if ((mode == FileMode.Open || mode == FileMode.Truncate) && !exists)
+            {
                 throw CommonExceptions.FileNotFound(path);
+            }
 
             if (!exists || mode == FileMode.CreateNew)
+            {
                 return Create(path);
+            }
 
             if (mode == FileMode.Create || mode == FileMode.Truncate)
             {
@@ -410,8 +413,6 @@ namespace System.IO.Abstractions.TestingHelpers
 
             var mockFileData = mockFileDataAccessor.GetFile(path);
             mockFileData.CheckFileAccess(path, access);
-
-            var length = mockFileData.Contents.Length;
 
             return new MockFileStream(mockFileDataAccessor, path, mode, access, options);
         }
@@ -427,8 +428,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-            return new StreamReader(
-                OpenRead(path));
+            return new StreamReader(OpenRead(path));
         }
 
         public override Stream OpenWrite(string path) => OpenWriteInternal(path, FileOptions.None);
@@ -436,7 +436,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private Stream OpenWriteInternal(string path, FileOptions options)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-            return OpenInternal(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, options);
+            return OpenInternal(path, FileMode.OpenOrCreate, FileAccess.Write, options);
         }
 
         public override byte[] ReadAllBytes(string path)

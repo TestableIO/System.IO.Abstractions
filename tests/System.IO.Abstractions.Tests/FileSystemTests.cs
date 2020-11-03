@@ -1,7 +1,7 @@
 ﻿
 using NUnit.Framework;
 
-namespace System.IO.Abstractions.TestingHelpers.Tests
+namespace System.IO.Abstractions.Tests
 {
     [TestFixture]
     public class FileSystemTests
