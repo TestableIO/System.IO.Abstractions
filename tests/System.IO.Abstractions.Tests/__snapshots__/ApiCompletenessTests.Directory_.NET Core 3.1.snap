@@ -1,8 +1,8 @@
 ﻿{
   "ExtraMembers": [
     "System.IO.Abstractions.IDirectoryInfo CreateDirectory(System.String, System.Security.AccessControl.DirectorySecurity)",
-    "System.Security.AccessControl.DirectorySecurity GetAccessControl(System.String, System.Security.AccessControl.AccessControlSections)",
     "System.Security.AccessControl.DirectorySecurity GetAccessControl(System.String)",
+    "System.Security.AccessControl.DirectorySecurity GetAccessControl(System.String, System.Security.AccessControl.AccessControlSections)",
     "Void SetAccessControl(System.String, System.Security.AccessControl.DirectorySecurity)"
   ],
   "MissingMembers": [

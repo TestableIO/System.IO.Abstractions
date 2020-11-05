@@ -19,9 +19,9 @@
     "System.ReadOnlySpan`1[System.Char] GetPathRoot(System.ReadOnlySpan`1[System.Char])",
     "System.ReadOnlySpan`1[System.Char] TrimEndingDirectorySeparator(System.ReadOnlySpan`1[System.Char])",
     "System.String Join(System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char])",
-    "System.String Join(System.String, System.String, System.String, System.String)",
-    "System.String Join(System.String, System.String, System.String)",
     "System.String Join(System.String, System.String)",
+    "System.String Join(System.String, System.String, System.String)",
+    "System.String Join(System.String, System.String, System.String, System.String)",
     "System.String Join(System.String[])",
     "System.String TrimEndingDirectorySeparator(System.String)"
   ]
