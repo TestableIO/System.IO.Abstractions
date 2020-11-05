@@ -18,7 +18,12 @@ jobs:
         with:
           fetch-depth: 0
       - name: Run tests
-        run: dotnet test --verbosity normal --collect:"XPlat Code Coverage"
+        run: dotnet test --collect:"XPlat Code Coverage"
+      - name: Upload snapshots
+        uses: actions/upload-artifact@v2
+        with:
+          name: Snapshots ${{ matrix.os }}
+          path: "**/*.snap"
       - name: Upload coverage
         uses: actions/upload-artifact@v2
         with:

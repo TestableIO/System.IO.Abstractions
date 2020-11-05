@@ -97,6 +97,8 @@ namespace System.IO.Abstractions.Tests
         private const string snapshotSuffix = ".NET Core 3.1";
 #elif NETCOREAPP2_1
             private const string snapshotSuffix = ".NET Core 2.1";
+#elif NET461
+            private const string snapshotSuffix = ".NET Framework 4.6.1";
 #else
 #error Unknown target framework.
 #endif
