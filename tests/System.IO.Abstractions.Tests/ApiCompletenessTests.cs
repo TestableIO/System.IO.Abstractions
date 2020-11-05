@@ -59,7 +59,7 @@ namespace System.IO.Abstractions.Tests
             var expectedMembers = referenceType
                 .GetMembers(bindingFlags)
                 .Select(x => x.ToString())
-                .OrderBy(x => x)
+                .OrderBy(x => x, StringComparer.Ordinal)
                 .Select(x => x.Replace("System.IO.FileStream", "System.IO.Stream"))
                 .Select(x => x.Replace("System.IO.FileSystemInfo", "System.IO.Abstractions.IFileSystemInfo"))
                 .Select(x => x.Replace("System.IO.FileInfo", "System.IO.Abstractions.IFileInfo"))
@@ -68,11 +68,10 @@ namespace System.IO.Abstractions.Tests
             var implementedMembers = abstractionType
                 .GetMembers(bindingFlags)
                 .Select(x => x.ToString())
-                .OrderBy(x => x)
+                .OrderBy(x => x, StringComparer.Ordinal)
                 .Where(x => !x.Contains("op_Implicit"))
                 .Where(x => x != "System.IO.Abstractions.IFileSystem get_FileSystem()")
-                .Where(x => x != "System.IO.Abstractions.IFileSystem FileSystem")
-                .Where(x => x != "");
+                .Where(x => x != "System.IO.Abstractions.IFileSystem FileSystem");
 
             var diff = new ApiDiff(
                 implementedMembers.Except(expectedMembers),
