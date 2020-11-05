@@ -1,0 +1,20 @@
+﻿{
+  "ExtraMembers": [
+    "System.Security.AccessControl.DirectorySecurity GetAccessControl()",
+    "System.Security.AccessControl.DirectorySecurity GetAccessControl(System.Security.AccessControl.AccessControlSections)",
+    "Void Create(System.Security.AccessControl.DirectorySecurity)",
+    "Void SetAccessControl(System.Security.AccessControl.DirectorySecurity)"
+  ],
+  "MissingMembers": [
+    "System.Collections.Generic.IEnumerable`1[System.IO.Abstractions.IDirectoryInfo] EnumerateDirectories(System.String, System.IO.EnumerationOptions)",
+    "System.Collections.Generic.IEnumerable`1[System.IO.Abstractions.IFileInfo] EnumerateFiles(System.String, System.IO.EnumerationOptions)",
+    "System.Collections.Generic.IEnumerable`1[System.IO.Abstractions.IFileSystemInfo] EnumerateFileSystemInfos(System.String, System.IO.EnumerationOptions)",
+    "System.IO.Abstractions.IDirectoryInfo[] GetDirectories(System.String, System.IO.EnumerationOptions)",
+    "System.IO.Abstractions.IFileInfo[] GetFiles(System.String, System.IO.EnumerationOptions)",
+    "System.IO.Abstractions.IFileSystemInfo[] GetFileSystemInfos(System.String, System.IO.EnumerationOptions)",
+    "System.Object GetLifetimeService()",
+    "System.Object InitializeLifetimeService()",
+    "Void .ctor(System.String)",
+    "Void GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)"
+  ]
+}

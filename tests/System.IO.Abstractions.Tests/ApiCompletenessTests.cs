@@ -67,7 +67,8 @@ namespace System.IO.Abstractions.Tests
                 .Select(x => x.Replace("System.IO.DriveInfo", "System.IO.Abstractions.IDriveInfo"));
             var implementedMembers = abstractionType
                 .GetMembers(bindingFlags)
-                .OrderBy(x => x).Select(x => x.ToString())
+                .Select(x => x.ToString())
+                .OrderBy(x => x)
                 .Where(x => !x.Contains("op_Implicit"))
                 .Where(x => x != "System.IO.Abstractions.IFileSystem get_FileSystem()")
                 .Where(x => x != "System.IO.Abstractions.IFileSystem FileSystem")

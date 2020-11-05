@@ -1,0 +1,12 @@
+﻿{
+  "ExtraMembers": [
+    "System.IO.Abstractions.IDirectoryInfo CreateDirectory(System.String, System.Security.AccessControl.DirectorySecurity)",
+    "System.Security.AccessControl.DirectorySecurity GetAccessControl(System.String, System.Security.AccessControl.AccessControlSections)",
+    "System.Security.AccessControl.DirectorySecurity GetAccessControl(System.String)",
+    "Void SetAccessControl(System.String, System.Security.AccessControl.DirectorySecurity)"
+  ],
+  "MissingMembers": [
+    "System.String[] GetFileSystemEntries(System.String, System.String, System.IO.EnumerationOptions)",
+    "System.String[] GetFileSystemEntries(System.String, System.String, System.IO.SearchOption)"
+  ]
+}
