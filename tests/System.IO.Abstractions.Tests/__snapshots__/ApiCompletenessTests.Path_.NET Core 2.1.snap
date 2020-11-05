@@ -20,7 +20,7 @@
     "System.ReadOnlySpan`1[System.Char] GetPathRoot(System.ReadOnlySpan`1[System.Char])",
     "System.String GetFullPath(System.String, System.String)",
     "System.String GetRelativePath(System.String, System.String)",
-    "System.String Join(System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char])",
-    "System.String Join(System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char])"
+    "System.String Join(System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char])",
+    "System.String Join(System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char])"
   ]
 }
