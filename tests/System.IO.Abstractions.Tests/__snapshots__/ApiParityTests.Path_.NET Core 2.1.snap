@@ -1,0 +1,26 @@
+﻿{
+  "ExtraMembers": [
+    "Char get_AltDirectorySeparatorChar()",
+    "Char get_DirectorySeparatorChar()",
+    "Char get_PathSeparator()",
+    "Char get_VolumeSeparatorChar()",
+    "Char[] get_InvalidPathChars()"
+  ],
+  "MissingMembers": [
+    "Boolean HasExtension(System.ReadOnlySpan`1[System.Char])",
+    "Boolean IsPathFullyQualified(System.ReadOnlySpan`1[System.Char])",
+    "Boolean IsPathFullyQualified(System.String)",
+    "Boolean IsPathRooted(System.ReadOnlySpan`1[System.Char])",
+    "Boolean TryJoin(System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char], System.Span`1[System.Char], Int32 ByRef)",
+    "Boolean TryJoin(System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char], System.Span`1[System.Char], Int32 ByRef)",
+    "System.ReadOnlySpan`1[System.Char] GetDirectoryName(System.ReadOnlySpan`1[System.Char])",
+    "System.ReadOnlySpan`1[System.Char] GetExtension(System.ReadOnlySpan`1[System.Char])",
+    "System.ReadOnlySpan`1[System.Char] GetFileName(System.ReadOnlySpan`1[System.Char])",
+    "System.ReadOnlySpan`1[System.Char] GetFileNameWithoutExtension(System.ReadOnlySpan`1[System.Char])",
+    "System.ReadOnlySpan`1[System.Char] GetPathRoot(System.ReadOnlySpan`1[System.Char])",
+    "System.String GetFullPath(System.String, System.String)",
+    "System.String GetRelativePath(System.String, System.String)",
+    "System.String Join(System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char])",
+    "System.String Join(System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char])"
+  ]
+}

@@ -1,0 +1,11 @@
+﻿{
+  "ExtraMembers": [],
+  "MissingMembers": [
+    "System.IO.Abstractions.IDirectoryInfo CreateSubdirectory(System.String, System.Security.AccessControl.DirectorySecurity)",
+    "System.Object GetLifetimeService()",
+    "System.Object InitializeLifetimeService()",
+    "System.Runtime.Remoting.ObjRef CreateObjRef(System.Type)",
+    "Void .ctor(System.String)",
+    "Void GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)"
+  ]
+}

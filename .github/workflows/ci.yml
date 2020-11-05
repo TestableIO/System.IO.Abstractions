@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Run tests
-        run: dotnet test --verbosity normal --collect:"XPlat Code Coverage"
+        run: dotnet test --collect:"XPlat Code Coverage"
       - name: Upload coverage
         uses: actions/upload-artifact@v2
         with:

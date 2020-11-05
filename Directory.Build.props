@@ -7,6 +7,7 @@
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)StrongName.snk</AssemblyOriginatorKeyFile>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <LangVersion>8.0</LangVersion>
     <DefineConstants Condition="'$(TargetFramework)' == 'netcoreapp3.0' OR '$(TargetFramework)' == 'netstandard2.1'">$(DefineConstants);FEATURE_ASYNC_FILE;FEATURE_ENUMERATION_OPTIONS;FEATURE_ADVANCED_PATH_OPERATIONS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>

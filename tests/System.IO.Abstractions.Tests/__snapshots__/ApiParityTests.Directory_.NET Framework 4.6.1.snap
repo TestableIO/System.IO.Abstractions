@@ -1,0 +1,6 @@
+﻿{
+  "ExtraMembers": [],
+  "MissingMembers": [
+    "System.String[] GetFileSystemEntries(System.String, System.String, System.IO.SearchOption)"
+  ]
+}
