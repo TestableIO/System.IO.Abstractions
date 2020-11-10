@@ -80,12 +80,10 @@ namespace System.IO.Abstractions
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
-
         public override string[] GetDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
             return Directory.GetDirectories(path, searchPattern, enumerationOptions);
         }
-
 #endif
 
         public override string GetDirectoryRoot(string path)
@@ -109,12 +107,10 @@ namespace System.IO.Abstractions
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
-
         public override string[] GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
             return Directory.GetFiles(path, searchPattern, enumerationOptions);
         }
-
 #endif
 
         public override string[] GetFileSystemEntries(string path)
@@ -225,12 +221,10 @@ namespace System.IO.Abstractions
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
-
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
             return Directory.EnumerateDirectories(path, searchPattern, enumerationOptions);
         }
-
 #endif
 
         public override IEnumerable<string> EnumerateFiles(string path)
@@ -249,12 +243,10 @@ namespace System.IO.Abstractions
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
-
         public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
             return Directory.EnumerateFiles(path, searchPattern, enumerationOptions);
         }
-
 #endif
 
         public override IEnumerable<string> EnumerateFileSystemEntries(string path)
@@ -273,12 +265,10 @@ namespace System.IO.Abstractions
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
-
         public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
             return Directory.EnumerateFileSystemEntries(path, searchPattern, enumerationOptions);
         }
-
 #endif
     }
 }
