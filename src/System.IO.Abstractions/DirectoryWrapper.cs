@@ -197,7 +197,7 @@ namespace System.IO.Abstractions
 
         public override void SetLastWriteTime(string path, DateTime lastWriteTime)
         {
-            Directory.SetLastAccessTime(path, lastWriteTime);
+            Directory.SetLastWriteTime(path, lastWriteTime);
         }
 
         public override void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc)
