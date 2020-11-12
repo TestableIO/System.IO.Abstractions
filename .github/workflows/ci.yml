@@ -51,7 +51,7 @@ jobs:
           reporttypes: "Cobertura"
       - name: Publish coverage report to Codacy
         uses: codacy/codacy-coverage-reporter-action@master
-        if: secrets.CODACY_PROJECT_TOKEN != ''
+        if: github.repository == 'System-IO-Abstractions/System.IO.Abstractions' && github.event_name == 'push'
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           coverage-reports: coverage-report/Cobertura.xml
