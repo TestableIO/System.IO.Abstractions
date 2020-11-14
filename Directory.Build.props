@@ -15,6 +15,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="SauceControl.InheritDoc" Version="1.0.0" PrivateAssets="all" />
+    <PackageReference Include="SauceControl.InheritDoc" Version="1.1.1" PrivateAssets="all" />
   </ItemGroup>
 </Project>
