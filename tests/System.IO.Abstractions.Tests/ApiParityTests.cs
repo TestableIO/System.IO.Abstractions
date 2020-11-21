@@ -45,12 +45,12 @@ namespace System.IO.Abstractions.Tests
                 typeof(System.IO.Abstractions.DriveInfoBase)
             );
 
-        // [Test]
-        // public void Path() =>
-        //     AssertParity(
-        //         typeof(System.IO.Path),
-        //         typeof(System.IO.Abstractions.PathBase)
-        //     );
+        [Test]
+        public void Path() =>
+            AssertParity(
+                typeof(System.IO.Path),
+                typeof(System.IO.Abstractions.PathBase)
+            );
 
         private void AssertParity(Type referenceType, Type abstractionType)
         {
