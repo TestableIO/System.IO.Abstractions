@@ -1475,11 +1475,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            fileSystem.Directory.Move(@"c:\source\dummy", @"c:\destination\dummy");
+            fileSystem.Directory.Move(XFS.Path(@"c:\source\dummy"), XFS.Path(@"c:\destination\dummy"));
 
             // Assert
-            Assert.That(fileSystem.FileExists(@"c:\source\dummy.txt"), Is.True);
-            Assert.That(fileSystem.Directory.Exists(@"c:\source\dummy2"), Is.True);
+            Assert.That(fileSystem.FileExists(XFS.Path(@"c:\source\dummy.txt")), Is.True);
+            Assert.That(fileSystem.Directory.Exists(XFS.Path(@"c:\source\dummy2")), Is.True);
         }
 
         [Test]
