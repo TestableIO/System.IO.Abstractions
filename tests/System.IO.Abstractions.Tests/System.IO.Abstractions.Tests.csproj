@@ -8,6 +8,13 @@
     <IsPackable>false</IsPackable>
     <IsTestable>true</IsTestable>
   </PropertyGroup>
+  <PropertyGroup>
+    <!--  
+      Ensure that test logger is copied to output directory, see 
+      https://github.com/Tyrrrz/GitHubActionsTestLogger/issues/5 
+    -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/System.IO.Abstractions/System.IO.Abstractions.csproj" />
   </ItemGroup>

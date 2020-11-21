@@ -8,6 +8,13 @@
     <IsPackable>false</IsPackable>
     <IsTestable>true</IsTestable>
   </PropertyGroup>
+  <PropertyGroup>
+    <!--  
+      Ensure that test logger is copied to output directory, see 
+      https://github.com/Tyrrrz/GitHubActionsTestLogger/issues/5 
+    -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
   <ItemGroup>
     <None Remove="TestFiles\SecondTestFile.txt" />
     <None Remove="TestFiles\TestFile.txt" />
