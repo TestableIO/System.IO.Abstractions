@@ -3,7 +3,7 @@
 		<AssemblyName>System.IO.Abstractions.Benchmarks</AssemblyName>
 		<RootNamespace>System.IO.Abstractions.Benchmarks</RootNamespace>
 		<Description>Bencharmks comparisons.</Description>
-		<TargetFrameworks>netcoreapp3.1;net461</TargetFrameworks>
+		<TargetFrameworks>net5.0;netcoreapp3.1;net461</TargetFrameworks>
 		<PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>testing</PackageTags>

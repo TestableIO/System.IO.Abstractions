@@ -148,8 +148,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var absentFileNameFullPath = XFS.Path(@"c:\you surely don't have such file.hope-so");
             var mockFileSystem = new MockFileSystem();
 
-            var act = new AsyncTestDelegate(() =>
-                mockFileSystem.File.ReadAllTextAsync(absentFileNameFullPath)
+            var act = new AsyncTestDelegate(async() =>
+                await mockFileSystem.File.ReadAllTextAsync(absentFileNameFullPath)
             );
 
             var exception = Assert.CatchAsync<FileNotFoundException>(act);
