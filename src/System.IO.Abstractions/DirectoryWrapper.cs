@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
@@ -17,6 +18,7 @@ namespace System.IO.Abstractions
             return new DirectoryInfoWrapper(FileSystem, directoryInfo);
         }
 
+        [SupportedOSPlatform("windows")]
         public override IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
             var directoryInfo = new DirectoryInfo(path);
@@ -39,11 +41,13 @@ namespace System.IO.Abstractions
             return Directory.Exists(path);
         }
 
+        [SupportedOSPlatform("windows")]
         public override DirectorySecurity GetAccessControl(string path)
         {
             return new DirectoryInfo(path).GetAccessControl();
         }
 
+        [SupportedOSPlatform("windows")]
         public override DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
             return new DirectoryInfo(path).GetAccessControl(includeSections);
@@ -165,6 +169,7 @@ namespace System.IO.Abstractions
             Directory.Move(sourceDirName, destDirName);
         }
 
+        [SupportedOSPlatform("windows")]
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
             new DirectoryInfo(path).SetAccessControl(directorySecurity);

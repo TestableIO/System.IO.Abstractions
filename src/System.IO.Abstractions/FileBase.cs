@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Text;
 
@@ -92,9 +93,11 @@ namespace System.IO.Abstractions
 
 
         /// <inheritdoc cref="File.GetAccessControl(string)"/>
+        [SupportedOSPlatform("windows")]
         public abstract FileSecurity GetAccessControl(string path);
 
         /// <inheritdoc cref="File.GetAccessControl(string,AccessControlSections)"/>
+        [SupportedOSPlatform("windows")]
         public abstract FileSecurity GetAccessControl(string path, AccessControlSections includeSections);
 
 
@@ -314,6 +317,7 @@ namespace System.IO.Abstractions
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
 
         /// <inheritdoc cref="File.SetAccessControl(string,FileSecurity)"/>
+        [SupportedOSPlatform("windows")]
         public abstract void SetAccessControl(string path, FileSecurity fileSecurity);
 
         /// <inheritdoc cref="File.SetAttributes"/>

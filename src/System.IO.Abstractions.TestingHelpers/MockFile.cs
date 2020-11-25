@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading;
@@ -125,9 +126,9 @@ namespace System.IO.Abstractions.TestingHelpers
             Create(path, bufferSize, FileOptions.None);
 
         public override Stream Create(string path, int bufferSize, FileOptions options) =>
-            CreateInternal(path, options, null);
+            CreateInternal(path, options);
 
-        private Stream CreateInternal(string path, FileOptions options, FileSecurity fileSecurity)
+        private Stream CreateInternal(string path, FileOptions options)
         {
             if (path == null)
             {
@@ -137,10 +138,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, nameof(path));
             VerifyDirectoryExists(path);
 
-            var mockFileData = new MockFileData(new byte[0])
-            {
-                AccessControl = fileSecurity
-            };
+            var mockFileData = new MockFileData(new byte[0]);
             mockFileDataAccessor.AddFile(path, mockFileData);
             return OpenWriteInternal(path, options);
         }
@@ -192,6 +190,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return file != null && !file.IsDirectory;
         }
 
+        [SupportedOSPlatform("windows")]
         public override FileSecurity GetAccessControl(string path)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -205,6 +204,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return fileData.AccessControl;
         }
 
+        [SupportedOSPlatform("windows")]
         public override FileSecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
             return GetAccessControl(path);
@@ -603,6 +603,7 @@ namespace System.IO.Abstractions.TestingHelpers
             Move(sourceFileName, destinationFileName);
         }
 
+        [SupportedOSPlatform("windows")]
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Text;
 
@@ -67,6 +68,7 @@ namespace System.IO.Abstractions
             return File.CreateText(path);
         }
 
+        [SupportedOSPlatform("windows")]
         public override void Decrypt(string path)
         {
             File.Decrypt(path);
@@ -77,6 +79,7 @@ namespace System.IO.Abstractions
             File.Delete(path);
         }
 
+        [SupportedOSPlatform("windows")]
         public override void Encrypt(string path)
         {
             File.Encrypt(path);
@@ -87,11 +90,13 @@ namespace System.IO.Abstractions
             return File.Exists(path);
         }
 
+        [SupportedOSPlatform("windows")]
         public override FileSecurity GetAccessControl(string path)
         {
             return new FileInfo(path).GetAccessControl();
         }
 
+        [SupportedOSPlatform("windows")]
         public override FileSecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
             return new FileInfo(path).GetAccessControl(includeSections);
@@ -233,6 +238,7 @@ namespace System.IO.Abstractions
         }
 
 
+        [SupportedOSPlatform("windows")]
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
             new FileInfo(path).SetAccessControl(fileSecurity);

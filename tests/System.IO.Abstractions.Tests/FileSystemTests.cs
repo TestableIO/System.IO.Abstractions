@@ -13,7 +13,10 @@ namespace System.IO.Abstractions.Tests
             var memoryStream = new MemoryStream();
 
             var serializer = new Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+
+#pragma warning disable SYSLIB0011
             serializer.Serialize(memoryStream, fileSystem);
+#pragma warning restore SYSLIB0011
 
             Assert.That(memoryStream.Length > 0, "Length didn't increase after serialization task.");
         }

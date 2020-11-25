@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
@@ -24,6 +25,7 @@ namespace System.IO.Abstractions
         public abstract IDirectoryInfo CreateDirectory(string path);
 
         /// <inheritdoc cref="Directory.CreateDirectory(string,DirectorySecurity)"/>
+        [SupportedOSPlatform("windows")]
         public abstract IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity);
 
         /// <inheritdoc cref="Directory.Delete(string)"/>
@@ -36,9 +38,11 @@ namespace System.IO.Abstractions
         public abstract bool Exists(string path);
 
         /// <inheritdoc cref="Directory.GetAccessControl(string)"/>
+        [SupportedOSPlatform("windows")]
         public abstract DirectorySecurity GetAccessControl(string path);
 
         /// <inheritdoc cref="Directory.GetAccessControl(string,AccessControlSections)"/>
+        [SupportedOSPlatform("windows")]
         public abstract DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections);
 
         /// <inheritdoc cref="Directory.GetCreationTime"/>

@@ -1,4 +1,5 @@
-﻿using System.Security.AccessControl;
+﻿using System.Runtime.Versioning;
+using System.Security.AccessControl;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -16,6 +17,7 @@ namespace System.IO.Abstractions.TestingHelpers
             Attributes = FileAttributes.Directory;
         }
 
+        [SupportedOSPlatform("windows")]
         public new DirectorySecurity AccessControl
         {
             get
