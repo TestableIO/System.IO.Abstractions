@@ -43,6 +43,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileInfo.MoveTo"/>
         public abstract void MoveTo(string destFileName);
 
+#if FEATURE_FILE_MOVE_WITH_OVERWRITE
+        /// <inheritdoc cref="FileInfo.MoveTo(string,bool)"/>
+        public abstract void MoveTo(string destFileName, bool overwrite);
+#endif
+
         /// <inheritdoc cref="FileInfo.Open(FileMode)"/>
         public abstract Stream Open(FileMode mode);
 

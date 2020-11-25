@@ -357,6 +357,52 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.RemoveFile(sourceFileName);
         }
 
+#if FEATURE_FILE_MOVE_WITH_OVERWRITE
+        public override void Move(string sourceFileName, string destFileName, bool overwrite)
+        {
+            if (sourceFileName == null)
+            {
+                throw CommonExceptions.FilenameCannotBeNull(nameof(sourceFileName));
+            }
+
+            if (destFileName == null)
+            {
+                throw CommonExceptions.FilenameCannotBeNull(nameof(destFileName));
+            }
+
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, nameof(sourceFileName));
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(destFileName, nameof(destFileName));
+
+            if (mockFileDataAccessor.GetFile(destFileName) != null)
+            {
+                if (destFileName.Equals(sourceFileName))
+                {
+                    return;
+                }
+                else if (!overwrite)
+                {
+                    throw new IOException("A file can not be created if it already exists.");
+                }
+            }
+
+
+            var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
+
+            if (sourceFile == null)
+            {
+                throw CommonExceptions.FileNotFound(sourceFileName);
+            }
+            if (!sourceFile.AllowedFileShare.HasFlag(FileShare.Delete))
+            {
+                throw CommonExceptions.ProcessCannotAccessFileInUse();
+            }
+            VerifyDirectoryExists(destFileName);
+
+            mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile));
+            mockFileDataAccessor.RemoveFile(sourceFileName);
+        }
+#endif
+
         public override Stream Open(string path, FileMode mode)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
