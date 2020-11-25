@@ -1,0 +1,18 @@
+﻿{
+  "ExtraMembers": [
+    "Void Dispose(Boolean)"
+  ],
+  "MissingMembers": [
+    "System.ComponentModel.IContainer Container",
+    "System.ComponentModel.IContainer get_Container()",
+    "System.EventHandler Disposed",
+    "System.Object GetLifetimeService()",
+    "System.Object InitializeLifetimeService()",
+    "System.Runtime.Remoting.ObjRef CreateObjRef(System.Type)",
+    "Void .ctor()",
+    "Void .ctor(System.String)",
+    "Void .ctor(System.String, System.String)",
+    "Void add_Disposed(System.EventHandler)",
+    "Void remove_Disposed(System.EventHandler)"
+  ]
+}

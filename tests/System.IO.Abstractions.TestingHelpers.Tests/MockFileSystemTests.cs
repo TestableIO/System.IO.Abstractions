@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -408,6 +409,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             public override NotifyFilters NotifyFilter { get; set; }
             public override ISite Site { get; set; }
             public override ISynchronizeInvoke SynchronizingObject { get; set; }
+#if FEATURE_FILE_SYSTEM_WATCHER_FILTERS
+            public override Collection<string> Filters { get; }
+#endif
             public override void BeginInit() { }
             public override void EndInit() { }
             public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType) => default(WaitForChangedResult);
