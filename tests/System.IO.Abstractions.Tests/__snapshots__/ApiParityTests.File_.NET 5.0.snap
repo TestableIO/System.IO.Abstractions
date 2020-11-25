@@ -6,7 +6,5 @@
     "System.Threading.Tasks.Task WriteAllLinesAsync(System.String, System.String[], System.Threading.CancellationToken)",
     "Void SetAccessControl(System.String, System.Security.AccessControl.FileSecurity)"
   ],
-  "MissingMembers": [
-    "Void Move(System.String, System.String, Boolean)"
-  ]
+  "MissingMembers": []
 }

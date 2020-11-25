@@ -149,6 +149,14 @@ namespace System.IO.Abstractions
             File.Move(sourceFileName, destFileName);
         }
 
+#if FEATURE_FILE_MOVE_WITH_OVERWRITE
+        public override void Move(string sourceFileName, string destFileName, bool overwrite)
+        {
+            File.Move(sourceFileName, destFileName, overwrite);
+        }
+#endif
+
+
         public override Stream Open(string path, FileMode mode)
         {
             return File.Open(path, mode);

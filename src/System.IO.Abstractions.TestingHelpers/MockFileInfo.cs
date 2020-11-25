@@ -236,6 +236,19 @@ namespace System.IO.Abstractions.TestingHelpers
             path = movedFileInfo.FullName;
         }
 
+#if FEATURE_FILE_MOVE_WITH_OVERWRITE
+        public override void MoveTo(string destFileName, bool overwrite)
+        {
+            var movedFileInfo = CopyTo(destFileName, overwrite);
+            if (destFileName == FullName)
+            {
+                return;
+            }
+            Delete();
+            path = movedFileInfo.FullName;
+        }
+#endif
+
         public override Stream Open(FileMode mode)
         {
             return new MockFile(mockFileSystem).Open(FullName, mode);

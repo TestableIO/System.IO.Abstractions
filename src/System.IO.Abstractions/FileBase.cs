@@ -260,6 +260,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="File.Move"/>
         public abstract void Move(string sourceFileName, string destFileName);
 
+#if FEATURE_FILE_MOVE_WITH_OVERWRITE
+        /// <inheritdoc cref="File.Move(string,string,bool)"/>
+        public abstract void Move(string sourceFileName, string destFileName, bool overwrite);
+#endif
+
         /// <inheritdoc cref="File.Open(string,FileMode)"/>
         public abstract Stream Open(string path, FileMode mode);
 

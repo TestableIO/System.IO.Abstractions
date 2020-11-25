@@ -61,8 +61,12 @@ namespace System.IO.Abstractions
         DateTime GetLastWriteTime(string path);
         /// <inheritdoc cref="File.GetLastWriteTimeUtc"/>
         DateTime GetLastWriteTimeUtc(string path);
-        /// <inheritdoc cref="File.Move"/>
+        /// <inheritdoc cref="File.Move(string,string)"/>
         void Move(string sourceFileName, string destFileName);
+#if FEATURE_FILE_MOVE_WITH_OVERWRITE
+        /// <inheritdoc cref="File.Move(string,string,bool)"/>
+        void Move(string sourceFileName, string destFileName, bool overwrite);
+#endif
         /// <inheritdoc cref="File.Open(string,FileMode)"/>
         Stream Open(string path, FileMode mode);
         /// <inheritdoc cref="File.Open(string,FileMode,FileAccess)"/>

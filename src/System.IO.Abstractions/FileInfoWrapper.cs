@@ -134,6 +134,13 @@ namespace System.IO.Abstractions
             instance.MoveTo(destFileName);
         }
 
+#if FEATURE_FILE_MOVE_WITH_OVERWRITE
+        public override void MoveTo(string destFileName, bool overwrite)
+        {
+            instance.MoveTo(destFileName, overwrite);
+        }
+#endif
+
         public override Stream Open(FileMode mode)
         {
             return instance.Open(mode);
