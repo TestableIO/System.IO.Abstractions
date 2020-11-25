@@ -1,0 +1,14 @@
+﻿{
+  "ExtraMembers": [
+    "System.Security.AccessControl.DirectorySecurity GetAccessControl()",
+    "System.Security.AccessControl.DirectorySecurity GetAccessControl(System.Security.AccessControl.AccessControlSections)",
+    "Void Create(System.Security.AccessControl.DirectorySecurity)",
+    "Void SetAccessControl(System.Security.AccessControl.DirectorySecurity)"
+  ],
+  "MissingMembers": [
+    "System.Object GetLifetimeService()",
+    "System.Object InitializeLifetimeService()",
+    "Void .ctor(System.String)",
+    "Void GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)"
+  ]
+}

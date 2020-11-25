@@ -17,8 +17,18 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Setup .NET Core 2.1
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "2.1.x"
+      - name: Setup .NET Core 3.1
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "3.1.x"
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
       - name: Run tests
-        run: dotnet test --verbosity normal --collect:"XPlat Code Coverage"
+        run: dotnet test --collect:"XPlat Code Coverage"  --logger "GitHubActions"
       - name: Upload coverage
         uses: actions/upload-artifact@v2
         with:
@@ -31,6 +41,8 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
       - uses: actions/download-artifact@v2
         with:
           name: Code coverage ubuntu-latest
@@ -44,13 +56,14 @@ jobs:
           name: Code coverage macos-latest
           path: coverage-macos
       - name: Generate coverage report
-        uses: danielpalme/ReportGenerator-GitHub-Action@4.7.1
+        uses: danielpalme/ReportGenerator-GitHub-Action@4.8.1
         with:
           reports: "**/coverage.cobertura.xml"
           targetdir: "coverage-report"
           reporttypes: "Cobertura"
       - name: Publish coverage report to Codacy
         uses: codacy/codacy-coverage-reporter-action@master
+        if: github.repository == 'System-IO-Abstractions/System.IO.Abstractions' && github.event_name == 'push'
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
           coverage-reports: coverage-report/Cobertura.xml
@@ -63,6 +76,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
       - name: Create packages
         run: dotnet pack --configuration Release --output ./packages
       - name: Upload a Build Artifact
@@ -80,13 +95,15 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
       - uses: actions/download-artifact@v2
         with:
           name: NuGet packages
           path: packages
       - name: Push packages
         run: dotnet nuget push "packages/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
-      - uses: dotnet/nbgv@v0.3.1
+      - uses: dotnet/nbgv@v0.4.0
         id: nbgv
       - name: Create GitHub release
         uses: actions/create-release@v1

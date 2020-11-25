@@ -20,20 +20,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void AppendAllLines(string path, IEnumerable<string> contents)
         {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-            VerifyValueIsNotNull(contents, "contents");
-
             AppendAllLines(path, contents, MockFileData.DefaultEncoding);
         }
 
         public override void AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding)
         {
-            if (encoding == null)
-            {
-                throw new ArgumentNullException(nameof(encoding));
-            }
-
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+            VerifyValueIsNotNull(contents, nameof(contents));
+            VerifyValueIsNotNull(encoding, nameof(encoding));
 
             var concatContents = contents.Aggregate("", (a, b) => a + b + Environment.NewLine);
             AppendAllText(path, concatContents, encoding);
@@ -492,19 +486,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string ReadAllText(string path)
         {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-
-            if (!mockFileDataAccessor.FileExists(path))
-            {
-                throw CommonExceptions.FileNotFound(path);
-            }
-
             return ReadAllText(path, MockFileData.DefaultEncoding);
         }
 
         public override string ReadAllText(string path, Encoding encoding)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                throw CommonExceptions.FileNotFound(path);
+            }
 
             if (encoding == null)
             {

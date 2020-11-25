@@ -1,12 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net5.0;netcoreapp3.1;netcoreapp2.1</TargetFrameworks>
     <TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net461</TargetFrameworks>
     <Description>The unit tests for our pre-built mocks</Description>
     <AssemblyName>System.IO.Abstractions.TestingHelpers.Tests</AssemblyName>
     <RootNamespace>System.IO.Abstractions.TestingHelpers.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
     <IsTestable>true</IsTestable>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!--  
+      Ensure that test logger is copied to output directory, see 
+      https://github.com/Tyrrrz/GitHubActionsTestLogger/issues/5 
+    -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="TestFiles\SecondTestFile.txt" />
@@ -25,6 +32,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="GitHubActionsTestLogger" Version="1.1.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
     <PackageReference Include="Moq" Version="4.14.5" />
     <PackageReference Include="nunit" Version="3.12.0" />

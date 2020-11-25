@@ -3,14 +3,13 @@
     <AssemblyName>System.IO.Abstractions</AssemblyName>
     <RootNamespace>System.IO.Abstractions</RootNamespace>
     <Description>A set of abstractions to help make file system interactions testable.</Description>
-    <TargetFrameworks>netstandard2.1;netstandard2.0;net461</TargetFrameworks>
-    <PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageTags>testing</PackageTags>
-    <DefineConstants Condition="'$(TargetFramework)' == 'netstandard2.1'">$(DefineConstants);FEATURE_ASYNC_FILE;FEATURE_ENUMERATION_OPTIONS;FEATURE_ADVANCED_PATH_OPERATIONS;FEATURE_PATH_JOIN_WITH_SPAN</DefineConstants>
+    <TargetFrameworks>net5.0;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
   </PropertyGroup>
-  <ItemGroup Condition="'$(TargetFramework)' != 'net461'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1' OR '$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0"/>
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net461" Version="1.0.0">

@@ -1,0 +1,23 @@
+﻿{
+  "ExtraMembers": [
+    "System.Security.AccessControl.FileSecurity GetAccessControl(System.String)",
+    "System.Security.AccessControl.FileSecurity GetAccessControl(System.String, System.Security.AccessControl.AccessControlSections)",
+    "Void SetAccessControl(System.String, System.Security.AccessControl.FileSecurity)"
+  ],
+  "MissingMembers": [
+    "System.Threading.Tasks.Task AppendAllLinesAsync(System.String, System.Collections.Generic.IEnumerable`1[System.String], System.Text.Encoding, System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task AppendAllLinesAsync(System.String, System.Collections.Generic.IEnumerable`1[System.String], System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task AppendAllTextAsync(System.String, System.String, System.Text.Encoding, System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task AppendAllTextAsync(System.String, System.String, System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task WriteAllBytesAsync(System.String, Byte[], System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task WriteAllLinesAsync(System.String, System.Collections.Generic.IEnumerable`1[System.String], System.Text.Encoding, System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task WriteAllLinesAsync(System.String, System.Collections.Generic.IEnumerable`1[System.String], System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task WriteAllTextAsync(System.String, System.String, System.Text.Encoding, System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task WriteAllTextAsync(System.String, System.String, System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task`1[System.Byte[]] ReadAllBytesAsync(System.String, System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task`1[System.String[]] ReadAllLinesAsync(System.String, System.Text.Encoding, System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task`1[System.String[]] ReadAllLinesAsync(System.String, System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task`1[System.String] ReadAllTextAsync(System.String, System.Text.Encoding, System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task`1[System.String] ReadAllTextAsync(System.String, System.Threading.CancellationToken)"
+  ]
+}
