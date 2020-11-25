@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Text;
 
@@ -43,8 +44,10 @@ namespace System.IO.Abstractions
         bool Exists(string path);
 
         /// <inheritdoc cref="File.GetAccessControl(string)"/>
+        [SupportedOSPlatform("windows")]
         FileSecurity GetAccessControl(string path);
         /// <inheritdoc cref="File.GetAccessControl(string,AccessControlSections)"/>
+        [SupportedOSPlatform("windows")]
         FileSecurity GetAccessControl(string path, AccessControlSections includeSections);
 
         /// <inheritdoc cref="File.GetAttributes"/>
@@ -98,6 +101,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="File.Replace(string,string,string,bool)"/>
         void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
         /// <inheritdoc cref="File.SetAccessControl(string,FileSecurity)"/>
+        [SupportedOSPlatform("windows")]
         void SetAccessControl(string path, FileSecurity fileSecurity);
         /// <inheritdoc cref="File.SetAttributes"/>
         void SetAttributes(string path, FileAttributes fileAttributes);

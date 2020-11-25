@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
@@ -91,6 +92,7 @@ namespace System.IO.Abstractions
             instance.Create();
         }
 
+        [SupportedOSPlatform("windows")]
         public override void Create(DirectorySecurity directorySecurity)
         {
             instance.Create(directorySecurity);
@@ -172,11 +174,13 @@ namespace System.IO.Abstractions
         }
 #endif
 
+        [SupportedOSPlatform("windows")]
         public override DirectorySecurity GetAccessControl()
         {
             return instance.GetAccessControl();
         }
 
+        [SupportedOSPlatform("windows")]
         public override DirectorySecurity GetAccessControl(AccessControlSections includeSections)
         {
             return instance.GetAccessControl(includeSections);
@@ -253,6 +257,7 @@ namespace System.IO.Abstractions
             instance.MoveTo(destDirName);
         }
 
+        [SupportedOSPlatform("windows")]
         public override void SetAccessControl(DirectorySecurity directorySecurity)
         {
             instance.SetAccessControl(directorySecurity);

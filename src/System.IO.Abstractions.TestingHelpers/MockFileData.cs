@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Text;
 
@@ -151,6 +152,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <summary>
         /// Gets or sets <see cref="FileSecurity"/> of the <see cref="MockFileData"/>. This is the object that is returned for this <see cref="MockFileData"/> when calling <see cref="FileBase.GetAccessControl(string)"/>.
         /// </summary>
+        [SupportedOSPlatform("windows")]
         public FileSecurity AccessControl
         {
             get

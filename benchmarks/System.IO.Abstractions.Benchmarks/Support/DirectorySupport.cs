@@ -36,15 +36,8 @@ namespace System.IO.Abstractions.Benchmarks.Support
         public string CreateRandomDirectory()
         {
             var randomPath = this.GetRandomTempDirectory();
-            try
-            {
-                _fileSystem.Directory.CreateDirectory(randomPath);
-                return randomPath;
-            }
-            catch (Exception ex)
-            {
-                throw (ex);
-            }
+            _fileSystem.Directory.CreateDirectory(randomPath);
+            return randomPath;
         }
 
         private void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs = true, bool overwrite = true)

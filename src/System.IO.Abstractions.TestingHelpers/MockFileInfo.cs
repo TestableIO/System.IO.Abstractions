@@ -1,4 +1,5 @@
-﻿using System.Security.AccessControl;
+﻿using System.Runtime.Versioning;
+using System.Security.AccessControl;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -215,11 +216,13 @@ namespace System.IO.Abstractions.TestingHelpers
             MockFileData.Attributes |= FileAttributes.Encrypted;
         }
 
+        [SupportedOSPlatform("windows")]
         public override FileSecurity GetAccessControl()
         {
             return mockFileSystem.File.GetAccessControl(this.path);
         }
 
+        [SupportedOSPlatform("windows")]
         public override FileSecurity GetAccessControl(AccessControlSections includeSections)
         {
             return mockFileSystem.File.GetAccessControl(this.path, includeSections);
@@ -281,6 +284,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return mockFileSystem.FileInfo.FromFileName(destinationFileName);
         }
 
+        [SupportedOSPlatform("windows")]
         public override void SetAccessControl(FileSecurity fileSecurity)
         {
             mockFileSystem.File.SetAccessControl(this.path, fileSecurity);
