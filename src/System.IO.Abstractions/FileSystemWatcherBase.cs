@@ -15,6 +15,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileSystemWatcher.Filter"/>
         public abstract string Filter { get; set; }
 
+#if FEATURE_FILE_SYSTEM_WATCHER_FILTERS
+       /// <inheritdoc cref="FileSystemWatcher.Filters"/>
+        public abstract System.Collections.ObjectModel.Collection<string> Filters { get; }
+#endif
+
         /// <inheritdoc cref="FileSystemWatcher.InternalBufferSize"/>
         public abstract int InternalBufferSize { get; set; }
 

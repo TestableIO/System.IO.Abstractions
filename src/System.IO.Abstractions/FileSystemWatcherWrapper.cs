@@ -54,6 +54,13 @@ namespace System.IO.Abstractions
             set { watcher.Filter = value; }
         }
 
+#if FEATURE_FILE_SYSTEM_WATCHER_FILTERS
+        public override System.Collections.ObjectModel.Collection<string> Filters
+        {
+            get { return watcher.Filters; }
+        }
+#endif
+
         public override int InternalBufferSize
         {
             get { return watcher.InternalBufferSize; }
