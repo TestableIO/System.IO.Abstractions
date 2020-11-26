@@ -8,7 +8,6 @@
     "System.Object GetLifetimeService()",
     "System.Object InitializeLifetimeService()",
     "Void .ctor(System.String)",
-    "Void GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)",
-    "Void MoveTo(System.String, Boolean)"
+    "Void GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)"
   ]
 }

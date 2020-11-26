@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 
@@ -125,6 +126,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        [SupportedOSPlatform("windows")]
         public override DirectorySecurity GetAccessControl(string path)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
@@ -139,6 +141,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return directoryData.AccessControl;
         }
 
+        [SupportedOSPlatform("windows")]
         public override DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
             return GetAccessControl(path);
@@ -442,6 +445,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.MoveDirectory(fullSourcePath, fullDestPath);
         }
 
+        [SupportedOSPlatform("windows")]
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");

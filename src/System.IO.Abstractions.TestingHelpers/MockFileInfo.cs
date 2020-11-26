@@ -1,4 +1,5 @@
-﻿using System.Security.AccessControl;
+﻿using System.Runtime.Versioning;
+using System.Security.AccessControl;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -215,11 +216,13 @@ namespace System.IO.Abstractions.TestingHelpers
             MockFileData.Attributes |= FileAttributes.Encrypted;
         }
 
+        [SupportedOSPlatform("windows")]
         public override FileSecurity GetAccessControl()
         {
             return mockFileSystem.File.GetAccessControl(this.path);
         }
 
+        [SupportedOSPlatform("windows")]
         public override FileSecurity GetAccessControl(AccessControlSections includeSections)
         {
             return mockFileSystem.File.GetAccessControl(this.path, includeSections);
@@ -235,6 +238,19 @@ namespace System.IO.Abstractions.TestingHelpers
             Delete();
             path = movedFileInfo.FullName;
         }
+
+#if FEATURE_FILE_MOVE_WITH_OVERWRITE
+        public override void MoveTo(string destFileName, bool overwrite)
+        {
+            var movedFileInfo = CopyTo(destFileName, overwrite);
+            if (destFileName == FullName)
+            {
+                return;
+            }
+            Delete();
+            path = movedFileInfo.FullName;
+        }
+#endif
 
         public override Stream Open(FileMode mode)
         {
@@ -268,6 +284,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return mockFileSystem.FileInfo.FromFileName(destinationFileName);
         }
 
+        [SupportedOSPlatform("windows")]
         public override void SetAccessControl(FileSecurity fileSecurity)
         {
             mockFileSystem.File.SetAccessControl(this.path, fileSecurity);

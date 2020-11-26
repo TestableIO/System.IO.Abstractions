@@ -52,6 +52,13 @@ namespace System.IO.Abstractions.Tests
                 typeof(System.IO.Abstractions.PathBase)
             );
 
+        [Test]
+        public void FileSystemWatcher() =>
+            AssertParity(
+                typeof(System.IO.FileSystemWatcher),
+                typeof(System.IO.Abstractions.FileSystemWatcherBase)
+            );
+
         private void AssertParity(Type referenceType, Type abstractionType)
         {
             static IEnumerable<string> GetMembers(Type type) => type

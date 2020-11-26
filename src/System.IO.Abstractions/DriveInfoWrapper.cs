@@ -1,4 +1,6 @@
-﻿namespace System.IO.Abstractions
+﻿using System.Runtime.Versioning;
+
+namespace System.IO.Abstractions
 {
     /// <summary>
     /// The wrapper for a <see cref="DriveInfo"/>.
@@ -151,6 +153,7 @@
         {
             get { return instance.VolumeLabel; }
 
+            [SupportedOSPlatform("windows")]
             set { instance.VolumeLabel = value; }
         }
 

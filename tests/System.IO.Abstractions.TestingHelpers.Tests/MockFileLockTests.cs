@@ -186,6 +186,6 @@
             Assert.DoesNotThrow(() => filesystem.File.Delete(filepath));
         }
 
-        private static IResolveConstraint IOException() => Is.TypeOf<IOException>().And.Property("HResult").EqualTo(unchecked((int) 0x80070020));
+        private static IResolveConstraint IOException() => Is.TypeOf<IOException>().And.Property("HResult").EqualTo(unchecked((int)0x80070020));
     }
 }

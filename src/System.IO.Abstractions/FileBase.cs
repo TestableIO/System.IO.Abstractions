@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Text;
 
@@ -92,9 +93,11 @@ namespace System.IO.Abstractions
 
 
         /// <inheritdoc cref="File.GetAccessControl(string)"/>
+        [SupportedOSPlatform("windows")]
         public abstract FileSecurity GetAccessControl(string path);
 
         /// <inheritdoc cref="File.GetAccessControl(string,AccessControlSections)"/>
+        [SupportedOSPlatform("windows")]
         public abstract FileSecurity GetAccessControl(string path, AccessControlSections includeSections);
 
 
@@ -260,6 +263,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="File.Move"/>
         public abstract void Move(string sourceFileName, string destFileName);
 
+#if FEATURE_FILE_MOVE_WITH_OVERWRITE
+        /// <inheritdoc cref="File.Move(string,string,bool)"/>
+        public abstract void Move(string sourceFileName, string destFileName, bool overwrite);
+#endif
+
         /// <inheritdoc cref="File.Open(string,FileMode)"/>
         public abstract Stream Open(string path, FileMode mode);
 
@@ -309,6 +317,7 @@ namespace System.IO.Abstractions
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
 
         /// <inheritdoc cref="File.SetAccessControl(string,FileSecurity)"/>
+        [SupportedOSPlatform("windows")]
         public abstract void SetAccessControl(string path, FileSecurity fileSecurity);
 
         /// <inheritdoc cref="File.SetAttributes"/>

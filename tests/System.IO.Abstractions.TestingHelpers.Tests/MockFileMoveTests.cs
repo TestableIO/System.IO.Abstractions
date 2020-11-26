@@ -63,6 +63,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.Message, Is.EqualTo("A file can not be created if it already exists."));
         }
 
+#if FEATURE_FILE_MOVE_WITH_OVERWRITE
+        [Test]
+        public void MockFile_MoveWithOverwrite_ShouldSucceedWhenTargetAlreadyExists()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            string sourceFileContent = "this is some content";
+            string destFilePath = XFS.Path(@"c:\somethingelse\demo1.txt");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {sourceFilePath, new MockFileData(sourceFileContent)},
+                {destFilePath, new MockFileData(sourceFileContent)}
+            });
+
+            fileSystem.File.Move(sourceFilePath, destFilePath, overwrite: true);
+
+            Assert.That(fileSystem.File.ReadAllText(destFilePath), Is.EqualTo(sourceFileContent));
+        }
+#endif
+
         [Test]
         public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenSourceIsNull_Message()
         {
@@ -227,7 +246,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsEmpty_ParamName() {
+        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsEmpty_ParamName()
+        {
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
@@ -260,7 +280,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenTargetIsNull_ParamName() {
+        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenTargetIsNull_ParamName()
+        {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 

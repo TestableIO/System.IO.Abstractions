@@ -22,8 +22,12 @@ namespace System.IO.Abstractions
         FileSecurity GetAccessControl();
         /// <inheritdoc cref="FileInfo.GetAccessControl(AccessControlSections)"/>
         FileSecurity GetAccessControl(AccessControlSections includeSections);
-        /// <inheritdoc cref="FileInfo.MoveTo"/>
+        /// <inheritdoc cref="FileInfo.MoveTo(string)"/>
         void MoveTo(string destFileName);
+#if FEATURE_FILE_MOVE_WITH_OVERWRITE
+        /// <inheritdoc cref="FileInfo.MoveTo(string,bool)"/>
+        void MoveTo(string destFileName, bool overwrite);
+#endif
         /// <inheritdoc cref="FileInfo.Open(FileMode)"/>
         Stream Open(FileMode mode);
         /// <inheritdoc cref="FileInfo.Open(FileMode,FileAccess)"/>

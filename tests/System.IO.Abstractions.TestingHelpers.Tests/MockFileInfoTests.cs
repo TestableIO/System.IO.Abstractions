@@ -527,6 +527,27 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<FileNotFoundException>(action);
         }
 
+
+
+#if FEATURE_FILE_MOVE_WITH_OVERWRITE
+        [Test]
+        public void MockFileInfo_MoveToWithOverwrite_ShouldSucceedWhenTargetAlreadyExists()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            string sourceFileContent = "this is some content";
+            string destFilePath = XFS.Path(@"c:\somethingelse\demo1.txt");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {sourceFilePath, new MockFileData(sourceFileContent)},
+                {destFilePath, new MockFileData(sourceFileContent)}
+            });
+
+            fileSystem.FileInfo.FromFileName(sourceFilePath).MoveTo(destFilePath, overwrite: true);
+
+            Assert.That(fileSystem.File.ReadAllText(destFilePath), Is.EqualTo(sourceFileContent));
+        }
+#endif
+
         [Test]
         public void MockFileInfo_CopyTo_ThrowsExceptionIfSourceDoesntExist()
         {

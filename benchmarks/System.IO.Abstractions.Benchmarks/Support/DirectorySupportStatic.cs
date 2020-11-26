@@ -16,15 +16,8 @@
         public static string CreateDirectory()
         {
             var randomPath = GetRandomTempDirectory();
-            try
-            {
-                Directory.CreateDirectory(randomPath);
-                return randomPath;
-            }
-            catch (Exception ex)
-            {
-                throw (ex);
-            }
+            Directory.CreateDirectory(randomPath);
+            return randomPath;
         }
 
         private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs = true, bool overwrite = true)

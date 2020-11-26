@@ -10,6 +10,10 @@ namespace System.IO.Abstractions
         bool EnableRaisingEvents { get; set; }
         /// <inheritdoc cref="FileSystemWatcher.Filter"/>
         string Filter { get; set; }
+#if FEATURE_FILE_SYSTEM_WATCHER_FILTERS
+        /// <inheritdoc cref="FileSystemWatcher.Filters"/>
+        System.Collections.ObjectModel.Collection<string> Filters { get; }
+#endif
         /// <inheritdoc cref="FileSystemWatcher.InternalBufferSize"/>
         int InternalBufferSize { get; set; }
         /// <inheritdoc cref="FileSystemWatcher.NotifyFilter"/>

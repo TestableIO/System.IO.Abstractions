@@ -1,4 +1,5 @@
-﻿using System.Security.AccessControl;
+﻿using System.Runtime.Versioning;
+using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
@@ -109,21 +110,25 @@ namespace System.IO.Abstractions
             return instance.CreateText();
         }
 
+        [SupportedOSPlatform("windows")]
         public override void Decrypt()
         {
             instance.Decrypt();
         }
 
+        [SupportedOSPlatform("windows")]
         public override void Encrypt()
         {
             instance.Encrypt();
         }
 
+        [SupportedOSPlatform("windows")]
         public override FileSecurity GetAccessControl()
         {
             return instance.GetAccessControl();
         }
 
+        [SupportedOSPlatform("windows")]
         public override FileSecurity GetAccessControl(AccessControlSections includeSections)
         {
             return instance.GetAccessControl(includeSections);
@@ -133,6 +138,13 @@ namespace System.IO.Abstractions
         {
             instance.MoveTo(destFileName);
         }
+
+#if FEATURE_FILE_MOVE_WITH_OVERWRITE
+        public override void MoveTo(string destFileName, bool overwrite)
+        {
+            instance.MoveTo(destFileName, overwrite);
+        }
+#endif
 
         public override Stream Open(FileMode mode)
         {
@@ -174,6 +186,7 @@ namespace System.IO.Abstractions
             return new FileInfoWrapper(FileSystem, instance.Replace(destinationFileName, destinationBackupFileName, ignoreMetadataErrors));
         }
 
+        [SupportedOSPlatform("windows")]
         public override void SetAccessControl(FileSecurity fileSecurity)
         {
             instance.SetAccessControl(fileSecurity);
