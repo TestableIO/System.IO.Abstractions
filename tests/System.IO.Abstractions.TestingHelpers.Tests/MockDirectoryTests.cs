@@ -1462,6 +1462,27 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_Move_ShouldOnlyMoveDirAndFilesWithinDir()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                {XFS.Path(@"c:\source\dummy"), new MockDirectoryData()},
+                {XFS.Path(@"c:\source\dummy\content.txt"), new MockFileData(new byte[] {0})},
+                {XFS.Path(@"c:\source\dummy.txt"), new MockFileData(new byte[] {0})},
+                {XFS.Path(@"c:\source\dummy2"), new MockDirectoryData()},
+                {XFS.Path(@"c:\destination"), new MockDirectoryData()},
+            });
+
+            // Act
+            fileSystem.Directory.Move(XFS.Path(@"c:\source\dummy"), XFS.Path(@"c:\destination\dummy"));
+
+            // Assert
+            Assert.That(fileSystem.FileExists(XFS.Path(@"c:\source\dummy.txt")), Is.True);
+            Assert.That(fileSystem.Directory.Exists(XFS.Path(@"c:\source\dummy2")), Is.True);
+        }
+
+        [Test]
         public void MockDirectory_GetCurrentDirectory_ShouldReturnValueFromFileSystemConstructor()
         {
             string directory = XFS.Path(@"D:\folder1\folder2");
