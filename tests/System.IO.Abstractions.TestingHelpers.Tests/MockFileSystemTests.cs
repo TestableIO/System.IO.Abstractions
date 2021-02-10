@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -361,6 +362,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.IsTrue(mockFileSystem.Directory.Exists(tempDirectory));
             Assert.IsTrue(mockFileSystemOverload.Directory.Exists(tempDirectory));
+        }
+
+        [Test]
+        public void MockFileSystem_Constructor_InitializedQuicklyWithLargeAmountOfData()
+        {
+            var watch = new Stopwatch();
+            var testData = Enumerable.Range(0, 100000).ToDictionary(
+                i => @$"C:\{string.Join("\\", Enumerable.Range(0, i % 10).Select(i => i.ToString()))}\{i}.bin", i => (MockFileData)i.ToString());
+            watch.Start();
+            var mockFileSystem = new MockFileSystem(testData);
+            watch.Stop();
+            Console.Write(watch.Elapsed.TotalSeconds);
         }
 
         [Test]

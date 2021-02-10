@@ -13,7 +13,9 @@ namespace System.IO.Abstractions.TestingHelpers
         private const string DEFAULT_CURRENT_DIRECTORY = @"C:\";
         private const string TEMP_DIRECTORY = @"C:\temp";
 
+        private readonly object @lock = new object();
         private readonly IDictionary<string, MockFileData> files;
+        private readonly IDictionary<string, MockDirectoryData> directories;
         private readonly PathVerifier pathVerifier;
 
         public MockFileSystem() : this(null) { }
@@ -34,6 +36,7 @@ namespace System.IO.Abstractions.TestingHelpers
             StringOperations = new StringOperations(XFS.IsUnixPlatform());
             pathVerifier = new PathVerifier(this);
             this.files = new Dictionary<string, MockFileData>(StringOperations.Comparer);
+            this.directories = new Dictionary<string, MockDirectoryData>(StringOperations.Comparer);
 
             Path = new MockPath(this, defaultTempDirectory);
             File = new MockFile(this);
@@ -121,13 +124,16 @@ namespace System.IO.Abstractions.TestingHelpers
         private void SetEntry(string path, MockFileData mockFile)
         {
             path = FixPath(path, true).TrimSlashes();
-            files[path] = mockFile;
+            if (mockFile is MockDirectoryData directory)
+                directories[path] = directory;
+            else
+                files[path] = mockFile;
         }
 
         public void AddFile(string path, MockFileData mockFile)
         {
             var fixedPath = FixPath(path, true);
-            lock (files)
+            lock (@lock)
             {
                 var file = GetFile(fixedPath);
 
@@ -159,7 +165,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var fixedPath = FixPath(path, true);
             var separator = Path.DirectorySeparatorChar.ToString();
 
-            lock (files)
+            lock (@lock)
             {
                 if (FileExists(fixedPath) &&
                     (GetFile(fixedPath).Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
@@ -241,17 +247,23 @@ namespace System.IO.Abstractions.TestingHelpers
 
             var sourcePathSequence = sourcePath.Split(new[] {Path.DirectorySeparatorChar}, StringSplitOptions.RemoveEmptyEntries);
 
-            lock (files)
+            lock (@lock)
             {
-                var affectedPaths = files.Keys
+                MoveFiles(files, sourcePathSequence, sourcePath, destPath);
+                MoveFiles(directories, sourcePathSequence, sourcePath, destPath);
+            }
+
+            void MoveFiles<T>(IDictionary<string, T> dictionary, string[] sourcePathSequence, string sourcePath, string destPath)
+            {
+                var affectedPaths = dictionary.Keys
                     .Where(p => PathStartsWith(p, sourcePathSequence))
                     .ToList();
 
                 foreach (var path in affectedPaths)
                 {
                     var newPath = StringOperations.Replace(path, sourcePath, destPath);
-                    files[newPath] = files[path];
-                    files.Remove(path);
+                    dictionary[newPath] = dictionary[path];
+                    dictionary.Remove(path);
                 }
             }
 
@@ -279,7 +291,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             path = FixPath(path);
 
-            lock (files)
+            lock (@lock)
             {
                 if (FileExists(path) && (GetFile(path).Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
                 {
@@ -287,6 +299,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 }
 
                 files.Remove(path);
+                directories.Remove(path);
             }
         }
 
@@ -299,9 +312,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
             path = FixPath(path).TrimSlashes();
 
-            lock (files)
+            lock (@lock)
             {
-                return files.ContainsKey(path);
+                return files.ContainsKey(path) || directories.ContainsKey(path);
             }
         }
 
@@ -309,9 +322,9 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                lock (files)
+                lock (@lock)
                 {
-                    return files.Keys.ToArray();
+                    return files.Keys.Concat(directories.Keys).ToArray();
                 }
             }
         }
@@ -320,7 +333,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                lock (files)
+                lock (@lock)
                 {
                     return AllPaths.Where(path => !IsStartOfAnotherPath(path)).ToArray();
                 }
@@ -331,9 +344,9 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                lock (files)
+                lock (@lock)
                 {
-                    return files.Where(f => !f.Value.IsDirectory).Select(f => f.Key).ToArray();
+                    return files.Keys.ToArray();
                 }
             }
         }
@@ -342,9 +355,9 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                lock (files)
+                lock (@lock)
                 {
-                    return files.Where(f => f.Value.IsDirectory).Select(f => f.Key).ToArray();
+                    return directories.Keys.ToArray();
                 }
             }
         }
@@ -356,10 +369,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private MockFileData GetFileWithoutFixingPath(string path)
         {
-            lock (files)
+            lock (@lock)
             {
-                files.TryGetValue(path, out var result);
-                return result;
+                if(files.TryGetValue(path, out var fileResult))
+                    return fileResult;
+                directories.TryGetValue(path, out var directoryResult);
+                return directoryResult;
             }
         }
     }
