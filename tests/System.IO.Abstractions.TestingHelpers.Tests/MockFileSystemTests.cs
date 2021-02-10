@@ -356,13 +356,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileSystem_Constructor_InitializedQuicklyWithLargeAmountOfData()
         {
             var testData = Enumerable.Range(0, 100000).ToDictionary(
-                i =>  XFS.Path(@$"C:\{string.Join("\\", Enumerable.Range(0, i % 10).Select(i => i.ToString()))}\{i}.bin"),
+                i =>  XFS.Path(@$"C:\{string.Join("\\", Enumerable.Range(0, i % 7).Select(i => i.ToString()))}\{i}.bin"),
                 i => (MockFileData)i.ToString());
-
             var stopWatch = Stopwatch.StartNew();
-            var mockFileSystem = new MockFileSystem(testData);
-            stopWatch.Stop();
 
+            var mockFileSystem = new MockFileSystem(testData);
+
+            stopWatch.Stop();
             Assert.IsTrue(stopWatch.Elapsed < TimeSpan.FromMinutes(1));
         }
 

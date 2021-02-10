@@ -253,21 +253,21 @@ namespace System.IO.Abstractions.TestingHelpers
 
             lock (@lock)
             {
-                MoveFiles(files, sourcePathSequence, sourcePath, destPath);
-                MoveFiles(directories, sourcePathSequence, sourcePath, destPath);
+                Move(files, sourcePathSequence, sourcePath, destPath);
+                Move(directories, sourcePathSequence, sourcePath, destPath);
             }
 
-            void MoveFiles<T>(IDictionary<string, T> dictionary, string[] sourcePathSequence, string sourcePath, string destPath)
+            void Move(IDictionary<string, MockFileData> nodes, string[] sourcePathSequence, string sourcePath, string destPath)
             {
-                var affectedPaths = dictionary.Keys
+                var affectedPaths = nodes.Keys
                     .Where(p => PathStartsWith(p, sourcePathSequence))
                     .ToList();
 
                 foreach (var path in affectedPaths)
                 {
                     var newPath = StringOperations.Replace(path, sourcePath, destPath);
-                    dictionary[newPath] = dictionary[path];
-                    dictionary.Remove(path);
+                    nodes[newPath] = nodes[path];
+                    nodes.Remove(path);
                 }
             }
 
@@ -376,7 +376,9 @@ namespace System.IO.Abstractions.TestingHelpers
             lock (@lock)
             {
                 if(files.TryGetValue(path, out var fileResult))
+                {
                     return fileResult;
+                }
                 directories.TryGetValue(path, out var directoryResult);
                 return directoryResult;
             }
