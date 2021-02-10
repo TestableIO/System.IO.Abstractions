@@ -360,6 +360,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 i => new MockFileData(i.ToString()));
             var stopWatch = Stopwatch.StartNew();
 
+
             var mockFileSystem = new MockFileSystem(testData);
 
             stopWatch.Stop();
