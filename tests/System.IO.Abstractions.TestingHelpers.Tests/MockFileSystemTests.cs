@@ -356,7 +356,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileSystem_Constructor_InitializedQuicklyWithLargeAmountOfData()
         {
             var testData = Enumerable.Range(0, 100000).ToDictionary(
-                i =>  XFS.Path(@$"C:\{string.Join("\\", Enumerable.Range(0, i % 7).Select(i => i.ToString()))}\{i}.bin"),
+                i =>  XFS.Path(@$"C:\{string.Join("\\", Enumerable.Range(0, i % 8 + 1).Select(i => i.ToString()))}\{i}.bin"),
                 i => new MockFileData(i.ToString()));
             var stopWatch = Stopwatch.StartNew();
 
