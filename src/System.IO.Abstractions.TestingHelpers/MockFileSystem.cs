@@ -15,7 +15,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private readonly object @lock = new object();
         private readonly IDictionary<string, MockFileData> files;
-        private readonly IDictionary<string, MockDirectoryData> directories;
+        private readonly IDictionary<string, MockFileData> directories;
         private readonly PathVerifier pathVerifier;
 
         public MockFileSystem() : this(null) { }
@@ -36,7 +36,7 @@ namespace System.IO.Abstractions.TestingHelpers
             StringOperations = new StringOperations(XFS.IsUnixPlatform());
             pathVerifier = new PathVerifier(this);
             this.files = new Dictionary<string, MockFileData>(StringOperations.Comparer);
-            this.directories = new Dictionary<string, MockDirectoryData>(StringOperations.Comparer);
+            this.directories = new Dictionary<string, MockFileData>(StringOperations.Comparer);
 
             Path = new MockPath(this, defaultTempDirectory);
             File = new MockFile(this);
@@ -124,10 +124,14 @@ namespace System.IO.Abstractions.TestingHelpers
         private void SetEntry(string path, MockFileData mockFile)
         {
             path = FixPath(path, true).TrimSlashes();
-            if (mockFile is MockDirectoryData directory)
-                directories[path] = directory;
+            if (mockFile.IsDirectory)
+            {
+                directories[path] = mockFile;
+            }
             else
+            {
                 files[path] = mockFile;
+            }
         }
 
         public void AddFile(string path, MockFileData mockFile)
