@@ -355,7 +355,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFileSystem_Constructor_InitializedQuicklyWithLargeAmountOfData()
         {
-            var filesCount = 1000000;
+            var filesCount = 100000;
             var maxDirectoryDepth = 8;
             var testData = Enumerable.Range(0, filesCount).ToDictionary(
                 i => XFS.Path(@$"C:\{string.Join("\\", Enumerable.Range(0, i % maxDirectoryDepth + 1).Select(i => i.ToString()))}\{i}.bin"),
