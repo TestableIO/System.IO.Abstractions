@@ -13,7 +13,9 @@ namespace System.IO.Abstractions.TestingHelpers
         private const string DEFAULT_CURRENT_DIRECTORY = @"C:\";
         private const string TEMP_DIRECTORY = @"C:\temp";
 
-        private readonly IDictionary<string, MockFileData> files;
+        // The KeyValuePair-value ensures a fast access to the actual path.
+        // E.g. files["C:\foo"] and files["C:\FOO"] both match the same path, but files[...].Key delivers the actual path.
+        private readonly IDictionary<string, KeyValuePair<string, MockFileData>> files;
         private readonly PathVerifier pathVerifier;
 
         public MockFileSystem() : this(null) { }
@@ -33,7 +35,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             StringOperations = new StringOperations(XFS.IsUnixPlatform());
             pathVerifier = new PathVerifier(this);
-            this.files = new Dictionary<string, MockFileData>(StringOperations.Comparer);
+            this.files = new Dictionary<string, KeyValuePair<string, MockFileData>>(StringOperations.Comparer);
 
             Path = new MockPath(this, defaultTempDirectory);
             File = new MockFile(this);
@@ -101,10 +103,10 @@ namespace System.IO.Abstractions.TestingHelpers
                 int lastSeparator = leftHalf.LastIndexOf(Path.DirectorySeparatorChar);
                 leftHalf = lastSeparator > 0 ? leftHalf.Substring(0, lastSeparator) : leftHalf;
 
-                if (Directory.Exists(leftHalf))
+                if (DirectoryExistsWithoutFixingPath(leftHalf))
                 {
                     leftHalf = Path.GetFullPath(leftHalf).TrimSlashes();
-                    string baseDirectory = AllDirectories.First(dir => StringOperations.Equals(dir, leftHalf));
+                    string baseDirectory = files[leftHalf].Key;
                     return baseDirectory + Path.DirectorySeparatorChar + rightHalf;
                 }
             }
@@ -121,7 +123,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private void SetEntry(string path, MockFileData mockFile)
         {
             path = FixPath(path, true).TrimSlashes();
-            files[path] = mockFile;
+            files[path] = new KeyValuePair<string, MockFileData>(path, mockFile);
         }
 
         public void AddFile(string path, MockFileData mockFile)
@@ -145,7 +147,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
                 var directoryPath = Path.GetDirectoryName(fixedPath);
 
-                if (!Directory.Exists(directoryPath))
+                if (!DirectoryExistsWithoutFixingPath(directoryPath))
                 {
                     AddDirectory(directoryPath);
                 }
@@ -190,7 +192,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 while ((lastIndex = StringOperations.IndexOf(fixedPath, separator, lastIndex + 1)) > -1)
                 {
                     var segment = fixedPath.Substring(0, lastIndex + 1);
-                    if (!Directory.Exists(segment))
+                    if (!DirectoryExistsWithoutFixingPath(segment))
                     {
                         SetEntry(segment, new MockDirectoryData());
                     }
@@ -333,7 +335,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 lock (files)
                 {
-                    return files.Where(f => !f.Value.IsDirectory).Select(f => f.Key).ToArray();
+                    return files.Where(f => !f.Value.Value.IsDirectory).Select(f => f.Key).ToArray();
                 }
             }
         }
@@ -344,7 +346,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 lock (files)
                 {
-                    return files.Where(f => f.Value.IsDirectory).Select(f => f.Key).ToArray();
+                    return files.Where(f => f.Value.Value.IsDirectory).Select(f => f.Key).ToArray();
                 }
             }
         }
@@ -359,7 +361,15 @@ namespace System.IO.Abstractions.TestingHelpers
             lock (files)
             {
                 files.TryGetValue(path, out var result);
-                return result;
+                return result.Value;
+            }
+        }
+
+        private bool DirectoryExistsWithoutFixingPath(string path)
+        {
+            lock (files)
+            {
+                return files.TryGetValue(path, out var result) && result.Value.IsDirectory;
             }
         }
     }

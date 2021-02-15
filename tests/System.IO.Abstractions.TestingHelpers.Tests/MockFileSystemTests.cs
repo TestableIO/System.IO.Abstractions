@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -349,6 +350,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 new MockFileSystem(null, "non-rooted")
             );
             Assert.AreEqual("currentDirectory", ae.ParamName);
+        }
+
+        [Test]
+        public void MockFileSystem_Constructor_InitializedQuicklyWithLargeAmountOfData()
+        {
+            var filesCount = 1000000;
+            var maxDirectoryDepth = 8;
+            var testData = Enumerable.Range(0, filesCount).ToDictionary(
+                i => XFS.Path(@$"C:\{string.Join("\\", Enumerable.Range(0, i % maxDirectoryDepth + 1).Select(i => i.ToString()))}\{i}.bin"),
+                i => new MockFileData(i.ToString()));
+            var stopWatch = Stopwatch.StartNew();
+
+            var mockFileSystem = new MockFileSystem(testData);
+
+            stopWatch.Stop();
+            Assert.IsTrue(stopWatch.Elapsed < TimeSpan.FromSeconds(30));
         }
 
         [Test]
