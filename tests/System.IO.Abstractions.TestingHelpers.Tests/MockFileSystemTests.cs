@@ -353,7 +353,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileSystem_Constructor_ShouldInitializeFastWithLargeAmountOfFiles()
+        public void MockFileSystem_Constructor_ShouldExecuteFastWithLargeAmountOfFiles()
         {
             var filesCount = 100000;
             var maxDirectoryDepth = 8;
