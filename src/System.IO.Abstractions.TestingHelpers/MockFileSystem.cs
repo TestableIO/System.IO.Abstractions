@@ -103,7 +103,6 @@ namespace System.IO.Abstractions.TestingHelpers
 
                 if (DirectoryExistsWithoutFixingPath(leftHalf))
                 {
-                    leftHalf = Path.GetFullPath(leftHalf).TrimSlashes();
                     string baseDirectory = files[leftHalf].Path;
                     return baseDirectory + Path.DirectorySeparatorChar + rightHalf;
                 }
@@ -358,7 +357,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             lock (files)
             {
-                return files.TryGetValue(path, out var result) ? result.Data : null;
+                return files.TryGetValue(path, out var result) ? result.Data : default(MockFileData) ;
             }
         }
 
