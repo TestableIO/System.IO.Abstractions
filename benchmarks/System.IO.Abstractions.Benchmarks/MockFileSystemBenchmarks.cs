@@ -10,16 +10,15 @@ namespace System.IO.Abstractions.Benchmarks
     [MemoryDiagnoser]
     public class MockFileSystemBenchmarks
     {
-        private Dictionary<string, MockFileData> testData = CreateTestData();
+        private static readonly Dictionary<string, MockFileData> testData = CreateTestData();
 
         private static Dictionary<string, MockFileData> CreateTestData()
         {
             var filesCount = 100000;
             var maxDirectoryDepth = 8;
-            var testData = Enumerable.Range(0, filesCount).ToDictionary(
+            return Enumerable.Range(0, filesCount).ToDictionary(
                 i => XFS.Path(@$"C:\{string.Join(@"\", Enumerable.Range(0, i % maxDirectoryDepth + 1).Select(i => i.ToString()))}\{i}.bin"),
                 i => new MockFileData(i.ToString()));
-            return testData;
         }
 
         [Benchmark]
