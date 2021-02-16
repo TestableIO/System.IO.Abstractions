@@ -10,9 +10,9 @@ namespace System.IO.Abstractions.Benchmarks
     [MemoryDiagnoser]
     public class MockFileSystemBenchmarks
     {
-        private static readonly Dictionary<string, MockFileData> testData = CreateTestData();
+        private readonly Dictionary<string, MockFileData> testData = CreateTestData();
 
-        private static Dictionary<string, MockFileData> CreateTestData()
+        private Dictionary<string, MockFileData> CreateTestData()
         {
             var filesCount = 100000;
             var maxDirectoryDepth = 8;
