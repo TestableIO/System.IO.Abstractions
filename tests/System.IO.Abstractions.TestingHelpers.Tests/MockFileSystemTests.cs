@@ -353,22 +353,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileSystem_Constructor_ShouldExecuteFastWithLargeAmountOfFiles()
-        {
-            var filesCount = 100000;
-            var maxDirectoryDepth = 8;
-            var testData = Enumerable.Range(0, filesCount).ToDictionary(
-                i => XFS.Path(@$"C:\{string.Join(@"\", Enumerable.Range(0, i % maxDirectoryDepth + 1).Select(i => i.ToString()))}\{i}.bin"),
-                i => new MockFileData(i.ToString()));
-            var stopWatch = Stopwatch.StartNew();
-
-            var mockFileSystem = new MockFileSystem(testData);
-
-            stopWatch.Stop();
-            Assert.IsTrue(stopWatch.Elapsed < TimeSpan.FromSeconds(30));
-        }
-
-        [Test]
         public void MockFileSystem_DefaultState_DefaultTempDirectoryExists()
         {
             var tempDirectory = XFS.Path(@"C:\temp");
