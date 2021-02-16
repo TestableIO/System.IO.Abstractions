@@ -357,7 +357,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             lock (files)
             {
-                return files.TryGetValue(path, out var result) ? result.Data : default(MockFileData) ;
+                return files.TryGetValue(path, out var result) ? result.Data : null;
             }
         }
 
