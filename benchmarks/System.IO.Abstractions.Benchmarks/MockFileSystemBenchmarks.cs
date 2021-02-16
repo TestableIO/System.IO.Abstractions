@@ -12,7 +12,7 @@ namespace System.IO.Abstractions.Benchmarks
     {
         private readonly Dictionary<string, MockFileData> testData = CreateTestData();
 
-        private Dictionary<string, MockFileData> CreateTestData()
+        private static Dictionary<string, MockFileData> CreateTestData()
         {
             var filesCount = 100000;
             var maxDirectoryDepth = 8;
