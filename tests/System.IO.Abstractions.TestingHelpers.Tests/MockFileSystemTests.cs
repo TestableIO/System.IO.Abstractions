@@ -254,13 +254,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileSystem_MoveDirectoryAndFile_ShouldMoveCorrectly()
         {
             var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(XFS.Path(@"C:\project1\project1.txt"), string.Empty);
-            fileSystem.AddFile(XFS.Path(@"C:\project1\subdir\other.txt"), string.Empty);
+            fileSystem.AddFile(XFS.Path(@"C:\source\project.txt"), string.Empty);
+            fileSystem.AddFile(XFS.Path(@"C:\source\subdir\other.txt"), string.Empty);
 
-            fileSystem.Directory.Move(XFS.Path(@"C:\project1"), XFS.Path(@"C:\proj1"));
-            fileSystem.File.Move(XFS.Path(@"C:\proj1\project1.txt"), XFS.Path(@"C:\proj1\proj1.txt"));
+            fileSystem.Directory.Move(XFS.Path(@"C:\source"), XFS.Path(@"C:\target"));
+            fileSystem.File.Move(XFS.Path(@"C:\target\project.txt"), XFS.Path(@"C:\target\proj.txt"));
 
-            var expected = new[] { XFS.Path(@"C:\proj1\proj1.txt"), XFS.Path(@"C:\proj1\subdir\other.txt") };
+            var expected = new[] { XFS.Path(@"C:\target\proj.txt"), XFS.Path(@"C:\target\subdir\other.txt") };
             CollectionAssert.AreEquivalent(expected, fileSystem.AllFiles);
         }
 
