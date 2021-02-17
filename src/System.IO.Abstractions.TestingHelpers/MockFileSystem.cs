@@ -248,7 +248,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
                 foreach (var path in affectedPaths)
                 {
-                    var newPath = StringOperations.Replace(path, sourcePath, destPath);
+                    var newPath = Path.Combine(destPath, path.Substring(sourcePath.Length).TrimStart(Path.DirectorySeparatorChar));
                     files[newPath] = files[path];
                     files.Remove(path);
                 }
