@@ -251,6 +251,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileSystem_MoveDirectoryAndFile_ShouldMoveCorrectly()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(@"C:\project1\project1.txt", string.Empty);
+            fileSystem.AddFile(@"C:\project1\subdir\other.txt", string.Empty);
+
+            fileSystem.Directory.Move(@"C:\project1", @"C:\proj1");
+            fileSystem.File.Move(@"C:\proj1\project1.txt", @"C:\proj1\proj1.txt");
+
+            var expected = new[] { @"C:\proj1\proj1.txt", @"C:\proj1\subdir\other.txt" };
+            CollectionAssert.AreEquivalent(expected, fileSystem.AllFiles);
+        }
+
+        [Test]
         public void MockFileSystem_RemoveFile_RemovesFiles()
         {
             var fileSystem = new MockFileSystem();
