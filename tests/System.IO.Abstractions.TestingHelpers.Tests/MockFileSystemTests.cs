@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -248,6 +247,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.Contains(XFS.Path(@"C:\TestFile.txt"), fileSystem.AllFiles.ToList());
             Assert.Contains(XFS.Path(@"C:\SecondTestFile.txt"), fileSystem.AllFiles.ToList());
+        }
+
+        [Test]
+        public void MockFileSystem_MoveDirectoryAndFile_ShouldMoveCorrectly()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(XFS.Path(@"C:\source\project.txt"), string.Empty);
+            fileSystem.AddFile(XFS.Path(@"C:\source\subdir\other.txt"), string.Empty);
+
+            fileSystem.Directory.Move(XFS.Path(@"C:\source"), XFS.Path(@"C:\target"));
+            fileSystem.File.Move(XFS.Path(@"C:\target\project.txt"), XFS.Path(@"C:\target\proj.txt"));
+
+            var expected = new[] { XFS.Path(@"C:\target\proj.txt"), XFS.Path(@"C:\target\subdir\other.txt") };
+            CollectionAssert.AreEquivalent(expected, fileSystem.AllFiles);
         }
 
         [Test]

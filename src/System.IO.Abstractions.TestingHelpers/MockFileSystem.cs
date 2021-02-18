@@ -249,7 +249,9 @@ namespace System.IO.Abstractions.TestingHelpers
                 foreach (var path in affectedPaths)
                 {
                     var newPath = StringOperations.Replace(path, sourcePath, destPath);
-                    files[newPath] = files[path];
+                    var entry = files[path];
+                    entry.Path = newPath;
+                    files[newPath] = entry;
                     files.Remove(path);
                 }
             }
