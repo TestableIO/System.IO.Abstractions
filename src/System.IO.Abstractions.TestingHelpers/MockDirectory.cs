@@ -118,7 +118,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 path = path.TrimSlashes();
                 path = mockFileDataAccessor.Path.GetFullPath(path);
-                return mockFileDataAccessor.AllDirectories.Any(p => mockFileDataAccessor.StringOperations.Equals(p, path));
+                return mockFileDataAccessor.GetFile(path)?.IsDirectory ?? false;
             }
             catch (Exception)
             {
