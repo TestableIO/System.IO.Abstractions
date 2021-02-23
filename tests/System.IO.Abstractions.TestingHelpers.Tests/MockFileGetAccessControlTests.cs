@@ -1,15 +1,14 @@
 ﻿using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Security.AccessControl;
+using System.Runtime.Versioning;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using XFS = MockUnixSupport;
     [TestFixture]
     [WindowsOnly(WindowsSpecifics.AccessControlLists)]
+    [SupportedOSPlatform("windows")]
     public class MockFileGetAccessControlTests
     {
         [TestCase(" ")]

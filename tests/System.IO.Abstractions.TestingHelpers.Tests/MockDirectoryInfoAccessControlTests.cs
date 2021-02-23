@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 
@@ -7,6 +8,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     [TestFixture]
     [WindowsOnly(WindowsSpecifics.AccessControlLists)]
+    [SupportedOSPlatform("windows")]
     public class MockDirectoryInfoAccessControlTests
     {
         [Test]
