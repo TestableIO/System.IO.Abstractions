@@ -165,10 +165,12 @@
                     101, 0, 0, 0, 33, 0, 0, 0, 32, 0, 0, 0, 68, 0, 0, 0, 122, 0,
                     0, 0, 105, 0, 0, 0, 25, 1, 0, 0, 107, 0, 0, 0, 105, 0, 0, 0, 46, 0, 0, 0 } },
 
+#pragma warning disable SYSLIB0001
                 // UTF-7 does not need a BOM
                 { Encoding.UTF7, new byte [] {72, 101, 108, 108, 111, 32, 116,
                     104, 101, 114, 101, 43, 65, 67, 69, 45, 32, 68, 122, 105,
                     43, 65, 82, 107, 45, 107, 105, 46 } },
+#pragma warning restore SYSLIB0001
 
                 // The default encoding does not need a BOM
                 { utf8WithoutBom, new byte [] { 72, 101, 108, 108, 111, 32, 116,

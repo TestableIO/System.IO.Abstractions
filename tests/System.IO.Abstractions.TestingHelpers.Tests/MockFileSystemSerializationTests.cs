@@ -23,10 +23,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             //Act
             var memoryStream = new MemoryStream();
             var serializer = new Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            
+#pragma warning disable SYSLIB0011
             serializer.Serialize(memoryStream, fileSystem);
             memoryStream.Flush();
             memoryStream.Position = 0; 
             fileSystem = (MockFileSystem)serializer.Deserialize(memoryStream);
+#pragma warning restore SYSLIB0011
             memoryStream.Dispose();
 
             // Assert
