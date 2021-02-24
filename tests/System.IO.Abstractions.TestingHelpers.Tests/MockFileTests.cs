@@ -543,7 +543,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             //Act
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new MemoryStream();
+            
+#pragma warning disable SYSLIB0011
             formatter.Serialize(stream, data);
+#pragma warning restore SYSLIB0011
 
             //Assert
             Assert.Pass();
@@ -560,11 +563,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new MemoryStream();
+#pragma warning disable SYSLIB0011
             formatter.Serialize(stream, data);
 
             stream.Seek(0, SeekOrigin.Begin);
 
             MockFileData deserialized = (MockFileData)formatter.Deserialize(stream);
+#pragma warning restore SYSLIB0011
 
             //Assert
             Assert.That(deserialized.TextContents, Is.EqualTo(textContentStr));

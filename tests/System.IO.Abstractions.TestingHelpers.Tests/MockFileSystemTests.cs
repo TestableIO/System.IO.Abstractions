@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -132,7 +131,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var memoryStream = new MemoryStream();
 
             var serializer = new Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            
+#pragma warning disable SYSLIB0011
             serializer.Serialize(memoryStream, fileSystem);
+#pragma warning restore SYSLIB0011
 
             Assert.That(memoryStream.Length > 0, "Length didn't increase after serialization task.");
         }
@@ -259,6 +261,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.MoveDirectory(XFS.Path(@"C:\dir1"), XFS.Path(@"C:\dir2"));
 
             var expected = new[] { XFS.Path(@"C:\dir2\dir1\dir1.txt") };
+            CollectionAssert.AreEquivalent(expected, fileSystem.AllFiles);
+        }
+
+        [Test]
+        public void MockFileSystem_MoveDirectoryAndFile_ShouldMoveCorrectly()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(XFS.Path(@"C:\source\project.txt"), string.Empty);
+            fileSystem.AddFile(XFS.Path(@"C:\source\subdir\other.txt"), string.Empty);
+
+            fileSystem.Directory.Move(XFS.Path(@"C:\source"), XFS.Path(@"C:\target"));
+            fileSystem.File.Move(XFS.Path(@"C:\target\project.txt"), XFS.Path(@"C:\target\proj.txt"));
+
+            var expected = new[] { XFS.Path(@"C:\target\proj.txt"), XFS.Path(@"C:\target\subdir\other.txt") };
             CollectionAssert.AreEquivalent(expected, fileSystem.AllFiles);
         }
 
