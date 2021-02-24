@@ -253,6 +253,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileSystem_MoveDirectory_MovesDirectoryWithoutRenamingFiles()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(XFS.Path(@"C:\dir1\dir1\dir1.txt"), string.Empty);
+
+            fileSystem.MoveDirectory(XFS.Path(@"C:\dir1"), XFS.Path(@"C:\dir2"));
+
+            var expected = new[] { XFS.Path(@"C:\dir2\dir1\dir1.txt") };
+            CollectionAssert.AreEquivalent(expected, fileSystem.AllFiles);
+        }
+
+        [Test]
         public void MockFileSystem_MoveDirectoryAndFile_ShouldMoveCorrectly()
         {
             var fileSystem = new MockFileSystem();
