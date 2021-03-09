@@ -126,9 +126,9 @@ namespace System.IO.Abstractions.TestingHelpers
             Create(path, bufferSize, FileOptions.None);
 
         public override Stream Create(string path, int bufferSize, FileOptions options) =>
-            CreateInternal(path, options);
+            CreateInternal(path, FileAccess.Write, options);
 
-        private Stream CreateInternal(string path, FileOptions options)
+        private Stream CreateInternal(string path, FileAccess access, FileOptions options)
         {
             if (path == null)
             {
@@ -140,7 +140,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             var mockFileData = new MockFileData(new byte[0]);
             mockFileDataAccessor.AddFile(path, mockFileData);
-            return OpenWriteInternal(path, options);
+            return OpenInternal(path, FileMode.Open, access, options);
         }
 
         public override StreamWriter CreateText(string path)
@@ -442,13 +442,13 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!exists || mode == FileMode.CreateNew)
             {
-                return Create(path);
+                return CreateInternal(path, access, options);
             }
 
             if (mode == FileMode.Create || mode == FileMode.Truncate)
             {
                 Delete(path);
-                return Create(path);
+                return CreateInternal(path, access, options);
             }
 
             var mockFileData = mockFileDataAccessor.GetFile(path);
