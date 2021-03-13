@@ -324,6 +324,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(expectedName, actualName);
         }
 
+        [TestCase(@"c:\", @"c:\")]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void MockDirectoryInfo_Name_ShouldReturnPathRoot_IfDirectoryPathIsPathRoot(string directoryPath, string expectedName)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, directoryPath);
+
+            // Act
+            var actualName = directoryInfo.Name;
+
+            // Assert
+            Assert.AreEqual(expectedName, actualName);
+        }
+
         [Test]
         public void MockDirectoryInfo_Constructor_ShouldThrowArgumentNullException_IfArgumentDirectoryIsNull()
         {
