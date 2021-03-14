@@ -120,7 +120,11 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override string Name
         {
-            get { return new MockPath(mockFileDataAccessor).GetFileName(directoryPath.TrimEnd(mockFileDataAccessor.Path.DirectorySeparatorChar)); }
+            get
+            {
+                var mockPath = new MockPath(mockFileDataAccessor);
+                return string.Equals(mockPath.GetPathRoot(directoryPath), directoryPath) ? directoryPath : mockPath.GetFileName(directoryPath.TrimEnd(mockFileDataAccessor.Path.DirectorySeparatorChar));
+            }
         }
 
         public override void Create()
