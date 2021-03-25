@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <Product>System.IO.Abstractions</Product>
-    <Copyright>Copyright © Tatham Oddie 2010</Copyright>
+    <Copyright>Copyright © Tatham Oddie &amp; friends 2010-2021</Copyright>
     <Authors>Tatham Oddie &amp; friends</Authors>
     <SignAssembly Condition="'$(Configuration)' == 'Release'">True</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)StrongName.snk</AssemblyOriginatorKeyFile>
@@ -23,5 +23,9 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="SauceControl.InheritDoc" Version="1.2.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 </Project>
