@@ -38,9 +38,9 @@
             IsReady = true;
         }
 
-        public new long AvailableFreeSpace { get; set; }
-        public new string DriveFormat { get; set; }
-        public new DriveType DriveType { get; set; }
+        public new long AvailableFreeSpace { get { return base.AvailableFreeSpace; } set { base.AvailableFreeSpace = value; } }
+        public new string DriveFormat { get { return base.DriveFormat; } set { base.DriveFormat = value; } }
+        public new DriveType DriveType { get { return base.DriveType; } set { base.DriveType = value; } }
         public new bool IsReady { get; protected set; }
         public override string Name { get; protected set; }
 
