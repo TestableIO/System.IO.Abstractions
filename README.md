@@ -1,4 +1,7 @@
 ![System.IO.Abstractions](https://socialify.git.ci/System-IO-Abstractions/System.IO.Abstractions/image?description=1&font=Source%20Code%20Pro&forks=1&issues=1&pattern=Charlie%20Brown&pulls=1&stargazers=1&theme=Dark)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![NuGet](https://img.shields.io/nuget/v/System.IO.Abstractions.svg)](https://www.nuget.org/packages/System.IO.Abstractions)
 ![Continuous Integration](https://github.com/System-IO-Abstractions/System.IO.Abstractions/workflows/Continuous%20Integration/badge.svg)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2e777fa545c94767acccd6345b1ed9b7)](https://app.codacy.com/gh/System-IO-Abstractions/System.IO.Abstractions?utm_source=github.com&utm_medium=referral&utm_content=System-IO-Abstractions/System.IO.Abstractions&utm_campaign=Badge_Grade_Dashboard)
@@ -137,3 +140,23 @@ public class SomeClassUsingFileSystemWatcher
     }
 }
 ```
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/blarson"><img src="https://avatars.githubusercontent.com/u/11714445?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ben Larson</b></sub></a><br /><a href="https://github.com/System-IO-Abstractions/System.IO.Abstractions/issues?q=author%3Ablarson" title="Bug reports">🐛</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
