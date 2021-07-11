@@ -230,6 +230,13 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void MoveTo(string destFileName)
         {
+            if (destFileName != FullName && Path.GetDirectoryName(destFileName) == DirectoryName
+                && destFileName.ToLower() == FullName.ToLower())
+            {
+                var tempPath = GetSafeTempName(destFileName);
+                MoveTo(tempPath);
+            }
+
             var movedFileInfo = CopyTo(destFileName);
             if (destFileName == FullName)
             {
@@ -237,6 +244,16 @@ namespace System.IO.Abstractions.TestingHelpers
             }
             Delete();
             path = movedFileInfo.FullName;
+        }
+
+        private string GetSafeTempName(string outputFilePath)
+        {
+            outputFilePath += "_";
+            while (FileSystem.File.Exists(outputFilePath))
+            {
+                outputFilePath += "_";
+            }
+            return outputFilePath;
         }
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
