@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Versioning;
 using System.Security.AccessControl;
+using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -231,7 +232,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void MoveTo(string destFileName)
         {
             if (destFileName != FullName && Path.GetDirectoryName(destFileName) == DirectoryName
-                && destFileName.ToLower() == FullName.ToLower())
+                && destFileName.ToLowerInvariant() == FullName.ToLowerInvariant())
             {
                 var tempPath = GetSafeTempName(destFileName);
                 MoveTo(tempPath);
@@ -248,12 +249,13 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private string GetSafeTempName(string outputFilePath)
         {
-            outputFilePath += "_";
-            while (FileSystem.File.Exists(outputFilePath))
+            var stb = new StringBuilder(outputFilePath);
+            stb.Append('_');
+            while (FileSystem.File.Exists(stb.ToString()))
             {
-                outputFilePath += "_";
+                stb.Append('_');
             }
-            return outputFilePath;
+            return stb.ToString();
         }
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
