@@ -330,7 +330,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (mockFileDataAccessor.GetFile(destFileName) != null)
             {
-                if (destFileName.Equals(sourceFileName))
+                if (mockFileDataAccessor.StringOperations.Equals(destFileName, sourceFileName))
                 {
                     return;
                 }
@@ -339,7 +339,6 @@ namespace System.IO.Abstractions.TestingHelpers
                     throw new IOException("A file can not be created if it already exists.");
                 }
             }
-
 
             var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
 
