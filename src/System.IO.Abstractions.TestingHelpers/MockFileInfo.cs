@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Versioning;
 using System.Security.AccessControl;
+using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -230,25 +231,15 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public override void MoveTo(string destFileName)
         {
-            var movedFileInfo = CopyTo(destFileName);
-            if (destFileName == FullName)
-            {
-                return;
-            }
-            Delete();
-            path = movedFileInfo.FullName;
+            mockFileSystem.File.Move(path, destFileName);
+            path = mockFileSystem.Path.GetFullPath(destFileName);
         }
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
         public override void MoveTo(string destFileName, bool overwrite)
         {
-            var movedFileInfo = CopyTo(destFileName, overwrite);
-            if (destFileName == FullName)
-            {
-                return;
-            }
-            Delete();
-            path = movedFileInfo.FullName;
+            mockFileSystem.File.Move(path, destFileName, overwrite);
+            path = mockFileSystem.Path.GetFullPath(destFileName);
         }
 #endif
 
