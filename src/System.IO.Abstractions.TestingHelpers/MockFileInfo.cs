@@ -229,46 +229,11 @@ namespace System.IO.Abstractions.TestingHelpers
             return mockFileSystem.File.GetAccessControl(this.path, includeSections);
         }
 
-        public override void MoveTo(string destFileName)
-        {
-            if (destFileName != FullName && Path.GetDirectoryName(destFileName) == DirectoryName
-                && destFileName.ToLowerInvariant() == FullName.ToLowerInvariant())
-            {
-                var tempPath = GetSafeTempName(destFileName);
-                MoveTo(tempPath);
-            }
+        public override void MoveTo(string destFileName) => mockFileSystem.File.Move(path, destFileName);
 
-            var movedFileInfo = CopyTo(destFileName);
-            if (destFileName == FullName)
-            {
-                return;
-            }
-            Delete();
-            path = movedFileInfo.FullName;
-        }
-
-        private string GetSafeTempName(string outputFilePath)
-        {
-            var stb = new StringBuilder(outputFilePath);
-            stb.Append('_');
-            while (FileSystem.File.Exists(stb.ToString()))
-            {
-                stb.Append('_');
-            }
-            return stb.ToString();
-        }
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
-        public override void MoveTo(string destFileName, bool overwrite)
-        {
-            var movedFileInfo = CopyTo(destFileName, overwrite);
-            if (destFileName == FullName)
-            {
-                return;
-            }
-            Delete();
-            path = movedFileInfo.FullName;
-        }
+        public override void MoveTo(string destFileName, bool overwrite) => mockFileSystem.File.Move(path, destFileName, overwrite);
 #endif
 
         public override Stream Open(FileMode mode)
