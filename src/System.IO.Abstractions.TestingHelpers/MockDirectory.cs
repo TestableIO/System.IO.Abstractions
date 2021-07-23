@@ -230,6 +230,11 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             CheckSearchPattern(searchPattern);
+            if (searchPattern.Equals(string.Empty, StringComparison.OrdinalIgnoreCase))
+            {
+                searchPattern = "*";
+            }
+
             path = path.TrimSlashes();
             path = path.NormalizeSlashes();
             path = mockFileDataAccessor.Path.GetFullPath(path);
