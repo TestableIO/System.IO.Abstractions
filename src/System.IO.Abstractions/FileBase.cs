@@ -260,7 +260,7 @@ namespace System.IO.Abstractions
         /// </remarks>
         public abstract DateTime GetLastWriteTimeUtc(string path);
 
-        /// <inheritdoc cref="File.Move"/>
+        /// <inheritdoc cref="File.Move(string,string)"/>
         public abstract void Move(string sourceFileName, string destFileName);
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE

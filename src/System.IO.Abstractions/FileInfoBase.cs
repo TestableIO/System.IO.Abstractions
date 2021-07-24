@@ -37,10 +37,10 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileInfo.GetAccessControl()"/>
         public abstract FileSecurity GetAccessControl();
 
-        /// <inheritdoc cref="FileInfo.GetAccessControl(AccessControlSections)"/>
+        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(DirectoryInfo,AccessControlSections)"/>
         public abstract FileSecurity GetAccessControl(AccessControlSections includeSections);
 
-        /// <inheritdoc cref="FileInfo.MoveTo"/>
+        /// <inheritdoc cref="FileInfo.MoveTo(string)"/>
         public abstract void MoveTo(string destFileName);
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE

@@ -44,7 +44,7 @@ namespace System.IO.Abstractions
         IFileInfo Replace(string destinationFileName, string destinationBackupFileName);
         /// <inheritdoc cref="FileInfo.Replace(string,string,bool)"/>
         IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
-        /// <inheritdoc cref="FileInfo.SetAccessControl(FileSecurity)"/>
+        /// <inheritdoc cref="M:FileInfo.SetAccessControl(FileSecurity)"/>
         void SetAccessControl(FileSecurity fileSecurity);
         /// <inheritdoc cref="FileInfo.Directory"/>
         IDirectoryInfo Directory { get; }
