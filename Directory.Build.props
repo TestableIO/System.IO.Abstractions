@@ -16,6 +16,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <InheritDocEnabled>true</InheritDocEnabled>
     <NoWarn>CS1591</NoWarn>
+    <DefineConstants Condition="'$(TargetFramework)' != 'net461'">$(DefineConstants);FEATURE_FILE_SYSTEM_ACL_EXTENSIONS</DefineConstants>
     <DefineConstants Condition="'$(TargetFramework)' == 'net5.0' OR '$(TargetFramework)' == 'netcoreapp3.1' OR '$(TargetFramework)' == 'netstandard2.1'">$(DefineConstants);FEATURE_ASYNC_FILE;FEATURE_ENUMERATION_OPTIONS;FEATURE_ADVANCED_PATH_OPERATIONS;FEATURE_PATH_JOIN_WITH_SPAN</DefineConstants>
     <DefineConstants Condition="'$(TargetFramework)' == 'net5.0'">$(DefineConstants);FEATURE_FILE_MOVE_WITH_OVERWRITE</DefineConstants>
     <DefineConstants Condition="'$(TargetFramework)' == 'net5.0'">$(DefineConstants);FEATURE_SUPPORTED_OS_ATTRIBUTE</DefineConstants>

@@ -42,11 +42,18 @@ namespace System.IO.Abstractions
         void Encrypt(string path);
         /// <inheritdoc cref="File.Exists"/>
         bool Exists(string path);
-
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(FileInfo)"/>
+#else
         /// <inheritdoc cref="File.GetAccessControl(string)"/>
+#endif
         [SupportedOSPlatform("windows")]
         FileSecurity GetAccessControl(string path);
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(FileInfo,AccessControlSections)"/>
+#else
         /// <inheritdoc cref="File.GetAccessControl(string,AccessControlSections)"/>
+#endif
         [SupportedOSPlatform("windows")]
         FileSecurity GetAccessControl(string path, AccessControlSections includeSections);
 
@@ -100,7 +107,11 @@ namespace System.IO.Abstractions
         void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName);
         /// <inheritdoc cref="File.Replace(string,string,string,bool)"/>
         void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
-        /// <inheritdoc cref="File.SetAccessControl(string,FileSecurity)"/>
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.SetAccessControl(FileInfo,FileSecurity)"/>
+#else
+        /// <inheritdoc cref="File.SetAccessControl(FileSecurity)"/>
+#endif
         [SupportedOSPlatform("windows")]
         void SetAccessControl(string path, FileSecurity fileSecurity);
         /// <inheritdoc cref="File.SetAttributes"/>

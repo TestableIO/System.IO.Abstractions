@@ -12,7 +12,12 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="Directory.CreateDirectory(string)"/>
         IDirectoryInfo CreateDirectory(string path);
+        
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.CreateDirectory(DirectorySecurity,string)"/>
+#else
         /// <inheritdoc cref="Directory.CreateDirectory(string,DirectorySecurity)"/>
+#endif
         IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity);
         /// <inheritdoc cref="Directory.Delete(string)"/>
         void Delete(string path);
@@ -21,10 +26,18 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Directory.Exists"/>
         bool Exists(string path);
 
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(DirectoryInfo)"/>
+#else
         /// <inheritdoc cref="Directory.GetAccessControl(string)"/>
+#endif
         DirectorySecurity GetAccessControl(string path);
 
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(DirectoryInfo)"/>
+#else
         /// <inheritdoc cref="Directory.GetAccessControl(string,AccessControlSections)"/>
+#endif
         DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections);
 
         /// <inheritdoc cref="Directory.GetCreationTime"/>
@@ -73,7 +86,12 @@ namespace System.IO.Abstractions
         IDirectoryInfo GetParent(string path);
         /// <inheritdoc cref="Directory.Move"/>
         void Move(string sourceDirName, string destDirName);
-        /// <inheritdoc cref="Directory.SetAccessControl"/>
+        
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.SetAccessControl(DirectoryInfo, DirectorySecurity)"/>
+#else
+        /// <inheritdoc cref="Directory.SetAccessControl(string,DirectorySecurity)"/>
+#endif
         void SetAccessControl(string path, DirectorySecurity directorySecurity);
         /// <inheritdoc cref="Directory.SetCreationTime"/>
         void SetCreationTime(string path, DateTime creationTime);

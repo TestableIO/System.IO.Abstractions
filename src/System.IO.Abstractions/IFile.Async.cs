@@ -34,9 +34,9 @@ namespace System.IO.Abstractions
         Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken = default(CancellationToken));
         /// <inheritdoc cref="File.WriteAllLinesAsync(string,IEnumerable{string},Encoding,CancellationToken)"/>
         Task WriteAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken));
-        /// <inheritdoc cref="File.WriteAllLinesAsync(string,string[],CancellationToken)"/>
+        /// <inheritdoc cref="File.WriteAllLinesAsync(string, IEnumerable{string}, CancellationToken)"/>
         Task WriteAllLinesAsync(string path, string[] contents, CancellationToken cancellationToken = default(CancellationToken));
-        /// <inheritdoc cref="File.WriteAllLinesAsync(string,string[],Encoding,CancellationToken)"/>
+        /// <inheritdoc cref="File.WriteAllLinesAsync(string,IEnumerable{string},Encoding,CancellationToken)"/>
         Task WriteAllLinesAsync(string path, string[] contents, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <inheritdoc cref="File.WriteAllTextAsync(string,string,CancellationToken)"/>

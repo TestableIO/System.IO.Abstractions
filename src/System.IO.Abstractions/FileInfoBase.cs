@@ -13,78 +13,78 @@ namespace System.IO.Abstractions
         [Obsolete("This constructor only exists to support mocking libraries.", error: true)]
         internal FileInfoBase() { }
 
-        /// <inheritdoc cref="FileInfo.AppendText"/>
+        /// <inheritdoc cref="IFileInfo.AppendText"/>
         public abstract StreamWriter AppendText();
 
-        /// <inheritdoc cref="FileInfo.CopyTo(string)"/>
+        /// <inheritdoc cref="IFileInfo.CopyTo(string)"/>
         public abstract IFileInfo CopyTo(string destFileName);
 
-        /// <inheritdoc cref="FileInfo.CopyTo(string,bool)"/>
+        /// <inheritdoc cref="IFileInfo.CopyTo(string,bool)"/>
         public abstract IFileInfo CopyTo(string destFileName, bool overwrite);
 
-        /// <inheritdoc cref="FileInfo.Create"/>
+        /// <inheritdoc cref="IFileInfo.Create"/>
         public abstract Stream Create();
 
-        /// <inheritdoc cref="FileInfo.CreateText"/>
+        /// <inheritdoc cref="IFileInfo.CreateText"/>
         public abstract StreamWriter CreateText();
 
-        /// <inheritdoc cref="FileInfo.Decrypt"/>
+        /// <inheritdoc cref="IFileInfo.Decrypt"/>
         public abstract void Decrypt();
 
-        /// <inheritdoc cref="FileInfo.Encrypt"/>
+        /// <inheritdoc cref="IFileInfo.Encrypt"/>
         public abstract void Encrypt();
 
-        /// <inheritdoc cref="FileInfo.GetAccessControl()"/>
+        /// <inheritdoc cref="IFileInfo.GetAccessControl()"/>
         public abstract FileSecurity GetAccessControl();
 
-        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(DirectoryInfo,AccessControlSections)"/>
+        /// <inheritdoc cref="IFileInfo.GetAccessControl(AccessControlSections)"/>
         public abstract FileSecurity GetAccessControl(AccessControlSections includeSections);
 
-        /// <inheritdoc cref="FileInfo.MoveTo(string)"/>
+        /// <inheritdoc cref="IFileInfo.MoveTo(string)"/>
         public abstract void MoveTo(string destFileName);
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
-        /// <inheritdoc cref="FileInfo.MoveTo(string,bool)"/>
+        /// <inheritdoc cref="IFileInfo.MoveTo(string,bool)"/>
         public abstract void MoveTo(string destFileName, bool overwrite);
 #endif
 
-        /// <inheritdoc cref="FileInfo.Open(FileMode)"/>
+        /// <inheritdoc cref="IFileInfo.Open(FileMode)"/>
         public abstract Stream Open(FileMode mode);
 
-        /// <inheritdoc cref="FileInfo.Open(FileMode,FileAccess)"/>
+        /// <inheritdoc cref="IFileInfo.Open(FileMode,FileAccess)"/>
         public abstract Stream Open(FileMode mode, FileAccess access);
 
-        /// <inheritdoc cref="FileInfo.Open(FileMode,FileAccess,FileShare)"/>
+        /// <inheritdoc cref="IFileInfo.Open(FileMode,FileAccess,FileShare)"/>
         public abstract Stream Open(FileMode mode, FileAccess access, FileShare share);
 
-        /// <inheritdoc cref="FileInfo.OpenRead"/>
+        /// <inheritdoc cref="IFileInfo.OpenRead"/>
         public abstract Stream OpenRead();
 
-        /// <inheritdoc cref="FileInfo.OpenText"/>
+        /// <inheritdoc cref="IFileInfo.OpenText"/>
         public abstract StreamReader OpenText();
 
-        /// <inheritdoc cref="FileInfo.OpenWrite"/>
+        /// <inheritdoc cref="IFileInfo.OpenWrite"/>
         public abstract Stream OpenWrite();
 
-        /// <inheritdoc cref="FileInfo.Replace(string,string)"/>
+        /// <inheritdoc cref="IFileInfo.Replace(string,string)"/>
         public abstract IFileInfo Replace(string destinationFileName, string destinationBackupFileName);
 
-        /// <inheritdoc cref="FileInfo.Replace(string,string,bool)"/>
+        /// <inheritdoc cref="IFileInfo.Replace(string,string,bool)"/>
         public abstract IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
 
-        /// <inheritdoc cref="FileInfo.SetAccessControl(FileSecurity)"/>
+        /// <inheritdoc cref="IFileInfo.SetAccessControl(FileSecurity)"/>
         public abstract void SetAccessControl(FileSecurity fileSecurity);
 
-        /// <inheritdoc cref="FileInfo.Directory"/>
+        /// <inheritdoc cref="IFileInfo.Directory"/>
         public abstract IDirectoryInfo Directory { get; }
 
-        /// <inheritdoc cref="FileInfo.DirectoryName"/>
+        /// <inheritdoc cref="IFileInfo.DirectoryName"/>
         public abstract string DirectoryName { get; }
 
-        /// <inheritdoc cref="FileInfo.IsReadOnly"/>
+        /// <inheritdoc cref="IFileInfo.IsReadOnly"/>
         public abstract bool IsReadOnly { get; set; }
 
-        /// <inheritdoc cref="FileInfo.Length"/>
+        /// <inheritdoc cref="IFileInfo.Length"/>
         public abstract long Length { get; }
 
         public static implicit operator FileInfoBase(FileInfo fileInfo)

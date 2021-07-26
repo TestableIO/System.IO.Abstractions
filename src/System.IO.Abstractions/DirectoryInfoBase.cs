@@ -14,118 +14,118 @@ namespace System.IO.Abstractions
         [Obsolete("This constructor only exists to support mocking libraries.", error: true)]
         internal DirectoryInfoBase() { }
 
-        /// <inheritdoc cref="DirectoryInfo.Create()"/>
+        /// <inheritdoc cref="IDirectoryInfo.Create()"/>
         public abstract void Create();
-        /// <inheritdoc cref="DirectoryInfo.Create(DirectorySecurity)"/>
+        /// <inheritdoc cref="IDirectoryInfo.Create(DirectorySecurity)"/>
         public abstract void Create(DirectorySecurity directorySecurity);
 
-        /// <inheritdoc cref="DirectoryInfo.CreateSubdirectory(string)"/>
+        /// <inheritdoc cref="IDirectoryInfo.CreateSubdirectory(string)"/>
         public abstract IDirectoryInfo CreateSubdirectory(string path);
 
-        /// <inheritdoc cref="DirectoryInfo.Delete(bool)"/>
+        /// <inheritdoc cref="IDirectoryInfo.Delete(bool)"/>
         public abstract void Delete(bool recursive);
 
-        /// <inheritdoc cref="DirectoryInfo.EnumerateDirectories()"/>
+        /// <inheritdoc cref="IDirectoryInfo.EnumerateDirectories()"/>
         public abstract IEnumerable<IDirectoryInfo> EnumerateDirectories();
 
-        /// <inheritdoc cref="DirectoryInfo.EnumerateDirectories(string)"/>
+        /// <inheritdoc cref="IDirectoryInfo.EnumerateDirectories(string)"/>
         public abstract IEnumerable<IDirectoryInfo> EnumerateDirectories(string searchPattern);
 
-        /// <inheritdoc cref="DirectoryInfo.EnumerateDirectories(string,SearchOption)"/>
+        /// <inheritdoc cref="IDirectoryInfo.EnumerateDirectories(string,SearchOption)"/>
         public abstract IEnumerable<IDirectoryInfo> EnumerateDirectories(string searchPattern, SearchOption searchOption);
 
 #if FEATURE_ENUMERATION_OPTIONS
-        /// <inheritdoc cref="DirectoryInfo.EnumerateDirectories(string,EnumerationOptions)"/>
+        /// <inheritdoc cref="IDirectoryInfo.EnumerateDirectories(string,EnumerationOptions)"/>
         public abstract IEnumerable<IDirectoryInfo> EnumerateDirectories(string searchPattern, EnumerationOptions enumerationOptions);
 #endif
 
-        /// <inheritdoc cref="DirectoryInfo.EnumerateFiles()"/>
+        /// <inheritdoc cref="IDirectoryInfo.EnumerateFiles()"/>
         public abstract IEnumerable<IFileInfo> EnumerateFiles();
 
-        /// <inheritdoc cref="DirectoryInfo.EnumerateFiles(string)"/>
+        /// <inheritdoc cref="IDirectoryInfo.EnumerateFiles(string)"/>
         public abstract IEnumerable<IFileInfo> EnumerateFiles(string searchPattern);
 
-        /// <inheritdoc cref="DirectoryInfo.EnumerateFiles(string,SearchOption)"/>
+        /// <inheritdoc cref="IDirectoryInfo.EnumerateFiles(string,SearchOption)"/>
         public abstract IEnumerable<IFileInfo> EnumerateFiles(string searchPattern, SearchOption searchOption);
 
 #if FEATURE_ENUMERATION_OPTIONS
-        /// <inheritdoc cref="DirectoryInfo.EnumerateFiles(string,EnumerationOptions)"/>
+        /// <inheritdoc cref="IDirectoryInfo.EnumerateFiles(string,EnumerationOptions)"/>
         public abstract IEnumerable<IFileInfo> EnumerateFiles(string searchPattern, EnumerationOptions enumerationOptions);
 #endif
 
-        /// <inheritdoc cref="DirectoryInfo.EnumerateFileSystemInfos()"/>
+        /// <inheritdoc cref="IDirectoryInfo.EnumerateFileSystemInfos()"/>
         public abstract IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos();
 
-        /// <inheritdoc cref="DirectoryInfo.EnumerateFileSystemInfos(string)"/>
+        /// <inheritdoc cref="IDirectoryInfo.EnumerateFileSystemInfos(string)"/>
         public abstract IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern);
 
-        /// <inheritdoc cref="DirectoryInfo.EnumerateFileSystemInfos(string,SearchOption)"/>
+        /// <inheritdoc cref="IDirectoryInfo.EnumerateFileSystemInfos(string,SearchOption)"/>
         public abstract IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, SearchOption searchOption);
 
 #if FEATURE_ENUMERATION_OPTIONS
-        /// <inheritdoc cref="DirectoryInfo.EnumerateFileSystemInfos(string,EnumerationOptions)"/>
+        /// <inheritdoc cref="IDirectoryInfo.EnumerateFileSystemInfos(string,EnumerationOptions)"/>
         public abstract IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, EnumerationOptions enumerationOptions);
 #endif
 
-        /// <inheritdoc cref="DirectoryInfo.GetAccessControl()"/>
+        /// <inheritdoc cref="IDirectoryInfo.GetAccessControl()"/>
         public abstract DirectorySecurity GetAccessControl();
 
-        /// <inheritdoc cref="DirectoryInfo.GetAccessControl(AccessControlSections)"/>
+        /// <inheritdoc cref="IDirectoryInfo.GetAccessControl(AccessControlSections)"/>
         public abstract DirectorySecurity GetAccessControl(AccessControlSections includeSections);
 
-        /// <inheritdoc cref="DirectoryInfo.GetDirectories()"/>
+        /// <inheritdoc cref="IDirectoryInfo.GetDirectories()"/>
         public abstract IDirectoryInfo[] GetDirectories();
 
-        /// <inheritdoc cref="DirectoryInfo.GetDirectories(string)"/>
+        /// <inheritdoc cref="IDirectoryInfo.GetDirectories(string)"/>
         public abstract IDirectoryInfo[] GetDirectories(string searchPattern);
 
-        /// <inheritdoc cref="DirectoryInfo.GetDirectories(string,SearchOption)"/>
+        /// <inheritdoc cref="IDirectoryInfo.GetDirectories(string,SearchOption)"/>
         public abstract IDirectoryInfo[] GetDirectories(string searchPattern, SearchOption searchOption);
 
 #if FEATURE_ENUMERATION_OPTIONS
-        /// <inheritdoc cref="DirectoryInfo.GetDirectories(string,EnumerationOptions)"/>
+        /// <inheritdoc cref="IDirectoryInfo.GetDirectories(string,EnumerationOptions)"/>
         public abstract IDirectoryInfo[] GetDirectories(string searchPattern, EnumerationOptions enumerationOptions);
 #endif
 
-        /// <inheritdoc cref="DirectoryInfo.GetFiles(string)"/>
+        /// <inheritdoc cref="IDirectoryInfo.GetFiles(string)"/>
         public abstract IFileInfo[] GetFiles();
 
-        /// <inheritdoc cref="DirectoryInfo.GetFiles(string)"/>
+        /// <inheritdoc cref="IDirectoryInfo.GetFiles(string)"/>
         public abstract IFileInfo[] GetFiles(string searchPattern);
 
-        /// <inheritdoc cref="DirectoryInfo.GetFiles(string,SearchOption)"/>
+        /// <inheritdoc cref="IDirectoryInfo.GetFiles(string,SearchOption)"/>
         public abstract IFileInfo[] GetFiles(string searchPattern, SearchOption searchOption);
 
 
 #if FEATURE_ENUMERATION_OPTIONS
-        /// <inheritdoc cref="DirectoryInfo.GetFiles(string,EnumerationOptions)"/>
+        /// <inheritdoc cref="IDirectoryInfo.GetFiles(string,EnumerationOptions)"/>
         public abstract IFileInfo[] GetFiles(string searchPattern, EnumerationOptions enumerationOptions);
 #endif
 
-        /// <inheritdoc cref="DirectoryInfo.GetFileSystemInfos()"/>
+        /// <inheritdoc cref="IDirectoryInfo.GetFileSystemInfos()"/>
         public abstract IFileSystemInfo[] GetFileSystemInfos();
 
-        /// <inheritdoc cref="DirectoryInfo.GetFileSystemInfos(string)"/>
+        /// <inheritdoc cref="IDirectoryInfo.GetFileSystemInfos(string)"/>
         public abstract IFileSystemInfo[] GetFileSystemInfos(string searchPattern);
 
-        /// <inheritdoc cref="DirectoryInfo.GetFileSystemInfos(string,SearchOption)"/>
+        /// <inheritdoc cref="IDirectoryInfo.GetFileSystemInfos(string,SearchOption)"/>
         public abstract IFileSystemInfo[] GetFileSystemInfos(string searchPattern, SearchOption searchOption);
 
 #if FEATURE_ENUMERATION_OPTIONS
-        /// <inheritdoc cref="DirectoryInfo.GetFileSystemInfos(string,EnumerationOptions)"/>
+        /// <inheritdoc cref="IDirectoryInfo.GetFileSystemInfos(string,EnumerationOptions)"/>
         public abstract IFileSystemInfo[] GetFileSystemInfos(string searchPattern, EnumerationOptions enumerationOptions);
 #endif
 
-        /// <inheritdoc cref="DirectoryInfo.MoveTo"/>
+        /// <inheritdoc cref="IDirectoryInfo.MoveTo"/>
         public abstract void MoveTo(string destDirName);
 
-        /// <inheritdoc cref="DirectoryInfo.SetAccessControl"/>
+        /// <inheritdoc cref="IDirectoryInfo.SetAccessControl"/>
         public abstract void SetAccessControl(DirectorySecurity directorySecurity);
 
-        /// <inheritdoc cref="DirectoryInfo.Parent"/>
+        /// <inheritdoc cref="IDirectoryInfo.Parent"/>
         public abstract IDirectoryInfo Parent { get; }
 
-        /// <inheritdoc cref="DirectoryInfo.Root"/>
+        /// <inheritdoc cref="IDirectoryInfo.Root"/>
         public abstract IDirectoryInfo Root { get; }
 
         public static implicit operator DirectoryInfoBase(DirectoryInfo directoryInfo)
