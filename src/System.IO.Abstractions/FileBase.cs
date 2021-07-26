@@ -407,8 +407,6 @@ namespace System.IO.Abstractions
         ///     You can use this method to create the contents for a collection class that takes an <see cref="IEnumerable{T}"/> in its constructor, such as a <see cref="List{T}"/>, <see cref="HashSet{T}"/>, or a <see cref="SortedSet{T}"/> class.
         /// </para>
         /// </remarks>
-
-
         public abstract void WriteAllLines(string path, IEnumerable<string> contents);
 
         /// <inheritdoc cref="IFile.WriteAllLines(string,IEnumerable{string},Encoding)"/>

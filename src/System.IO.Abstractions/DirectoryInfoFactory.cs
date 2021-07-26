@@ -5,11 +5,13 @@ namespace System.IO.Abstractions
     {
         private readonly IFileSystem fileSystem;
 
+        /// <inheritdoc />
         public DirectoryInfoFactory(IFileSystem fileSystem)
         {
             this.fileSystem = fileSystem;
         }
 
+        /// <inheritdoc />
         public IDirectoryInfo FromDirectoryName(string directoryName)
         {
             var realDirectoryInfo = new DirectoryInfo(directoryName);

@@ -53,6 +53,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileSystemWatcher.BeginInit"/>
         public abstract void BeginInit();
 
+        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);
@@ -68,6 +69,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileSystemWatcher.WaitForChanged(WatcherChangeTypes,int)"/>
         public abstract WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout);
 
+        /// <inheritdoc />
         public static implicit operator FileSystemWatcherBase(FileSystemWatcher watcher)
         {
             if (watcher == null)
@@ -78,6 +80,7 @@ namespace System.IO.Abstractions
             return new FileSystemWatcherWrapper(watcher);
         }
 
+        /// <inheritdoc />
         public virtual void Dispose(bool disposing)
         {
             // do nothing

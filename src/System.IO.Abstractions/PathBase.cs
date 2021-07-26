@@ -4,6 +4,7 @@
     [Serializable]
     public abstract class PathBase : IPath
     {
+        /// <inheritdoc />
         protected PathBase(IFileSystem fileSystem)
         {
             this.FileSystem = fileSystem;

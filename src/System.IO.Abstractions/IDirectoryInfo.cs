@@ -3,6 +3,7 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
+    /// <inheritdoc cref="DirectoryInfo" />
     public interface IDirectoryInfo : IFileSystemInfo
     {
         /// <inheritdoc cref="DirectoryInfo.Create()"/>

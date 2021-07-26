@@ -2,6 +2,7 @@
 
 namespace System.IO.Abstractions
 {
+    /// <inheritdoc cref="FileInfo" />
     public interface IFileInfo : IFileSystemInfo
     {
         /// <inheritdoc cref="FileInfo.AppendText"/>

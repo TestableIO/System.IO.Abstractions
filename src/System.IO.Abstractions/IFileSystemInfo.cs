@@ -1,5 +1,6 @@
 ﻿namespace System.IO.Abstractions
 {
+    /// <inheritdoc cref="FileSystemInfo" />
     public interface IFileSystemInfo
     {
         /// <summary>

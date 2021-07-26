@@ -5,11 +5,13 @@
     {
         private readonly IFileSystem fileSystem;
 
+        /// <inheritdoc />
         public FileInfoFactory(IFileSystem fileSystem)
         {
             this.fileSystem = fileSystem;
         }
 
+        /// <inheritdoc />
         public IFileInfo FromFileName(string fileName)
         {
             var realFileInfo = new FileInfo(fileName);

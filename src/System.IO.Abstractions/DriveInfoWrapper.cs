@@ -157,6 +157,7 @@ namespace System.IO.Abstractions
             set { instance.VolumeLabel = value; }
         }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return instance.ToString();

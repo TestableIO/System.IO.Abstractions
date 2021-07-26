@@ -1,5 +1,8 @@
 ﻿namespace System.IO.Abstractions
 {
+    /// <summary>
+    /// Exposes factory methods for creating file system watchers.
+    /// </summary>
     public interface IFileSystemWatcherFactory
     {
         /// <summary>

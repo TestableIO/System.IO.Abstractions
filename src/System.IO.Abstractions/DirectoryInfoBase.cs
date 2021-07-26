@@ -3,7 +3,7 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
-    /// <inheritdoc cref="DirectoryInfo"/>
+    /// <inheritdoc cref="IDirectoryInfo"/>
     [Serializable]
     public abstract class DirectoryInfoBase : FileSystemInfoBase, IDirectoryInfo
     {
@@ -128,6 +128,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IDirectoryInfo.Root"/>
         public abstract IDirectoryInfo Root { get; }
 
+        /// <inheritdoc />
         public static implicit operator DirectoryInfoBase(DirectoryInfo directoryInfo)
         {
             if (directoryInfo == null)

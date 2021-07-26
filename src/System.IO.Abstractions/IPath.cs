@@ -1,5 +1,6 @@
 ﻿namespace System.IO.Abstractions
 {
+    /// <inheritdoc cref="Path" />
     public interface IPath
     {
         /// <inheritdoc cref="Path.AltDirectorySeparatorChar"/>

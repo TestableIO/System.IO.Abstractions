@@ -9,27 +9,35 @@ namespace System.IO.Abstractions
         public Stream Create(string path, FileMode mode)
             => new FileStream(path, mode);
 
+        /// <inheritdoc />
         public Stream Create(string path, FileMode mode, FileAccess access)
             => new FileStream(path, mode, access);
 
+        /// <inheritdoc />
         public Stream Create(string path, FileMode mode, FileAccess access, FileShare share)
             => new FileStream(path, mode, access, share);
 
+        /// <inheritdoc />
         public Stream Create(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize)
             => new FileStream(path, mode, access, share, bufferSize);
 
+        /// <inheritdoc />
         public Stream Create(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize, FileOptions options)
             => new FileStream(path, mode, access, share, bufferSize, options);
 
+        /// <inheritdoc />
         public Stream Create(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize, bool useAsync)
             => new FileStream(path, mode, access, share, bufferSize, useAsync);
 
+        /// <inheritdoc />
         public Stream Create(SafeFileHandle handle, FileAccess access)
             => new FileStream(handle, access);
 
+        /// <inheritdoc />
         public Stream Create(SafeFileHandle handle, FileAccess access, int bufferSize)
             => new FileStream(handle, access, bufferSize);
 
+        /// <inheritdoc />
         public Stream Create(SafeFileHandle handle, FileAccess access, int bufferSize, bool isAsync)
             => new FileStream(handle, access, bufferSize, isAsync);
 
