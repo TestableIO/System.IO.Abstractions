@@ -110,7 +110,7 @@ namespace System.IO.Abstractions
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
         /// <inheritdoc cref="FileSystemAclExtensions.SetAccessControl(FileInfo,FileSecurity)"/>
 #else
-        /// <inheritdoc cref="File.SetAccessControl(FileSecurity)"/>
+        /// <inheritdoc cref="File.SetAccessControl(string,FileSecurity)"/>
 #endif
         [SupportedOSPlatform("windows")]
         void SetAccessControl(string path, FileSecurity fileSecurity);

@@ -14,7 +14,7 @@ namespace System.IO.Abstractions
         IDirectoryInfo CreateDirectory(string path);
         
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
-        /// <inheritdoc cref="FileSystemAclExtensions.CreateDirectory(DirectorySecurity,string)"/>
+        /// <inheritdoc cref="FileSystemAclExtensions.Create(DirectoryInfo,DirectorySecurity)"/>
 #else
         /// <inheritdoc cref="Directory.CreateDirectory(string,DirectorySecurity)"/>
 #endif
