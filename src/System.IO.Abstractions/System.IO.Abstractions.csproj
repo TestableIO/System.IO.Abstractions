@@ -4,7 +4,7 @@
     <RootNamespace>System.IO.Abstractions</RootNamespace>
     <Description>A set of abstractions to help make file system interactions testable.</Description>
     <TargetFrameworks>net5.0;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
-    <PackageIconUrl>https://avatars1.githubusercontent.com/u/40829877</PackageIconUrl>
+    <PackageIcon>icon_256x256.png</PackageIcon>
   </PropertyGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1' OR '$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0"/>
@@ -17,5 +17,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\images\icon_256x256.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>
