@@ -11,6 +11,50 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockDirectoryTests
     {
         [Test]
+        public void MockDirectory_GetFiles_ShouldReturnAllFilesBelowPathWhenPatternIsEmptyAndSearchOptionIsAllDirectories()
+        {
+            // Arrange
+            var fileSystem = SetupFileSystem();
+            var expected = new[]
+            {
+                XFS.Path(@"c:\a\a.txt"),
+                XFS.Path(@"c:\a\b.gif"),
+                XFS.Path(@"c:\a\c.txt"),
+                XFS.Path(@"c:\a\d"),
+                XFS.Path(@"c:\a\a\a.txt"),
+                XFS.Path(@"c:\a\a\b.txt"),
+                XFS.Path(@"c:\a\a\c.gif"),
+                XFS.Path(@"c:\a\a\d")
+            };
+
+            // Act
+            var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\a"), "", SearchOption.AllDirectories);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        [Test]
+        public void MockDirectory_GetFiles_ShouldReturnFilesDirectlyBelowPathWhenPatternIsEmptyAndSearchOptionIsTopDirectoryOnly()
+        {
+            // Arrange
+            var fileSystem = SetupFileSystem();
+            var expected = new[]
+            {
+                XFS.Path(@"c:\a\a.txt"),
+                XFS.Path(@"c:\a\b.gif"),
+                XFS.Path(@"c:\a\c.txt"),
+                XFS.Path(@"c:\a\d")
+            };
+
+            // Act
+            var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\a"), "", SearchOption.TopDirectoryOnly);
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+
+        [Test]
         public void MockDirectory_GetFiles_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
         {
             // Arrange
