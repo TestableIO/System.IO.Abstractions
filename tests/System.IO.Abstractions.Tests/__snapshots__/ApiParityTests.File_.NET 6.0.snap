@@ -1,0 +1,15 @@
+﻿{
+  "ExtraMembers": [
+    "System.Security.AccessControl.FileSecurity GetAccessControl(System.String)",
+    "System.Security.AccessControl.FileSecurity GetAccessControl(System.String, System.Security.AccessControl.AccessControlSections)",
+    "System.Threading.Tasks.Task WriteAllLinesAsync(System.String, System.String[], System.Text.Encoding, System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task WriteAllLinesAsync(System.String, System.String[], System.Threading.CancellationToken)",
+    "Void SetAccessControl(System.String, System.Security.AccessControl.FileSecurity)"
+  ],
+  "MissingMembers": [
+    "Microsoft.Win32.SafeHandles.SafeFileHandle OpenHandle(System.String, System.IO.FileMode, System.IO.FileAccess, System.IO.FileShare, System.IO.FileOptions, Int64)",
+    "System.IO.Stream Open(System.String, System.IO.StreamOptions)",
+    "System.IO.Abstractions.IFileSystemInfo CreateSymbolicLink(System.String, System.String)",
+    "System.IO.Abstractions.IFileSystemInfo ResolveLinkTarget(System.String, Boolean)"
+  ]
+}
