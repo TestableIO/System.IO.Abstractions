@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using NUnit.Framework;
 
@@ -1902,6 +1903,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         [WindowsOnly(WindowsSpecifics.AccessControlLists)]
+        [SupportedOSPlatform("windows")]
         public void MockDirectory_GetAccessControl_ShouldReturnNewDirectorySecurity()
         {
             // Arrange

@@ -1,19 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net5.0;netcoreapp3.1;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net6.0;net5.0;netcoreapp3.1</TargetFrameworks>
     <TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net461</TargetFrameworks>
     <Description>The unit tests for our the core abstractions</Description>
     <AssemblyName>System.IO.Abstractions.Tests</AssemblyName>
     <RootNamespace>System.IO.Abstractions.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
     <IsTestable>true</IsTestable>
-  </PropertyGroup>
-  <PropertyGroup>
-    <!--  
-      Ensure that test logger is copied to output directory, see 
-      https://github.com/Tyrrrz/GitHubActionsTestLogger/issues/5 
-    -->
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../src/System.IO.Abstractions/System.IO.Abstractions.csproj" />
