@@ -3,6 +3,7 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
+    ///
     public interface IDirectory
     {
         /// <summary>
@@ -12,7 +13,7 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="Directory.CreateDirectory(string)"/>
         IDirectoryInfo CreateDirectory(string path);
-        
+
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
         /// <inheritdoc cref="FileSystemAclExtensions.Create(DirectoryInfo,DirectorySecurity)"/>
 #else
@@ -86,7 +87,7 @@ namespace System.IO.Abstractions
         IDirectoryInfo GetParent(string path);
         /// <inheritdoc cref="Directory.Move"/>
         void Move(string sourceDirName, string destDirName);
-        
+
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
         /// <inheritdoc cref="FileSystemAclExtensions.SetAccessControl(DirectoryInfo, DirectorySecurity)"/>
 #else

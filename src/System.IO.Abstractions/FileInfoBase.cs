@@ -6,6 +6,7 @@ namespace System.IO.Abstractions
     [Serializable]
     public abstract class FileInfoBase : FileSystemInfoBase, IFileInfo
     {
+        /// <inheritdoc />
         protected FileInfoBase(IFileSystem fileSystem) : base(fileSystem)
         {
         }
@@ -87,6 +88,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFileInfo.Length"/>
         public abstract long Length { get; }
 
+        /// <inheritdoc />
         public static implicit operator FileInfoBase(FileInfo fileInfo)
         {
             if (fileInfo == null)

@@ -2,16 +2,19 @@
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    /// <inheritdoc />
     [Serializable]
     public class MockDriveInfoFactory : IDriveInfoFactory
     {
         private readonly IMockFileDataAccessor mockFileSystem;
 
+        /// <inheritdoc />
         public MockDriveInfoFactory(IMockFileDataAccessor mockFileSystem)
         {
             this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
         }
 
+        /// <inheritdoc />
         public IDriveInfo[] GetDrives()
         {
             var driveLetters = new HashSet<string>(new DriveEqualityComparer(mockFileSystem));
@@ -38,6 +41,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return result.ToArray();
         }
 
+        /// <inheritdoc />
         public IDriveInfo FromDriveName(string driveName)
         {
             var drive = mockFileSystem.Path.GetPathRoot(driveName);

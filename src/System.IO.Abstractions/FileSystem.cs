@@ -1,8 +1,10 @@
 ﻿namespace System.IO.Abstractions
 {
+    /// <inheritdoc />
     [Serializable]
     public class FileSystem : IFileSystem
     {
+        /// <inheritdoc />
         public FileSystem()
         {
             DriveInfo = new DriveInfoFactory(this);

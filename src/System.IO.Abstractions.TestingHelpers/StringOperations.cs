@@ -1,7 +1,7 @@
 ﻿namespace System.IO.Abstractions.TestingHelpers
 {
     [Serializable]
-    public class StringOperations
+    internal class StringOperations
     {
         private readonly bool caseSensitive;
         private readonly StringComparison comparison;

@@ -4,6 +4,7 @@
     [Serializable]
     public abstract class FileSystemInfoBase : IFileSystemInfo
     {
+        /// <inheritdoc />
         protected FileSystemInfoBase(IFileSystem fileSystem)
         {
             FileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));

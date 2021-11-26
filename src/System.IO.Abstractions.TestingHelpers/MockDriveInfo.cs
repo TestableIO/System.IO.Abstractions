@@ -1,10 +1,12 @@
 ﻿namespace System.IO.Abstractions.TestingHelpers
 {
+    /// <inheritdoc />
     [Serializable]
     public class MockDriveInfo : DriveInfoBase
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
 
+        /// <inheritdoc />
         public MockDriveInfo(IMockFileDataAccessor mockFileDataAccessor, string name) : base(mockFileDataAccessor?.FileSystem)
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
@@ -38,12 +40,18 @@
             IsReady = true;
         }
 
+        /// <inheritdoc />
         public new long AvailableFreeSpace { get; set; }
+        /// <inheritdoc />
         public new string DriveFormat { get; set; }
+        /// <inheritdoc />
         public new DriveType DriveType { get; set; }
+        /// <inheritdoc />
         public new bool IsReady { get; protected set; }
+        /// <inheritdoc />
         public override string Name { get; protected set; }
 
+        /// <inheritdoc />
         public override IDirectoryInfo RootDirectory
         {
             get
@@ -52,13 +60,17 @@
             }
         }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return Name;
         }
 
+        /// <inheritdoc />
         public new long TotalFreeSpace { get; protected set; }
+        /// <inheritdoc />
         public new long TotalSize { get; protected set; }
+        /// <inheritdoc />
         public override string VolumeLabel { get; set; }
     }
 }

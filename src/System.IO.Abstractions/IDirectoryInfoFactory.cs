@@ -1,5 +1,6 @@
 namespace System.IO.Abstractions
 {
+    ///
     public interface IDirectoryInfoFactory
     {
         /// <summary>

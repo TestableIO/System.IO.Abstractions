@@ -15,12 +15,24 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <returns>The file. <see langword="null"/> if the file does not exist.</returns>
         MockFileData GetFile(string path);
 
+        /// <summary>
+        /// </summary>
         void AddFile(string path, MockFileData mockFile);
+
+        /// <summary>
+        /// </summary>
         void AddDirectory(string path);
 
+        /// <summary>
+        /// </summary>
         void AddFileFromEmbeddedResource(string path, Assembly resourceAssembly, string embeddedResourcePath);
+        
+        /// <summary>
+        /// </summary>
         void AddFilesFromEmbeddedNamespace(string path, Assembly resourceAssembly, string embeddedResourcePath);
-
+        
+        /// <summary>
+        /// </summary>
         void MoveDirectory(string sourcePath, string destPath);
 
         /// <summary>
@@ -54,17 +66,42 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </summary>
         IEnumerable<string> AllDirectories { get; }
 
+        /// <summary>
+        /// </summary>
+        
         StringOperations StringOperations { get; }
 
+        /// <summary>
+        /// </summary>
         IFile File { get; }
+        
+        /// <summary>
+        /// </summary>
         IDirectory Directory { get; }
+        
+        /// <summary>
+        /// </summary>
         IFileInfoFactory FileInfo {get; }
+        
+        /// <summary>
+        /// </summary>
         IPath Path { get; }
+        
+        /// <summary>
+        /// </summary>
         IDirectoryInfoFactory DirectoryInfo { get; }
+        
+        /// <summary>
+        /// </summary>
         IDriveInfoFactory DriveInfo { get; }
 
+        /// <summary>
+        /// </summary>
         PathVerifier PathVerifier { get; }
 
+        
+        /// <summary>
+        /// </summary>
         IFileSystem FileSystem { get; }
     }
 }

@@ -5,9 +5,11 @@ using System.Security.AccessControl;
 using System.Text;
 namespace System.IO.Abstractions
 {
+    /// <inheritdoc />
     [Serializable]
     public partial class FileWrapper : FileBase
     {
+        /// <inheritdoc />
         public FileWrapper(IFileSystem fileSystem) : base(fileSystem)
         {
         }

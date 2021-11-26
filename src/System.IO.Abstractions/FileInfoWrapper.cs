@@ -3,6 +3,7 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
+    /// <inheritdoc />
     [Serializable]
     public class FileInfoWrapper : FileInfoBase
     {
@@ -166,6 +167,7 @@ namespace System.IO.Abstractions
         }
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
+        /// <inheritdoc />
         public override void MoveTo(string destFileName, bool overwrite)
         {
             instance.MoveTo(destFileName, overwrite);
@@ -220,6 +222,7 @@ namespace System.IO.Abstractions
             return new FileInfoWrapper(FileSystem, instance.Replace(destinationFileName, destinationBackupFileName, ignoreMetadataErrors));
         }
 
+        /// <inheritdoc />
         [SupportedOSPlatform("windows")]
         public override void SetAccessControl(FileSecurity fileSecurity)
         {

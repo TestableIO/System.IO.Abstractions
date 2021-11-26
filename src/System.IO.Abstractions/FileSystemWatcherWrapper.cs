@@ -2,6 +2,7 @@
 
 namespace System.IO.Abstractions
 {
+    /// <inheritdoc />
     [Serializable]
     public class FileSystemWatcherWrapper : FileSystemWatcherBase
     {
@@ -62,6 +63,7 @@ namespace System.IO.Abstractions
         }
 
 #if FEATURE_FILE_SYSTEM_WATCHER_FILTERS
+        /// <inheritdoc />
         public override System.Collections.ObjectModel.Collection<string> Filters
         {
             get { return watcher.Filters; }

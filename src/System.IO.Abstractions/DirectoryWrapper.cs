@@ -4,9 +4,11 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
+    /// <inheritdoc />
     [Serializable]
     public class DirectoryWrapper : DirectoryBase
     {
+        /// <inheritdoc />
         public DirectoryWrapper(IFileSystem fileSystem) : base(fileSystem)
         {
         }
@@ -19,6 +21,7 @@ namespace System.IO.Abstractions
             return new DirectoryInfoWrapper(FileSystem, directoryInfo);
         }
 
+        /// <inheritdoc />
         [SupportedOSPlatform("windows")]
         public override IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity)
         {
@@ -45,12 +48,14 @@ namespace System.IO.Abstractions
             return Directory.Exists(path);
         }
 
+        /// <inheritdoc />
         [SupportedOSPlatform("windows")]
         public override DirectorySecurity GetAccessControl(string path)
         {
             return new DirectoryInfo(path).GetAccessControl();
         }
 
+        /// <inheritdoc />
         [SupportedOSPlatform("windows")]
         public override DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
@@ -94,6 +99,7 @@ namespace System.IO.Abstractions
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
+        /// <inheritdoc />
         public override string[] GetDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
             return Directory.GetDirectories(path, searchPattern, enumerationOptions);
@@ -125,6 +131,7 @@ namespace System.IO.Abstractions
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
+        /// <inheritdoc />
         public override string[] GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
             return Directory.GetFiles(path, searchPattern, enumerationOptions);
@@ -192,6 +199,7 @@ namespace System.IO.Abstractions
             Directory.Move(sourceDirName, destDirName);
         }
 
+        /// <inheritdoc />
         [SupportedOSPlatform("windows")]
         public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
         {
@@ -259,6 +267,7 @@ namespace System.IO.Abstractions
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
+        /// <inheritdoc />
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
             return Directory.EnumerateDirectories(path, searchPattern, enumerationOptions);
@@ -284,6 +293,7 @@ namespace System.IO.Abstractions
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
+        /// <inheritdoc />
         public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
             return Directory.EnumerateFiles(path, searchPattern, enumerationOptions);
@@ -309,6 +319,7 @@ namespace System.IO.Abstractions
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
+        /// <inheritdoc />
         public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
             return Directory.EnumerateFileSystemEntries(path, searchPattern, enumerationOptions);

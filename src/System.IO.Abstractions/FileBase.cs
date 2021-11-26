@@ -9,6 +9,7 @@ namespace System.IO.Abstractions
     [Serializable]
     public abstract partial class FileBase : IFile
     {
+        /// <inheritdoc />
         protected FileBase(IFileSystem fileSystem)
         {
             FileSystem = fileSystem;

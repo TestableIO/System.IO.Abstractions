@@ -1,8 +1,10 @@
 ﻿namespace System.IO.Abstractions
 {
+    /// <inheritdoc />
     [Serializable]
     public abstract class DriveInfoBase : IDriveInfo
     {
+        /// <inheritdoc />
         protected DriveInfoBase(IFileSystem fileSystem)
         {
             FileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));

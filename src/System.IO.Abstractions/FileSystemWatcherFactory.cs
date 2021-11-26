@@ -1,5 +1,6 @@
 ﻿namespace System.IO.Abstractions
 {
+    /// <inheritdoc />
     [Serializable]
     public class FileSystemWatcherFactory : IFileSystemWatcherFactory
     {

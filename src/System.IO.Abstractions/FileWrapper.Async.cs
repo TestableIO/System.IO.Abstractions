@@ -9,6 +9,7 @@ namespace System.IO.Abstractions
 {
     partial class FileWrapper
     {
+        /// <inheritdoc />
         public override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken)
         {
             return File.AppendAllLinesAsync(path, contents, cancellationToken);

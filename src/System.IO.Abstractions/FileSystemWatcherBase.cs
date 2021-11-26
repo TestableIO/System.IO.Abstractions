@@ -86,26 +86,31 @@ namespace System.IO.Abstractions
             // do nothing
         }
 
+        /// <inheritdoc />
         protected void OnCreated(object sender, FileSystemEventArgs args)
         {
             Created?.Invoke(sender, args);
         }
 
+        /// <inheritdoc />
         protected void OnChanged(object sender, FileSystemEventArgs args)
         {
             Changed?.Invoke(sender, args);
         }
 
+        /// <inheritdoc />
         protected void OnDeleted(object sender, FileSystemEventArgs args)
         {
             Deleted?.Invoke(sender, args);
         }
 
+        /// <inheritdoc />
         protected void OnRenamed(object sender, RenamedEventArgs args)
         {
             Renamed?.Invoke(sender, args);
         }
 
+        /// <inheritdoc />
         protected void OnError(object sender, ErrorEventArgs args)
         {
             Error?.Invoke(sender, args);

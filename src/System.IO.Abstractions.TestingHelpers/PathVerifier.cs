@@ -4,17 +4,23 @@ namespace System.IO.Abstractions.TestingHelpers
 {
     using XFS = MockUnixSupport;
 
+    /// <summary>
+    /// </summary>
     [Serializable]
     public class PathVerifier
     {
         private static readonly char[] AdditionalInvalidPathChars = { '*', '?' };
         private readonly IMockFileDataAccessor _mockFileDataAccessor;
 
+        /// <summary>
+        /// </summary>
         public PathVerifier(IMockFileDataAccessor mockFileDataAccessor)
         {
             _mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
         }
 
+        /// <summary>
+        /// </summary>
         public void IsLegalAbsoluteOrRelative(string path, string paramName)
         {
             if (path == null)
@@ -26,7 +32,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw new ArgumentException("Empty file name is not legal.", paramName);
             }
-            
+
             if (path.Trim() == string.Empty)
             {
                 throw CommonExceptions.PathIsNotOfALegalForm(paramName);
@@ -34,7 +40,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (XFS.IsWindowsPlatform() && !IsValidUseOfVolumeSeparatorChar(path))
             {
-                
+
                 throw CommonExceptions.InvalidUseOfVolumeSeparator();
             }
 
@@ -72,6 +78,8 @@ namespace System.IO.Abstractions.TestingHelpers
             return string.Join(_mockFileDataAccessor.Path.DirectorySeparatorChar.ToString(), extractFilePath.Take(extractFilePath.Length - 1));
         }
 
+        /// <summary>
+        /// </summary>
         public bool HasIllegalCharacters(string path, bool checkAdditional)
         {
             if (path == null)
@@ -89,6 +97,8 @@ namespace System.IO.Abstractions.TestingHelpers
             return path.IndexOfAny(invalidPathChars) >= 0;
         }
 
+        /// <summary>
+        /// </summary>
         public void CheckInvalidPathChars(string path, bool checkAdditional = false)
         {
             if (path == null)

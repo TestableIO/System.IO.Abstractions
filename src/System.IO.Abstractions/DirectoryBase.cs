@@ -8,6 +8,7 @@ namespace System.IO.Abstractions
     [Serializable]
     public abstract class DirectoryBase : IDirectory
     {
+        /// <inheritdoc />
         protected DirectoryBase(IFileSystem fileSystem)
         {
             FileSystem = fileSystem;

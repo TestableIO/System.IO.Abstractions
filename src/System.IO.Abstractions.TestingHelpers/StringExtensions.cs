@@ -7,7 +7,7 @@ namespace System.IO.Abstractions.TestingHelpers
 {
     using XFS = MockUnixSupport;
 
-    public static class StringExtensions
+    internal static class StringExtensions
     {
         [Pure]
         public static string[] SplitLines(this string input)
