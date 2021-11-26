@@ -173,11 +173,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             {
                 { path, new MockFileData("line 1") }
             });
-            
+
             // Act
             Assert.ThrowsAsync<OperationCanceledException>(async () =>
                 await fileSystem.File.AppendAllLinesAsync(
-                    path, 
+                    path,
                     new[] { "line 2" },
                     new CancellationToken(canceled: true))
             );

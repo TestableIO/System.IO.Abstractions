@@ -1,7 +1,7 @@
 ﻿namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-  using System.Collections.Generic;
-  using NUnit.Framework;
+    using System.Collections.Generic;
+    using NUnit.Framework;
 
     using XFS = MockUnixSupport;
 

@@ -172,11 +172,11 @@
         /// <inheritdoc />
         public override string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3) =>
             Path.Join(path1, path2, path3);
-        
+
         /// <inheritdoc />
         public override bool TryJoin(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, Span<char> destination, out int charsWritten) =>
             Path.TryJoin(path1, path2, destination, out charsWritten);
-        
+
         /// <inheritdoc />
         public override bool TryJoin(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3, Span<char> destination, out int charsWritten) =>
             Path.TryJoin(path1, path2, path3, destination, out charsWritten);

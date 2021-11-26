@@ -154,9 +154,9 @@ namespace System.IO.Abstractions
             get { return instance.VolumeLabel; }
 
             [SupportedOSPlatform("windows")]
-            #pragma warning disable CA1416
+#pragma warning disable CA1416
             set { instance.VolumeLabel = value; }
-            #pragma warning restore CA1416
+#pragma warning restore CA1416
         }
 
         /// <inheritdoc />

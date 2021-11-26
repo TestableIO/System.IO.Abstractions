@@ -4,7 +4,7 @@ namespace System.IO.Abstractions.TestingHelpers
 {
     internal static class CommonExceptions
     {
-        private const int _fileLockHResult = unchecked((int) 0x80070020);
+        private const int _fileLockHResult = unchecked((int)0x80070020);
 
         public static FileNotFoundException FileNotFound(string path) =>
             new FileNotFoundException(
@@ -37,9 +37,9 @@ namespace System.IO.Abstractions.TestingHelpers
         public static Exception InvalidUseOfVolumeSeparator() =>
             new NotSupportedException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"));
 
-        public static Exception PathIsNotOfALegalForm(string paramName) => 
+        public static Exception PathIsNotOfALegalForm(string paramName) =>
             new ArgumentException(
-                StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"), 
+                StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"),
                 paramName
             );
 
@@ -50,11 +50,11 @@ namespace System.IO.Abstractions.TestingHelpers
             );
 
         public static ArgumentException IllegalCharactersInPath(string paramName = null) =>
-            paramName != null 
+            paramName != null
                 ? new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"), paramName)
                 : new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
 
-        public static Exception InvalidUncPath(string paramName) => 
+        public static Exception InvalidUncPath(string paramName) =>
             new ArgumentException(@"The UNC path should be of the form \\server\share.", paramName);
 
         public static IOException ProcessCannotAccessFileInUse(string paramName = null) =>

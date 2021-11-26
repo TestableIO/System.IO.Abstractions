@@ -54,14 +54,14 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="DirectoryInfo.EnumerateFileSystemInfos(string,EnumerationOptions)"/>
         IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, EnumerationOptions enumerationOptions);
 #endif
-        
+
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
         /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(DirectoryInfo)"/>
 #else
         /// <inheritdoc cref="DirectoryInfo.GetAccessControl()"/>
 #endif
         DirectorySecurity GetAccessControl();
-        
+
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
         /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(DirectoryInfo,AccessControlSections)"/>
 #else

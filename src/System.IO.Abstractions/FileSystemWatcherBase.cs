@@ -16,7 +16,7 @@ namespace System.IO.Abstractions
         public abstract string Filter { get; set; }
 
 #if FEATURE_FILE_SYSTEM_WATCHER_FILTERS
-       /// <inheritdoc cref="FileSystemWatcher.Filters"/>
+        /// <inheritdoc cref="FileSystemWatcher.Filters"/>
         public abstract System.Collections.ObjectModel.Collection<string> Filters { get; }
 #endif
 

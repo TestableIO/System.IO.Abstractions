@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework; 
+using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {

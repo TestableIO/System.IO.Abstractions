@@ -102,11 +102,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             const string path = "test.txt";
             var fileSystem = new MockFileSystem();
-            
+
             // Act
             Assert.ThrowsAsync<OperationCanceledException>(async () =>
                 await fileSystem.File.WriteAllTextAsync(
-                    path, 
+                    path,
                     "content",
                     new CancellationToken(canceled: true))
             );

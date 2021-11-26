@@ -22,7 +22,7 @@ namespace System.IO.Abstractions.Benchmarks
         #endregion
 
         #region CTOR's
-        public FileSystemAbstractionBenchmarks( )
+        public FileSystemAbstractionBenchmarks()
         {
             // Initialize file support
             _fileSupport = new FileSupport();

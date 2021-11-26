@@ -376,9 +376,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(null)]
         [TestCase("")]
         [TestCase(@"C:\temp")]
-        public void GetTempPath_Called_ReturnsStringLengthGreaterThanZero(string tempDirectory) {
+        public void GetTempPath_Called_ReturnsStringLengthGreaterThanZero(string tempDirectory)
+        {
             //Arrange
-            var mockPath = new MockPath(new MockFileSystem(), string.IsNullOrEmpty(tempDirectory)? tempDirectory: XFS.Path(tempDirectory));
+            var mockPath = new MockPath(new MockFileSystem(), string.IsNullOrEmpty(tempDirectory) ? tempDirectory : XFS.Path(tempDirectory));
 
             //Act
             var result = mockPath.GetTempPath();
@@ -388,7 +389,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void GetTempPath_Called_WithNonNullVirtualTempDirectory_ReturnsVirtualTempDirectory() {
+        public void GetTempPath_Called_WithNonNullVirtualTempDirectory_ReturnsVirtualTempDirectory()
+        {
             //Arrange
             var tempDirectory = XFS.Path(@"C:\temp");
 
@@ -398,13 +400,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetTempPath();
 
             //Assert
-            Assert.AreEqual(tempDirectory,result);
+            Assert.AreEqual(tempDirectory, result);
         }
 
         [Test]
         [TestCase(null)]
         [TestCase("")]
-        public void GetTempPath_Called_WithNullOrEmptyVirtualTempDirectory_ReturnsFallbackTempDirectory(string tempDirectory) {
+        public void GetTempPath_Called_WithNullOrEmptyVirtualTempDirectory_ReturnsFallbackTempDirectory(string tempDirectory)
+        {
             //Arrange
             var mockPath = new MockPath(new MockFileSystem(), tempDirectory);
 
@@ -467,7 +470,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             //Assert
             Assert.IsFalse(result);
         }
-        
+
         [Test]
         public void IsPathFullyQualified_WithRelativePathParts_ReturnsFalse()
         {
@@ -481,8 +484,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(result);
         }
 
-        
-        
+
+
         [Test]
         public void GetRelativePath_Works()
         {

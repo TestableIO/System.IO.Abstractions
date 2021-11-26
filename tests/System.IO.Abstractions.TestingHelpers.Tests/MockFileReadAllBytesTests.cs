@@ -109,8 +109,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_ReadAllBytesAsync_ShouldThrowOperationCanceledExceptionIfCanceled()
         {
             var fileSystem = new MockFileSystem();
-            
-            AsyncTestDelegate action = async () => 
+
+            AsyncTestDelegate action = async () =>
                 await fileSystem.File.ReadAllBytesAsync(@"C:\a.txt", new CancellationToken(canceled: true));
 
             Assert.ThrowsAsync<OperationCanceledException>(action);

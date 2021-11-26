@@ -96,7 +96,7 @@
 #if FEATURE_ADVANCED_PATH_OPERATIONS
         /// <inheritdoc />
         public abstract bool IsPathFullyQualified(string path);
-        
+
         /// <inheritdoc />
         public abstract string GetRelativePath(string relativeTo, string path);
 #endif
@@ -107,10 +107,10 @@
 
         /// <inheritdoc />
         public abstract string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3);
-        
+
         /// <inheritdoc />
         public abstract bool TryJoin(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3, Span<char> destination, out int charsWritten);
-        
+
         /// <inheritdoc />
         public abstract bool TryJoin(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, Span<char> destination, out int charsWritten);
 #endif

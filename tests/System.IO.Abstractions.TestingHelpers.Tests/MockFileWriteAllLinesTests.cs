@@ -379,24 +379,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 }
             }
 
-        [Test]
-        public void MockFile_WriteAllLinesAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
-        {
-            // Arrange
-            const string path = "test.txt";
-            var fileSystem = new MockFileSystem();
-            
-            // Act
-            Assert.ThrowsAsync<OperationCanceledException>(async () =>
-                await fileSystem.File.WriteAllLinesAsync(
-                    path, 
-                    new [] { "line 1", "line 2" },
-                    new CancellationToken(canceled: true))
-            );
+            [Test]
+            public void MockFile_WriteAllLinesAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
+            {
+                // Arrange
+                const string path = "test.txt";
+                var fileSystem = new MockFileSystem();
 
-            // Assert
-            Assert.IsFalse(fileSystem.File.Exists(path));
-        }
+                // Act
+                Assert.ThrowsAsync<OperationCanceledException>(async () =>
+                    await fileSystem.File.WriteAllLinesAsync(
+                        path,
+                        new[] { "line 1", "line 2" },
+                        new CancellationToken(canceled: true))
+                );
+
+                // Assert
+                Assert.IsFalse(fileSystem.File.Exists(path));
+            }
 #endif
 
         }

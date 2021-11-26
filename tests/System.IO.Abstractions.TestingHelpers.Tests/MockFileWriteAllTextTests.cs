@@ -249,11 +249,11 @@
             // Arrange
             const string path = "test.txt";
             var fileSystem = new MockFileSystem();
-            
+
             // Act
             Assert.ThrowsAsync<OperationCanceledException>(async () =>
                 await fileSystem.File.WriteAllTextAsync(
-                    path, 
+                    path,
                     "line",
                     new CancellationToken(canceled: true))
             );
