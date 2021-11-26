@@ -6,7 +6,7 @@ namespace System.IO.Abstractions.TestingHelpers
     /// <summary>
     /// Provides access to the file system storage.
     /// </summary>
-    public interface IMockFileDataAccessor
+    public interface IMockFileDataAccessor : IFileSystem
     {
         /// <summary>
         /// Gets a file.
@@ -26,11 +26,11 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <summary>
         /// </summary>
         void AddFileFromEmbeddedResource(string path, Assembly resourceAssembly, string embeddedResourcePath);
-        
+
         /// <summary>
         /// </summary>
         void AddFilesFromEmbeddedNamespace(string path, Assembly resourceAssembly, string embeddedResourcePath);
-        
+
         /// <summary>
         /// </summary>
         void MoveDirectory(string sourcePath, string destPath);
@@ -67,40 +67,18 @@ namespace System.IO.Abstractions.TestingHelpers
         IEnumerable<string> AllDirectories { get; }
 
         /// <summary>
+        /// Gets a helper for string operations.
         /// </summary>
-        
+
         StringOperations StringOperations { get; }
 
         /// <summary>
-        /// </summary>
-        IFile File { get; }
-        
-        /// <summary>
-        /// </summary>
-        IDirectory Directory { get; }
-        
-        /// <summary>
-        /// </summary>
-        IFileInfoFactory FileInfo {get; }
-        
-        /// <summary>
-        /// </summary>
-        IPath Path { get; }
-        
-        /// <summary>
-        /// </summary>
-        IDirectoryInfoFactory DirectoryInfo { get; }
-        
-        /// <summary>
-        /// </summary>
-        IDriveInfoFactory DriveInfo { get; }
-
-        /// <summary>
+        /// Gets a helper for verifying file system paths.
         /// </summary>
         PathVerifier PathVerifier { get; }
 
-        
         /// <summary>
+        /// Gets a reference to the underlying file system. 
         /// </summary>
         IFileSystem FileSystem { get; }
     }

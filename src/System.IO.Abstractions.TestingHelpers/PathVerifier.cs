@@ -5,6 +5,7 @@ namespace System.IO.Abstractions.TestingHelpers
     using XFS = MockUnixSupport;
 
     /// <summary>
+    /// Provides helper methods for verifying paths.
     /// </summary>
     [Serializable]
     public class PathVerifier
@@ -13,6 +14,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private readonly IMockFileDataAccessor _mockFileDataAccessor;
 
         /// <summary>
+        /// Creates a new verifier instance.
         /// </summary>
         public PathVerifier(IMockFileDataAccessor mockFileDataAccessor)
         {
@@ -20,6 +22,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <summary>
+        /// Determines whether the given path is legal.
         /// </summary>
         public void IsLegalAbsoluteOrRelative(string path, string paramName)
         {
@@ -79,6 +82,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <summary>
+        /// Determines whether the given path contains illegal characters.
         /// </summary>
         public bool HasIllegalCharacters(string path, bool checkAdditional)
         {
@@ -98,6 +102,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <summary>
+        /// Throws an excpetion if the given path contains invalid characters.
         /// </summary>
         public void CheckInvalidPathChars(string path, bool checkAdditional = false)
         {
