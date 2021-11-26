@@ -1,0 +1,18 @@
+﻿{
+  "ExtraMembers": [
+    "System.Security.AccessControl.FileSecurity GetAccessControl()",
+    "System.Security.AccessControl.FileSecurity GetAccessControl(System.Security.AccessControl.AccessControlSections)",
+    "Void SetAccessControl(System.Security.AccessControl.FileSecurity)"
+  ],
+  "MissingMembers": [
+    "System.IO.Stream Open(System.IO.StreamOptions)",
+    "System.IO.Abstractions.IFileSystemInfo ResolveLinkTarget(Boolean)",
+    "System.Object GetLifetimeService()",
+    "System.Object InitializeLifetimeService()",
+    "System.String LinkTarget",
+    "System.String get_LinkTarget()",
+    "Void .ctor(System.String)",
+    "Void CreateAsSymbolicLink(System.String)",
+    "Void GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)"
+  ]
+}
