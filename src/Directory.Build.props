@@ -6,7 +6,6 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile >true</GenerateDocumentationFile>
-    <!-- <InheritDocEnabled>true</InheritDocEnabled> -->
-    <!-- <NoWarn>CS1591</NoWarn> -->
+    <InheritDocEnabled>true</InheritDocEnabled>
   </PropertyGroup>
 </Project>
