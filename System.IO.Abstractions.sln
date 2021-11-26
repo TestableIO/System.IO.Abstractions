@@ -19,7 +19,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions.Benc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{BCEC61BD-4941-41EC-975A-ACEFC7AC1780}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.IO.Abstractions.Tests", "tests\System.IO.Abstractions.Tests\System.IO.Abstractions.Tests.csproj", "{7105D748-1253-409F-A624-4879412EF3C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions.Tests", "tests\System.IO.Abstractions.Tests\System.IO.Abstractions.Tests.csproj", "{7105D748-1253-409F-A624-4879412EF3C2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{F781892B-7C5D-4C8D-8D3D-3E9E207D686D}"
+	ProjectSection(SolutionItems) = preProject
+		images\icon_256x256.png = images\icon_256x256.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,10 +56,10 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {8885C59C-F6A0-4C2F-A3BC-B720E9BD161F}
-	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7105D748-1253-409F-A624-4879412EF3C2} = {BCEC61BD-4941-41EC-975A-ACEFC7AC1780}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8885C59C-F6A0-4C2F-A3BC-B720E9BD161F}
 	EndGlobalSection
 EndGlobal
