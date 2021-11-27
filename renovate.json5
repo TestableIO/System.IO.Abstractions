@@ -1,0 +1,6 @@
+{
+  extends: ["config:base"],
+  ignorePaths: [
+    // Clear the default list to enable Renovate for all files
+  ],
+}
