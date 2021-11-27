@@ -543,7 +543,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             //Act
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new MemoryStream();
-            
+
 #pragma warning disable SYSLIB0011
             formatter.Serialize(stream, data);
 #pragma warning restore SYSLIB0011

@@ -9,6 +9,7 @@ namespace System.IO.Abstractions
 {
     partial interface IFile
     {
+        /// <inheritdoc cref="File.AppendAllLinesAsync(string,IEnumerable{string},CancellationToken)"/>
         Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken = default(CancellationToken));
         /// <inheritdoc cref="File.AppendAllLinesAsync(string,IEnumerable{string},Encoding,CancellationToken)"/>
         Task AppendAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken));
@@ -34,19 +35,19 @@ namespace System.IO.Abstractions
         Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken = default(CancellationToken));
         /// <inheritdoc cref="File.WriteAllLinesAsync(string,IEnumerable{string},Encoding,CancellationToken)"/>
         Task WriteAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken));
-        /// <inheritdoc cref="File.WriteAllLinesAsync(string,string[],CancellationToken)"/>
+        /// <inheritdoc cref="File.WriteAllLinesAsync(string, IEnumerable{string}, CancellationToken)"/>
         Task WriteAllLinesAsync(string path, string[] contents, CancellationToken cancellationToken = default(CancellationToken));
-        /// <inheritdoc cref="File.WriteAllLinesAsync(string,string[],Encoding,CancellationToken)"/>
+        /// <inheritdoc cref="File.WriteAllLinesAsync(string,IEnumerable{string},Encoding,CancellationToken)"/>
         Task WriteAllLinesAsync(string path, string[] contents, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <inheritdoc cref="File.WriteAllTextAsync(string,string,CancellationToken)"/>
         Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken = default(CancellationToken));
         /// <inheritdoc cref="File.WriteAllTextAsync(string,string,Encoding,CancellationToken)"/>
         Task WriteAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken = default(CancellationToken));
- 
-    /// <inheritdoc cref="File.WriteAllBytesAsync"/>
+
+        /// <inheritdoc cref="File.WriteAllBytesAsync"/>
         Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken = default(CancellationToken));
-       }
+    }
 }
 
 #endif

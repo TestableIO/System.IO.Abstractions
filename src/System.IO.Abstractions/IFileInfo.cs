@@ -2,6 +2,7 @@
 
 namespace System.IO.Abstractions
 {
+    /// <inheritdoc cref="FileInfo" />
     public interface IFileInfo : IFileSystemInfo
     {
         /// <inheritdoc cref="FileInfo.AppendText"/>
@@ -18,9 +19,17 @@ namespace System.IO.Abstractions
         void Decrypt();
         /// <inheritdoc cref="FileInfo.Encrypt"/>
         void Encrypt();
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(FileInfo)"/>
+#else
         /// <inheritdoc cref="FileInfo.GetAccessControl()"/>
+#endif
         FileSecurity GetAccessControl();
-        /// <inheritdoc cref="FileInfo.GetAccessControl(AccessControlSections)"/>
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(FileInfo,AccessControlSections)"/>
+#else
+        /// <inheritdoc cref="File.GetAccessControl(string,AccessControlSections)"/>
+#endif
         FileSecurity GetAccessControl(AccessControlSections includeSections);
         /// <inheritdoc cref="FileInfo.MoveTo(string)"/>
         void MoveTo(string destFileName);
@@ -44,7 +53,7 @@ namespace System.IO.Abstractions
         IFileInfo Replace(string destinationFileName, string destinationBackupFileName);
         /// <inheritdoc cref="FileInfo.Replace(string,string,bool)"/>
         IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
-        /// <inheritdoc cref="FileInfo.SetAccessControl(FileSecurity)"/>
+        /// <inheritdoc cref="M:FileInfo.SetAccessControl(FileSecurity)"/>
         void SetAccessControl(FileSecurity fileSecurity);
         /// <inheritdoc cref="FileInfo.Directory"/>
         IDirectoryInfo Directory { get; }

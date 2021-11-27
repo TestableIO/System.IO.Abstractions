@@ -4,6 +4,7 @@ using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    /// <inheritdoc />
     [Serializable]
     public class MockFileInfo : FileInfoBase
     {
@@ -11,6 +12,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private string path;
         private string originalPath;
 
+        /// <inheritdoc />
         public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path) : base(mockFileSystem?.FileSystem)
         {
             this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
@@ -24,16 +26,19 @@ namespace System.IO.Abstractions.TestingHelpers
             get { return mockFileSystem.GetFile(path); }
         }
 
+        /// <inheritdoc />
         public override void Delete()
         {
             mockFileSystem.RemoveFile(path);
         }
 
+        /// <inheritdoc />
         public override void Refresh()
         {
             // Nothing to do here. Mock file system is always up-to-date.
         }
 
+        /// <inheritdoc />
         public override FileAttributes Attributes
         {
             get
@@ -54,6 +59,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public override DateTime CreationTime
         {
             get
@@ -74,6 +80,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public override DateTime CreationTimeUtc
         {
             get
@@ -88,11 +95,13 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public override bool Exists
         {
             get { return MockFileData != null && !MockFileData.IsDirectory; }
         }
 
+        /// <inheritdoc />
         public override string Extension
         {
             get
@@ -103,11 +112,13 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public override string FullName
         {
             get { return path; }
         }
 
+        /// <inheritdoc />
         public override DateTime LastAccessTime
         {
             get
@@ -122,6 +133,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public override DateTime LastAccessTimeUtc
         {
             get
@@ -136,6 +148,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public override DateTime LastWriteTime
         {
             get
@@ -150,6 +163,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public override DateTime LastWriteTimeUtc
         {
             get
@@ -164,21 +178,25 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public override string Name
         {
             get { return new MockPath(mockFileSystem).GetFileName(path); }
         }
 
+        /// <inheritdoc />
         public override StreamWriter AppendText()
         {
             return new StreamWriter(new MockFileStream(mockFileSystem, FullName, FileMode.Append));
         }
 
+        /// <inheritdoc />
         public override IFileInfo CopyTo(string destFileName)
         {
             return CopyTo(destFileName, false);
         }
 
+        /// <inheritdoc />
         public override IFileInfo CopyTo(string destFileName, bool overwrite)
         {
             if (!Exists)
@@ -193,16 +211,19 @@ namespace System.IO.Abstractions.TestingHelpers
             return mockFileSystem.FileInfo.FromFileName(destFileName);
         }
 
+        /// <inheritdoc />
         public override Stream Create()
         {
             return new MockFile(mockFileSystem).Create(FullName);
         }
 
+        /// <inheritdoc />
         public override StreamWriter CreateText()
         {
             return new MockFile(mockFileSystem).CreateText(FullName);
         }
 
+        /// <inheritdoc />
         public override void Decrypt()
         {
             if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
@@ -210,6 +231,7 @@ namespace System.IO.Abstractions.TestingHelpers
             MockFileData.Attributes &= ~FileAttributes.Encrypted;
         }
 
+        /// <inheritdoc />
         public override void Encrypt()
         {
             if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
@@ -217,18 +239,21 @@ namespace System.IO.Abstractions.TestingHelpers
             MockFileData.Attributes |= FileAttributes.Encrypted;
         }
 
+        /// <inheritdoc />
         [SupportedOSPlatform("windows")]
         public override FileSecurity GetAccessControl()
         {
             return mockFileSystem.File.GetAccessControl(this.path);
         }
 
+        /// <inheritdoc />
         [SupportedOSPlatform("windows")]
         public override FileSecurity GetAccessControl(AccessControlSections includeSections)
         {
             return mockFileSystem.File.GetAccessControl(this.path, includeSections);
         }
 
+        /// <inheritdoc />
         public override void MoveTo(string destFileName)
         {
             mockFileSystem.File.Move(path, destFileName);
@@ -236,6 +261,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
+        /// <inheritdoc />
         public override void MoveTo(string destFileName, bool overwrite)
         {
             mockFileSystem.File.Move(path, destFileName, overwrite);
@@ -243,44 +269,54 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 #endif
 
+        /// <inheritdoc />
         public override Stream Open(FileMode mode)
         {
             return new MockFile(mockFileSystem).Open(FullName, mode);
         }
 
+        /// <inheritdoc />
         public override Stream Open(FileMode mode, FileAccess access)
         {
             return new MockFile(mockFileSystem).Open(FullName, mode, access);
         }
 
+        /// <inheritdoc />
         public override Stream Open(FileMode mode, FileAccess access, FileShare share)
         {
             return new MockFile(mockFileSystem).Open(FullName, mode, access, share);
         }
 
+        /// <inheritdoc />
         public override Stream OpenRead() => mockFileSystem.File.OpenRead(path);
 
+        /// <inheritdoc />
         public override StreamReader OpenText() => mockFileSystem.File.OpenText(path);
 
+        /// <inheritdoc />
         public override Stream OpenWrite() => mockFileSystem.File.OpenWrite(path);
 
+        /// <inheritdoc />
         public override IFileInfo Replace(string destinationFileName, string destinationBackupFileName)
         {
             return Replace(destinationFileName, destinationBackupFileName, false);
         }
 
+        /// <inheritdoc />
         public override IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
             mockFileSystem.File.Replace(path, destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
             return mockFileSystem.FileInfo.FromFileName(destinationFileName);
         }
 
+        /// <inheritdoc />
         [SupportedOSPlatform("windows")]
         public override void SetAccessControl(FileSecurity fileSecurity)
         {
             mockFileSystem.File.SetAccessControl(this.path, fileSecurity);
         }
 
+        /// <inheritdoc />
         public override IDirectoryInfo Directory
         {
             get
@@ -289,6 +325,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public override string DirectoryName
         {
             get
@@ -299,6 +336,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public override bool IsReadOnly
         {
             get
@@ -326,6 +364,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public override long Length
         {
             get
@@ -338,6 +377,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public override string ToString()
         {
             return originalPath;

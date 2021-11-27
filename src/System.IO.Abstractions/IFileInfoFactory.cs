@@ -1,5 +1,8 @@
 ﻿namespace System.IO.Abstractions
 {
+    /// <summary>
+    /// Provides factory methods for creating <see cref="IFileInfo"/> instances. 
+    /// </summary>
     public interface IFileInfoFactory
     {
         /// <summary>

@@ -1982,7 +1982,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     @"c:\temp3\exists2\d3", @"c:\temp4\exists"
                 };
 
-                var testSourceDirs = new[] {@"c:\temp\exists\foldertomove", @"c:\temp3\exists", @"c:\temp3"};
+                var testSourceDirs = new[] { @"c:\temp\exists\foldertomove", @"c:\temp3\exists", @"c:\temp3" };
 
                 return
                     from s in testSourceDirs
@@ -2020,7 +2020,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     @".\..\temp2\fd\df\..\..", @".\..\temp2\fd\df\..\..\", @"..\temp2", @".\temp2", @"\temp2", @"temp2",
                 };
 
-                var testSourceDirs = new[] { @"c:\temp3\exists\foldertomove",@"c:\temp3\exists", @"c:\temp4" };
+                var testSourceDirs = new[] { @"c:\temp3\exists\foldertomove", @"c:\temp3\exists", @"c:\temp4" };
 
                 return
                     from s in testSourceDirs

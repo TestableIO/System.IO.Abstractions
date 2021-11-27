@@ -9,6 +9,7 @@ namespace System.IO.Abstractions
     [Serializable]
     public abstract partial class FileBase : IFile
     {
+        /// <inheritdoc />
         protected FileBase(IFileSystem fileSystem)
         {
             FileSystem = fileSystem;
@@ -22,46 +23,46 @@ namespace System.IO.Abstractions
         /// </summary>
         public IFileSystem FileSystem { get; }
 
-        /// <inheritdoc cref="File.AppendAllLines(string,IEnumerable{string})"/>
+        /// <inheritdoc cref="IFile.AppendAllLines(string,IEnumerable{string})"/>
         public abstract void AppendAllLines(string path, IEnumerable<string> contents);
 
-        /// <inheritdoc cref="File.AppendAllLines(string,IEnumerable{string},Encoding)"/>
+        /// <inheritdoc cref="IFile.AppendAllLines(string,IEnumerable{string},Encoding)"/>
         public abstract void AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding);
 
-        /// <inheritdoc cref="File.AppendAllText(string,string)"/>
+        /// <inheritdoc cref="IFile.AppendAllText(string,string)"/>
         public abstract void AppendAllText(string path, string contents);
 
-        /// <inheritdoc cref="File.AppendAllText(string,string,Encoding)"/>
+        /// <inheritdoc cref="IFile.AppendAllText(string,string,Encoding)"/>
         public abstract void AppendAllText(string path, string contents, Encoding encoding);
 
-        /// <inheritdoc cref="File.AppendText"/>
+        /// <inheritdoc cref="IFile.AppendText"/>
         public abstract StreamWriter AppendText(string path);
 
-        /// <inheritdoc cref="File.Copy(string,string)"/>
+        /// <inheritdoc cref="IFile.Copy(string,string)"/>
         public abstract void Copy(string sourceFileName, string destFileName);
 
-        /// <inheritdoc cref="File.Copy(string,string,bool)"/>
+        /// <inheritdoc cref="IFile.Copy(string,string,bool)"/>
         public abstract void Copy(string sourceFileName, string destFileName, bool overwrite);
 
-        /// <inheritdoc cref="File.Create(string)"/>
+        /// <inheritdoc cref="IFile.Create(string)"/>
         public abstract Stream Create(string path);
 
-        /// <inheritdoc cref="File.Create(string,int)"/>
+        /// <inheritdoc cref="IFile.Create(string,int)"/>
         public abstract Stream Create(string path, int bufferSize);
 
-        /// <inheritdoc cref="File.Create(string,int,FileOptions)"/>
+        /// <inheritdoc cref="IFile.Create(string,int,FileOptions)"/>
         public abstract Stream Create(string path, int bufferSize, FileOptions options);
 
-        /// <inheritdoc cref="File.CreateText"/>
+        /// <inheritdoc cref="IFile.CreateText"/>
         public abstract StreamWriter CreateText(string path);
-        /// <inheritdoc cref="File.Decrypt"/>
+        /// <inheritdoc cref="IFile.Decrypt"/>
         public abstract void Decrypt(string path);
-        /// <inheritdoc cref="File.Delete"/>
+        /// <inheritdoc cref="IFile.Delete"/>
         public abstract void Delete(string path);
-        /// <inheritdoc cref="File.Encrypt"/>
+        /// <inheritdoc cref="IFile.Encrypt"/>
         public abstract void Encrypt(string path);
 
-        /// <inheritdoc cref="File.Exists"/>
+        /// <inheritdoc cref="IFile.Exists"/>
         /// <summary>
         /// Determines whether the specified file exists.
         /// </summary>
@@ -92,16 +93,16 @@ namespace System.IO.Abstractions
         public abstract bool Exists(string path);
 
 
-        /// <inheritdoc cref="File.GetAccessControl(string)"/>
+        /// <inheritdoc cref="IFile.GetAccessControl(string)"/>
         [SupportedOSPlatform("windows")]
         public abstract FileSecurity GetAccessControl(string path);
 
-        /// <inheritdoc cref="File.GetAccessControl(string,AccessControlSections)"/>
+        /// <inheritdoc cref="IFile.GetAccessControl(string,AccessControlSections)"/>
         [SupportedOSPlatform("windows")]
         public abstract FileSecurity GetAccessControl(string path, AccessControlSections includeSections);
 
 
-        /// <inheritdoc cref="File.GetAttributes"/>
+        /// <inheritdoc cref="IFile.GetAttributes"/>
         /// <summary>
         /// Gets the <see cref="FileAttributes"/> of the file on the path.
         /// </summary>
@@ -116,7 +117,7 @@ namespace System.IO.Abstractions
         /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission.</exception>
         public abstract FileAttributes GetAttributes(string path);
 
-        /// <inheritdoc cref="File.GetCreationTime"/>
+        /// <inheritdoc cref="IFile.GetCreationTime"/>
         /// <summary>
         /// Returns the creation date and time of the specified file or directory.
         /// </summary>
@@ -140,7 +141,7 @@ namespace System.IO.Abstractions
         /// </remarks>
         public abstract DateTime GetCreationTime(string path);
 
-        /// <inheritdoc cref="File.GetCreationTimeUtc"/>
+        /// <inheritdoc cref="IFile.GetCreationTimeUtc"/>
         /// <summary>
         /// Returns the creation date and time, in coordinated universal time (UTC), of the specified file or directory.
         /// </summary>
@@ -164,7 +165,7 @@ namespace System.IO.Abstractions
         /// </remarks>
         public abstract DateTime GetCreationTimeUtc(string path);
 
-        /// <inheritdoc cref="File.GetLastAccessTime"/>
+        /// <inheritdoc cref="IFile.GetLastAccessTime"/>
         /// <summary>
         /// Returns the date and time the specified file or directory was last accessed.
         /// </summary>
@@ -188,7 +189,7 @@ namespace System.IO.Abstractions
         /// </remarks>
         public abstract DateTime GetLastAccessTime(string path);
 
-        /// <inheritdoc cref="File.GetLastAccessTimeUtc"/>
+        /// <inheritdoc cref="IFile.GetLastAccessTimeUtc"/>
         /// <summary>
         /// Returns the date and time, in coordinated universal time (UTC), that the specified file or directory was last accessed.
         /// </summary>
@@ -212,7 +213,7 @@ namespace System.IO.Abstractions
         /// </remarks>
         public abstract DateTime GetLastAccessTimeUtc(string path);
 
-        /// <inheritdoc cref="File.GetLastWriteTime"/>
+        /// <inheritdoc cref="IFile.GetLastWriteTime"/>
         /// <summary>
         /// Returns the date and time the specified file or directory was last written to.
         /// </summary>
@@ -236,7 +237,7 @@ namespace System.IO.Abstractions
         /// </remarks>
         public abstract DateTime GetLastWriteTime(string path);
 
-        /// <inheritdoc cref="File.GetLastWriteTimeUtc"/>
+        /// <inheritdoc cref="IFile.GetLastWriteTimeUtc"/>
         /// <summary>
         /// Returns the date and time, in coordinated universal time (UTC), that the specified file or directory was last written to.
         /// </summary>
@@ -260,88 +261,88 @@ namespace System.IO.Abstractions
         /// </remarks>
         public abstract DateTime GetLastWriteTimeUtc(string path);
 
-        /// <inheritdoc cref="File.Move"/>
+        /// <inheritdoc cref="IFile.Move(string,string)"/>
         public abstract void Move(string sourceFileName, string destFileName);
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
-        /// <inheritdoc cref="File.Move(string,string,bool)"/>
+        /// <inheritdoc cref="IFile.Move(string,string,bool)"/>
         public abstract void Move(string sourceFileName, string destFileName, bool overwrite);
 #endif
 
-        /// <inheritdoc cref="File.Open(string,FileMode)"/>
+        /// <inheritdoc cref="IFile.Open(string,FileMode)"/>
         public abstract Stream Open(string path, FileMode mode);
 
-        /// <inheritdoc cref="File.Open(string,FileMode,FileAccess)"/>
+        /// <inheritdoc cref="IFile.Open(string,FileMode,FileAccess)"/>
         public abstract Stream Open(string path, FileMode mode, FileAccess access);
 
-        /// <inheritdoc cref="File.Open(string,FileMode,FileAccess,FileShare)"/>
+        /// <inheritdoc cref="IFile.Open(string,FileMode,FileAccess,FileShare)"/>
         public abstract Stream Open(string path, FileMode mode, FileAccess access, FileShare share);
 
-        /// <inheritdoc cref="File.OpenRead"/>
+        /// <inheritdoc cref="IFile.OpenRead"/>
         public abstract Stream OpenRead(string path);
 
-        /// <inheritdoc cref="File.OpenText"/>
+        /// <inheritdoc cref="IFile.OpenText"/>
         public abstract StreamReader OpenText(string path);
 
-        /// <inheritdoc cref="File.OpenWrite"/>
+        /// <inheritdoc cref="IFile.OpenWrite"/>
         public abstract Stream OpenWrite(string path);
 
-        /// <inheritdoc cref="File.ReadAllBytes"/>
+        /// <inheritdoc cref="IFile.ReadAllBytes"/>
         public abstract byte[] ReadAllBytes(string path);
 
 
-        /// <inheritdoc cref="File.ReadAllLines(string)"/>
+        /// <inheritdoc cref="IFile.ReadAllLines(string)"/>
         public abstract string[] ReadAllLines(string path);
 
-        /// <inheritdoc cref="File.ReadAllLines(string,Encoding)"/>
+        /// <inheritdoc cref="IFile.ReadAllLines(string,Encoding)"/>
         public abstract string[] ReadAllLines(string path, Encoding encoding);
 
 
-        /// <inheritdoc cref="File.ReadAllText(string)"/>
+        /// <inheritdoc cref="IFile.ReadAllText(string)"/>
         public abstract string ReadAllText(string path);
 
-        /// <inheritdoc cref="File.ReadAllText(string,Encoding)"/>
+        /// <inheritdoc cref="IFile.ReadAllText(string,Encoding)"/>
         public abstract string ReadAllText(string path, Encoding encoding);
 
 
-        /// <inheritdoc cref="File.ReadLines(string)"/>
+        /// <inheritdoc cref="IFile.ReadLines(string)"/>
         public abstract IEnumerable<string> ReadLines(string path);
 
-        /// <inheritdoc cref="File.ReadLines(string,Encoding)"/>
+        /// <inheritdoc cref="IFile.ReadLines(string,Encoding)"/>
         public abstract IEnumerable<string> ReadLines(string path, Encoding encoding);
 
-        /// <inheritdoc cref="File.Replace(string,string,string)"/>
+        /// <inheritdoc cref="IFile.Replace(string,string,string)"/>
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName);
 
-        /// <inheritdoc cref="File.Replace(string,string,string,bool)"/>
+        /// <inheritdoc cref="IFile.Replace(string,string,string,bool)"/>
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
 
-        /// <inheritdoc cref="File.SetAccessControl(string,FileSecurity)"/>
+        /// <inheritdoc cref="IFile.SetAccessControl(string,FileSecurity)"/>
         [SupportedOSPlatform("windows")]
         public abstract void SetAccessControl(string path, FileSecurity fileSecurity);
 
-        /// <inheritdoc cref="File.SetAttributes"/>
+        /// <inheritdoc cref="IFile.SetAttributes"/>
         public abstract void SetAttributes(string path, FileAttributes fileAttributes);
 
-        /// <inheritdoc cref="File.SetCreationTime"/>
+        /// <inheritdoc cref="IFile.SetCreationTime"/>
         public abstract void SetCreationTime(string path, DateTime creationTime);
 
-        /// <inheritdoc cref="File.SetCreationTimeUtc"/>
+        /// <inheritdoc cref="IFile.SetCreationTimeUtc"/>
         public abstract void SetCreationTimeUtc(string path, DateTime creationTimeUtc);
 
-        /// <inheritdoc cref="File.SetLastAccessTime"/>
+        /// <inheritdoc cref="IFile.SetLastAccessTime"/>
         public abstract void SetLastAccessTime(string path, DateTime lastAccessTime);
 
-        /// <inheritdoc cref="File.SetLastAccessTimeUtc"/>
+        /// <inheritdoc cref="IFile.SetLastAccessTimeUtc"/>
         public abstract void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc);
 
-        /// <inheritdoc cref="File.SetLastWriteTime"/>
+        /// <inheritdoc cref="IFile.SetLastWriteTime"/>
         public abstract void SetLastWriteTime(string path, DateTime lastWriteTime);
 
-        /// <inheritdoc cref="File.SetLastWriteTimeUtc"/>
+        /// <inheritdoc cref="IFile.SetLastWriteTimeUtc"/>
         public abstract void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc);
 
-        /// <inheritdoc cref="File.WriteAllBytes"/>
+        /// <inheritdoc cref="IFile.WriteAllBytes"/>
         /// <summary>
         /// Creates a new file, writes the specified byte array to the file, and then closes the file.
         /// If the target file already exists, it is overwritten.
@@ -373,7 +374,7 @@ namespace System.IO.Abstractions
         /// </remarks>
         public abstract void WriteAllBytes(string path, byte[] bytes);
 
-        /// <inheritdoc cref="File.WriteAllLines(string,IEnumerable{string})"/>
+        /// <inheritdoc cref="IFile.WriteAllLines(string,IEnumerable{string})"/>
         /// <summary>
         /// Creates a new file, writes a collection of strings to the file, and then closes the file.
         /// </summary>
@@ -407,11 +408,9 @@ namespace System.IO.Abstractions
         ///     You can use this method to create the contents for a collection class that takes an <see cref="IEnumerable{T}"/> in its constructor, such as a <see cref="List{T}"/>, <see cref="HashSet{T}"/>, or a <see cref="SortedSet{T}"/> class.
         /// </para>
         /// </remarks>
-
-
         public abstract void WriteAllLines(string path, IEnumerable<string> contents);
 
-        /// <inheritdoc cref="File.WriteAllLines(string,IEnumerable{string},Encoding)"/>
+        /// <inheritdoc cref="IFile.WriteAllLines(string,IEnumerable{string},Encoding)"/>
         /// <summary>
         /// Creates a new file by using the specified encoding, writes a collection of strings to the file, and then closes the file.
         /// </summary>
@@ -456,7 +455,7 @@ namespace System.IO.Abstractions
         /// </remarks>
         public abstract void WriteAllLines(string path, IEnumerable<string> contents, Encoding encoding);
 
-        /// <inheritdoc cref="File.WriteAllLines(string,string[])"/>
+        /// <inheritdoc cref="IFile.WriteAllLines(string,string[])"/>
         /// <summary>
         /// Creates a new file, writes the specified string array to the file by using the specified encoding, and then closes the file.
         /// </summary>
@@ -496,7 +495,7 @@ namespace System.IO.Abstractions
         /// </remarks>
         public abstract void WriteAllLines(string path, string[] contents);
 
-        /// <inheritdoc cref="File.WriteAllLines(string,string[],Encoding)"/>
+        /// <inheritdoc cref="IFile.WriteAllLines(string,string[],Encoding)"/>
         /// <summary>
         /// Creates a new file, writes the specified string array to the file by using the specified encoding, and then closes the file.
         /// </summary>
@@ -534,7 +533,7 @@ namespace System.IO.Abstractions
         /// </remarks>
         public abstract void WriteAllLines(string path, string[] contents, Encoding encoding);
 
-        /// <inheritdoc cref="File.WriteAllText(string,string)"/>
+        /// <inheritdoc cref="IFile.WriteAllText(string,string)"/>
         /// <summary>
         /// Creates a new file, writes the specified string to the file using the specified encoding, and then closes the file. If the target file already exists, it is overwritten.
         /// </summary>
@@ -569,7 +568,7 @@ namespace System.IO.Abstractions
         /// </remarks>
         public abstract void WriteAllText(string path, string contents);
 
-        /// <inheritdoc cref="File.WriteAllText(string,string,Encoding)"/>
+        /// <inheritdoc cref="IFile.WriteAllText(string,string,Encoding)"/>
         /// <summary>
         /// Creates a new file, writes the specified string to the file using the specified encoding, and then closes the file. If the target file already exists, it is overwritten.
         /// </summary>

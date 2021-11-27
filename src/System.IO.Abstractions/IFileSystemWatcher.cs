@@ -2,6 +2,7 @@
 
 namespace System.IO.Abstractions
 {
+    /// <inheritdoc cref="FileSystemWatcher" />
     public interface IFileSystemWatcher : IDisposable
     {
         /// <inheritdoc cref="FileSystemWatcher.IncludeSubdirectories"/>

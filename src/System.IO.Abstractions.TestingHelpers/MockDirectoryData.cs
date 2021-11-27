@@ -3,6 +3,7 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    /// <inheritdoc />
     [Serializable]
     public class MockDirectoryData : MockFileData
     {
@@ -10,13 +11,16 @@ namespace System.IO.Abstractions.TestingHelpers
         [NonSerialized]
         private DirectorySecurity accessControl;
 
+        /// <inheritdoc />
         public override bool IsDirectory { get { return true; } }
 
+        /// <inheritdoc />
         public MockDirectoryData() : base(string.Empty)
         {
             Attributes = FileAttributes.Directory;
         }
 
+        /// <inheritdoc />
         [SupportedOSPlatform("windows")]
         public new DirectorySecurity AccessControl
         {

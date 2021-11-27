@@ -1,5 +1,6 @@
 ﻿namespace System.IO.Abstractions.TestingHelpers
 {
+    /// <inheritdoc />
     [Serializable]
     public class MockFileStream : MemoryStream
     {
@@ -10,12 +11,13 @@
 
         private bool disposed;
 
+        /// <inheritdoc />
         public MockFileStream(
-            IMockFileDataAccessor mockFileDataAccessor,
-            string path,
-            FileMode mode,
-            FileAccess access = FileAccess.ReadWrite,
-            FileOptions options = FileOptions.None)
+                  IMockFileDataAccessor mockFileDataAccessor,
+                  string path,
+                  FileMode mode,
+                  FileAccess access = FileAccess.ReadWrite,
+                  FileOptions options = FileOptions.None)
 
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
@@ -63,9 +65,13 @@
             this.access = access;
         }
 
+        /// <inheritdoc />
         public override bool CanRead => access.HasFlag(FileAccess.Read);
+
+        /// <inheritdoc />
         public override bool CanWrite => access.HasFlag(FileAccess.Write);
 
+        /// <inheritdoc />
         protected override void Dispose(bool disposing)
         {
             if (disposed)
@@ -78,6 +84,7 @@
             disposed = true;
         }
 
+        /// <inheritdoc />
         public override void Flush()
         {
             InternalFlush();

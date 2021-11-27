@@ -13,9 +13,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return ds => ds.CreateDirectory(null);
             if (MockUnixSupport.IsWindowsPlatform())
             {
-                #pragma warning disable CA1416
+#pragma warning disable CA1416
                 yield return ds => ds.CreateDirectory(null, new DirectorySecurity());
-                #pragma warning restore CA1416
+#pragma warning restore CA1416
             }
             yield return ds => ds.SetCreationTime(null, DateTime.Now);
             yield return ds => ds.SetCreationTimeUtc(null, DateTime.Now);

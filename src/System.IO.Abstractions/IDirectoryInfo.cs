@@ -3,12 +3,17 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
+    /// <inheritdoc cref="DirectoryInfo" />
     public interface IDirectoryInfo : IFileSystemInfo
     {
         /// <inheritdoc cref="DirectoryInfo.Create()"/>
         void Create();
 
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.Create(DirectoryInfo,DirectorySecurity)"/>
+#else
         /// <inheritdoc cref="DirectoryInfo.Create(DirectorySecurity)"/>
+#endif
         void Create(DirectorySecurity directorySecurity);
         /// <inheritdoc cref="DirectoryInfo.CreateSubdirectory(string)"/>
         IDirectoryInfo CreateSubdirectory(string path);
@@ -50,9 +55,18 @@ namespace System.IO.Abstractions
         IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, EnumerationOptions enumerationOptions);
 #endif
 
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(DirectoryInfo)"/>
+#else
         /// <inheritdoc cref="DirectoryInfo.GetAccessControl()"/>
+#endif
         DirectorySecurity GetAccessControl();
+
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(DirectoryInfo,AccessControlSections)"/>
+#else
         /// <inheritdoc cref="DirectoryInfo.GetAccessControl(AccessControlSections)"/>
+#endif
         DirectorySecurity GetAccessControl(AccessControlSections includeSections);
 
         /// <inheritdoc cref="DirectoryInfo.GetDirectories()"/>
@@ -94,7 +108,12 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="DirectoryInfo.MoveTo"/>
         void MoveTo(string destDirName);
 
-        /// <inheritdoc cref="DirectoryInfo.SetAccessControl"/>
+
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.SetAccessControl(DirectoryInfo,DirectorySecurity)"/>
+#else
+        /// <inheritdoc cref="DirectoryInfo.SetAccessControl(DirectorySecurity)"/>
+#endif
         void SetAccessControl(DirectorySecurity directorySecurity);
 
         /// <inheritdoc cref="DirectoryInfo.Parent"/>

@@ -13,14 +13,17 @@ namespace System.IO.Abstractions.TestingHelpers
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string defaultTempDirectory;
 
-        public MockPath(IMockFileDataAccessor mockFileDataAccessor) : this(mockFileDataAccessor,string.Empty) { }
+        /// <inheritdoc />
+        public MockPath(IMockFileDataAccessor mockFileDataAccessor) : this(mockFileDataAccessor, string.Empty) { }
 
-        public MockPath(IMockFileDataAccessor mockFileDataAccessor,string defaultTempDirectory) : base(mockFileDataAccessor?.FileSystem)
+        /// <inheritdoc />
+        public MockPath(IMockFileDataAccessor mockFileDataAccessor, string defaultTempDirectory) : base(mockFileDataAccessor?.FileSystem)
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
             this.defaultTempDirectory = !string.IsNullOrEmpty(defaultTempDirectory) ? defaultTempDirectory : base.GetTempPath();
         }
 
+        /// <inheritdoc />
         public override string GetFullPath(string path)
         {
             if (path == null)
@@ -129,6 +132,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return paths.SelectMany(path => path.Split(new[] { DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries)).ToArray();
         }
 
+        /// <inheritdoc />
         public override string GetTempFileName()
         {
             string fileName = mockFileDataAccessor.Path.GetRandomFileName();
@@ -141,6 +145,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return fullPath;
         }
 
+        /// <inheritdoc />
         public override string GetTempPath() => defaultTempDirectory;
     }
 }

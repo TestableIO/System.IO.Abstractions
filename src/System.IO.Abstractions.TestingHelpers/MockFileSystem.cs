@@ -7,6 +7,7 @@ namespace System.IO.Abstractions.TestingHelpers
 {
     using XFS = MockUnixSupport;
 
+    /// <inheritdoc />
     [Serializable]
     public class MockFileSystem : IFileSystem, IMockFileDataAccessor
     {
@@ -16,8 +17,10 @@ namespace System.IO.Abstractions.TestingHelpers
         private readonly IDictionary<string, FileSystemEntry> files;
         private readonly PathVerifier pathVerifier;
 
+        /// <inheritdoc />
         public MockFileSystem() : this(null) { }
 
+        /// <inheritdoc />
         public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = "")
         {
             if (string.IsNullOrEmpty(currentDirectory))
@@ -63,16 +66,27 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public StringOperations StringOperations { get; }
+        /// <inheritdoc />
         public IFile File { get; }
+        /// <inheritdoc />
         public IDirectory Directory { get; }
+        /// <inheritdoc />
         public IFileInfoFactory FileInfo { get; }
+        /// <inheritdoc />
         public IFileStreamFactory FileStream { get; }
+        /// <inheritdoc />
         public IPath Path { get; }
+        /// <inheritdoc />
         public IDirectoryInfoFactory DirectoryInfo { get; }
+        /// <inheritdoc />
         public IDriveInfoFactory DriveInfo { get; }
+        /// <inheritdoc />
         public IFileSystemWatcherFactory FileSystemWatcher { get; set; }
+        /// <inheritdoc />
         public IFileSystem FileSystem => this;
+        /// <inheritdoc />
         public PathVerifier PathVerifier => pathVerifier;
 
         private string FixPath(string path, bool checkCaps = false)
@@ -111,6 +125,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return fullPath.TrimSlashes();
         }
 
+        /// <inheritdoc />
         public MockFileData GetFile(string path)
         {
             path = FixPath(path).TrimSlashes();
@@ -123,6 +138,7 @@ namespace System.IO.Abstractions.TestingHelpers
             files[path] = new FileSystemEntry { Path = path, Data = mockFile };
         }
 
+        /// <inheritdoc />
         public void AddFile(string path, MockFileData mockFile)
         {
             var fixedPath = FixPath(path, true);
@@ -153,6 +169,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public void AddDirectory(string path)
         {
             var fixedPath = FixPath(path, true);
@@ -200,6 +217,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public void AddFileFromEmbeddedResource(string path, Assembly resourceAssembly, string embeddedResourcePath)
         {
             using (var embeddedResourceStream = resourceAssembly.GetManifestResourceStream(embeddedResourcePath))
@@ -217,6 +235,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public void AddFilesFromEmbeddedNamespace(string path, Assembly resourceAssembly, string embeddedRresourcePath)
         {
             var matchingResources = resourceAssembly.GetManifestResourceNames().Where(f => f.StartsWith(embeddedRresourcePath));
@@ -233,12 +252,13 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public void MoveDirectory(string sourcePath, string destPath)
         {
             sourcePath = FixPath(sourcePath);
             destPath = FixPath(destPath);
 
-            var sourcePathSequence = sourcePath.Split(new[] {Path.DirectorySeparatorChar}, StringSplitOptions.RemoveEmptyEntries);
+            var sourcePathSequence = sourcePath.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
 
             lock (files)
             {
@@ -258,7 +278,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             bool PathStartsWith(string path, string[] minMatch)
             {
-                var pathSequence = path.Split(new[] {Path.DirectorySeparatorChar}, StringSplitOptions.RemoveEmptyEntries);
+                var pathSequence = path.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
                 if (pathSequence.Length < minMatch.Length)
                 {
                     return false;
@@ -276,6 +296,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public void RemoveFile(string path)
         {
             path = FixPath(path);
@@ -291,6 +312,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public bool FileExists(string path)
         {
             if (string.IsNullOrEmpty(path))
@@ -306,6 +328,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public IEnumerable<string> AllPaths
         {
             get
@@ -317,6 +340,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public IEnumerable<string> AllNodes
         {
             get
@@ -328,6 +352,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public IEnumerable<string> AllFiles
         {
             get
@@ -339,6 +364,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <inheritdoc />
         public IEnumerable<string> AllDirectories
         {
             get

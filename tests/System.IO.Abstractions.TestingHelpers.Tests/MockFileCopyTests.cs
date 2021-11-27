@@ -36,7 +36,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockFileSystem = new MockFileSystem();
             mockFileSystem.AddFile(sourceFileName, "Original");
             mockFileSystem.File.Copy(sourceFileName, destFileName);
-            
+
             using (var stream = mockFileSystem.File.Open(sourceFileName, FileMode.Open, FileAccess.ReadWrite))
             {
                 var binaryWriter = new System.IO.BinaryWriter(stream);
@@ -368,7 +368,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.Throws<FileNotFoundException>(action);
         }
-        
+
         [Test]
         public void MockFile_Copy_ShouldWorkWithRelativePaths()
         {

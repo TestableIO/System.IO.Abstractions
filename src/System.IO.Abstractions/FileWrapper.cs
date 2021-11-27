@@ -1,160 +1,176 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
-using System.Text;
 
+using System.Text;
 namespace System.IO.Abstractions
 {
+    /// <inheritdoc />
     [Serializable]
     public partial class FileWrapper : FileBase
     {
+        /// <inheritdoc />
         public FileWrapper(IFileSystem fileSystem) : base(fileSystem)
         {
         }
 
+        /// <inheritdoc />
         public override void AppendAllLines(string path, IEnumerable<string> contents)
         {
             File.AppendAllLines(path, contents);
         }
 
+        /// <inheritdoc />
         public override void AppendAllLines(string path, IEnumerable<string> contents, Encoding encoding)
         {
             File.AppendAllLines(path, contents, encoding);
         }
 
 
+        /// <inheritdoc />
         public override void AppendAllText(string path, string contents)
         {
             File.AppendAllText(path, contents);
         }
 
+        /// <inheritdoc />
         public override void AppendAllText(string path, string contents, Encoding encoding)
         {
             File.AppendAllText(path, contents, encoding);
         }
 
+        /// <inheritdoc />
         public override StreamWriter AppendText(string path)
         {
             return File.AppendText(path);
         }
 
+        /// <inheritdoc />
         public override void Copy(string sourceFileName, string destFileName)
         {
             File.Copy(sourceFileName, destFileName);
         }
 
+        /// <inheritdoc />
         public override void Copy(string sourceFileName, string destFileName, bool overwrite)
         {
             File.Copy(sourceFileName, destFileName, overwrite);
         }
 
+        /// <inheritdoc />
         public override Stream Create(string path)
         {
             return File.Create(path);
         }
 
+        /// <inheritdoc />
         public override Stream Create(string path, int bufferSize)
         {
             return File.Create(path, bufferSize);
         }
 
+        /// <inheritdoc />
         public override Stream Create(string path, int bufferSize, FileOptions options)
         {
             return File.Create(path, bufferSize, options);
         }
 
+        /// <inheritdoc />
         public override StreamWriter CreateText(string path)
         {
             return File.CreateText(path);
         }
 
+        /// <inheritdoc />
         [SupportedOSPlatform("windows")]
         public override void Decrypt(string path)
         {
             File.Decrypt(path);
         }
 
+        /// <inheritdoc />
         public override void Delete(string path)
         {
             File.Delete(path);
         }
 
+        /// <inheritdoc />
         [SupportedOSPlatform("windows")]
         public override void Encrypt(string path)
         {
             File.Encrypt(path);
         }
 
+        /// <inheritdoc />
         public override bool Exists(string path)
         {
             return File.Exists(path);
         }
 
+        /// <inheritdoc />
         [SupportedOSPlatform("windows")]
         public override FileSecurity GetAccessControl(string path)
         {
             return new FileInfo(path).GetAccessControl();
         }
 
+        /// <inheritdoc />
         [SupportedOSPlatform("windows")]
         public override FileSecurity GetAccessControl(string path, AccessControlSections includeSections)
         {
             return new FileInfo(path).GetAccessControl(includeSections);
         }
 
-        /// <summary>
-        /// Gets the <see cref="FileAttributes"/> of the file on the path.
-        /// </summary>
-        /// <param name="path">The path to the file.</param>
-        /// <returns>The <see cref="FileAttributes"/> of the file on the path.</returns>
-        /// <exception cref="ArgumentException"><paramref name="path"/> is empty, contains only white spaces, or contains invalid characters.</exception>
-        /// <exception cref="PathTooLongException">The specified path, file name, or both exceed the system-defined maximum length. For example, on Windows-based platforms, paths must be less than 248 characters, and file names must be less than 260 characters.</exception>
-        /// <exception cref="NotSupportedException"><paramref name="path"/> is in an invalid format.</exception>
-        /// <exception cref="FileNotFoundException"><paramref name="path"/> represents a file and is invalid, such as being on an unmapped drive, or the file cannot be found.</exception>
-        /// <exception cref="DirectoryNotFoundException"><paramref name="path"/> represents a directory and is invalid, such as being on an unmapped drive, or the directory cannot be found.</exception>
-        /// <exception cref="IOException">This file is being used by another process.</exception>
-        /// <exception cref="UnauthorizedAccessException">The caller does not have the required permission.</exception>
+        /// <inheritdoc />
         public override FileAttributes GetAttributes(string path)
         {
             return File.GetAttributes(path);
         }
 
+        /// <inheritdoc />
         public override DateTime GetCreationTime(string path)
         {
             return File.GetCreationTime(path);
         }
 
+        /// <inheritdoc />
         public override DateTime GetCreationTimeUtc(string path)
         {
             return File.GetCreationTimeUtc(path);
         }
 
+        /// <inheritdoc />
         public override DateTime GetLastAccessTime(string path)
         {
             return File.GetLastAccessTime(path);
         }
 
+        /// <inheritdoc />
         public override DateTime GetLastAccessTimeUtc(string path)
         {
             return File.GetLastAccessTimeUtc(path);
         }
 
+        /// <inheritdoc />
         public override DateTime GetLastWriteTime(string path)
         {
             return File.GetLastWriteTime(path);
         }
 
+        /// <inheritdoc />
         public override DateTime GetLastWriteTimeUtc(string path)
         {
             return File.GetLastWriteTimeUtc(path);
         }
 
+        /// <inheritdoc />
         public override void Move(string sourceFileName, string destFileName)
         {
             File.Move(sourceFileName, destFileName);
         }
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
+        /// <inheritdoc />
         public override void Move(string sourceFileName, string destFileName, bool overwrite)
         {
             File.Move(sourceFileName, destFileName, overwrite);
@@ -162,118 +178,140 @@ namespace System.IO.Abstractions
 #endif
 
 
+        /// <inheritdoc />
         public override Stream Open(string path, FileMode mode)
         {
             return File.Open(path, mode);
         }
 
+        /// <inheritdoc />
         public override Stream Open(string path, FileMode mode, FileAccess access)
         {
             return File.Open(path, mode, access);
         }
 
+        /// <inheritdoc />
         public override Stream Open(string path, FileMode mode, FileAccess access, FileShare share)
         {
             return File.Open(path, mode, access, share);
         }
 
+        /// <inheritdoc />
         public override Stream OpenRead(string path)
         {
             return File.OpenRead(path);
         }
 
+        /// <inheritdoc />
         public override StreamReader OpenText(string path)
         {
             return File.OpenText(path);
         }
 
+        /// <inheritdoc />
         public override Stream OpenWrite(string path)
         {
             return File.OpenWrite(path);
         }
 
+        /// <inheritdoc />
         public override byte[] ReadAllBytes(string path)
         {
             return File.ReadAllBytes(path);
         }
 
+        /// <inheritdoc />
         public override string[] ReadAllLines(string path)
         {
             return File.ReadAllLines(path);
         }
 
+        /// <inheritdoc />
         public override string[] ReadAllLines(string path, Encoding encoding)
         {
             return File.ReadAllLines(path, encoding);
         }
 
+        /// <inheritdoc />
         public override string ReadAllText(string path)
         {
             return File.ReadAllText(path);
         }
 
+        /// <inheritdoc />
         public override string ReadAllText(string path, Encoding encoding)
         {
             return File.ReadAllText(path, encoding);
         }
 
+        /// <inheritdoc />
         public override IEnumerable<string> ReadLines(string path)
         {
             return File.ReadLines(path);
         }
 
+        /// <inheritdoc />
         public override IEnumerable<string> ReadLines(string path, Encoding encoding)
         {
             return File.ReadLines(path, encoding);
         }
 
+        /// <inheritdoc />
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName)
         {
             File.Replace(sourceFileName, destinationFileName, destinationBackupFileName);
         }
 
+        /// <inheritdoc />
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
             File.Replace(sourceFileName, destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
         }
 
-
+        /// <inheritdoc />
         [SupportedOSPlatform("windows")]
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
         {
             new FileInfo(path).SetAccessControl(fileSecurity);
         }
 
+        /// <inheritdoc />
         public override void SetAttributes(string path, FileAttributes fileAttributes)
         {
             File.SetAttributes(path, fileAttributes);
         }
 
+        /// <inheritdoc />
         public override void SetCreationTime(string path, DateTime creationTime)
         {
             File.SetCreationTime(path, creationTime);
         }
 
+        /// <inheritdoc />
         public override void SetCreationTimeUtc(string path, DateTime creationTimeUtc)
         {
             File.SetCreationTimeUtc(path, creationTimeUtc);
         }
 
+        /// <inheritdoc />
         public override void SetLastAccessTime(string path, DateTime lastAccessTime)
         {
             File.SetLastAccessTime(path, lastAccessTime);
         }
 
+        /// <inheritdoc />
         public override void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc)
         {
             File.SetLastAccessTimeUtc(path, lastAccessTimeUtc);
         }
 
+        /// <inheritdoc />
         public override void SetLastWriteTime(string path, DateTime lastWriteTime)
         {
             File.SetLastWriteTime(path, lastWriteTime);
         }
 
+        /// <inheritdoc />
         public override void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc)
         {
             File.SetLastWriteTimeUtc(path, lastWriteTimeUtc);

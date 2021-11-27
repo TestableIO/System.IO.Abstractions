@@ -135,8 +135,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFile_ReadAllLinesAsync_ShouldThrowOperationCanceledExceptionIfCanceled()
         {
             var fileSystem = new MockFileSystem();
-            
-            AsyncTestDelegate action = async () => 
+
+            AsyncTestDelegate action = async () =>
                 await fileSystem.File.ReadAllLinesAsync(@"C:\a.txt", new CancellationToken(canceled: true));
 
             Assert.ThrowsAsync<OperationCanceledException>(action);
@@ -148,7 +148,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var absentFileNameFullPath = XFS.Path(@"c:\you surely don't have such file.hope-so");
             var mockFileSystem = new MockFileSystem();
 
-            var act = new AsyncTestDelegate(async() =>
+            var act = new AsyncTestDelegate(async () =>
                 await mockFileSystem.File.ReadAllTextAsync(absentFileNameFullPath)
             );
 
