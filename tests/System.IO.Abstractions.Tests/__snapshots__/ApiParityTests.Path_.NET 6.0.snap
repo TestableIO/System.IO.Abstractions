@@ -6,23 +6,5 @@
     "Char get_VolumeSeparatorChar()",
     "Char[] get_InvalidPathChars()"
   ],
-  "MissingMembers": [
-    "Boolean EndsInDirectorySeparator(System.ReadOnlySpan`1[System.Char])",
-    "Boolean EndsInDirectorySeparator(System.String)",
-    "Boolean HasExtension(System.ReadOnlySpan`1[System.Char])",
-    "Boolean IsPathFullyQualified(System.ReadOnlySpan`1[System.Char])",
-    "Boolean IsPathRooted(System.ReadOnlySpan`1[System.Char])",
-    "System.ReadOnlySpan`1[System.Char] GetDirectoryName(System.ReadOnlySpan`1[System.Char])",
-    "System.ReadOnlySpan`1[System.Char] GetExtension(System.ReadOnlySpan`1[System.Char])",
-    "System.ReadOnlySpan`1[System.Char] GetFileName(System.ReadOnlySpan`1[System.Char])",
-    "System.ReadOnlySpan`1[System.Char] GetFileNameWithoutExtension(System.ReadOnlySpan`1[System.Char])",
-    "System.ReadOnlySpan`1[System.Char] GetPathRoot(System.ReadOnlySpan`1[System.Char])",
-    "System.ReadOnlySpan`1[System.Char] TrimEndingDirectorySeparator(System.ReadOnlySpan`1[System.Char])",
-    "System.String Join(System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char], System.ReadOnlySpan`1[System.Char])",
-    "System.String Join(System.String, System.String)",
-    "System.String Join(System.String, System.String, System.String)",
-    "System.String Join(System.String, System.String, System.String, System.String)",
-    "System.String Join(System.String[])",
-    "System.String TrimEndingDirectorySeparator(System.String)"
-  ]
+  "MissingMembers": []
 }
