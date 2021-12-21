@@ -206,6 +206,7 @@
         {
             return Path.TrimEndingDirectorySeparator(path);
         }
+
         /// <inheritdoc />
         public override string TrimEndingDirectorySeparator(string path)
         {
@@ -214,8 +215,6 @@
 #endif
 
 #if FEATURE_ADVANCED_PATH_OPERATIONS
-
-
         /// <inheritdoc />
         public override bool HasExtension(ReadOnlySpan<char> path)
         {
@@ -263,7 +262,6 @@
         {
             return Path.GetPathRoot(path);
         }
-
 #endif
 
 #if FEATURE_PATH_JOIN_WITH_FOUR_PATHS
@@ -272,17 +270,15 @@
         {
             return Path.Join(path1, path2, path3, path4);
         }
+
         /// <inheritdoc />
         public override string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3, ReadOnlySpan<char> path4)
         {
             return Path.Join(path1, path2, path3, path4);
         }
-
 #endif
 
 #if FEATURE_PATH_JOIN_WITH_PARAMS
-
-
         /// <inheritdoc />
         public override string Join(string path1, string path2)
         {
@@ -294,6 +290,7 @@
         {
             return Path.Join(path1, path2, path3);
         }
+
         /// <inheritdoc />
         public override string Join(params string[] paths)
         {

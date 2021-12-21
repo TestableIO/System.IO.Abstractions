@@ -81,7 +81,6 @@
 #endif
 
 #if FEATURE_ADVANCED_PATH_OPERATIONS
-
         /// <inheritdoc cref="System.IO.Path.HasExtension(ReadOnlySpan{char})"/>
         bool HasExtension(ReadOnlySpan<char> path);
 
@@ -109,10 +108,8 @@
 #endif
 
 #if FEATURE_PATH_JOIN_WITH_PARAMS
-
         /// <inheritdoc cref="System.IO.Path.Join(string,string)" />
         string Join(string path1, string path2);
-
 
         /// <inheritdoc cref="System.IO.Path.Join(string?, string?, string?)" />
         string Join(string path1, string path2, string path3);
@@ -133,7 +130,6 @@
         /// <inheritdoc cref="System.IO.Path.TrimEndingDirectorySeparator(string)" />
         string TrimEndingDirectorySeparator(string path);
 #endif
-
 
 #if FEATURE_PATH_JOIN_WITH_FOUR_PATHS
         /// <inheritdoc cref="System.IO.Path.Join(ReadOnlySpan{char}, ReadOnlySpan{char}, ReadOnlySpan{char}, ReadOnlySpan{char})" />
