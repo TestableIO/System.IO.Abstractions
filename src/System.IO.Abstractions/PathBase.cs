@@ -114,5 +114,56 @@
         /// <inheritdoc />
         public abstract bool TryJoin(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, Span<char> destination, out int charsWritten);
 #endif
+
+#if FEATURE_ADVANCED_PATH_OPERATIONS
+        /// <inheritdoc />
+        public abstract bool HasExtension(ReadOnlySpan<char> path);
+        /// <inheritdoc />
+        public abstract bool IsPathFullyQualified(ReadOnlySpan<char> path);
+        /// <inheritdoc />
+        public abstract bool IsPathRooted(ReadOnlySpan<char> path);
+        /// <inheritdoc />
+        public abstract ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path);
+        /// <inheritdoc />
+        public abstract ReadOnlySpan<char> GetExtension(ReadOnlySpan<char> path);
+        /// <inheritdoc />
+        public abstract ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path);
+        /// <inheritdoc />
+        public abstract ReadOnlySpan<char> GetFileNameWithoutExtension(ReadOnlySpan<char> path);
+        /// <inheritdoc />
+        public abstract ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path);
+
+#endif
+#if FEATURE_PATH_JOIN_WITH_PARAMS
+        /// <inheritdoc />
+        public abstract string Join(params string[] paths);
+
+        /// <inheritdoc />
+        public abstract string Join(string path1, string path2);
+        /// <inheritdoc />
+
+        public abstract string Join(string path1, string path2, string path3);
+
+#endif
+
+#if FEATURE_ENDS_IN_DIRECTORY_SEPARATOR
+        /// <inheritdoc />
+        public abstract bool EndsInDirectorySeparator(ReadOnlySpan<char> path);
+        /// <inheritdoc />
+        public abstract bool EndsInDirectorySeparator(string path);
+        /// <inheritdoc />
+        public abstract ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path);
+
+        /// <inheritdoc />
+        public abstract string TrimEndingDirectorySeparator(string path);
+#endif
+
+#if FEATURE_PATH_JOIN_WITH_FOUR_PATHS
+
+        /// <inheritdoc />
+        public abstract string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3, ReadOnlySpan<char> path4);
+        /// <inheritdoc />
+        public abstract string Join(string path1, string path2, string path3, string path4);
+#endif
     }
 }

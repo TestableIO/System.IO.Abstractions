@@ -79,5 +79,64 @@
         /// <inheritdoc cref="System.IO.Path.TryJoin(ReadOnlySpan{char}, ReadOnlySpan{char}, ReadOnlySpan{char}, Span{char}, out int)"/>
         bool TryJoin(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, Span<char> destination, out int charsWritten);
 #endif
+
+#if FEATURE_ADVANCED_PATH_OPERATIONS
+        /// <inheritdoc cref="System.IO.Path.HasExtension(ReadOnlySpan{char})"/>
+        bool HasExtension(ReadOnlySpan<char> path);
+
+        /// <inheritdoc cref="System.IO.Path.IsPathFullyQualified(ReadOnlySpan{char})"/>
+        bool IsPathFullyQualified(ReadOnlySpan<char> path);
+
+        /// <inheritdoc cref="System.IO.Path.IsPathRooted(ReadOnlySpan{char})"/>
+        bool IsPathRooted(ReadOnlySpan<char> path);
+
+        /// <inheritdoc cref="System.IO.Path.GetDirectoryName(ReadOnlySpan{char})"/>
+        ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path);
+
+        /// <inheritdoc cref="System.IO.Path.GetExtension(ReadOnlySpan{char})"/>
+        ReadOnlySpan<char> GetExtension(ReadOnlySpan<char> path);
+
+        /// <inheritdoc cref="System.IO.Path.GetFileName(ReadOnlySpan{char})"/>
+        ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path);
+
+        /// <inheritdoc cref="System.IO.Path.GetFileNameWithoutExtension(ReadOnlySpan{char})"/> 
+        ReadOnlySpan<char> GetFileNameWithoutExtension(ReadOnlySpan<char> path);
+
+        /// <inheritdoc cref="System.IO.Path.GetPathRoot(ReadOnlySpan{char})"/> 
+        ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path);
+
+#endif
+
+#if FEATURE_PATH_JOIN_WITH_PARAMS
+        /// <inheritdoc cref="System.IO.Path.Join(string,string)" />
+        string Join(string path1, string path2);
+
+        /// <inheritdoc cref="System.IO.Path.Join(string?, string?, string?)" />
+        string Join(string path1, string path2, string path3);
+
+        /// <inheritdoc cref="System.IO.Path.Join(string?[])" />
+        string Join(params string[] paths);
+#endif
+
+#if FEATURE_ENDS_IN_DIRECTORY_SEPARATOR
+        /// <inheritdoc cref="System.IO.Path.EndsInDirectorySeparator(ReadOnlySpan{char})"/>
+        bool EndsInDirectorySeparator(ReadOnlySpan<char> path);
+
+        /// <inheritdoc cref="System.IO.Path.EndsInDirectorySeparator(string)"/>
+        bool EndsInDirectorySeparator(string path);
+
+        /// <inheritdoc cref="System.IO.Path.TrimEndingDirectorySeparator(ReadOnlySpan{char})"/> 
+        ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path);
+        /// <inheritdoc cref="System.IO.Path.TrimEndingDirectorySeparator(string)" />
+        string TrimEndingDirectorySeparator(string path);
+#endif
+
+#if FEATURE_PATH_JOIN_WITH_FOUR_PATHS
+        /// <inheritdoc cref="System.IO.Path.Join(ReadOnlySpan{char}, ReadOnlySpan{char}, ReadOnlySpan{char}, ReadOnlySpan{char})" />
+        string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3, ReadOnlySpan<char> path4);
+
+        /// <inheritdoc cref="System.IO.Path.Join(string?, string?, string?, string?)" />
+        string Join(string path1, string path2, string path3, string path4);
+#endif
     }
 }

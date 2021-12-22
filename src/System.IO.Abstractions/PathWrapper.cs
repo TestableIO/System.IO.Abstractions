@@ -187,5 +187,115 @@
         {
             return Path.IsPathRooted(path);
         }
+
+#if FEATURE_ENDS_IN_DIRECTORY_SEPARATOR
+        /// <inheritdoc />
+        public override bool EndsInDirectorySeparator(ReadOnlySpan<char> path)
+        {
+            return Path.EndsInDirectorySeparator(path);
+        }
+
+        /// <inheritdoc />
+        public override bool EndsInDirectorySeparator(string path)
+        {
+            return Path.EndsInDirectorySeparator(path);
+        }
+
+        /// <inheritdoc />
+        public override ReadOnlySpan<char> TrimEndingDirectorySeparator(ReadOnlySpan<char> path)
+        {
+            return Path.TrimEndingDirectorySeparator(path);
+        }
+
+        /// <inheritdoc />
+        public override string TrimEndingDirectorySeparator(string path)
+        {
+            return Path.TrimEndingDirectorySeparator(path);
+        }
+#endif
+
+#if FEATURE_ADVANCED_PATH_OPERATIONS
+        /// <inheritdoc />
+        public override bool HasExtension(ReadOnlySpan<char> path)
+        {
+            return Path.HasExtension(path);
+        }
+
+        /// <inheritdoc />
+        public override bool IsPathFullyQualified(ReadOnlySpan<char> path)
+        {
+            return Path.IsPathFullyQualified(path);
+        }
+
+        /// <inheritdoc />
+        public override bool IsPathRooted(ReadOnlySpan<char> path)
+        {
+            return Path.IsPathRooted(path);
+        }
+
+        /// <inheritdoc />
+        public override ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path)
+        {
+            return Path.GetDirectoryName(path);
+        }
+
+        /// <inheritdoc />
+        public override ReadOnlySpan<char> GetExtension(ReadOnlySpan<char> path)
+        {
+            return Path.GetExtension(path);
+        }
+
+        /// <inheritdoc />
+        public override ReadOnlySpan<char> GetFileName(ReadOnlySpan<char> path)
+        {
+            return Path.GetFileName(path);
+        }
+
+        /// <inheritdoc />
+        public override ReadOnlySpan<char> GetFileNameWithoutExtension(ReadOnlySpan<char> path)
+        {
+            return Path.GetFileNameWithoutExtension(path);
+        }
+
+        /// <inheritdoc />
+        public override ReadOnlySpan<char> GetPathRoot(ReadOnlySpan<char> path)
+        {
+            return Path.GetPathRoot(path);
+        }
+#endif
+
+#if FEATURE_PATH_JOIN_WITH_FOUR_PATHS
+        /// <inheritdoc />
+        public override string Join(string path1, string path2, string path3, string path4)
+        {
+            return Path.Join(path1, path2, path3, path4);
+        }
+
+        /// <inheritdoc />
+        public override string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3, ReadOnlySpan<char> path4)
+        {
+            return Path.Join(path1, path2, path3, path4);
+        }
+#endif
+
+#if FEATURE_PATH_JOIN_WITH_PARAMS
+        /// <inheritdoc />
+        public override string Join(string path1, string path2)
+        {
+            return Path.Join(path1, path2);
+        }
+
+        /// <inheritdoc />
+        public override string Join(string path1, string path2, string path3)
+        {
+            return Path.Join(path1, path2, path3);
+        }
+
+        /// <inheritdoc />
+        public override string Join(params string[] paths)
+        {
+            return Path.Join(paths);
+        }
+#endif
     }
 }
