@@ -393,23 +393,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileSystem_FileSystemWatcher_PathShouldBeAssignable()
+        public void MockFileSystem_FileSystemWatcher_Can_Be_Overridden()
         {
             var path = XFS.Path(@"C:\root");
-            var fileSystem = new MockFileSystem { FileSystemWatcher = new TestFileSystemWatcherFactory() };
+            var fileSystem = new TestFileSystem(new TestFileSystemWatcherFactory());
             var watcher = fileSystem.FileSystemWatcher.CreateNew(path);
             Assert.AreEqual(path, watcher.Path);
         }
 
-        [Test]
-        public void MockFileSystem_FileSystemWatcher_PathAndFilterShouldBeAssignable()
+        private class TestFileSystem : MockFileSystem
         {
-            var path = XFS.Path(@"C:\root");
-            var filter = "*.txt";
-            var fileSystem = new MockFileSystem { FileSystemWatcher = new TestFileSystemWatcherFactory() };
-            var watcher = fileSystem.FileSystemWatcher.CreateNew(path, filter);
-            Assert.AreEqual(path, watcher.Path);
-            Assert.AreEqual(filter, watcher.Filter);
+            private readonly IFileSystemWatcherFactory fileSystemWatcherFactory;
+
+            public TestFileSystem(IFileSystemWatcherFactory fileSystemWatcherFactory)
+            {
+                this.fileSystemWatcherFactory = fileSystemWatcherFactory;
+            }
+
+            public override IFileSystemWatcherFactory FileSystemWatcher => fileSystemWatcherFactory;
         }
 
         private class TestFileSystemWatcherFactory : IFileSystemWatcherFactory
