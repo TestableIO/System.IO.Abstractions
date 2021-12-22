@@ -2,7 +2,7 @@
 {
     /// <inheritdoc />
     [Serializable]
-    public class FileSystem : IFileSystem
+    public class FileSystem : FileSystemBase
     {
         /// <inheritdoc />
         public FileSystem()
@@ -18,27 +18,27 @@
         }
 
         /// <inheritdoc />
-        public IDirectory Directory { get; }
+        public override IDirectory Directory { get; }
 
         /// <inheritdoc />
-        public IFile File { get; }
+        public override IFile File { get; }
 
         /// <inheritdoc />
-        public IFileInfoFactory FileInfo { get; }
+        public override IFileInfoFactory FileInfo { get; }
 
         /// <inheritdoc />
-        public IFileStreamFactory FileStream { get; }
+        public override IFileStreamFactory FileStream { get; }
 
         /// <inheritdoc />
-        public IPath Path { get; }
+        public override IPath Path { get; }
 
         /// <inheritdoc />
-        public IDirectoryInfoFactory DirectoryInfo { get; }
+        public override IDirectoryInfoFactory DirectoryInfo { get; }
 
         /// <inheritdoc />
-        public IDriveInfoFactory DriveInfo { get; }
+        public override IDriveInfoFactory DriveInfo { get; }
 
         /// <inheritdoc />
-        public IFileSystemWatcherFactory FileSystemWatcher { get; }
+        public override IFileSystemWatcherFactory FileSystemWatcher { get; }
     }
 }

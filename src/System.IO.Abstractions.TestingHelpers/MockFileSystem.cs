@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
@@ -9,7 +8,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
     /// <inheritdoc />
     [Serializable]
-    public class MockFileSystem : IFileSystem, IMockFileDataAccessor
+    public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     {
         private const string DEFAULT_CURRENT_DIRECTORY = @"C:\";
         private const string TEMP_DIRECTORY = @"C:\temp";
@@ -69,21 +68,21 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public StringOperations StringOperations { get; }
         /// <inheritdoc />
-        public IFile File { get; }
+        public override IFile File { get; }
         /// <inheritdoc />
-        public IDirectory Directory { get; }
+        public override IDirectory Directory { get; }
         /// <inheritdoc />
-        public IFileInfoFactory FileInfo { get; }
+        public override IFileInfoFactory FileInfo { get; }
         /// <inheritdoc />
-        public IFileStreamFactory FileStream { get; }
+        public override IFileStreamFactory FileStream { get; }
         /// <inheritdoc />
-        public IPath Path { get; }
+        public override IPath Path { get; }
         /// <inheritdoc />
-        public IDirectoryInfoFactory DirectoryInfo { get; }
+        public override IDirectoryInfoFactory DirectoryInfo { get; }
         /// <inheritdoc />
-        public IDriveInfoFactory DriveInfo { get; }
+        public override IDriveInfoFactory DriveInfo { get; }
         /// <inheritdoc />
-        public IFileSystemWatcherFactory FileSystemWatcher { get; set; }
+        public override IFileSystemWatcherFactory FileSystemWatcher { get; }
         /// <inheritdoc />
         public IFileSystem FileSystem => this;
         /// <inheritdoc />
