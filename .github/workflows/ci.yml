@@ -103,12 +103,12 @@ jobs:
       - uses: dotnet/nbgv@v0.4.0
         id: nbgv
       - name: Create GitHub release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
+          name: v${{ steps.nbgv.outputs.SemVer2 }}
           tag_name: v${{ steps.nbgv.outputs.SemVer2 }}
-          release_name: v${{ steps.nbgv.outputs.SemVer2 }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          generate_release_notes: true
       - name: Comment relevant issues and merge requests
         uses: apexskier/github-release-commenter@v1.3.2
         with:
