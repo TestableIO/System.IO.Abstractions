@@ -54,6 +54,11 @@
         /// <inheritdoc cref="FileSystemInfo.LastWriteTimeUtc"/>
         public abstract DateTime LastWriteTimeUtc { get; set; }
 
+#if NET6_0_OR_GREATER
+        /// <inheritdoc cref="FileSystemInfo.LinkTarget"/>
+        public abstract string LinkTarget { get; }
+#endif
+
         /// <inheritdoc cref="FileSystemInfo.Name"/>
         public abstract string Name { get; }
     }

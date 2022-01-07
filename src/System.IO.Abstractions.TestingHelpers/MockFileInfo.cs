@@ -167,6 +167,14 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+#if NET6_0_OR_GREATER
+        /// <inheritdoc />
+        public override string LinkTarget
+        {
+            get { return null; }
+        }
+#endif
+
         /// <inheritdoc />
         public override string Name
         {

@@ -28,7 +28,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return ds => ds.EnumerateDirectories(null, "foo", SearchOption.AllDirectories);
         }
 
-        [TestCaseSource("GetFileSystemActionsForArgumentNullException")]
+        [TestCaseSource(nameof(GetFileSystemActionsForArgumentNullException))]
         public void Operations_ShouldThrowArgumentNullExceptionIfPathIsNull(Action<IDirectory> action)
         {
             // Arrange

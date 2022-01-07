@@ -96,6 +96,14 @@ namespace System.IO.Abstractions
             set { instance.LastWriteTimeUtc = value; }
         }
 
+#if NET6_0_OR_GREATER
+        /// <inheritdoc />
+        public override string LinkTarget
+        {
+            get { return instance.LinkTarget; }
+        }
+#endif
+
         /// <inheritdoc />
         public override string Name
         {
