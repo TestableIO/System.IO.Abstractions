@@ -191,7 +191,10 @@ namespace System.IO.Abstractions.TestingHelpers
             if (!Exists)
             {
                 var mockFileData = GetMockFileDataForRead(throwIfNotExisting: false);
-                if (mockFileData == null) throw CommonExceptions.FileNotFound(FullName);
+                if (mockFileData == null)
+                {
+                    throw CommonExceptions.FileNotFound(FullName);
+                }
             }
             if (destFileName == FullName)
             {
