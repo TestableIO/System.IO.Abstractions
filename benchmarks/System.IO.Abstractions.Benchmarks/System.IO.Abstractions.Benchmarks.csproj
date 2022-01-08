@@ -4,7 +4,7 @@
 		<RootNamespace>System.IO.Abstractions.Benchmarks</RootNamespace>
 		<Description>Bencharmks comparisons.</Description>
 		<TargetFrameworks>net5.0;netcoreapp3.1;net461</TargetFrameworks>
-		<PackageProjectUrl>https://github.com/System-IO-Abstractions/System.IO.Abstractions</PackageProjectUrl>
+		<PackageProjectUrl>https://github.com/TestableIO/System.IO.Abstractions</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>testing</PackageTags>
 		<IsPackable>false</IsPackable>
