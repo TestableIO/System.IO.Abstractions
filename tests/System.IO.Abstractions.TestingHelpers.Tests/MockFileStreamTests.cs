@@ -31,7 +31,7 @@
         public void MockFileStream_Dispose_ShouldNotResurrectFile()
         {
             // path in this test case is a subject to Directory.GetParent(path) Linux issue
-            // https://github.com/System-IO-Abstractions/System.IO.Abstractions/issues/395
+            // https://github.com/TestableIO/System.IO.Abstractions/issues/395
             var fileSystem = new MockFileSystem();
             var path = XFS.Path("C:\\some_folder\\test");
             var directory = fileSystem.Path.GetDirectoryName(path);
