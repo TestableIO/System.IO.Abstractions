@@ -15,7 +15,7 @@
     <DefineConstants Condition="'$(TargetFramework)' == 'net6.0' OR '$(TargetFramework)' == 'net5.0'">$(DefineConstants);FEATURE_FILE_MOVE_WITH_OVERWRITE;FEATURE_SUPPORTED_OS_ATTRIBUTE;FEATURE_FILE_SYSTEM_WATCHER_FILTERS;FEATURE_ENDS_IN_DIRECTORY_SEPARATOR;FEATURE_PATH_JOIN_WITH_PARAMS;FEATURE_PATH_JOIN_WITH_FOUR_PATHS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.244">
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.255">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
