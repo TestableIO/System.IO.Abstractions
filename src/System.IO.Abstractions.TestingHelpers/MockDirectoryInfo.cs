@@ -134,11 +134,11 @@ namespace System.IO.Abstractions.TestingHelpers
             set { GetMockFileDataForWrite().LastWriteTime = value.ToLocalTime(); }
         }
 
-#if NET6_0_OR_GREATER
+#if FEATURE_FILE_SYSTEM_INFO_LINK_TARGET
         /// <inheritdoc />
         public override string LinkTarget
         {
-            get { return null; }
+            get { return GetMockFileDataForRead().LinkTarget; }
         }
 #endif
 

@@ -167,11 +167,16 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
-#if NET6_0_OR_GREATER
+#if FEATURE_FILE_SYSTEM_INFO_LINK_TARGET
         /// <inheritdoc />
         public override string LinkTarget
         {
-            get { return null; }
+            get
+            {
+                // TODO Refactor to match #791 style (also hold on merge until that is merged)
+                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
+                return MockFileData.LinkTarget;
+            }
         }
 #endif
 

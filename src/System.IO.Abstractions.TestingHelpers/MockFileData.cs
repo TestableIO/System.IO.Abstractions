@@ -101,6 +101,9 @@ namespace System.IO.Abstractions.TestingHelpers
             CreationTime = template.CreationTime;
             LastAccessTime = template.LastAccessTime;
             LastWriteTime = template.LastWriteTime;
+#if FEATURE_FILE_SYSTEM_INFO_LINK_TARGET
+            LinkTarget = template.LinkTarget;
+#endif
         }
 
         /// <summary>
@@ -134,6 +137,13 @@ namespace System.IO.Abstractions.TestingHelpers
         /// Gets or sets the date and time of the <see cref="MockFileData"/> was last written to.
         /// </summary>
         public DateTimeOffset LastWriteTime { get; set; } = new DateTimeOffset(2010, 01, 04, 00, 00, 00, TimeSpan.FromHours(4));
+
+#if FEATURE_FILE_SYSTEM_INFO_LINK_TARGET
+        /// <summary>
+        /// Gets or sets the link target of the <see cref="MockFileData"/>.
+        /// </summary>
+        public string LinkTarget { get; set; } = null;
+#endif
 
         /// <summary>
         /// Casts a string into <see cref="MockFileData"/>.

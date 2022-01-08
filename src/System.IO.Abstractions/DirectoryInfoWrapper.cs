@@ -96,7 +96,7 @@ namespace System.IO.Abstractions
             set { instance.LastWriteTimeUtc = value; }
         }
 
-#if NET6_0_OR_GREATER
+#if FEATURE_FILE_SYSTEM_INFO_LINK_TARGET
         /// <inheritdoc />
         public override string LinkTarget
         {
