@@ -12,9 +12,6 @@ namespace System.IO.Abstractions.TestingHelpers
         private DirectorySecurity accessControl;
 
         /// <inheritdoc />
-        public override bool IsDirectory { get { return true; } }
-
-        /// <inheritdoc />
         public MockDirectoryData() : base(string.Empty)
         {
             Attributes = FileAttributes.Directory;

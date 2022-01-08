@@ -10,7 +10,9 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         private readonly IMockFileDataAccessor mockFileSystem;
         private string path;
-        private string originalPath;
+        private readonly string originalPath;
+        private MockFileData cachedMockFileData;
+        private bool refreshOnNextRead;
 
         /// <inheritdoc />
         public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path) : base(mockFileSystem?.FileSystem)
@@ -18,12 +20,7 @@ namespace System.IO.Abstractions.TestingHelpers
             this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
             this.originalPath = path ?? throw new ArgumentNullException(nameof(path));
             this.path = mockFileSystem.Path.GetFullPath(path);
-
-        }
-
-        MockFileData MockFileData
-        {
-            get { return mockFileSystem.GetFile(path); }
+            Refresh();
         }
 
         /// <inheritdoc />
@@ -35,7 +32,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void Refresh()
         {
-            // Nothing to do here. Mock file system is always up-to-date.
+            cachedMockFileData = mockFileSystem.GetFile(path)?.Clone();
         }
 
         /// <inheritdoc />
@@ -43,19 +40,13 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null)
-                {
-                    throw CommonExceptions.FileNotFound(path);
-                }
-                return MockFileData.Attributes;
+                var mockFileData = GetMockFileDataForRead();
+                return mockFileData.Attributes;
             }
             set
             {
-                if (MockFileData == null)
-                {
-                    throw CommonExceptions.FileNotFound(path);
-                }
-                MockFileData.Attributes = value;
+                var mockFileData = GetMockFileDataForWrite();
+                mockFileData.Attributes = value;
             }
         }
 
@@ -64,19 +55,13 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null)
-                {
-                    throw CommonExceptions.FileNotFound(path);
-                }
-                return MockFileData.CreationTime.DateTime;
+                var mockFileData = GetMockFileDataForRead();
+                return mockFileData.CreationTime.DateTime;
             }
             set
             {
-                if (MockFileData == null)
-                {
-                    throw CommonExceptions.FileNotFound(path);
-                }
-                MockFileData.CreationTime = value;
+                var mockFileData = GetMockFileDataForWrite();
+                mockFileData.CreationTime = value;
             }
         }
 
@@ -85,20 +70,24 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
-                return MockFileData.CreationTime.UtcDateTime;
+                var mockFileData = GetMockFileDataForRead();
+                return mockFileData.CreationTime.UtcDateTime;
             }
             set
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
-                MockFileData.CreationTime = value.ToLocalTime();
+                var mockFileData = GetMockFileDataForWrite();
+                mockFileData.CreationTime = value.ToLocalTime();
             }
         }
 
         /// <inheritdoc />
         public override bool Exists
         {
-            get { return MockFileData != null && !MockFileData.IsDirectory; }
+            get
+            {
+                var mockFileData = GetMockFileDataForRead(throwIfNotExisting: false);
+                return mockFileData != null && !mockFileData.IsDirectory;
+            }
         }
 
         /// <inheritdoc />
@@ -123,13 +112,13 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
-                return MockFileData.LastAccessTime.DateTime;
+                var mockFileData = GetMockFileDataForRead();
+                return mockFileData.LastAccessTime.DateTime;
             }
             set
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
-                MockFileData.LastAccessTime = value;
+                var mockFileData = GetMockFileDataForWrite();
+                mockFileData.LastAccessTime = value;
             }
         }
 
@@ -138,13 +127,13 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
-                return MockFileData.LastAccessTime.UtcDateTime;
+                var mockFileData = GetMockFileDataForRead();
+                return mockFileData.LastAccessTime.UtcDateTime;
             }
             set
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
-                MockFileData.LastAccessTime = value;
+                var mockFileData = GetMockFileDataForWrite();
+                mockFileData.LastAccessTime = value;
             }
         }
 
@@ -153,13 +142,13 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
-                return MockFileData.LastWriteTime.DateTime;
+                var mockFileData = GetMockFileDataForRead();
+                return mockFileData.LastWriteTime.DateTime;
             }
             set
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
-                MockFileData.LastWriteTime = value;
+                var mockFileData = GetMockFileDataForWrite();
+                mockFileData.LastWriteTime = value;
             }
         }
 
@@ -168,13 +157,13 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
-                return MockFileData.LastWriteTime.UtcDateTime;
+                var mockFileData = GetMockFileDataForRead();
+                return mockFileData.LastWriteTime.UtcDateTime;
             }
             set
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
-                MockFileData.LastWriteTime = value.ToLocalTime();
+                var mockFileData = GetMockFileDataForWrite();
+                mockFileData.LastWriteTime = value.ToLocalTime();
             }
         }
 
@@ -201,7 +190,8 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             if (!Exists)
             {
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(FullName);
+                var mockFileData = GetMockFileDataForRead(throwIfNotExisting: false);
+                if (mockFileData == null) throw CommonExceptions.FileNotFound(FullName);
             }
             if (destFileName == FullName)
             {
@@ -226,17 +216,15 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void Decrypt()
         {
-            if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
-
-            MockFileData.Attributes &= ~FileAttributes.Encrypted;
+            var mockFileData = GetMockFileDataForWrite();
+            mockFileData.Attributes &= ~FileAttributes.Encrypted;
         }
 
         /// <inheritdoc />
         public override void Encrypt()
         {
-            if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
-
-            MockFileData.Attributes |= FileAttributes.Encrypted;
+            var mockFileData = GetMockFileDataForWrite();
+            mockFileData.Attributes |= FileAttributes.Encrypted;
         }
 
         /// <inheritdoc />
@@ -341,25 +329,19 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null)
-                {
-                    throw CommonExceptions.FileNotFound(path);
-                }
-                return (MockFileData.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
+                var mockFileData = GetMockFileDataForRead();
+                return (mockFileData.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
             }
             set
             {
-                if (MockFileData == null)
-                {
-                    throw CommonExceptions.FileNotFound(path);
-                }
+                var mockFileData = GetMockFileDataForWrite();
                 if (value)
                 {
-                    MockFileData.Attributes |= FileAttributes.ReadOnly;
+                    mockFileData.Attributes |= FileAttributes.ReadOnly;
                 }
                 else
                 {
-                    MockFileData.Attributes &= ~FileAttributes.ReadOnly;
+                    mockFileData.Attributes &= ~FileAttributes.ReadOnly;
                 }
             }
         }
@@ -369,11 +351,12 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                if (MockFileData == null || MockFileData.IsDirectory)
+                var mockFileData = GetMockFileDataForRead(throwIfNotExisting: false);
+                if (mockFileData == null || mockFileData.IsDirectory)
                 {
                     throw CommonExceptions.FileNotFound(path);
                 }
-                return MockFileData.Contents.Length;
+                return mockFileData.Contents.Length;
             }
         }
 
@@ -381,6 +364,35 @@ namespace System.IO.Abstractions.TestingHelpers
         public override string ToString()
         {
             return originalPath;
+        }
+
+        private MockFileData GetMockFileDataForRead(bool throwIfNotExisting = true)
+        {
+            if (refreshOnNextRead)
+            {
+                Refresh();
+                refreshOnNextRead = false;
+            }
+            var mockFileData = cachedMockFileData;
+            if (mockFileData == null)
+            {
+                if (throwIfNotExisting)
+                {
+                    throw CommonExceptions.FileNotFound(path);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            return mockFileData;
+        }
+
+        private MockFileData GetMockFileDataForWrite()
+        {
+            refreshOnNextRead = true;
+            return mockFileSystem.GetFile(path)
+                ?? throw CommonExceptions.FileNotFound(path);
         }
     }
 }

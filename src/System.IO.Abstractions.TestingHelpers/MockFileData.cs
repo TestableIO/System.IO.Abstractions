@@ -42,7 +42,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <summary>
         /// Gets a value indicating whether the <see cref="MockFileData"/> is a directory or not.
         /// </summary>
-        public virtual bool IsDirectory { get { return false; } }
+        public bool IsDirectory { get { return Attributes.HasFlag(FileAttributes.Directory); } }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MockFileData"/> class with an empty content.
@@ -182,6 +182,11 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw CommonExceptions.ProcessCannotAccessFileInUse(path);
             }
+        }
+
+        internal virtual MockFileData Clone()
+        {
+            return new MockFileData(this);
         }
     }
 }

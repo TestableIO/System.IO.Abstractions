@@ -718,5 +718,36 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.Throws<FileNotFoundException>(() => fileInfo.Replace(path2, null));
         }
+
+        [Test]
+        public void MockFileInfo_Exists_ShouldReturnCachedData()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var fileInfo = fileSystem.FileInfo.FromFileName(path1);
+
+            // Act
+            fileSystem.AddFile(path1, new MockFileData("1"));
+
+            // Assert
+            Assert.IsFalse(fileInfo.Exists);
+        }
+
+        [Test]
+        public void MockFileInfo_Exists_ShouldUpdateCachedDataOnRefresh()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var fileInfo = fileSystem.FileInfo.FromFileName(path1);
+
+            // Act
+            fileSystem.AddFile(path1, new MockFileData("1"));
+            fileInfo.Refresh();
+
+            // Assert
+            Assert.IsTrue(fileInfo.Exists);
+        }
     }
 }

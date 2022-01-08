@@ -13,6 +13,8 @@ namespace System.IO.Abstractions.TestingHelpers
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string directoryPath;
         private readonly string originalPath;
+        private MockFileData cachedMockFileData;
+        private bool refreshOnNextRead;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MockDirectoryInfo"/> class.
@@ -33,6 +35,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 directoryPath = directoryPath.TrimEnd(' ');
             }
             this.directoryPath = directoryPath;
+            Refresh();
         }
 
         /// <inheritdoc />
@@ -44,7 +47,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void Refresh()
         {
-            // Nothing to do here. Mock file system is always up-to-date.
+            cachedMockFileData = mockFileDataAccessor.GetFile(directoryPath)?.Clone();
         }
 
         /// <inheritdoc />
@@ -71,7 +74,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override bool Exists
         {
-            get { return mockFileDataAccessor.Directory.Exists(FullName); }
+            get { return GetMockFileDataForRead() != MockFileData.NullObject; }
         }
 
         /// <inheritdoc />
@@ -380,11 +383,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private MockFileData GetMockFileDataForRead()
         {
-            return mockFileDataAccessor.GetFile(directoryPath) ?? MockFileData.NullObject;
+            if (refreshOnNextRead)
+            {
+                Refresh();
+                refreshOnNextRead = false;
+            }
+            return cachedMockFileData ?? MockFileData.NullObject;
         }
 
         private MockFileData GetMockFileDataForWrite()
         {
+            refreshOnNextRead = true;
             return mockFileDataAccessor.GetFile(directoryPath)
                 ?? throw CommonExceptions.FileNotFound(directoryPath);
         }
