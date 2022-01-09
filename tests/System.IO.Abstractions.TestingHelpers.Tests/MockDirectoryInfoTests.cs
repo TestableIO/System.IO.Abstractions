@@ -393,5 +393,55 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(directoryPath, mockDirectoryInfo.ToString());
         }
+
+        [Test]
+        public void MockDirectoryInfo_Exists_ShouldReturnCachedData()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path = XFS.Path(@"c:\abc");
+            var directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(path);
+
+            // Act
+            fileSystem.AddDirectory(path);
+
+            // Assert
+            Assert.IsFalse(directoryInfo.Exists);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_Exists_ShouldUpdateCachedDataOnRefresh()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path = XFS.Path(@"c:\abc");
+            var directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(path);
+
+            // Act
+            fileSystem.AddDirectory(path);
+            directoryInfo.Refresh();
+
+            // Assert
+            Assert.IsTrue(directoryInfo.Exists);
+        }
+
+        [Test]
+        public void MockDirectoryInfo_LastAccessTime_ShouldReflectChangedValue()
+        {
+            // Arrange  
+            var path = XFS.Path(@"c:\abc");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, new MockDirectoryData() }
+            });
+            var directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(path);
+            var lastAccessTime = new DateTime(2022, 1, 8);
+
+            // Act
+            directoryInfo.LastAccessTime = lastAccessTime;
+
+            // Assert
+            Assert.AreEqual(lastAccessTime, directoryInfo.LastAccessTime);
+        }
     }
 }
