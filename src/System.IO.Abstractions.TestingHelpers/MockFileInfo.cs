@@ -173,9 +173,8 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                // TODO Refactor to match #791 style (also hold on merge until that is merged)
-                if (MockFileData == null) throw CommonExceptions.FileNotFound(path);
-                return MockFileData.LinkTarget;
+                var mockFileData = GetMockFileDataForWrite();
+                return mockFileData.LinkTarget;
             }
         }
 #endif
