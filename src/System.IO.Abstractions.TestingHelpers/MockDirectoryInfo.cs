@@ -142,7 +142,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 #endif
 
-            /// <inheritdoc />
+        /// <inheritdoc />
         public override string Name
         {
             get
