@@ -167,6 +167,18 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+#if FEATURE_FILE_SYSTEM_INFO_LINK_TARGET
+        /// <inheritdoc />
+        public override string LinkTarget
+        {
+            get
+            {
+                var mockFileData = GetMockFileDataForRead();
+                return mockFileData.LinkTarget;
+            }
+        }
+#endif
+
         /// <inheritdoc />
         public override string Name
         {

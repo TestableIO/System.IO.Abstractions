@@ -96,6 +96,14 @@ namespace System.IO.Abstractions
             set { instance.LastWriteTimeUtc = value; }
         }
 
+#if FEATURE_FILE_SYSTEM_INFO_LINK_TARGET
+        /// <inheritdoc />
+        public override string LinkTarget
+        {
+            get { return instance.LinkTarget; }
+        }
+#endif
+
         /// <inheritdoc />
         public override string Name
         {
