@@ -173,7 +173,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                var mockFileData = GetMockFileDataForWrite();
+                var mockFileData = GetMockFileDataForRead();
                 return mockFileData.LinkTarget;
             }
         }
