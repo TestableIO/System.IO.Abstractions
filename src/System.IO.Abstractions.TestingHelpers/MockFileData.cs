@@ -142,7 +142,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <summary>
         /// Gets or sets the link target of the <see cref="MockFileData"/>.
         /// </summary>
-        public string LinkTarget { get; set; } = null;
+        public string LinkTarget { get; set; }
 #endif
 
         /// <summary>
