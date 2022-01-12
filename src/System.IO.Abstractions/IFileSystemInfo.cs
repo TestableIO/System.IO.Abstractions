@@ -31,6 +31,10 @@
         DateTime LastWriteTime { get; set; }
         /// <inheritdoc cref="FileSystemInfo.LastWriteTimeUtc"/>
         DateTime LastWriteTimeUtc { get; set; }
+#if FEATURE_FILE_SYSTEM_INFO_LINK_TARGET
+        /// <inheritdoc cref="FileSystemInfo.LinkTarget"/>
+        string LinkTarget { get; }
+#endif
         /// <inheritdoc cref="FileSystemInfo.Name"/>
         string Name { get; }
     }
