@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <Product>System.IO.Abstractions</Product>
-    <Copyright>Copyright © Tatham Oddie &amp; friends 2010-2021</Copyright>
+    <Copyright>Copyright © Tatham Oddie &amp; friends 2010-2022</Copyright>
     <Authors>Tatham Oddie &amp; friends</Authors>
     <SignAssembly Condition="'$(Configuration)' == 'Release'">True</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)StrongName.snk</AssemblyOriginatorKeyFile>
