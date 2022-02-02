@@ -288,5 +288,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(fileSystem.File.Exists(relativeFile));
         }
+
+        [Test]
+        public void MockFile_Create_CanReadFromNewStream()
+        {
+            string fullPath = XFS.Path(@"c:\something\demo.txt");
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDirectory(XFS.Path(@"c:\something"));
+
+            using (var stream = fileSystem.File.Create(fullPath))
+            {
+                Assert.That(stream.CanRead, Is.True);
+            }
+        }
     }
 }

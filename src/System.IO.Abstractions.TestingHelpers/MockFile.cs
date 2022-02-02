@@ -138,7 +138,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         /// <inheritdoc />
         public override Stream Create(string path, int bufferSize, FileOptions options) =>
-           CreateInternal(path, FileAccess.Write, options);
+           CreateInternal(path, FileAccess.ReadWrite, options);
 
         private Stream CreateInternal(string path, FileAccess access, FileOptions options)
         {
