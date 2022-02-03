@@ -12,6 +12,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private string path;
         private readonly string originalPath;
         private MockFileData cachedMockFileData;
+        private MockFile mockFile;
         private bool refreshOnNextRead;
 
         /// <inheritdoc />
@@ -20,13 +21,14 @@ namespace System.IO.Abstractions.TestingHelpers
             this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
             this.originalPath = path ?? throw new ArgumentNullException(nameof(path));
             this.path = mockFileSystem.Path.GetFullPath(path);
+            this.mockFile = new MockFile(mockFileSystem);
             Refresh();
         }
 
         /// <inheritdoc />
         public override void Delete()
         {
-            mockFileSystem.RemoveFile(path);
+            mockFile.Delete(path);
         }
 
         /// <inheritdoc />
