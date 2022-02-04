@@ -749,5 +749,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.IsTrue(fileInfo.Exists);
         }
+
+        [Test]
+        public void MockFileInfo_Delete_ShouldThrowIfFileAccessShareHasNoWriteOrDeleteAccess()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(
+                    @"c:\bar\foo.txt",
+                    new MockFileData("text contents") { AllowedFileShare = FileShare.None });
+
+            var fi = fileSystem.FileInfo.FromFileName(@"c:\bar\foo.txt");
+
+            Assert.Throws(typeof(System.IO.IOException), () => fi.Delete());
+        }
     }
 }
