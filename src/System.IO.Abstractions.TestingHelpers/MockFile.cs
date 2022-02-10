@@ -203,6 +203,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 return false;
             }
 
+            if (path.Length == 0)
+            {
+                return false;
+            }
+
             var file = mockFileDataAccessor.GetFile(path);
             return file != null && !file.IsDirectory;
         }

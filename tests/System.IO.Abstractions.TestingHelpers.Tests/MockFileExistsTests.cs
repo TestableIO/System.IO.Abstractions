@@ -89,6 +89,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_Exists_ShouldReturnFalseForEmptyStringPath()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            var result = fileSystem.File.Exists(string.Empty);
+
+            // Assert
+            Assert.IsFalse(result);
+        }
+
+        [Test]
         public void MockFile_Exists_ShouldReturnFalseForDirectories()
         {
             // Arrange
