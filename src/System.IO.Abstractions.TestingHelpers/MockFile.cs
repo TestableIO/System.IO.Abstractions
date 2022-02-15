@@ -203,13 +203,23 @@ namespace System.IO.Abstractions.TestingHelpers
                 return false;
             }
 
-            if (path.Length == 0)
+            if (path.Trim() == string.Empty)
             {
                 return false;
             }
 
-            var file = mockFileDataAccessor.GetFile(path);
-            return file != null && !file.IsDirectory;
+            try
+            {
+                mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, nameof(path));
+
+                var file = mockFileDataAccessor.GetFile(path);
+                return file != null && !file.IsDirectory;
+            }
+            catch (ArgumentException) { }
+            catch (IOException) { }
+            catch (UnauthorizedAccessException) { }
+
+            return false;
         }
 
         /// <inheritdoc />
