@@ -208,6 +208,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 return false;
             }
 
+            //Not handling exceptions here so that mock behaviour is as similar as possible to System.IO.File.Exists (See #810)
             try
             {
                 mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, nameof(path));
