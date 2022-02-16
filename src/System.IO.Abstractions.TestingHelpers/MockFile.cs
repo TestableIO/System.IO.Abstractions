@@ -216,6 +216,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 return file != null && !file.IsDirectory;
             }
             catch (ArgumentException) { }
+            catch (NotSupportedException) { }
             catch (IOException) { }
             catch (UnauthorizedAccessException) { }
 
