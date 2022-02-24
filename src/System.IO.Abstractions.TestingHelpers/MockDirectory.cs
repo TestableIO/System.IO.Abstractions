@@ -571,10 +571,17 @@ namespace System.IO.Abstractions.TestingHelpers
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+            var isOriginalPathRooted = mockFileDataAccessor.Path.IsPathRooted(path);
             path = path.TrimSlashes();
             path = mockFileDataAccessor.Path.GetFullPath(path);
-            return GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption)
+            var directories = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption)
                 .Where(p => !mockFileDataAccessor.StringOperations.Equals(p, path));
+            if (!isOriginalPathRooted)
+            {
+                //if the path was orginally relative, return relative paths: #815
+                directories = directories.Select(p => p.Substring(currentDirectory.Length + 1));
+            }
+            return directories;
         }
 
 #if FEATURE_ENUMERATION_OPTIONS

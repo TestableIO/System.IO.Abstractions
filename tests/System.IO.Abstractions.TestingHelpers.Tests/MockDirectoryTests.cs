@@ -1211,7 +1211,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [TestCase(@"Folder\SubFolder")]
         [TestCase(@"Folder")]
-        public void MockDirectory_GetDirectories_RelativeDirectory_WithChildren_ShouldReturnChildDirectories(string relativeDirPath)
+        public void MockDirectory_GetDirectories_RelativeDirectory_WithChildren_ShouldReturnRelativeChildDirectories(string relativeDirPath)
         {
             // Arrange
             var currentDirectory = XFS.Path(@"T:\foo");
@@ -1224,7 +1224,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             CollectionAssert.AreEqual(
-                new[] { XFS.Path(currentDirectory + @"\" + relativeDirPath + @"\child") },
+                new[] { XFS.Path(relativeDirPath + @"\child") },
                 actualResult
             );
         }
@@ -1242,6 +1242,26 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.That(actualResult, Is.Empty);
+        }
+
+        [TestCase(@"Folder\SubFolder")]
+        [TestCase(@"Folder")]
+        public void MockDirectory_GetDirectories_AbsoluteDirectory_WithChildren_ShouldReturnAbsoluteChildDirectories(string relativeDirPath)
+        {
+            // Arrange
+            var currentDirectory = XFS.Path(@"T:\foo");
+            var fileSystem = new MockFileSystem(null, currentDirectory: currentDirectory);
+            fileSystem.Directory.CreateDirectory(XFS.Path(relativeDirPath));
+            fileSystem.Directory.CreateDirectory(XFS.Path(relativeDirPath + @"\child"));
+
+            // Act
+            var actualResult = fileSystem.Directory.GetDirectories(XFS.Path(currentDirectory + @"\" + relativeDirPath));
+
+            // Assert
+            CollectionAssert.AreEqual(
+                new[] { XFS.Path(currentDirectory + @"\" + relativeDirPath + @"\child") },
+                actualResult
+            );
         }
 
         [Test]
