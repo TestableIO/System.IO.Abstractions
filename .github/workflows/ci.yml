@@ -40,15 +40,15 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: Code coverage ubuntu-latest
           path: coverage-ubuntu
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: Code coverage windows-latest
           path: coverage-windows
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: Code coverage macos-latest
           path: coverage-macos
@@ -94,7 +94,7 @@ jobs:
           fetch-depth: 0
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: NuGet packages
           path: packages
