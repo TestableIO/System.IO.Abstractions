@@ -751,6 +751,49 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileInfo_Create_ShouldUpdateCachedDataAndReturnTrueForExists()
+        {
+            IFileSystem fileSystem = new MockFileSystem();
+            var path = XFS.Path(@"c:\temp\file1.txt");
+            IFileInfo fileInfo = fileSystem.FileInfo.FromFileName(path);
+
+            // Act
+            fileInfo.Create().Dispose();
+
+            // Assert
+            var result = fileInfo.Exists;
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void MockFileInfo_CreateText_ShouldUpdateCachedDataAndReturnTrueForExists()
+        {
+            IFileSystem fileSystem = new MockFileSystem();
+            var path = XFS.Path(@"c:\temp\file1.txt");
+            IFileInfo fileInfo = fileSystem.FileInfo.FromFileName(path);
+
+            // Act
+            fileInfo.CreateText().Dispose();
+
+            // Assert
+            Assert.IsTrue(fileInfo.Exists);
+        }
+
+        [Test]
+        public void MockFileInfo_Delete_ShouldUpdateCachedDataAndReturnFalseForExists()
+        {
+            var fileSystem = new MockFileSystem();
+            var path = XFS.Path(@"c:\temp\file1.txt");
+            IFileInfo fileInfo = fileSystem.FileInfo.FromFileName(path);
+
+            // Act
+            fileInfo.Delete();
+
+            // Assert
+            Assert.IsFalse(fileInfo.Exists);
+        }
+
+        [Test]
         public void MockFileInfo_Delete_ShouldThrowIfFileAccessShareHasNoWriteOrDeleteAccess()
         {
             var fileSystem = new MockFileSystem();
