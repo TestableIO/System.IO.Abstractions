@@ -1211,6 +1211,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [TestCase(@"Folder\SubFolder")]
         [TestCase(@"Folder")]
+        [TestCase(@".\Folder")]
+        [TestCase(@"..\foo\Folder")]
+        [TestCase(@".\.\Folder")]
+        [TestCase(@"..\.\foo\.\Folder")]
         public void MockDirectory_GetDirectories_RelativeDirectory_WithChildren_ShouldReturnRelativeChildDirectories(string relativeDirPath)
         {
             // Arrange

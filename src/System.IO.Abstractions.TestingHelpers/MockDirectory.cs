@@ -567,11 +567,13 @@ namespace System.IO.Abstractions.TestingHelpers
             return EnumerateDirectories(path, searchPattern, SearchOption.TopDirectoryOnly);
         }
 
+
         /// <inheritdoc />
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
             var isOriginalPathRooted = mockFileDataAccessor.Path.IsPathRooted(path);
+            string originalPath = path;
             path = path.TrimSlashes();
             path = mockFileDataAccessor.Path.GetFullPath(path);
             var directories = GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption)
@@ -579,7 +581,10 @@ namespace System.IO.Abstractions.TestingHelpers
             if (!isOriginalPathRooted)
             {
                 //if the path was orginally relative, return relative paths: #815
-                directories = directories.Select(p => p.Substring(currentDirectory.Length + 1));
+                directories = directories
+                    .Select(p => p.Split(Path.DirectorySeparatorChar).Last()) //first get the last component of the path
+                    .Select(p => Path.Combine(originalPath, p)) //we combine the last component with the original base path
+                ;
             }
             return directories;
         }
