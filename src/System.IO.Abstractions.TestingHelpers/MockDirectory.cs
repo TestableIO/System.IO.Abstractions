@@ -567,7 +567,6 @@ namespace System.IO.Abstractions.TestingHelpers
             return EnumerateDirectories(path, searchPattern, SearchOption.TopDirectoryOnly);
         }
 
-
         /// <inheritdoc />
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
         {
