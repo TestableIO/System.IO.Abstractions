@@ -28,6 +28,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void Delete()
         {
+            refreshOnNextRead = true;
             mockFile.Delete(path);
         }
 
@@ -221,13 +222,17 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override Stream Create()
         {
-            return mockFile.Create(FullName);
+            var result = mockFile.Create(FullName);
+            refreshOnNextRead = true;
+            return result;
         }
 
         /// <inheritdoc />
         public override StreamWriter CreateText()
         {
-            return mockFile.CreateText(FullName);
+            var result = mockFile.CreateText(FullName);
+            refreshOnNextRead = true;
+            return result;
         }
 
         /// <inheritdoc />
