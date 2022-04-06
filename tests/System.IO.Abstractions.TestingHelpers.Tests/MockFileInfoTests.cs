@@ -189,6 +189,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileInfo_Attributes_SetterShouldThrowFileNotFoundEceptionOnNonExistingFileOrDirectory()
+        {
+            var fileSystem = new MockFileSystem();
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\non\existing\file.txt"));
+
+            Assert.Throws<FileNotFoundException>(() => fileInfo.Attributes = FileAttributes.Hidden);
+        }
+
+        [Test]
         public void MockFileInfo_IsReadOnly_ShouldSetReadOnlyAttributeOfFileInMemoryFileSystem()
         {
             var fileData = new MockFileData("Demo text content");
