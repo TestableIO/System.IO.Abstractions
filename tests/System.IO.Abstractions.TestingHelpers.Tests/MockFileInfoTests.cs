@@ -128,6 +128,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileInfo_CreationTimeUtc_ShouldReturnDefaultTimeForNonExistingFile()
+        {
+            var fileSystem = new MockFileSystem();
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\non\existing\file.txt"));
+
+            var result = fileInfo.CreationTimeUtc;
+
+            Assert.AreEqual(MockFileData.DefaultDateTimeOffset.UtcDateTime, result);
+        }
+
+        [Test]
         public void MockFileInfo_CreationTimeUtc_ShouldSetCreationTimeUtcOfFileInMemoryFileSystem()
         {
             var creationTime = DateTime.Now.AddHours(-4);
@@ -159,6 +170,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileInfo.CreationTime;
 
             Assert.AreEqual(creationTime, result);
+        }
+
+        [Test]
+        public void MockFileInfo_CreationTime_ShouldReturnDefaultTimeForNonExistingFile()
+        {
+            var fileSystem = new MockFileSystem();
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\non\existing\file.txt"));
+
+            var result = fileInfo.CreationTime;
+
+            Assert.AreEqual(MockFileData.DefaultDateTimeOffset.DateTime, result);
         }
 
         [Test]
@@ -343,6 +365,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileInfo_LastAccessTimeUtc_ShouldReturnDefaultTimeForNonExistingFile()
+        {
+            var fileSystem = new MockFileSystem();
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\non\existing\file.txt"));
+
+            var result = fileInfo.LastAccessTimeUtc;
+
+            Assert.AreEqual(MockFileData.DefaultDateTimeOffset.UtcDateTime, result);
+        }
+
+        [Test]
         public void MockFileInfo_LastAccessTimeUtc_ShouldSetCreationTimeUtcOfFileInMemoryFileSystem()
         {
             var lastAccessTime = DateTime.Now.AddHours(-4);
@@ -360,6 +393,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileInfo_LastWriteTime_ShouldReturnDefaultTimeForNonExistingFile()
+        {
+            var fileSystem = new MockFileSystem();
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\non\existing\file.txt"));
+
+            var result = fileInfo.LastWriteTime;
+
+            Assert.AreEqual(MockFileData.DefaultDateTimeOffset.DateTime, result);
+        }
+
+        [Test]
         public void MockFileInfo_LastWriteTimeUtc_ShouldReturnLastWriteTimeUtcOfFileInMemoryFileSystem()
         {
             var lastWriteTime = DateTime.Now.AddHours(-4);
@@ -373,6 +417,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileInfo.LastWriteTimeUtc;
 
             Assert.AreEqual(lastWriteTime.ToUniversalTime(), result);
+        }
+
+        [Test]
+        public void MockFileInfo_LastWriteTimeUtc_ShouldReturnDefaultTimeForNonExistingFile()
+        {
+            var fileSystem = new MockFileSystem();
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\non\existing\file.txt"));
+
+            var result = fileInfo.LastWriteTimeUtc;
+
+            Assert.AreEqual(MockFileData.DefaultDateTimeOffset.UtcDateTime, result);
         }
 
         [Test]
