@@ -56,6 +56,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectoryInfo_Attributes_ShouldReturnMinusOneForNonExistingFile()
+        {
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing\file.txt"));
+            FileAttributes expected = (FileAttributes)(-1);
+
+            Assert.That(directoryInfo.Attributes, Is.EqualTo(expected));
+        }
+
+        [Test]
         [WindowsOnly(WindowsSpecifics.UNCPaths)]
         public void MockDirectoryInfo_GetFiles_ShouldWorkWithUNCPath()
         {

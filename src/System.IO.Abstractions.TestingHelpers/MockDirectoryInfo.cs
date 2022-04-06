@@ -47,7 +47,8 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void Refresh()
         {
-            cachedMockFileData = mockFileDataAccessor.GetFile(directoryPath)?.Clone();
+            var mockFileData = mockFileDataAccessor.GetFile(directoryPath) ?? MockFileData.NullObject;
+            cachedMockFileData = mockFileData.Clone();
         }
 
         /// <inheritdoc />
@@ -74,7 +75,10 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override bool Exists
         {
-            get { return GetMockFileDataForRead() != MockFileData.NullObject; }
+            get {
+                var mockFileData = GetMockFileDataForRead();
+                return (int)mockFileData.Attributes != -1 && mockFileData.IsDirectory;
+            }
         }
 
         /// <inheritdoc />
@@ -396,7 +400,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 Refresh();
                 refreshOnNextRead = false;
             }
-            return cachedMockFileData ?? MockFileData.NullObject;
+            return cachedMockFileData;
         }
 
         private MockFileData GetMockFileDataForWrite()

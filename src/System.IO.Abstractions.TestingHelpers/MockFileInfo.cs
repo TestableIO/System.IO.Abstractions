@@ -35,7 +35,8 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void Refresh()
         {
-            cachedMockFileData = mockFileSystem.GetFile(path)?.Clone();
+            var mockFileData = mockFileSystem.GetFile(path)?.Clone();
+            cachedMockFileData = mockFileData ?? MockFileData.NullObject.Clone();
         }
 
         /// <inheritdoc />
@@ -88,8 +89,8 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                var mockFileData = GetMockFileDataForRead(throwIfNotExisting: false);
-                return mockFileData != null && !mockFileData.IsDirectory;
+                var mockFileData = GetMockFileDataForRead();
+                return (int)mockFileData.Attributes != -1 && !mockFileData.IsDirectory;
             }
         }
 
@@ -203,14 +204,6 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override IFileInfo CopyTo(string destFileName, bool overwrite)
         {
-            if (!Exists)
-            {
-                var mockFileData = GetMockFileDataForRead(throwIfNotExisting: false);
-                if (mockFileData == null)
-                {
-                    throw CommonExceptions.FileNotFound(FullName);
-                }
-            }
             if (destFileName == FullName)
             {
                 return this;
@@ -373,7 +366,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                var mockFileData = GetMockFileDataForRead(throwIfNotExisting: false);
+                var mockFileData = GetMockFileDataForRead();
                 if (mockFileData == null || mockFileData.IsDirectory)
                 {
                     throw CommonExceptions.FileNotFound(path);
@@ -388,26 +381,14 @@ namespace System.IO.Abstractions.TestingHelpers
             return originalPath;
         }
 
-        private MockFileData GetMockFileDataForRead(bool throwIfNotExisting = true)
+        private MockFileData GetMockFileDataForRead()
         {
             if (refreshOnNextRead)
             {
                 Refresh();
                 refreshOnNextRead = false;
             }
-            var mockFileData = cachedMockFileData;
-            if (mockFileData == null)
-            {
-                if (throwIfNotExisting)
-                {
-                    throw CommonExceptions.FileNotFound(path);
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            return mockFileData;
+            return cachedMockFileData;
         }
 
         private MockFileData GetMockFileDataForWrite()

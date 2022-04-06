@@ -179,6 +179,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileInfo_Attributes_ShouldReturnMinusOneForNonExistingFile()
+        {
+            var fileSystem = new MockFileSystem();
+            var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
+            FileAttributes expected = (FileAttributes)(-1);
+
+            Assert.That(fileInfo.Attributes, Is.EqualTo(expected));
+        }
+
+        [Test]
         public void MockFileInfo_IsReadOnly_ShouldSetReadOnlyAttributeOfFileInMemoryFileSystem()
         {
             var fileData = new MockFileData("Demo text content");
