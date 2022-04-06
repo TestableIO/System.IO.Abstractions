@@ -1812,12 +1812,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_EnumerateFiles_WhenFilterIsUnRooted_ShouldFindFilesInCurrentDirectory()
         {
             // Arrange
+            var someContent = new MockFileData(String.Empty);
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { XFS.Path(@"c:\a.txt"), MockFileData.NullObject },
-                { XFS.Path(@"c:\a\a.txt"), MockFileData.NullObject },
-                { XFS.Path(@"c:\a\b\b.txt"), MockFileData.NullObject },
-                { XFS.Path(@"c:\a\c\c.txt"), MockFileData.NullObject },
+                { XFS.Path(@"c:\a.txt"), someContent },
+                { XFS.Path(@"c:\a\a.txt"), someContent },
+                { XFS.Path(@"c:\a\b\b.txt"), someContent },
+                { XFS.Path(@"c:\a\c\c.txt"), someContent },
             });
 
             var expected = new[]
@@ -1838,11 +1839,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_EnumerateFiles_WhenFilterIsUnRooted_ShouldNotFindFilesInPathOutsideCurrentDirectory()
         {
             // Arrange
+            var someContent = new MockFileData(String.Empty);
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { XFS.Path(@"c:\a.txt"), MockFileData.NullObject },
-                { XFS.Path(@"c:\a\b\b.txt"), MockFileData.NullObject },
-                { XFS.Path(@"c:\c\b\b.txt"), MockFileData.NullObject },
+                { XFS.Path(@"c:\a.txt"), someContent },
+                { XFS.Path(@"c:\a\b\b.txt"), someContent },
+                { XFS.Path(@"c:\c\b\b.txt"), someContent },
             });
 
             var expected = new[]
