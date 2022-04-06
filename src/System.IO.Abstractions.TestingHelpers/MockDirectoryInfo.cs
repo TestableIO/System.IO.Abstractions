@@ -407,7 +407,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             refreshOnNextRead = true;
             return mockFileDataAccessor.GetFile(directoryPath)
-                ?? throw CommonExceptions.FileNotFound(directoryPath);
+                ?? throw CommonExceptions.CouldNotFindPartOfPath(directoryPath);
         }
 
         /// <inheritdoc />
