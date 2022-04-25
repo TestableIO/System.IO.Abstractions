@@ -312,8 +312,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { XFS.Path(@"c:\something\demo.txt"), MockFileData.NullObject },
-                { XFS.Path(@"c:\something\other.gif"), MockFileData.NullObject },
+                { XFS.Path(@"c:\something\demo.txt"), string.Empty },
+                { XFS.Path(@"c:\something\other.gif"), string.Empty },
                 { XFS.Path(@"d:\foobar\"), new MockDirectoryData() },
                 { XFS.Path(@"d:\foo\bar"), new MockDirectoryData( )}
             });

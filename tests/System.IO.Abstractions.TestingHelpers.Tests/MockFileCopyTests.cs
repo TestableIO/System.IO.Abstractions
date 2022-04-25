@@ -110,7 +110,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string destFileName = XFS.Path(destFilePath);
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                {sourceFileName, MockFileData.NullObject}
+                {sourceFileName, string.Empty}
             });
 
             Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Copy(sourceFileName, destFileName), string.Format(CultureInfo.InvariantCulture, @"Could not find a part of the path '{0}'.", destFilePath));

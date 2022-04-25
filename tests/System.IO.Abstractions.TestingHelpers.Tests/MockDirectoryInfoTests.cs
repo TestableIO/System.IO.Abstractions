@@ -56,6 +56,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectoryInfo_Attributes_ShouldReturnMinusOneForNonExistingFile()
+        {
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing\file.txt"));
+            FileAttributes expected = (FileAttributes)(-1);
+
+            Assert.That(directoryInfo.Attributes, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void MockDirectoryInfo_Attributes_SetterShouldThrowDirectoryNotFoundEceptionOnNonExistingFileOrDirectory()
+        {
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
+
+            Assert.That(() => directoryInfo.Attributes = FileAttributes.Hidden, Throws.TypeOf<DirectoryNotFoundException>());
+        }
+
+        [Test]
         [WindowsOnly(WindowsSpecifics.UNCPaths)]
         public void MockDirectoryInfo_GetFiles_ShouldWorkWithUNCPath()
         {
@@ -443,5 +462,126 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(lastAccessTime, directoryInfo.LastAccessTime);
         }
+
+        [Test]
+        public void MockDirectoryInfo_CreationTime_ShouldReturnDefaultTimeForNonExistingFile()
+        {
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
+
+            var result = directoryInfo.CreationTime;
+
+            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.UtcDateTime));
+        }
+
+        [Test]
+        public void MockDirectoryInfo_LastAccessTime_ShouldReturnDefaultTimeForNonExistingFile()
+        {
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
+
+            var result = directoryInfo.LastAccessTimeUtc;
+
+            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.UtcDateTime));
+        }
+
+        [Test]
+        public void MockDirectoryInfo_LastWriteTime_ShouldReturnDefaultTimeForNonExistingFile()
+        {
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
+
+            var result = directoryInfo.LastWriteTimeUtc;
+
+            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.UtcDateTime));
+        }
+
+        [Test]
+        public void MockDirectoryInfo_CreationTimeUtc_ShouldReturnDefaultTimeForNonExistingFile()
+        {
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
+
+            var result = directoryInfo.CreationTimeUtc;
+
+            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.UtcDateTime));
+        }
+
+        [Test]
+        public void MockDirectoryInfo_LastAccessTimeUtc_ShouldReturnDefaultTimeForNonExistingFile()
+        {
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
+
+            var result = directoryInfo.LastAccessTimeUtc;
+
+            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.UtcDateTime));
+        }
+
+        [Test]
+        public void MockDirectoryInfo_LastWriteTimeUtc_ShouldReturnDefaultTimeForNonExistingFile()
+        {
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
+
+            var result = directoryInfo.LastWriteTimeUtc;
+
+            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.UtcDateTime));
+        }
+
+        public void MockDirectoryInfo_CreationTime_SetterShouldThrowDirectoryNotFoundExceptionForNonExistingDirectory()
+        {
+            var newTime = new DateTime(2022, 04, 06);
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
+
+            Assert.That(() => directoryInfo.CreationTime = newTime, Throws.TypeOf<DirectoryNotFoundException>());
+        }
+
+        public void MockDirectoryInfo_LastAccessTime_SetterShouldThrowDirectoryNotFoundExceptionForNonExistingDirectory()
+        {
+            var newTime = new DateTime(2022, 04, 06);
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
+
+            Assert.That(() => directoryInfo.LastAccessTime = newTime, Throws.TypeOf<DirectoryNotFoundException>());
+        }
+
+        public void MockDirectoryInfo_LastWriteTime_SetterShouldThrowDirectoryNotFoundExceptionForNonExistingDirectory()
+        {
+            var newTime = new DateTime(2022, 04, 06);
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
+
+            Assert.That(() => directoryInfo.LastWriteTime = newTime, Throws.TypeOf<DirectoryNotFoundException>());
+        }
+
+        public void MockDirectoryInfo_CreationTimeUtc_SetterShouldThrowDirectoryNotFoundExceptionForNonExistingDirectory()
+        {
+            var newTime = new DateTime(2022, 04, 06);
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
+
+            Assert.That(() => directoryInfo.CreationTimeUtc = newTime, Throws.TypeOf<DirectoryNotFoundException>());
+        }
+
+        public void MockDirectoryInfo_LastAccessTimeUtc_SetterShouldThrowDirectoryNotFoundExceptionForNonExistingDirectory()
+        {
+            var newTime = new DateTime(2022, 04, 06);
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
+
+            Assert.That(() => directoryInfo.LastAccessTimeUtc = newTime, Throws.TypeOf<DirectoryNotFoundException>());
+        }
+
+        public void MockDirectoryInfo_LastWriteTimeUtc_SetterShouldThrowDirectoryNotFoundExceptionForNonExistingDirectory()
+        {
+            var newTime = new DateTime(2022, 04, 06);
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
+
+            Assert.That(() => directoryInfo.LastWriteTime = newTime, Throws.TypeOf<DirectoryNotFoundException>());
+        }
+
     }
 }

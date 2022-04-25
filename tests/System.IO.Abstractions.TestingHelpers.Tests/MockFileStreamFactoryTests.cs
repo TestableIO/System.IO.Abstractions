@@ -17,7 +17,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { @"c:\existing.txt", MockFileData.NullObject }
+                { @"c:\existing.txt", string.Empty }
             });
 
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
@@ -108,13 +108,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            fileSystem.AddFile(XFS.Path(@"C:\Test\some_random_file.txt"), MockFileData.NullObject);
+            var path = XFS.Path(@"C:\Test\some_random_file.txt");
+            fileSystem.AddFile(path, string.Empty);
 
             // Act
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
 
             // Assert
-            Assert.Throws<IOException>(() => fileStreamFactory.Create(XFS.Path(@"C:\Test\some_random_file.txt"), fileMode));
+            Assert.Throws<IOException>(() => fileStreamFactory.Create(path, fileMode));
 
         }
 
