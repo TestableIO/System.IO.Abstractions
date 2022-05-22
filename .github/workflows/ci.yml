@@ -84,7 +84,13 @@ jobs:
           path: packages/*.*
   deploy:
     name: Deploy
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: |
+      github.ref == 'refs/heads/main' && 
+      github.event_name == 'push' &&
+      (
+        startsWith(github.event.head_commit.message, 'feat:') ||
+        startsWith(github.event.head_commit.message, 'fix:')
+      )
     needs: [pack]
     runs-on: ubuntu-latest
     steps:
