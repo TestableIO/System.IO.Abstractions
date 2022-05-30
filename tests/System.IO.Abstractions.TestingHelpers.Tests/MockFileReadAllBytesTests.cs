@@ -66,10 +66,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFile_ReadAllBytes_ShouldReturnANewCopyOfTheFileContents()
         {
-            const string path = @"c:\something\demo.bin";
+            var path = XFS.Path(@"c:\something\demo.bin");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                { XFS.Path(path), new MockFileData(new byte[] { 1, 2, 3, 4 }) }
+                { path, new MockFileData(new byte[] { 1, 2, 3, 4 }) }
             });
 
             var firstRead = fileSystem.File.ReadAllBytes(path);
