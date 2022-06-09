@@ -538,7 +538,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw CommonExceptions.FileNotFound(path);
             }
             mockFileDataAccessor.GetFile(path).CheckFileAccess(path, FileAccess.Read);
-            return mockFileDataAccessor.GetFile(path).Contents;
+            return mockFileDataAccessor.GetFile(path).Contents.ToArray();
         }
 
         /// <inheritdoc />
@@ -784,7 +784,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
             VerifyDirectoryExists(path);
 
-            mockFileDataAccessor.AddFile(path, new MockFileData(bytes));
+            mockFileDataAccessor.AddFile(path, new MockFileData(bytes.ToArray()));
         }
 
         /// <summary>

@@ -62,6 +62,28 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.AreEqual(data, fileSystem.File.ReadAllBytes(altPath));
         }
+
+        [Test]
+        public void MockFile_ReadAllBytes_ShouldReturnANewCopyOfTheFileContents()
+        {
+            var path = XFS.Path(@"c:\something\demo.bin");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { path, new MockFileData(new byte[] { 1, 2, 3, 4 }) }
+            });
+
+            var firstRead = fileSystem.File.ReadAllBytes(path);
+
+            var secondRead = fileSystem.File.ReadAllBytes(path);
+
+            for (int i = 0; i < firstRead.Length; i++)
+            {
+                firstRead[i] += 1;
+            }
+
+            Assert.AreNotEqual(firstRead, secondRead);
+        }
+
 #if FEATURE_ASYNC_FILE
         [Test]
         public async Task MockFile_ReadAllBytesAsync_ShouldReturnOriginalByteData()

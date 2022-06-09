@@ -83,6 +83,27 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.ParamName, Is.EqualTo("bytes"));
         }
 
+        [Test]
+        public void MockFile_WriteAllBytes_ShouldWriteASeparateCopyToTheFileSystem()
+        {
+            var fileSystem = new MockFileSystem();
+            string path = XFS.Path(@"c:\something\file.bin");
+            fileSystem.AddDirectory(XFS.Path(@"c:\something"));
+            var fileContent = new byte[] { 1, 2, 3, 4 };
+
+            fileSystem.File.WriteAllBytes(path, fileContent);
+
+            for(int i = 0; i < fileContent.Length; i++)
+            {
+                fileContent[i] += 1;
+            }
+
+            var readAgain = fileSystem.File.ReadAllBytes(path);
+
+            Assert.AreNotEqual(fileContent, readAgain);
+        }
+
+
 #if FEATURE_ASYNC_FILE
         [Test]
         public void MockFile_WriteAllBytesAsync_ShouldThrowDirectoryNotFoundExceptionIfPathDoesNotExists()
