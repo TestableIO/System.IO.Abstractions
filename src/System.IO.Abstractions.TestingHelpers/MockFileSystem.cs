@@ -87,6 +87,8 @@ namespace System.IO.Abstractions.TestingHelpers
         public IFileSystem FileSystem => this;
         /// <inheritdoc />
         public PathVerifier PathVerifier => pathVerifier;
+        /// <inheritdoc/>
+        public bool SetAttributesOnStreamCreation { get; set; }
 
         private string FixPath(string path, bool checkCaps = false)
         {

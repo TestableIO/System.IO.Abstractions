@@ -78,6 +78,11 @@ namespace System.IO.Abstractions.TestingHelpers
         PathVerifier PathVerifier { get; }
 
         /// <summary>
+        /// Get if attributes for a file created via stream should be set to default or not
+        /// </summary>
+        bool SetAttributesOnStreamCreation { get; }
+
+        /// <summary>
         /// Gets a reference to the underlying file system. 
         /// </summary>
         IFileSystem FileSystem { get; }

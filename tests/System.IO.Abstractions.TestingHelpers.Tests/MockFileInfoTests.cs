@@ -854,6 +854,28 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileInfo_Create_ShouldSetProperDefaultAttributes()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.SetAttributesOnStreamCreation = true;
+            var file = XFS.Path(@"C:\test\test.txt");
+            var fi = fileSystem.FileInfo.FromFileName(file);
+            if (!fi.Directory.Exists)
+            {
+                fi.Directory.Create();
+            }
+
+            // Act
+            using (var stream = fi.Create())
+            {
+                // Assert
+                Assert.AreEqual(FileAttributes.Normal, fi.Attributes);
+                Assert.LessOrEqual(DateTime.Now - fi.CreationTime, TimeSpan.FromSeconds(1));
+            }
+        }
+
+        [Test]
         public void MockFileInfo_Delete_ShouldUpdateCachedDataAndReturnFalseForExists()
         {
             var fileSystem = new MockFileSystem();

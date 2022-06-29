@@ -184,5 +184,25 @@
                 Assert.AreEqual(200, stream.Position);
             }
         }
+
+        [Test]
+        public void MockFileStream_Create_ShouldSetProperDefaultAttributes()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            fileSystem.SetAttributesOnStreamCreation = true;
+            var dir = XFS.Path(@"C:\test\");
+            var file = XFS.Path(@"C:\test\test.txt");
+            fileSystem.Directory.CreateDirectory(dir);
+
+            // Act
+            using (var stream = fileSystem.FileStream.Create(file, FileMode.Create))
+            {
+                var fi = fileSystem.FileInfo.FromFileName(file);
+                // Assert
+                Assert.AreEqual(FileAttributes.Normal, fi.Attributes);
+                Assert.LessOrEqual(DateTime.Now - fi.CreationTime, TimeSpan.FromSeconds(1));
+            }
+        }
     }
 }

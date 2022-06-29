@@ -150,7 +150,10 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, nameof(path));
             VerifyDirectoryExists(path);
 
-            var mockFileData = new MockFileData(new byte[0]);
+            var mockFileData = mockFileDataAccessor.SetAttributesOnStreamCreation
+                ? MockFileData.NewObject
+                : new MockFileData(Array.Empty<byte>());
+
             mockFileDataAccessor.AddFile(path, mockFileData);
             return OpenInternal(path, FileMode.Open, access, options);
         }

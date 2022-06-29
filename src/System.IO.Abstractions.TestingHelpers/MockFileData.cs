@@ -27,6 +27,14 @@ namespace System.IO.Abstractions.TestingHelpers
             Attributes = (FileAttributes)(-1),
         };
 
+        internal static readonly MockFileData NewObject = new MockFileData(string.Empty)
+        {
+            CreationTime = DateTime.Now,
+            LastWriteTime = DateTime.Now,
+            LastAccessTime = DateTime.Now,
+            Attributes = FileAttributes.Normal,
+        };
+
         /// <summary>
         /// Gets the default date time offset.
         /// E.g. for not existing files.

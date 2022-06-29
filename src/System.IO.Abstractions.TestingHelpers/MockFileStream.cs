@@ -59,7 +59,11 @@
                     throw CommonExceptions.FileNotFound(path);
                 }
 
-                mockFileDataAccessor.AddFile(path, new MockFileData(new byte[] { }));
+                var mfd = mockFileDataAccessor.SetAttributesOnStreamCreation
+                    ? MockFileData.NewObject
+                    : new MockFileData(Array.Empty<byte>());
+
+                mockFileDataAccessor.AddFile(path, mfd);
             }
 
             this.access = access;
