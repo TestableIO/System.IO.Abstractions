@@ -28,6 +28,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_Copy_ShouldAdjustTimestampsOnDestination()
+        {
+            var sourceFileName = XFS.Path(@"c:\source\demo.txt");
+            var destFileName = XFS.Path(@"c:\source\demo_copy.txt");
+
+            var mockFileSystem = new MockFileSystem();
+            mockFileSystem.AddFile(sourceFileName, "Original");
+            mockFileSystem.File.Copy(sourceFileName, destFileName);
+
+            var sourceFileInfo = mockFileSystem.FileInfo.FromFileName(sourceFileName);
+            var destFileInfo = mockFileSystem.FileInfo.FromFileName(destFileName);
+            Assert.AreEqual(sourceFileInfo.LastWriteTime, destFileInfo.LastWriteTime);
+            Assert.LessOrEqual(DateTime.Now - destFileInfo.CreationTime, TimeSpan.FromSeconds(1));
+            Assert.AreEqual(destFileInfo.CreationTime, destFileInfo.LastAccessTime);
+        }
+
+        [Test]
         public void MockFile_Copy_ShouldCloneContents()
         {
             var sourceFileName = XFS.Path(@"c:\source\demo.txt");
