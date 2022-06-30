@@ -42,6 +42,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void Delete()
         {
             mockFileDataAccessor.Directory.Delete(directoryPath);
+            refreshOnNextRead = true;
         }
 
         /// <inheritdoc />
@@ -160,12 +161,14 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void Create()
         {
             mockFileDataAccessor.Directory.CreateDirectory(FullName);
+            refreshOnNextRead = true;
         }
 
         /// <inheritdoc />
         public override void Create(DirectorySecurity directorySecurity)
         {
             mockFileDataAccessor.Directory.CreateDirectory(FullName, directorySecurity);
+            refreshOnNextRead = true;
         }
 
         /// <inheritdoc />
@@ -178,6 +181,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void Delete(bool recursive)
         {
             mockFileDataAccessor.Directory.Delete(directoryPath, recursive);
+            refreshOnNextRead = true;
         }
 
         /// <inheritdoc />
