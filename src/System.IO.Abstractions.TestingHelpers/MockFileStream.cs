@@ -8,7 +8,7 @@
         private readonly string path;
         private readonly FileAccess access = FileAccess.ReadWrite;
         private readonly FileOptions options;
-
+        private readonly MockFileData fileData;
         private bool disposed;
 
         /// <inheritdoc />
@@ -31,7 +31,8 @@
                     throw CommonExceptions.FileAlreadyExists(path);
                 }
 
-                var fileData = mockFileDataAccessor.GetFile(path);
+                fileData = mockFileDataAccessor.GetFile(path);
+                fileData.LastAccessTime = DateTime.Now;
                 fileData.CheckFileAccess(path, access);
 
                 var existingContents = fileData.Contents;
@@ -40,8 +41,8 @@
                     mode != FileMode.Truncate && mode != FileMode.Create;
                 if (keepExistingContents)
                 {
-                    Write(existingContents, 0, existingContents.Length);
-                    Seek(0, mode == FileMode.Append
+                    base.Write(existingContents, 0, existingContents.Length);
+                    base.Seek(0, mode == FileMode.Append
                         ? SeekOrigin.End
                         : SeekOrigin.Begin);
                 }
@@ -59,7 +60,9 @@
                     throw CommonExceptions.FileNotFound(path);
                 }
 
-                mockFileDataAccessor.AddFile(path, new MockFileData(new byte[] { }));
+                fileData = new MockFileData(new byte[] { });
+                fileData.CreationTime = fileData.LastWriteTime = fileData.LastAccessTime = DateTime.Now;
+                mockFileDataAccessor.AddFile(path, fileData);
             }
 
             this.access = access;
@@ -70,6 +73,20 @@
 
         /// <inheritdoc />
         public override bool CanWrite => access.HasFlag(FileAccess.Write);
+
+        /// <inheritdoc />
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            fileData.LastAccessTime = DateTime.Now;
+            return base.Read(buffer, offset, count);
+        }
+
+        /// <inheritdoc />
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            fileData.LastWriteTime = fileData.LastAccessTime = DateTime.Now;
+            base.Write(buffer, offset, count);
+        }
 
         /// <inheritdoc />
         protected override void Dispose(bool disposing)
