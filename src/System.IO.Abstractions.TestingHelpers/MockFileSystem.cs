@@ -176,8 +176,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             lock (files)
             {
-                if (FileExists(fixedPath) &&
-                    (GetFile(fixedPath).Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                if (FileExists(fixedPath) && FileIsReadOnly(fixedPath))
                 {
                     throw CommonExceptions.AccessDenied(fixedPath);
                 }
@@ -302,7 +301,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             lock (files)
             {
-                if (FileExists(path) && (GetFile(path).Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                if (FileExists(path) && (FileIsReadOnly(path) || Directory.Exists(path) && AnyFileIsReadOnly(path)))
                 {
                     throw CommonExceptions.AccessDenied(path);
                 }
@@ -375,6 +374,14 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        private bool AnyFileIsReadOnly(string path)
+        {
+            lock (files)
+            {
+                return Directory.GetFiles(path).Any(file => FileIsReadOnly(file));
+            }
+        }
+
         private bool IsStartOfAnotherPath(string path)
         {
             return AllPaths.Any(otherPath => otherPath.StartsWith(path) && otherPath != path);
@@ -393,6 +400,14 @@ namespace System.IO.Abstractions.TestingHelpers
             lock (files)
             {
                 return files.TryGetValue(path, out var result) && result.Data.IsDirectory;
+            }
+        }
+
+        private bool FileIsReadOnly(string path)
+        {
+            lock (files)
+            {
+                return (GetFile(path).Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
             }
         }
 
