@@ -32,7 +32,6 @@
                 }
 
                 fileData = mockFileDataAccessor.GetFile(path);
-                fileData.LastAccessTime = DateTime.Now;
                 fileData.CheckFileAccess(path, access);
 
                 var existingContents = fileData.Contents;
