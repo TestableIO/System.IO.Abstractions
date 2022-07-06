@@ -11,7 +11,7 @@ namespace System.IO.Abstractions.TestingHelpers
     public class MockDirectoryInfo : DirectoryInfoBase
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
-        private readonly string directoryPath;
+        private string directoryPath;
         private readonly string originalPath;
         private MockFileData cachedMockFileData;
         private bool refreshOnNextRead;
@@ -27,14 +27,7 @@ namespace System.IO.Abstractions.TestingHelpers
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
 
             originalPath = directoryPath;
-            directoryPath = mockFileDataAccessor.Path.GetFullPath(directoryPath);
-
-            directoryPath = directoryPath.TrimSlashes();
-            if (XFS.IsWindowsPlatform())
-            {
-                directoryPath = directoryPath.TrimEnd(' ');
-            }
-            this.directoryPath = directoryPath;
+            this.directoryPath = GetCleanDirectoryPath(directoryPath);
             Refresh();
         }
 
@@ -367,6 +360,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void MoveTo(string destDirName)
         {
             mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
+            directoryPath = GetCleanDirectoryPath(destDirName);
         }
 
         /// <inheritdoc />
@@ -408,6 +402,19 @@ namespace System.IO.Abstractions.TestingHelpers
             refreshOnNextRead = true;
             return mockFileDataAccessor.GetFile(directoryPath)
                 ?? throw CommonExceptions.CouldNotFindPartOfPath(directoryPath);
+        }
+        
+        private string GetCleanDirectoryPath(string path)
+        {
+            string cleanPath = mockFileDataAccessor.Path.GetFullPath(path);
+
+            cleanPath = cleanPath.TrimSlashes();
+            if (XFS.IsWindowsPlatform())
+            {
+                cleanPath = cleanPath.TrimEnd(' ');
+            }
+
+            return cleanPath;
         }
 
         /// <inheritdoc />

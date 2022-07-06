@@ -46,7 +46,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                {XFS.Path(@"c:\temp\folder\file.txt"), new MockFileData("Hello World")}
+                { XFS.Path(@"c:\temp\folder\file.txt"), new MockFileData("Hello World") }
             });
             var directoryInfo = new MockDirectoryInfo(fileSystem, path);
 
@@ -60,7 +60,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var fileSystem = new MockFileSystem();
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing\file.txt"));
-            FileAttributes expected = (FileAttributes)(-1);
+            FileAttributes expected = (FileAttributes) (-1);
 
             Assert.That(directoryInfo.Attributes, Is.EqualTo(expected));
         }
@@ -83,7 +83,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
-                {fileName, ""}
+                { fileName, "" }
             });
 
             var directoryInfo = new MockDirectoryInfo(fileSystem, directoryName);
@@ -96,7 +96,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
 
-
         [Test]
         public void MockDirectoryInfo_FullName_ShouldReturnFullNameWithoutIncludingTrailingPathDelimiter()
         {
@@ -104,7 +103,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             {
                 {
                     XFS.Path(@"c:\temp\folder\file.txt"),
-                        new MockFileData("Hello World")
+                    new MockFileData("Hello World")
                 }
             });
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
@@ -529,6 +528,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.UtcDateTime));
         }
 
+        [Test]
+        public void MockDirectoryInfo_MoveTo_ShouldUpdateFullName()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { @"c:\source", new MockDirectoryData() },
+            });
+            var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\source"));
+        
+            // Act
+            directoryInfo.MoveTo(@"c:\destination");
+        
+            // Assert
+            Assert.AreEqual(@"c:\destination", directoryInfo.FullName);
+        }
+
         public void MockDirectoryInfo_CreationTime_SetterShouldThrowDirectoryNotFoundExceptionForNonExistingDirectory()
         {
             var newTime = new DateTime(2022, 04, 06);
@@ -582,6 +598,5 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(() => directoryInfo.LastWriteTime = newTime, Throws.TypeOf<DirectoryNotFoundException>());
         }
-
     }
 }
