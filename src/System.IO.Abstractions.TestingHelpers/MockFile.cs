@@ -125,7 +125,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
             var sourceFileData = mockFileDataAccessor.GetFile(sourceFileName);
             sourceFileData.CheckFileAccess(sourceFileName, FileAccess.Read);
-            mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFileData));
+            var destFileData = new MockFileData(sourceFileData);
+            destFileData.CreationTime = destFileData.LastAccessTime = DateTime.Now;
+            mockFileDataAccessor.AddFile(destFileName, destFileData);
         }
 
         /// <inheritdoc />
