@@ -376,10 +376,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private bool AnyFileIsReadOnly(string path)
         {
-            lock (files)
-            {
-                return Directory.GetFiles(path).Any(file => FileIsReadOnly(file));
-            }
+            return Directory.GetFiles(path).Any(file => FileIsReadOnly(file));
         }
 
         private bool IsStartOfAnotherPath(string path)
@@ -405,10 +402,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private bool FileIsReadOnly(string path)
         {
-            lock (files)
-            {
-                return (GetFile(path).Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
-            }
+            return (GetFile(path).Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
         }
 
         [Serializable]
