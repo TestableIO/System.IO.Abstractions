@@ -401,6 +401,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(path, watcher.Path);
         }
 
+        [Test]
+        public void MockFileSystem_DeleteDirectoryRecursive_WithReadOnlyFile_ShouldThrowUnauthorizedException()
+        {
+            string baseDirectory = XFS.Path(@"C:\Test");
+            string textFile = XFS.Path(@"C:\Test\file.txt");
+
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(baseDirectory, new MockFileData(string.Empty));
+            fileSystem.AddFile(textFile, new MockFileData("Content"));
+            fileSystem.File.SetAttributes(textFile, FileAttributes.ReadOnly);
+
+            TestDelegate action = () => fileSystem.Directory.Delete(baseDirectory, true);
+
+            Assert.Throws<UnauthorizedAccessException>(action);
+            Assert.True(fileSystem.File.Exists(textFile));
+            Assert.True(fileSystem.Directory.Exists(baseDirectory));
+        }
+
         private class TestFileSystem : MockFileSystem
         {
             private readonly IFileSystemWatcherFactory fileSystemWatcherFactory;
