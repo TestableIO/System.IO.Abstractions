@@ -16,7 +16,7 @@
     <DefineConstants Condition="'$(TargetFramework)' == 'net6.0'">$(DefineConstants);FEATURE_FILE_SYSTEM_INFO_LINK_TARGET</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Nerdbank.GitVersioning" Version="3.5.107">
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.5.109">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

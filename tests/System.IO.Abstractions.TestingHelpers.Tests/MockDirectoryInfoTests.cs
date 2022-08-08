@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
@@ -438,6 +439,76 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Act
             fileSystem.AddDirectory(path);
             directoryInfo.Refresh();
+
+            // Assert
+            Assert.IsTrue(directoryInfo.Exists);
+        }
+
+        [Test]
+        public void Directory_exists_after_creation()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(XFS.Path(@"c:\abc"));
+
+            // Act
+            directoryInfo.Create();
+
+            // Assert
+            Assert.IsTrue(directoryInfo.Exists);
+        }
+
+        [Test, WindowsOnly(WindowsSpecifics.AccessControlLists)]
+        public void Directory_exists_after_creation_with_security()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(XFS.Path(@"c:\abc"));
+
+            // Act
+            directoryInfo.Create(new DirectorySecurity());
+
+            // Assert
+            Assert.IsTrue(directoryInfo.Exists);
+        }
+
+        [Test]
+        public void Directory_does_not_exist_after_delete()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\abc"));
+
+            // Act
+            directoryInfo.Delete();
+
+            // Assert
+            Assert.IsFalse(directoryInfo.Exists);
+        }
+
+        [Test]
+        public void Directory_does_not_exist_after_recursive_delete()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\abc"));
+
+            // Act
+            directoryInfo.Delete(true);
+
+            // Assert
+            Assert.IsFalse(directoryInfo.Exists);
+        }
+
+        [Test]
+        public void Directory_still_exists_after_move()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var directoryInfo = fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\abc"));
+
+            // Act
+            directoryInfo.MoveTo(XFS.Path(@"c:\abc2"));
 
             // Assert
             Assert.IsTrue(directoryInfo.Exists);
