@@ -157,6 +157,46 @@ namespace System.IO.Abstractions.TestingHelpers
             return OpenInternal(path, FileMode.Open, access, options);
         }
 
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget)
+        {
+            if (path == null)
+            {
+                throw CommonExceptions.FilenameCannotBeNull(nameof(path));
+            }
+
+            if (pathToTarget == null)
+            {
+                throw CommonExceptions.FilenameCannotBeNull(nameof(pathToTarget));
+            }
+
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, nameof(path));
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(pathToTarget, nameof(pathToTarget));
+
+            if (Exists(path))
+            {
+                throw CommonExceptions.FileAlreadyExists(nameof(path));
+            }
+
+            VerifyDirectoryExists(path);
+
+            var fileExists = mockFileDataAccessor.FileExists(pathToTarget);
+            if (!fileExists)
+            {
+                throw CommonExceptions.FileNotFound(pathToTarget);
+            }
+
+            var sourceFileData = mockFileDataAccessor.GetFile(pathToTarget);
+            sourceFileData.CheckFileAccess(pathToTarget, FileAccess.Read);
+            var destFileData = new MockFileData(new byte[0]);
+            destFileData.CreationTime = destFileData.LastAccessTime = DateTime.Now;
+            destFileData.LinkTarget = pathToTarget;
+            mockFileDataAccessor.AddFile(path, destFileData);
+
+            return new MockFileInfo(mockFileDataAccessor, path);
+        }
+#endif
         /// <inheritdoc />
         public override StreamWriter CreateText(string path)
         {

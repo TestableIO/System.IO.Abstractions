@@ -20,6 +20,10 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Directory.CreateDirectory(string,DirectorySecurity)"/>
 #endif
         IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity);
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc cref="Directory.CreateSymbolicLink"/>
+        IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget);
+#endif
         /// <inheritdoc cref="Directory.Delete(string)"/>
         void Delete(string path);
         /// <inheritdoc cref="Directory.Delete(string,bool)"/>

@@ -9,7 +9,6 @@
   "MissingMembers": [
     "Microsoft.Win32.SafeHandles.SafeFileHandle OpenHandle(System.String, System.IO.FileMode, System.IO.FileAccess, System.IO.FileShare, System.IO.FileOptions, Int64)",
     "System.IO.Stream Open(System.String, System.IO.StreamOptions)",
-    "System.IO.Abstractions.IFileSystemInfo CreateSymbolicLink(System.String, System.String)",
     "System.IO.Abstractions.IFileSystemInfo ResolveLinkTarget(System.String, Boolean)"
   ]
 }
