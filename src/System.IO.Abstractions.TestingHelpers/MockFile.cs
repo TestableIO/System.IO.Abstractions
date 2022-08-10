@@ -55,12 +55,13 @@ namespace System.IO.Abstractions.TestingHelpers
             if (!mockFileDataAccessor.FileExists(path))
             {
                 VerifyDirectoryExists(path);
-                mockFileDataAccessor.AddFile(path, new MockFileData(contents, encoding));
+                mockFileDataAccessor.AddFile(path, mockFileDataAccessor.AdjustTimes(new MockFileData(contents, encoding), TimeAdjustments.All));
             }
             else
             {
                 var file = mockFileDataAccessor.GetFile(path);
                 file.CheckFileAccess(path, FileAccess.Write);
+                mockFileDataAccessor.AdjustTimes(file, TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
                 var bytesToAppend = encoding.GetBytes(contents);
                 file.Contents = file.Contents.Concat(bytesToAppend).ToArray();
             }
@@ -124,7 +125,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var sourceFileData = mockFileDataAccessor.GetFile(sourceFileName);
             sourceFileData.CheckFileAccess(sourceFileName, FileAccess.Read);
             var destFileData = new MockFileData(sourceFileData);
-            destFileData.CreationTime = destFileData.LastAccessTime = DateTime.Now;
+            mockFileDataAccessor.AdjustTimes(destFileData, TimeAdjustments.CreationTime | TimeAdjustments.LastAccessTime);
             mockFileDataAccessor.AddFile(destFileName, destFileData);
         }
 
@@ -151,6 +152,7 @@ namespace System.IO.Abstractions.TestingHelpers
             VerifyDirectoryExists(path);
 
             var mockFileData = new MockFileData(new byte[0]);
+            mockFileDataAccessor.AdjustTimes(mockFileData, TimeAdjustments.All);
             mockFileDataAccessor.AddFile(path, mockFileData);
             return OpenInternal(path, FileMode.Open, access, options);
         }
@@ -436,7 +438,7 @@ namespace System.IO.Abstractions.TestingHelpers
             VerifyDirectoryExists(destFileName);
 
             mockFileDataAccessor.RemoveFile(sourceFileName);
-            mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile));
+            mockFileDataAccessor.AddFile(destFileName, mockFileDataAccessor.AdjustTimes(new MockFileData(sourceFile), TimeAdjustments.LastAccessTime));
         }
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
@@ -480,9 +482,9 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw CommonExceptions.ProcessCannotAccessFileInUse();
             }
             VerifyDirectoryExists(destFileName);
-
+            
             mockFileDataAccessor.RemoveFile(sourceFileName);
-            mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile));
+            mockFileDataAccessor.AddFile(destFileName, mockFileDataAccessor.AdjustTimes(new MockFileData(sourceFile), TimeAdjustments.LastAccessTime));
         }
 #endif
 
@@ -539,6 +541,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
             var mockFileData = mockFileDataAccessor.GetFile(path);
             mockFileData.CheckFileAccess(path, access);
+            var timeAdjustments = TimeAdjustments.LastAccessTime;
+            if (access != FileAccess.Read)
+            {
+                timeAdjustments |= TimeAdjustments.LastWriteTime;
+            }
+            mockFileDataAccessor.AdjustTimes(mockFileData, timeAdjustments);
 
             return new MockFileStream(mockFileDataAccessor, path, mode, access, options);
         }
@@ -578,7 +586,9 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw CommonExceptions.FileNotFound(path);
             }
             mockFileDataAccessor.GetFile(path).CheckFileAccess(path, FileAccess.Read);
-            return mockFileDataAccessor.GetFile(path).Contents.ToArray();
+            var fileData = mockFileDataAccessor.GetFile(path);
+            mockFileDataAccessor.AdjustTimes(fileData, TimeAdjustments.LastAccessTime);
+            return fileData.Contents.ToArray();
         }
 
         /// <inheritdoc />
@@ -590,10 +600,11 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw CommonExceptions.FileNotFound(path);
             }
-            mockFileDataAccessor.GetFile(path).CheckFileAccess(path, FileAccess.Read);
+            var fileData = mockFileDataAccessor.GetFile(path);
+            fileData.CheckFileAccess(path, FileAccess.Read);
+            mockFileDataAccessor.AdjustTimes(fileData, TimeAdjustments.LastAccessTime);
 
-            return mockFileDataAccessor
-                .GetFile(path)
+            return fileData
                 .TextContents
                 .SplitLines();
         }
@@ -613,9 +624,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw CommonExceptions.FileNotFound(path);
             }
 
-            mockFileDataAccessor.GetFile(path).CheckFileAccess(path, FileAccess.Read);
+            var fileData = mockFileDataAccessor.GetFile(path);
+            fileData.CheckFileAccess(path, FileAccess.Read);
+            mockFileDataAccessor.AdjustTimes(fileData, TimeAdjustments.LastAccessTime);
 
-            using (var ms = new MemoryStream(mockFileDataAccessor.GetFile(path).Contents))
+            using (var ms = new MemoryStream(fileData.Contents))
             using (var sr = new StreamReader(ms, encoding))
             {
                 return sr.ReadToEnd().SplitLines();
@@ -713,6 +726,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var fileData = mockFileDataAccessor.GetFile(path);
+            mockFileDataAccessor.AdjustTimes(fileData, TimeAdjustments.LastAccessTime);
             fileData.AccessControl = fileSecurity;
         }
 
@@ -736,6 +750,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
             else
             {
+                mockFileDataAccessor.AdjustTimes(possibleFileData, TimeAdjustments.LastAccessTime);
                 possibleFileData.Attributes = fileAttributes;
             }
         }
@@ -824,7 +839,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
             VerifyDirectoryExists(path);
 
-            mockFileDataAccessor.AddFile(path, new MockFileData(bytes.ToArray()));
+            mockFileDataAccessor.AddFile(path, mockFileDataAccessor.AdjustTimes(new MockFileData(bytes.ToArray()), TimeAdjustments.All));
         }
 
         /// <summary>
@@ -1094,7 +1109,7 @@ namespace System.IO.Abstractions.TestingHelpers
             VerifyDirectoryExists(path);
 
             MockFileData data = contents == null ? new MockFileData(new byte[0]) : new MockFileData(contents, encoding);
-            mockFileDataAccessor.AddFile(path, data);
+            mockFileDataAccessor.AddFile(path, mockFileDataAccessor.AdjustTimes(data, TimeAdjustments.All));
         }
 
         internal static string ReadAllBytes(byte[] contents, Encoding encoding)
@@ -1110,6 +1125,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             var mockFileData = mockFileDataAccessor.GetFile(path);
             mockFileData.CheckFileAccess(path, FileAccess.Read);
+            mockFileDataAccessor.AdjustTimes(mockFileData, TimeAdjustments.LastAccessTime);
             return ReadAllBytes(mockFileData.Contents, encoding);
         }
 

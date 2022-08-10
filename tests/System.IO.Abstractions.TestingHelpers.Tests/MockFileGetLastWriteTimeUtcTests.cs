@@ -31,5 +31,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.AreEqual(new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc), actualLastWriteTime);
         }
+
+        [Test]
+        public void MockFile_GetLastWriteTimeUtc_ShouldBeSet()
+        {
+            var now = DateTime.Now.AddDays(10);
+            var fileSystem = new MockFileSystem()
+                .MockTime(() => now);
+            fileSystem.File.WriteAllText("foo.txt", "xyz");
+
+            var result = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
+
+            Assert.That(result.Kind, Is.EqualTo(DateTimeKind.Utc));
+            Assert.That(result, Is.EqualTo(now.ToUniversalTime()));
+        }
     }
 }

@@ -34,6 +34,7 @@
                 fileData = mockFileDataAccessor.GetFile(path);
                 fileData.CheckFileAccess(path, access);
 
+                mockFileDataAccessor.AdjustTimes(fileData, TimeAdjustments.LastAccessTime);
                 var existingContents = fileData.Contents;
                 var keepExistingContents =
                     existingContents?.Length > 0 &&
@@ -60,7 +61,8 @@
                 }
 
                 fileData = new MockFileData(new byte[] { });
-                fileData.CreationTime = fileData.LastWriteTime = fileData.LastAccessTime = DateTime.Now;
+                mockFileDataAccessor.AdjustTimes(fileData,
+                    TimeAdjustments.CreationTime | TimeAdjustments.LastAccessTime);
                 mockFileDataAccessor.AddFile(path, fileData);
             }
 
@@ -76,14 +78,16 @@
         /// <inheritdoc />
         public override int Read(byte[] buffer, int offset, int count)
         {
-            fileData.LastAccessTime = DateTime.Now;
+            mockFileDataAccessor.AdjustTimes(fileData,
+                TimeAdjustments.LastAccessTime);
             return base.Read(buffer, offset, count);
         }
 
         /// <inheritdoc />
         public override void Write(byte[] buffer, int offset, int count)
         {
-            fileData.LastWriteTime = fileData.LastAccessTime = DateTime.Now;
+            mockFileDataAccessor.AdjustTimes(fileData,
+                TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
             base.Write(buffer, offset, count);
         }
 

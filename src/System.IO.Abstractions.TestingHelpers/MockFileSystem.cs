@@ -15,6 +15,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private readonly IDictionary<string, FileSystemEntry> files;
         private readonly PathVerifier pathVerifier;
+        [NonSerialized]
+        private Func<DateTime> dateTimeProvider = defaultDateTimeProvider;
+        private static Func<DateTime> defaultDateTimeProvider = () => DateTime.Now;
 
         /// <inheritdoc />
         public MockFileSystem() : this(null) { }
@@ -88,6 +91,19 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public PathVerifier PathVerifier => pathVerifier;
 
+        /// <summary>
+        /// Replaces the time provider with a mocked instance. This allows to influence the used time in tests.
+        /// <para />
+        /// If not set, the default implementation returns <see cref="DateTime.Now"/>.
+        /// </summary>
+        /// <param name="dateTimeProvider">The function that returns the current <see cref="DateTime"/>.</param>
+        /// <returns></returns>
+        public MockFileSystem MockTime(Func<DateTime> dateTimeProvider)
+        {
+            this.dateTimeProvider = dateTimeProvider ?? defaultDateTimeProvider;
+            return this;
+        }
+
         private string FixPath(string path, bool checkCaps = false)
         {
             if (path == null)
@@ -125,6 +141,28 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
+        public MockFileData AdjustTimes(MockFileData fileData, TimeAdjustments timeAdjustments)
+        {
+            var now = (dateTimeProvider ?? defaultDateTimeProvider)();
+            if ((timeAdjustments & TimeAdjustments.CreationTime) != TimeAdjustments.None)
+            {
+                fileData.CreationTime = now;
+            }
+
+            if ((timeAdjustments & TimeAdjustments.LastAccessTime) != TimeAdjustments.None)
+            {
+                fileData.LastAccessTime = now;
+            }
+
+            if ((timeAdjustments & TimeAdjustments.LastWriteTime) != TimeAdjustments.None)
+            {
+                fileData.LastWriteTime = now;
+            }
+
+            return fileData;
+        }
+
+        /// <inheritdoc />
         public MockFileData GetFile(string path)
         {
             path = FixPath(path).TrimSlashes();
@@ -143,6 +181,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var fixedPath = FixPath(path, true);
             lock (files)
             {
+                mockFile ??= new MockFileData(string.Empty);
                 var file = GetFile(fixedPath);
 
                 if (file != null)
@@ -155,6 +194,7 @@ namespace System.IO.Abstractions.TestingHelpers
                         throw CommonExceptions.AccessDenied(path);
                     }
                     file.CheckFileAccess(fixedPath, FileAccess.Write);
+                    mockFile.CreationTime = file.CreationTime;
                 }
 
                 var directoryPath = Path.GetDirectoryName(fixedPath);
@@ -164,7 +204,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     AddDirectory(directoryPath);
                 }
 
-                SetEntry(fixedPath, mockFile ?? new MockFileData(string.Empty));
+                SetEntry(fixedPath, mockFile);
             }
         }
 
