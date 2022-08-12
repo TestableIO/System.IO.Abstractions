@@ -9,7 +9,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     using XFS = MockUnixSupport;
 
     [TestFixture]
-    public class MockDirectorySimlinkTests
+    public class MockDirectorySymlinkTests
     {
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -140,6 +140,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockDirectory_CreateSymbolicLink_ShouldFailWithIllegalCharactersInPath()
         {
             // Arrange
@@ -155,12 +156,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockDirectory_CreateSymbolicLink_ShouldFailWithIllegalCharactersInTarget()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            string path = XFS.Path(@"C:\Folder\foo");
-            fileSystem.AddDirectory(path);
+            string path = XFS.Path(@"C:\foo");
 
             // Act
             TestDelegate ex = () => fileSystem.Directory.CreateSymbolicLink(path, @"C:\bar_?_");
