@@ -4,8 +4,6 @@ using System.Linq;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -437,8 +435,8 @@ namespace System.IO.Abstractions.TestingHelpers
             }
             VerifyDirectoryExists(destFileName);
 
-            mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile));
             mockFileDataAccessor.RemoveFile(sourceFileName);
+            mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile));
         }
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
@@ -483,8 +481,8 @@ namespace System.IO.Abstractions.TestingHelpers
             }
             VerifyDirectoryExists(destFileName);
 
-            mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile));
             mockFileDataAccessor.RemoveFile(sourceFileName);
+            mockFileDataAccessor.AddFile(destFileName, new MockFileData(sourceFile));
         }
 #endif
 
