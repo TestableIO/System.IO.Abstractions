@@ -6,7 +6,6 @@
     "Void SetAccessControl(System.String, System.Security.AccessControl.DirectorySecurity)"
   ],
   "MissingMembers": [
-    "System.IO.Abstractions.IFileSystemInfo CreateSymbolicLink(System.String, System.String)",
     "System.IO.Abstractions.IFileSystemInfo ResolveLinkTarget(System.String, Boolean)",
     "System.String[] GetFileSystemEntries(System.String, System.String, System.IO.EnumerationOptions)",
     "System.String[] GetFileSystemEntries(System.String, System.String, System.IO.SearchOption)"

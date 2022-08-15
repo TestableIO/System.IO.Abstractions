@@ -84,6 +84,30 @@ namespace System.IO.Abstractions.TestingHelpers
             return created;
         }
 
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget)
+        {
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, nameof(path));
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(pathToTarget, nameof(pathToTarget));
+
+            if (Exists(path))
+            {
+                throw CommonExceptions.FileAlreadyExists(nameof(path));
+            }
+
+            var targetExists = Exists(pathToTarget);
+            if (!targetExists)
+            {
+                throw CommonExceptions.FileNotFound(pathToTarget);
+            }
+
+            mockFileDataAccessor.AddDirectory(path);
+            mockFileDataAccessor.GetFile(path).LinkTarget = pathToTarget;
+
+            return new MockDirectoryInfo(mockFileDataAccessor, path);
+        }
+#endif
 
         /// <inheritdoc />
         public override void Delete(string path)

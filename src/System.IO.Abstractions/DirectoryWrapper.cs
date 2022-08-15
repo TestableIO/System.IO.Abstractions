@@ -29,7 +29,13 @@ namespace System.IO.Abstractions
             directoryInfo.Create(directorySecurity);
             return new DirectoryInfoWrapper(FileSystem, directoryInfo);
         }
-
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget)
+        {
+            return Directory.CreateSymbolicLink(path, pathToTarget).WrapFileSystemInfo(FileSystem);
+        }
+#endif
         /// <inheritdoc />
         public override void Delete(string path)
         {

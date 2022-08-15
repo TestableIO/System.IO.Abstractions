@@ -52,7 +52,10 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="IFile.Create(string,int,FileOptions)"/>
         public abstract Stream Create(string path, int bufferSize, FileOptions options);
-
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc cref="IFile.CreateSymbolicLink(string, string)"/>
+        public abstract IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget);
+#endif
         /// <inheritdoc cref="IFile.CreateText"/>
         public abstract StreamWriter CreateText(string path);
         /// <inheritdoc cref="IFile.Decrypt"/>
