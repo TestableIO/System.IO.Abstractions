@@ -28,6 +28,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_Move_WithReadOnlyAttribute_ShouldThrowUnauthorizedAccessExceptionAndNotMoveFile()
+        {
+            var sourceFilePath = @"c:\foo.txt";
+            var destFilePath = @"c:\bar.txt";
+            var fileSystem = new MockFileSystem();
+            fileSystem.File.WriteAllText(sourceFilePath, "this is some content");
+            fileSystem.File.SetAttributes(sourceFilePath, FileAttributes.ReadOnly);
+
+            Assert.Throws<UnauthorizedAccessException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+
+            Assert.That(fileSystem.File.Exists(sourceFilePath), Is.EqualTo(true));
+            Assert.That(fileSystem.File.Exists(destFilePath), Is.EqualTo(false));
+        }
+
+        [Test]
         public void MockFile_Move_SameSourceAndTargetIsANoOp()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
