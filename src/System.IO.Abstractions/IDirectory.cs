@@ -77,6 +77,8 @@ namespace System.IO.Abstractions
         string[] GetFileSystemEntries(string path);
         /// <inheritdoc cref="Directory.GetFileSystemEntries(string,string)"/>
         string[] GetFileSystemEntries(string path, string searchPattern);
+        /// <inheritdoc cref="Directory.GetFileSystemEntries(string,string,SearchOption)"/>
+        string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
         /// <inheritdoc cref="Directory.GetLastAccessTime"/>
         DateTime GetLastAccessTime(string path);
         /// <inheritdoc cref="Directory.GetLastAccessTimeUtc"/>

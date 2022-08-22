@@ -381,6 +381,15 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
+        public override string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
+        {
+            var dirs = GetDirectories(path, searchPattern, searchOption);
+            var files = GetFiles(path, searchPattern, searchOption);
+
+            return dirs.Union(files).ToArray();
+        }
+
+        /// <inheritdoc />
         public override DateTime GetLastAccessTime(string path)
         {
             return mockFileDataAccessor.File.GetLastAccessTime(path);
