@@ -393,6 +393,57 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileInfo_CreationTimeUtcWithUnspecifiedDateTimeKind_ShouldSetCreationTimeUtcOfFileInMemoryFileSystem()
+        {
+            var date = DateTime.SpecifyKind(DateTime.Now.AddHours(-4), DateTimeKind.Unspecified);
+            var fileData = new MockFileData("Demo text content");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { MockUnixSupport.Path(@"c:\a.txt"), fileData }
+            });
+            var fileInfo = new MockFileInfo(fileSystem, MockUnixSupport.Path(@"c:\a.txt"))
+            {
+                CreationTimeUtc = date,
+            };
+
+            Assert.AreEqual(date, fileInfo.CreationTimeUtc);
+        }
+
+        [Test]
+        public void MockFileInfo_LastAccessTimeUtcWithUnspecifiedDateTimeKind_ShouldSetLastAccessTimeUtcOfFileInMemoryFileSystem()
+        {
+            var date = DateTime.SpecifyKind(DateTime.Now.AddHours(-4), DateTimeKind.Unspecified);
+            var fileData = new MockFileData("Demo text content");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { MockUnixSupport.Path(@"c:\a.txt"), fileData }
+            });
+            var fileInfo = new MockFileInfo(fileSystem, MockUnixSupport.Path(@"c:\a.txt"))
+            {
+                LastAccessTimeUtc = date
+            };
+
+            Assert.AreEqual(date, fileInfo.LastAccessTimeUtc);
+        }
+
+        [Test]
+        public void MockFileInfo_LastWriteTimeUtcWithUnspecifiedDateTimeKind_ShouldSetLastWriteTimeUtcOfFileInMemoryFileSystem()
+        {
+            var date = DateTime.SpecifyKind(DateTime.Now.AddHours(-4), DateTimeKind.Unspecified);
+            var fileData = new MockFileData("Demo text content");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { MockUnixSupport.Path(@"c:\a.txt"), fileData }
+            });
+            var fileInfo = new MockFileInfo(fileSystem, MockUnixSupport.Path(@"c:\a.txt"))
+            {
+                LastWriteTimeUtc = date,
+            };
+
+            Assert.AreEqual(date, fileInfo.LastWriteTimeUtc);
+        }
+
+        [Test]
         public void MockFileInfo_LastWriteTime_ShouldReturnDefaultTimeForNonExistingFile()
         {
             var fileSystem = new MockFileSystem();
