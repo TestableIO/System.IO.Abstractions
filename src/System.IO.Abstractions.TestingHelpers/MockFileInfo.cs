@@ -137,7 +137,7 @@ namespace System.IO.Abstractions.TestingHelpers
             set
             {
                 var mockFileData = GetMockFileDataForWrite();
-                mockFileData.LastAccessTime = value;
+                mockFileData.LastAccessTime = value.ToLocalTime();
             }
         }
 
