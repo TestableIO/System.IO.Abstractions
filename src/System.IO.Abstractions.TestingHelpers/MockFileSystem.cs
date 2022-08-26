@@ -145,17 +145,17 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockFileData AdjustTimes(MockFileData fileData, TimeAdjustments timeAdjustments)
         {
             var now = dateTimeProvider();
-            if ((timeAdjustments & TimeAdjustments.CreationTime) != TimeAdjustments.None)
+            if (timeAdjustments.HasFlag(TimeAdjustments.CreationTime))
             {
                 fileData.CreationTime = now;
             }
 
-            if ((timeAdjustments & TimeAdjustments.LastAccessTime) != TimeAdjustments.None)
+            if (timeAdjustments.HasFlag(TimeAdjustments.LastAccessTime))
             {
                 fileData.LastAccessTime = now;
             }
 
-            if ((timeAdjustments & TimeAdjustments.LastWriteTime) != TimeAdjustments.None)
+            if (timeAdjustments.HasFlag(TimeAdjustments.LastWriteTime))
             {
                 fileData.LastWriteTime = now;
             }
