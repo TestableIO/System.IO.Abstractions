@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿    using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -143,7 +144,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public MockFileData AdjustTimes(MockFileData fileData, TimeAdjustments timeAdjustments)
         {
-            var now = (dateTimeProvider ?? defaultDateTimeProvider)();
+            var now = dateTimeProvider();
             if ((timeAdjustments & TimeAdjustments.CreationTime) != TimeAdjustments.None)
             {
                 fileData.CreationTime = now;
@@ -412,6 +413,12 @@ namespace System.IO.Abstractions.TestingHelpers
                     return files.Where(f => f.Value.Data.IsDirectory).Select(f => f.Key).ToArray();
                 }
             }
+        }
+
+        [OnDeserializing]
+        private void OnDeserializing(StreamingContext c)
+        {
+            dateTimeProvider = defaultDateTimeProvider;
         }
 
         private bool AnyFileIsReadOnly(string path)
