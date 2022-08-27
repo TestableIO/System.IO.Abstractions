@@ -190,7 +190,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var sourceFileData = mockFileDataAccessor.GetFile(pathToTarget);
             sourceFileData.CheckFileAccess(pathToTarget, FileAccess.Read);
             var destFileData = new MockFileData(new byte[0]);
-            destFileData.CreationTime = destFileData.LastAccessTime = DateTime.Now;
+            mockFileDataAccessor.AdjustTimes(destFileData, TimeAdjustments.CreationTime | TimeAdjustments.LastAccessTime);
             destFileData.LinkTarget = pathToTarget;
             mockFileDataAccessor.AddFile(path, destFileData);
 
