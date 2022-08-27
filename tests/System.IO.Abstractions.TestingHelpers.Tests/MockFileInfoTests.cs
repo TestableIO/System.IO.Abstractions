@@ -180,7 +180,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.CreationTime;
 
-            Assert.AreEqual(MockFileData.DefaultDateTimeOffset.DateTime, result);
+            Assert.AreEqual(MockFileData.DefaultDateTimeOffset.LocalDateTime, result);
         }
 
         [Test]
@@ -400,7 +400,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.LastWriteTime;
 
-            Assert.AreEqual(MockFileData.DefaultDateTimeOffset.DateTime, result);
+            Assert.AreEqual(MockFileData.DefaultDateTimeOffset.LocalDateTime, result);
         }
 
         [Test]
@@ -442,9 +442,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\a.txt"));
 
             var newUtcTime = DateTime.UtcNow;
-            fileInfo.LastWriteTime = newUtcTime;
+            fileInfo.LastWriteTimeUtc = newUtcTime;
 
-            Assert.AreEqual(newUtcTime, fileInfo.LastWriteTime);
+            Assert.AreEqual(newUtcTime, fileInfo.LastWriteTimeUtc);
         }
 
         [Test]

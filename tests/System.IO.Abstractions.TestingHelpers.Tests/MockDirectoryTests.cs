@@ -411,7 +411,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(result, Is.EquivalentTo(expected));
         }
 
-        private void ExecuteTimeAttributeTest(Action<IFileSystem, string, DateTime> setter, Func<IFileSystem, string, DateTime> getter)
+        private void ExecuteTimeAttributeTest(DateTime time, Action<IFileSystem, string, DateTime> setter, Func<IFileSystem, string, DateTime> getter)
         {
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -420,7 +420,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            var time = new DateTime(2010, 6, 4, 13, 26, 42);
             setter(fileSystem, path, time);
             var result = getter(fileSystem, path);
 
@@ -432,6 +431,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_GetCreationTime_ShouldReturnCreationTimeFromFile()
         {
             ExecuteTimeAttributeTest(
+                new DateTime(2010, 6, 4, 13, 26, 42),
                 (fs, p, d) => fs.File.SetCreationTime(p, d),
                 (fs, p) => fs.Directory.GetCreationTime(p));
         }
@@ -440,6 +440,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_GetCreationTimeUtc_ShouldReturnCreationTimeUtcFromFile()
         {
             ExecuteTimeAttributeTest(
+                new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
                 (fs, p, d) => fs.File.SetCreationTimeUtc(p, d),
                 (fs, p) => fs.Directory.GetCreationTimeUtc(p));
         }
@@ -448,6 +449,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_GetLastAccessTime_ShouldReturnLastAccessTimeFromFile()
         {
             ExecuteTimeAttributeTest(
+                new DateTime(2010, 6, 4, 13, 26, 42),
                 (fs, p, d) => fs.File.SetLastAccessTime(p, d),
                 (fs, p) => fs.Directory.GetLastAccessTime(p));
         }
@@ -456,6 +458,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_GetLastAccessTimeUtc_ShouldReturnLastAccessTimeUtcFromFile()
         {
             ExecuteTimeAttributeTest(
+                new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
                 (fs, p, d) => fs.File.SetLastAccessTimeUtc(p, d),
                 (fs, p) => fs.Directory.GetLastAccessTimeUtc(p));
         }
@@ -464,6 +467,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_GetLastWriteTime_ShouldReturnLastWriteTimeFromFile()
         {
             ExecuteTimeAttributeTest(
+                new DateTime(2010, 6, 4, 13, 26, 42),
                 (fs, p, d) => fs.File.SetLastWriteTime(p, d),
                 (fs, p) => fs.Directory.GetLastWriteTime(p));
         }
@@ -472,6 +476,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_GetLastWriteTimeUtc_ShouldReturnLastWriteTimeUtcFromFile()
         {
             ExecuteTimeAttributeTest(
+                new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
                 (fs, p, d) => fs.File.SetLastWriteTimeUtc(p, d),
                 (fs, p) => fs.Directory.GetLastWriteTimeUtc(p));
         }
@@ -480,6 +485,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_SetCreationTime_ShouldSetCreationTimeOnFile()
         {
             ExecuteTimeAttributeTest(
+                new DateTime(2010, 6, 4, 13, 26, 42),
                 (fs, p, d) => fs.Directory.SetCreationTime(p, d),
                 (fs, p) => fs.File.GetCreationTime(p));
         }
@@ -488,6 +494,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_SetCreationTimeUtc_ShouldSetCreationTimeUtcOnFile()
         {
             ExecuteTimeAttributeTest(
+                new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
                 (fs, p, d) => fs.Directory.SetCreationTimeUtc(p, d),
                 (fs, p) => fs.File.GetCreationTimeUtc(p));
         }
@@ -496,6 +503,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_SetLastAccessTime_ShouldSetLastAccessTimeOnFile()
         {
             ExecuteTimeAttributeTest(
+                new DateTime(2010, 6, 4, 13, 26, 42),
                 (fs, p, d) => fs.Directory.SetLastAccessTime(p, d),
                 (fs, p) => fs.File.GetLastAccessTime(p));
         }
@@ -504,6 +512,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_SetLastAccessTimeUtc_ShouldSetLastAccessTimeUtcOnFile()
         {
             ExecuteTimeAttributeTest(
+                new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
                 (fs, p, d) => fs.Directory.SetLastAccessTimeUtc(p, d),
                 (fs, p) => fs.File.GetLastAccessTimeUtc(p));
         }
@@ -512,6 +521,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_SetLastWriteTime_ShouldSetLastWriteTimeOnFile()
         {
             ExecuteTimeAttributeTest(
+                new DateTime(2010, 6, 4, 13, 26, 42),
                 (fs, p, d) => fs.Directory.SetLastWriteTime(p, d),
                 (fs, p) => fs.File.GetLastWriteTime(p));
         }
@@ -520,6 +530,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockDirectory_SetLastWriteTimeUtc_ShouldSetLastWriteTimeUtcOnFile()
         {
             ExecuteTimeAttributeTest(
+                new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
                 (fs, p, d) => fs.Directory.SetLastWriteTimeUtc(p, d),
                 (fs, p) => fs.File.GetLastWriteTimeUtc(p));
         }

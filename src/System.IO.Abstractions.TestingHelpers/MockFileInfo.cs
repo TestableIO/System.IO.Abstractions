@@ -60,7 +60,7 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 var mockFileData = GetMockFileDataForRead();
-                return mockFileData.CreationTime.DateTime;
+                return mockFileData.CreationTime.LocalDateTime;
             }
             set
             {
@@ -80,7 +80,7 @@ namespace System.IO.Abstractions.TestingHelpers
             set
             {
                 var mockFileData = GetMockFileDataForWrite();
-                mockFileData.CreationTime = value.ToLocalTime();
+                mockFileData.CreationTime = value;
             }
         }
 
@@ -117,7 +117,7 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 var mockFileData = GetMockFileDataForRead();
-                return mockFileData.LastAccessTime.DateTime;
+                return mockFileData.LastAccessTime.LocalDateTime;
             }
             set
             {
@@ -147,7 +147,7 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 var mockFileData = GetMockFileDataForRead();
-                return mockFileData.LastWriteTime.DateTime;
+                return mockFileData.LastWriteTime.LocalDateTime;
             }
             set
             {
@@ -167,7 +167,7 @@ namespace System.IO.Abstractions.TestingHelpers
             set
             {
                 var mockFileData = GetMockFileDataForWrite();
-                mockFileData.LastWriteTime = value.ToLocalTime();
+                mockFileData.LastWriteTime = value;
             }
         }
 

@@ -542,7 +542,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = directoryInfo.CreationTime;
 
-            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.UtcDateTime));
+            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.LocalDateTime));
         }
 
         [Test]
@@ -551,9 +551,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
 
-            var result = directoryInfo.LastAccessTimeUtc;
+            var result = directoryInfo.LastAccessTime;
 
-            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.UtcDateTime));
+            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.LocalDateTime));
         }
 
         [Test]
@@ -562,9 +562,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
 
-            var result = directoryInfo.LastWriteTimeUtc;
+            var result = directoryInfo.LastWriteTime;
 
-            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.UtcDateTime));
+            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.LocalDateTime));
         }
 
         [Test]

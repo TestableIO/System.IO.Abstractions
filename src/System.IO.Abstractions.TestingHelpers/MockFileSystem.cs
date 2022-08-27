@@ -18,7 +18,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private readonly PathVerifier pathVerifier;
         [NonSerialized]
         private Func<DateTime> dateTimeProvider = defaultDateTimeProvider;
-        private static Func<DateTime> defaultDateTimeProvider = () => DateTime.Now;
+        private static Func<DateTime> defaultDateTimeProvider = () => DateTime.UtcNow;
 
         /// <inheritdoc />
         public MockFileSystem() : this(null) { }

@@ -62,7 +62,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override DateTime CreationTime
         {
-            get { return GetMockFileDataForRead().CreationTime.DateTime; }
+            get { return GetMockFileDataForRead().CreationTime.LocalDateTime; }
             set { GetMockFileDataForWrite().CreationTime = value; }
         }
 
@@ -70,7 +70,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override DateTime CreationTimeUtc
         {
             get { return GetMockFileDataForRead().CreationTime.UtcDateTime; }
-            set { GetMockFileDataForWrite().CreationTime = value.ToLocalTime(); }
+            set { GetMockFileDataForWrite().CreationTime = value; }
         }
 
         /// <inheritdoc />
@@ -114,7 +114,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override DateTime LastAccessTime
         {
-            get { return GetMockFileDataForRead().LastAccessTime.DateTime; }
+            get { return GetMockFileDataForRead().LastAccessTime.LocalDateTime; }
             set { GetMockFileDataForWrite().LastAccessTime = value; }
         }
 
@@ -122,13 +122,13 @@ namespace System.IO.Abstractions.TestingHelpers
         public override DateTime LastAccessTimeUtc
         {
             get { return GetMockFileDataForRead().LastAccessTime.UtcDateTime; }
-            set { GetMockFileDataForWrite().LastAccessTime = value.ToLocalTime(); }
+            set { GetMockFileDataForWrite().LastAccessTime = value; }
         }
 
         /// <inheritdoc />
         public override DateTime LastWriteTime
         {
-            get { return GetMockFileDataForRead().LastWriteTime.DateTime; }
+            get { return GetMockFileDataForRead().LastWriteTime.LocalDateTime; }
             set { GetMockFileDataForWrite().LastWriteTime = value; }
         }
 
@@ -136,7 +136,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override DateTime LastWriteTimeUtc
         {
             get { return GetMockFileDataForRead().LastWriteTime.UtcDateTime; }
-            set { GetMockFileDataForWrite().LastWriteTime = value.ToLocalTime(); }
+            set { GetMockFileDataForWrite().LastWriteTime = value; }
         }
 
 #if FEATURE_FILE_SYSTEM_INFO_LINK_TARGET
