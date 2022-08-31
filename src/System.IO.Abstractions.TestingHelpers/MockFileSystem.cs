@@ -16,6 +16,9 @@ namespace System.IO.Abstractions.TestingHelpers
         private readonly IDictionary<string, FileSystemEntry> files;
         private readonly PathVerifier pathVerifier;
 
+        private Action<MockFileChanging> onFileChanging;
+        private Action<MockDirectoryChanging> onDirectoryChanging;
+
         /// <inheritdoc />
         public MockFileSystem() : this(null) { }
 
@@ -88,6 +91,24 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public PathVerifier PathVerifier => pathVerifier;
 
+        /// <summary>
+        /// Registers a callback to be executed when a file is changing. 
+        /// </summary>
+        public MockFileSystem OnFileChanging(Action<MockFileChanging> callback)
+        {
+            onFileChanging = callback;
+            return this;
+        }
+
+        /// <summary>
+        /// Registers a callback to be executed when a directory is changing. 
+        /// </summary>
+        public MockFileSystem OnDirectoryChanging(Action<MockDirectoryChanging> callback)
+        {
+            onDirectoryChanging = callback;
+            return this;
+        }
+
         private string FixPath(string path, bool checkCaps = false)
         {
             if (path == null)
@@ -134,7 +155,25 @@ namespace System.IO.Abstractions.TestingHelpers
         private void SetEntry(string path, MockFileData mockFile)
         {
             path = FixPath(path, true).TrimSlashes();
+            if (mockFile is MockDirectoryData)
+            {
+                ExecuteCallbackAndCheckExceptionToThrow(onDirectoryChanging, new MockDirectoryChanging(path));
+            }
+            else
+            {
+                ExecuteCallbackAndCheckExceptionToThrow(onFileChanging, new MockFileChanging(path));
+            }
             files[path] = new FileSystemEntry { Path = path, Data = mockFile };
+        }
+
+        private void ExecuteCallbackAndCheckExceptionToThrow<T>(Action<T> callback, T fileChanging)
+            where T : MockFileSystemEvent
+        {
+            callback?.Invoke(fileChanging);
+            if (fileChanging.ExceptionToThrow != null)
+            {
+                throw fileChanging.ExceptionToThrow;
+            }
         }
 
         /// <inheritdoc />
