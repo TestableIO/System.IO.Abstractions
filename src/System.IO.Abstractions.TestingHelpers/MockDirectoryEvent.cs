@@ -3,7 +3,7 @@
     /// <summary>
     /// Notifies about a pending directory event.
     /// </summary>
-    public class MockDirectoryEvent : MockFileSystemEvent
+    public class MockDirectoryEvent
     {
         /// <summary>
         /// The path of the directory.

@@ -4,7 +4,6 @@ using System.Reflection;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
-    using static System.Net.WebRequestMethods;
     using XFS = MockUnixSupport;
 
     /// <inheritdoc />
@@ -93,8 +92,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public PathVerifier PathVerifier => pathVerifier;
 
         /// <summary>
-        /// Registers a callback to be executed when a file event is triggered.<para/>
-        /// Enables throwing custom exceptions by setting the <see cref="MockFileSystemEvent.ExceptionToThrow"/> property of the callback parameter.
+        /// Registers a callback to be executed when a file event is triggered.
         /// </summary>
         public MockFileSystem OnFileEvent(Action<MockFileEvent> callback)
         {
@@ -103,8 +101,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <summary>
-        /// Registers a callback to be executed when a directory event is triggered.<para/>
-        /// Enables throwing custom exceptions by setting the <see cref="MockFileSystemEvent.ExceptionToThrow"/> property of the callback parameter.
+        /// Registers a callback to be executed when a directory event is triggered.
         /// </summary>
         public MockFileSystem OnDirectoryEvent(Action<MockDirectoryEvent> callback)
         {
@@ -161,16 +158,6 @@ namespace System.IO.Abstractions.TestingHelpers
             files[path] = new FileSystemEntry { Path = path, Data = mockFile };
         }
 
-        private void ExecuteCallbackAndCheckExceptionToThrow<T>(Action<T> callback, T fileChanging)
-            where T : MockFileSystemEvent
-        {
-            callback?.Invoke(fileChanging);
-            if (fileChanging.ExceptionToThrow != null)
-            {
-                throw fileChanging.ExceptionToThrow;
-            }
-        }
-
         /// <inheritdoc />
         public void AddFile(string path, MockFileData mockFile)
         {
@@ -201,11 +188,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 var existingFile = GetFileWithoutFixingPath(fixedPath);
                 if (existingFile == null)
                 {
-                    ExecuteCallbackAndCheckExceptionToThrow(onFileEvent, new MockFileEvent(fixedPath, MockFileEvent.FileEventType.Created));
+                    onFileEvent?.Invoke(new MockFileEvent(fixedPath, MockFileEvent.FileEventType.Created));
                 }
                 else
                 {
-                    ExecuteCallbackAndCheckExceptionToThrow(onFileEvent, new MockFileEvent(fixedPath, MockFileEvent.FileEventType.Updated));
+                    onFileEvent?.Invoke(new MockFileEvent(fixedPath, MockFileEvent.FileEventType.Updated));
                 }
                 SetEntry(fixedPath, mockFile ?? new MockFileData(string.Empty));
             }
@@ -255,7 +242,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
                 var s = StringOperations.EndsWith(fixedPath, separator) ? fixedPath : fixedPath + separator;
 
-                ExecuteCallbackAndCheckExceptionToThrow(onDirectoryEvent, new MockDirectoryEvent(s.TrimSlashes(), MockDirectoryEvent.DirectoryEventType.Created));
+                onDirectoryEvent?.Invoke(new MockDirectoryEvent(s.TrimSlashes(), MockDirectoryEvent.DirectoryEventType.Created));
                 SetEntry(s, new MockDirectoryData());
             }
         }
@@ -316,13 +303,13 @@ namespace System.IO.Abstractions.TestingHelpers
                     entry.Path = newPath;
                     if (entry.Data is MockDirectoryData)
                     {
-                        ExecuteCallbackAndCheckExceptionToThrow(onDirectoryEvent, new MockDirectoryEvent(path, MockDirectoryEvent.DirectoryEventType.Deleted));
-                        ExecuteCallbackAndCheckExceptionToThrow(onDirectoryEvent, new MockDirectoryEvent(newPath, MockDirectoryEvent.DirectoryEventType.Created));
+                        onDirectoryEvent?.Invoke(new MockDirectoryEvent(path, MockDirectoryEvent.DirectoryEventType.Deleted));
+                        onDirectoryEvent?.Invoke(new MockDirectoryEvent(newPath, MockDirectoryEvent.DirectoryEventType.Created));
                     }
                     else
                     {
-                        ExecuteCallbackAndCheckExceptionToThrow(onFileEvent, new MockFileEvent(path, MockFileEvent.FileEventType.Deleted));
-                        ExecuteCallbackAndCheckExceptionToThrow(onFileEvent, new MockFileEvent(newPath, MockFileEvent.FileEventType.Created));
+                        onFileEvent?.Invoke(new MockFileEvent(path, MockFileEvent.FileEventType.Deleted));
+                        onFileEvent?.Invoke(new MockFileEvent(newPath, MockFileEvent.FileEventType.Created));
                     }
                     files[newPath] = entry;
                     files.Remove(path);
@@ -364,11 +351,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 var file = GetFileWithoutFixingPath(path);
                 if (file is MockDirectoryData)
                 {
-                    ExecuteCallbackAndCheckExceptionToThrow(onDirectoryEvent, new MockDirectoryEvent(path, MockDirectoryEvent.DirectoryEventType.Deleted));
+                    onDirectoryEvent?.Invoke(new MockDirectoryEvent(path, MockDirectoryEvent.DirectoryEventType.Deleted));
                 }
                 else
                 {
-                    ExecuteCallbackAndCheckExceptionToThrow(onFileEvent, new MockFileEvent(path, MockFileEvent.FileEventType.Deleted));
+                    onFileEvent?.Invoke(new MockFileEvent(path, MockFileEvent.FileEventType.Deleted));
                 }
 
                 files.Remove(path);

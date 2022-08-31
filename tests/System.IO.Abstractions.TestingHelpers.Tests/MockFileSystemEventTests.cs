@@ -7,14 +7,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileSystemEventTests
     {
         [Test]
-        public void OnFileChanging_SetExceptionToThrow_ShouldThrowExceptionAndNotCreateFile()
+        public void OnFileChanging_ThrowExceptionInCallback_ShouldThrowExceptionAndNotCreateFile()
         {
             var basePath = Path.GetFullPath("/foo/bar");
             var fileName = "foo.txt";
             var exception = new Exception("the file should not be created");
             var expectedPath = Path.Combine(basePath, fileName);
             var fs = new MockFileSystem(null, basePath)
-                .OnFileEvent(f => f.ExceptionToThrow = exception);
+                .OnFileEvent(_ => throw exception);
 
             var receivedException = Assert.Throws<Exception>(() => fs.File.WriteAllText(fileName, "some content"));
             var result = fs.File.Exists(expectedPath);
@@ -56,14 +56,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void OnDirectoryChanging_SetExceptionToThrow_ShouldThrowExceptionAndNotCreateDirectory()
+        public void OnDirectoryChanging_ThrowExceptionInCallback_ShouldThrowExceptionAndNotCreateDirectory()
         {
             var basePath = Path.GetFullPath("/foo/bar");
             var directoryName = "test-directory";
             var exception = new Exception("the directory should not be created");
             var expectedPath = Path.Combine(basePath, directoryName);
             var fs = new MockFileSystem(null, basePath)
-                .OnDirectoryEvent(f => f.ExceptionToThrow = exception);
+                .OnDirectoryEvent(_ => throw exception);
 
             var receivedException = Assert.Throws<Exception>(() => fs.Directory.CreateDirectory(directoryName));
             var result = fs.Directory.Exists(expectedPath);

@@ -3,7 +3,7 @@
     /// <summary>
     /// Notifies about a pending file event.
     /// </summary>
-    public class MockFileEvent : MockFileSystemEvent
+    public class MockFileEvent
     {
         /// <summary>
         /// The path of the file.
