@@ -4,6 +4,7 @@ using System.Reflection;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using static System.Net.WebRequestMethods;
     using XFS = MockUnixSupport;
 
     /// <inheritdoc />
@@ -16,8 +17,8 @@ namespace System.IO.Abstractions.TestingHelpers
         private readonly IDictionary<string, FileSystemEntry> files;
         private readonly PathVerifier pathVerifier;
 
-        private Action<MockFileChanging> onFileChanging;
-        private Action<MockDirectoryChanging> onDirectoryChanging;
+        private Action<MockFileEvent> onFileChanging;
+        private Action<MockDirectoryEvent> onDirectoryChanging;
 
         /// <inheritdoc />
         public MockFileSystem() : this(null) { }
@@ -94,7 +95,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <summary>
         /// Registers a callback to be executed when a file is changing. 
         /// </summary>
-        public MockFileSystem OnFileChanging(Action<MockFileChanging> callback)
+        public MockFileSystem OnFileChanging(Action<MockFileEvent> callback)
         {
             onFileChanging = callback;
             return this;
@@ -103,7 +104,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <summary>
         /// Registers a callback to be executed when a directory is changing. 
         /// </summary>
-        public MockFileSystem OnDirectoryChanging(Action<MockDirectoryChanging> callback)
+        public MockFileSystem OnDirectoryChanging(Action<MockDirectoryEvent> callback)
         {
             onDirectoryChanging = callback;
             return this;
@@ -155,14 +156,6 @@ namespace System.IO.Abstractions.TestingHelpers
         private void SetEntry(string path, MockFileData mockFile)
         {
             path = FixPath(path, true).TrimSlashes();
-            if (mockFile is MockDirectoryData)
-            {
-                ExecuteCallbackAndCheckExceptionToThrow(onDirectoryChanging, new MockDirectoryChanging(path));
-            }
-            else
-            {
-                ExecuteCallbackAndCheckExceptionToThrow(onFileChanging, new MockFileChanging(path));
-            }
             files[path] = new FileSystemEntry { Path = path, Data = mockFile };
         }
 
@@ -203,6 +196,15 @@ namespace System.IO.Abstractions.TestingHelpers
                     AddDirectory(directoryPath);
                 }
 
+                var existingFile = GetFileWithoutFixingPath(fixedPath);
+                if (existingFile == null)
+                {
+                    ExecuteCallbackAndCheckExceptionToThrow(onFileChanging, new MockFileEvent(fixedPath, MockFileEvent.FileEventType.Created));
+                }
+                else
+                {
+                    ExecuteCallbackAndCheckExceptionToThrow(onFileChanging, new MockFileEvent(fixedPath, MockFileEvent.FileEventType.Updated));
+                }
                 SetEntry(fixedPath, mockFile ?? new MockFileData(string.Empty));
             }
         }
@@ -250,6 +252,8 @@ namespace System.IO.Abstractions.TestingHelpers
                 }
 
                 var s = StringOperations.EndsWith(fixedPath, separator) ? fixedPath : fixedPath + separator;
+
+                ExecuteCallbackAndCheckExceptionToThrow(onDirectoryChanging, new MockDirectoryEvent(s.TrimSlashes(), MockDirectoryEvent.DirectoryEventType.Created));
                 SetEntry(s, new MockDirectoryData());
             }
         }
@@ -308,6 +312,16 @@ namespace System.IO.Abstractions.TestingHelpers
                     var newPath = Path.Combine(destPath, path.Substring(sourcePath.Length).TrimStart(Path.DirectorySeparatorChar));
                     var entry = files[path];
                     entry.Path = newPath;
+                    if (entry.Data is MockDirectoryData)
+                    {
+                        ExecuteCallbackAndCheckExceptionToThrow(onDirectoryChanging, new MockDirectoryEvent(path, MockDirectoryEvent.DirectoryEventType.Deleted));
+                        ExecuteCallbackAndCheckExceptionToThrow(onDirectoryChanging, new MockDirectoryEvent(newPath, MockDirectoryEvent.DirectoryEventType.Created));
+                    }
+                    else
+                    {
+                        ExecuteCallbackAndCheckExceptionToThrow(onFileChanging, new MockFileEvent(path, MockFileEvent.FileEventType.Deleted));
+                        ExecuteCallbackAndCheckExceptionToThrow(onFileChanging, new MockFileEvent(newPath, MockFileEvent.FileEventType.Created));
+                    }
                     files[newPath] = entry;
                     files.Remove(path);
                 }
@@ -336,13 +350,23 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public void RemoveFile(string path)
         {
-            path = FixPath(path);
+            path = FixPath(path).TrimSlashes();
 
             lock (files)
             {
                 if (FileExists(path) && (FileIsReadOnly(path) || Directory.Exists(path) && AnyFileIsReadOnly(path)))
                 {
                     throw CommonExceptions.AccessDenied(path);
+                }
+
+                var file = GetFileWithoutFixingPath(path);
+                if (file is MockDirectoryData)
+                {
+                    ExecuteCallbackAndCheckExceptionToThrow(onDirectoryChanging, new MockDirectoryEvent(path, MockDirectoryEvent.DirectoryEventType.Deleted));
+                }
+                else
+                {
+                    ExecuteCallbackAndCheckExceptionToThrow(onFileChanging, new MockFileEvent(path, MockFileEvent.FileEventType.Deleted));
                 }
 
                 files.Remove(path);

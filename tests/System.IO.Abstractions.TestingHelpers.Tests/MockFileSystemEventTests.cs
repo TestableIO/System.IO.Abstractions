@@ -7,21 +7,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileSystemEventTests
     {
         [Test]
-        public void OnFileChanging_WriteAllText_ShouldBeCalledWithFullFilePath()
-        {
-            var basePath = Path.GetFullPath("/foo/bar");
-            var fileName = "foo.txt";
-            var expectedPath = Path.Combine(basePath, fileName);
-            var calledPath = string.Empty;
-            var fs = new MockFileSystem(null, basePath)
-                .OnFileChanging(f => calledPath = f.Path);
-
-            fs.File.WriteAllText(fileName, "some content");
-
-            Assert.That(calledPath, Is.EqualTo(expectedPath));
-        }
-
-        [Test]
         public void OnFileChanging_SetExceptionToThrow_ShouldThrowExceptionAndNotCreateFile()
         {
             var basePath = Path.GetFullPath("/foo/bar");
@@ -39,35 +24,35 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void OnFileChanging_ReadAllText_ShouldNotBeCalled()
+        public void OnFileChanging_WithFileEvent_ShouldCallOnFileChangingWithFullFilePath()
         {
             var basePath = Path.GetFullPath("/foo/bar");
             var fileName = "foo.txt";
-            bool isCalled = false;
-            var fs = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { fileName, new MockFileData("some content") }
-            }, basePath)
-                .OnFileChanging(f => isCalled = true);
+            var expectedPath = Path.Combine(basePath, fileName);
+            var calledPath = string.Empty;
+            var fs = new MockFileSystem(null, basePath)
+                .OnFileChanging(f => calledPath = f.Path);
 
-            _ = fs.File.ReadAllText(fileName);
+            fs.File.WriteAllText(fileName, "some content");
 
-            Assert.That(isCalled, Is.False);
+            Assert.That(calledPath, Is.EqualTo(expectedPath));
         }
 
         [Test]
-        public void OnDirectoryChanging_WriteAllText_ShouldBeCalledWithFullDirectoryPath()
+        public void OnFileChanging_WithDirectoryEvent_ShouldNotBeCalled()
         {
             var basePath = Path.GetFullPath("/foo/bar");
             var directoryName = "test-directory";
-            var expectedPath = Path.Combine(basePath, directoryName);
-            var calledPath = string.Empty;
-            var fs = new MockFileSystem(null, basePath)
-                .OnDirectoryChanging(f => calledPath = f.Path);
+            bool isCalled = false;
+            var fs = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { directoryName, new MockFileData("some content") }
+            }, basePath)
+                .OnFileChanging(f => isCalled = true);
 
-            fs.Directory.CreateDirectory(directoryName);
+            _ = fs.Directory.CreateDirectory(directoryName);
 
-            Assert.That(calledPath, Is.EqualTo(expectedPath));
+            Assert.That(isCalled, Is.False);
         }
 
         [Test]
@@ -88,17 +73,135 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void OnDirectoryChanging_ReadAllText_ShouldNotBeCalled()
+        public void OnDirectoryChanging_WithDirectoryEvent_ShouldCallOnDirectoryChangingWithFullDirectoryPath()
         {
             var basePath = Path.GetFullPath("/foo/bar");
             var directoryName = "test-directory";
+            var expectedPath = Path.Combine(basePath, directoryName);
+            var calledPath = string.Empty;
+            var fs = new MockFileSystem(null, basePath)
+                .OnDirectoryChanging(f => calledPath = f.Path);
+
+            fs.Directory.CreateDirectory(directoryName);
+
+            Assert.That(calledPath, Is.EqualTo(expectedPath));
+        }
+
+        [Test]
+        public void OnDirectoryChanging_WithFileEvent_ShouldNotBeCalled()
+        {
+            var basePath = Path.GetFullPath("/foo/bar");
+            var fileName = "test-directory";
             bool isCalled = false;
             var fs = new MockFileSystem(null, basePath)
                 .OnDirectoryChanging(f => isCalled = true);
 
-            _ = fs.Directory.Exists(directoryName);
+            fs.File.WriteAllText(fileName, "some content");
 
             Assert.That(isCalled, Is.False);
+        }
+
+        [Test]
+        public void File_WriteAllText_NewFile_ShouldTriggerOnFileChangingWithCreatedType()
+        {
+            var fileName = "foo.txt";
+            MockFileEvent.FileEventType? receivedEventType = null;
+            var fs = new MockFileSystem()
+                .OnFileChanging(f => receivedEventType = f.EventType);
+
+            fs.File.WriteAllText(fileName, "some content");
+
+            Assert.That(receivedEventType, Is.EqualTo(MockFileEvent.FileEventType.Created));
+        }
+
+        [Test]
+        public void File_WriteAllText_ExistingFile_ShouldTriggerOnFileChangingWithUpdatedType()
+        {
+            var fileName = "foo.txt";
+            MockFileEvent.FileEventType? receivedEventType = null;
+            var fs = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { fileName, new MockFileData("some content") }
+            }).OnFileChanging(f => receivedEventType = f.EventType);
+
+            fs.File.WriteAllText(fileName, "some content");
+
+            Assert.That(receivedEventType, Is.EqualTo(MockFileEvent.FileEventType.Updated));
+        }
+
+        [Test]
+        public void File_Delete_ShouldTriggerOnFileChangingWithDeletedType()
+        {
+            var fileName = "foo.txt";
+            MockFileEvent.FileEventType? receivedEventType = null;
+            var fs = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { fileName, new MockFileData("some content") }
+            }).OnFileChanging(f => receivedEventType = f.EventType);
+
+            fs.File.Delete(fileName);
+
+            Assert.That(receivedEventType, Is.EqualTo(MockFileEvent.FileEventType.Deleted));
+        }
+
+        [Test]
+        public void File_Move_ShouldTriggerOnFileChangingWithDeletedAndCreatedTypes()
+        {
+            var fileName = "foo.txt";
+            var receivedEventTypes = new List<MockFileEvent.FileEventType>();
+            var fs = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { fileName, new MockFileData("some content") }
+            }).OnFileChanging(f => receivedEventTypes.Add(f.EventType));
+
+            fs.File.Move(fileName, "bar.txt");
+
+            Assert.That(receivedEventTypes, Contains.Item(MockFileEvent.FileEventType.Deleted));
+            Assert.That(receivedEventTypes, Contains.Item(MockFileEvent.FileEventType.Created));
+        }
+
+        [Test]
+        public void Directory_CreateDirectory_ShouldCallOnDirectoryChangingWithFullDirectoryPath()
+        {
+            var directoryName = "test-directory";
+            MockDirectoryEvent.DirectoryEventType? receivedEventType = null;
+            var fs = new MockFileSystem()
+                .OnDirectoryChanging(f => receivedEventType = f.EventType);
+
+            fs.Directory.CreateDirectory(directoryName);
+
+            Assert.That(receivedEventType, Is.EqualTo(MockDirectoryEvent.DirectoryEventType.Created));
+        }
+
+        [Test]
+        public void Directory_DeleteDirectory_ShouldCallOnDirectoryChangingWithFullDirectoryPath()
+        {
+            var directoryName = "test-directory";
+            MockDirectoryEvent.DirectoryEventType? receivedEventType = null;
+            var fs = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { directoryName, new MockDirectoryData() }
+            }).OnDirectoryChanging(f => receivedEventType = f.EventType);
+
+            fs.Directory.Delete(directoryName);
+
+            Assert.That(receivedEventType, Is.EqualTo(MockDirectoryEvent.DirectoryEventType.Deleted));
+        }
+
+        [Test]
+        public void Directory_Move_ShouldTriggerOnDirectoryChangingWithDeletedAndCreatedTypes()
+        {
+            var fileName = "foo.txt";
+            var receivedEventTypes = new List<MockDirectoryEvent.DirectoryEventType>();
+            var fs = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { fileName, new MockDirectoryData() }
+            }).OnDirectoryChanging(f => receivedEventTypes.Add(f.EventType));
+
+            fs.Directory.Move(fileName, "bar.txt");
+
+            Assert.That(receivedEventTypes, Contains.Item(MockDirectoryEvent.DirectoryEventType.Deleted));
+            Assert.That(receivedEventTypes, Contains.Item(MockDirectoryEvent.DirectoryEventType.Created));
         }
     }
 }
