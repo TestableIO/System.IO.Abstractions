@@ -49,7 +49,10 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </summary>
         private MockFileData()
         {
-            // empty
+            var now = DateTime.UtcNow;
+            LastWriteTime = now;
+            LastAccessTime = now;
+            CreationTime = now;
         }
 
         /// <summary>

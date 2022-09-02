@@ -542,7 +542,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var mockFileData = mockFileDataAccessor.GetFile(path);
             mockFileData.CheckFileAccess(path, access);
             var timeAdjustments = TimeAdjustments.LastAccessTime;
-            if (access != FileAccess.Read)
+            if (access.HasFlag(FileAccess.Write))
             {
                 timeAdjustments |= TimeAdjustments.LastWriteTime;
             }
