@@ -148,14 +148,14 @@
             {
                 case FileMode.Append:
                 case FileMode.CreateNew:
-                    if (access != FileAccess.Write)
+                    if (access.HasFlag(FileAccess.Read))
                     {
                         return TimeAdjustments.LastAccessTime;
                     }
                     return TimeAdjustments.None;
                 case FileMode.Create:
                 case FileMode.Truncate:
-                    if (access != FileAccess.Read)
+                    if (access.HasFlag(FileAccess.Write))
                     {
                         return TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime;
                     }
