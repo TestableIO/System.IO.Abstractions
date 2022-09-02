@@ -34,7 +34,8 @@
                 fileData = mockFileDataAccessor.GetFile(path);
                 fileData.CheckFileAccess(path, access);
 
-                mockFileDataAccessor.AdjustTimes(fileData, TimeAdjustments.LastAccessTime);
+                var timeAdjustments = GetTimeAdjustmentsForFileStreamWhenFileExists(mode, access);
+                mockFileDataAccessor.AdjustTimes(fileData, timeAdjustments);
                 var existingContents = fileData.Contents;
                 var keepExistingContents =
                     existingContents?.Length > 0 &&
@@ -138,6 +139,31 @@
             if (options.HasFlag(FileOptions.Encrypted) && mockFileDataAccessor.FileExists(path))
             {
                 mockFileDataAccessor.FileInfo.FromFileName(path).Encrypt();
+            }
+        }
+
+        private TimeAdjustments GetTimeAdjustmentsForFileStreamWhenFileExists(FileMode mode, FileAccess access)
+        {
+            switch (mode)
+            {
+                case FileMode.Append:
+                case FileMode.CreateNew:
+                    if (access != FileAccess.Write)
+                    {
+                        return TimeAdjustments.LastAccessTime;
+                    }
+                    return TimeAdjustments.None;
+                case FileMode.Create:
+                case FileMode.Truncate:
+                    if (access != FileAccess.Read)
+                    {
+                        return TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime;
+                    }
+                    return TimeAdjustments.LastAccessTime;
+                case FileMode.Open:
+                case FileMode.OpenOrCreate:
+                default:
+                    return TimeAdjustments.None;
             }
         }
     }
