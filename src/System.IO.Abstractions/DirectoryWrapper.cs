@@ -157,6 +157,12 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
+        public override string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
+        {
+            return Directory.GetFileSystemEntries(path, searchPattern, searchOption);
+        }
+
+        /// <inheritdoc />
         public override DateTime GetLastAccessTime(string path)
         {
             return Directory.GetLastAccessTime(path);

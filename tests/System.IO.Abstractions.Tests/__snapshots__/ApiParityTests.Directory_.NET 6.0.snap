@@ -7,7 +7,6 @@
   ],
   "MissingMembers": [
     "System.IO.Abstractions.IFileSystemInfo ResolveLinkTarget(System.String, Boolean)",
-    "System.String[] GetFileSystemEntries(System.String, System.String, System.IO.EnumerationOptions)",
-    "System.String[] GetFileSystemEntries(System.String, System.String, System.IO.SearchOption)"
+    "System.String[] GetFileSystemEntries(System.String, System.String, System.IO.EnumerationOptions)"
   ]
 }
