@@ -11,7 +11,6 @@
     "System.Collections.Generic.IEnumerable`1[System.String] EnumerateFiles(System.String, System.String, System.IO.EnumerationOptions)",
     "System.String[] GetDirectories(System.String, System.String, System.IO.EnumerationOptions)",
     "System.String[] GetFileSystemEntries(System.String, System.String, System.IO.EnumerationOptions)",
-    "System.String[] GetFileSystemEntries(System.String, System.String, System.IO.SearchOption)",
     "System.String[] GetFiles(System.String, System.String, System.IO.EnumerationOptions)"
   ]
 }

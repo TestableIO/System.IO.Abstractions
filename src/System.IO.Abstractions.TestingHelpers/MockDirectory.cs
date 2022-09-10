@@ -381,6 +381,15 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
+        public override string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
+        {
+            var dirs = GetDirectories(path, searchPattern, searchOption);
+            var files = GetFiles(path, searchPattern, searchOption);
+
+            return dirs.Union(files).ToArray();
+        }
+
+        /// <inheritdoc />
         public override DateTime GetLastAccessTime(string path)
         {
             return mockFileDataAccessor.File.GetLastAccessTime(path);
@@ -644,25 +653,19 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override IEnumerable<string> EnumerateFileSystemEntries(string path)
         {
-            var fileSystemEntries = new List<string>(GetFiles(path));
-            fileSystemEntries.AddRange(GetDirectories(path));
-            return fileSystemEntries;
+            return GetFileSystemEntries(path);
         }
 
         /// <inheritdoc />
         public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern)
         {
-            var fileSystemEntries = new List<string>(GetFiles(path, searchPattern));
-            fileSystemEntries.AddRange(GetDirectories(path, searchPattern));
-            return fileSystemEntries;
+            return GetFileSystemEntries(path, searchPattern);
         }
 
         /// <inheritdoc />
         public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
         {
-            var fileSystemEntries = new List<string>(GetFiles(path, searchPattern, searchOption));
-            fileSystemEntries.AddRange(GetDirectories(path, searchPattern, searchOption));
-            return fileSystemEntries;
+            return GetFileSystemEntries(path, searchPattern, searchOption);
         }
 
 #if FEATURE_ENUMERATION_OPTIONS

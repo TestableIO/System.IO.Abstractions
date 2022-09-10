@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
@@ -962,6 +962,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             var entries = fileSystem.Directory.GetFileSystemEntries(XFS.Path(@"c:\foo")).OrderBy(k => k);
+            Assert.AreEqual(2, entries.Count());
+            Assert.AreEqual(testDir, entries.First());
+            Assert.AreEqual(testPath, entries.Last());
+        }
+
+        [Test]
+        public void MockDirectory_GetFileSystemEntries_ShouldNotReturnSubDirectory_WithSearchOption()
+        {
+            string testPath = XFS.Path(@"c:\foo\bar.txt");
+            string testDir = XFS.Path(@"c:\foo\bar");
+            string testSubDir = XFS.Path(@"c:\foo\bar\baz");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { testPath, new MockFileData("Demo text content") },
+                { testSubDir,  new MockDirectoryData() },
+            });
+
+            var entries = fileSystem.Directory.GetFileSystemEntries(XFS.Path(@"c:\foo"), "*", SearchOption.TopDirectoryOnly).OrderBy(k => k);
             Assert.AreEqual(2, entries.Count());
             Assert.AreEqual(testDir, entries.First());
             Assert.AreEqual(testPath, entries.Last());
