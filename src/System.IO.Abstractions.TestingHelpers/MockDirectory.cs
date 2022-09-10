@@ -653,25 +653,19 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override IEnumerable<string> EnumerateFileSystemEntries(string path)
         {
-            var fileSystemEntries = new List<string>(GetFiles(path));
-            fileSystemEntries.AddRange(GetDirectories(path));
-            return fileSystemEntries;
+            return GetFileSystemEntries(path);
         }
 
         /// <inheritdoc />
         public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern)
         {
-            var fileSystemEntries = new List<string>(GetFiles(path, searchPattern));
-            fileSystemEntries.AddRange(GetDirectories(path, searchPattern));
-            return fileSystemEntries;
+            return GetFileSystemEntries(path, searchPattern);
         }
 
         /// <inheritdoc />
         public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
         {
-            var fileSystemEntries = new List<string>(GetFiles(path, searchPattern, searchOption));
-            fileSystemEntries.AddRange(GetDirectories(path, searchPattern, searchOption));
-            return fileSystemEntries;
+            return GetFileSystemEntries(path, searchPattern, searchOption);
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
