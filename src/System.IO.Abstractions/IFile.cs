@@ -33,6 +33,10 @@ namespace System.IO.Abstractions
         Stream Create(string path, int bufferSize);
         /// <inheritdoc cref="File.Create(string,int,FileOptions)"/>
         Stream Create(string path, int bufferSize, FileOptions options);
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc cref="File.CreateSymbolicLink"/>
+        IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget);
+#endif
         /// <inheritdoc cref="File.CreateText"/>
         StreamWriter CreateText(string path);
         /// <inheritdoc cref="File.Decrypt"/>

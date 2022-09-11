@@ -20,6 +20,10 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Directory.CreateDirectory(string,DirectorySecurity)"/>
 #endif
         IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity);
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc cref="Directory.CreateSymbolicLink"/>
+        IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget);
+#endif
         /// <inheritdoc cref="Directory.Delete(string)"/>
         void Delete(string path);
         /// <inheritdoc cref="Directory.Delete(string,bool)"/>
@@ -73,6 +77,8 @@ namespace System.IO.Abstractions
         string[] GetFileSystemEntries(string path);
         /// <inheritdoc cref="Directory.GetFileSystemEntries(string,string)"/>
         string[] GetFileSystemEntries(string path, string searchPattern);
+        /// <inheritdoc cref="Directory.GetFileSystemEntries(string,string,SearchOption)"/>
+        string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
         /// <inheritdoc cref="Directory.GetLastAccessTime"/>
         DateTime GetLastAccessTime(string path);
         /// <inheritdoc cref="Directory.GetLastAccessTimeUtc"/>

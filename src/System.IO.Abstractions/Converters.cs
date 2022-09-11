@@ -12,6 +12,9 @@ namespace System.IO.Abstractions
         internal static FileSystemInfoBase[] WrapFileSystemInfos(this FileSystemInfo[] input, IFileSystem fileSystem)
             => input.Select(info => WrapFileSystemInfo(fileSystem, info)).ToArray();
 
+        internal static FileSystemInfoBase WrapFileSystemInfo(this FileSystemInfo input, IFileSystem fileSystem)
+            => WrapFileSystemInfo(fileSystem, input);
+
         internal static IEnumerable<DirectoryInfoBase> WrapDirectories(this IEnumerable<DirectoryInfo> input, IFileSystem fileSystem)
             => input.Select(info => WrapDirectoryInfo(fileSystem, info));
 

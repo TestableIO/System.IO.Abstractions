@@ -75,6 +75,13 @@ namespace System.IO.Abstractions
             return File.Create(path, bufferSize, options);
         }
 
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget)
+        {
+            return File.CreateSymbolicLink(path, pathToTarget).WrapFileSystemInfo(FileSystem);
+        }
+#endif
         /// <inheritdoc />
         public override StreamWriter CreateText(string path)
         {

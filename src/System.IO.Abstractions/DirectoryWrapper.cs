@@ -29,7 +29,13 @@ namespace System.IO.Abstractions
             directoryInfo.Create(directorySecurity);
             return new DirectoryInfoWrapper(FileSystem, directoryInfo);
         }
-
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget)
+        {
+            return Directory.CreateSymbolicLink(path, pathToTarget).WrapFileSystemInfo(FileSystem);
+        }
+#endif
         /// <inheritdoc />
         public override void Delete(string path)
         {
@@ -148,6 +154,12 @@ namespace System.IO.Abstractions
         public override string[] GetFileSystemEntries(string path, string searchPattern)
         {
             return Directory.GetFileSystemEntries(path, searchPattern);
+        }
+
+        /// <inheritdoc />
+        public override string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
+        {
+            return Directory.GetFileSystemEntries(path, searchPattern, searchOption);
         }
 
         /// <inheritdoc />
