@@ -95,6 +95,9 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IDirectory.GetFileSystemEntries(string,string)"/>
         public abstract string[] GetFileSystemEntries(string path, string searchPattern);
 
+        /// <inheritdoc cref="IDirectory.GetFileSystemEntries(string,string,SearchOption)"/>
+        public abstract string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
+
         /// <inheritdoc cref="IDirectory.GetLastAccessTime"/>
         public abstract DateTime GetLastAccessTime(string path);
 

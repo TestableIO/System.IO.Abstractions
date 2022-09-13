@@ -6,7 +6,6 @@
     "Void SetAccessControl(System.String, System.Security.AccessControl.DirectorySecurity)"
   ],
   "MissingMembers": [
-    "System.String[] GetFileSystemEntries(System.String, System.String, System.IO.EnumerationOptions)",
-    "System.String[] GetFileSystemEntries(System.String, System.String, System.IO.SearchOption)"
+    "System.String[] GetFileSystemEntries(System.String, System.String, System.IO.EnumerationOptions)"
   ]
 }
