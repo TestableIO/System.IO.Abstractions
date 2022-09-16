@@ -930,5 +930,101 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.Throws(typeof(System.IO.IOException), () => fi.Delete());
         }
+
+        [Test]
+        public void MockFileInfo_LastAccessTimeUtcWithUnspecifiedDateTimeKind_ShouldSetLastAccessTimeUtcOfFileInFileSystem()
+        {
+            var date = DateTime.SpecifyKind(DateTime.Now.AddHours(-4), DateTimeKind.Unspecified);
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(@"c:\test");
+            fileSystem.File.WriteAllText(@"c:\test\a.txt", "Demo text content");
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\test\a.txt")
+            {
+                LastAccessTimeUtc = date
+            };
+
+            Assert.AreEqual(date, fileInfo.LastAccessTimeUtc);
+            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastAccessTimeUtc);
+        }
+
+        [Test]
+        public void MockFileInfo_LastAccessTimeWithUnspecifiedDateTimeKind_ShouldSetLastAccessTimeOfFileInFileSystem()
+        {
+            var date = DateTime.SpecifyKind(DateTime.Now.AddHours(-4), DateTimeKind.Unspecified);
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(@"c:\test");
+            fileSystem.File.WriteAllText(@"c:\test\a.txt", "Demo text content");
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\test\a.txt")
+            {
+                LastAccessTime = date
+            };
+
+            Assert.AreEqual(date, fileInfo.LastAccessTime);
+            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastAccessTime);
+        }
+
+        [Test]
+        public void MockFileInfo_CreationTimeUtcWithUnspecifiedDateTimeKind_ShouldSetCreationTimeUtcOfFileInFileSystem()
+        {
+            var date = DateTime.SpecifyKind(DateTime.Now.AddHours(-4), DateTimeKind.Unspecified);
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(@"c:\test");
+            fileSystem.File.WriteAllText(@"c:\test\a.txt", "Demo text content");
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\test\a.txt")
+            {
+                CreationTimeUtc = date
+            };
+
+            Assert.AreEqual(date, fileInfo.CreationTimeUtc);
+            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.CreationTimeUtc);
+        }
+
+        [Test]
+        public void MockFileInfo_CreationTimeWithUnspecifiedDateTimeKind_ShouldSetCreationTimeOfFileInFileSystem()
+        {
+            var date = DateTime.SpecifyKind(DateTime.Now.AddHours(-4), DateTimeKind.Unspecified);
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(@"c:\test");
+            fileSystem.File.WriteAllText(@"c:\test\a.txt", "Demo text content");
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\test\a.txt")
+            {
+                CreationTime = date
+            };
+
+            Assert.AreEqual(date, fileInfo.CreationTime);
+            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.CreationTime);
+        }
+
+        [Test]
+        public void MockFileInfo_LastWriteTimeUtcWithUnspecifiedDateTimeKind_ShouldSetLastWriteTimeUtcOfFileInFileSystem()
+        {
+            var date = DateTime.SpecifyKind(DateTime.Now.AddHours(-4), DateTimeKind.Unspecified);
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(@"c:\test");
+            fileSystem.File.WriteAllText(@"c:\test\a.txt", "Demo text content");
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\test\a.txt")
+            {
+                LastWriteTimeUtc = date
+            };
+
+            Assert.AreEqual(date, fileInfo.LastWriteTimeUtc);
+            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastWriteTimeUtc);
+        }
+
+        [Test]
+        public void MockFileInfo_LastWriteTimeWithUnspecifiedDateTimeKind_ShouldSetLastWriteTimeOfFileInFileSystem()
+        {
+            var date = DateTime.SpecifyKind(DateTime.Now.AddHours(-4), DateTimeKind.Unspecified);
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(@"c:\test");
+            fileSystem.File.WriteAllText(@"c:\test\a.txt", "Demo text content");
+            var fileInfo = new MockFileInfo(fileSystem, @"c:\test\a.txt")
+            {
+                LastWriteTime = date
+            };
+
+            Assert.AreEqual(date, fileInfo.LastWriteTime);
+            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastWriteTime);
+        }
     }
 }
