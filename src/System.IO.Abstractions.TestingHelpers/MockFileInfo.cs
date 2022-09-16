@@ -1,6 +1,5 @@
 ﻿using System.Runtime.Versioning;
 using System.Security.AccessControl;
-using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
@@ -60,12 +59,12 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 var mockFileData = GetMockFileDataForRead();
-                return mockFileData.CreationTime.DateTime;
+                return mockFileData.CreationTime.LocalDateTime;
             }
             set
             {
                 var mockFileData = GetMockFileDataForWrite();
-                mockFileData.CreationTime = value;
+                mockFileData.CreationTime = AdjustUnspecifiedKind(value, DateTimeKind.Local);
             }
         }
 
@@ -80,7 +79,7 @@ namespace System.IO.Abstractions.TestingHelpers
             set
             {
                 var mockFileData = GetMockFileDataForWrite();
-                mockFileData.CreationTime = value.ToLocalTime();
+                mockFileData.CreationTime = AdjustUnspecifiedKind(value, DateTimeKind.Utc);
             }
         }
 
@@ -117,12 +116,12 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 var mockFileData = GetMockFileDataForRead();
-                return mockFileData.LastAccessTime.DateTime;
+                return mockFileData.LastAccessTime.LocalDateTime;
             }
             set
             {
                 var mockFileData = GetMockFileDataForWrite();
-                mockFileData.LastAccessTime = value;
+                mockFileData.LastAccessTime = AdjustUnspecifiedKind(value, DateTimeKind.Local);
             }
         }
 
@@ -137,7 +136,7 @@ namespace System.IO.Abstractions.TestingHelpers
             set
             {
                 var mockFileData = GetMockFileDataForWrite();
-                mockFileData.LastAccessTime = value;
+                mockFileData.LastAccessTime = AdjustUnspecifiedKind(value, DateTimeKind.Utc);
             }
         }
 
@@ -147,12 +146,12 @@ namespace System.IO.Abstractions.TestingHelpers
             get
             {
                 var mockFileData = GetMockFileDataForRead();
-                return mockFileData.LastWriteTime.DateTime;
+                return mockFileData.LastWriteTime.LocalDateTime;
             }
             set
             {
                 var mockFileData = GetMockFileDataForWrite();
-                mockFileData.LastWriteTime = value;
+                mockFileData.LastWriteTime = AdjustUnspecifiedKind(value, DateTimeKind.Local);
             }
         }
 
@@ -167,7 +166,7 @@ namespace System.IO.Abstractions.TestingHelpers
             set
             {
                 var mockFileData = GetMockFileDataForWrite();
-                mockFileData.LastWriteTime = value.ToLocalTime();
+                mockFileData.LastWriteTime = AdjustUnspecifiedKind(value, DateTimeKind.Utc);
             }
         }
 
@@ -379,6 +378,16 @@ namespace System.IO.Abstractions.TestingHelpers
         public override string ToString()
         {
             return originalPath;
+        }
+
+        private static DateTime AdjustUnspecifiedKind(DateTime time, DateTimeKind fallbackKind)
+        {
+            if (time.Kind == DateTimeKind.Unspecified)
+            {
+                return DateTime.SpecifyKind(time, fallbackKind);
+            }
+
+            return time;
         }
 
         private MockFileData GetMockFileDataForRead()

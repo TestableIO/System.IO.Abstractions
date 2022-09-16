@@ -49,7 +49,10 @@ namespace System.IO.Abstractions.TestingHelpers
         /// </summary>
         private MockFileData()
         {
-            // empty
+            var now = DateTime.UtcNow;
+            LastWriteTime = now;
+            LastAccessTime = now;
+            CreationTime = now;
         }
 
         /// <summary>
@@ -78,6 +81,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <param name="contents">The actual content.</param>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="contents"/> is <see langword="null" />.</exception>
         public MockFileData(byte[] contents)
+            : this()
         {
             Contents = contents ?? throw new ArgumentNullException(nameof(contents));
         }
@@ -126,17 +130,32 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <summary>
         /// Gets or sets the date and time the <see cref="MockFileData"/> was created.
         /// </summary>
-        public DateTimeOffset CreationTime { get; set; } = new DateTimeOffset(2010, 01, 02, 00, 00, 00, TimeSpan.FromHours(4));
+        public DateTimeOffset CreationTime
+        {
+            get { return creationTime; }
+            set{ creationTime = value.ToUniversalTime(); }
+        }
+        private DateTimeOffset creationTime;
 
         /// <summary>
         /// Gets or sets the date and time of the <see cref="MockFileData"/> was last accessed to.
         /// </summary>
-        public DateTimeOffset LastAccessTime { get; set; } = new DateTimeOffset(2010, 02, 04, 00, 00, 00, TimeSpan.FromHours(4));
+        public DateTimeOffset LastAccessTime
+        {
+            get { return lastAccessTime; }
+            set { lastAccessTime = value.ToUniversalTime(); }
+        }
+        private DateTimeOffset lastAccessTime;
 
         /// <summary>
         /// Gets or sets the date and time of the <see cref="MockFileData"/> was last written to.
         /// </summary>
-        public DateTimeOffset LastWriteTime { get; set; } = new DateTimeOffset(2010, 01, 04, 00, 00, 00, TimeSpan.FromHours(4));
+        public DateTimeOffset LastWriteTime
+        {
+            get { return lastWriteTime; }
+            set { lastWriteTime = value.ToUniversalTime(); }
+        }
+        private DateTimeOffset lastWriteTime;
 
 #if FEATURE_FILE_SYSTEM_INFO_LINK_TARGET
         /// <summary>

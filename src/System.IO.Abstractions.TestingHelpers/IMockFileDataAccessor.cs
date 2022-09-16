@@ -9,6 +9,14 @@ namespace System.IO.Abstractions.TestingHelpers
     public interface IMockFileDataAccessor : IFileSystem
     {
         /// <summary>
+        /// Adjust the times of the <paramref name="fileData"/>.
+        /// </summary>
+        /// <param name="fileData">The <see cref="MockFileData"/> for which the times should be adjusted.</param>
+        /// <param name="timeAdjustments">The adjustments to make on the <see cref="MockFileData"/>.</param>
+        /// <returns>The adjusted file.</returns>
+        MockFileData AdjustTimes(MockFileData fileData, TimeAdjustments timeAdjustments);
+
+        /// <summary>
         /// Gets a file.
         /// </summary>
         /// <param name="path">The path of the file to get.</param>
