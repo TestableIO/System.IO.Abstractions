@@ -794,21 +794,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileInfo_Exists_ShouldReturnCachedData()
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem();
-            var path1 = XFS.Path(@"c:\temp\file1.txt");
-            var fileInfo = fileSystem.FileInfo.FromFileName(path1);
-
-            // Act
-            fileSystem.AddFile(path1, new MockFileData("1"));
-
-            // Assert
-            Assert.IsFalse(fileInfo.Exists);
-        }
-
-        [Test]
         public void MockFileInfo_Exists_ShouldUpdateCachedDataOnRefresh()
         {
             // Arrange

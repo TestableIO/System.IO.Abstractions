@@ -231,6 +231,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileSystem_AddFile_ShouldMarkFileAsExisting()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var fileInfo = fileSystem.FileInfo.FromFileName(path1);
+
+            // Act
+            fileSystem.AddFile(path1, new MockFileData("1"));
+
+            // Assert
+            Assert.IsTrue(fileInfo.Exists);
+        }
+
+        [Test]
         public void MockFileSystem_AddFileFromEmbeddedResource_ShouldAddTheFile()
         {
             var fileSystem = new MockFileSystem();
