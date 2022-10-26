@@ -818,7 +818,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
             var path1 = XFS.Path(@"c:\temp\file1.txt");
             var fileInfo = fileSystem.FileInfo.FromFileName(path1);
-            fileInfo.Refresh();
+            fileInfo.Refresh(); // circumvent the lazy loading in Exists on first access by forcing a load
 
             // Act
             fileSystem.AddFile(path1, new MockFileData("1"));
@@ -835,7 +835,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             IFileSystem fileSystem = new MockFileSystem();
             var path = XFS.Path(@"c:\temp\file1.txt");
             IFileInfo fileInfo = fileSystem.FileInfo.FromFileName(path);
-            fileInfo.Refresh();
+            fileInfo.Refresh(); // circumvent the lazy loading in Exists on first access by forcing a load
 
             // Act
             fileInfo.Create().Dispose();
@@ -852,7 +852,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             IFileSystem fileSystem = new MockFileSystem();
             var path = XFS.Path(@"c:\temp\file1.txt");
             IFileInfo fileInfo = fileSystem.FileInfo.FromFileName(path);
-            fileInfo.Refresh();
+            fileInfo.Refresh(); // circumvent the lazy loading in Exists on first access by forcing a load
 
             // Act
             fileInfo.CreateText().Dispose();
@@ -868,7 +868,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
             var path = XFS.Path(@"c:\temp\file1.txt");
             IFileInfo fileInfo = fileSystem.FileInfo.FromFileName(path);
-            fileInfo.Refresh();
+            fileInfo.Refresh(); // circumvent the lazy loading in Exists on first access by forcing a load
 
             // Act
             fileInfo.Delete();
