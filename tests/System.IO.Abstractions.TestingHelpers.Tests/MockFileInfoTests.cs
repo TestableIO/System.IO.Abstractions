@@ -794,6 +794,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileInfo_Exists_LazyLoadsData()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path1 = XFS.Path(@"c:\temp\file1.txt");
+            var fileInfo = fileSystem.FileInfo.FromFileName(path1);
+            var cachedFileInfo = fileSystem.FileInfo.FromFileName(path1);
+            _ = cachedFileInfo.Exists;  // this forces a lazyload of the data.
+
+            // Act
+            fileSystem.AddFile(path1, new MockFileData("1"));
+
+            // Assert
+            Assert.IsTrue(fileInfo.Exists);
+            Assert.IsFalse(cachedFileInfo.Exists, "Cached MockFileInfo should still return the cached value");
+        }
+
+        [Test]
         public void MockFileInfo_Exists_ShouldUpdateCachedDataOnRefresh()
         {
             // Arrange
