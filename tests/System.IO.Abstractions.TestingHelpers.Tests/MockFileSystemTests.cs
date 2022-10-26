@@ -231,7 +231,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileSystem_AddFile_ShouldMarkFileAsExisting()
+        public void MockFileSystem_FileInfoExists_ShouldBeTrueIfAFileWasAddedBeforeMockFileDataWasLazyLoaded()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
