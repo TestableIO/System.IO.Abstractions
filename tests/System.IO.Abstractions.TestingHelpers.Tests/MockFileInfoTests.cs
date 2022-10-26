@@ -818,6 +818,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
             var path1 = XFS.Path(@"c:\temp\file1.txt");
             var fileInfo = fileSystem.FileInfo.FromFileName(path1);
+            fileInfo.Refresh();
 
             // Act
             fileSystem.AddFile(path1, new MockFileData("1"));
@@ -830,9 +831,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFileInfo_Create_ShouldUpdateCachedDataAndReturnTrueForExists()
         {
+            // Arrange
             IFileSystem fileSystem = new MockFileSystem();
             var path = XFS.Path(@"c:\temp\file1.txt");
             IFileInfo fileInfo = fileSystem.FileInfo.FromFileName(path);
+            fileInfo.Refresh();
 
             // Act
             fileInfo.Create().Dispose();
@@ -845,9 +848,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFileInfo_CreateText_ShouldUpdateCachedDataAndReturnTrueForExists()
         {
+            // Arrange
             IFileSystem fileSystem = new MockFileSystem();
             var path = XFS.Path(@"c:\temp\file1.txt");
             IFileInfo fileInfo = fileSystem.FileInfo.FromFileName(path);
+            fileInfo.Refresh();
 
             // Act
             fileInfo.CreateText().Dispose();
@@ -859,9 +864,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFileInfo_Delete_ShouldUpdateCachedDataAndReturnFalseForExists()
         {
+            // Arrange
             var fileSystem = new MockFileSystem();
             var path = XFS.Path(@"c:\temp\file1.txt");
             IFileInfo fileInfo = fileSystem.FileInfo.FromFileName(path);
+            fileInfo.Refresh();
 
             // Act
             fileInfo.Delete();
