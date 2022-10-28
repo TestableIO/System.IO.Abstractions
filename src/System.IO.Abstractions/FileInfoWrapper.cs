@@ -40,7 +40,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc />
         public override IFileSystemInfo ResolveLinkTarget(bool returnFinalTarget)
         {
-            //TODO: Unclear how to handle this case, as no explicit `FileSystemInfoWrapper` exists
+            //TODO(vbreuss): Unclear how to handle this case, as no explicit `FileSystemInfoWrapper` exists
             //return new FileSystemInfoWrapper(FileSystem, instance.ResolveLinkTarget(returnFinalTarget));
             return null;
         }

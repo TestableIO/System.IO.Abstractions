@@ -89,7 +89,7 @@ namespace System.IO.Abstractions
                 return null;
             }
 
-            //TODO: Unclear how we can implement this?!?
+            //TODO(vbreuss): Unclear how we can implement this without a IFileSystem instance?!?
             return new FileSystemWatcherWrapper(null, watcher);
         }
 

@@ -281,7 +281,7 @@ namespace System.IO.Abstractions
 #else
         /// <inheritdoc cref="IFile.Move(string,string,bool)"/>
 #endif
-        // TODO: Check how to proceed with this method, as `Move` was also implemented on .NET5
+        // TODO(vbreuss): Check how to proceed with this method, as `Move` was also implemented on .NET5
         public abstract void Move(string sourceFileName, string destFileName, bool overwrite);
 #endif
 
