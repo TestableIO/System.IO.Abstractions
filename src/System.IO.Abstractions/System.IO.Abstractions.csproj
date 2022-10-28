@@ -4,6 +4,7 @@
     <RootNamespace>System.IO.Abstractions</RootNamespace>
     <Description>A set of abstractions to help make file system interactions testable.</Description>
     <TargetFrameworks>net6.0;net5.0;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
     <PackageIcon>icon_256x256.png</PackageIcon>
   </PropertyGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1' OR '$(TargetFramework)' == 'netstandard2.0'">
@@ -17,6 +18,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Testably.Abstractions.Interface" Version="0.13.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\images\icon_256x256.png" Pack="true" PackagePath="\" />
