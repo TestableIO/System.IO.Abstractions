@@ -13,7 +13,16 @@ namespace System.IO.Abstractions
         public FileInfoWrapper(IFileSystem fileSystem, FileInfo instance) : base(fileSystem)
         {
             this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
+            ExtensionContainer = new FileSystemExtensionContainer(instance);
         }
+
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override void CreateAsSymbolicLink(string pathToTarget)
+        {
+            instance.CreateAsSymbolicLink(pathToTarget);
+        }
+#endif
 
         /// <inheritdoc />
         public override void Delete()
@@ -26,6 +35,16 @@ namespace System.IO.Abstractions
         {
             instance.Refresh();
         }
+
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override IFileSystemInfo ResolveLinkTarget(bool returnFinalTarget)
+        {
+            //TODO: Unclear how to handle this case, as no explicit `FileSystemInfoWrapper` exists
+            //return new FileSystemInfoWrapper(FileSystem, instance.ResolveLinkTarget(returnFinalTarget));
+            return null;
+        }
+#endif
 
         /// <inheritdoc />
         public override FileAttributes Attributes
@@ -59,6 +78,9 @@ namespace System.IO.Abstractions
         {
             get { return instance.Extension; }
         }
+
+        /// <inheritdoc />
+        public override IFileSystemExtensionContainer ExtensionContainer { get; }
 
         /// <inheritdoc />
         public override string FullName
@@ -127,9 +149,9 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-        public override Stream Create()
+        public override FileSystemStream Create()
         {
-            return instance.Create();
+            return new FileStreamWrapper(instance.Create());
         }
 
         /// <inheritdoc />
@@ -183,27 +205,35 @@ namespace System.IO.Abstractions
 #endif
 
         /// <inheritdoc />
-        public override Stream Open(FileMode mode)
+        public override FileSystemStream Open(FileMode mode)
         {
-            return instance.Open(mode);
+            return new FileStreamWrapper(instance.Open(mode));
         }
 
         /// <inheritdoc />
-        public override Stream Open(FileMode mode, FileAccess access)
+        public override FileSystemStream Open(FileMode mode, FileAccess access)
         {
-            return instance.Open(mode, access);
+            return new FileStreamWrapper(instance.Open(mode, access));
         }
 
         /// <inheritdoc />
-        public override Stream Open(FileMode mode, FileAccess access, FileShare share)
+        public override FileSystemStream Open(FileMode mode, FileAccess access, FileShare share)
         {
-            return instance.Open(mode, access, share);
+            return new FileStreamWrapper(instance.Open(mode, access, share));
         }
 
+#if FEATURE_FILESTREAMOPTIONS
         /// <inheritdoc />
-        public override Stream OpenRead()
+        public override FileSystemStream Open(FileStreamOptions options)
         {
-            return instance.OpenRead();
+            return new FileStreamWrapper(instance.Open(options));
+        }
+#endif
+
+        /// <inheritdoc />
+        public override FileSystemStream OpenRead()
+        {
+            return new FileStreamWrapper(instance.OpenRead());
         }
 
         /// <inheritdoc />
@@ -213,9 +243,9 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-        public override Stream OpenWrite()
+        public override FileSystemStream OpenWrite()
         {
-            return instance.OpenWrite();
+            return new FileStreamWrapper(instance.OpenWrite());
         }
 
         /// <inheritdoc />

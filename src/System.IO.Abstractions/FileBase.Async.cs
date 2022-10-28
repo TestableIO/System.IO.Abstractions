@@ -43,10 +43,14 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.WriteAllLinesAsync(string,IEnumerable{string},Encoding,CancellationToken)"/>
         public abstract Task WriteAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken);
 
-        /// <inheritdoc cref="IFile.WriteAllLinesAsync(string,string[],CancellationToken)"/>
+        /// <inheritdoc />
+        // TODO: Check where this overload comes from!
+        [Obsolete("This overload is no longer supported in the interface")]
         public abstract Task WriteAllLinesAsync(string path, string[] contents, CancellationToken cancellationToken);
 
-        /// <inheritdoc cref="IFile.WriteAllLinesAsync(string,string[],Encoding,CancellationToken)"/>
+        /// <inheritdoc />
+        // TODO: Check where this overload comes from!
+        [Obsolete("This overload is no longer supported in the interface")]
         public abstract Task WriteAllLinesAsync(string path, string[] contents, Encoding encoding, CancellationToken cancellationToken);
 
         /// <inheritdoc cref="IFile.WriteAllTextAsync(string,string,CancellationToken)"/>

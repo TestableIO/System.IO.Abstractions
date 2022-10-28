@@ -45,13 +45,13 @@ namespace System.IO.Abstractions
         public abstract void Copy(string sourceFileName, string destFileName, bool overwrite);
 
         /// <inheritdoc cref="IFile.Create(string)"/>
-        public abstract Stream Create(string path);
+        public abstract FileSystemStream Create(string path);
 
         /// <inheritdoc cref="IFile.Create(string,int)"/>
-        public abstract Stream Create(string path, int bufferSize);
+        public abstract FileSystemStream Create(string path, int bufferSize);
 
         /// <inheritdoc cref="IFile.Create(string,int,FileOptions)"/>
-        public abstract Stream Create(string path, int bufferSize, FileOptions options);
+        public abstract FileSystemStream Create(string path, int bufferSize, FileOptions options);
 #if FEATURE_CREATE_SYMBOLIC_LINK
         /// <inheritdoc cref="IFile.CreateSymbolicLink(string, string)"/>
         public abstract IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget);
@@ -96,11 +96,19 @@ namespace System.IO.Abstractions
         public abstract bool Exists(string path);
 
 
-        /// <inheritdoc cref="IFile.GetAccessControl(string)"/>
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(FileInfo)"/>
+#else
+        /// <inheritdoc cref="File.GetAccessControl(string)"/>
+#endif
         [SupportedOSPlatform("windows")]
         public abstract FileSecurity GetAccessControl(string path);
 
-        /// <inheritdoc cref="IFile.GetAccessControl(string,AccessControlSections)"/>
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(FileInfo,AccessControlSections)"/>
+#else
+        /// <inheritdoc cref="File.GetAccessControl(string,AccessControlSections)"/>
+#endif
         [SupportedOSPlatform("windows")]
         public abstract FileSecurity GetAccessControl(string path, AccessControlSections includeSections);
 
@@ -268,27 +276,37 @@ namespace System.IO.Abstractions
         public abstract void Move(string sourceFileName, string destFileName);
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
+#if NET5_0
+        /// <inheritdoc />
+#else
         /// <inheritdoc cref="IFile.Move(string,string,bool)"/>
+#endif
+        // TODO: Check how to proceed with this method, as `Move` was also implemented on .NET5
         public abstract void Move(string sourceFileName, string destFileName, bool overwrite);
 #endif
 
         /// <inheritdoc cref="IFile.Open(string,FileMode)"/>
-        public abstract Stream Open(string path, FileMode mode);
+        public abstract FileSystemStream Open(string path, FileMode mode);
 
         /// <inheritdoc cref="IFile.Open(string,FileMode,FileAccess)"/>
-        public abstract Stream Open(string path, FileMode mode, FileAccess access);
+        public abstract FileSystemStream Open(string path, FileMode mode, FileAccess access);
 
         /// <inheritdoc cref="IFile.Open(string,FileMode,FileAccess,FileShare)"/>
-        public abstract Stream Open(string path, FileMode mode, FileAccess access, FileShare share);
+        public abstract FileSystemStream Open(string path, FileMode mode, FileAccess access, FileShare share);
+
+#if FEATURE_FILESTREAMOPTIONS
+        /// <inheritdoc cref="IFile.Open(string,FileStreamOptions)"/>
+        public abstract FileSystemStream Open(string path, FileStreamOptions options);
+#endif
 
         /// <inheritdoc cref="IFile.OpenRead"/>
-        public abstract Stream OpenRead(string path);
+        public abstract FileSystemStream OpenRead(string path);
 
         /// <inheritdoc cref="IFile.OpenText"/>
         public abstract StreamReader OpenText(string path);
 
         /// <inheritdoc cref="IFile.OpenWrite"/>
-        public abstract Stream OpenWrite(string path);
+        public abstract FileSystemStream OpenWrite(string path);
 
         /// <inheritdoc cref="IFile.ReadAllBytes"/>
         public abstract byte[] ReadAllBytes(string path);
@@ -320,7 +338,16 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.Replace(string,string,string,bool)"/>
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
 
-        /// <inheritdoc cref="IFile.SetAccessControl(string,FileSecurity)"/>
+#if FEATURE_FILE_SYSTEM_INFO_LINK_TARGET
+        /// <inheritdoc cref="IFile.ResolveLinkTarget(string,bool)"/>
+        public abstract IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget);
+#endif
+
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.SetAccessControl(FileInfo,FileSecurity)"/>
+#else
+        /// <inheritdoc cref="File.SetAccessControl(string,FileSecurity)"/>
+#endif
         [SupportedOSPlatform("windows")]
         public abstract void SetAccessControl(string path, FileSecurity fileSecurity);
 

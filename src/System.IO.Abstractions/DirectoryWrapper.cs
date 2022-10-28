@@ -106,7 +106,8 @@ namespace System.IO.Abstractions
 
 #if FEATURE_ENUMERATION_OPTIONS
         /// <inheritdoc />
-        public override string[] GetDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        public override string[] GetDirectories(string path, string searchPattern,
+            EnumerationOptions enumerationOptions)
         {
             return Directory.GetDirectories(path, searchPattern, enumerationOptions);
         }
@@ -161,6 +162,15 @@ namespace System.IO.Abstractions
         {
             return Directory.GetFileSystemEntries(path, searchPattern, searchOption);
         }
+
+#if FEATURE_ENUMERATION_OPTIONS
+        /// <inheritdoc />
+        public override string[] GetFileSystemEntries(string path, string searchPattern,
+            EnumerationOptions enumerationOptions)
+        {
+            return Directory.GetFileSystemEntries(path, searchPattern, enumerationOptions);
+        }
+#endif
 
         /// <inheritdoc />
         public override DateTime GetLastAccessTime(string path)
@@ -273,14 +283,16 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-        public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
+        public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern,
+            SearchOption searchOption)
         {
             return Directory.EnumerateDirectories(path, searchPattern, searchOption);
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
         /// <inheritdoc />
-        public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern,
+            EnumerationOptions enumerationOptions)
         {
             return Directory.EnumerateDirectories(path, searchPattern, enumerationOptions);
         }
@@ -306,7 +318,8 @@ namespace System.IO.Abstractions
 
 #if FEATURE_ENUMERATION_OPTIONS
         /// <inheritdoc />
-        public override IEnumerable<string> EnumerateFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        public override IEnumerable<string> EnumerateFiles(string path, string searchPattern,
+            EnumerationOptions enumerationOptions)
         {
             return Directory.EnumerateFiles(path, searchPattern, enumerationOptions);
         }
@@ -325,14 +338,16 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-        public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption)
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern,
+            SearchOption searchOption)
         {
             return Directory.EnumerateFileSystemEntries(path, searchPattern, searchOption);
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
         /// <inheritdoc />
-        public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        public override IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern,
+            EnumerationOptions enumerationOptions)
         {
             return Directory.EnumerateFileSystemEntries(path, searchPattern, enumerationOptions);
         }

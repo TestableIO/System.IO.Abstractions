@@ -10,28 +10,29 @@ namespace System.IO.Abstractions
         private readonly FileSystemWatcher watcher;
 
         /// <inheritdoc />
-        public FileSystemWatcherWrapper()
-            : this(new FileSystemWatcher())
+        public FileSystemWatcherWrapper(IFileSystem fileSystem)
+            : this(fileSystem, new FileSystemWatcher())
         {
             // do nothing
         }
 
         /// <inheritdoc />
-        public FileSystemWatcherWrapper(string path)
-            : this(new FileSystemWatcher(path))
+        public FileSystemWatcherWrapper(IFileSystem fileSystem, string path)
+            : this(fileSystem, new FileSystemWatcher(path))
         {
             // do nothing
         }
 
         /// <inheritdoc />
-        public FileSystemWatcherWrapper(string path, string filter)
-            : this(new FileSystemWatcher(path, filter))
+        public FileSystemWatcherWrapper(IFileSystem fileSystem, string path, string filter)
+            : this(fileSystem, new FileSystemWatcher(path, filter))
         {
             // do nothing
         }
 
         /// <inheritdoc />
-        public FileSystemWatcherWrapper(FileSystemWatcher watcher)
+        public FileSystemWatcherWrapper(IFileSystem fileSystem, FileSystemWatcher watcher)
+            : base(fileSystem)
         {
             this.watcher = watcher ?? throw new ArgumentNullException(nameof(watcher));
             this.watcher.Created += OnCreated;
@@ -134,15 +135,45 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-        public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
+        public override IFileSystemWatcher.IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
         {
-            return watcher.WaitForChanged(changeType);
+            return new WaitForChangedResultWrapper(watcher.WaitForChanged(changeType));
         }
 
         /// <inheritdoc />
-        public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
+        public override IFileSystemWatcher.IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
         {
-            return watcher.WaitForChanged(changeType, timeout);
+            return new WaitForChangedResultWrapper(watcher.WaitForChanged(changeType, timeout));
+        }
+
+        /// <inheritdoc />
+        public override IContainer Container => watcher.Container;
+
+        private readonly struct WaitForChangedResultWrapper
+            : IFileSystemWatcher.IWaitForChangedResult
+        {
+            private readonly WaitForChangedResult instance;
+
+            public WaitForChangedResultWrapper(WaitForChangedResult instance)
+            {
+                this.instance = instance;
+            }
+
+            /// <inheritdoc cref="IFileSystemWatcher.IWaitForChangedResult.ChangeType" />
+            public WatcherChangeTypes ChangeType
+                => instance.ChangeType;
+
+            /// <inheritdoc cref="IFileSystemWatcher.IWaitForChangedResult.Name" />
+            public string Name
+                => instance.Name;
+
+            /// <inheritdoc cref="IFileSystemWatcher.IWaitForChangedResult.OldName" />
+            public string OldName
+                => instance.OldName;
+
+            /// <inheritdoc cref="IFileSystemWatcher.IWaitForChangedResult.TimedOut" />
+            public bool TimedOut
+                => instance.TimedOut;
         }
     }
 }

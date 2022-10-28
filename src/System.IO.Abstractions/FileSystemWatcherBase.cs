@@ -6,6 +6,15 @@ namespace System.IO.Abstractions
     [Serializable]
     public abstract class FileSystemWatcherBase : IFileSystemWatcher
     {
+        /// <inheritdoc />
+        public IFileSystem FileSystem { get; }
+
+        /// 
+        protected FileSystemWatcherBase(IFileSystem fileSystem)
+        {
+            FileSystem = fileSystem;
+        }
+
         /// <inheritdoc cref="FileSystemWatcher.IncludeSubdirectories"/>
         public abstract bool IncludeSubdirectories { get; set; }
 
@@ -64,10 +73,13 @@ namespace System.IO.Abstractions
         public abstract void EndInit();
 
         /// <inheritdoc cref="FileSystemWatcher.WaitForChanged(WatcherChangeTypes)"/>
-        public abstract WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType);
+        public abstract IFileSystemWatcher.IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType);
 
         /// <inheritdoc cref="FileSystemWatcher.WaitForChanged(WatcherChangeTypes,int)"/>
-        public abstract WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout);
+        public abstract IFileSystemWatcher.IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout);
+
+        /// <inheritdoc cref="ComponentModel.Container"/>
+        public abstract IContainer Container { get; }
 
         /// <inheritdoc />
         public static implicit operator FileSystemWatcherBase(FileSystemWatcher watcher)
@@ -77,7 +89,8 @@ namespace System.IO.Abstractions
                 return null;
             }
 
-            return new FileSystemWatcherWrapper(watcher);
+            //TODO: Unclear how we can implement this?!?
+            return new FileSystemWatcherWrapper(null, watcher);
         }
 
         /// <inheritdoc />

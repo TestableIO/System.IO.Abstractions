@@ -18,11 +18,21 @@
         /// </summary>
         public IFileSystem FileSystem { get; }
 
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc cref="FileSystemInfo.CreateAsSymbolicLink(string)"/>
+        public abstract void CreateAsSymbolicLink(string pathToTarget);
+#endif
+
         /// <inheritdoc cref="FileSystemInfo.Delete"/>
         public abstract void Delete();
 
         /// <inheritdoc cref="FileSystemInfo.Refresh"/>
         public abstract void Refresh();
+
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc cref="FileSystemInfo.ResolveLinkTarget(bool)"/>
+        public abstract IFileSystemInfo ResolveLinkTarget(bool returnFinalTarget);
+#endif
 
         /// <inheritdoc cref="FileSystemInfo.Attributes"/>
         public abstract FileAttributes Attributes { get; set; }
@@ -38,6 +48,9 @@
 
         /// <inheritdoc cref="FileSystemInfo.Extension"/>
         public abstract string Extension { get; }
+
+        /// <inheritdoc cref="IFileSystemInfo.ExtensionContainer"/>
+        public abstract IFileSystemExtensionContainer ExtensionContainer { get; }
 
         /// <inheritdoc cref="FileSystemInfo.FullName"/>
         public abstract string FullName { get; }

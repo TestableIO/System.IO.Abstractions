@@ -25,7 +25,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IDirectory.CreateDirectory(string)"/>
         public abstract IDirectoryInfo CreateDirectory(string path);
 
-        /// <inheritdoc cref="IDirectory.CreateDirectory(string,DirectorySecurity)"/>
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.Create(DirectoryInfo,DirectorySecurity)"/>
+#else
+        /// <inheritdoc cref="Directory.CreateDirectory(string,DirectorySecurity)"/>
+#endif
         [SupportedOSPlatform("windows")]
         public abstract IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity);
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -41,11 +45,19 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IDirectory.Exists"/>
         public abstract bool Exists(string path);
 
-        /// <inheritdoc cref="IDirectory.GetAccessControl(string)"/>
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(DirectoryInfo)"/>
+#else
+        /// <inheritdoc cref="Directory.GetAccessControl(string)"/>
+#endif
         [SupportedOSPlatform("windows")]
         public abstract DirectorySecurity GetAccessControl(string path);
 
-        /// <inheritdoc cref="IDirectory.GetAccessControl(string,AccessControlSections)"/>
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(DirectoryInfo)"/>
+#else
+        /// <inheritdoc cref="Directory.GetAccessControl(string,AccessControlSections)"/>
+#endif
         [SupportedOSPlatform("windows")]
         public abstract DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections);
 
@@ -98,6 +110,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IDirectory.GetFileSystemEntries(string,string,SearchOption)"/>
         public abstract string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
 
+#if FEATURE_ENUMERATION_OPTIONS
+        /// <inheritdoc cref="IDirectory.GetFileSystemEntries(string,string,EnumerationOptions)"/>
+        public abstract string[] GetFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions);
+#endif
+
         /// <inheritdoc cref="IDirectory.GetLastAccessTime"/>
         public abstract DateTime GetLastAccessTime(string path);
 
@@ -119,7 +136,20 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IDirectory.Move"/>
         public abstract void Move(string sourceDirName, string destDirName);
 
-        /// <inheritdoc cref="IDirectory.SetAccessControl"/>
+#if FEATURE_FILE_SYSTEM_INFO_LINK_TARGET
+        /// <inheritdoc cref="IDirectory.ResolveLinkTarget(string, bool)"/>
+        public IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget)
+        {
+            return FileSystem.DirectoryInfo.New(linkPath)
+                .ResolveLinkTarget(returnFinalTarget);
+        }
+#endif
+
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.SetAccessControl(DirectoryInfo, DirectorySecurity)"/>
+#else
+        /// <inheritdoc cref="Directory.SetAccessControl(string,DirectorySecurity)"/>
+#endif
         public abstract void SetAccessControl(string path, DirectorySecurity directorySecurity);
 
         /// <inheritdoc cref="IDirectory.SetCreationTime"/>

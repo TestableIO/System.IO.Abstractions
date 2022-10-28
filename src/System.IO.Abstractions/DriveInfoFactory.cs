@@ -3,11 +3,12 @@
     [Serializable]
     internal class DriveInfoFactory : IDriveInfoFactory
     {
-        private readonly IFileSystem fileSystem;
+        /// <inheritdoc />
+        public IFileSystem FileSystem { get; }
 
         public DriveInfoFactory(IFileSystem fileSystem)
         {
-            this.fileSystem = fileSystem;
+            FileSystem = fileSystem;
         }
 
         /// <summary>
@@ -21,7 +22,7 @@
             for (int index = 0; index < driveInfos.Length; index++)
             {
                 var driveInfo = driveInfos[index];
-                driveInfoWrappers[index] = new DriveInfoWrapper(fileSystem, driveInfo);
+                driveInfoWrappers[index] = new DriveInfoWrapper(FileSystem, driveInfo);
             }
 
             return driveInfoWrappers;
@@ -31,10 +32,27 @@
         /// Initializes a new instance of the <see cref="DriveInfoBase"/> class, which acts as a wrapper for a logical drive.
         /// </summary>
         /// <param name="driveName">A valid drive path or drive letter.</param>
-        public IDriveInfo FromDriveName(string driveName)
+        public IDriveInfo New(string driveName)
         {
             var realDriveInfo = new DriveInfo(driveName);
-            return new DriveInfoWrapper(fileSystem, realDriveInfo);
+            return new DriveInfoWrapper(FileSystem, realDriveInfo);
         }
+
+        /// <inheritdoc />
+        public IDriveInfo Wrap(DriveInfo driveInfo)
+        {
+            return new DriveInfoWrapper(FileSystem, driveInfo);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DriveInfoBase"/> class, which acts as a wrapper for a logical drive.
+        /// </summary>
+        /// <param name="driveName">A valid drive path or drive letter.</param>
+        [Obsolete("Use `DriveInfoFactory.New(string)` instead.")]
+        public IDriveInfo FromDriveName(string driveName)
+        {
+            return New(driveName);
+        }
+
     }
 }

@@ -17,7 +17,11 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="IDirectoryInfo.Create()"/>
         public abstract void Create();
-        /// <inheritdoc cref="IDirectoryInfo.Create(DirectorySecurity)"/>
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.Create(DirectoryInfo,DirectorySecurity)"/>
+#else
+        /// <inheritdoc cref="DirectoryInfo.Create(DirectorySecurity)"/>
+#endif
         public abstract void Create(DirectorySecurity directorySecurity);
 
         /// <inheritdoc cref="IDirectoryInfo.CreateSubdirectory(string)"/>
@@ -68,10 +72,18 @@ namespace System.IO.Abstractions
         public abstract IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, EnumerationOptions enumerationOptions);
 #endif
 
-        /// <inheritdoc cref="IDirectoryInfo.GetAccessControl()"/>
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(DirectoryInfo)"/>
+#else
+        /// <inheritdoc cref="DirectoryInfo.GetAccessControl()"/>
+#endif
         public abstract DirectorySecurity GetAccessControl();
 
-        /// <inheritdoc cref="IDirectoryInfo.GetAccessControl(AccessControlSections)"/>
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(DirectoryInfo,AccessControlSections)"/>
+#else
+        /// <inheritdoc cref="DirectoryInfo.GetAccessControl(AccessControlSections)"/>
+#endif
         public abstract DirectorySecurity GetAccessControl(AccessControlSections includeSections);
 
         /// <inheritdoc cref="IDirectoryInfo.GetDirectories()"/>
@@ -120,7 +132,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IDirectoryInfo.MoveTo"/>
         public abstract void MoveTo(string destDirName);
 
-        /// <inheritdoc cref="IDirectoryInfo.SetAccessControl"/>
+#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
+        /// <inheritdoc cref="FileSystemAclExtensions.SetAccessControl(DirectoryInfo,DirectorySecurity)"/>
+#else
+        /// <inheritdoc cref="DirectoryInfo.SetAccessControl(DirectorySecurity)"/>
+#endif
         public abstract void SetAccessControl(DirectorySecurity directorySecurity);
 
         /// <inheritdoc cref="IDirectoryInfo.Parent"/>

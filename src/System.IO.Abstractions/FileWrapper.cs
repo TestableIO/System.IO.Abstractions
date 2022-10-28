@@ -58,21 +58,21 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-        public override Stream Create(string path)
+        public override FileSystemStream Create(string path)
         {
-            return File.Create(path);
+            return new FileStreamWrapper(File.Create(path));
         }
 
         /// <inheritdoc />
-        public override Stream Create(string path, int bufferSize)
+        public override FileSystemStream Create(string path, int bufferSize)
         {
-            return File.Create(path, bufferSize);
+            return new FileStreamWrapper(File.Create(path, bufferSize));
         }
 
         /// <inheritdoc />
-        public override Stream Create(string path, int bufferSize, FileOptions options)
+        public override FileSystemStream Create(string path, int bufferSize, FileOptions options)
         {
-            return File.Create(path, bufferSize, options);
+            return new FileStreamWrapper(File.Create(path, bufferSize, options));
         }
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -186,27 +186,35 @@ namespace System.IO.Abstractions
 
 
         /// <inheritdoc />
-        public override Stream Open(string path, FileMode mode)
+        public override FileSystemStream Open(string path, FileMode mode)
         {
-            return File.Open(path, mode);
+            return new FileStreamWrapper(File.Open(path, mode));
         }
 
         /// <inheritdoc />
-        public override Stream Open(string path, FileMode mode, FileAccess access)
+        public override FileSystemStream Open(string path, FileMode mode, FileAccess access)
         {
-            return File.Open(path, mode, access);
+            return new FileStreamWrapper(File.Open(path, mode, access));
         }
 
         /// <inheritdoc />
-        public override Stream Open(string path, FileMode mode, FileAccess access, FileShare share)
+        public override FileSystemStream Open(string path, FileMode mode, FileAccess access, FileShare share)
         {
-            return File.Open(path, mode, access, share);
+            return new FileStreamWrapper(File.Open(path, mode, access, share));
         }
 
+#if FEATURE_FILESTREAMOPTIONS
         /// <inheritdoc />
-        public override Stream OpenRead(string path)
+        public override FileSystemStream Open(string path, FileStreamOptions options)
         {
-            return File.OpenRead(path);
+            return new FileStreamWrapper(File.Open(path, options));
+        }
+#endif
+
+        /// <inheritdoc />
+        public override FileSystemStream OpenRead(string path)
+        {
+            return new FileStreamWrapper(File.OpenRead(path));
         }
 
         /// <inheritdoc />
@@ -216,9 +224,9 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-        public override Stream OpenWrite(string path)
+        public override FileSystemStream OpenWrite(string path)
         {
-            return File.OpenWrite(path);
+            return new FileStreamWrapper(File.OpenWrite(path));
         }
 
         /// <inheritdoc />
@@ -274,6 +282,14 @@ namespace System.IO.Abstractions
         {
             File.Replace(sourceFileName, destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
         }
+
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget)
+        {
+            return FileSystem.FileInfo.New(linkPath).ResolveLinkTarget(returnFinalTarget);
+        }
+#endif
 
         /// <inheritdoc />
         [SupportedOSPlatform("windows")]

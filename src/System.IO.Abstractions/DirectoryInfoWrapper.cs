@@ -15,7 +15,16 @@ namespace System.IO.Abstractions
         public DirectoryInfoWrapper(IFileSystem fileSystem, DirectoryInfo instance) : base(fileSystem)
         {
             this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
+            ExtensionContainer = new FileSystemExtensionContainer(instance);
         }
+
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override void CreateAsSymbolicLink(string pathToTarget)
+        {
+            instance.CreateAsSymbolicLink(pathToTarget);
+        }
+#endif
 
         /// <inheritdoc />
         public override void Delete()
@@ -28,6 +37,16 @@ namespace System.IO.Abstractions
         {
             instance.Refresh();
         }
+
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override IFileSystemInfo ResolveLinkTarget(bool returnFinalTarget)
+        {
+            //TODO: Unclear how to handle this case, as no explicit `FileSystemInfoWrapper` exists
+            //return instance.ResolveLinkTarget(returnFinalTarget);
+            return null;
+        }
+#endif
 
         /// <inheritdoc />
         public override FileAttributes Attributes
@@ -61,6 +80,9 @@ namespace System.IO.Abstractions
         {
             get { return instance.Extension; }
         }
+
+        /// <inheritdoc />
+        public override IFileSystemExtensionContainer ExtensionContainer { get; }
 
         /// <inheritdoc />
         public override string FullName
