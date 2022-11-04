@@ -6,17 +6,9 @@
     <TargetFrameworks>net6.0;net5.0;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
     <PackageIcon>icon_256x256.png</PackageIcon>
   </PropertyGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1' OR '$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
-    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
-  </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net461" Version="1.0.3">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
+    <ProjectReference Include="..\TestableIO.System.IO.Abstractions\TestableIO.System.IO.Abstractions.csproj" />
+    <ProjectReference Include="..\TestableIO.System.IO.Wrappers\TestableIO.System.IO.Wrappers.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\images\icon_256x256.png" Pack="true" PackagePath="\" />
