@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions.Benc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{BCEC61BD-4941-41EC-975A-ACEFC7AC1780}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions.Tests", "tests\System.IO.Abstractions.Tests\System.IO.Abstractions.Tests.csproj", "{7105D748-1253-409F-A624-4879412EF3C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestableIO.System.IO.Wrappers.Tests", "tests\TestableIO.System.IO.Wrappers.Tests\TestableIO.System.IO.Wrappers.Tests.csproj", "{7105D748-1253-409F-A624-4879412EF3C2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{F781892B-7C5D-4C8D-8D3D-3E9E207D686D}"
 	ProjectSection(SolutionItems) = preProject
