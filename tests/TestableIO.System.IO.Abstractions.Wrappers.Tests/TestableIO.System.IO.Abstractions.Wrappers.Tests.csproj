@@ -9,7 +9,7 @@
     <IsTestable>true</IsTestable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\TestableIO.System.IO.Wrappers\TestableIO.System.IO.Wrappers.csproj" />
+    <ProjectReference Include="..\..\src\TestableIO.System.IO.Abstractions.Wrappers\TestableIO.System.IO.Abstractions.Wrappers.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="3.2.0">
