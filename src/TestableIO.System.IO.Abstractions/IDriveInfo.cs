@@ -1,6 +1,6 @@
 ﻿namespace System.IO.Abstractions
 {
-    /// <inheritdoc cref="DirectoryInfo" />
+    /// <inheritdoc cref="DriveInfo" />
     public interface IDriveInfo
     {
         /// <summary>

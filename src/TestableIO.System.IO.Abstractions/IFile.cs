@@ -5,7 +5,9 @@ using System.Text;
 
 namespace System.IO.Abstractions
 {
-    /// <inheritdoc cref="File" />
+    /// <summary>
+    /// Abstractions for <see cref="File" />.
+    /// </summary>
     public partial interface IFile
     {
         /// <summary>

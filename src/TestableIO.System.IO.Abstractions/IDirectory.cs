@@ -3,7 +3,9 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
-    ///
+    /// <summary>
+    /// Abstractions for <see cref="Directory" />.
+    /// </summary>
     public interface IDirectory
     {
         /// <summary>
