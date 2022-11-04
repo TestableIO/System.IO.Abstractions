@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30128.74
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F3BDA62-8052-4C37-97A0-94354AA971B0}"
 	ProjectSection(SolutionItems) = preProject
@@ -19,7 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions.Benc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{BCEC61BD-4941-41EC-975A-ACEFC7AC1780}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions.Tests", "tests\System.IO.Abstractions.Tests\System.IO.Abstractions.Tests.csproj", "{7105D748-1253-409F-A624-4879412EF3C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestableIO.System.IO.Abstractions.Wrappers.Tests", "tests\TestableIO.System.IO.Abstractions.Wrappers.Tests\TestableIO.System.IO.Abstractions.Wrappers.Tests.csproj", "{7105D748-1253-409F-A624-4879412EF3C2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestableIO.System.IO.Abstractions", "src\TestableIO.System.IO.Abstractions\TestableIO.System.IO.Abstractions.csproj", "{1B8388D2-58A7-47B8-89EC-C5A94A0FEED5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestableIO.System.IO.Abstractions.Wrappers", "src\TestableIO.System.IO.Abstractions.Wrappers\TestableIO.System.IO.Abstractions.Wrappers.csproj", "{3698BB93-B031-4140-BAEF-D3480A94F531}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{F781892B-7C5D-4C8D-8D3D-3E9E207D686D}"
 	ProjectSection(SolutionItems) = preProject
@@ -52,11 +56,20 @@ Global
 		{7105D748-1253-409F-A624-4879412EF3C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7105D748-1253-409F-A624-4879412EF3C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7105D748-1253-409F-A624-4879412EF3C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B8388D2-58A7-47B8-89EC-C5A94A0FEED5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B8388D2-58A7-47B8-89EC-C5A94A0FEED5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B8388D2-58A7-47B8-89EC-C5A94A0FEED5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B8388D2-58A7-47B8-89EC-C5A94A0FEED5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3698BB93-B031-4140-BAEF-D3480A94F531}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3698BB93-B031-4140-BAEF-D3480A94F531}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3698BB93-B031-4140-BAEF-D3480A94F531}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3698BB93-B031-4140-BAEF-D3480A94F531}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{20B02738-952A-40F5-9C10-E2F83013E9FC} = {BCEC61BD-4941-41EC-975A-ACEFC7AC1780}
 		{7105D748-1253-409F-A624-4879412EF3C2} = {BCEC61BD-4941-41EC-975A-ACEFC7AC1780}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
