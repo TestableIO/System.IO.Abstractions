@@ -5,19 +5,34 @@
     public class MockFileSystemWatcherFactory : IFileSystemWatcherFactory
     {
         /// <inheritdoc />
-        public IFileSystemWatcher CreateNew() =>
-                  throw new NotImplementedException(StringResources.Manager.GetString("FILE_SYSTEM_WATCHER_NOT_IMPLEMENTED_EXCEPTION"));
+        [Obsolete("Use `IFileSystemWatcherFactory.New()` instead")]
+        public IFileSystemWatcher CreateNew()
+            => New();
 
         /// <inheritdoc />
-        public IFileSystemWatcher CreateNew(string path) =>
-                throw new NotImplementedException(StringResources.Manager.GetString("FILE_SYSTEM_WATCHER_NOT_IMPLEMENTED_EXCEPTION"));
+        [Obsolete("Use `IFileSystemWatcherFactory.New(string)` instead")]
+        public IFileSystemWatcher CreateNew(string path)
+            => New(path);
 
         /// <inheritdoc />
-        public IFileSystemWatcher CreateNew(string path, string filter) =>
-                  throw new NotImplementedException(StringResources.Manager.GetString("FILE_SYSTEM_WATCHER_NOT_IMPLEMENTED_EXCEPTION"));
+        [Obsolete("Use `IFileSystemWatcherFactory.New(string, string)` instead")]
+        public IFileSystemWatcher CreateNew(string path, string filter)
+            => New(path, filter);
 
         /// <inheritdoc />
-        public IFileSystemWatcher FromPath(string path) =>
-                  throw new NotImplementedException(StringResources.Manager.GetString("FILE_SYSTEM_WATCHER_NOT_IMPLEMENTED_EXCEPTION"));
+        public IFileSystemWatcher New()
+            => throw new NotImplementedException(StringResources.Manager.GetString("FILE_SYSTEM_WATCHER_NOT_IMPLEMENTED_EXCEPTION"));
+
+        /// <inheritdoc />
+        public IFileSystemWatcher New(string path)
+            => throw new NotImplementedException(StringResources.Manager.GetString("FILE_SYSTEM_WATCHER_NOT_IMPLEMENTED_EXCEPTION"));
+
+        /// <inheritdoc />
+        public IFileSystemWatcher New(string path, string filter)
+            => throw new NotImplementedException(StringResources.Manager.GetString("FILE_SYSTEM_WATCHER_NOT_IMPLEMENTED_EXCEPTION"));
+
+        /// <inheritdoc />
+        public IFileSystemWatcher Wrap(FileSystemWatcher fileSystemWatcher)
+            => throw new NotImplementedException(StringResources.Manager.GetString("FILE_SYSTEM_WATCHER_NOT_IMPLEMENTED_EXCEPTION"));
     }
 }

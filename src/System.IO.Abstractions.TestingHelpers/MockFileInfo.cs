@@ -24,6 +24,14 @@ namespace System.IO.Abstractions.TestingHelpers
             Refresh();
         }
 
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override void CreateAsSymbolicLink(string pathToTarget)
+        {
+            throw new NotImplementedException();
+        }
+#endif
+
         /// <inheritdoc />
         public override void Delete()
         {
@@ -37,6 +45,14 @@ namespace System.IO.Abstractions.TestingHelpers
             var mockFileData = mockFileSystem.GetFile(path)?.Clone();
             cachedMockFileData = mockFileData ?? MockFileData.NullObject.Clone();
         }
+
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override IFileSystemInfo ResolveLinkTarget(bool returnFinalTarget)
+        {
+            throw new NotImplementedException();
+        }
+#endif
 
         /// <inheritdoc />
         public override FileAttributes Attributes
@@ -208,11 +224,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 return this;
             }
             mockFile.Copy(FullName, destFileName, overwrite);
-            return mockFileSystem.FileInfo.FromFileName(destFileName);
+            return mockFileSystem.FileInfo.New(destFileName);
         }
 
         /// <inheritdoc />
-        public override Stream Create()
+        public override FileSystemStream Create()
         {
             var result = mockFile.Create(FullName);
             refreshOnNextRead = true;
@@ -272,31 +288,31 @@ namespace System.IO.Abstractions.TestingHelpers
 #endif
 
         /// <inheritdoc />
-        public override Stream Open(FileMode mode)
+        public override FileSystemStream Open(FileMode mode)
         {
             return mockFile.Open(FullName, mode);
         }
 
         /// <inheritdoc />
-        public override Stream Open(FileMode mode, FileAccess access)
+        public override FileSystemStream Open(FileMode mode, FileAccess access)
         {
             return mockFile.Open(FullName, mode, access);
         }
 
         /// <inheritdoc />
-        public override Stream Open(FileMode mode, FileAccess access, FileShare share)
+        public override FileSystemStream Open(FileMode mode, FileAccess access, FileShare share)
         {
             return mockFile.Open(FullName, mode, access, share);
         }
 
         /// <inheritdoc />
-        public override Stream OpenRead() => mockFile.OpenRead(path);
+        public override FileSystemStream OpenRead() => mockFile.OpenRead(path);
 
         /// <inheritdoc />
         public override StreamReader OpenText() => mockFile.OpenText(path);
 
         /// <inheritdoc />
-        public override Stream OpenWrite() => mockFile.OpenWrite(path);
+        public override FileSystemStream OpenWrite() => mockFile.OpenWrite(path);
 
         /// <inheritdoc />
         public override IFileInfo Replace(string destinationFileName, string destinationBackupFileName)
@@ -308,7 +324,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
             mockFile.Replace(path, destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
-            return mockFileSystem.FileInfo.FromFileName(destinationFileName);
+            return mockFileSystem.FileInfo.New(destinationFileName);
         }
 
         /// <inheritdoc />
@@ -323,7 +339,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             get
             {
-                return mockFileSystem.DirectoryInfo.FromDirectoryName(DirectoryName);
+                return mockFileSystem.DirectoryInfo.New(DirectoryName);
             }
         }
 

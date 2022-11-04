@@ -433,9 +433,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         private class TestFileSystemWatcherFactory : IFileSystemWatcherFactory
         {
-            public IFileSystemWatcher CreateNew() => new TestFileSystemWatcher(null);
-            public IFileSystemWatcher CreateNew(string path) => new TestFileSystemWatcher(path);
-            public IFileSystemWatcher CreateNew(string path, string filter) => new TestFileSystemWatcher(path, filter);
+            public IFileSystemWatcher CreateNew() => New();
+            public IFileSystemWatcher CreateNew(string path) => New(path);
+            public IFileSystemWatcher CreateNew(string path, string filter) => New(path, filter);
+            public IFileSystemWatcher New()
+                => new TestFileSystemWatcher(null);
+
+            public IFileSystemWatcher New(string path)
+                => new TestFileSystemWatcher(path);
+
+            public IFileSystemWatcher New(string path, string filter)
+                => new TestFileSystemWatcher(path, filter);
+
+            public IFileSystemWatcher Wrap(FileSystemWatcher fileSystemWatcher)
+                => throw new NotImplementedException(StringResources.Manager.GetString("FILE_SYSTEM_WATCHER_NOT_IMPLEMENTED_EXCEPTION"));
+
             public IFileSystemWatcher FromPath(string path) => new TestFileSystemWatcher(path);
         }
 
@@ -451,6 +463,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             public override string Path { get; set; }
             public override bool IncludeSubdirectories { get; set; }
+            public override IContainer Container { get; }
             public override bool EnableRaisingEvents { get; set; }
             public override string Filter { get; set; }
             public override int InternalBufferSize { get; set; }
@@ -462,8 +475,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 #endif
             public override void BeginInit() { }
             public override void EndInit() { }
-            public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType) => default(WaitForChangedResult);
-            public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout) => default(WaitForChangedResult);
+            public override IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType) => default(IWaitForChangedResult);
+            public override IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout) => default(IWaitForChangedResult);
         }
     }
 }

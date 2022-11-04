@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace System.IO.Abstractions
 {
     /// <summary>
@@ -9,6 +11,19 @@ namespace System.IO.Abstractions
         /// Initializes a new instance of a wrapper for <see cref="DirectoryInfo"/> which implements <see cref="IDirectoryInfo"/>.
         /// </summary>
         /// <param name="directoryName">The fully qualified name of the new directory, or the relative directory name.</param>
+        [Obsolete("Use `IDirectoryInfoFactory.New(string)` instead")]
         IDirectoryInfo FromDirectoryName(string directoryName);
+
+        /// <summary>
+        /// Initializes a new instance of a wrapper for <see cref="DirectoryInfo"/> which implements <see cref="IDirectoryInfo"/>.
+        /// </summary>
+        /// <param name="path">A string specifying the path on which to create the <see cref="IDirectoryInfo" />.</param>
+        IDirectoryInfo New(string path);
+
+        /// <summary>
+        /// Wraps the <paramref name="directoryInfo" /> in a wrapper for <see cref="DirectoryInfo"/> which implements <see cref="IDirectoryInfo" />.
+        /// </summary>
+        [return: NotNullIfNotNull("directoryInfo")]
+        IDirectoryInfo? Wrap(DirectoryInfo? directoryInfo);
     }
 }

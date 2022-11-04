@@ -1,4 +1,6 @@
-﻿namespace System.IO.Abstractions
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace System.IO.Abstractions
 {
     /// <summary>
     /// A factory for the creation of wrappers for <see cref="DriveInfo" /> in a <see cref="IFileSystem" />.
@@ -6,15 +8,32 @@
     public interface IDriveInfoFactory
     {
         /// <summary>
+        /// Initializes a new instance of a wrapper for <see cref="DriveInfo"/> which implements <see cref="IDriveInfo"/>.
+        /// </summary>
+        /// <param name="driveName">A valid drive path or drive letter.</param>
+        [Obsolete("Use `IDriveInfoFactory.New(string)` instead")]
+        IDriveInfo FromDriveName(string driveName);
+
+        /// <summary>
         /// Retrieves the drive names of all logical drives on a computer.
         /// </summary>
         /// <returns>An array of type <see cref="IDriveInfo"/> that represents the logical drives on a computer.</returns>
         IDriveInfo[] GetDrives();
 
         /// <summary>
-        /// Initializes a new instance of a wrapper for <see cref="DriveInfo"/> which implements <see cref="IDriveInfo"/>.
+        /// Provides access to the information on the specified drive.
         /// </summary>
-        /// <param name="driveName">A valid drive path or drive letter.</param>
-        IDriveInfo FromDriveName(string driveName);
+        /// <param name="driveName">
+        /// A valid drive path or drive letter.
+        /// This can be either uppercase or lowercase, 'a' to 'z'.
+        /// A <see langword="null" /> value is not valid.
+        /// </param>
+        IDriveInfo New(string driveName);
+
+        /// <summary>
+        /// Wraps the <paramref name="driveInfo" /> in a wrapper for <see cref="DriveInfo"/> which implements <see cref="IDriveInfo" />.
+        /// </summary>
+        [return: NotNullIfNotNull("driveInfo")]
+        IDriveInfo? Wrap(DriveInfo? driveInfo);
     }
 }

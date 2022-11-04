@@ -45,13 +45,13 @@ namespace System.IO.Abstractions
         public abstract void Copy(string sourceFileName, string destFileName, bool overwrite);
 
         /// <inheritdoc cref="IFile.Create(string)"/>
-        public abstract Stream Create(string path);
+        public abstract FileSystemStream Create(string path);
 
         /// <inheritdoc cref="IFile.Create(string,int)"/>
-        public abstract Stream Create(string path, int bufferSize);
+        public abstract FileSystemStream Create(string path, int bufferSize);
 
         /// <inheritdoc cref="IFile.Create(string,int,FileOptions)"/>
-        public abstract Stream Create(string path, int bufferSize, FileOptions options);
+        public abstract FileSystemStream Create(string path, int bufferSize, FileOptions options);
 #if FEATURE_CREATE_SYMBOLIC_LINK
         /// <inheritdoc cref="IFile.CreateSymbolicLink(string, string)"/>
         public abstract IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget);
@@ -273,22 +273,22 @@ namespace System.IO.Abstractions
 #endif
 
         /// <inheritdoc cref="IFile.Open(string,FileMode)"/>
-        public abstract Stream Open(string path, FileMode mode);
+        public abstract FileSystemStream Open(string path, FileMode mode);
 
         /// <inheritdoc cref="IFile.Open(string,FileMode,FileAccess)"/>
-        public abstract Stream Open(string path, FileMode mode, FileAccess access);
+        public abstract FileSystemStream Open(string path, FileMode mode, FileAccess access);
 
         /// <inheritdoc cref="IFile.Open(string,FileMode,FileAccess,FileShare)"/>
-        public abstract Stream Open(string path, FileMode mode, FileAccess access, FileShare share);
+        public abstract FileSystemStream Open(string path, FileMode mode, FileAccess access, FileShare share);
 
         /// <inheritdoc cref="IFile.OpenRead"/>
-        public abstract Stream OpenRead(string path);
+        public abstract FileSystemStream OpenRead(string path);
 
         /// <inheritdoc cref="IFile.OpenText"/>
         public abstract StreamReader OpenText(string path);
 
         /// <inheritdoc cref="IFile.OpenWrite"/>
-        public abstract Stream OpenWrite(string path);
+        public abstract FileSystemStream OpenWrite(string path);
 
         /// <inheritdoc cref="IFile.ReadAllBytes"/>
         public abstract byte[] ReadAllBytes(string path);
@@ -319,6 +319,11 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="IFile.Replace(string,string,string,bool)"/>
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
+
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc cref="IFile.ResolveLinkTarget(string,bool)"/>
+        public abstract IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget);
+#endif
 
         /// <inheritdoc cref="IFile.SetAccessControl(string,FileSecurity)"/>
         [SupportedOSPlatform("windows")]

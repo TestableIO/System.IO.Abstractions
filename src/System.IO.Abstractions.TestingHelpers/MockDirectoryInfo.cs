@@ -38,6 +38,14 @@ namespace System.IO.Abstractions.TestingHelpers
             Refresh();
         }
 
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override void CreateAsSymbolicLink(string pathToTarget)
+        {
+            throw new NotImplementedException();
+        }
+#endif
+
         /// <inheritdoc />
         public override void Delete()
         {
@@ -51,6 +59,14 @@ namespace System.IO.Abstractions.TestingHelpers
             var mockFileData = mockFileDataAccessor.GetFile(directoryPath) ?? MockFileData.NullObject;
             cachedMockFileData = mockFileData.Clone();
         }
+
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override IFileSystemInfo ResolveLinkTarget(bool returnFinalTarget)
+        {
+            throw new NotImplementedException();
+        }
+#endif
 
         /// <inheritdoc />
         public override FileAttributes Attributes
@@ -337,7 +353,7 @@ namespace System.IO.Abstractions.TestingHelpers
         IFileInfo[] ConvertStringsToFiles(IEnumerable<string> paths)
         {
             return paths
-                  .Select(mockFileDataAccessor.FileInfo.FromFileName)
+                  .Select(mockFileDataAccessor.FileInfo.New)
                   .ToArray();
         }
 

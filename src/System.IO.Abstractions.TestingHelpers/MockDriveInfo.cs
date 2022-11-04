@@ -56,7 +56,7 @@
         {
             get
             {
-                return mockFileDataAccessor.DirectoryInfo.FromDirectoryName(Name);
+                return mockFileDataAccessor.DirectoryInfo.New(Name);
             }
         }
 

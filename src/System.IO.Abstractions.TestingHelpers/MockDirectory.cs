@@ -389,6 +389,14 @@ namespace System.IO.Abstractions.TestingHelpers
             return dirs.Union(files).ToArray();
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        /// <inheritdoc />
+        public override string[] GetFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            return GetFileSystemEntries(path, "*", EnumerationOptionsToSearchOption(enumerationOptions));
+        }
+#endif
+
         /// <inheritdoc />
         public override DateTime GetLastAccessTime(string path)
         {
@@ -525,6 +533,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
             mockFileDataAccessor.MoveDirectory(fullSourcePath, fullDestPath);
         }
+
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget)
+        {
+            throw new NotImplementedException();
+        }
+#endif
 
         /// <inheritdoc />
         [SupportedOSPlatform("windows")]

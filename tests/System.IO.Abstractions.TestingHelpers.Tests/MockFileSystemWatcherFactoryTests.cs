@@ -35,7 +35,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var path = XFS.Path(@"y:\test");
             var factory = new MockFileSystemWatcherFactory();
-            Assert.Throws<NotImplementedException>(() => factory.FromPath(path));
+            Assert.Throws<NotImplementedException>(() => factory.New(path));
         }
     }
 }

@@ -42,13 +42,7 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="IFile.WriteAllLinesAsync(string,IEnumerable{string},Encoding,CancellationToken)"/>
         public abstract Task WriteAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken);
-
-        /// <inheritdoc cref="IFile.WriteAllLinesAsync(string,string[],CancellationToken)"/>
-        public abstract Task WriteAllLinesAsync(string path, string[] contents, CancellationToken cancellationToken);
-
-        /// <inheritdoc cref="IFile.WriteAllLinesAsync(string,string[],Encoding,CancellationToken)"/>
-        public abstract Task WriteAllLinesAsync(string path, string[] contents, Encoding encoding, CancellationToken cancellationToken);
-
+        
         /// <inheritdoc cref="IFile.WriteAllTextAsync(string,string,CancellationToken)"/>
         public abstract Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken);
 

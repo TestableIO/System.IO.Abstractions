@@ -49,6 +49,10 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
+        public override IContainer Container
+            => watcher.Container;
+
+        /// <inheritdoc />
         public override bool EnableRaisingEvents
         {
             get { return watcher.EnableRaisingEvents; }
@@ -134,15 +138,42 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-        public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
+        public override IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
         {
-            return watcher.WaitForChanged(changeType);
+            return new WaitForChangedResultWrapper(watcher.WaitForChanged(changeType));
         }
 
         /// <inheritdoc />
-        public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
+        public override IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
         {
-            return watcher.WaitForChanged(changeType, timeout);
+            return new WaitForChangedResultWrapper(watcher.WaitForChanged(changeType, timeout));
+        }
+
+        private readonly struct WaitForChangedResultWrapper
+            : IWaitForChangedResult
+        {
+            private readonly WaitForChangedResult _instance;
+
+            public WaitForChangedResultWrapper(WaitForChangedResult instance)
+            {
+                _instance = instance;
+            }
+
+            /// <inheritdoc cref="IWaitForChangedResult.ChangeType" />
+            public WatcherChangeTypes ChangeType
+                => _instance.ChangeType;
+
+            /// <inheritdoc cref="IWaitForChangedResult.Name" />
+            public string Name
+                => _instance.Name;
+
+            /// <inheritdoc cref="IWaitForChangedResult.OldName" />
+            public string OldName
+                => _instance.OldName;
+
+            /// <inheritdoc cref="IWaitForChangedResult.TimedOut" />
+            public bool TimedOut
+                => _instance.TimedOut;
         }
     }
 }

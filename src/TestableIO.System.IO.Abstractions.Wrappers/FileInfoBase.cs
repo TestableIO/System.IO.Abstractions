@@ -24,7 +24,7 @@ namespace System.IO.Abstractions
         public abstract IFileInfo CopyTo(string destFileName, bool overwrite);
 
         /// <inheritdoc cref="IFileInfo.Create"/>
-        public abstract Stream Create();
+        public abstract FileSystemStream Create();
 
         /// <inheritdoc cref="IFileInfo.CreateText"/>
         public abstract StreamWriter CreateText();
@@ -50,22 +50,22 @@ namespace System.IO.Abstractions
 #endif
 
         /// <inheritdoc cref="IFileInfo.Open(FileMode)"/>
-        public abstract Stream Open(FileMode mode);
+        public abstract FileSystemStream Open(FileMode mode);
 
         /// <inheritdoc cref="IFileInfo.Open(FileMode,FileAccess)"/>
-        public abstract Stream Open(FileMode mode, FileAccess access);
+        public abstract FileSystemStream Open(FileMode mode, FileAccess access);
 
         /// <inheritdoc cref="IFileInfo.Open(FileMode,FileAccess,FileShare)"/>
-        public abstract Stream Open(FileMode mode, FileAccess access, FileShare share);
+        public abstract FileSystemStream Open(FileMode mode, FileAccess access, FileShare share);
 
         /// <inheritdoc cref="IFileInfo.OpenRead"/>
-        public abstract Stream OpenRead();
+        public abstract FileSystemStream OpenRead();
 
         /// <inheritdoc cref="IFileInfo.OpenText"/>
         public abstract StreamReader OpenText();
 
         /// <inheritdoc cref="IFileInfo.OpenWrite"/>
-        public abstract Stream OpenWrite();
+        public abstract FileSystemStream OpenWrite();
 
         /// <inheritdoc cref="IFileInfo.Replace(string,string)"/>
         public abstract IFileInfo Replace(string destinationFileName, string destinationBackupFileName);
