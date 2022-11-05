@@ -494,7 +494,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var fileSystem = new MockFileSystem();
             fileSystem.AddFile(XFS.Path(@"c:\temp\file.txt"), new MockFileData(new byte[] { 1, 2 }));
-            var fileInfo = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file.txt"));
+            var fileInfo = fileSystem.FileInfo.New(XFS.Path(@"c:\temp\file.txt"));
 
             byte[] result = new byte[2];
             using (var stream = fileInfo.OpenRead())
@@ -510,7 +510,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var fileSystem = new MockFileSystem();
             fileSystem.AddFile(XFS.Path(@"c:\temp\file.txt"), new MockFileData(@"line 1\r\nline 2"));
-            var fileInfo = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file.txt"));
+            var fileInfo = fileSystem.FileInfo.New(XFS.Path(@"c:\temp\file.txt"));
 
             string result;
             using (var streamReader = fileInfo.OpenText())
@@ -529,7 +529,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var destinationFolder = XFS.Path(@"c:\temp2");
             var destinationPath = XFS.Path(destinationFolder + @"\file.txt");
             fileSystem.AddFile(sourcePath, new MockFileData("1"));
-            var fileInfo = fileSystem.FileInfo.FromFileName(sourcePath);
+            var fileInfo = fileSystem.FileInfo.New(sourcePath);
             fileSystem.AddDirectory(destinationFolder);
 
             fileInfo.MoveTo(destinationPath);
@@ -545,7 +545,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var sourcePath = XFS.Path(@"c:\temp\file.txt");
             var destinationPath = XFS.Path(@"c:\temp2\file.txt");
             fileSystem.AddFile(sourcePath, new MockFileData("1"));
-            var fileInfo = fileSystem.FileInfo.FromFileName(sourcePath);
+            var fileInfo = fileSystem.FileInfo.New(sourcePath);
 
             Assert.Throws<DirectoryNotFoundException>(() => fileInfo.MoveTo(destinationPath));
         }
@@ -557,7 +557,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var sourcePath = XFS.Path(@"c:\temp\file.txt");
             var destinationPath = XFS.Path(@"c:\temp2\file.txt");
             fileSystem.AddFile(sourcePath, new MockFileData("1"));
-            var fileInfo = fileSystem.FileInfo.FromFileName(sourcePath);
+            var fileInfo = fileSystem.FileInfo.New(sourcePath);
             fileSystem.AddFile(destinationPath, new MockFileData("2"));
 
             Assert.Throws<IOException>(() => fileInfo.MoveTo(destinationPath));
@@ -568,7 +568,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var fileSystem = new MockFileSystem();
             fileSystem.AddFile(XFS.Path(@"c:\temp\file.txt"), new MockFileData(@"line 1\r\nline 2"));
-            var fileInfo = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file.txt"));
+            var fileInfo = fileSystem.FileInfo.New(XFS.Path(@"c:\temp\file.txt"));
             string destination = XFS.Path(XFS.Path(@"c:\temp\file.txt"));
 
             fileInfo.MoveTo(destination);
@@ -581,7 +581,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileInfo_MoveTo_SameSourceAndTargetThrowsExceptionIfSourceDoesntExist()
         {
             var fileSystem = new MockFileSystem();
-            var fileInfo = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file.txt"));
+            var fileInfo = fileSystem.FileInfo.New(XFS.Path(@"c:\temp\file.txt"));
             string destination = XFS.Path(XFS.Path(@"c:\temp\file.txt"));
 
             TestDelegate action = () => fileInfo.MoveTo(destination);
@@ -593,7 +593,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileInfo_MoveTo_ThrowsExceptionIfSourceDoesntExist()
         {
             var fileSystem = new MockFileSystem();
-            var fileInfo = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file.txt"));
+            var fileInfo = fileSystem.FileInfo.New(XFS.Path(@"c:\temp\file.txt"));
             string destination = XFS.Path(XFS.Path(@"c:\temp\file2.txt"));
 
             TestDelegate action = () => fileInfo.MoveTo(destination);
@@ -616,7 +616,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 {destFilePath, new MockFileData(sourceFileContent)}
             });
 
-            fileSystem.FileInfo.FromFileName(sourceFilePath).MoveTo(destFilePath, overwrite: true);
+            fileSystem.FileInfo.New(sourceFilePath).MoveTo(destFilePath, overwrite: true);
 
             Assert.That(fileSystem.File.ReadAllText(destFilePath), Is.EqualTo(sourceFileContent));
         }
@@ -632,7 +632,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 {sourceFilePath, new MockFileData("1")},
             });
 
-            var fileInfo = fileSystem.FileInfo.FromFileName(sourceFilePath);
+            var fileInfo = fileSystem.FileInfo.New(sourceFilePath);
             fileInfo.MoveTo(destFilePath);
 
             Assert.AreEqual(fileInfo.FullName, destFilePath);
@@ -643,7 +643,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileInfo_CopyTo_ThrowsExceptionIfSourceDoesntExist()
         {
             var fileSystem = new MockFileSystem();
-            var fileInfo = fileSystem.FileInfo.FromFileName(XFS.Path(@"c:\temp\file.txt"));
+            var fileInfo = fileSystem.FileInfo.New(XFS.Path(@"c:\temp\file.txt"));
             string destination = XFS.Path(XFS.Path(@"c:\temp\file2.txt"));
 
             TestDelegate action = () => fileInfo.CopyTo(destination);
@@ -671,21 +671,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         /// <summary>
         /// Normalize, tested with Path.GetFullPath and new FileInfo().FullName;
         /// </summary>
-        [TestCaseSource(nameof(FromFileName_Paths_NormalizePaths_Cases))]
-        public void FromFileName_Paths_NormalizePaths(string input, string expected)
+        [TestCaseSource(nameof(New_Paths_NormalizePaths_Cases))]
+        public void New_Paths_NormalizePaths(string input, string expected)
         {
             // Arrange
             var mockFs = new MockFileSystem();
 
             // Act
-            var mockFileInfo = mockFs.FileInfo.FromFileName(input);
+            var mockFileInfo = mockFs.FileInfo.New(input);
             var result = mockFileInfo.FullName;
 
             // Assert
             Assert.AreEqual(expected, result);
         }
 
-        public static IEnumerable<string[]> FromFileName_Paths_NormalizePaths_Cases
+        public static IEnumerable<string[]> New_Paths_NormalizePaths_Cases
         {
             get
             {
@@ -705,8 +705,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var path2 = XFS.Path(@"c:\temp\file2.txt");
             fileSystem.AddFile(path1, new MockFileData("1"));
             fileSystem.AddFile(path2, new MockFileData("2"));
-            var fileInfo1 = fileSystem.FileInfo.FromFileName(path1);
-            var fileInfo2 = fileSystem.FileInfo.FromFileName(path2);
+            var fileInfo1 = fileSystem.FileInfo.New(path1);
+            var fileInfo2 = fileSystem.FileInfo.New(path2);
 
             // Act
             fileInfo1.Replace(path2, null);
@@ -724,8 +724,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var path3 = XFS.Path(@"c:\temp\file3.txt");
             fileSystem.AddFile(path1, new MockFileData("1"));
             fileSystem.AddFile(path2, new MockFileData("2"));
-            var fileInfo1 = fileSystem.FileInfo.FromFileName(path1);
-            var fileInfo3 = fileSystem.FileInfo.FromFileName(path3);
+            var fileInfo1 = fileSystem.FileInfo.New(path1);
+            var fileInfo3 = fileSystem.FileInfo.New(path3);
 
             // Act
             fileInfo1.Replace(path2, path3);
@@ -743,7 +743,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var path3 = XFS.Path(@"c:\temp\subdirectory\file3.txt");
             fileSystem.AddFile(path1, new MockFileData("1"));
             fileSystem.AddFile(path2, new MockFileData("2"));
-            var fileInfo1 = fileSystem.FileInfo.FromFileName(path1);
+            var fileInfo1 = fileSystem.FileInfo.New(path1);
 
             // Act
             Assert.Throws<DirectoryNotFoundException>(() => fileInfo1.Replace(path2, path3));
@@ -758,8 +758,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var path2 = XFS.Path(@"c:\temp\file2.txt");
             fileSystem.AddFile(path1, new MockFileData("1"));
             fileSystem.AddFile(path2, new MockFileData("2"));
-            var fileInfo1 = fileSystem.FileInfo.FromFileName(path1);
-            var fileInfo2 = fileSystem.FileInfo.FromFileName(path2);
+            var fileInfo1 = fileSystem.FileInfo.New(path1);
+            var fileInfo2 = fileSystem.FileInfo.New(path2);
 
             // Act
             var result = fileInfo1.Replace(path2, null);
@@ -775,7 +775,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var path1 = XFS.Path(@"c:\temp\file1.txt");
             var path2 = XFS.Path(@"c:\temp\file2.txt");
             fileSystem.AddFile(path2, new MockFileData("1"));
-            var fileInfo = fileSystem.FileInfo.FromFileName(path1);
+            var fileInfo = fileSystem.FileInfo.New(path1);
 
             Assert.Throws<FileNotFoundException>(() => fileInfo.Replace(path2, null));
         }
@@ -788,7 +788,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var path1 = XFS.Path(@"c:\temp\file1.txt");
             var path2 = XFS.Path(@"c:\temp\file2.txt");
             fileSystem.AddFile(path1, new MockFileData("1"));
-            var fileInfo = fileSystem.FileInfo.FromFileName(path1);
+            var fileInfo = fileSystem.FileInfo.New(path1);
 
             Assert.Throws<FileNotFoundException>(() => fileInfo.Replace(path2, null));
         }
@@ -799,7 +799,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem();
             var path1 = XFS.Path(@"c:\temp\file1.txt");
-            var fileInfo = fileSystem.FileInfo.FromFileName(path1);
+            var fileInfo = fileSystem.FileInfo.New(path1);
 
             // Act
             fileSystem.AddFile(path1, new MockFileData("1"));
@@ -814,7 +814,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem();
             var path1 = XFS.Path(@"c:\temp\file1.txt");
-            var fileInfo = fileSystem.FileInfo.FromFileName(path1);
+            var fileInfo = fileSystem.FileInfo.New(path1);
 
             // Act
             fileSystem.AddFile(path1, new MockFileData("1"));
@@ -829,7 +829,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             IFileSystem fileSystem = new MockFileSystem();
             var path = XFS.Path(@"c:\temp\file1.txt");
-            IFileInfo fileInfo = fileSystem.FileInfo.FromFileName(path);
+            IFileInfo fileInfo = fileSystem.FileInfo.New(path);
 
             // Act
             fileInfo.Create().Dispose();
@@ -844,7 +844,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             IFileSystem fileSystem = new MockFileSystem();
             var path = XFS.Path(@"c:\temp\file1.txt");
-            IFileInfo fileInfo = fileSystem.FileInfo.FromFileName(path);
+            IFileInfo fileInfo = fileSystem.FileInfo.New(path);
 
             // Act
             fileInfo.CreateText().Dispose();
@@ -858,7 +858,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var fileSystem = new MockFileSystem();
             var path = XFS.Path(@"c:\temp\file1.txt");
-            IFileInfo fileInfo = fileSystem.FileInfo.FromFileName(path);
+            IFileInfo fileInfo = fileSystem.FileInfo.New(path);
 
             // Act
             fileInfo.Delete();
@@ -875,7 +875,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     @"c:\bar\foo.txt",
                     new MockFileData("text contents") { AllowedFileShare = FileShare.None });
 
-            var fi = fileSystem.FileInfo.FromFileName(@"c:\bar\foo.txt");
+            var fi = fileSystem.FileInfo.New(@"c:\bar\foo.txt");
 
             Assert.Throws(typeof(System.IO.IOException), () => fi.Delete());
         }

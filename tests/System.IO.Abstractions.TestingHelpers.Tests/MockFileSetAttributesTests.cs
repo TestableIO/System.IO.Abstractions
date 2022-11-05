@@ -29,7 +29,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
             var path = XFS.Path(@"c:\something");
             fileSystem.AddDirectory(path);
-            var directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(path);
+            var directoryInfo = fileSystem.DirectoryInfo.New(path);
             directoryInfo.Attributes = FileAttributes.Directory | FileAttributes.Normal;
 
             fileSystem.File.SetAttributes(path, FileAttributes.Directory | FileAttributes.Hidden);

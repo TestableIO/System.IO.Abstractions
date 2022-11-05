@@ -420,7 +420,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem();
             var path = XFS.Path(@"c:\abc");
-            var directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(path);
+            var directoryInfo = fileSystem.DirectoryInfo.New(path);
 
             // Act
             fileSystem.AddDirectory(path);
@@ -435,7 +435,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var fileSystem = new MockFileSystem();
             var path = XFS.Path(@"c:\abc");
-            var directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(path);
+            var directoryInfo = fileSystem.DirectoryInfo.New(path);
 
             // Act
             fileSystem.AddDirectory(path);
@@ -450,7 +450,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            var directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(XFS.Path(@"c:\abc"));
+            var directoryInfo = fileSystem.DirectoryInfo.New(XFS.Path(@"c:\abc"));
 
             // Act
             directoryInfo.Create();
@@ -464,7 +464,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var fileSystem = new MockFileSystem();
-            var directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(XFS.Path(@"c:\abc"));
+            var directoryInfo = fileSystem.DirectoryInfo.New(XFS.Path(@"c:\abc"));
 
             // Act
             directoryInfo.Create(new DirectorySecurity());
@@ -524,7 +524,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             {
                 { path, new MockDirectoryData() }
             });
-            var directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(path);
+            var directoryInfo = fileSystem.DirectoryInfo.New(path);
             var lastAccessTime = new DateTime(2022, 1, 8);
 
             // Act

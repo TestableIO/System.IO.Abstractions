@@ -29,7 +29,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { filePath, fileData }
             });
 
-            var directorInfo = fileSystem.DirectoryInfo.FromDirectoryName(filePath);
+            var directorInfo = fileSystem.DirectoryInfo.New(filePath);
 
             // Act
             var directorySecurity = directorInfo.GetAccessControl();
@@ -50,7 +50,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { filePath, fileData }
             });
 
-            var directorInfo = fileSystem.DirectoryInfo.FromDirectoryName(filePath);
+            var directorInfo = fileSystem.DirectoryInfo.New(filePath);
 
             // Act
             var expectedAccessControl = new DirectorySecurity();

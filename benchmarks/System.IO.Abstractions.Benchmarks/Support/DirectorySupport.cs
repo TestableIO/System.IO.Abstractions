@@ -43,7 +43,7 @@ namespace System.IO.Abstractions.Benchmarks.Support
         private void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs = true, bool overwrite = true)
         {
             // Get the subdirectories for the specified directory.
-            var dir = _fileSystem.DirectoryInfo.FromDirectoryName(sourceDirName);
+            var dir = _fileSystem.DirectoryInfo.New(sourceDirName);
             if (!dir.Exists)
             {
                 throw new DirectoryNotFoundException(

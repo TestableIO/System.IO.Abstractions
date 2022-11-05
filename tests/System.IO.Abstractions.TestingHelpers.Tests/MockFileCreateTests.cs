@@ -172,7 +172,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string testFileName = XFS.Path(@"c:\someFile.txt");
             var fileSystem = new MockFileSystem();
 
-            using (var stream = fileSystem.FileStream.Create(testFileName, FileMode.Create, FileAccess.Write))
+            using (var stream = fileSystem.FileStream.New(testFileName, FileMode.Create, FileAccess.Write))
             {
                 using (var writer = new StreamWriter(stream))
                 {
@@ -181,7 +181,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
             // Act
-            using (var stream = fileSystem.FileStream.Create(testFileName, FileMode.Truncate, FileAccess.Write))
+            using (var stream = fileSystem.FileStream.New(testFileName, FileMode.Truncate, FileAccess.Write))
             {
                 using (var writer = new StreamWriter(stream))
                 {
@@ -200,7 +200,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string testFileName = XFS.Path(@"c:\someFile.txt");
             var fileSystem = new MockFileSystem();
 
-            using (var stream = fileSystem.FileStream.Create(testFileName, FileMode.Create, FileAccess.Write))
+            using (var stream = fileSystem.FileStream.New(testFileName, FileMode.Create, FileAccess.Write))
             {
                 using (var writer = new StreamWriter(stream))
                 {
@@ -209,7 +209,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
             // Act
-            using (var stream = fileSystem.FileStream.Create(testFileName, FileMode.Truncate, FileAccess.Write))
+            using (var stream = fileSystem.FileStream.New(testFileName, FileMode.Truncate, FileAccess.Write))
             {
                 // Opening the stream is enough to reset the contents
             }
@@ -257,7 +257,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             using (var stream = fileSystem.File.Create(filePath, 4096, FileOptions.Encrypted))
             {
-                var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
+                var fileInfo = fileSystem.FileInfo.New(filePath);
                 Assert.IsFalse(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted));
             }
         }
@@ -274,7 +274,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             {
             }
 
-            var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
+            var fileInfo = fileSystem.FileInfo.New(filePath);
             Assert.IsTrue(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted));
         }
 

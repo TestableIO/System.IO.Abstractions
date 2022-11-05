@@ -366,7 +366,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var fs = new MockFileSystem(null, XFS.Path(currentDirectory));
 
-            var actualCurrentDirectory = fs.DirectoryInfo.FromDirectoryName(".");
+            var actualCurrentDirectory = fs.DirectoryInfo.New(".");
 
             Assert.IsTrue(actualCurrentDirectory.Exists);
         }
@@ -397,7 +397,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var path = XFS.Path(@"C:\root");
             var fileSystem = new TestFileSystem(new TestFileSystemWatcherFactory());
-            var watcher = fileSystem.FileSystemWatcher.CreateNew(path);
+            var watcher = fileSystem.FileSystemWatcher.New(path);
             Assert.AreEqual(path, watcher.Path);
         }
 

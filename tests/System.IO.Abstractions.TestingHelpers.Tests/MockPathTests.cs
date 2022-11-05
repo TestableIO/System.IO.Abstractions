@@ -356,7 +356,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetTempFileName();
 
             Assert.True(fileSystem.FileExists(result));
-            Assert.AreEqual(0, fileSystem.FileInfo.FromFileName(result).Length);
+            Assert.AreEqual(0, fileSystem.FileInfo.New(result).Length);
         }
 
         [Test]

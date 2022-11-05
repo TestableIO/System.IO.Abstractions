@@ -37,8 +37,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             mockFileSystem.AddFile(sourceFileName, "Original");
             mockFileSystem.File.Copy(sourceFileName, destFileName);
 
-            var sourceFileInfo = mockFileSystem.FileInfo.FromFileName(sourceFileName);
-            var destFileInfo = mockFileSystem.FileInfo.FromFileName(destFileName);
+            var sourceFileInfo = mockFileSystem.FileInfo.New(sourceFileName);
+            var destFileInfo = mockFileSystem.FileInfo.New(destFileName);
             Assert.AreEqual(sourceFileInfo.LastWriteTime, destFileInfo.LastWriteTime);
             Assert.LessOrEqual(DateTime.Now - destFileInfo.CreationTime, TimeSpan.FromSeconds(1));
             Assert.AreEqual(destFileInfo.CreationTime, destFileInfo.LastAccessTime);

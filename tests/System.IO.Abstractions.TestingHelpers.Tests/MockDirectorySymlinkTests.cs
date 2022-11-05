@@ -42,7 +42,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Act
             fileSystem.Directory.CreateSymbolicLink(path, pathToTarget);
-            IDirectoryInfo directoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(path);
+            IDirectoryInfo directoryInfo = fileSystem.DirectoryInfo.New(path);
 
             // Assert
             Assert.AreEqual(path, directoryInfo.FullName);
