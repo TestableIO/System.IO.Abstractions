@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Versioning;
@@ -21,15 +22,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
         /// <inheritdoc />
         public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory) :
-                   this(mockFileDataAccessor, currentDirectory)
+            this(mockFileDataAccessor, currentDirectory)
         {
         }
 
         /// <inheritdoc />
-        public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, string currentDirectory) : base(mockFileDataAccessor?.FileSystem)
+        public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, string currentDirectory) : base(
+            mockFileDataAccessor?.FileSystem)
         {
             this.currentDirectory = currentDirectory;
-            this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
+            this.mockFileDataAccessor =
+                mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
         }
 
 
@@ -55,7 +58,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (path.Length == 0)
             {
-                throw new ArgumentException(StringResources.Manager.GetString("PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE"), "path");
+                throw new ArgumentException(
+                    StringResources.Manager.GetString("PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE"), "path");
             }
 
             if (mockFileDataAccessor.PathVerifier.HasIllegalCharacters(path, true))
@@ -136,7 +140,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!recursive && affectedPaths.Count > 1)
             {
-                throw new IOException("The directory specified by " + path + " is read-only, or recursive is false and " + path + " is not an empty directory.");
+                throw new IOException("The directory specified by " + path +
+                                      " is read-only, or recursive is false and " + path +
+                                      " is not an empty directory.");
             }
 
             foreach (var affectedPath in affectedPaths)
@@ -231,7 +237,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
 #if FEATURE_ENUMERATION_OPTIONS
         /// <inheritdoc />
-        public override string[] GetDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        public override string[] GetDirectories(string path, string searchPattern,
+            EnumerationOptions enumerationOptions)
         {
             return GetDirectories(path, "*", EnumerationOptionsToSearchOption(enumerationOptions));
         }
@@ -331,10 +338,12 @@ namespace System.IO.Abstractions.TestingHelpers
                     .Replace(@"\?", isUnix ? @"[^<>:""/|?*]?" : @"[^<>:""/\\|?*]?");
 
                 var extension = Path.GetExtension(searchPattern);
-                bool hasExtensionLengthOfThree = extension != null && extension.Length == 4 && !extension.Contains("*") && !extension.Contains("?");
+                bool hasExtensionLengthOfThree = extension != null && extension.Length == 4 &&
+                                                 !extension.Contains("*") && !extension.Contains("?");
                 if (hasExtensionLengthOfThree)
                 {
-                    var fileNamePatternSpecial = string.Format(CultureInfo.InvariantCulture, "{0}[^.]", fileNamePattern);
+                    var fileNamePatternSpecial =
+                        string.Format(CultureInfo.InvariantCulture, "{0}[^.]", fileNamePattern);
                     pathPatternSpecial = string.Format(
                         CultureInfo.InvariantCulture,
                         isUnix ? @"(?i:^{0}{1}{2}(?:/?)$)" : @"(?i:^{0}{1}{2}(?:\\?)$)",
@@ -358,9 +367,10 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             return files.Where(p =>
-                    !searchEndInStarDot ?
-                    (Regex.IsMatch(p, pathPattern) || (pathPatternSpecial != null && Regex.IsMatch(p, pathPatternSpecial)))
-                    : (Regex.IsMatch(p, pathPatternNoExtension) || Regex.IsMatch(p, pathPatternEndsInDot))
+                    !searchEndInStarDot
+                        ? (Regex.IsMatch(p, pathPattern) ||
+                           (pathPatternSpecial != null && Regex.IsMatch(p, pathPatternSpecial)))
+                        : (Regex.IsMatch(p, pathPatternNoExtension) || Regex.IsMatch(p, pathPatternEndsInDot))
                 )
                 .ToArray();
         }
@@ -391,7 +401,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
 #if FEATURE_ENUMERATION_OPTIONS
         /// <inheritdoc />
-        public override string[] GetFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        public override string[] GetFileSystemEntries(string path, string searchPattern,
+            EnumerationOptions enumerationOptions)
         {
             return GetFileSystemEntries(path, "*", EnumerationOptionsToSearchOption(enumerationOptions));
         }
@@ -442,7 +453,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (path.Length == 0)
             {
-                throw new ArgumentException(StringResources.Manager.GetString("PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE"), "path");
+                throw new ArgumentException(
+                    StringResources.Manager.GetString("PATH_CANNOT_BE_THE_EMPTY_STRING_OR_ALL_WHITESPACE"), "path");
             }
 
             if (mockFileDataAccessor.PathVerifier.HasIllegalCharacters(path, false))
@@ -477,9 +489,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 {
                     absolutePath = absolutePath.TrimSlashes();
 
-                    if (absolutePath.Length > 1 && absolutePath.LastIndexOf(mockFileDataAccessor.Path.DirectorySeparatorChar) == 0)
+                    if (absolutePath.Length > 1 &&
+                        absolutePath.LastIndexOf(mockFileDataAccessor.Path.DirectorySeparatorChar) == 0)
                     {
-                        return new MockDirectoryInfo(mockFileDataAccessor, mockFileDataAccessor.Path.DirectorySeparatorChar.ToString());
+                        return new MockDirectoryInfo(mockFileDataAccessor,
+                            mockFileDataAccessor.Path.DirectorySeparatorChar.ToString());
                     }
                 }
 
@@ -513,7 +527,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!mockFileDataAccessor.StringOperations.Equals(sourceRoot, destinationRoot))
             {
-                throw new IOException("Source and destination path must have identical roots. Move will not work across volumes.");
+                throw new IOException(
+                    "Source and destination path must have identical roots. Move will not work across volumes.");
             }
 
             if (!mockFileDataAccessor.Directory.Exists(fullSourcePath))
@@ -528,7 +543,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (mockFileDataAccessor.Directory.Exists(fullDestPath) || mockFileDataAccessor.File.Exists(fullDestPath))
             {
-                throw new IOException($"Cannot create '{fullDestPath}' because a file or directory with the same name already exists.");
+                throw new IOException(
+                    $"Cannot create '{fullDestPath}' because a file or directory with the same name already exists.");
             }
 
             mockFileDataAccessor.MoveDirectory(fullSourcePath, fullDestPath);
@@ -538,8 +554,40 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget)
         {
-            throw new NotImplementedException();
+            var initialContainer = mockFileDataAccessor.GetFile(linkPath);
+            if (initialContainer.LinkTarget != null)
+            {
+                var nextLocation = initialContainer.LinkTarget;
+                var nextContainer = mockFileDataAccessor.GetFile(nextLocation);
+
+                if (returnFinalTarget)
+                {
+                    // The maximum number of symbolic links that are followed:
+                    // https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.resolvelinktarget?view=net-6.0#remarks
+                    int maxResolveLinks = XFS.IsWindowsPlatform() ? 63 : 40;
+                    for (int i = 1; i < maxResolveLinks; i++)
+                    {
+                        if (nextContainer.LinkTarget == null)
+                        {
+                            break;
+                        }
+                        nextLocation = nextContainer.LinkTarget;
+                        nextContainer = mockFileDataAccessor.GetFile(nextLocation);
+                    }
+                }
+
+                if (nextContainer.IsDirectory)
+                {
+                    return new MockDirectoryInfo(mockFileDataAccessor, nextLocation);
+                }
+                else
+                {
+                    return new MockFileInfo(mockFileDataAccessor, nextLocation);
+                }
+            }
+            throw new IOException($"The name of the file cannot be resolved by the system. : '{linkPath}'");
         }
+    
 #endif
 
         /// <inheritdoc />

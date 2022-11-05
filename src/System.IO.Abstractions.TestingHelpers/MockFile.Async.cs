@@ -96,14 +96,6 @@ WriteAllTextAsync(path, contents, MockFileData.DefaultEncoding, cancellationToke
             WriteAllText(path, contents, encoding);
             return Task.CompletedTask;
         }
-
-#if FEATURE_CREATE_SYMBOLIC_LINK
-        /// <inheritdoc />
-        public override IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget)
-        {
-            throw new NotImplementedException();
-        }
-#endif
     }
 }
 

@@ -40,7 +40,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc />
         public override IFileSystemInfo ResolveLinkTarget(bool returnFinalTarget)
         {
-            throw new NotImplementedException();
+            return instance.ResolveLinkTarget(returnFinalTarget).WrapFileSystemInfo(FileSystem);
         }
 #endif
 
