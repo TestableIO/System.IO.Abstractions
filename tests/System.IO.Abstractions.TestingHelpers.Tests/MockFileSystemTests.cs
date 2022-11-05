@@ -477,8 +477,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 #endif
             public override void BeginInit() { }
             public override void EndInit() { }
-            public override IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType) => default(IWaitForChangedResult);
-            public override IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout) => default(IWaitForChangedResult);
+            public override IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
+            {
+                _ = changeType;
+                return default(IWaitForChangedResult);
+            }
+
+            public override IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
+            {
+                _ = changeType;
+                _ = timeout;
+                return default(IWaitForChangedResult);
+            }
         }
     }
 }
