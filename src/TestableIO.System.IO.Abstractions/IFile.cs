@@ -117,7 +117,7 @@ namespace System.IO.Abstractions
         FileSystemStream Open(string path, FileMode mode, FileAccess access,
             FileShare share);
 
-#if FEATURE_FILE_STREAM_OPTIONS
+#if FEATURE_FILESTREAM_OPTIONS
         /// <inheritdoc cref="File.Open(string, FileStreamOptions)" />
         FileSystemStream Open(string path, FileStreamOptions options);
 #endif
