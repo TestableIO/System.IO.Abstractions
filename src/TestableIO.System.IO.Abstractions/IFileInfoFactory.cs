@@ -5,7 +5,7 @@ namespace System.IO.Abstractions
     /// <summary>
     /// A factory for the creation of wrappers for <see cref="FileInfo" /> in a <see cref="IFileSystem" />.
     /// </summary>
-    public interface IFileInfoFactory
+    public interface IFileInfoFactory : IFileSystemExtensionPoint
     {
         /// <summary>
         /// Initializes a new instance of a wrapper for <see cref="FileInfo"/> which implements <see cref="IFileInfo"/>.

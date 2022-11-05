@@ -7,13 +7,8 @@ namespace System.IO.Abstractions
     /// <summary>
     /// Abstractions for <see cref="Directory" />.
     /// </summary>
-    public interface IDirectory
+    public interface IDirectory : IFileSystemExtensionPoint
     {
-        /// <summary>
-        /// Exposes the underlying filesystem implementation. This is useful for implementing extension methods.
-        /// </summary>
-        IFileSystem FileSystem { get; }
-
         /// <inheritdoc cref="Directory.CreateDirectory(string)" />
         IDirectoryInfo CreateDirectory(string path);
 

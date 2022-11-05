@@ -5,6 +5,14 @@ namespace System.IO.Abstractions
     [Serializable]
     internal sealed class FileStreamFactory : IFileStreamFactory
     {
+        public FileStreamFactory(IFileSystem fileSystem)
+        {
+            FileSystem = fileSystem;
+        }
+
+        /// <inheritdoc />
+        public IFileSystem FileSystem { get; }
+
         [Obsolete("Use `IFileStreamFactory.New(string, FileMode)` instead.")]
         public Stream Create(string path, FileMode mode)
             => New(path, mode);

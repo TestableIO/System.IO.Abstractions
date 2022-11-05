@@ -13,6 +13,10 @@
         }
 
         /// <inheritdoc />
+        public IFileSystem FileSystem
+            => mockFileSystem;
+
+        /// <inheritdoc />
         [Obsolete("Use `IFileInfoFactory.New(string)` instead")]
         public IFileInfo FromFileName(string fileName)
         {

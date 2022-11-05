@@ -4,7 +4,7 @@ using System.ComponentModel;
 namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="FileSystemWatcher" />
-    public interface IFileSystemWatcher : IDisposable
+    public interface IFileSystemWatcher : IFileSystemExtensionPoint, IDisposable
     {
         /// <inheritdoc cref="Component.Container" />
         IContainer? Container { get; }

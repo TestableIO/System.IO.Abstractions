@@ -6,6 +6,9 @@ namespace System.IO.Abstractions
     [Serializable]
     public abstract class FileSystemWatcherBase : IFileSystemWatcher
     {
+        /// <inheritdoc />
+        public abstract IFileSystem FileSystem { get; }
+
         /// <inheritdoc cref="FileSystemWatcher.IncludeSubdirectories"/>
         public abstract bool IncludeSubdirectories { get; set; }
 
@@ -80,7 +83,7 @@ namespace System.IO.Abstractions
                 return null;
             }
 
-            return new FileSystemWatcherWrapper(watcher);
+            return new FileSystemWatcherWrapper(null, watcher);
         }
 
         /// <inheritdoc />

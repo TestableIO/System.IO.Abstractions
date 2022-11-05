@@ -13,8 +13,8 @@
             Path = new PathWrapper(this);
             File = new FileWrapper(this);
             Directory = new DirectoryWrapper(this);
-            FileStream = new FileStreamFactory();
-            FileSystemWatcher = new FileSystemWatcherFactory();
+            FileStream = new FileStreamFactory(this);
+            FileSystemWatcher = new FileSystemWatcherFactory(this);
         }
 
         /// <inheritdoc />

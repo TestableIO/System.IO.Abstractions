@@ -12,6 +12,10 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public MockFileStreamFactory(IMockFileDataAccessor mockFileSystem)
             => this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
+        
+        /// <inheritdoc />
+        public IFileSystem FileSystem
+            => mockFileSystem;
 
         /// <inheritdoc />
         [Obsolete("Use `IFileStreamFactory.New(string, FileMode)` instead.")]

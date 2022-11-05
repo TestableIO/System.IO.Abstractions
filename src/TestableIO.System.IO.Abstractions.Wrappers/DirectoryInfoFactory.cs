@@ -12,6 +12,10 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
+        public IFileSystem FileSystem
+            => fileSystem;
+
+        /// <inheritdoc />
         [Obsolete("Use `IDirectoryInfoFactory.New(string)` instead")]
         public IDirectoryInfo FromDirectoryName(string directoryName)
         {

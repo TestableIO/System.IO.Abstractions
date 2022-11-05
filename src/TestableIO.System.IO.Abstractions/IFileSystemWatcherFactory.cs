@@ -5,7 +5,7 @@ namespace System.IO.Abstractions
     /// <summary>
     /// A factory for the creation of wrappers for <see cref="FileSystemWatcher" /> in a <see cref="IFileSystem" />.
     /// </summary>
-    public interface IFileSystemWatcherFactory
+    public interface IFileSystemWatcherFactory : IFileSystemExtensionPoint
     {
         /// <summary>
         /// Initializes a new instance of a wrapper for <see cref="FileSystemWatcher"/> which implements <see cref="IFileSystemWatcher"/>.

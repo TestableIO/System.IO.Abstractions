@@ -5,7 +5,7 @@ namespace System.IO.Abstractions
     /// <summary>
     /// A factory for the creation of wrappers for <see cref="DriveInfo" /> in a <see cref="IFileSystem" />.
     /// </summary>
-    public interface IDriveInfoFactory
+    public interface IDriveInfoFactory : IFileSystemExtensionPoint
     {
         /// <summary>
         /// Initializes a new instance of a wrapper for <see cref="DriveInfo"/> which implements <see cref="IDriveInfo"/>.

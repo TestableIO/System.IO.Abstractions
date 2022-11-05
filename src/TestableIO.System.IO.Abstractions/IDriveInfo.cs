@@ -4,13 +4,8 @@ using System.Runtime.Versioning;
 namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="DriveInfo" />
-    public interface IDriveInfo
+    public interface IDriveInfo : IFileSystemExtensionPoint
     {
-        /// <summary>
-        /// Exposes the underlying filesystem implementation. This is useful for implementing extension methods.
-        /// </summary>
-        IFileSystem FileSystem { get; }
-
         /// <inheritdoc cref="DriveInfo.AvailableFreeSpace" />
         long AvailableFreeSpace { get; }
 

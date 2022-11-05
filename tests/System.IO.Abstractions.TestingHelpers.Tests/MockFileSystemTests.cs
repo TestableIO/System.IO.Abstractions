@@ -449,6 +449,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 => throw new NotImplementedException(StringResources.Manager.GetString("FILE_SYSTEM_WATCHER_NOT_IMPLEMENTED_EXCEPTION"));
 
             public IFileSystemWatcher FromPath(string path) => new TestFileSystemWatcher(path);
+            public IFileSystem FileSystem => null!;
         }
 
         private class TestFileSystemWatcher : FileSystemWatcherBase
@@ -462,6 +463,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
             public override string Path { get; set; }
+            public override IFileSystem FileSystem { get; }
             public override bool IncludeSubdirectories { get; set; }
             public override IContainer Container { get; }
             public override bool EnableRaisingEvents { get; set; }

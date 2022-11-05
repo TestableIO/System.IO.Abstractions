@@ -4,6 +4,15 @@
     [Serializable]
     public class FileSystemWatcherFactory : IFileSystemWatcherFactory
     {
+        ///
+        public FileSystemWatcherFactory(IFileSystem fileSystem)
+        {
+            FileSystem = fileSystem;
+        }
+
+        /// <inheritdoc />
+        public IFileSystem FileSystem { get; }
+
         /// <inheritdoc />
         [Obsolete("Use `IFileSystemWatcherFactory.New()` instead")]
         public IFileSystemWatcher CreateNew()
@@ -21,18 +30,18 @@
 
         /// <inheritdoc />
         public IFileSystemWatcher New()
-            => new FileSystemWatcherWrapper();
+            => new FileSystemWatcherWrapper(FileSystem);
 
         /// <inheritdoc />
         public IFileSystemWatcher New(string path)
-            => new FileSystemWatcherWrapper(path);
+            => new FileSystemWatcherWrapper(FileSystem, path);
 
         /// <inheritdoc />
         public IFileSystemWatcher New(string path, string filter)
-            => new FileSystemWatcherWrapper(path, filter);
+            => new FileSystemWatcherWrapper(FileSystem, path, filter);
 
         /// <inheritdoc />
         public IFileSystemWatcher Wrap(FileSystemWatcher fileSystemWatcher)
-            => new FileSystemWatcherWrapper(fileSystemWatcher);
+            => new FileSystemWatcherWrapper(FileSystem, fileSystemWatcher);
     }
 }

@@ -15,6 +15,10 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
+        public IFileSystem FileSystem
+            => mockFileSystem;
+
+        /// <inheritdoc />
         public IDriveInfo[] GetDrives()
         {
             var driveLetters = new HashSet<string>(new DriveEqualityComparer(mockFileSystem));

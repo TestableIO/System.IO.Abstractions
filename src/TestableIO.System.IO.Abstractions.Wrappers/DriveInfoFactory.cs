@@ -11,6 +11,10 @@
         }
 
         /// <inheritdoc />
+        public IFileSystem FileSystem
+            => fileSystem;
+
+        /// <inheritdoc />
         public IDriveInfo[] GetDrives()
         {
             var driveInfos = DriveInfo.GetDrives();

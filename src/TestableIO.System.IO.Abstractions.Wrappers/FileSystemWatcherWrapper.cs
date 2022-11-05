@@ -10,29 +10,30 @@ namespace System.IO.Abstractions
         private readonly FileSystemWatcher watcher;
 
         /// <inheritdoc />
-        public FileSystemWatcherWrapper()
-            : this(new FileSystemWatcher())
+        public FileSystemWatcherWrapper(IFileSystem fileSystem)
+            : this(fileSystem, new FileSystemWatcher())
         {
             // do nothing
         }
 
         /// <inheritdoc />
-        public FileSystemWatcherWrapper(string path)
-            : this(new FileSystemWatcher(path))
+        public FileSystemWatcherWrapper(IFileSystem fileSystem, string path)
+            : this(fileSystem, new FileSystemWatcher(path))
         {
             // do nothing
         }
 
         /// <inheritdoc />
-        public FileSystemWatcherWrapper(string path, string filter)
-            : this(new FileSystemWatcher(path, filter))
+        public FileSystemWatcherWrapper(IFileSystem fileSystem, string path, string filter)
+            : this(fileSystem, new FileSystemWatcher(path, filter))
         {
             // do nothing
         }
 
         /// <inheritdoc />
-        public FileSystemWatcherWrapper(FileSystemWatcher watcher)
+        public FileSystemWatcherWrapper(IFileSystem fileSystem, FileSystemWatcher watcher)
         {
+            FileSystem = fileSystem;
             this.watcher = watcher ?? throw new ArgumentNullException(nameof(watcher));
             this.watcher.Created += OnCreated;
             this.watcher.Changed += OnChanged;
@@ -40,6 +41,9 @@ namespace System.IO.Abstractions
             this.watcher.Error += OnError;
             this.watcher.Renamed += OnRenamed;
         }
+
+        /// <inheritdoc />
+        public override IFileSystem FileSystem { get; }
 
         /// <inheritdoc />
         public override bool IncludeSubdirectories

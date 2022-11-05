@@ -9,13 +9,8 @@ namespace System.IO.Abstractions
     /// <summary>
     /// Abstractions for <see cref="File" />.
     /// </summary>
-    public partial interface IFile
+    public partial interface IFile : IFileSystemExtensionPoint
     {
-        /// <summary>
-        /// Exposes the underlying filesystem implementation. This is useful for implementing extension methods.
-        /// </summary>
-        IFileSystem FileSystem { get; }
-
         /// <inheritdoc cref="File.AppendAllLines(string, IEnumerable{string})" />
         void AppendAllLines(string path, IEnumerable<string> contents);
 

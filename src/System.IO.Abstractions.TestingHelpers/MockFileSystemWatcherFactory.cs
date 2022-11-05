@@ -4,6 +4,16 @@
     [Serializable]
     public class MockFileSystemWatcherFactory : IFileSystemWatcherFactory
     {
+
+        ///
+        public MockFileSystemWatcherFactory(MockFileSystem mockFileSystem)
+        {
+            FileSystem = mockFileSystem;
+        }
+
+        /// <inheritdoc />
+        public IFileSystem FileSystem { get; }
+
         /// <inheritdoc />
         [Obsolete("Use `IFileSystemWatcherFactory.New()` instead")]
         public IFileSystemWatcher CreateNew()
