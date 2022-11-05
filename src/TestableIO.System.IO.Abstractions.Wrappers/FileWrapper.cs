@@ -203,6 +203,14 @@ namespace System.IO.Abstractions
             return new FileStreamWrapper(File.Open(path, mode, access, share));
         }
 
+#if FEATURE_FILESTREAM_OPTIONS
+        /// <inheritdoc />
+        public override FileSystemStream Open(string path, FileStreamOptions options)
+        {
+            return new FileStreamWrapper(File.Open(path, options));
+        }
+#endif
+
         /// <inheritdoc />
         public override FileSystemStream OpenRead(string path)
         {

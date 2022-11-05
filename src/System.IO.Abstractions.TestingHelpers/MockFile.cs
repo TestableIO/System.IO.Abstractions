@@ -508,6 +508,14 @@ namespace System.IO.Abstractions.TestingHelpers
         public override FileSystemStream Open(string path, FileMode mode, FileAccess access, FileShare share) =>
                     OpenInternal(path, mode, access, FileOptions.None);
 
+#if FEATURE_FILESTREAM_OPTIONS
+        /// <inheritdoc />
+        public override FileSystemStream Open(string path, FileStreamOptions options)
+        {
+            return OpenInternal(path, options.Mode, options.Access, options.Options);
+        }
+#endif
+
         private FileSystemStream OpenInternal(
             string path,
             FileMode mode,

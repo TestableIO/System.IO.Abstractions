@@ -309,6 +309,14 @@ namespace System.IO.Abstractions.TestingHelpers
             return mockFile.Open(FullName, mode, access, share);
         }
 
+#if FEATURE_FILESTREAM_OPTIONS
+        /// <inheritdoc />
+        public override FileSystemStream Open(FileStreamOptions options)
+        {
+            return mockFile.Open(FullName, options.Mode, options.Access, options.Share);
+        }
+#endif
+
         /// <inheritdoc />
         public override FileSystemStream OpenRead() => mockFile.OpenRead(path);
 

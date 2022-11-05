@@ -221,6 +221,14 @@ namespace System.IO.Abstractions
             return new FileStreamWrapper(instance.Open(mode, access, share));
         }
 
+#if FEATURE_FILESTREAM_OPTIONS
+        /// <inheritdoc />
+        public override FileSystemStream Open(FileStreamOptions options)
+        {
+            return new FileStreamWrapper(instance.Open(options));
+        }
+#endif
+
         /// <inheritdoc />
         public override FileSystemStream OpenRead()
         {

@@ -58,6 +58,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFileInfo.Open(FileMode,FileAccess,FileShare)"/>
         public abstract FileSystemStream Open(FileMode mode, FileAccess access, FileShare share);
 
+#if FEATURE_FILESTREAM_OPTIONS
+        /// <inheritdoc cref="IFileInfo.Open(FileStreamOptions)"/>
+        public abstract FileSystemStream Open(FileStreamOptions options);
+#endif
+
         /// <inheritdoc cref="IFileInfo.OpenRead"/>
         public abstract FileSystemStream OpenRead();
 

@@ -281,6 +281,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.Open(string,FileMode,FileAccess,FileShare)"/>
         public abstract FileSystemStream Open(string path, FileMode mode, FileAccess access, FileShare share);
 
+#if FEATURE_FILESTREAM_OPTIONS
+        /// <inheritdoc cref="IFile.Open(string,FileStreamOptions)"/>
+        public abstract FileSystemStream Open(string path, FileStreamOptions options);
+#endif
+
         /// <inheritdoc cref="IFile.OpenRead"/>
         public abstract FileSystemStream OpenRead(string path);
 
