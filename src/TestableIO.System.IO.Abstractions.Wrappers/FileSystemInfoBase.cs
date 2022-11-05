@@ -49,6 +49,9 @@
         /// <inheritdoc cref="FileSystemInfo.Extension"/>
         public abstract string Extension { get; }
 
+        /// <inheritdoc cref="IFileSystemInfo.Extensibility"/>
+        public abstract IFileSystemExtensibility Extensibility { get; }
+
         /// <inheritdoc cref="FileSystemInfo.FullName"/>
         public abstract string FullName { get; }
 

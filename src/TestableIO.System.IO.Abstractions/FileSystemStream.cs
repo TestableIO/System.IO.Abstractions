@@ -83,10 +83,10 @@ namespace System.IO.Abstractions
             IsAsync = isAsync;
         }
 
-        // <summary>
-        //     A container to support extensions on <see cref="FileSystemStream" />.
-        // </summary>
-        //TODO!public abstract IFileSystemExtensionContainer ExtensionContainer { get; }
+        /// <summary>
+        ///     A container to support extensions on<see cref= "FileSystemStream" />.
+        /// </summary>
+        public abstract IFileSystemExtensibility Extensibility { get; }
 
         /// <inheritdoc cref="Stream.BeginRead(byte[], int, int, AsyncCallback?, object?)" />
         public override IAsyncResult BeginRead(byte[] buffer,

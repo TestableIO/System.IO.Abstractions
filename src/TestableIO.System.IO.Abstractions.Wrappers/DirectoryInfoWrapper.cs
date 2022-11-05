@@ -15,6 +15,7 @@ namespace System.IO.Abstractions
         public DirectoryInfoWrapper(IFileSystem fileSystem, DirectoryInfo instance) : base(fileSystem)
         {
             this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
+            this.Extensibility = new FileSystemExtensibility(instance);
         }
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -77,6 +78,9 @@ namespace System.IO.Abstractions
         {
             get { return instance.Extension; }
         }
+
+        /// <inheritdoc />
+        public override IFileSystemExtensibility Extensibility { get; }
 
         /// <inheritdoc />
         public override string FullName
