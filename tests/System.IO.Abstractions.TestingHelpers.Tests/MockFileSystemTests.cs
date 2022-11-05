@@ -446,7 +446,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 => new TestFileSystemWatcher(path, filter);
 
             public IFileSystemWatcher Wrap(FileSystemWatcher fileSystemWatcher)
-                => throw new NotImplementedException(StringResources.Manager.GetString("FILE_SYSTEM_WATCHER_NOT_IMPLEMENTED_EXCEPTION"));
+                => new TestFileSystemWatcher(fileSystemWatcher.Path, fileSystemWatcher.Filter);
 
             public IFileSystemWatcher FromPath(string path) => new TestFileSystemWatcher(path);
             public IFileSystem FileSystem => null!;

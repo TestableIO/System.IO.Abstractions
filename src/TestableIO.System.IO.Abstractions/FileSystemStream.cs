@@ -66,7 +66,7 @@ namespace System.IO.Abstractions
         ///     The <see cref="FileStream.IsAsync" /> flag, indicating if the <see cref="FileStream" /> was
         ///     opened asynchronously or synchronously.
         /// </param>
-        protected FileSystemStream(Stream stream, string? path, bool isAsync = false)
+        protected FileSystemStream(Stream stream, string? path, bool isAsync)
         {
             if (path is null)
             {

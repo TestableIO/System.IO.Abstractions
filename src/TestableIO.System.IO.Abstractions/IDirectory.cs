@@ -37,9 +37,7 @@ namespace System.IO.Abstractions
         IEnumerable<string> EnumerateDirectories(string path, string searchPattern);
 
         /// <inheritdoc cref="Directory.EnumerateDirectories(string, string, SearchOption)" />
-        IEnumerable<string> EnumerateDirectories(string path,
-            string searchPattern,
-            SearchOption searchOption);
+        IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption);
 
 #if FEATURE_ENUMERATION_OPTIONS
         /// <inheritdoc cref="Directory.EnumerateDirectories(string, string, EnumerationOptions)" />
@@ -53,9 +51,7 @@ namespace System.IO.Abstractions
         IEnumerable<string> EnumerateFiles(string path, string searchPattern);
 
         /// <inheritdoc cref="Directory.EnumerateFiles(string, string, SearchOption)" />
-        IEnumerable<string> EnumerateFiles(string path,
-            string searchPattern,
-            SearchOption searchOption);
+        IEnumerable<string> EnumerateFiles(string path, string searchPattern, SearchOption searchOption);
 
 #if FEATURE_ENUMERATION_OPTIONS
         /// <inheritdoc cref="Directory.EnumerateFiles(string, string, EnumerationOptions)"/>
@@ -69,9 +65,7 @@ namespace System.IO.Abstractions
         IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern);
 
         /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string, string, SearchOption)" />
-        IEnumerable<string> EnumerateFileSystemEntries(string path,
-            string searchPattern,
-            SearchOption searchOption);
+        IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
 
 #if FEATURE_ENUMERATION_OPTIONS
         /// <inheritdoc cref="Directory.EnumerateFileSystemEntries(string,string,EnumerationOptions)"/>
@@ -94,7 +88,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Directory.GetAccessControl(string,AccessControlSections)"/>
 #endif
         DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections);
-        
+
         /// <inheritdoc cref="Directory.GetCreationTime(string)" />
         DateTime GetCreationTime(string path);
 
@@ -111,15 +105,11 @@ namespace System.IO.Abstractions
         string[] GetDirectories(string path, string searchPattern);
 
         /// <inheritdoc cref="Directory.GetDirectories(string, string, SearchOption)" />
-        string[] GetDirectories(string path,
-            string searchPattern,
-            SearchOption searchOption);
+        string[] GetDirectories(string path, string searchPattern, SearchOption searchOption);
 
 #if FEATURE_ENUMERATION_OPTIONS
         /// <inheritdoc cref="Directory.GetDirectories(string, string, EnumerationOptions)" />
-        string[] GetDirectories(string path,
-            string searchPattern,
-            EnumerationOptions enumerationOptions);
+        string[] GetDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions);
 #endif
 
         /// <inheritdoc cref="Directory.GetDirectoryRoot(string)" />
@@ -132,15 +122,11 @@ namespace System.IO.Abstractions
         string[] GetFiles(string path, string searchPattern);
 
         /// <inheritdoc cref="Directory.GetFiles(string, string, SearchOption)" />
-        string[] GetFiles(string path,
-            string searchPattern,
-            SearchOption searchOption);
+        string[] GetFiles(string path, string searchPattern, SearchOption searchOption);
 
 #if FEATURE_ENUMERATION_OPTIONS
         /// <inheritdoc cref="Directory.GetFiles(string, string, EnumerationOptions)" />
-        string[] GetFiles(string path,
-            string searchPattern,
-            EnumerationOptions enumerationOptions);
+        string[] GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions);
 #endif
 
         /// <inheritdoc cref="Directory.GetFileSystemEntries(string)" />
@@ -150,15 +136,11 @@ namespace System.IO.Abstractions
         string[] GetFileSystemEntries(string path, string searchPattern);
 
         /// <inheritdoc cref="Directory.GetFileSystemEntries(string, string, SearchOption)" />
-        string[] GetFileSystemEntries(string path,
-            string searchPattern,
-            SearchOption searchOption);
+        string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
 
 #if FEATURE_ENUMERATION_OPTIONS
         /// <inheritdoc cref="Directory.GetFileSystemEntries(string, string, EnumerationOptions)" />
-        string[] GetFileSystemEntries(string path,
-            string searchPattern,
-            EnumerationOptions enumerationOptions);
+        string[] GetFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions);
 #endif
 
         /// <inheritdoc cref="Directory.GetLastAccessTime(string)" />

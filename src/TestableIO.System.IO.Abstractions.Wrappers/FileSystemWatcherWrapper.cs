@@ -154,7 +154,7 @@ namespace System.IO.Abstractions
         }
 
         private readonly struct WaitForChangedResultWrapper
-            : IWaitForChangedResult
+            : IWaitForChangedResult, IEquatable<WaitForChangedResultWrapper>
         {
             private readonly WaitForChangedResult _instance;
 
@@ -178,6 +178,25 @@ namespace System.IO.Abstractions
             /// <inheritdoc cref="IWaitForChangedResult.TimedOut" />
             public bool TimedOut
                 => _instance.TimedOut;
+
+            /// <inheritdoc cref="IEquatable{WaitForChangedResultWrapper}.Equals(WaitForChangedResultWrapper)" />
+            public bool Equals(WaitForChangedResultWrapper other)
+            {
+                return _instance.Equals(other._instance);
+            }
+
+            /// <inheritdoc cref="object.Equals(object)" />
+            public override bool Equals(object obj)
+            {
+                return obj is WaitForChangedResultWrapper other
+                       && Equals(other);
+            }
+
+            /// <inheritdoc cref="object.GetHashCode()" />
+            public override int GetHashCode()
+            {
+                return _instance.GetHashCode();
+            }
         }
     }
 }
