@@ -794,18 +794,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileInfo_Exists_ShouldReturnCachedData()
+        public void MockFileInfo_Exists_LazyLoadsData()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
             var path1 = XFS.Path(@"c:\temp\file1.txt");
             var fileInfo = fileSystem.FileInfo.FromFileName(path1);
+            var cachedFileInfo = fileSystem.FileInfo.FromFileName(path1);
+            _ = cachedFileInfo.Exists;  // this forces a lazyload of the data.
 
             // Act
             fileSystem.AddFile(path1, new MockFileData("1"));
 
             // Assert
-            Assert.IsFalse(fileInfo.Exists);
+            Assert.IsTrue(fileInfo.Exists);
+            Assert.IsFalse(cachedFileInfo.Exists, "Cached MockFileInfo should still return the cached value");
         }
 
         [Test]
@@ -815,6 +818,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
             var path1 = XFS.Path(@"c:\temp\file1.txt");
             var fileInfo = fileSystem.FileInfo.FromFileName(path1);
+            fileInfo.Refresh(); // circumvent the lazy loading in Exists on first access by forcing a load
 
             // Act
             fileSystem.AddFile(path1, new MockFileData("1"));
@@ -827,9 +831,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFileInfo_Create_ShouldUpdateCachedDataAndReturnTrueForExists()
         {
+            // Arrange
             IFileSystem fileSystem = new MockFileSystem();
             var path = XFS.Path(@"c:\temp\file1.txt");
             IFileInfo fileInfo = fileSystem.FileInfo.FromFileName(path);
+            fileInfo.Refresh(); // circumvent the lazy loading in Exists on first access by forcing a load
 
             // Act
             fileInfo.Create().Dispose();
@@ -842,9 +848,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFileInfo_CreateText_ShouldUpdateCachedDataAndReturnTrueForExists()
         {
+            // Arrange
             IFileSystem fileSystem = new MockFileSystem();
             var path = XFS.Path(@"c:\temp\file1.txt");
             IFileInfo fileInfo = fileSystem.FileInfo.FromFileName(path);
+            fileInfo.Refresh(); // circumvent the lazy loading in Exists on first access by forcing a load
 
             // Act
             fileInfo.CreateText().Dispose();
@@ -856,9 +864,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockFileInfo_Delete_ShouldUpdateCachedDataAndReturnFalseForExists()
         {
+            // Arrange
             var fileSystem = new MockFileSystem();
             var path = XFS.Path(@"c:\temp\file1.txt");
             IFileInfo fileInfo = fileSystem.FileInfo.FromFileName(path);
+            fileInfo.Refresh(); // circumvent the lazy loading in Exists on first access by forcing a load
 
             // Act
             fileInfo.Delete();

@@ -12,7 +12,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private readonly string originalPath;
         private MockFileData cachedMockFileData;
         private MockFile mockFile;
-        private bool refreshOnNextRead;
+        private bool refreshOnNextRead = true;
 
         /// <inheritdoc />
         public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path) : base(mockFileSystem?.FileSystem)
@@ -21,7 +21,6 @@ namespace System.IO.Abstractions.TestingHelpers
             this.originalPath = path ?? throw new ArgumentNullException(nameof(path));
             this.path = mockFileSystem.Path.GetFullPath(path);
             this.mockFile = new MockFile(mockFileSystem);
-            Refresh();
         }
 
         /// <inheritdoc />
