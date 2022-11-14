@@ -83,7 +83,7 @@ namespace System.IO.Abstractions
                 return null;
             }
 
-            return new FileSystemWatcherWrapper(null, watcher);
+            return new FileSystemWatcherWrapper(new FileSystem(), watcher);
         }
 
         /// <inheritdoc />
