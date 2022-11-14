@@ -728,38 +728,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget)
         {
-            var initialContainer = mockFileDataAccessor.GetFile(linkPath);
-            if (initialContainer.LinkTarget != null)
-            {
-                var nextLocation = initialContainer.LinkTarget;
-                var nextContainer = mockFileDataAccessor.GetFile(nextLocation);
-
-                if (returnFinalTarget)
-                {
-                    // The maximum number of symbolic links that are followed:
-                    // https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.resolvelinktarget?view=net-6.0#remarks
-                    int maxResolveLinks = XFS.IsWindowsPlatform() ? 63 : 40;
-                    for (int i = 1; i < maxResolveLinks; i++)
-                    {
-                        if (nextContainer.LinkTarget == null)
-                        {
-                            break;
-                        }
-                        nextLocation = nextContainer.LinkTarget;
-                        nextContainer = mockFileDataAccessor.GetFile(nextLocation);
-                    }
-                }
-
-                if (nextContainer.IsDirectory)
-                {
-                    return new MockDirectoryInfo(mockFileDataAccessor, nextLocation);
-                }
-                else
-                {
-                    return new MockFileInfo(mockFileDataAccessor, nextLocation);
-                }
-            }
-            throw new IOException($"The name of the file cannot be resolved by the system. : '{linkPath}'");
+            throw new NotImplementedException();
         }
 #endif
 

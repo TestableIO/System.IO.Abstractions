@@ -21,7 +21,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc />
         public override void CreateAsSymbolicLink(string pathToTarget)
         {
-            instance.CreateAsSymbolicLink(pathToTarget);
+            throw new NotImplementedException();
         }
 #endif
 
@@ -41,7 +41,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc />
         public override IFileSystemInfo ResolveLinkTarget(bool returnFinalTarget)
         {
-            return instance.ResolveLinkTarget(returnFinalTarget).WrapFileSystemInfo(FileSystem);
+            throw new NotImplementedException();
         }
 #endif
 

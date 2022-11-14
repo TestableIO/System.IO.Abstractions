@@ -287,7 +287,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc />
         public override IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget)
         {
-            return File.ResolveLinkTarget(linkPath, returnFinalTarget).WrapFileSystemInfo(FileSystem);
+            throw new NotImplementedException();
         }
 #endif
 

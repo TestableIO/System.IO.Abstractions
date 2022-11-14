@@ -166,7 +166,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc />
         public override string[] GetFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
-            return Directory.GetFileSystemEntries(path, searchPattern, enumerationOptions);
+            throw new NotImplementedException();
         }
 #endif
 
@@ -223,7 +223,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc />
         public override IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget)
         {
-            return Directory.ResolveLinkTarget(linkPath, returnFinalTarget).WrapFileSystemInfo(FileSystem);
+            throw new NotSupportedException("TODO: Missing object implementing `IFileSystemInfo`");
         }
 #endif
 
