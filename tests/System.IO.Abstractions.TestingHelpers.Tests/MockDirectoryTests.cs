@@ -943,7 +943,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            fileSystem.DirectoryInfo.FromDirectoryName(XFS.Path(@"c:\bar")).Delete(true);
+            fileSystem.DirectoryInfo.New(XFS.Path(@"c:\bar")).Delete(true);
 
             // Assert
             Assert.IsFalse(fileSystem.Directory.Exists(XFS.Path(@"c:\bar")));
@@ -1456,7 +1456,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            fileSystem.DirectoryInfo.FromDirectoryName(sourceDirName).MoveTo(destDirName);
+            fileSystem.DirectoryInfo.New(sourceDirName).MoveTo(destDirName);
 
             // Assert
             Assert.IsFalse(fileSystem.Directory.Exists(sourceDirName));
@@ -1498,14 +1498,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { XFS.Path(sourceDirName + filePathTwo) , new MockFileData("bbb") },
             });
 
-            var sourceDirectoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(sourceDirName);
+            var sourceDirectoryInfo = fileSystem.DirectoryInfo.New(sourceDirName);
             sourceDirectoryInfo.Attributes |= FileAttributes.System;
 
             // Act
-            fileSystem.DirectoryInfo.FromDirectoryName(sourceDirName).MoveTo(destDirName);
+            fileSystem.DirectoryInfo.New(sourceDirName).MoveTo(destDirName);
 
             // Assert
-            var destDirectoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(destDirName);
+            var destDirectoryInfo = fileSystem.DirectoryInfo.New(destDirName);
             Assert.IsTrue(destDirectoryInfo.Attributes.HasFlag(FileAttributes.System));
         }
 
@@ -1522,13 +1522,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(sourceSubDirName);
 
-            var subDirectoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(sourceSubDirName);
+            var subDirectoryInfo = fileSystem.DirectoryInfo.New(sourceSubDirName);
             subDirectoryInfo.Attributes |= FileAttributes.ReadOnly;
 
-            var sourceDirectoryInfo = fileSystem.DirectoryInfo.FromDirectoryName(sourceDirName);
+            var sourceDirectoryInfo = fileSystem.DirectoryInfo.New(sourceDirName);
 
             // Act
-            fileSystem.DirectoryInfo.FromDirectoryName(sourceDirName).MoveTo(destDirName);
+            fileSystem.DirectoryInfo.New(sourceDirName).MoveTo(destDirName);
 
             // Assert
             Assert.IsFalse(fileSystem.Directory.Exists(sourceSubDirName));

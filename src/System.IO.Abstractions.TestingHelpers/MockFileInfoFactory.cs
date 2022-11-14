@@ -13,9 +13,26 @@
         }
 
         /// <inheritdoc />
+        public IFileSystem FileSystem
+            => mockFileSystem;
+
+        /// <inheritdoc />
+        [Obsolete("Use `IFileInfoFactory.New(string)` instead")]
         public IFileInfo FromFileName(string fileName)
         {
+            return New(fileName);
+        }
+
+        /// <inheritdoc />
+        public IFileInfo New(string fileName)
+        {
             return new MockFileInfo(mockFileSystem, fileName);
+        }
+
+        /// <inheritdoc />
+        public IFileInfo Wrap(FileInfo fileInfo)
+        {
+            return new MockFileInfo(mockFileSystem, fileInfo.Name);
         }
     }
 }

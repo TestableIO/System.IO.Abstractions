@@ -156,7 +156,7 @@
             var fileSystem = new MockFileSystem();
             var path = XFS.Path("C:\\test");
             fileSystem.AddFile(path, new MockFileData(new byte[0]));
-            var stream = fileSystem.FileInfo.FromFileName(path).OpenWrite();
+            var stream = fileSystem.FileInfo.New(path).OpenWrite();
 
             // Act
             stream.Dispose();
@@ -173,7 +173,7 @@
             var path = XFS.Path("C:\\test");
             fileSystem.AddFile(path, new MockFileData(new byte[0]));
 
-            using (var stream = fileSystem.FileInfo.FromFileName(path).OpenWrite())
+            using (var stream = fileSystem.FileInfo.New(path).OpenWrite())
             {
                 // Act
                 stream.Write(new byte[400], 0, 400);

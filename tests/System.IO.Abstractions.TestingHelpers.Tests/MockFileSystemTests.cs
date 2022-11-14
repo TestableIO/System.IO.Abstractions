@@ -366,7 +366,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var fs = new MockFileSystem(null, XFS.Path(currentDirectory));
 
-            var actualCurrentDirectory = fs.DirectoryInfo.FromDirectoryName(".");
+            var actualCurrentDirectory = fs.DirectoryInfo.New(".");
 
             Assert.IsTrue(actualCurrentDirectory.Exists);
         }
@@ -397,7 +397,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             var path = XFS.Path(@"C:\root");
             var fileSystem = new TestFileSystem(new TestFileSystemWatcherFactory());
-            var watcher = fileSystem.FileSystemWatcher.CreateNew(path);
+            var watcher = fileSystem.FileSystemWatcher.New(path);
             Assert.AreEqual(path, watcher.Path);
         }
 
@@ -433,10 +433,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         private class TestFileSystemWatcherFactory : IFileSystemWatcherFactory
         {
-            public IFileSystemWatcher CreateNew() => new TestFileSystemWatcher(null);
-            public IFileSystemWatcher CreateNew(string path) => new TestFileSystemWatcher(path);
-            public IFileSystemWatcher CreateNew(string path, string filter) => new TestFileSystemWatcher(path, filter);
+            public IFileSystemWatcher CreateNew() => New();
+            public IFileSystemWatcher CreateNew(string path) => New(path);
+            public IFileSystemWatcher CreateNew(string path, string filter) => New(path, filter);
+            public IFileSystemWatcher New()
+                => new TestFileSystemWatcher(null);
+
+            public IFileSystemWatcher New(string path)
+                => new TestFileSystemWatcher(path);
+
+            public IFileSystemWatcher New(string path, string filter)
+                => new TestFileSystemWatcher(path, filter);
+
+            public IFileSystemWatcher Wrap(FileSystemWatcher fileSystemWatcher)
+                => new TestFileSystemWatcher(fileSystemWatcher.Path, fileSystemWatcher.Filter);
+
             public IFileSystemWatcher FromPath(string path) => new TestFileSystemWatcher(path);
+            public IFileSystem FileSystem => null!;
         }
 
         private class TestFileSystemWatcher : FileSystemWatcherBase
@@ -450,7 +463,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
             public override string Path { get; set; }
+            public override IFileSystem FileSystem { get; }
             public override bool IncludeSubdirectories { get; set; }
+            public override IContainer Container { get; }
             public override bool EnableRaisingEvents { get; set; }
             public override string Filter { get; set; }
             public override int InternalBufferSize { get; set; }
@@ -462,8 +477,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 #endif
             public override void BeginInit() { }
             public override void EndInit() { }
-            public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType) => default(WaitForChangedResult);
-            public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout) => default(WaitForChangedResult);
+            public override IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
+            {
+                _ = changeType;
+                return default(IWaitForChangedResult);
+            }
+
+            public override IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
+            {
+                _ = changeType;
+                _ = timeout;
+                return default(IWaitForChangedResult);
+            }
         }
     }
 }

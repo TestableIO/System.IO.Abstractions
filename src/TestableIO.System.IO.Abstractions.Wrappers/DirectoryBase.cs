@@ -98,6 +98,12 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IDirectory.GetFileSystemEntries(string,string,SearchOption)"/>
         public abstract string[] GetFileSystemEntries(string path, string searchPattern, SearchOption searchOption);
 
+#if FEATURE_ENUMERATION_OPTIONS
+        /// <inheritdoc cref="IDirectory.GetFileSystemEntries(string,string,EnumerationOptions)"/>
+        public abstract string[] GetFileSystemEntries(string path, string searchPattern,
+            EnumerationOptions enumerationOptions);
+#endif
+
         /// <inheritdoc cref="IDirectory.GetLastAccessTime"/>
         public abstract DateTime GetLastAccessTime(string path);
 
@@ -118,6 +124,11 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="IDirectory.Move"/>
         public abstract void Move(string sourceDirName, string destDirName);
+
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc cref="IDirectory.ResolveLinkTarget(string, bool)"/>
+        public abstract IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget);
+#endif
 
         /// <inheritdoc cref="IDirectory.SetAccessControl"/>
         public abstract void SetAccessControl(string path, DirectorySecurity directorySecurity);

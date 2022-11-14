@@ -10,10 +10,11 @@
             this.fileSystem = fileSystem;
         }
 
-        /// <summary>
-        /// Retrieves the drive names of all logical drives on a computer.
-        /// </summary>
-        /// <returns>An array of type <see cref="DriveInfoBase"/> that represents the logical drives on a computer.</returns>
+        /// <inheritdoc />
+        public IFileSystem FileSystem
+            => fileSystem;
+
+        /// <inheritdoc />
         public IDriveInfo[] GetDrives()
         {
             var driveInfos = DriveInfo.GetDrives();
@@ -27,14 +28,27 @@
             return driveInfoWrappers;
         }
 
+        /// <inheritdoc />
+        public IDriveInfo New(string driveName)
+        {
+            var realDriveInfo = new DriveInfo(driveName);
+            return new DriveInfoWrapper(fileSystem, realDriveInfo);
+        }
+
+        /// <inheritdoc />
+        public IDriveInfo Wrap(DriveInfo driveInfo)
+        {
+            return new DriveInfoWrapper(fileSystem, driveInfo);
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DriveInfoBase"/> class, which acts as a wrapper for a logical drive.
         /// </summary>
         /// <param name="driveName">A valid drive path or drive letter.</param>
+        [Obsolete("Use `IDriveInfoFactory.New(string)` instead")]
         public IDriveInfo FromDriveName(string driveName)
         {
-            var realDriveInfo = new DriveInfo(driveName);
-            return new DriveInfoWrapper(fileSystem, realDriveInfo);
+            return New(driveName);
         }
     }
 }

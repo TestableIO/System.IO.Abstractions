@@ -71,28 +71,28 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDriveInfoFactory_FromDriveName_WithDriveShouldReturnDrive()
+        public void MockDriveInfoFactory_New_WithDriveShouldReturnDrive()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
             var factory = new MockDriveInfoFactory(fileSystem);
 
             // Act
-            var actualResult = factory.FromDriveName(@"Z:\");
+            var actualResult = factory.New(@"Z:\");
 
             // Assert
             Assert.That(actualResult.Name, Is.EquivalentTo(@"Z:\"));
         }
 
         [Test]
-        public void MockDriveInfoFactory_FromDriveName_WithPathShouldReturnDrive()
+        public void MockDriveInfoFactory_New_WithPathShouldReturnDrive()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
             var factory = new MockDriveInfoFactory(fileSystem);
 
             // Act
-            var actualResult = factory.FromDriveName(@"Z:\foo\bar\");
+            var actualResult = factory.New(@"Z:\foo\bar\");
 
             // Assert
             Assert.That(actualResult.Name, Is.EquivalentTo(@"Z:\"));

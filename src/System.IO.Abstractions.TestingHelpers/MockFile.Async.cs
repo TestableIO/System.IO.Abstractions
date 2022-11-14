@@ -86,18 +86,6 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
-        public override Task WriteAllLinesAsync(string path, string[] contents, CancellationToken cancellationToken) =>
-     WriteAllLinesAsync(path, contents, MockFileData.DefaultEncoding, cancellationToken);
-
-        /// <inheritdoc />
-        public override Task WriteAllLinesAsync(string path, string[] contents, Encoding encoding, CancellationToken cancellationToken)
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            WriteAllLines(path, contents, encoding);
-            return Task.CompletedTask;
-        }
-
-        /// <inheritdoc />
         public override Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken) =>
 WriteAllTextAsync(path, contents, MockFileData.DefaultEncoding, cancellationToken);
 

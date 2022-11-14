@@ -7,6 +7,8 @@ using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
+    using XFS = MockUnixSupport;
+
     /// <inheritdoc />
     [Serializable]
     public partial class MockFile : FileBase
@@ -130,18 +132,18 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
-        public override Stream Create(string path) =>
+        public override FileSystemStream Create(string path) =>
            Create(path, 4096);
 
         /// <inheritdoc />
-        public override Stream Create(string path, int bufferSize) =>
+        public override FileSystemStream Create(string path, int bufferSize) =>
            Create(path, bufferSize, FileOptions.None);
 
         /// <inheritdoc />
-        public override Stream Create(string path, int bufferSize, FileOptions options) =>
+        public override FileSystemStream Create(string path, int bufferSize, FileOptions options) =>
            CreateInternal(path, FileAccess.ReadWrite, options);
 
-        private Stream CreateInternal(string path, FileAccess access, FileOptions options)
+        private FileSystemStream CreateInternal(string path, FileAccess access, FileOptions options)
         {
             if (path == null)
             {
@@ -317,7 +319,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
             else
             {
-                var directoryInfo = mockFileDataAccessor.DirectoryInfo.FromDirectoryName(path);
+                var directoryInfo = mockFileDataAccessor.DirectoryInfo.New(path);
                 if (directoryInfo.Exists)
                 {
                     result = directoryInfo.Attributes;
@@ -489,7 +491,7 @@ namespace System.IO.Abstractions.TestingHelpers
 #endif
 
         /// <inheritdoc />
-        public override Stream Open(string path, FileMode mode)
+        public override FileSystemStream Open(string path, FileMode mode)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
@@ -497,7 +499,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
-        public override Stream Open(string path, FileMode mode, FileAccess access)
+        public override FileSystemStream Open(string path, FileMode mode, FileAccess access)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
@@ -505,10 +507,18 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
-        public override Stream Open(string path, FileMode mode, FileAccess access, FileShare share) =>
+        public override FileSystemStream Open(string path, FileMode mode, FileAccess access, FileShare share) =>
                     OpenInternal(path, mode, access, FileOptions.None);
 
-        private Stream OpenInternal(
+#if FEATURE_FILESTREAM_OPTIONS
+        /// <inheritdoc />
+        public override FileSystemStream Open(string path, FileStreamOptions options)
+        {
+            return OpenInternal(path, options.Mode, options.Access, options.Options);
+        }
+#endif
+
+        private FileSystemStream OpenInternal(
             string path,
             FileMode mode,
             FileAccess access,
@@ -552,7 +562,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
-        public override Stream OpenRead(string path)
+        public override FileSystemStream OpenRead(string path)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
@@ -568,9 +578,9 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
-        public override Stream OpenWrite(string path) => OpenWriteInternal(path, FileOptions.None);
+        public override FileSystemStream OpenWrite(string path) => OpenWriteInternal(path, FileOptions.None);
 
-        private Stream OpenWriteInternal(string path, FileOptions options)
+        private FileSystemStream OpenWriteInternal(string path, FileOptions options)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
             return OpenInternal(path, FileMode.OpenOrCreate, FileAccess.Write, options);
@@ -714,6 +724,14 @@ namespace System.IO.Abstractions.TestingHelpers
             Move(sourceFileName, destinationFileName);
         }
 
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget)
+        {
+            throw new NotImplementedException();
+        }
+#endif
+
         /// <inheritdoc />
         [SupportedOSPlatform("windows")]
         public override void SetAccessControl(string path, FileSecurity fileSecurity)
@@ -738,7 +756,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var possibleFileData = mockFileDataAccessor.GetFile(path);
             if (possibleFileData == null)
             {
-                var directoryInfo = mockFileDataAccessor.DirectoryInfo.FromDirectoryName(path);
+                var directoryInfo = mockFileDataAccessor.DirectoryInfo.New(path);
                 if (directoryInfo.Exists)
                 {
                     directoryInfo.Attributes = fileAttributes;

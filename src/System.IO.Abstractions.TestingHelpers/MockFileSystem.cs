@@ -48,7 +48,7 @@ namespace System.IO.Abstractions.TestingHelpers
             FileStream = new MockFileStreamFactory(this);
             DirectoryInfo = new MockDirectoryInfoFactory(this);
             DriveInfo = new MockDriveInfoFactory(this);
-            FileSystemWatcher = new MockFileSystemWatcherFactory();
+            FileSystemWatcher = new MockFileSystemWatcherFactory(this);
 
             if (files != null)
             {

@@ -82,18 +82,6 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-        public override Task WriteAllLinesAsync(string path, string[] contents, CancellationToken cancellationToken)
-        {
-            return File.WriteAllLinesAsync(path, contents, cancellationToken);
-        }
-
-        /// <inheritdoc />
-        public override Task WriteAllLinesAsync(string path, string[] contents, Encoding encoding, CancellationToken cancellationToken)
-        {
-            return File.WriteAllLinesAsync(path, contents, encoding, cancellationToken);
-        }
-
-        /// <inheritdoc />
         public override Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken)
         {
             return File.WriteAllTextAsync(path, contents, cancellationToken);

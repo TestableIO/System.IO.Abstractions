@@ -66,11 +66,13 @@ namespace System.IO.Abstractions.Tests
                 .Select(x => x.ToString())
                 .OrderBy(x => x, StringComparer.Ordinal);
             var referenceMembers = GetMembers(referenceType)
-                .Select(x => x.Replace("System.IO.FileStream", "System.IO.Stream"))
+                .Select(x => x.Replace("System.IO.FileStream", "System.IO.Abstractions.FileSystemStream"))
+                .Select(x => x.Replace("System.IO.Abstractions.FileSystemStreamOptions", "System.IO.FileStreamOptions"))
                 .Select(x => x.Replace("System.IO.FileSystemInfo", "System.IO.Abstractions.IFileSystemInfo"))
                 .Select(x => x.Replace("System.IO.FileInfo", "System.IO.Abstractions.IFileInfo"))
                 .Select(x => x.Replace("System.IO.DirectoryInfo", "System.IO.Abstractions.IDirectoryInfo"))
-                .Select(x => x.Replace("System.IO.DriveInfo", "System.IO.Abstractions.IDriveInfo"));
+                .Select(x => x.Replace("System.IO.DriveInfo", "System.IO.Abstractions.IDriveInfo"))
+                .Select(x => x.Replace("System.IO.WaitForChangedResult", "System.IO.Abstractions.IWaitForChangedResult"));
             var abstractionMembers = GetMembers(abstractionType)
                 .Where(x => !x.Contains("op_Implicit"))
                 .Where(x => x != "System.IO.Abstractions.IFileSystem get_FileSystem()")

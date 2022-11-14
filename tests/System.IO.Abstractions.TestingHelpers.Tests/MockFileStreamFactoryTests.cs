@@ -52,13 +52,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
             string FilePath = XFS.Path("C:\\File.txt");
 
-            using (var stream = fileSystem.FileStream.Create(FilePath, fileMode, System.IO.FileAccess.Write))
+            using (var stream = fileSystem.FileStream.New(FilePath, fileMode, System.IO.FileAccess.Write))
             {
                 var data = Encoding.UTF8.GetBytes("1234567890");
                 stream.Write(data, 0, data.Length);
             }
 
-            using (var stream = fileSystem.FileStream.Create(FilePath, fileMode, System.IO.FileAccess.Write))
+            using (var stream = fileSystem.FileStream.New(FilePath, fileMode, System.IO.FileAccess.Write))
             {
                 var data = Encoding.UTF8.GetBytes("AAAAA");
                 stream.Write(data, 0, data.Length);
@@ -143,7 +143,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             // Act
-            var fileStream = fileSystem.FileStream.Create("file.txt", FileMode.CreateNew, FileAccess.Write);
+            var fileStream = fileSystem.FileStream.New("file.txt", FileMode.CreateNew, FileAccess.Write);
 
             // Assert
             Assert.IsFalse(fileStream.CanRead);

@@ -10,29 +10,30 @@ namespace System.IO.Abstractions
         private readonly FileSystemWatcher watcher;
 
         /// <inheritdoc />
-        public FileSystemWatcherWrapper()
-            : this(new FileSystemWatcher())
+        public FileSystemWatcherWrapper(IFileSystem fileSystem)
+            : this(fileSystem, new FileSystemWatcher())
         {
             // do nothing
         }
 
         /// <inheritdoc />
-        public FileSystemWatcherWrapper(string path)
-            : this(new FileSystemWatcher(path))
+        public FileSystemWatcherWrapper(IFileSystem fileSystem, string path)
+            : this(fileSystem, new FileSystemWatcher(path))
         {
             // do nothing
         }
 
         /// <inheritdoc />
-        public FileSystemWatcherWrapper(string path, string filter)
-            : this(new FileSystemWatcher(path, filter))
+        public FileSystemWatcherWrapper(IFileSystem fileSystem, string path, string filter)
+            : this(fileSystem, new FileSystemWatcher(path, filter))
         {
             // do nothing
         }
 
         /// <inheritdoc />
-        public FileSystemWatcherWrapper(FileSystemWatcher watcher)
+        public FileSystemWatcherWrapper(IFileSystem fileSystem, FileSystemWatcher watcher)
         {
+            FileSystem = fileSystem;
             this.watcher = watcher ?? throw new ArgumentNullException(nameof(watcher));
             this.watcher.Created += OnCreated;
             this.watcher.Changed += OnChanged;
@@ -42,11 +43,18 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
+        public override IFileSystem FileSystem { get; }
+
+        /// <inheritdoc />
         public override bool IncludeSubdirectories
         {
             get { return watcher.IncludeSubdirectories; }
             set { watcher.IncludeSubdirectories = value; }
         }
+
+        /// <inheritdoc />
+        public override IContainer Container
+            => watcher.Container;
 
         /// <inheritdoc />
         public override bool EnableRaisingEvents
@@ -134,15 +142,61 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-        public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
+        public override IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType)
         {
-            return watcher.WaitForChanged(changeType);
+            return new WaitForChangedResultWrapper(watcher.WaitForChanged(changeType));
         }
 
         /// <inheritdoc />
-        public override WaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
+        public override IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout)
         {
-            return watcher.WaitForChanged(changeType, timeout);
+            return new WaitForChangedResultWrapper(watcher.WaitForChanged(changeType, timeout));
+        }
+
+        private readonly struct WaitForChangedResultWrapper
+            : IWaitForChangedResult, IEquatable<WaitForChangedResultWrapper>
+        {
+            private readonly WaitForChangedResult _instance;
+
+            public WaitForChangedResultWrapper(WaitForChangedResult instance)
+            {
+                _instance = instance;
+            }
+
+            /// <inheritdoc cref="IWaitForChangedResult.ChangeType" />
+            public WatcherChangeTypes ChangeType
+                => _instance.ChangeType;
+
+            /// <inheritdoc cref="IWaitForChangedResult.Name" />
+            public string Name
+                => _instance.Name;
+
+            /// <inheritdoc cref="IWaitForChangedResult.OldName" />
+            public string OldName
+                => _instance.OldName;
+
+            /// <inheritdoc cref="IWaitForChangedResult.TimedOut" />
+            public bool TimedOut
+                => _instance.TimedOut;
+
+            /// <inheritdoc cref="IEquatable{WaitForChangedResultWrapper}.Equals(WaitForChangedResultWrapper)" />
+            public bool Equals(WaitForChangedResultWrapper other)
+            {
+                return _instance.Equals(other._instance);
+            }
+
+            /// <inheritdoc cref="object.Equals(object)" />
+            public override bool Equals(object obj)
+            {
+                return obj is WaitForChangedResultWrapper other
+                       && Equals(other);
+            }
+
+            /// <inheritdoc cref="object.GetHashCode()" />
+            public override int GetHashCode()
+            {
+                return _instance.GetHashCode();
+            }
         }
     }
 }

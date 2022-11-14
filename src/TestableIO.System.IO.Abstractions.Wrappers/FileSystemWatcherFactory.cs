@@ -4,18 +4,44 @@
     [Serializable]
     public class FileSystemWatcherFactory : IFileSystemWatcherFactory
     {
-        /// <inheritdoc />
-        public IFileSystemWatcher CreateNew()
+        ///
+        public FileSystemWatcherFactory(IFileSystem fileSystem)
         {
-            return new FileSystemWatcherWrapper();
+            FileSystem = fileSystem;
         }
 
         /// <inheritdoc />
-        public IFileSystemWatcher CreateNew(string path) =>
-            new FileSystemWatcherWrapper(path);
+        public IFileSystem FileSystem { get; }
 
         /// <inheritdoc />
+        [Obsolete("Use `IFileSystemWatcherFactory.New()` instead")]
+        public IFileSystemWatcher CreateNew()
+            => New();
+
+        /// <inheritdoc />
+        [Obsolete("Use `IFileSystemWatcherFactory.New(string)` instead")]
+        public IFileSystemWatcher CreateNew(string path)
+            => New(path);
+
+        /// <inheritdoc />
+        [Obsolete("Use `IFileSystemWatcherFactory.New(string, string)` instead")]
         public IFileSystemWatcher CreateNew(string path, string filter)
-            => new FileSystemWatcherWrapper(path, filter);
+            => New(path, filter);
+
+        /// <inheritdoc />
+        public IFileSystemWatcher New()
+            => new FileSystemWatcherWrapper(FileSystem);
+
+        /// <inheritdoc />
+        public IFileSystemWatcher New(string path)
+            => new FileSystemWatcherWrapper(FileSystem, path);
+
+        /// <inheritdoc />
+        public IFileSystemWatcher New(string path, string filter)
+            => new FileSystemWatcherWrapper(FileSystem, path, filter);
+
+        /// <inheritdoc />
+        public IFileSystemWatcher Wrap(FileSystemWatcher fileSystemWatcher)
+            => new FileSystemWatcherWrapper(FileSystem, fileSystemWatcher);
     }
 }

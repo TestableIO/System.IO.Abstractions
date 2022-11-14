@@ -17,6 +17,14 @@ namespace System.IO.Abstractions
             this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
         }
 
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override void CreateAsSymbolicLink(string pathToTarget)
+        {
+            throw new NotImplementedException();
+        }
+#endif
+
         /// <inheritdoc />
         public override void Delete()
         {
@@ -28,6 +36,14 @@ namespace System.IO.Abstractions
         {
             instance.Refresh();
         }
+
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override IFileSystemInfo ResolveLinkTarget(bool returnFinalTarget)
+        {
+            throw new NotImplementedException();
+        }
+#endif
 
         /// <inheritdoc />
         public override FileAttributes Attributes
@@ -335,9 +351,7 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc />
         public override IDirectoryInfo Root
-        {
-            get { return new DirectoryInfoWrapper(FileSystem, instance.Root); }
-        }
+            => new DirectoryInfoWrapper(FileSystem, instance.Root);
 
         /// <inheritdoc />
         public override string ToString()

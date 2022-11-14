@@ -2,8 +2,6 @@
   "ExtraMembers": [
     "System.Security.AccessControl.FileSecurity GetAccessControl(System.String)",
     "System.Security.AccessControl.FileSecurity GetAccessControl(System.String, System.Security.AccessControl.AccessControlSections)",
-    "System.Threading.Tasks.Task WriteAllLinesAsync(System.String, System.String[], System.Text.Encoding, System.Threading.CancellationToken)",
-    "System.Threading.Tasks.Task WriteAllLinesAsync(System.String, System.String[], System.Threading.CancellationToken)",
     "Void SetAccessControl(System.String, System.Security.AccessControl.FileSecurity)"
   ],
   "MissingMembers": []

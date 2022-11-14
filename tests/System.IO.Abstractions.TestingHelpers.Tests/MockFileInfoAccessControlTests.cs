@@ -29,7 +29,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { filePath, fileData }
             });
 
-            var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
+            var fileInfo = fileSystem.FileInfo.New(filePath);
 
             // Act
             var fileSecurity = fileInfo.GetAccessControl();
@@ -50,7 +50,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { filePath, fileData }
             });
 
-            var fileInfo = fileSystem.FileInfo.FromFileName(filePath);
+            var fileInfo = fileSystem.FileInfo.New(filePath);
 
             // Act
             var expectedAccessControl = new FileSecurity();

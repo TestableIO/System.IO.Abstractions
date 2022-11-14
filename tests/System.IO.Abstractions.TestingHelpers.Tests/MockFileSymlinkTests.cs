@@ -44,7 +44,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Act
             fileSystem.File.CreateSymbolicLink(path, pathToTarget);
-            IFileInfo directoryInfo = fileSystem.FileInfo.FromFileName(path);
+            IFileInfo directoryInfo = fileSystem.FileInfo.New(path);
 
             // Assert
             Assert.AreEqual(path, directoryInfo.FullName);

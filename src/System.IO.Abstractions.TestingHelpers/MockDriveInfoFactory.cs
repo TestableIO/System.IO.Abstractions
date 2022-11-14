@@ -15,6 +15,10 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
+        public IFileSystem FileSystem
+            => mockFileSystem;
+
+        /// <inheritdoc />
         public IDriveInfo[] GetDrives()
         {
             var driveLetters = new HashSet<string>(new DriveEqualityComparer(mockFileSystem));
@@ -42,11 +46,24 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
-        public IDriveInfo FromDriveName(string driveName)
+        public IDriveInfo New(string driveName)
         {
             var drive = mockFileSystem.Path.GetPathRoot(driveName);
 
             return new MockDriveInfo(mockFileSystem, drive);
+        }
+
+        /// <inheritdoc />
+        public IDriveInfo Wrap(DriveInfo driveInfo)
+        {
+            return New(driveInfo.Name);
+        }
+
+        /// <inheritdoc />
+        [Obsolete("Use `IDirectoryInfoFactory.New(string)` instead")]
+        public IDriveInfo FromDriveName(string driveName)
+        {
+            return New(driveName);
         }
 
         private string NormalizeDriveName(string driveName)

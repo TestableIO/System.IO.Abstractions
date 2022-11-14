@@ -162,6 +162,14 @@ namespace System.IO.Abstractions
             return Directory.GetFileSystemEntries(path, searchPattern, searchOption);
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        /// <inheritdoc />
+        public override string[] GetFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
+        {
+            throw new NotImplementedException();
+        }
+#endif
+
         /// <inheritdoc />
         public override DateTime GetLastAccessTime(string path)
         {
@@ -210,6 +218,14 @@ namespace System.IO.Abstractions
         {
             Directory.Move(sourceDirName, destDirName);
         }
+
+#if FEATURE_CREATE_SYMBOLIC_LINK
+        /// <inheritdoc />
+        public override IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget)
+        {
+            throw new NotSupportedException("TODO: Missing object implementing `IFileSystemInfo`");
+        }
+#endif
 
         /// <inheritdoc />
         [SupportedOSPlatform("windows")]

@@ -12,10 +12,27 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
+        public IFileSystem FileSystem
+            => fileSystem;
+
+        /// <inheritdoc />
+        [Obsolete("Use `IDirectoryInfoFactory.New(string)` instead")]
         public IDirectoryInfo FromDirectoryName(string directoryName)
         {
-            var realDirectoryInfo = new DirectoryInfo(directoryName);
+            return New(directoryName);
+        }
+
+        /// <inheritdoc />
+        public IDirectoryInfo New(string path)
+        {
+            var realDirectoryInfo = new DirectoryInfo(path);
             return new DirectoryInfoWrapper(fileSystem, realDirectoryInfo);
+        }
+
+        /// <inheritdoc />
+        public IDirectoryInfo Wrap(DirectoryInfo directoryInfo)
+        {
+            return new DirectoryInfoWrapper(fileSystem, directoryInfo);
         }
     }
 }
