@@ -23,11 +23,6 @@
         /// <inheritdoc cref="FileSystemInfo.Extension" />
         string Extension { get; }
 
-        /// <summary>
-        ///     A container to support extensions on <see cref= "IFileSystemInfo" />.
-        /// </summary>
-        IFileSystemExtensibility Extensibility { get; }
-
         /// <inheritdoc cref="FileSystemInfo.FullName" />
         string FullName { get; }
 

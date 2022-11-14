@@ -22,7 +22,6 @@ namespace System.IO.Abstractions.TestingHelpers
             this.path = mockFileSystem.Path.GetFullPath(path);
             this.mockFile = new MockFile(mockFileSystem);
             Refresh();
-            this.Extensibility = new FileSystemExtensibility();
         }
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -120,9 +119,6 @@ namespace System.IO.Abstractions.TestingHelpers
                 return Path.GetExtension(path);
             }
         }
-
-        /// <inheritdoc />
-        public override IFileSystemExtensibility Extensibility { get; }
 
         /// <inheritdoc />
         public override string FullName

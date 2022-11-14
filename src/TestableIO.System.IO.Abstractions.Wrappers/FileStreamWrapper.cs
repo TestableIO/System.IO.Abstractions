@@ -6,10 +6,6 @@
             : base(fileStream, fileStream.Name, fileStream.IsAsync)
 
         {
-            Extensibility = new FileSystemExtensibility(fileStream);
         }
-
-        /// <inheritdoc />
-        public override IFileSystemExtensibility Extensibility { get; }
     }
 }
