@@ -3,8 +3,6 @@
     "Void Dispose(Boolean)"
   ],
   "MissingMembers": [
-    "System.ComponentModel.IContainer Container",
-    "System.ComponentModel.IContainer get_Container()",
     "System.EventHandler Disposed",
     "System.Object GetLifetimeService()",
     "System.Object InitializeLifetimeService()",
