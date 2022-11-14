@@ -3,7 +3,7 @@
     /// <summary>
     ///     Interface to support implementing extension methods on top of nested <see cref="IFileSystem" /> interfaces.
     /// </summary>
-    public interface IFileSystemExtensionPoint
+    public interface IFileSystemEntity
     {
         /// <summary>
         ///     Exposes the underlying file system implementation.

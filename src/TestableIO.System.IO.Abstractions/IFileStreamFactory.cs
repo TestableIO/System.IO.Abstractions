@@ -5,7 +5,7 @@ namespace System.IO.Abstractions
     /// <summary>
     /// A factory for the creation of wrappers for <see cref="FileStream" /> in a <see cref="IFileSystem" />.
     /// </summary>
-    public interface IFileStreamFactory : IFileSystemExtensionPoint
+    public interface IFileStreamFactory : IFileSystemEntity
     {
         /// <inheritdoc cref="FileStream(string,FileMode)" />
         [Obsolete("Use `IFileStreamFactory.New(string, FileMode)` instead.")]

@@ -3,7 +3,7 @@
 namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="Path" />
-    public interface IPath : IFileSystemExtensionPoint
+    public interface IPath : IFileSystemEntity
     {
         /// <inheritdoc cref="Path.AltDirectorySeparatorChar" />
         char AltDirectorySeparatorChar { get; }

@@ -4,7 +4,7 @@ using System.Runtime.Versioning;
 namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="DriveInfo" />
-    public interface IDriveInfo : IFileSystemExtensionPoint
+    public interface IDriveInfo : IFileSystemEntity
     {
         /// <inheritdoc cref="DriveInfo.AvailableFreeSpace" />
         long AvailableFreeSpace { get; }

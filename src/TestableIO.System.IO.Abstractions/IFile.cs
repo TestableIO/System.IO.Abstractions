@@ -9,7 +9,7 @@ namespace System.IO.Abstractions
     /// <summary>
     /// Abstractions for <see cref="File" />.
     /// </summary>
-    public partial interface IFile : IFileSystemExtensionPoint
+    public partial interface IFile : IFileSystemEntity
     {
         /// <inheritdoc cref="File.AppendAllLines(string, IEnumerable{string})" />
         void AppendAllLines(string path, IEnumerable<string> contents);
