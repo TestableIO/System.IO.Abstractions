@@ -26,6 +26,7 @@ namespace System.IO.Abstractions.TestingHelpers
                (options & FileOptions.Asynchronous) != 0)
 
         {
+            this.Extensibility = new FileSystemExtensibility();
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
             this.path = path;
             this.options = options;
@@ -112,6 +113,9 @@ namespace System.IO.Abstractions.TestingHelpers
             }
             base.EndWrite(asyncResult);
         }
+
+        /// <inheritdoc cref="FileSystemStream.Extensibility" />
+        public override IFileSystemExtensibility Extensibility { get; }
 
         /// <inheritdoc />
         public override void SetLength(long value)

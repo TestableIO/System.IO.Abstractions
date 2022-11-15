@@ -36,6 +36,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
             this.directoryPath = directoryPath;
             Refresh();
+            this.Extensibility = new FileSystemExtensibility();
         }
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -97,6 +98,9 @@ namespace System.IO.Abstractions.TestingHelpers
                 return (int)mockFileData.Attributes != -1 && mockFileData.IsDirectory;
             }
         }
+
+        /// <inheritdoc />
+        public override IFileSystemExtensibility Extensibility { get; }
 
         /// <inheritdoc />
         public override string Extension
