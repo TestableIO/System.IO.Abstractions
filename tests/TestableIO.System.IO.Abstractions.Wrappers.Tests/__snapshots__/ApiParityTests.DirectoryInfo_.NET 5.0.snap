@@ -1,9 +1,7 @@
 ﻿{
   "ExtraMembers": [
-    "System.Security.AccessControl.DirectorySecurity GetAccessControl()",
-    "System.Security.AccessControl.DirectorySecurity GetAccessControl(System.Security.AccessControl.AccessControlSections)",
-    "Void Create(System.Security.AccessControl.DirectorySecurity)",
-    "Void SetAccessControl(System.Security.AccessControl.DirectorySecurity)"
+    "System.IO.Abstractions.IFileSystemExtensibility Extensibility",
+    "System.IO.Abstractions.IFileSystemExtensibility get_Extensibility()"
   ],
   "MissingMembers": [
     "System.Object GetLifetimeService()",

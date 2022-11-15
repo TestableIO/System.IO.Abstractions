@@ -1,6 +1,9 @@
 ﻿{
   "ExtraMembers": [],
   "MissingMembers": [
-    "System.IO.Abstractions.FileSystemStream Create(System.String, Int32, System.IO.FileOptions, System.Security.AccessControl.FileSecurity)"
+    "System.IO.Abstractions.FileSystemStream Create(System.String, Int32, System.IO.FileOptions, System.Security.AccessControl.FileSecurity)",
+    "System.Security.AccessControl.FileSecurity GetAccessControl(System.String)",
+    "System.Security.AccessControl.FileSecurity GetAccessControl(System.String, System.Security.AccessControl.AccessControlSections)",
+    "Void SetAccessControl(System.String, System.Security.AccessControl.FileSecurity)"
   ]
 }

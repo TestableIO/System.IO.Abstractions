@@ -1,8 +1,7 @@
 ﻿{
   "ExtraMembers": [
-    "System.Security.AccessControl.FileSecurity GetAccessControl()",
-    "System.Security.AccessControl.FileSecurity GetAccessControl(System.Security.AccessControl.AccessControlSections)",
-    "Void SetAccessControl(System.Security.AccessControl.FileSecurity)"
+    "System.IO.Abstractions.IFileSystemExtensibility Extensibility",
+    "System.IO.Abstractions.IFileSystemExtensibility get_Extensibility()"
   ],
   "MissingMembers": [
     "System.Object GetLifetimeService()",

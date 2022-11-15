@@ -1,10 +1,16 @@
 ﻿{
-  "ExtraMembers": [],
+  "ExtraMembers": [
+    "System.IO.Abstractions.IFileSystemExtensibility Extensibility",
+    "System.IO.Abstractions.IFileSystemExtensibility get_Extensibility()"
+  ],
   "MissingMembers": [
     "System.Object GetLifetimeService()",
     "System.Object InitializeLifetimeService()",
     "System.Runtime.Remoting.ObjRef CreateObjRef(System.Type)",
+    "System.Security.AccessControl.FileSecurity GetAccessControl()",
+    "System.Security.AccessControl.FileSecurity GetAccessControl(System.Security.AccessControl.AccessControlSections)",
     "Void .ctor(System.String)",
-    "Void GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)"
+    "Void GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)",
+    "Void SetAccessControl(System.Security.AccessControl.FileSecurity)"
   ]
 }

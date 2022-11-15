@@ -1,9 +1,5 @@
 ﻿{
-  "ExtraMembers": [
-    "System.Security.AccessControl.FileSecurity GetAccessControl(System.String)",
-    "System.Security.AccessControl.FileSecurity GetAccessControl(System.String, System.Security.AccessControl.AccessControlSections)",
-    "Void SetAccessControl(System.String, System.Security.AccessControl.FileSecurity)"
-  ],
+  "ExtraMembers": [],
   "MissingMembers": [
     "Void Move(System.String, System.String, Boolean)"
   ]
