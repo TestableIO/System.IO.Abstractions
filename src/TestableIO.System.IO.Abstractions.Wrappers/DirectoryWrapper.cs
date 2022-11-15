@@ -21,14 +21,6 @@ namespace System.IO.Abstractions
             return new DirectoryInfoWrapper(FileSystem, directoryInfo);
         }
 
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity)
-        {
-            var directoryInfo = new DirectoryInfo(path);
-            directoryInfo.Create(directorySecurity);
-            return new DirectoryInfoWrapper(FileSystem, directoryInfo);
-        }
 #if FEATURE_CREATE_SYMBOLIC_LINK
         /// <inheritdoc />
         public override IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget)
@@ -52,20 +44,6 @@ namespace System.IO.Abstractions
         public override bool Exists(string path)
         {
             return Directory.Exists(path);
-        }
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override DirectorySecurity GetAccessControl(string path)
-        {
-            return new DirectoryInfo(path).GetAccessControl();
-        }
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections)
-        {
-            return new DirectoryInfo(path).GetAccessControl(includeSections);
         }
 
         /// <inheritdoc />
@@ -226,13 +204,6 @@ namespace System.IO.Abstractions
             throw new NotSupportedException("TODO: Missing object implementing `IFileSystemInfo`");
         }
 #endif
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
-        {
-            new DirectoryInfo(path).SetAccessControl(directorySecurity);
-        }
 
         /// <inheritdoc />
         public override void SetCreationTime(string path, DateTime creationTime)

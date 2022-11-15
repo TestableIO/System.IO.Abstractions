@@ -137,13 +137,6 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override void Create(DirectorySecurity directorySecurity)
-        {
-            instance.Create(directorySecurity);
-        }
-
-        /// <inheritdoc />
         public override IDirectoryInfo CreateSubdirectory(string path)
         {
             return new DirectoryInfoWrapper(FileSystem, instance.CreateSubdirectory(path));
@@ -232,19 +225,6 @@ namespace System.IO.Abstractions
             return instance.EnumerateFileSystemInfos(searchPattern, enumerationOptions).WrapFileSystemInfos(FileSystem);
         }
 #endif
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override DirectorySecurity GetAccessControl()
-        {
-            return instance.GetAccessControl();
-        }
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override DirectorySecurity GetAccessControl(AccessControlSections includeSections)
-        {
-            return instance.GetAccessControl(includeSections);
-        }
 
         /// <inheritdoc />
         public override IDirectoryInfo[] GetDirectories()
@@ -328,13 +308,6 @@ namespace System.IO.Abstractions
         public override void MoveTo(string destDirName)
         {
             instance.MoveTo(destDirName);
-        }
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override void SetAccessControl(DirectorySecurity directorySecurity)
-        {
-            instance.SetAccessControl(directorySecurity);
         }
 
         /// <inheritdoc />

@@ -173,22 +173,6 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-
-        [SupportedOSPlatform("windows")]
-        public override FileSecurity GetAccessControl()
-        {
-            return instance.GetAccessControl();
-        }
-
-        /// <inheritdoc />
-
-        [SupportedOSPlatform("windows")]
-        public override FileSecurity GetAccessControl(AccessControlSections includeSections)
-        {
-            return instance.GetAccessControl(includeSections);
-        }
-
-        /// <inheritdoc />
         public override void MoveTo(string destFileName)
         {
             instance.MoveTo(destFileName);
@@ -256,13 +240,6 @@ namespace System.IO.Abstractions
         public override IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors)
         {
             return new FileInfoWrapper(FileSystem, instance.Replace(destinationFileName, destinationBackupFileName, ignoreMetadataErrors));
-        }
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override void SetAccessControl(FileSecurity fileSecurity)
-        {
-            instance.SetAccessControl(fileSecurity);
         }
 
         /// <inheritdoc />

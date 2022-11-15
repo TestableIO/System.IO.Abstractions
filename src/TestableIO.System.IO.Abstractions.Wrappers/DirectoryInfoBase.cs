@@ -17,8 +17,6 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="IDirectoryInfo.Create()"/>
         public abstract void Create();
-        /// <inheritdoc cref="IDirectoryInfo.Create(DirectorySecurity)"/>
-        public abstract void Create(DirectorySecurity directorySecurity);
 
         /// <inheritdoc cref="IDirectoryInfo.CreateSubdirectory(string)"/>
         public abstract IDirectoryInfo CreateSubdirectory(string path);
@@ -67,13 +65,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IDirectoryInfo.EnumerateFileSystemInfos(string,EnumerationOptions)"/>
         public abstract IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, EnumerationOptions enumerationOptions);
 #endif
-
-        /// <inheritdoc cref="IDirectoryInfo.GetAccessControl()"/>
-        public abstract DirectorySecurity GetAccessControl();
-
-        /// <inheritdoc cref="IDirectoryInfo.GetAccessControl(AccessControlSections)"/>
-        public abstract DirectorySecurity GetAccessControl(AccessControlSections includeSections);
-
+        
         /// <inheritdoc cref="IDirectoryInfo.GetDirectories()"/>
         public abstract IDirectoryInfo[] GetDirectories();
 
@@ -119,10 +111,7 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="IDirectoryInfo.MoveTo"/>
         public abstract void MoveTo(string destDirName);
-
-        /// <inheritdoc cref="IDirectoryInfo.SetAccessControl"/>
-        public abstract void SetAccessControl(DirectorySecurity directorySecurity);
-
+        
         /// <inheritdoc cref="IDirectoryInfo.Parent"/>
         public abstract IDirectoryInfo Parent { get; }
 

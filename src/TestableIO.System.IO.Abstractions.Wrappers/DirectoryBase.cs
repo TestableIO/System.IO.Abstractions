@@ -24,10 +24,7 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="IDirectory.CreateDirectory(string)"/>
         public abstract IDirectoryInfo CreateDirectory(string path);
-
-        /// <inheritdoc cref="IDirectory.CreateDirectory(string,DirectorySecurity)"/>
-        [SupportedOSPlatform("windows")]
-        public abstract IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity);
+        
 #if FEATURE_CREATE_SYMBOLIC_LINK
         /// <inheritdoc cref="IDirectory.CreateSymbolicLink(string, string)"/>
         public abstract IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget);
@@ -40,15 +37,7 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="IDirectory.Exists"/>
         public abstract bool Exists(string path);
-
-        /// <inheritdoc cref="IDirectory.GetAccessControl(string)"/>
-        [SupportedOSPlatform("windows")]
-        public abstract DirectorySecurity GetAccessControl(string path);
-
-        /// <inheritdoc cref="IDirectory.GetAccessControl(string,AccessControlSections)"/>
-        [SupportedOSPlatform("windows")]
-        public abstract DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections);
-
+        
         /// <inheritdoc cref="IDirectory.GetCreationTime"/>
         public abstract DateTime GetCreationTime(string path);
 
@@ -129,10 +118,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IDirectory.ResolveLinkTarget(string, bool)"/>
         public abstract IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget);
 #endif
-
-        /// <inheritdoc cref="IDirectory.SetAccessControl"/>
-        public abstract void SetAccessControl(string path, DirectorySecurity directorySecurity);
-
+        
         /// <inheritdoc cref="IDirectory.SetCreationTime"/>
         public abstract void SetCreationTime(string path, DateTime creationTime);
 
