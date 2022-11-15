@@ -36,8 +36,11 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <summary>
         /// The extensibility of the <see cref="MockFileData"/>.
         /// </summary>
-        public IFileSystemExtensibility Extensibility { get; }
-            = new FileSystemExtensibility();
+        public IFileSystemExtensibility Extensibility
+            => extensibility;
+
+        [NonSerialized]
+        private IFileSystemExtensibility extensibility = new FileSystemExtensibility();
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="MockFileData"/> is a directory or not.
