@@ -201,7 +201,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         [SupportedOSPlatform("windows")]
         [WindowsOnly(WindowsSpecifics.AccessControlLists)]
-        public void MockFile_AfterSetAccessControl_ShouldUpdateLastAccessTime()
+        public void MockFile_AfterSetAccessControl_ShouldNotUpdateLastAccessTime()
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
             var updateTime = creationTime.AddDays(10);
@@ -216,7 +216,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
 
             Assert.That(actualCreationTime, Is.EqualTo(creationTime));
-            Assert.That(actualLastAccessTime, Is.EqualTo(updateTime));
+            Assert.That(actualLastAccessTime, Is.EqualTo(creationTime));
             Assert.That(actualLastWriteTime, Is.EqualTo(creationTime));
         }
 

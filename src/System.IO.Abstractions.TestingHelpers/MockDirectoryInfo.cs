@@ -25,8 +25,17 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath) : base(mockFileDataAccessor?.FileSystem)
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
-
+            
             originalPath = directoryPath;
+
+            if (directoryPath== null)
+            {
+                throw new ArgumentNullException("path", StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
+            }
+            if (directoryPath.Trim() == string.Empty)
+            {
+                throw CommonExceptions.PathIsNotOfALegalForm("path");
+            }
             directoryPath = mockFileDataAccessor.Path.GetFullPath(directoryPath);
 
             directoryPath = directoryPath.TrimSlashes();
@@ -35,6 +44,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 directoryPath = directoryPath.TrimEnd(' ');
             }
             this.directoryPath = directoryPath;
+
             Refresh();
         }
 

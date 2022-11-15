@@ -16,6 +16,7 @@
         {
             this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
             this.originalPath = path ?? throw new ArgumentNullException(nameof(path));
+            mockFileSystem.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
             this.path = mockFileSystem.Path.GetFullPath(path);
             this.mockFile = new MockFile(mockFileSystem);
             Refresh();
