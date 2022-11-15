@@ -7,10 +7,6 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockDirectoryData : MockFileData
     {
-
-        [NonSerialized]
-        private DirectorySecurity accessControl;
-
         /// <inheritdoc />
         public MockDirectoryData() : base(string.Empty)
         {
@@ -25,9 +21,16 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 // DirectorySecurity's constructor will throw PlatformNotSupportedException on non-Windows platform, so we initialize it in lazy way.
                 // This let's us use this class as long as we don't use AccessControl property.
-                return accessControl ?? (accessControl = new DirectorySecurity());
+                var directorySecurity = Extensibility.RetrieveMetadata<DirectorySecurity>("AccessControl");
+                if (directorySecurity == null)
+                {
+                    directorySecurity = new DirectorySecurity();
+                    Extensibility.StoreMetadata("AccessControl", directorySecurity);
+                }
+
+                return directorySecurity;
             }
-            set { accessControl = value; }
+            set { Extensibility.StoreMetadata("AccessControl", value); }
         }
     }
 }

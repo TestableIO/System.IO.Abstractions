@@ -22,7 +22,6 @@ namespace System.IO.Abstractions.TestingHelpers
             this.path = mockFileSystem.Path.GetFullPath(path);
             this.mockFile = new MockFile(mockFileSystem);
             Refresh();
-            this.Extensibility = new FileSystemExtensibility();
         }
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -111,7 +110,8 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
-        public override IFileSystemExtensibility Extensibility { get; }
+        public override IFileSystemExtensibility Extensibility
+            => (mockFileSystem.GetFile(path) ?? MockFileData.NullObject)?.Extensibility;
 
         /// <inheritdoc />
         public override string Extension
@@ -260,21 +260,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var mockFileData = GetMockFileDataForWrite();
             mockFileData.Attributes |= FileAttributes.Encrypted;
         }
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override FileSecurity GetAccessControl()
-        {
-            return mockFileSystem.File.GetAccessControl(this.path);
-        }
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override FileSecurity GetAccessControl(AccessControlSections includeSections)
-        {
-            return mockFileSystem.File.GetAccessControl(this.path, includeSections);
-        }
-
+        
         /// <inheritdoc />
         public override void MoveTo(string destFileName)
         {
@@ -338,14 +324,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFile.Replace(path, destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
             return mockFileSystem.FileInfo.New(destinationFileName);
         }
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override void SetAccessControl(FileSecurity fileSecurity)
-        {
-            mockFile.SetAccessControl(this.path, fileSecurity);
-        }
-
+        
         /// <inheritdoc />
         public override IDirectoryInfo Directory
         {

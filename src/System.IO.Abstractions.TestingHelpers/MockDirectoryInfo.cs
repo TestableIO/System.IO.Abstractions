@@ -36,7 +36,6 @@ namespace System.IO.Abstractions.TestingHelpers
             }
             this.directoryPath = directoryPath;
             Refresh();
-            this.Extensibility = new FileSystemExtensibility();
         }
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -100,7 +99,8 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
-        public override IFileSystemExtensibility Extensibility { get; }
+        public override IFileSystemExtensibility Extensibility
+            => (mockFileDataAccessor.GetFile(directoryPath) ?? MockFileData.NullObject)?.Extensibility;
 
         /// <inheritdoc />
         public override string Extension
@@ -183,14 +183,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.Directory.CreateDirectory(FullName);
             refreshOnNextRead = true;
         }
-
-        /// <inheritdoc />
-        public override void Create(DirectorySecurity directorySecurity)
-        {
-            mockFileDataAccessor.Directory.CreateDirectory(FullName, directorySecurity);
-            refreshOnNextRead = true;
-        }
-
+        
         /// <inheritdoc />
         public override IDirectoryInfo CreateSubdirectory(string path)
         {
@@ -281,19 +274,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetFileSystemInfos(searchPattern, enumerationOptions);
         }
 #endif
-
-        /// <inheritdoc />
-        public override DirectorySecurity GetAccessControl()
-        {
-            return mockFileDataAccessor.Directory.GetAccessControl(directoryPath);
-        }
-
-        /// <inheritdoc />
-        public override DirectorySecurity GetAccessControl(AccessControlSections includeSections)
-        {
-            return mockFileDataAccessor.Directory.GetAccessControl(directoryPath, includeSections);
-        }
-
+        
         /// <inheritdoc />
         public override IDirectoryInfo[] GetDirectories()
         {
@@ -392,13 +373,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
         }
-
-        /// <inheritdoc />
-        public override void SetAccessControl(DirectorySecurity directorySecurity)
-        {
-            mockFileDataAccessor.Directory.SetAccessControl(directoryPath, directorySecurity);
-        }
-
+        
         /// <inheritdoc />
         public override IDirectoryInfo Parent
         {

@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.Versioning;
-using System.Security.AccessControl;
 using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -39,17 +36,10 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override IDirectoryInfo CreateDirectory(string path)
         {
-            return CreateDirectoryInternal(path, null);
+            return CreateDirectoryInternal(path);
         }
 
-
-        /// <inheritdoc />
-        public override IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity)
-        {
-            return CreateDirectoryInternal(path, directorySecurity);
-        }
-
-        private IDirectoryInfo CreateDirectoryInternal(string path, DirectorySecurity directorySecurity)
+        private IDirectoryInfo CreateDirectoryInternal(string path)
         {
             if (path == null)
             {
@@ -79,11 +69,6 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);
-
-            if (directorySecurity != null)
-            {
-                created.SetAccessControl(directorySecurity);
-            }
 
             return created;
         }
@@ -170,31 +155,6 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 return false;
             }
-        }
-
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override DirectorySecurity GetAccessControl(string path)
-        {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-            path = path.TrimSlashes();
-
-            if (!mockFileDataAccessor.Directory.Exists(path))
-            {
-                throw CommonExceptions.CouldNotFindPartOfPath(path);
-            }
-
-            var directoryData = (MockDirectoryData)mockFileDataAccessor.GetFile(path);
-            return directoryData.AccessControl;
-        }
-
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections)
-        {
-            return GetAccessControl(path);
         }
 
 
@@ -558,22 +518,6 @@ namespace System.IO.Abstractions.TestingHelpers
         }
     
 #endif
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override void SetAccessControl(string path, DirectorySecurity directorySecurity)
-        {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-            path = path.TrimSlashes();
-
-            if (!mockFileDataAccessor.Directory.Exists(path))
-            {
-                throw CommonExceptions.CouldNotFindPartOfPath(path);
-            }
-
-            var directoryData = (MockDirectoryData)mockFileDataAccessor.GetFile(path);
-            directoryData.AccessControl = directorySecurity;
-        }
 
         /// <inheritdoc />
         public override void SetCreationTime(string path, DateTime creationTime)
