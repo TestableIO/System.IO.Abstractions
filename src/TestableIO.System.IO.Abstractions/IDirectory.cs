@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
@@ -11,14 +10,7 @@ namespace System.IO.Abstractions
     {
         /// <inheritdoc cref="Directory.CreateDirectory(string)" />
         IDirectoryInfo CreateDirectory(string path);
-
-#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
-        /// <inheritdoc cref="FileSystemAclExtensions.Create(DirectoryInfo,DirectorySecurity)"/>
-#else
-        /// <inheritdoc cref="Directory.CreateDirectory(string,DirectorySecurity)"/>
-#endif
-        IDirectoryInfo CreateDirectory(string path, DirectorySecurity directorySecurity);
-
+        
 #if FEATURE_CREATE_SYMBOLIC_LINK
         /// <inheritdoc cref="Directory.CreateSymbolicLink(string, string)" />
         IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget);
@@ -75,20 +67,6 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Directory.Exists(string)" />
         bool Exists([NotNullWhen(true)] string? path);
         
-#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
-        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(DirectoryInfo)"/>
-#else
-        /// <inheritdoc cref="Directory.GetAccessControl(string)"/>
-#endif
-        DirectorySecurity GetAccessControl(string path);
-
-#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
-        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(DirectoryInfo)"/>
-#else
-        /// <inheritdoc cref="Directory.GetAccessControl(string,AccessControlSections)"/>
-#endif
-        DirectorySecurity GetAccessControl(string path, AccessControlSections includeSections);
-
         /// <inheritdoc cref="Directory.GetCreationTime(string)" />
         DateTime GetCreationTime(string path);
 
@@ -168,13 +146,6 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Directory.ResolveLinkTarget(string, bool)" />
         IFileSystemInfo? ResolveLinkTarget(string linkPath, bool returnFinalTarget);
 #endif
-
-#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
-        /// <inheritdoc cref="FileSystemAclExtensions.SetAccessControl(DirectoryInfo, DirectorySecurity)"/>
-#else
-        /// <inheritdoc cref="Directory.SetAccessControl(string,DirectorySecurity)"/>
-#endif
-        void SetAccessControl(string path, DirectorySecurity directorySecurity);
 
         /// <inheritdoc cref="Directory.SetCreationTime(string, DateTime)" />
         void SetCreationTime(string path, DateTime creationTime);
