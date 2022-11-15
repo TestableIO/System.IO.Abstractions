@@ -31,6 +31,14 @@ namespace System.IO.Abstractions.TestingHelpers
             return default;
         }
 
+        internal void Clone(FileSystemExtensibility template)
+        {
+            foreach (var item in template._metadata)
+            {
+                _metadata[item.Key] = item.Value;
+            }
+        }
+
         public static IFileSystemExtensibility GetNullObject(Func<Exception> exceptionFactory)
             => new NullFileSystemExtensibility(exceptionFactory);
 

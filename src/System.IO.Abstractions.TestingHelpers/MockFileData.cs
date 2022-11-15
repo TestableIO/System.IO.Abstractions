@@ -40,7 +40,7 @@ namespace System.IO.Abstractions.TestingHelpers
             => extensibility;
 
         [NonSerialized]
-        private IFileSystemExtensibility extensibility = new FileSystemExtensibility();
+        private FileSystemExtensibility extensibility = new FileSystemExtensibility();
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="MockFileData"/> is a directory or not.
@@ -101,10 +101,8 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw new ArgumentNullException(nameof(template));
             }
-
-#pragma warning disable CA1416
-            AccessControl = template.AccessControl;
-#pragma warning restore CA1416
+            
+            extensibility.Clone(template.extensibility);
             Attributes = template.Attributes;
             Contents = template.Contents.ToArray();
             CreationTime = template.CreationTime;
