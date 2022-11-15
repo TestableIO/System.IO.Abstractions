@@ -1,7 +1,4 @@
-﻿using System.Runtime.Versioning;
-using System.Security.AccessControl;
-
-namespace System.IO.Abstractions.TestingHelpers
+﻿namespace System.IO.Abstractions.TestingHelpers
 {
     /// <inheritdoc />
     [Serializable]
@@ -111,7 +108,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
         /// <inheritdoc />
         public override IFileSystemExtensibility Extensibility
-            => (mockFileSystem.GetFile(path) ?? MockFileData.NullObject)?.Extensibility;
+        {
+            get
+            {
+                var mockFileData = mockFileSystem.GetFile(path);
+                return mockFileData?.Extensibility ?? FileSystemExtensibility.GetNullObject(
+                    () => CommonExceptions.FileNotFound(path));
+            }
+        }
 
         /// <inheritdoc />
         public override string Extension

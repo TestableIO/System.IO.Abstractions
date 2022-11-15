@@ -22,7 +22,7 @@ namespace System.IO.Abstractions
             return extensibility.TryGetWrappedInstance(out FileInfo fi)
                 ? fi.GetAccessControl()
                 : extensibility.RetrieveMetadata<FileSecurity>(
-                    "AccessControl") ?? new FileSecurity();
+                    "AccessControl:File") ?? new FileSecurity();
         }
 
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
@@ -40,7 +40,7 @@ namespace System.IO.Abstractions
             return extensibility.TryGetWrappedInstance(out FileInfo fi)
                 ? fi.GetAccessControl(includeSections)
                 : extensibility.RetrieveMetadata<FileSecurity>(
-                    "AccessControl") ?? new FileSecurity();
+                    "AccessControl:File") ?? new FileSecurity();
         }
 
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
@@ -60,7 +60,7 @@ namespace System.IO.Abstractions
             }
             else
             {
-                extensibility.StoreMetadata("AccessControl",
+                extensibility.StoreMetadata("AccessControl:File",
                     fileSecurity);
             }
         }

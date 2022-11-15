@@ -100,7 +100,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
         /// <inheritdoc />
         public override IFileSystemExtensibility Extensibility
-            => (mockFileDataAccessor.GetFile(directoryPath) ?? MockFileData.NullObject)?.Extensibility;
+        {
+            get
+            {
+                var mockFileData = mockFileDataAccessor.GetFile(directoryPath);
+                return mockFileData?.Extensibility ?? FileSystemExtensibility.GetNullObject(
+                    () =>CommonExceptions.CouldNotFindPartOfPath(directoryPath));
+            }
+        }
 
         /// <inheritdoc />
         public override string Extension
