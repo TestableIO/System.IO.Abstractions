@@ -6,8 +6,6 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         private readonly Dictionary<string, object> _metadata = new();
 
-
-
         /// <inheritdoc cref="IFileSystemExtensibility.TryGetWrappedInstance{T}(out T)" />
         public bool TryGetWrappedInstance<T>(out T wrappedInstance)
         {
@@ -24,28 +22,25 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public T RetrieveMetadata<T>(string key)
         {
-            if (_metadata.ContainsKey(key))
+            if (_metadata.TryGetValue(key, out object value) &&
+                value is T castedValue)
             {
-                var value = _metadata[key];
-                if (value is T)
-                {
-                    return (T) value;
-                }
+                return castedValue;
             }
 
             return default;
         }
 
-        public static IFileSystemExtensibility GetNullObject(Func<Exception> factory)
-            => new NullFileSystemExtensibility(factory);
+        public static IFileSystemExtensibility GetNullObject(Func<Exception> exceptionFactory)
+            => new NullFileSystemExtensibility(exceptionFactory);
 
         private class NullFileSystemExtensibility : IFileSystemExtensibility
         {
-            private readonly Func<Exception> _factory;
+            private readonly Func<Exception> _exceptionFactory;
 
-            public NullFileSystemExtensibility(Func<Exception> factory)
+            public NullFileSystemExtensibility(Func<Exception> exceptionFactory)
             {
-                _factory = factory;
+                _exceptionFactory = exceptionFactory;
             }
             public bool TryGetWrappedInstance<T>(out T wrappedInstance)
             {
@@ -55,12 +50,12 @@ namespace System.IO.Abstractions.TestingHelpers
 
             public void StoreMetadata<T>(string key, T value)
             {
-                throw _factory.Invoke();
+                throw _exceptionFactory.Invoke();
             }
 
             public T RetrieveMetadata<T>(string key)
             {
-                throw _factory.Invoke();
+                throw _exceptionFactory.Invoke();
             }
         }
     }

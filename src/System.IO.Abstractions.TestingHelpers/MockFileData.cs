@@ -24,7 +24,7 @@ namespace System.IO.Abstractions.TestingHelpers
             LastWriteTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
             LastAccessTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
             CreationTime = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
-            Attributes = (FileAttributes)(-1)
+            Attributes = (FileAttributes)(-1),
         };
 
         /// <summary>
@@ -193,16 +193,16 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 // FileSecurity's constructor will throw PlatformNotSupportedException on non-Windows platform, so we initialize it in lazy way.
                 // This let's us use this class as long as we don't use AccessControl property.
-                var fileSecurity = Extensibility.RetrieveMetadata<FileSecurity>("AccessControl:File");
+                var fileSecurity = Extensibility.RetrieveMetadata<FileSecurity>("AccessControl:FileSecurity");
                 if (fileSecurity == null)
                 {
                     fileSecurity = new FileSecurity();
-                    Extensibility.StoreMetadata("AccessControl:File", fileSecurity);
+                    Extensibility.StoreMetadata("AccessControl:FileSecurity", fileSecurity);
                 }
 
                 return fileSecurity;
             }
-            set { Extensibility.StoreMetadata("AccessControl:File", value); }
+            set { Extensibility.StoreMetadata("AccessControl:FileSecurity", value); }
         }
 
         /// <summary>

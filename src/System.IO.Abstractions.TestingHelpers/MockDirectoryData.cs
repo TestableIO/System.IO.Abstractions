@@ -21,16 +21,16 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 // DirectorySecurity's constructor will throw PlatformNotSupportedException on non-Windows platform, so we initialize it in lazy way.
                 // This let's us use this class as long as we don't use AccessControl property.
-                var directorySecurity = Extensibility.RetrieveMetadata<DirectorySecurity>("AccessControl:Directory");
+                var directorySecurity = Extensibility.RetrieveMetadata<DirectorySecurity>("AccessControl:DirectorySecurity");
                 if (directorySecurity == null)
                 {
                     directorySecurity = new DirectorySecurity();
-                    Extensibility.StoreMetadata("AccessControl:Directory", directorySecurity);
+                    Extensibility.StoreMetadata("AccessControl:DirectorySecurity", directorySecurity);
                 }
 
                 return directorySecurity;
             }
-            set { Extensibility.StoreMetadata("AccessControl:Directory", value); }
+            set { Extensibility.StoreMetadata("AccessControl:DirectorySecurity", value); }
         }
     }
 }

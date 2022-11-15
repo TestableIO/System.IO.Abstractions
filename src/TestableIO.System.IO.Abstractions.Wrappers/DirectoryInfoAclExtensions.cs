@@ -26,7 +26,7 @@ namespace System.IO.Abstractions
             else
             {
                 directoryInfo.Create();
-                directoryInfo.Extensibility.StoreMetadata("AccessControl:Directory",
+                directoryInfo.Extensibility.StoreMetadata("AccessControl:DirectorySecurity",
                     directorySecurity);
             }
         }
@@ -45,7 +45,7 @@ namespace System.IO.Abstractions
             return extensibility.TryGetWrappedInstance(out DirectoryInfo di)
                 ? di.GetAccessControl()
                 : extensibility.RetrieveMetadata<DirectorySecurity>(
-                    "AccessControl:Directory") ?? new DirectorySecurity();
+                    "AccessControl:DirectorySecurity") ?? new DirectorySecurity();
         }
 
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
@@ -63,7 +63,7 @@ namespace System.IO.Abstractions
             return extensibility.TryGetWrappedInstance(out DirectoryInfo di)
                 ? di.GetAccessControl(includeSections)
                 : extensibility.RetrieveMetadata<DirectorySecurity>(
-                    "AccessControl:Directory") ?? new DirectorySecurity();
+                    "AccessControl:DirectorySecurity") ?? new DirectorySecurity();
         }
 
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
@@ -83,7 +83,7 @@ namespace System.IO.Abstractions
             }
             else
             {
-                extensibility.StoreMetadata("AccessControl:Directory",
+                extensibility.StoreMetadata("AccessControl:DirectorySecurity",
                     directorySecurity);
             }
         }

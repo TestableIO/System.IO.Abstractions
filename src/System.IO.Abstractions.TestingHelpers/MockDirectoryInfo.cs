@@ -25,7 +25,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath) : base(mockFileDataAccessor?.FileSystem)
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
-            
+
             originalPath = directoryPath;
 
             if (directoryPath== null)
@@ -44,7 +44,6 @@ namespace System.IO.Abstractions.TestingHelpers
                 directoryPath = directoryPath.TrimEnd(' ');
             }
             this.directoryPath = directoryPath;
-
             Refresh();
         }
 
@@ -115,7 +114,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 var mockFileData = mockFileDataAccessor.GetFile(directoryPath);
                 return mockFileData?.Extensibility ?? FileSystemExtensibility.GetNullObject(
-                    () =>CommonExceptions.CouldNotFindPartOfPath(directoryPath));
+                    () => CommonExceptions.CouldNotFindPartOfPath(directoryPath));
             }
         }
 

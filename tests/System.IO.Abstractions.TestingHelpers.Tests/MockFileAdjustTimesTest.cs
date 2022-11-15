@@ -201,7 +201,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         [SupportedOSPlatform("windows")]
         [WindowsOnly(WindowsSpecifics.AccessControlLists)]
-        public void MockFile_AfterSetAccessControl_ShouldNotUpdateLastAccessTime()
+        public void MockFile_AfterSetAccessControl_ShouldUpdateLastAccessTime()
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
             var updateTime = creationTime.AddDays(10);
