@@ -26,8 +26,6 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
 
-            originalPath = directoryPath;
-
             if (directoryPath== null)
             {
                 throw new ArgumentNullException("path", StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
@@ -36,6 +34,8 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw CommonExceptions.PathIsNotOfALegalForm("path");
             }
+            
+            originalPath = directoryPath;
             directoryPath = mockFileDataAccessor.Path.GetFullPath(directoryPath);
 
             directoryPath = directoryPath.TrimSlashes();
