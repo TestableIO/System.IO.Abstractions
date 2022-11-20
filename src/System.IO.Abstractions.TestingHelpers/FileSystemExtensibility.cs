@@ -13,13 +13,13 @@ namespace System.IO.Abstractions.TestingHelpers
             return false;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IFileSystemExtensibility.StoreMetadata{T}(string, T)" />
         public void StoreMetadata<T>(string key, T value)
         {
             _metadata[key] = value;
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="IFileSystemExtensibility.RetrieveMetadata{T}(string)" />
         public T RetrieveMetadata<T>(string key)
         {
             if (_metadata.TryGetValue(key, out object value) &&
@@ -50,19 +50,26 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 _exceptionFactory = exceptionFactory;
             }
+
+            /// <inheritdoc cref="IFileSystemExtensibility.TryGetWrappedInstance{T}(out T)" />
             public bool TryGetWrappedInstance<T>(out T wrappedInstance)
             {
                 wrappedInstance = default;
                 return false;
             }
 
+            /// <inheritdoc cref="IFileSystemExtensibility.StoreMetadata{T}(string, T)" />
             public void StoreMetadata<T>(string key, T value)
             {
+                _ = key;
+                _ = value;
                 throw _exceptionFactory.Invoke();
             }
 
+            /// <inheritdoc cref="IFileSystemExtensibility.RetrieveMetadata{T}(string)" />
             public T RetrieveMetadata<T>(string key)
             {
+                _ = key;
                 throw _exceptionFactory.Invoke();
             }
         }
