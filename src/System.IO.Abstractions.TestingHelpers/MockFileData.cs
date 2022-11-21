@@ -102,7 +102,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentNullException(nameof(template));
             }
             
-            extensibility.Clone(template.extensibility);
+            extensibility.CloneFrom(template.extensibility);
             Attributes = template.Attributes;
             Contents = template.Contents.ToArray();
             CreationTime = template.CreationTime;

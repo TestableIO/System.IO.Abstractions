@@ -31,7 +31,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return default;
         }
 
-        internal void Clone(FileSystemExtensibility template)
+        internal void CloneFrom(FileSystemExtensibility template)
         {
             foreach (var item in template._metadata)
             {
