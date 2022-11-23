@@ -333,9 +333,16 @@ namespace System.IO.Abstractions
             return instance.ToString();
         }
 
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl()" />
+        [SupportedOSPlatform("windows")]
+        public object GetAccessControl()
+        {
+            return instance.GetAccessControl();
+        }
+
         /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
         [SupportedOSPlatform("windows")]
-        public object GetAccessControl(IFileSystemAclSupport.AccessControlSections includeSections = IFileSystemAclSupport.AccessControlSections.Default)
+        public object GetAccessControl(IFileSystemAclSupport.AccessControlSections includeSections)
         {
             return instance.GetAccessControl((AccessControlSections)includeSections);
         }

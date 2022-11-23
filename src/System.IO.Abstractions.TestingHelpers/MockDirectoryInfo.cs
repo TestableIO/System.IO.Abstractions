@@ -421,9 +421,16 @@ namespace System.IO.Abstractions.TestingHelpers
             return originalPath;
         }
 
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl()" />
+        [SupportedOSPlatform("windows")]
+        public object GetAccessControl()
+        {
+            return GetMockDirectoryData().AccessControl;
+        }
+
         /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
         [SupportedOSPlatform("windows")]
-        public object GetAccessControl(IFileSystemAclSupport.AccessControlSections includeSections = IFileSystemAclSupport.AccessControlSections.Default)
+        public object GetAccessControl(IFileSystemAclSupport.AccessControlSections includeSections)
         {
             return GetMockDirectoryData().AccessControl;
         }

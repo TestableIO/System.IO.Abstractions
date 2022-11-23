@@ -8,13 +8,20 @@ namespace System.IO.Abstractions
     public interface IFileSystemAclSupport
     {
         /// <summary>
-        ///     Retrieves previously stored access control information.
+        ///     Gets a access control object that encapsulates the access control list (ACL) entries for the file or directory in the file system.
         /// </summary>
         [SupportedOSPlatform("windows")]
-        object GetAccessControl(AccessControlSections includeSections = AccessControlSections.Default);
+        object GetAccessControl();
 
         /// <summary>
-        ///     Stores access control information.
+        ///     Gets a access control object that encapsulates the access control list (ACL) entries for the file or directory in the file system.
+        /// </summary>
+        /// <param name="includeSections">One of the <see cref="AccessControlSections" /> values that specifies the type of access control list (ACL) information to receive.</param>
+        [SupportedOSPlatform("windows")]
+        object GetAccessControl(AccessControlSections includeSections);
+
+        /// <summary>
+        ///     Applies access control list (ACL) entries described by the <paramref name="value"/> object to the file or directory in the file system.
         /// </summary>
         [SupportedOSPlatform("windows")]
         void SetAccessControl(object value);
@@ -52,12 +59,7 @@ namespace System.IO.Abstractions
             /// <summary>
             /// The entire security descriptor.
             /// </summary>
-            All = Group | Owner | Access | Audit,
-
-            /// <summary>
-            /// The default value when no <see cref="AccessControlSections"/> are specified.#
-            /// </summary>
-            Default = Access | Owner | Group,
+            All = Group | Owner | Access | Audit
         }
     }
 }

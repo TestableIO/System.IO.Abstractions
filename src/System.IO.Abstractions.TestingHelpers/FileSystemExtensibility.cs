@@ -28,31 +28,5 @@ namespace System.IO.Abstractions.TestingHelpers
                 _metadata[item.Key] = item.Value;
             }
         }
-
-        public static FileSystemExtensibility GetNullObject(Func<Exception> exceptionFactory)
-            => new NullFileSystemExtensibility(exceptionFactory);
-
-        private sealed class NullFileSystemExtensibility : FileSystemExtensibility
-        {
-            private readonly Func<Exception> _exceptionFactory;
-
-            public NullFileSystemExtensibility(Func<Exception> exceptionFactory)
-            {
-                _exceptionFactory = exceptionFactory;
-            }
-            
-            public override void StoreMetadata(string key, object value)
-            {
-                _ = key;
-                _ = value;
-                throw _exceptionFactory.Invoke();
-            }
-            
-            public override object RetrieveMetadata(string key)
-            {
-                _ = key;
-                throw _exceptionFactory.Invoke();
-            }
-        }
     }
 }

@@ -14,11 +14,18 @@ namespace System.IO.Abstractions
             this.fileStream = fileStream;
         }
 
-        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl()" />
         [SupportedOSPlatform("windows")]
-        public object GetAccessControl(IFileSystemAclSupport.AccessControlSections includeSections = IFileSystemAclSupport.AccessControlSections.Default)
+        public object GetAccessControl()
         {
             return fileStream.GetAccessControl();
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
+        [SupportedOSPlatform("windows")]
+        public object GetAccessControl(IFileSystemAclSupport.AccessControlSections includeSections)
+        {
+            throw new NotSupportedException("GetAccessControl with includeSections is not supported for FileStreams");
         }
 
         /// <inheritdoc cref="IFileSystemAclSupport.SetAccessControl(object)" />
