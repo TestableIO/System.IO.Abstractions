@@ -17,18 +17,14 @@ namespace System.IO.Abstractions
         public static void Create(this IDirectoryInfo directoryInfo,
             DirectorySecurity directorySecurity)
         {
-            IFileSystemExtensibility extensibility =
-                directoryInfo.Extensibility;
-            if (extensibility.TryGetWrappedInstance(out DirectoryInfo di))
+            IFileSystemAclSupport aclSupport = directoryInfo as IFileSystemAclSupport;
+            if (aclSupport == null)
             {
-                di.Create(directorySecurity);
+                throw new NotSupportedException("The directory info does not support ACL extensions");
             }
-            else
-            {
-                directoryInfo.Create();
-                directoryInfo.Extensibility.StoreMetadata("AccessControl:DirectorySecurity",
-                    directorySecurity);
-            }
+
+            directoryInfo.Create();
+            aclSupport.SetAccessControl(directorySecurity);
         }
 
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
@@ -40,12 +36,14 @@ namespace System.IO.Abstractions
         public static DirectorySecurity GetAccessControl(
             this IDirectoryInfo directoryInfo)
         {
-            IFileSystemExtensibility extensibility =
-                directoryInfo.Extensibility;
-            return extensibility.TryGetWrappedInstance(out DirectoryInfo di)
-                ? di.GetAccessControl()
-                : extensibility.RetrieveMetadata<DirectorySecurity>(
-                    "AccessControl:DirectorySecurity") ?? new DirectorySecurity();
+            IFileSystemAclSupport aclSupport = directoryInfo as IFileSystemAclSupport;
+            var value = aclSupport?.GetAccessControl();
+            if (aclSupport == null || value is not DirectorySecurity directorySecurity)
+            {
+                throw new NotSupportedException("The directory info does not support ACL extensions");
+            }
+
+            return directorySecurity;
         }
 
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
@@ -58,12 +56,14 @@ namespace System.IO.Abstractions
             this IDirectoryInfo directoryInfo,
             AccessControlSections includeSections)
         {
-            IFileSystemExtensibility extensibility =
-                directoryInfo.Extensibility;
-            return extensibility.TryGetWrappedInstance(out DirectoryInfo di)
-                ? di.GetAccessControl(includeSections)
-                : extensibility.RetrieveMetadata<DirectorySecurity>(
-                    "AccessControl:DirectorySecurity") ?? new DirectorySecurity();
+            IFileSystemAclSupport aclSupport = directoryInfo as IFileSystemAclSupport;
+            var value = aclSupport?.GetAccessControl((IFileSystemAclSupport.AccessControlSections) includeSections);
+            if (aclSupport == null || value is not DirectorySecurity directorySecurity)
+            {
+                throw new NotSupportedException("The directory info does not support ACL extensions");
+            }
+
+            return directorySecurity;
         }
 
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
@@ -75,17 +75,13 @@ namespace System.IO.Abstractions
         public static void SetAccessControl(this IDirectoryInfo directoryInfo,
             DirectorySecurity directorySecurity)
         {
-            IFileSystemExtensibility extensibility =
-                directoryInfo.Extensibility;
-            if (extensibility.TryGetWrappedInstance(out DirectoryInfo di))
+            IFileSystemAclSupport aclSupport = directoryInfo as IFileSystemAclSupport;
+            if (aclSupport == null)
             {
-                di.SetAccessControl(directorySecurity);
+                throw new NotSupportedException("The directory info does not support ACL extensions");
             }
-            else
-            {
-                extensibility.StoreMetadata("AccessControl:DirectorySecurity",
-                    directorySecurity);
-            }
+            
+            aclSupport.SetAccessControl(directorySecurity);
         }
     }
 }

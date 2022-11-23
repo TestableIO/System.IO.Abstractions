@@ -1,8 +1,11 @@
-﻿namespace System.IO.Abstractions.TestingHelpers
+﻿using System.Runtime.Versioning;
+using System.Security.AccessControl;
+
+namespace System.IO.Abstractions.TestingHelpers
 {
     /// <inheritdoc />
     [Serializable]
-    public class MockFileInfo : FileInfoBase
+    public class MockFileInfo : FileInfoBase, IFileSystemAclSupport
     {
         private readonly IMockFileDataAccessor mockFileSystem;
         private string path;
@@ -104,17 +107,6 @@
             {
                 var mockFileData = GetMockFileDataForRead();
                 return (int)mockFileData.Attributes != -1 && !mockFileData.IsDirectory;
-            }
-        }
-
-        /// <inheritdoc />
-        public override IFileSystemExtensibility Extensibility
-        {
-            get
-            {
-                var mockFileData = mockFileSystem.GetFile(path);
-                return mockFileData?.Extensibility ?? FileSystemExtensibility.GetNullObject(
-                    () => CommonExceptions.FileNotFound(path));
             }
         }
 
@@ -390,6 +382,26 @@
         public override string ToString()
         {
             return originalPath;
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
+        [SupportedOSPlatform("windows")]
+        public object GetAccessControl(IFileSystemAclSupport.AccessControlSections includeSections = IFileSystemAclSupport.AccessControlSections.Default)
+        {
+            return GetMockFileData().AccessControl;
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.SetAccessControl(object)" />
+        [SupportedOSPlatform("windows")]
+        public void SetAccessControl(object value)
+        {
+            GetMockFileData().AccessControl = value as FileSecurity;
+        }
+
+        private MockFileData GetMockFileData()
+        {
+            return mockFileSystem.GetFile(path)
+                   ?? throw CommonExceptions.FileNotFound(path);
         }
 
         private static DateTime AdjustUnspecifiedKind(DateTime time, DateTimeKind fallbackKind)

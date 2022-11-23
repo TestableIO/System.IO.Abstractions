@@ -18,20 +18,8 @@ namespace System.IO.Abstractions
             string path,
             DirectorySecurity directorySecurity)
         {
-            IDirectoryInfo directoryInfo =
-                directory.FileSystem.DirectoryInfo.New(path);
-            IFileSystemExtensibility extensibility =
-                directoryInfo.Extensibility;
-            if (extensibility.TryGetWrappedInstance(out DirectoryInfo di))
-            {
-                di.Create(directorySecurity);
-            }
-            else
-            {
-                extensibility.StoreMetadata("AccessControl:DirectorySecurity",
-                    directorySecurity);
-                directoryInfo.Create();
-            }
+            IDirectoryInfo directoryInfo = directory.FileSystem.DirectoryInfo.New(path);
+            directoryInfo.Create(directorySecurity);
         }
 
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
@@ -43,14 +31,8 @@ namespace System.IO.Abstractions
         public static DirectorySecurity GetAccessControl(
             this IDirectory directory, string path)
         {
-            IDirectoryInfo directoryInfo =
-                directory.FileSystem.DirectoryInfo.New(path);
-            IFileSystemExtensibility extensibility =
-                directoryInfo.Extensibility;
-            return extensibility.TryGetWrappedInstance(out DirectoryInfo di)
-                ? di.GetAccessControl()
-                : extensibility.RetrieveMetadata<DirectorySecurity>(
-                    "AccessControl:DirectorySecurity") ?? new DirectorySecurity();
+            IDirectoryInfo directoryInfo = directory.FileSystem.DirectoryInfo.New(path);
+            return directoryInfo.GetAccessControl();
         }
 
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
@@ -64,14 +46,8 @@ namespace System.IO.Abstractions
             string path,
             AccessControlSections includeSections)
         {
-            IDirectoryInfo directoryInfo =
-                directory.FileSystem.DirectoryInfo.New(path);
-            IFileSystemExtensibility extensibility =
-                directoryInfo.Extensibility;
-            return extensibility.TryGetWrappedInstance(out DirectoryInfo di)
-                ? di.GetAccessControl(includeSections)
-                : extensibility.RetrieveMetadata<DirectorySecurity>(
-                    "AccessControl:DirectorySecurity") ?? new DirectorySecurity();
+            IDirectoryInfo directoryInfo = directory.FileSystem.DirectoryInfo.New(path);
+            return directoryInfo.GetAccessControl(includeSections);
         }
 
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
@@ -84,19 +60,8 @@ namespace System.IO.Abstractions
             string path,
             DirectorySecurity directorySecurity)
         {
-            IDirectoryInfo directoryInfo =
-                directory.FileSystem.DirectoryInfo.New(path);
-            IFileSystemExtensibility extensibility =
-                directoryInfo.Extensibility;
-            if (extensibility.TryGetWrappedInstance(out DirectoryInfo di))
-            {
-                di.SetAccessControl(directorySecurity);
-            }
-            else
-            {
-                extensibility.StoreMetadata("AccessControl:DirectorySecurity",
-                    directorySecurity);
-            }
+            IDirectoryInfo directoryInfo = directory.FileSystem.DirectoryInfo.New(path);
+            directoryInfo.SetAccessControl(directorySecurity);
         }
     }
 }

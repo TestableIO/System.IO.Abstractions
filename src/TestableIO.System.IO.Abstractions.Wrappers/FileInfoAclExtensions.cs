@@ -17,12 +17,14 @@ namespace System.IO.Abstractions
         public static FileSecurity GetAccessControl(
             this IFileInfo fileInfo)
         {
-            IFileSystemExtensibility extensibility =
-                fileInfo.Extensibility;
-            return extensibility.TryGetWrappedInstance(out FileInfo fi)
-                ? fi.GetAccessControl()
-                : extensibility.RetrieveMetadata<FileSecurity>(
-                    "AccessControl:FileSecurity") ?? new FileSecurity();
+            IFileSystemAclSupport aclSupport = fileInfo as IFileSystemAclSupport;
+            var value = aclSupport?.GetAccessControl();
+            if (aclSupport == null || value is not FileSecurity fileSecurity)
+            {
+                throw new NotSupportedException("The file info does not support ACL extensions");
+            }
+
+            return fileSecurity;
         }
 
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
@@ -35,12 +37,14 @@ namespace System.IO.Abstractions
             this IFileInfo fileInfo,
             AccessControlSections includeSections)
         {
-            IFileSystemExtensibility extensibility =
-                fileInfo.Extensibility;
-            return extensibility.TryGetWrappedInstance(out FileInfo fi)
-                ? fi.GetAccessControl(includeSections)
-                : extensibility.RetrieveMetadata<FileSecurity>(
-                    "AccessControl:FileSecurity") ?? new FileSecurity();
+            IFileSystemAclSupport aclSupport = fileInfo as IFileSystemAclSupport;
+            var value = aclSupport?.GetAccessControl((IFileSystemAclSupport.AccessControlSections)includeSections);
+            if (aclSupport == null || value is not FileSecurity fileSecurity)
+            {
+                throw new NotSupportedException("The file info does not support ACL extensions");
+            }
+
+            return fileSecurity;
         }
 
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
@@ -52,17 +56,13 @@ namespace System.IO.Abstractions
         public static void SetAccessControl(this IFileInfo fileInfo,
             FileSecurity fileSecurity)
         {
-            IFileSystemExtensibility extensibility =
-                fileInfo.Extensibility;
-            if (extensibility.TryGetWrappedInstance(out FileInfo fi))
+            IFileSystemAclSupport aclSupport = fileInfo as IFileSystemAclSupport;
+            if (aclSupport == null)
             {
-                fi.SetAccessControl(fileSecurity);
+                throw new NotSupportedException("The file info does not support ACL extensions");
             }
-            else
-            {
-                extensibility.StoreMetadata("AccessControl:FileSecurity",
-                    fileSecurity);
-            }
+
+            aclSupport.SetAccessControl(fileSecurity);
         }
     }
 }

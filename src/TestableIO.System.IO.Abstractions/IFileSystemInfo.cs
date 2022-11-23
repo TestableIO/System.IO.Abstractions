@@ -20,11 +20,6 @@
         /// <inheritdoc cref="FileSystemInfo.Exists" />
         bool Exists { get; }
 
-        /// <summary>
-        ///     A container to support extensions on <see cref= "IFileSystemInfo" />.
-        /// </summary>
-        IFileSystemExtensibility Extensibility { get; }
-
         /// <inheritdoc cref="FileSystemInfo.Extension" />
         string Extension { get; }
 

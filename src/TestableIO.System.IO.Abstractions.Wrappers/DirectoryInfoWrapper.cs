@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
@@ -7,7 +8,7 @@ namespace System.IO.Abstractions
 {
     /// <inheritdoc />
     [Serializable]
-    public class DirectoryInfoWrapper : DirectoryInfoBase
+    public class DirectoryInfoWrapper : DirectoryInfoBase, IFileSystemAclSupport
     {
         private readonly DirectoryInfo instance;
 
@@ -15,7 +16,6 @@ namespace System.IO.Abstractions
         public DirectoryInfoWrapper(IFileSystem fileSystem, DirectoryInfo instance) : base(fileSystem)
         {
             this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
-            this.Extensibility = new FileSystemExtensibility(instance);
         }
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -72,9 +72,6 @@ namespace System.IO.Abstractions
         {
             get { return instance.Exists; }
         }
-
-        /// <inheritdoc />
-        public override IFileSystemExtensibility Extensibility { get; }
 
         /// <inheritdoc />
         public override string Extension
@@ -334,6 +331,27 @@ namespace System.IO.Abstractions
         public override string ToString()
         {
             return instance.ToString();
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
+        [SupportedOSPlatform("windows")]
+        public object GetAccessControl(IFileSystemAclSupport.AccessControlSections includeSections = IFileSystemAclSupport.AccessControlSections.Default)
+        {
+            return instance.GetAccessControl((AccessControlSections)includeSections);
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.SetAccessControl(object)" />
+        [SupportedOSPlatform("windows")]
+        public void SetAccessControl(object value)
+        {
+            if (value is DirectorySecurity directorySecurity)
+            {
+                this.instance.SetAccessControl(directorySecurity);
+            }
+            else
+            {
+                throw new ArgumentException("value must be of type `FileSecurity`");
+            }
         }
     }
 }

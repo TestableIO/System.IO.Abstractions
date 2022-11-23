@@ -36,7 +36,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <summary>
         /// The extensibility of the <see cref="MockFileData"/>.
         /// </summary>
-        public IFileSystemExtensibility Extensibility
+        internal FileSystemExtensibility Extensibility
             => extensibility;
 
         [NonSerialized]
@@ -191,8 +191,8 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 // FileSecurity's constructor will throw PlatformNotSupportedException on non-Windows platform, so we initialize it in lazy way.
                 // This let's us use this class as long as we don't use AccessControl property.
-                var fileSecurity = Extensibility.RetrieveMetadata<FileSecurity>("AccessControl:FileSecurity");
-                if (fileSecurity == null)
+                var value = Extensibility.RetrieveMetadata("AccessControl:FileSecurity");
+                if (value is not FileSecurity fileSecurity)
                 {
                     fileSecurity = new FileSecurity();
                     Extensibility.StoreMetadata("AccessControl:FileSecurity", fileSecurity);

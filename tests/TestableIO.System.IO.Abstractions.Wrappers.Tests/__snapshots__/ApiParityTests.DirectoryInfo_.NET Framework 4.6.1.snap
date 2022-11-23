@@ -1,8 +1,5 @@
 ﻿{
-  "ExtraMembers": [
-    "System.IO.Abstractions.IFileSystemExtensibility Extensibility",
-    "System.IO.Abstractions.IFileSystemExtensibility get_Extensibility()"
-  ],
+  "ExtraMembers": [],
   "MissingMembers": [
     "System.IO.Abstractions.IDirectoryInfo CreateSubdirectory(System.String, System.Security.AccessControl.DirectorySecurity)",
     "System.Object GetLifetimeService()",

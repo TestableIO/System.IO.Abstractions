@@ -46,9 +46,6 @@
         /// <inheritdoc cref="FileSystemInfo.Exists"/>
         public abstract bool Exists { get; }
 
-        /// <inheritdoc cref="IFileSystemInfo.Extensibility"/>
-        public abstract IFileSystemExtensibility Extensibility { get; }
-
         /// <inheritdoc cref="FileSystemInfo.Extension"/>
         public abstract string Extension { get; }
 

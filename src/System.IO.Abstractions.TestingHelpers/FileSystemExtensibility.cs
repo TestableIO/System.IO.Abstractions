@@ -2,30 +2,20 @@
 
 namespace System.IO.Abstractions.TestingHelpers
 {
-    internal class FileSystemExtensibility : IFileSystemExtensibility
+    internal class FileSystemExtensibility
     {
         private readonly Dictionary<string, object> _metadata = new();
-
-        /// <inheritdoc cref="IFileSystemExtensibility.TryGetWrappedInstance{T}(out T)" />
-        public bool TryGetWrappedInstance<T>(out T wrappedInstance)
-        {
-            wrappedInstance = default;
-            return false;
-        }
-
-        /// <inheritdoc cref="IFileSystemExtensibility.StoreMetadata{T}(string, T)" />
-        public void StoreMetadata<T>(string key, T value)
+        
+        public virtual void StoreMetadata(string key, object value)
         {
             _metadata[key] = value;
         }
-
-        /// <inheritdoc cref="IFileSystemExtensibility.RetrieveMetadata{T}(string)" />
-        public T RetrieveMetadata<T>(string key)
+        
+        public virtual object RetrieveMetadata(string key)
         {
-            if (_metadata.TryGetValue(key, out object value) &&
-                value is T castedValue)
+            if (_metadata.TryGetValue(key, out object value))
             {
-                return castedValue;
+                return value;
             }
 
             return default;
@@ -39,10 +29,10 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
-        public static IFileSystemExtensibility GetNullObject(Func<Exception> exceptionFactory)
+        public static FileSystemExtensibility GetNullObject(Func<Exception> exceptionFactory)
             => new NullFileSystemExtensibility(exceptionFactory);
 
-        private class NullFileSystemExtensibility : IFileSystemExtensibility
+        private sealed class NullFileSystemExtensibility : FileSystemExtensibility
         {
             private readonly Func<Exception> _exceptionFactory;
 
@@ -50,24 +40,15 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 _exceptionFactory = exceptionFactory;
             }
-
-            /// <inheritdoc cref="IFileSystemExtensibility.TryGetWrappedInstance{T}(out T)" />
-            public bool TryGetWrappedInstance<T>(out T wrappedInstance)
-            {
-                wrappedInstance = default;
-                return false;
-            }
-
-            /// <inheritdoc cref="IFileSystemExtensibility.StoreMetadata{T}(string, T)" />
-            public void StoreMetadata<T>(string key, T value)
+            
+            public override void StoreMetadata(string key, object value)
             {
                 _ = key;
                 _ = value;
                 throw _exceptionFactory.Invoke();
             }
-
-            /// <inheritdoc cref="IFileSystemExtensibility.RetrieveMetadata{T}(string)" />
-            public T RetrieveMetadata<T>(string key)
+            
+            public override object RetrieveMetadata(string key)
             {
                 _ = key;
                 throw _exceptionFactory.Invoke();

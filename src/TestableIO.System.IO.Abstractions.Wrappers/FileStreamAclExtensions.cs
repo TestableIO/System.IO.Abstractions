@@ -1,4 +1,5 @@
-﻿using System.Runtime.Versioning;
+﻿using System.Reflection;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
@@ -16,12 +17,14 @@ namespace System.IO.Abstractions
         [SupportedOSPlatform("windows")]
         public static FileSecurity GetAccessControl(this FileSystemStream fileStream)
         {
-            IFileSystemExtensibility extensibility =
-                fileStream.Extensibility;
-            return extensibility.TryGetWrappedInstance(out FileStream fs)
-                ? fs.GetAccessControl()
-                : extensibility.RetrieveMetadata<FileSecurity>(
-                    "AccessControl:FileSecurity") ?? new FileSecurity();
+            IFileSystemAclSupport aclSupport = fileStream as IFileSystemAclSupport;
+            var value = aclSupport?.GetAccessControl();
+            if (aclSupport == null || value is not FileSecurity fileSecurity)
+            {
+                throw new NotSupportedException("The file stream does not support ACL extensions");
+            }
+
+            return fileSecurity;
         }
 
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
@@ -33,17 +36,13 @@ namespace System.IO.Abstractions
         public static void SetAccessControl(this FileSystemStream fileStream,
             FileSecurity fileSecurity)
         {
-            IFileSystemExtensibility extensibility =
-                fileStream.Extensibility;
-            if (extensibility.TryGetWrappedInstance(out FileStream fs))
+            IFileSystemAclSupport aclSupport = fileStream as IFileSystemAclSupport;
+            if (aclSupport == null)
             {
-                fs.SetAccessControl(fileSecurity);
+                throw new NotSupportedException("The file info does not support ACL extensions");
             }
-            else
-            {
-                extensibility.StoreMetadata("AccessControl:FileSecurity",
-                    fileSecurity);
-            }
+
+            aclSupport.SetAccessControl(fileSecurity);
         }
     }
 }

@@ -24,11 +24,6 @@ namespace System.IO.Abstractions
         public override bool CanWrite
             => _stream.CanWrite;
 
-        /// <summary>
-        ///     A container to support extensions on<see cref= "FileSystemStream" />.
-        /// </summary>
-        public abstract IFileSystemExtensibility Extensibility { get; }
-
         /// <inheritdoc cref="FileStream.IsAsync" />
         public bool IsAsync { get; }
 

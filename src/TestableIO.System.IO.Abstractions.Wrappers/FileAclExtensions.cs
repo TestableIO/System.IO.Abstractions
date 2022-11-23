@@ -18,12 +18,7 @@ namespace System.IO.Abstractions
             this IFile file, string path)
         {
             IFileInfo fileInfo = file.FileSystem.FileInfo.New(path);
-            IFileSystemExtensibility extensibility =
-                fileInfo.Extensibility;
-            return extensibility.TryGetWrappedInstance(out FileInfo fi)
-                ? fi.GetAccessControl()
-                : extensibility.RetrieveMetadata<FileSecurity>(
-                    "AccessControl:FileSecurity") ?? new FileSecurity();
+            return fileInfo.GetAccessControl();
         }
 
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
@@ -38,12 +33,7 @@ namespace System.IO.Abstractions
             AccessControlSections includeSections)
         {
             IFileInfo fileInfo = file.FileSystem.FileInfo.New(path);
-            IFileSystemExtensibility extensibility =
-                fileInfo.Extensibility;
-            return extensibility.TryGetWrappedInstance(out FileInfo fi)
-                ? fi.GetAccessControl(includeSections)
-                : extensibility.RetrieveMetadata<FileSecurity>(
-                    "AccessControl:FileSecurity") ?? new FileSecurity();
+            return fileInfo.GetAccessControl(includeSections);
         }
 
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
@@ -57,17 +47,7 @@ namespace System.IO.Abstractions
             FileSecurity fileSecurity)
         {
             IFileInfo fileInfo = file.FileSystem.FileInfo.New(path);
-            IFileSystemExtensibility extensibility =
-                fileInfo.Extensibility;
-            if (extensibility.TryGetWrappedInstance(out FileInfo fi))
-            {
-                fi.SetAccessControl(fileSecurity);
-            }
-            else
-            {
-                extensibility.StoreMetadata("AccessControl:FileSecurity",
-                    fileSecurity);
-            }
+            fileInfo.SetAccessControl(fileSecurity);
         }
     }
 }

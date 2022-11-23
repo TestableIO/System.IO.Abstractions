@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
 using System.Threading;
+using System.Runtime.Versioning;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
     /// <inheritdoc />
     [Serializable]
-    public class MockFileStream : FileSystemStream
+    public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string path;
@@ -26,7 +27,6 @@ namespace System.IO.Abstractions.TestingHelpers
                (options & FileOptions.Asynchronous) != 0)
 
         {
-            this.Extensibility = new FileSystemExtensibility();
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
             this.path = path;
             this.options = options;
@@ -114,9 +114,6 @@ namespace System.IO.Abstractions.TestingHelpers
             base.EndWrite(asyncResult);
         }
 
-        /// <inheritdoc cref="FileSystemStream.Extensibility" />
-        public override IFileSystemExtensibility Extensibility { get; }
-
         /// <inheritdoc />
         public override void SetLength(long value)
         {
@@ -198,6 +195,27 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void Flush()
         {
             InternalFlush();
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
+        [SupportedOSPlatform("windows")]
+        public object GetAccessControl(IFileSystemAclSupport.AccessControlSections includeSections = IFileSystemAclSupport.AccessControlSections.Default)
+        {
+            return GetExtensibility().RetrieveMetadata("AccessControl:FileSecurity");
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.SetAccessControl(object)" />
+        [SupportedOSPlatform("windows")]
+        public void SetAccessControl(object value)
+        {
+            GetExtensibility().StoreMetadata("AccessControl:FileSecurity", value);
+        }
+
+        private FileSystemExtensibility GetExtensibility()
+        {
+            var mockFileData = mockFileDataAccessor.GetFile(path);
+            return mockFileData?.Extensibility ?? FileSystemExtensibility.GetNullObject(
+                () => CommonExceptions.FileNotFound(path));
         }
 
         private void InternalFlush()
