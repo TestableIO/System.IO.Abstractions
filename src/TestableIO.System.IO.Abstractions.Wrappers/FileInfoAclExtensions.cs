@@ -18,8 +18,8 @@ namespace System.IO.Abstractions
             this IFileInfo fileInfo)
         {
             IFileSystemAclSupport aclSupport = fileInfo as IFileSystemAclSupport;
-            var value = aclSupport?.GetAccessControl();
-            if (aclSupport == null || value is not FileSecurity fileSecurity)
+            var fileSecurity = aclSupport?.GetAccessControl() as FileSecurity;
+            if (aclSupport == null || fileSecurity == null)
             {
                 throw new NotSupportedException("The file info does not support ACL extensions");
             }
@@ -38,8 +38,8 @@ namespace System.IO.Abstractions
             AccessControlSections includeSections)
         {
             IFileSystemAclSupport aclSupport = fileInfo as IFileSystemAclSupport;
-            var value = aclSupport?.GetAccessControl((IFileSystemAclSupport.AccessControlSections)includeSections);
-            if (aclSupport == null || value is not FileSecurity fileSecurity)
+            var fileSecurity = aclSupport?.GetAccessControl((IFileSystemAclSupport.AccessControlSections)includeSections) as FileSecurity;
+            if (aclSupport == null || fileSecurity == null)
             {
                 throw new NotSupportedException("The file info does not support ACL extensions");
             }

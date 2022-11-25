@@ -18,8 +18,8 @@ namespace System.IO.Abstractions
         public static FileSecurity GetAccessControl(this FileSystemStream fileStream)
         {
             IFileSystemAclSupport aclSupport = fileStream as IFileSystemAclSupport;
-            var value = aclSupport?.GetAccessControl();
-            if (aclSupport == null || value is not FileSecurity fileSecurity)
+            var fileSecurity = aclSupport?.GetAccessControl() as FileSecurity;
+            if (aclSupport == null || fileSecurity == null)
             {
                 throw new NotSupportedException("The file stream does not support ACL extensions");
             }

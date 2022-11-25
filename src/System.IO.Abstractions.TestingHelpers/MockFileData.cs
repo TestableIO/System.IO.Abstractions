@@ -102,7 +102,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentNullException(nameof(template));
             }
             
-            extensibility.CloneFrom(template.extensibility);
+            extensibility.CopyMetadataFrom(template.extensibility);
             Attributes = template.Attributes;
             Contents = template.Contents.ToArray();
             CreationTime = template.CreationTime;
@@ -191,8 +191,8 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 // FileSecurity's constructor will throw PlatformNotSupportedException on non-Windows platform, so we initialize it in lazy way.
                 // This let's us use this class as long as we don't use AccessControl property.
-                var value = Extensibility.RetrieveMetadata("AccessControl:FileSecurity");
-                if (value is not FileSecurity fileSecurity)
+                var fileSecurity = Extensibility.RetrieveMetadata("AccessControl:FileSecurity") as FileSecurity;
+                if (fileSecurity == null)
                 {
                     fileSecurity = new FileSecurity();
                     Extensibility.StoreMetadata("AccessControl:FileSecurity", fileSecurity);

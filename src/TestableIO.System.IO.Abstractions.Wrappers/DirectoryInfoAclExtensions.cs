@@ -37,8 +37,8 @@ namespace System.IO.Abstractions
             this IDirectoryInfo directoryInfo)
         {
             IFileSystemAclSupport aclSupport = directoryInfo as IFileSystemAclSupport;
-            var value = aclSupport?.GetAccessControl();
-            if (aclSupport == null || value is not DirectorySecurity directorySecurity)
+            var directorySecurity = aclSupport?.GetAccessControl() as DirectorySecurity;
+            if (aclSupport == null || directorySecurity == null)
             {
                 throw new NotSupportedException("The directory info does not support ACL extensions");
             }
@@ -57,8 +57,8 @@ namespace System.IO.Abstractions
             AccessControlSections includeSections)
         {
             IFileSystemAclSupport aclSupport = directoryInfo as IFileSystemAclSupport;
-            var value = aclSupport?.GetAccessControl((IFileSystemAclSupport.AccessControlSections) includeSections);
-            if (aclSupport == null || value is not DirectorySecurity directorySecurity)
+            var directorySecurity = aclSupport?.GetAccessControl((IFileSystemAclSupport.AccessControlSections) includeSections) as DirectorySecurity;
+            if (aclSupport == null || directorySecurity == null)
             {
                 throw new NotSupportedException("The directory info does not support ACL extensions");
             }
