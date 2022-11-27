@@ -1,5 +1,5 @@
 ![System.IO.Abstractions](https://socialify.git.ci/TestableIO/System.IO.Abstractions/image?description=1&font=Source%20Code%20Pro&forks=1&issues=1&pattern=Charlie%20Brown&pulls=1&stargazers=1&theme=Dark)
-[![NuGet](https://img.shields.io/nuget/v/System.IO.Abstractions.svg)](https://www.nuget.org/packages/System.IO.Abstractions)
+[![NuGet](https://img.shields.io/nuget/v/TestableIO.System.IO.Abstractions.svg)](https://www.nuget.org/packages/TestableIO.System.IO.Abstractions)
 ![Continuous Integration](https://github.com/TestableIO/System.IO.Abstractions/workflows/Continuous%20Integration/badge.svg)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/54479b054d194adfb4ff476ef0182fe0)](https://www.codacy.com/gh/TestableIO/System.IO.Abstractions/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TestableIO/System.IO.Abstractions&amp;utm_campaign=Badge_Grade)
 [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
@@ -8,8 +8,10 @@
 At the core of the library is `IFileSystem` and `FileSystem`. Instead of calling methods like `File.ReadAllText` directly, use `IFileSystem.File.ReadAllText`. We have exactly the same API, except that ours is injectable and testable.
 
 ```shell
-dotnet add package System.IO.Abstractions
+dotnet add package TestableIO.System.IO.Abstractions
 ```
+
+*Note: This NuGet package is also published as `System.IO.Abstractions` but we suggest to use the prefix to make clear that this is not an official .NET package.*
 
 ```csharp
 public class MyComponent
@@ -43,8 +45,10 @@ public class MyComponent
 The library also ships with a series of test helpers to save you from having to mock out every call, for basic scenarios. They are not a complete copy of a real-life file system, but they'll get you most of the way there.
 
 ```shell
-dotnet add package System.IO.Abstractions.TestingHelpers
+dotnet add package TestableIO.System.IO.Abstractions.TestingHelpers
 ```
+
+*Note: This NuGet package is also published as `System.IO.Abstractions.TestingHelpers` but we suggest to use the prefix to make clear that this is not an official .NET package.*
 
 ```csharp
 [Test]
