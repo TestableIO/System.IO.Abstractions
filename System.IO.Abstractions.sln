@@ -1,21 +1,13 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F3BDA62-8052-4C37-97A0-94354AA971B0}"
-	ProjectSection(SolutionItems) = preProject
-		appveyor.yml = appveyor.yml
-		StrongName.snk = StrongName.snk
-	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions.TestingHelpers.Tests", "tests\System.IO.Abstractions.TestingHelpers.Tests\System.IO.Abstractions.TestingHelpers.Tests.csproj", "{20B02738-952A-40F5-9C10-E2F83013E9FC}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions", "src\System.IO.Abstractions\System.IO.Abstractions.csproj", "{B7DA254D-496F-4C50-969C-CF925758E2ED}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions.TestingHelpers", "src\System.IO.Abstractions.TestingHelpers\System.IO.Abstractions.TestingHelpers.csproj", "{0103D32A-6124-4A1A-AD6C-30EB957F09B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions.Benchmarks", "benchmarks\System.IO.Abstractions.Benchmarks\System.IO.Abstractions.Benchmarks.csproj", "{015B3812-E01D-479C-895D-BDDF16E798CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestableIO.System.IO.Abstractions.Benchmarks", "benchmarks\TestableIO.System.IO.Abstractions.Benchmarks\TestableIO.System.IO.Abstractions.Benchmarks.csproj", "{015B3812-E01D-479C-895D-BDDF16E798CA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{BCEC61BD-4941-41EC-975A-ACEFC7AC1780}"
 EndProject
@@ -25,10 +17,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestableIO.System.IO.Abstra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestableIO.System.IO.Abstractions.Wrappers", "src\TestableIO.System.IO.Abstractions.Wrappers\TestableIO.System.IO.Abstractions.Wrappers.csproj", "{3698BB93-B031-4140-BAEF-D3480A94F531}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{F781892B-7C5D-4C8D-8D3D-3E9E207D686D}"
-	ProjectSection(SolutionItems) = preProject
-		images\icon_256x256.png = images\icon_256x256.png
-	EndProjectSection
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "meta", "meta", "{C078E0B6-9747-475F-A999-B9E775DF6643}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestableIO.System.IO.Abstractions.TestingHelpers", "src\TestableIO.System.IO.Abstractions.TestingHelpers\TestableIO.System.IO.Abstractions.TestingHelpers.csproj", "{DE22AA55-408F-4041-B85D-26D6D6A158A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestableIO.System.IO.Abstractions.TestingHelpers.Tests", "tests\TestableIO.System.IO.Abstractions.TestingHelpers.Tests\TestableIO.System.IO.Abstractions.TestingHelpers.Tests.csproj", "{919888D2-E37D-40E7-8AD0-600F9429316D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,10 +29,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{20B02738-952A-40F5-9C10-E2F83013E9FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{20B02738-952A-40F5-9C10-E2F83013E9FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{20B02738-952A-40F5-9C10-E2F83013E9FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{20B02738-952A-40F5-9C10-E2F83013E9FC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B7DA254D-496F-4C50-969C-CF925758E2ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B7DA254D-496F-4C50-969C-CF925758E2ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7DA254D-496F-4C50-969C-CF925758E2ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -64,14 +53,24 @@ Global
 		{3698BB93-B031-4140-BAEF-D3480A94F531}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3698BB93-B031-4140-BAEF-D3480A94F531}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3698BB93-B031-4140-BAEF-D3480A94F531}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE22AA55-408F-4041-B85D-26D6D6A158A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE22AA55-408F-4041-B85D-26D6D6A158A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE22AA55-408F-4041-B85D-26D6D6A158A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE22AA55-408F-4041-B85D-26D6D6A158A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{919888D2-E37D-40E7-8AD0-600F9429316D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{919888D2-E37D-40E7-8AD0-600F9429316D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{919888D2-E37D-40E7-8AD0-600F9429316D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{919888D2-E37D-40E7-8AD0-600F9429316D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{20B02738-952A-40F5-9C10-E2F83013E9FC} = {BCEC61BD-4941-41EC-975A-ACEFC7AC1780}
+		{0103D32A-6124-4A1A-AD6C-30EB957F09B0} = {C078E0B6-9747-475F-A999-B9E775DF6643}
+		{B7DA254D-496F-4C50-969C-CF925758E2ED} = {C078E0B6-9747-475F-A999-B9E775DF6643}
 		{015B3812-E01D-479C-895D-BDDF16E798CA} = {BCEC61BD-4941-41EC-975A-ACEFC7AC1780}
 		{7105D748-1253-409F-A624-4879412EF3C2} = {BCEC61BD-4941-41EC-975A-ACEFC7AC1780}
+		{919888D2-E37D-40E7-8AD0-600F9429316D} = {BCEC61BD-4941-41EC-975A-ACEFC7AC1780}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8885C59C-F6A0-4C2F-A3BC-B720E9BD161F}
