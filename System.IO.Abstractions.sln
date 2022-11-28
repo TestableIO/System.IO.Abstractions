@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions.TestingHelpers", "src\System.IO.Abstractions.TestingHelpers\System.IO.Abstractions.TestingHelpers.csproj", "{0103D32A-6124-4A1A-AD6C-30EB957F09B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "System.IO.Abstractions.Benchmarks", "benchmarks\System.IO.Abstractions.Benchmarks\System.IO.Abstractions.Benchmarks.csproj", "{015B3812-E01D-479C-895D-BDDF16E798CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestableIO.System.IO.Abstractions.Benchmarks", "benchmarks\TestableIO.System.IO.Abstractions.Benchmarks\TestableIO.System.IO.Abstractions.Benchmarks.csproj", "{015B3812-E01D-479C-895D-BDDF16E798CA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{BCEC61BD-4941-41EC-975A-ACEFC7AC1780}"
 EndProject
