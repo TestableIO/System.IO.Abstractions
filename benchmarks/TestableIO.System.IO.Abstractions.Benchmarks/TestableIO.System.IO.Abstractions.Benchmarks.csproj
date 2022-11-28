@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<AssemblyName>System.IO.Abstractions.Benchmarks</AssemblyName>
-		<RootNamespace>System.IO.Abstractions.Benchmarks</RootNamespace>
+		<AssemblyName>TestableIO.System.IO.Abstractions.Benchmarks</AssemblyName>
+		<RootNamespace>TestableIO.System.IO.Abstractions.Benchmarks</RootNamespace>
 		<Description>Bencharmks comparisons.</Description>
 		<TargetFrameworks>net5.0;netcoreapp3.1;net461</TargetFrameworks>
 		<PackageProjectUrl>https://github.com/TestableIO/System.IO.Abstractions</PackageProjectUrl>
@@ -13,8 +13,8 @@
 		<OutputType>Exe</OutputType>
 	</PropertyGroup>
 	<ItemGroup>
-		<ProjectReference Include="../../src/System.IO.Abstractions/System.IO.Abstractions.csproj" />
-		<ProjectReference Include="../../src/System.IO.Abstractions.TestingHelpers/System.IO.Abstractions.TestingHelpers.csproj" />
+		<ProjectReference Include="../../src/TestableIO.System.IO.Abstractions.Wrappers/TestableIO.System.IO.Abstractions.Wrappers.csproj" />
+		<ProjectReference Include="../../src/TestableIO.System.IO.Abstractions.TestingHelpers/TestableIO.System.IO.Abstractions.TestingHelpers.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net461" Version="1.0.3">
