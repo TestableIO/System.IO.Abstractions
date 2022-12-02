@@ -34,13 +34,10 @@ namespace System.IO.Abstractions.TestingHelpers
         public static readonly DateTimeOffset DefaultDateTimeOffset = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc);
 
         /// <summary>
-        /// The extensibility of the <see cref="MockFileData"/>.
+        /// The access control of the <see cref="MockFileData"/>.
         /// </summary>
-        internal FileSystemExtensibility Extensibility
-            => extensibility;
-
         [NonSerialized]
-        private FileSystemExtensibility extensibility = new FileSystemExtensibility();
+        private FileSecurity accessControl;
 
         /// <summary>
         /// Gets a value indicating whether the <see cref="MockFileData"/> is a directory or not.
@@ -101,8 +98,8 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 throw new ArgumentNullException(nameof(template));
             }
-            
-            extensibility.CopyMetadataFrom(template.extensibility);
+
+            accessControl = template.accessControl;
             Attributes = template.Attributes;
             Contents = template.Contents.ToArray();
             CreationTime = template.CreationTime;
@@ -136,7 +133,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public DateTimeOffset CreationTime
         {
             get { return creationTime; }
-            set{ creationTime = value.ToUniversalTime(); }
+            set { creationTime = value.ToUniversalTime(); }
         }
         private DateTimeOffset creationTime;
 
@@ -191,16 +188,9 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 // FileSecurity's constructor will throw PlatformNotSupportedException on non-Windows platform, so we initialize it in lazy way.
                 // This let's us use this class as long as we don't use AccessControl property.
-                var fileSecurity = Extensibility.RetrieveMetadata("AccessControl:FileSecurity") as FileSecurity;
-                if (fileSecurity == null)
-                {
-                    fileSecurity = new FileSecurity();
-                    Extensibility.StoreMetadata("AccessControl:FileSecurity", fileSecurity);
-                }
-
-                return fileSecurity;
+                return accessControl ?? (accessControl = new FileSecurity());
             }
-            set { Extensibility.StoreMetadata("AccessControl:FileSecurity", value); }
+            set { accessControl = value; }
         }
 
         /// <summary>

@@ -1,6 +1,4 @@
-﻿using System.Runtime.Versioning;
-
-namespace System.IO.Abstractions
+﻿namespace System.IO.Abstractions
 {
     /// <summary>
     ///     Support ACL functionality on file system instances.
@@ -10,20 +8,17 @@ namespace System.IO.Abstractions
         /// <summary>
         ///     Gets a access control object that encapsulates the access control list (ACL) entries for the file or directory in the file system.
         /// </summary>
-        [SupportedOSPlatform("windows")]
         object GetAccessControl();
 
         /// <summary>
         ///     Gets a access control object that encapsulates the access control list (ACL) entries for the file or directory in the file system.
         /// </summary>
         /// <param name="includeSections">One of the <see cref="AccessControlSections" /> values that specifies the type of access control list (ACL) information to receive.</param>
-        [SupportedOSPlatform("windows")]
         object GetAccessControl(AccessControlSections includeSections);
 
         /// <summary>
         ///     Applies access control list (ACL) entries described by the <paramref name="value"/> object to the file or directory in the file system.
         /// </summary>
-        [SupportedOSPlatform("windows")]
         void SetAccessControl(object value);
 
         /// <summary>
