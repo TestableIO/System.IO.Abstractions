@@ -5,7 +5,7 @@ namespace System.IO.Abstractions.TestingHelpers
 {
     /// <inheritdoc />
     [Serializable]
-    public class MockFileInfo : FileInfoBase
+    public class MockFileInfo : FileInfoBase, IFileSystemAclSupport
     {
         private readonly IMockFileDataAccessor mockFileSystem;
         private string path;
@@ -18,7 +18,8 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockFileInfo(IMockFileDataAccessor mockFileSystem, string path) : base(mockFileSystem?.FileSystem)
         {
             this.mockFileSystem = mockFileSystem ?? throw new ArgumentNullException(nameof(mockFileSystem));
-            this.originalPath = path ?? throw new ArgumentNullException(nameof(path));
+            mockFileSystem.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+            this.originalPath = path;
             this.path = mockFileSystem.Path.GetFullPath(path);
             this.mockFile = new MockFile(mockFileSystem);
             Refresh();
@@ -256,21 +257,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var mockFileData = GetMockFileDataForWrite();
             mockFileData.Attributes |= FileAttributes.Encrypted;
         }
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override FileSecurity GetAccessControl()
-        {
-            return mockFileSystem.File.GetAccessControl(this.path);
-        }
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override FileSecurity GetAccessControl(AccessControlSections includeSections)
-        {
-            return mockFileSystem.File.GetAccessControl(this.path, includeSections);
-        }
-
+        
         /// <inheritdoc />
         public override void MoveTo(string destFileName)
         {
@@ -334,14 +321,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFile.Replace(path, destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
             return mockFileSystem.FileInfo.New(destinationFileName);
         }
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override void SetAccessControl(FileSecurity fileSecurity)
-        {
-            mockFile.SetAccessControl(this.path, fileSecurity);
-        }
-
+        
         /// <inheritdoc />
         public override IDirectoryInfo Directory
         {
@@ -402,6 +382,33 @@ namespace System.IO.Abstractions.TestingHelpers
         public override string ToString()
         {
             return originalPath;
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl()" />
+        [SupportedOSPlatform("windows")]
+        public object GetAccessControl()
+        {
+            return GetMockFileData().AccessControl;
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
+        [SupportedOSPlatform("windows")]
+        public object GetAccessControl(IFileSystemAclSupport.AccessControlSections includeSections)
+        {
+            return GetMockFileData().AccessControl;
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.SetAccessControl(object)" />
+        [SupportedOSPlatform("windows")]
+        public void SetAccessControl(object value)
+        {
+            GetMockFileData().AccessControl = value as FileSecurity;
+        }
+
+        private MockFileData GetMockFileData()
+        {
+            return mockFileSystem.GetFile(path)
+                   ?? throw CommonExceptions.FileNotFound(path);
         }
 
         private static DateTime AdjustUnspecifiedKind(DateTime time, DateTimeKind fallbackKind)

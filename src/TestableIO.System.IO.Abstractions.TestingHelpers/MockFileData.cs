@@ -133,7 +133,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public DateTimeOffset CreationTime
         {
             get { return creationTime; }
-            set{ creationTime = value.ToUniversalTime(); }
+            set { creationTime = value.ToUniversalTime(); }
         }
         private DateTimeOffset creationTime;
 
@@ -179,7 +179,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public FileAttributes Attributes { get; set; } = FileAttributes.Normal;
 
         /// <summary>
-        /// Gets or sets <see cref="FileSecurity"/> of the <see cref="MockFileData"/>. This is the object that is returned for this <see cref="MockFileData"/> when calling <see cref="FileBase.GetAccessControl(string)"/>.
+        /// Gets or sets <see cref="FileSecurity"/> of the <see cref="MockFileData"/>.
         /// </summary>
         [SupportedOSPlatform("windows")]
         public FileSecurity AccessControl

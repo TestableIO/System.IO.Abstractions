@@ -1,5 +1,4 @@
 ﻿using System.Runtime.Versioning;
-using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
@@ -41,19 +40,6 @@ namespace System.IO.Abstractions
         [SupportedOSPlatform("windows")]
         void Encrypt();
 
-#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
-        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(FileInfo)"/>
-#else
-        /// <inheritdoc cref="FileInfo.GetAccessControl()"/>
-#endif
-        FileSecurity GetAccessControl();
-#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
-        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(FileInfo,AccessControlSections)"/>
-#else
-        /// <inheritdoc cref="File.GetAccessControl(string,AccessControlSections)"/>
-#endif
-        FileSecurity GetAccessControl(AccessControlSections includeSections);
-
         /// <inheritdoc cref="FileInfo.MoveTo(string)" />
         void MoveTo(string destFileName);
 
@@ -93,10 +79,5 @@ namespace System.IO.Abstractions
         IFileInfo Replace(string destinationFileName,
             string? destinationBackupFileName,
             bool ignoreMetadataErrors);
-
-#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
-#endif
-        /// <inheritdoc cref="M:FileInfo.SetAccessControl(FileSecurity)"/>
-        void SetAccessControl(FileSecurity fileSecurity);
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.Versioning;
-using System.Security.AccessControl;
 using System.Text;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -266,28 +264,6 @@ namespace System.IO.Abstractions.TestingHelpers
             catch (UnauthorizedAccessException) { }
 
             return false;
-        }
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override FileSecurity GetAccessControl(string path)
-        {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-
-            if (!mockFileDataAccessor.FileExists(path))
-            {
-                throw CommonExceptions.FileNotFound(path);
-            }
-
-            var fileData = mockFileDataAccessor.GetFile(path);
-            return fileData.AccessControl;
-        }
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override FileSecurity GetAccessControl(string path, AccessControlSections includeSections)
-        {
-            return GetAccessControl(path);
         }
 
         /// <summary>
@@ -731,22 +707,6 @@ namespace System.IO.Abstractions.TestingHelpers
             throw new NotImplementedException();
         }
 #endif
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override void SetAccessControl(string path, FileSecurity fileSecurity)
-        {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-
-            if (!mockFileDataAccessor.FileExists(path))
-            {
-                throw CommonExceptions.FileNotFound(path);
-            }
-
-            var fileData = mockFileDataAccessor.GetFile(path);
-            mockFileDataAccessor.AdjustTimes(fileData, TimeAdjustments.LastAccessTime);
-            fileData.AccessControl = fileSecurity;
-        }
 
         /// <inheritdoc />
         public override void SetAttributes(string path, FileAttributes fileAttributes)

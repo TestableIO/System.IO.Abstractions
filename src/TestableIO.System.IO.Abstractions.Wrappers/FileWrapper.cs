@@ -115,20 +115,6 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override FileSecurity GetAccessControl(string path)
-        {
-            return new FileInfo(path).GetAccessControl();
-        }
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override FileSecurity GetAccessControl(string path, AccessControlSections includeSections)
-        {
-            return new FileInfo(path).GetAccessControl(includeSections);
-        }
-
-        /// <inheritdoc />
         public override FileAttributes GetAttributes(string path)
         {
             return File.GetAttributes(path);
@@ -290,13 +276,6 @@ namespace System.IO.Abstractions
             throw new NotImplementedException();
         }
 #endif
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override void SetAccessControl(string path, FileSecurity fileSecurity)
-        {
-            new FileInfo(path).SetAccessControl(fileSecurity);
-        }
 
         /// <inheritdoc />
         public override void SetAttributes(string path, FileAttributes fileAttributes)

@@ -5,7 +5,7 @@ namespace System.IO.Abstractions
 {
     /// <inheritdoc />
     [Serializable]
-    public class FileInfoWrapper : FileInfoBase
+    public class FileInfoWrapper : FileInfoBase, IFileSystemAclSupport
     {
         private readonly FileInfo instance;
 
@@ -169,22 +169,6 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-
-        [SupportedOSPlatform("windows")]
-        public override FileSecurity GetAccessControl()
-        {
-            return instance.GetAccessControl();
-        }
-
-        /// <inheritdoc />
-
-        [SupportedOSPlatform("windows")]
-        public override FileSecurity GetAccessControl(AccessControlSections includeSections)
-        {
-            return instance.GetAccessControl(includeSections);
-        }
-
-        /// <inheritdoc />
         public override void MoveTo(string destFileName)
         {
             instance.MoveTo(destFileName);
@@ -255,13 +239,6 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override void SetAccessControl(FileSecurity fileSecurity)
-        {
-            instance.SetAccessControl(fileSecurity);
-        }
-
-        /// <inheritdoc />
         public override IDirectoryInfo Directory
         {
             get { return new DirectoryInfoWrapper(FileSystem, instance.Directory); }
@@ -290,6 +267,34 @@ namespace System.IO.Abstractions
         public override string ToString()
         {
             return instance.ToString();
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl()" />
+        [SupportedOSPlatform("windows")]
+        public object GetAccessControl()
+        {
+            return instance.GetAccessControl();
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
+        [SupportedOSPlatform("windows")]
+        public object GetAccessControl(IFileSystemAclSupport.AccessControlSections includeSections)
+        {
+            return instance.GetAccessControl((AccessControlSections)includeSections);
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.SetAccessControl(object)" />
+        [SupportedOSPlatform("windows")]
+        public void SetAccessControl(object value)
+        {
+            if (value is FileSecurity fileSecurity)
+            {
+                this.instance.SetAccessControl(fileSecurity);
+            }
+            else
+            {
+                throw new ArgumentException("value must be of type `FileSecurity`");
+            }
         }
     }
 }

@@ -1,10 +1,5 @@
 ﻿{
-  "ExtraMembers": [
-    "System.Security.AccessControl.DirectorySecurity GetAccessControl()",
-    "System.Security.AccessControl.DirectorySecurity GetAccessControl(System.Security.AccessControl.AccessControlSections)",
-    "Void Create(System.Security.AccessControl.DirectorySecurity)",
-    "Void SetAccessControl(System.Security.AccessControl.DirectorySecurity)"
-  ],
+  "ExtraMembers": [],
   "MissingMembers": [
     "System.Object GetLifetimeService()",
     "System.Object InitializeLifetimeService()",

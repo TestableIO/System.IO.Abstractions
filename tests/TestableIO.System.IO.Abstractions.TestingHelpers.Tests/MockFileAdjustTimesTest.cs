@@ -216,7 +216,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
 
             Assert.That(actualCreationTime, Is.EqualTo(creationTime));
-            Assert.That(actualLastAccessTime, Is.EqualTo(updateTime));
+            Assert.That(actualLastAccessTime, Is.EqualTo(creationTime));
             Assert.That(actualLastWriteTime, Is.EqualTo(creationTime));
         }
 

@@ -5,7 +5,11 @@
     "System.Object GetLifetimeService()",
     "System.Object InitializeLifetimeService()",
     "System.Runtime.Remoting.ObjRef CreateObjRef(System.Type)",
+    "System.Security.AccessControl.DirectorySecurity GetAccessControl()",
+    "System.Security.AccessControl.DirectorySecurity GetAccessControl(System.Security.AccessControl.AccessControlSections)",
     "Void .ctor(System.String)",
-    "Void GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)"
+    "Void Create(System.Security.AccessControl.DirectorySecurity)",
+    "Void GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)",
+    "Void SetAccessControl(System.Security.AccessControl.DirectorySecurity)"
   ]
 }

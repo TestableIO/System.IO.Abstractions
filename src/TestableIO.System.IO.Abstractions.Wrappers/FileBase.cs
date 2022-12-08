@@ -94,17 +94,7 @@ namespace System.IO.Abstractions
         /// </para>
         /// </remarks>
         public abstract bool Exists(string path);
-
-
-        /// <inheritdoc cref="IFile.GetAccessControl(string)"/>
-        [SupportedOSPlatform("windows")]
-        public abstract FileSecurity GetAccessControl(string path);
-
-        /// <inheritdoc cref="IFile.GetAccessControl(string,AccessControlSections)"/>
-        [SupportedOSPlatform("windows")]
-        public abstract FileSecurity GetAccessControl(string path, AccessControlSections includeSections);
-
-
+        
         /// <inheritdoc cref="IFile.GetAttributes"/>
         /// <summary>
         /// Gets the <see cref="FileAttributes"/> of the file on the path.
@@ -329,11 +319,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.ResolveLinkTarget(string,bool)"/>
         public abstract IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget);
 #endif
-
-        /// <inheritdoc cref="IFile.SetAccessControl(string,FileSecurity)"/>
-        [SupportedOSPlatform("windows")]
-        public abstract void SetAccessControl(string path, FileSecurity fileSecurity);
-
+        
         /// <inheritdoc cref="IFile.SetAttributes"/>
         public abstract void SetAttributes(string path, FileAttributes fileAttributes);
 

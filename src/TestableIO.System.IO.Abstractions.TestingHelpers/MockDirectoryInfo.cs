@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Security.AccessControl;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -8,7 +9,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
     /// <inheritdoc />
     [Serializable]
-    public class MockDirectoryInfo : DirectoryInfoBase
+    public class MockDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string directoryPath;
@@ -26,6 +27,15 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
 
+            if (directoryPath == null)
+            {
+                throw new ArgumentNullException("path", StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
+            }
+            if (directoryPath.Trim() == string.Empty)
+            {
+                throw CommonExceptions.PathIsNotOfALegalForm("path");
+            }
+            
             originalPath = directoryPath;
             directoryPath = mockFileDataAccessor.Path.GetFullPath(directoryPath);
 
@@ -179,14 +189,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.Directory.CreateDirectory(FullName);
             refreshOnNextRead = true;
         }
-
-        /// <inheritdoc />
-        public override void Create(DirectorySecurity directorySecurity)
-        {
-            mockFileDataAccessor.Directory.CreateDirectory(FullName, directorySecurity);
-            refreshOnNextRead = true;
-        }
-
+        
         /// <inheritdoc />
         public override IDirectoryInfo CreateSubdirectory(string path)
         {
@@ -277,19 +280,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetFileSystemInfos(searchPattern, enumerationOptions);
         }
 #endif
-
-        /// <inheritdoc />
-        public override DirectorySecurity GetAccessControl()
-        {
-            return mockFileDataAccessor.Directory.GetAccessControl(directoryPath);
-        }
-
-        /// <inheritdoc />
-        public override DirectorySecurity GetAccessControl(AccessControlSections includeSections)
-        {
-            return mockFileDataAccessor.Directory.GetAccessControl(directoryPath, includeSections);
-        }
-
+        
         /// <inheritdoc />
         public override IDirectoryInfo[] GetDirectories()
         {
@@ -388,13 +379,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
         }
-
-        /// <inheritdoc />
-        public override void SetAccessControl(DirectorySecurity directorySecurity)
-        {
-            mockFileDataAccessor.Directory.SetAccessControl(directoryPath, directorySecurity);
-        }
-
+        
         /// <inheritdoc />
         public override IDirectoryInfo Parent
         {
@@ -434,6 +419,33 @@ namespace System.IO.Abstractions.TestingHelpers
         public override string ToString()
         {
             return originalPath;
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl()" />
+        [SupportedOSPlatform("windows")]
+        public object GetAccessControl()
+        {
+            return GetMockDirectoryData().AccessControl;
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
+        [SupportedOSPlatform("windows")]
+        public object GetAccessControl(IFileSystemAclSupport.AccessControlSections includeSections)
+        {
+            return GetMockDirectoryData().AccessControl;
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.SetAccessControl(object)" />
+        [SupportedOSPlatform("windows")]
+        public void SetAccessControl(object value)
+        {
+            GetMockDirectoryData().AccessControl = value as DirectorySecurity;
+        }
+        
+        private MockDirectoryData GetMockDirectoryData()
+        {
+            return mockFileDataAccessor.GetFile(directoryPath) as MockDirectoryData
+                ?? throw CommonExceptions.CouldNotFindPartOfPath(directoryPath);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
@@ -7,7 +8,7 @@ namespace System.IO.Abstractions
 {
     /// <inheritdoc />
     [Serializable]
-    public class DirectoryInfoWrapper : DirectoryInfoBase
+    public class DirectoryInfoWrapper : DirectoryInfoBase, IFileSystemAclSupport
     {
         private readonly DirectoryInfo instance;
 
@@ -133,13 +134,6 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override void Create(DirectorySecurity directorySecurity)
-        {
-            instance.Create(directorySecurity);
-        }
-
-        /// <inheritdoc />
         public override IDirectoryInfo CreateSubdirectory(string path)
         {
             return new DirectoryInfoWrapper(FileSystem, instance.CreateSubdirectory(path));
@@ -228,19 +222,6 @@ namespace System.IO.Abstractions
             return instance.EnumerateFileSystemInfos(searchPattern, enumerationOptions).WrapFileSystemInfos(FileSystem);
         }
 #endif
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override DirectorySecurity GetAccessControl()
-        {
-            return instance.GetAccessControl();
-        }
-
-        /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override DirectorySecurity GetAccessControl(AccessControlSections includeSections)
-        {
-            return instance.GetAccessControl(includeSections);
-        }
 
         /// <inheritdoc />
         public override IDirectoryInfo[] GetDirectories()
@@ -327,13 +308,6 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
-        [SupportedOSPlatform("windows")]
-        public override void SetAccessControl(DirectorySecurity directorySecurity)
-        {
-            instance.SetAccessControl(directorySecurity);
-        }
-
-        /// <inheritdoc />
         public override IDirectoryInfo Parent
         {
             get
@@ -357,6 +331,34 @@ namespace System.IO.Abstractions
         public override string ToString()
         {
             return instance.ToString();
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl()" />
+        [SupportedOSPlatform("windows")]
+        public object GetAccessControl()
+        {
+            return instance.GetAccessControl();
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
+        [SupportedOSPlatform("windows")]
+        public object GetAccessControl(IFileSystemAclSupport.AccessControlSections includeSections)
+        {
+            return instance.GetAccessControl((AccessControlSections)includeSections);
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.SetAccessControl(object)" />
+        [SupportedOSPlatform("windows")]
+        public void SetAccessControl(object value)
+        {
+            if (value is DirectorySecurity directorySecurity)
+            {
+                this.instance.SetAccessControl(directorySecurity);
+            }
+            else
+            {
+                throw new ArgumentException("value must be of type `FileSecurity`");
+            }
         }
     }
 }

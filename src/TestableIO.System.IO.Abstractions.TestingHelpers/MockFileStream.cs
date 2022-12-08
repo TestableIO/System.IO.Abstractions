@@ -1,11 +1,13 @@
 ﻿using System.Threading.Tasks;
 using System.Threading;
+using System.Runtime.Versioning;
+using System.Security.AccessControl;
 
 namespace System.IO.Abstractions.TestingHelpers
 {
     /// <inheritdoc />
     [Serializable]
-    public class MockFileStream : FileSystemStream
+    public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string path;
@@ -194,6 +196,33 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void Flush()
         {
             InternalFlush();
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl()" />
+        [SupportedOSPlatform("windows")]
+        public object GetAccessControl()
+        {
+            return GetMockFileData().AccessControl;
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
+        [SupportedOSPlatform("windows")]
+        public object GetAccessControl(IFileSystemAclSupport.AccessControlSections includeSections)
+        {
+            return GetMockFileData().AccessControl;
+        }
+
+        /// <inheritdoc cref="IFileSystemAclSupport.SetAccessControl(object)" />
+        [SupportedOSPlatform("windows")]
+        public void SetAccessControl(object value)
+        {
+            GetMockFileData().AccessControl = value as FileSecurity;
+        }
+
+        private MockFileData GetMockFileData()
+        {
+            return mockFileDataAccessor.GetFile(path)
+                               ?? throw CommonExceptions.FileNotFound(path);
         }
 
         private void InternalFlush()

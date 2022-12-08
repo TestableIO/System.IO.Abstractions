@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Versioning;
-using System.Security.AccessControl;
 using System.Text;
 
 namespace System.IO.Abstractions
@@ -65,22 +64,6 @@ namespace System.IO.Abstractions
         
         /// <inheritdoc cref="File.Exists(string?)" />
         bool Exists([NotNullWhen(true)] string? path);
-
-#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
-        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(FileInfo)"/>
-#else
-        /// <inheritdoc cref="File.GetAccessControl(string)"/>
-#endif
-        [SupportedOSPlatform("windows")]
-        FileSecurity GetAccessControl(string path);
-
-#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
-        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(FileInfo,AccessControlSections)"/>
-#else
-        /// <inheritdoc cref="File.GetAccessControl(string,AccessControlSections)"/>
-#endif
-        [SupportedOSPlatform("windows")]
-        FileSecurity GetAccessControl(string path, AccessControlSections includeSections);
 
         /// <inheritdoc cref="File.GetAttributes(string)" />
         FileAttributes GetAttributes(string path);
@@ -172,14 +155,6 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="File.ResolveLinkTarget(string, bool)" />
         IFileSystemInfo? ResolveLinkTarget(string linkPath, bool returnFinalTarget);
 #endif
-
-#if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
-        /// <inheritdoc cref="FileSystemAclExtensions.SetAccessControl(FileInfo,FileSecurity)"/>
-#else
-        /// <inheritdoc cref="File.SetAccessControl(string,FileSecurity)"/>
-#endif
-        [SupportedOSPlatform("windows")]
-        void SetAccessControl(string path, FileSecurity fileSecurity);
         
         /// <inheritdoc cref="File.SetAttributes(string, FileAttributes)" />
         void SetAttributes(string path, FileAttributes fileAttributes);
