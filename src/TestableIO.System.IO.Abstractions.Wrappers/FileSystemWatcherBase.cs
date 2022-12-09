@@ -75,6 +75,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileSystemWatcher.WaitForChanged(WatcherChangeTypes,int)"/>
         public abstract IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout);
 
+#if FEATURE_FILESYSTEM_NET7
+        /// <inheritdoc cref="FileSystemWatcher.WaitForChanged(WatcherChangeTypes,TimeSpan)"/>
+        public abstract IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, TimeSpan timeout);
+#endif
+
         /// <inheritdoc />
         public static implicit operator FileSystemWatcherBase(FileSystemWatcher watcher)
         {

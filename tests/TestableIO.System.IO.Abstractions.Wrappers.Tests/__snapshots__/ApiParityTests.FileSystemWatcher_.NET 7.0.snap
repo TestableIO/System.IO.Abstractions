@@ -4,7 +4,6 @@
   ],
   "MissingMembers": [
     "System.EventHandler Disposed",
-    "System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes, System.TimeSpan)",
     "System.Object GetLifetimeService()",
     "System.Object InitializeLifetimeService()",
     "Void .ctor()",

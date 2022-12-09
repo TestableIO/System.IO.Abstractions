@@ -1,10 +1,12 @@
-﻿namespace System.IO.Abstractions
+﻿using System.Runtime.Versioning;
+
+namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="FileSystemInfo"/>
     [Serializable]
     public abstract class FileSystemInfoBase : IFileSystemInfo
     {
-        /// <inheritdoc />
+        ///
         protected FileSystemInfoBase(IFileSystem fileSystem)
         {
             FileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
@@ -71,5 +73,14 @@
 
         /// <inheritdoc cref="FileSystemInfo.Name"/>
         public abstract string Name { get; }
+
+#if FEATURE_FILESYSTEM_UNIXFILEMODE
+        /// <inheritdoc cref="IFileSystemInfo.UnixFileMode"/>
+        public UnixFileMode UnixFileMode
+        {
+            get;
+            [UnsupportedOSPlatform("windows")] set;
+        }
+#endif
     }
 }

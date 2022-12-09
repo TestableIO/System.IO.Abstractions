@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Versioning;
-using System.Security.AccessControl;
-
 using System.Text;
+using Microsoft.Win32.SafeHandles;
+
 namespace System.IO.Abstractions
 {
     /// <inheritdoc />
@@ -120,11 +120,27 @@ namespace System.IO.Abstractions
             return File.GetAttributes(path);
         }
 
+#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+        /// <inheritdoc />
+        public override FileAttributes GetAttributes(SafeFileHandle fileHandle)
+        {
+            return File.GetAttributes(fileHandle);
+        }
+#endif
+
         /// <inheritdoc />
         public override DateTime GetCreationTime(string path)
         {
             return File.GetCreationTime(path);
         }
+
+#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+        /// <inheritdoc />
+        public override DateTime GetCreationTime(SafeFileHandle fileHandle)
+        {
+            return File.GetCreationTime(fileHandle);
+        }
+#endif
 
         /// <inheritdoc />
         public override DateTime GetCreationTimeUtc(string path)
@@ -132,11 +148,27 @@ namespace System.IO.Abstractions
             return File.GetCreationTimeUtc(path);
         }
 
+#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+        /// <inheritdoc />
+        public override DateTime GetCreationTimeUtc(SafeFileHandle fileHandle)
+        {
+            return File.GetCreationTimeUtc(fileHandle);
+        }
+#endif
+
         /// <inheritdoc />
         public override DateTime GetLastAccessTime(string path)
         {
             return File.GetLastAccessTime(path);
         }
+
+#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+        /// <inheritdoc />
+        public override DateTime GetLastAccessTime(SafeFileHandle fileHandle)
+        {
+            return File.GetLastAccessTime(fileHandle);
+        }
+#endif
 
         /// <inheritdoc />
         public override DateTime GetLastAccessTimeUtc(string path)
@@ -144,17 +176,59 @@ namespace System.IO.Abstractions
             return File.GetLastAccessTimeUtc(path);
         }
 
+#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+        /// <inheritdoc />
+        public override DateTime GetLastAccessTimeUtc(SafeFileHandle fileHandle)
+        {
+            return File.GetLastAccessTimeUtc(fileHandle);
+        }
+#endif
+
         /// <inheritdoc />
         public override DateTime GetLastWriteTime(string path)
         {
             return File.GetLastWriteTime(path);
         }
 
+#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+        /// <inheritdoc />
+        public override DateTime GetLastWriteTime(SafeFileHandle fileHandle)
+        {
+            return File.GetLastWriteTime(fileHandle);
+        }
+#endif
+
         /// <inheritdoc />
         public override DateTime GetLastWriteTimeUtc(string path)
         {
             return File.GetLastWriteTimeUtc(path);
         }
+
+#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+        /// <inheritdoc />
+        public override DateTime GetLastWriteTimeUtc(SafeFileHandle fileHandle)
+        {
+            return File.GetLastWriteTimeUtc(fileHandle);
+        }
+#endif
+
+#if FEATURE_FILESYSTEM_UNIXFILEMODE
+        /// <inheritdoc />
+        [UnsupportedOSPlatform("windows")]
+        public override UnixFileMode GetUnixFileMode(string path)
+        {
+            return File.GetUnixFileMode(path);
+        }
+#endif
+
+#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+        /// <inheritdoc />
+        [UnsupportedOSPlatform("windows")]
+        public override UnixFileMode GetUnixFileMode(SafeFileHandle fileHandle)
+        {
+            return File.GetUnixFileMode(fileHandle);
+        }
+#endif
 
         /// <inheritdoc />
         public override void Move(string sourceFileName, string destFileName)
@@ -283,11 +357,27 @@ namespace System.IO.Abstractions
             File.SetAttributes(path, fileAttributes);
         }
 
+#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+        /// <inheritdoc />
+        public override void SetAttributes(SafeFileHandle fileHandle, FileAttributes fileAttributes)
+        {
+            File.SetAttributes(fileHandle, fileAttributes);
+        }
+#endif
+
         /// <inheritdoc />
         public override void SetCreationTime(string path, DateTime creationTime)
         {
             File.SetCreationTime(path, creationTime);
         }
+
+#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+        /// <inheritdoc />
+        public override void SetCreationTime(SafeFileHandle fileHandle, DateTime creationTime)
+        {
+            File.SetCreationTime(fileHandle, creationTime);
+        }
+#endif
 
         /// <inheritdoc />
         public override void SetCreationTimeUtc(string path, DateTime creationTimeUtc)
@@ -295,11 +385,27 @@ namespace System.IO.Abstractions
             File.SetCreationTimeUtc(path, creationTimeUtc);
         }
 
+#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+        /// <inheritdoc />
+        public override void SetCreationTimeUtc(SafeFileHandle fileHandle, DateTime creationTimeUtc)
+        {
+            File.SetCreationTimeUtc(fileHandle, creationTimeUtc);
+        }
+#endif
+
         /// <inheritdoc />
         public override void SetLastAccessTime(string path, DateTime lastAccessTime)
         {
             File.SetLastAccessTime(path, lastAccessTime);
         }
+
+#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+        /// <inheritdoc />
+        public override void SetLastAccessTime(SafeFileHandle fileHandle, DateTime lastAccessTime)
+        {
+            File.SetLastAccessTime(fileHandle, lastAccessTime);
+        }
+#endif
 
         /// <inheritdoc />
         public override void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc)
@@ -307,17 +413,59 @@ namespace System.IO.Abstractions
             File.SetLastAccessTimeUtc(path, lastAccessTimeUtc);
         }
 
+#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+        /// <inheritdoc />
+        public override void SetLastAccessTimeUtc(SafeFileHandle fileHandle, DateTime lastAccessTimeUtc)
+        {
+            File.SetLastAccessTimeUtc(fileHandle, lastAccessTimeUtc);
+        }
+#endif
+
         /// <inheritdoc />
         public override void SetLastWriteTime(string path, DateTime lastWriteTime)
         {
             File.SetLastWriteTime(path, lastWriteTime);
         }
 
+#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+        /// <inheritdoc />
+        public override void SetLastWriteTime(SafeFileHandle fileHandle, DateTime lastWriteTime)
+        {
+            File.SetLastWriteTime(fileHandle, lastWriteTime);
+        }
+#endif
+
         /// <inheritdoc />
         public override void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc)
         {
             File.SetLastWriteTimeUtc(path, lastWriteTimeUtc);
         }
+
+#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+        /// <inheritdoc />
+        public override void SetLastWriteTimeUtc(SafeFileHandle fileHandle, DateTime lastWriteTimeUtc)
+        {
+            File.SetLastWriteTimeUtc(fileHandle, lastWriteTimeUtc);
+        }
+#endif
+
+#if FEATURE_FILESYSTEM_UNIXFILEMODE
+        /// <inheritdoc />
+        [UnsupportedOSPlatform("windows")]
+        public override void SetUnixFileMode(string path, UnixFileMode mode)
+        {
+            File.SetUnixFileMode(path, mode);
+        }
+#endif
+
+#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+        /// <inheritdoc />
+        [UnsupportedOSPlatform("windows")]
+        public override void SetUnixFileMode(SafeFileHandle fileHandle, UnixFileMode mode)
+        {
+            File.SetUnixFileMode(fileHandle, mode);
+        }
+#endif
 
         /// <summary>
         /// Creates a new file, writes the specified byte array to the file, and then closes the file.

@@ -53,6 +53,19 @@ namespace System.IO.Abstractions
             Encoding encoding,
             CancellationToken cancellationToken = default);
 
+#if FEATURE_FILESYSTEM_NET7
+        /// <inheritdoc cref="File.ReadLinesAsync(string, CancellationToken)" />
+        IAsyncEnumerable<string> ReadLinesAsync(string path,
+            CancellationToken cancellationToken =
+                default);
+
+        /// <inheritdoc cref="File.ReadLinesAsync(string, Encoding, CancellationToken)" />
+        IAsyncEnumerable<string> ReadLinesAsync(string path, Encoding encoding,
+            CancellationToken cancellationToken =
+                default);
+#endif
+
+
         /// <inheritdoc cref="File.WriteAllBytesAsync(string, byte[], CancellationToken)" />
         Task WriteAllBytesAsync(string path,
             byte[] bytes,

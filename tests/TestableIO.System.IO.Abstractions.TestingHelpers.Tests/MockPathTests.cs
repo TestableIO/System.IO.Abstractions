@@ -499,5 +499,63 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(XFS.Path("e\\f.txt"), result);
         }
 #endif
+
+#if FEATURE_FILESYSTEM_NET7
+        [Test]
+        public void Exists_Null_ShouldReturnFalse()
+        {
+            var fileSystem = new MockFileSystem();
+            bool result = fileSystem.Path.Exists(null);
+
+            Assert.IsFalse(result);
+        }
+
+        [Test]
+        public void Exists_ShouldWorkWithAbsolutePaths()
+        {
+            var fileSystem = new MockFileSystem();
+            string path = "some-path";
+            string absolutePath = fileSystem.Path.GetFullPath(path);
+            fileSystem.Directory.CreateDirectory(path);
+
+            bool result = fileSystem.Path.Exists(absolutePath);
+
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void Exists_ExistingFile_ShouldReturnTrue()
+        {
+            var fileSystem = new MockFileSystem();
+            string path = "some-path";
+            fileSystem.File.WriteAllText(path, "some content");
+
+            bool result = fileSystem.Path.Exists(path);
+
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void Exists_ExistingDirectory_ShouldReturnTrue()
+        {
+            var fileSystem = new MockFileSystem();
+            string path = "some-path";
+            fileSystem.Directory.CreateDirectory(path);
+
+            bool result = fileSystem.Path.Exists(path);
+
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        public void Exists_ExistingFileOrDirectory_ShouldReturnTrue()
+        {
+            var fileSystem = new MockFileSystem();
+            string path = "some-path";
+            bool result = fileSystem.Path.Exists(path);
+
+            Assert.IsFalse(result);
+        }
+#endif
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Versioning;
-using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
@@ -21,11 +20,30 @@ namespace System.IO.Abstractions
             return new DirectoryInfoWrapper(FileSystem, directoryInfo);
         }
 
+#if FEATURE_FILESYSTEM_UNIXFILEMODE
+        /// <inheritdoc />
+        [UnsupportedOSPlatform("windows")]
+        public override IDirectoryInfo CreateDirectory(string path, UnixFileMode unixCreateMode)
+        {
+            return new DirectoryInfoWrapper(FileSystem,
+                Directory.CreateDirectory(path, unixCreateMode));
+        }
+#endif
+
 #if FEATURE_CREATE_SYMBOLIC_LINK
         /// <inheritdoc />
         public override IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget)
         {
             return Directory.CreateSymbolicLink(path, pathToTarget).WrapFileSystemInfo(FileSystem);
+        }
+#endif
+
+#if FEATURE_FILESYSTEM_NET7
+        /// <inheritdoc />
+        public override IDirectoryInfo CreateTempSubdirectory(string prefix = null)
+        {
+            return new DirectoryInfoWrapper(FileSystem, 
+                Directory.CreateTempSubdirectory(prefix));
         }
 #endif
         /// <inheritdoc />

@@ -1,4 +1,6 @@
-﻿namespace System.IO.Abstractions
+﻿using System.Runtime.Versioning;
+
+namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="FileSystemInfo" />
     public interface IFileSystemInfo
@@ -45,6 +47,16 @@
 
         /// <inheritdoc cref="FileSystemInfo.Name" />
         string Name { get; }
+
+#if FEATURE_FILESYSTEM_UNIXFILEMODE
+        /// <inheritdoc cref="FileSystemInfo.UnixFileMode" />
+        UnixFileMode UnixFileMode
+        {
+            get;
+            [UnsupportedOSPlatform("windows")]
+            set;
+        }
+#endif
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
         /// <inheritdoc cref="FileSystemInfo.CreateAsSymbolicLink(string)" />

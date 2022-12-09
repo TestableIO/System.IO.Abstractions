@@ -6,7 +6,5 @@
     "Char get_VolumeSeparatorChar()",
     "Char[] get_InvalidPathChars()"
   ],
-  "MissingMembers": [
-    "Boolean Exists(System.String)"
-  ]
+  "MissingMembers": []
 }

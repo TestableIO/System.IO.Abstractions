@@ -489,6 +489,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 _ = timeout;
                 return default(IWaitForChangedResult);
             }
+
+#if FEATURE_FILESYSTEM_NET7
+            public override IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, TimeSpan timeout)
+            {
+                _ = changeType;
+                _ = timeout;
+                return default(IWaitForChangedResult);
+            }
+#endif
         }
     }
 }

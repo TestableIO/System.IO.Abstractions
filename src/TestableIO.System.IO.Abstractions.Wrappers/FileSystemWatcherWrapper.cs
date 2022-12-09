@@ -153,6 +153,14 @@ namespace System.IO.Abstractions
             return new WaitForChangedResultWrapper(watcher.WaitForChanged(changeType, timeout));
         }
 
+#if FEATURE_FILESYSTEM_NET7
+        /// <inheritdoc />
+        public override IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, TimeSpan timeout)
+        {
+            return new WaitForChangedResultWrapper(watcher.WaitForChanged(changeType, timeout));
+        }
+#endif
+
         private readonly struct WaitForChangedResultWrapper
             : IWaitForChangedResult, IEquatable<WaitForChangedResultWrapper>
         {

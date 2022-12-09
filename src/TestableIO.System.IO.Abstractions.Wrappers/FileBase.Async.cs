@@ -34,6 +34,17 @@ namespace System.IO.Abstractions
 
         ///<inheritdoc cref="IFile.ReadAllTextAsync(string,Encoding,CancellationToken)"/>
         public abstract Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken cancellationToken);
+
+#if FEATURE_FILESYSTEM_NET7
+        ///<inheritdoc cref="IFile.ReadLinesAsync(string,Encoding,CancellationToken)"/>
+        public abstract IAsyncEnumerable<string> ReadLinesAsync(string path,
+            CancellationToken cancellationToken = default);
+
+        ///<inheritdoc cref="IFile.ReadLinesAsync(string,Encoding,CancellationToken)"/>
+        public abstract IAsyncEnumerable<string> ReadLinesAsync(string path, Encoding encoding,
+            CancellationToken cancellationToken = default);
+#endif
+
         /// <inheritdoc cref="IFile.WriteAllBytesAsync"/>
         public abstract Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken);
 

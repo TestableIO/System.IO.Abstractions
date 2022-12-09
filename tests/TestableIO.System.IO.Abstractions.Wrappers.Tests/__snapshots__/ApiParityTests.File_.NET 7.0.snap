@@ -1,26 +1,6 @@
 ﻿{
   "ExtraMembers": [],
   "MissingMembers": [
-    "Microsoft.Win32.SafeHandles.SafeFileHandle OpenHandle(System.String, System.IO.FileMode, System.IO.FileAccess, System.IO.FileShare, System.IO.FileOptions, Int64)",
-    "System.Collections.Generic.IAsyncEnumerable`1[System.String] ReadLinesAsync(System.String, System.Text.Encoding, System.Threading.CancellationToken)",
-    "System.Collections.Generic.IAsyncEnumerable`1[System.String] ReadLinesAsync(System.String, System.Threading.CancellationToken)",
-    "System.DateTime GetCreationTime(Microsoft.Win32.SafeHandles.SafeFileHandle)",
-    "System.DateTime GetCreationTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle)",
-    "System.DateTime GetLastAccessTime(Microsoft.Win32.SafeHandles.SafeFileHandle)",
-    "System.DateTime GetLastAccessTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle)",
-    "System.DateTime GetLastWriteTime(Microsoft.Win32.SafeHandles.SafeFileHandle)",
-    "System.DateTime GetLastWriteTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle)",
-    "System.IO.FileAttributes GetAttributes(Microsoft.Win32.SafeHandles.SafeFileHandle)",
-    "System.IO.UnixFileMode GetUnixFileMode(Microsoft.Win32.SafeHandles.SafeFileHandle)",
-    "System.IO.UnixFileMode GetUnixFileMode(System.String)",
-    "Void SetAttributes(Microsoft.Win32.SafeHandles.SafeFileHandle, System.IO.FileAttributes)",
-    "Void SetCreationTime(Microsoft.Win32.SafeHandles.SafeFileHandle, System.DateTime)",
-    "Void SetCreationTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle, System.DateTime)",
-    "Void SetLastAccessTime(Microsoft.Win32.SafeHandles.SafeFileHandle, System.DateTime)",
-    "Void SetLastAccessTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle, System.DateTime)",
-    "Void SetLastWriteTime(Microsoft.Win32.SafeHandles.SafeFileHandle, System.DateTime)",
-    "Void SetLastWriteTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle, System.DateTime)",
-    "Void SetUnixFileMode(Microsoft.Win32.SafeHandles.SafeFileHandle, System.IO.UnixFileMode)",
-    "Void SetUnixFileMode(System.String, System.IO.UnixFileMode)"
+    "Microsoft.Win32.SafeHandles.SafeFileHandle OpenHandle(System.String, System.IO.FileMode, System.IO.FileAccess, System.IO.FileShare, System.IO.FileOptions, Int64)"
   ]
 }

@@ -65,6 +65,22 @@ namespace System.IO.Abstractions.TestingHelpers
             return Task.FromResult(ReadAllText(path, encoding));
         }
 
+#if FEATURE_FILESYSTEM_NET7
+        /// <inheritdoc />
+        public override IAsyncEnumerable<string> ReadLinesAsync(string path,
+            CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc />
+        public override IAsyncEnumerable<string> ReadLinesAsync(string path, Encoding encoding,
+            CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+#endif
+
         /// <inheritdoc />
         public override Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken)
         {
