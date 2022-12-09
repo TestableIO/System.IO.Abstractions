@@ -3,4 +3,11 @@
   ignorePaths: [
     // Clear the default list to enable Renovate for all files
   ],
+  packageRules: [
+    {
+      description: "Ignore .NET 7",
+      matchPackageNames: ["dotnet-sdk"],
+      allowedVersions: "<7"
+    }
+  ]
 }
