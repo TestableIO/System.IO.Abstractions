@@ -1,0 +1,7 @@
+﻿{
+  "ExtraMembers": [],
+  "MissingMembers": [
+    "System.IO.Abstractions.IDirectoryInfo CreateDirectory(System.String, System.IO.UnixFileMode)",
+    "System.IO.Abstractions.IDirectoryInfo CreateTempSubdirectory(System.String)"
+  ]
+}

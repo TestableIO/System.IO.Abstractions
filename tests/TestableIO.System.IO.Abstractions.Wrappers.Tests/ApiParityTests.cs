@@ -107,6 +107,8 @@ namespace System.IO.Abstractions.Tests
         private const string snapshotSuffix = ".NET 5.0";
 #elif NET6_0
         private const string snapshotSuffix = ".NET 6.0";
+#elif NET7_0
+        private const string snapshotSuffix = ".NET 7.0";
 #else
 #error Unknown target framework.
 #endif

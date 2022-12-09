@@ -1,0 +1,12 @@
+﻿{
+  "ExtraMembers": [],
+  "MissingMembers": [
+    "System.IO.UnixFileMode UnixFileMode",
+    "System.IO.UnixFileMode get_UnixFileMode()",
+    "System.Object GetLifetimeService()",
+    "System.Object InitializeLifetimeService()",
+    "Void .ctor(System.String)",
+    "Void GetObjectData(System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext)",
+    "Void set_UnixFileMode(System.IO.UnixFileMode)"
+  ]
+}
