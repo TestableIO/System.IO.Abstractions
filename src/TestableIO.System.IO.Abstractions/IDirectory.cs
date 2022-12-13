@@ -10,10 +10,20 @@ namespace System.IO.Abstractions
     {
         /// <inheritdoc cref="Directory.CreateDirectory(string)" />
         IDirectoryInfo CreateDirectory(string path);
-        
+
+#if FEATURE_UNIX_FILE_MODE
+	/// <inheritdoc cref="Directory.CreateDirectory(string, UnixFileMode)" />
+	IDirectoryInfo CreateDirectory(string path, UnixFileMode unixCreateMode);
+#endif
+
 #if FEATURE_CREATE_SYMBOLIC_LINK
         /// <inheritdoc cref="Directory.CreateSymbolicLink(string, string)" />
         IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget);
+#endif
+
+#if FEATURE_CREATE_TEMP_SUBDIRECTORY
+	/// <inheritdoc cref="Directory.CreateTempSubdirectory(string)" />
+	IDirectoryInfo CreateTempSubdirectory(string? prefix = null);
 #endif
 
         /// <inheritdoc cref="Directory.Delete(string)" />

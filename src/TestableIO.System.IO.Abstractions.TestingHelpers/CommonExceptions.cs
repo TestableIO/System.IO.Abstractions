@@ -64,5 +64,8 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public static IOException FileAlreadyExists(string paramName) =>
             new IOException(string.Format(StringResources.Manager.GetString("FILE_ALREADY_EXISTS"), paramName));
+
+        public static NotImplementedException NotImplemented() =>
+            new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
     }
 }

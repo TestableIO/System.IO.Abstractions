@@ -23,6 +23,14 @@ namespace System.IO.Abstractions.TestingHelpers
             this.defaultTempDirectory = !string.IsNullOrEmpty(defaultTempDirectory) ? defaultTempDirectory : base.GetTempPath();
         }
 
+#if FEATURE_PATH_EXISTS
+        /// <inheritdoc />
+        public override bool Exists(string path)
+        {
+            return mockFileDataAccessor.FileExists(path);
+        }
+#endif
+
         /// <inheritdoc />
         public override string GetFullPath(string path)
         {

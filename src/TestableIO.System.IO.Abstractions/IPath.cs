@@ -41,6 +41,11 @@ namespace System.IO.Abstractions
 	    bool EndsInDirectorySeparator(string path);
 #endif
 
+#if FEATURE_PATH_EXISTS
+        /// <inheritdoc cref="Path.Exists(string)" />
+        bool Exists([NotNullWhen(true)] string? path);
+#endif
+
 #if FEATURE_ADVANCED_PATH_OPERATIONS
         /// <inheritdoc cref="Path.GetDirectoryName(ReadOnlySpan{char})" />
         ReadOnlySpan<char> GetDirectoryName(ReadOnlySpan<char> path);

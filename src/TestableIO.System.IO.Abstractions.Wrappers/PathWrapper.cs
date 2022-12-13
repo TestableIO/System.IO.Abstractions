@@ -1,4 +1,6 @@
-﻿namespace System.IO.Abstractions
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace System.IO.Abstractions
 {
     /// <inheritdoc />
     [Serializable]
@@ -69,6 +71,14 @@
         {
             return Path.Combine(path1, path2, path3, path4);
         }
+
+#if FEATURE_PATH_EXISTS
+        /// <inheritdoc />
+        public override bool Exists(string path)
+        {
+            return Path.Exists(path);
+        }
+#endif
 
         /// <inheritdoc />
         public override string GetDirectoryName(string path)

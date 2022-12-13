@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Win32.SafeHandles;
 using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
@@ -21,12 +22,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return fs => fs.WriteAllLines(null, new[] { "does not matter" }.ToArray(), Encoding.ASCII);
             yield return fs => fs.Create(null);
             yield return fs => fs.Delete(null);
-            yield return fs => fs.GetCreationTime(null);
-            yield return fs => fs.GetCreationTimeUtc(null);
-            yield return fs => fs.GetLastAccessTime(null);
-            yield return fs => fs.GetLastAccessTimeUtc(null);
-            yield return fs => fs.GetLastWriteTime(null);
-            yield return fs => fs.GetLastWriteTimeUtc(null);
+            yield return fs => fs.GetCreationTime((string)null);
+            yield return fs => fs.GetCreationTimeUtc((string)null);
+            yield return fs => fs.GetLastAccessTime((string)null);
+            yield return fs => fs.GetLastAccessTimeUtc((string)null);
+            yield return fs => fs.GetLastWriteTime((string)null);
+            yield return fs => fs.GetLastWriteTimeUtc((string)null);
             yield return fs => fs.WriteAllText(null, "does not matter");
             yield return fs => fs.WriteAllText(null, "does not matter", Encoding.ASCII);
             yield return fs => fs.Open(null, FileMode.OpenOrCreate);
@@ -42,14 +43,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return fs => fs.ReadAllText(null, Encoding.ASCII);
             yield return fs => fs.ReadLines(null);
             yield return fs => fs.ReadLines(null, Encoding.ASCII);
-            yield return fs => fs.SetAttributes(null, FileAttributes.Archive);
-            yield return fs => fs.GetAttributes(null);
-            yield return fs => fs.SetCreationTime(null, DateTime.Now);
-            yield return fs => fs.SetCreationTimeUtc(null, DateTime.Now);
-            yield return fs => fs.SetLastAccessTime(null, DateTime.Now);
-            yield return fs => fs.SetLastAccessTimeUtc(null, DateTime.Now);
-            yield return fs => fs.SetLastWriteTime(null, DateTime.Now);
-            yield return fs => fs.SetLastWriteTimeUtc(null, DateTime.Now);
+            yield return fs => fs.SetAttributes((string)null, FileAttributes.Archive);
+            yield return fs => fs.GetAttributes((string)null);
+            yield return fs => fs.SetCreationTime((string)null, DateTime.Now);
+            yield return fs => fs.SetCreationTimeUtc((string)null, DateTime.Now);
+            yield return fs => fs.SetLastAccessTime((string)null, DateTime.Now);
+            yield return fs => fs.SetLastAccessTimeUtc((string)null, DateTime.Now);
+            yield return fs => fs.SetLastWriteTime((string)null, DateTime.Now);
+            yield return fs => fs.SetLastWriteTimeUtc((string)null, DateTime.Now);
             yield return fs => fs.Decrypt(null);
             yield return fs => fs.Encrypt(null);
         }

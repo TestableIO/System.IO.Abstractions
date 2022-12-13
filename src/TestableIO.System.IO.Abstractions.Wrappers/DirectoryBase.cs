@@ -24,10 +24,20 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="IDirectory.CreateDirectory(string)"/>
         public abstract IDirectoryInfo CreateDirectory(string path);
-        
+
+#if FEATURE_UNIX_FILE_MODE
+        /// <inheritdoc cref="IDirectory.CreateDirectory(string, UnixFileMode)"/>
+        public abstract IDirectoryInfo CreateDirectory(string path, UnixFileMode unixCreateMode);
+#endif
+
 #if FEATURE_CREATE_SYMBOLIC_LINK
         /// <inheritdoc cref="IDirectory.CreateSymbolicLink(string, string)"/>
         public abstract IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget);
+#endif
+
+#if FEATURE_CREATE_TEMP_SUBDIRECTORY
+        /// <inheritdoc cref="IDirectory.CreateTempSubdirectory(string)"/>
+        public abstract IDirectoryInfo CreateTempSubdirectory(string prefix = null);
 #endif
         /// <inheritdoc cref="IDirectory.Delete(string)"/>
         public abstract void Delete(string path);

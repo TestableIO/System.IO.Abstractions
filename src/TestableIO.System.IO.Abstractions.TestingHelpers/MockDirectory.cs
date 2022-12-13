@@ -39,6 +39,14 @@ namespace System.IO.Abstractions.TestingHelpers
             return CreateDirectoryInternal(path);
         }
 
+#if FEATURE_UNIX_FILE_MODE
+        /// <inheritdoc />
+        public override IDirectoryInfo CreateDirectory(string path, UnixFileMode unixCreateMode)
+        {
+            throw CommonExceptions.NotImplemented();
+        }
+#endif
+
         private IDirectoryInfo CreateDirectoryInternal(string path)
         {
             if (path == null)
@@ -95,6 +103,14 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.GetFile(path).LinkTarget = pathToTarget;
 
             return new MockDirectoryInfo(mockFileDataAccessor, path);
+        }
+#endif
+
+#if FEATURE_CREATE_TEMP_SUBDIRECTORY
+        /// <inheritdoc />
+        public override IDirectoryInfo CreateTempSubdirectory(string prefix = null)
+        {
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -514,7 +530,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
     
 #endif

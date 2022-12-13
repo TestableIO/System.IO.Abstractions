@@ -64,5 +64,10 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="FileSystemWatcher.WaitForChanged(WatcherChangeTypes, int)" />
         IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout);
+
+#if FEATURE_FILE_SYSTEM_WATCHER_WAIT_WITH_TIMESPAN
+        /// <inheritdoc cref="FileSystemWatcher.WaitForChanged(WatcherChangeTypes, TimeSpan)" />
+        IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, TimeSpan timeout);
+#endif
     }
 }

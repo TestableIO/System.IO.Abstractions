@@ -63,6 +63,18 @@ namespace System.IO.Abstractions
             return File.ReadAllTextAsync(path, encoding, cancellationToken);
         }
 
+#if FEATURE_READ_LINES_ASYNC
+        /// <inheritdoc />
+        public override IAsyncEnumerable<string> ReadLinesAsync(string path,
+            CancellationToken cancellationToken = default)
+            => File.ReadLinesAsync(path, cancellationToken);
+
+        /// <inheritdoc />
+        public override IAsyncEnumerable<string> ReadLinesAsync(string path, Encoding encoding,
+            CancellationToken cancellationToken = default)
+            => File.ReadLinesAsync(path, encoding, cancellationToken);
+#endif
+
         /// <inheritdoc />
         public override Task WriteAllBytesAsync(string path, byte[] bytes, CancellationToken cancellationToken)
         {
