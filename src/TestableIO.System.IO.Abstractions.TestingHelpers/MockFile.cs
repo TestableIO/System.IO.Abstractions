@@ -316,7 +316,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override FileAttributes GetAttributes(SafeFileHandle fileHandle)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -332,7 +332,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override DateTime GetCreationTime(SafeFileHandle fileHandle)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -348,7 +348,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override DateTime GetCreationTimeUtc(SafeFileHandle fileHandle)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -364,7 +364,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override DateTime GetLastAccessTime(SafeFileHandle fileHandle)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -380,7 +380,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override DateTime GetLastAccessTimeUtc(SafeFileHandle fileHandle)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -396,7 +396,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override DateTime GetLastWriteTime(SafeFileHandle fileHandle)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -412,7 +412,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override DateTime GetLastWriteTimeUtc(SafeFileHandle fileHandle)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -420,7 +420,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override UnixFileMode GetUnixFileMode(string path)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -428,7 +428,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override UnixFileMode GetUnixFileMode(SafeFileHandle fileHandle)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -777,7 +777,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -810,7 +810,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void SetAttributes(SafeFileHandle fileHandle, FileAttributes fileAttributes)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -826,7 +826,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void SetCreationTime(SafeFileHandle fileHandle, DateTime creationTime)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -842,7 +842,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void SetCreationTimeUtc(SafeFileHandle fileHandle, DateTime creationTimeUtc)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -858,7 +858,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void SetLastAccessTime(SafeFileHandle fileHandle, DateTime lastAccessTime)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -874,7 +874,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void SetLastAccessTimeUtc(SafeFileHandle fileHandle, DateTime lastAccessTimeUtc)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -890,7 +890,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void SetLastWriteTime(SafeFileHandle fileHandle, DateTime lastWriteTime)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -906,7 +906,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void SetLastWriteTimeUtc(SafeFileHandle fileHandle, DateTime lastWriteTimeUtc)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -914,7 +914,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void SetUnixFileMode(string path, UnixFileMode mode)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -922,7 +922,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void SetUnixFileMode(SafeFileHandle fileHandle, UnixFileMode mode)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 

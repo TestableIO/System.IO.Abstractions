@@ -43,7 +43,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override IDirectoryInfo CreateDirectory(string path, UnixFileMode unixCreateMode)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -110,7 +110,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override IDirectoryInfo CreateTempSubdirectory(string prefix = null)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
@@ -530,7 +530,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
     
 #endif

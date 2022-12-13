@@ -70,14 +70,14 @@ namespace System.IO.Abstractions.TestingHelpers
         public override IAsyncEnumerable<string> ReadLinesAsync(string path,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 
         /// <inheritdoc />
         public override IAsyncEnumerable<string> ReadLinesAsync(string path, Encoding encoding,
             CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            throw CommonExceptions.NotImplemented();
         }
 #endif
 
