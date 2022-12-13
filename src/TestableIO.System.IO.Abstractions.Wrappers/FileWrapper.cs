@@ -120,7 +120,7 @@ namespace System.IO.Abstractions
             return File.GetAttributes(path);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override FileAttributes GetAttributes(SafeFileHandle fileHandle)
         {
@@ -134,7 +134,7 @@ namespace System.IO.Abstractions
             return File.GetCreationTime(path);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override DateTime GetCreationTime(SafeFileHandle fileHandle)
         {
@@ -148,7 +148,7 @@ namespace System.IO.Abstractions
             return File.GetCreationTimeUtc(path);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override DateTime GetCreationTimeUtc(SafeFileHandle fileHandle)
         {
@@ -162,7 +162,7 @@ namespace System.IO.Abstractions
             return File.GetLastAccessTime(path);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override DateTime GetLastAccessTime(SafeFileHandle fileHandle)
         {
@@ -176,7 +176,7 @@ namespace System.IO.Abstractions
             return File.GetLastAccessTimeUtc(path);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override DateTime GetLastAccessTimeUtc(SafeFileHandle fileHandle)
         {
@@ -190,7 +190,7 @@ namespace System.IO.Abstractions
             return File.GetLastWriteTime(path);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override DateTime GetLastWriteTime(SafeFileHandle fileHandle)
         {
@@ -204,7 +204,7 @@ namespace System.IO.Abstractions
             return File.GetLastWriteTimeUtc(path);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override DateTime GetLastWriteTimeUtc(SafeFileHandle fileHandle)
         {
@@ -212,7 +212,7 @@ namespace System.IO.Abstractions
         }
 #endif
 
-#if FEATURE_FILESYSTEM_UNIXFILEMODE
+#if FEATURE_UNIX_FILE_MODE
         /// <inheritdoc />
         [UnsupportedOSPlatform("windows")]
         public override UnixFileMode GetUnixFileMode(string path)
@@ -221,7 +221,7 @@ namespace System.IO.Abstractions
         }
 #endif
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         [UnsupportedOSPlatform("windows")]
         public override UnixFileMode GetUnixFileMode(SafeFileHandle fileHandle)
@@ -357,7 +357,7 @@ namespace System.IO.Abstractions
             File.SetAttributes(path, fileAttributes);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override void SetAttributes(SafeFileHandle fileHandle, FileAttributes fileAttributes)
         {
@@ -371,7 +371,7 @@ namespace System.IO.Abstractions
             File.SetCreationTime(path, creationTime);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override void SetCreationTime(SafeFileHandle fileHandle, DateTime creationTime)
         {
@@ -385,7 +385,7 @@ namespace System.IO.Abstractions
             File.SetCreationTimeUtc(path, creationTimeUtc);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override void SetCreationTimeUtc(SafeFileHandle fileHandle, DateTime creationTimeUtc)
         {
@@ -399,7 +399,7 @@ namespace System.IO.Abstractions
             File.SetLastAccessTime(path, lastAccessTime);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override void SetLastAccessTime(SafeFileHandle fileHandle, DateTime lastAccessTime)
         {
@@ -413,7 +413,7 @@ namespace System.IO.Abstractions
             File.SetLastAccessTimeUtc(path, lastAccessTimeUtc);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override void SetLastAccessTimeUtc(SafeFileHandle fileHandle, DateTime lastAccessTimeUtc)
         {
@@ -427,7 +427,7 @@ namespace System.IO.Abstractions
             File.SetLastWriteTime(path, lastWriteTime);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override void SetLastWriteTime(SafeFileHandle fileHandle, DateTime lastWriteTime)
         {
@@ -441,7 +441,7 @@ namespace System.IO.Abstractions
             File.SetLastWriteTimeUtc(path, lastWriteTimeUtc);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override void SetLastWriteTimeUtc(SafeFileHandle fileHandle, DateTime lastWriteTimeUtc)
         {
@@ -449,7 +449,7 @@ namespace System.IO.Abstractions
         }
 #endif
 
-#if FEATURE_FILESYSTEM_UNIXFILEMODE
+#if FEATURE_UNIX_FILE_MODE
         /// <inheritdoc />
         [UnsupportedOSPlatform("windows")]
         public override void SetUnixFileMode(string path, UnixFileMode mode)
@@ -458,7 +458,7 @@ namespace System.IO.Abstractions
         }
 #endif
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         [UnsupportedOSPlatform("windows")]
         public override void SetUnixFileMode(SafeFileHandle fileHandle, UnixFileMode mode)

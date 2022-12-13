@@ -48,7 +48,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileSystemInfo.Name" />
         string Name { get; }
 
-#if FEATURE_FILESYSTEM_UNIXFILEMODE
+#if FEATURE_UNIX_FILE_MODE
         /// <inheritdoc cref="FileSystemInfo.UnixFileMode" />
         UnixFileMode UnixFileMode
         {

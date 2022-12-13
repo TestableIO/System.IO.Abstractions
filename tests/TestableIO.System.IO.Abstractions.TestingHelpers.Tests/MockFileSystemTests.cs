@@ -490,7 +490,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 return default(IWaitForChangedResult);
             }
 
-#if FEATURE_FILESYSTEM_NET7
+#if FEATURE_FILE_SYSTEM_WATCHER_WAIT_WITH_TIMESPAN
             public override IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, TimeSpan timeout)
             {
                 _ = changeType;

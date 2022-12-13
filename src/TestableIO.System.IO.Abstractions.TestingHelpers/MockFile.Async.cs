@@ -65,7 +65,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return Task.FromResult(ReadAllText(path, encoding));
         }
 
-#if FEATURE_FILESYSTEM_NET7
+#if FEATURE_READ_LINES_ASYNC
         /// <inheritdoc />
         public override IAsyncEnumerable<string> ReadLinesAsync(string path,
             CancellationToken cancellationToken = default)

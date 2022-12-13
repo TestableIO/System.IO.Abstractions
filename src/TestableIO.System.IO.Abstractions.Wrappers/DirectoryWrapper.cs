@@ -20,7 +20,7 @@ namespace System.IO.Abstractions
             return new DirectoryInfoWrapper(FileSystem, directoryInfo);
         }
 
-#if FEATURE_FILESYSTEM_UNIXFILEMODE
+#if FEATURE_UNIX_FILE_MODE
         /// <inheritdoc />
         [UnsupportedOSPlatform("windows")]
         public override IDirectoryInfo CreateDirectory(string path, UnixFileMode unixCreateMode)
@@ -38,7 +38,7 @@ namespace System.IO.Abstractions
         }
 #endif
 
-#if FEATURE_FILESYSTEM_NET7
+#if FEATURE_CREATE_TEMP_SUBDIRECTORY
         /// <inheritdoc />
         public override IDirectoryInfo CreateTempSubdirectory(string prefix = null)
         {

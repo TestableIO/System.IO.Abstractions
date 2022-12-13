@@ -75,7 +75,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileSystemWatcher.WaitForChanged(WatcherChangeTypes,int)"/>
         public abstract IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, int timeout);
 
-#if FEATURE_FILESYSTEM_NET7
+#if FEATURE_FILE_SYSTEM_WATCHER_WAIT_WITH_TIMESPAN
         /// <inheritdoc cref="FileSystemWatcher.WaitForChanged(WatcherChangeTypes,TimeSpan)"/>
         public abstract IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, TimeSpan timeout);
 #endif

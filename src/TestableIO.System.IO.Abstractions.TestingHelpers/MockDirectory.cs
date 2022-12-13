@@ -39,7 +39,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return CreateDirectoryInternal(path);
         }
 
-#if FEATURE_FILESYSTEM_UNIXFILEMODE
+#if FEATURE_UNIX_FILE_MODE
         /// <inheritdoc />
         public override IDirectoryInfo CreateDirectory(string path, UnixFileMode unixCreateMode)
         {
@@ -106,7 +106,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 #endif
 
-#if FEATURE_FILESYSTEM_NET7
+#if FEATURE_CREATE_TEMP_SUBDIRECTORY
         /// <inheritdoc />
         public override IDirectoryInfo CreateTempSubdirectory(string prefix = null)
         {

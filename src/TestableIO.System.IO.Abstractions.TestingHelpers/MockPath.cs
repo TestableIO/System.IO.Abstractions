@@ -23,7 +23,7 @@ namespace System.IO.Abstractions.TestingHelpers
             this.defaultTempDirectory = !string.IsNullOrEmpty(defaultTempDirectory) ? defaultTempDirectory : base.GetTempPath();
         }
 
-#if FEATURE_FILESYSTEM_NET7
+#if FEATURE_PATH_EXISTS
         /// <inheritdoc />
         public override bool Exists(string path)
         {

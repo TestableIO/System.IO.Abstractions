@@ -35,7 +35,7 @@ namespace System.IO.Abstractions
         ///<inheritdoc cref="IFile.ReadAllTextAsync(string,Encoding,CancellationToken)"/>
         public abstract Task<string> ReadAllTextAsync(string path, Encoding encoding, CancellationToken cancellationToken);
 
-#if FEATURE_FILESYSTEM_NET7
+#if FEATURE_READ_LINES_ASYNC
         ///<inheritdoc cref="IFile.ReadLinesAsync(string,Encoding,CancellationToken)"/>
         public abstract IAsyncEnumerable<string> ReadLinesAsync(string path,
             CancellationToken cancellationToken = default);

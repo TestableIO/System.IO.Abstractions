@@ -500,7 +500,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 #endif
 
-#if FEATURE_FILESYSTEM_NET7
+#if FEATURE_PATH_EXISTS
         [Test]
         public void Exists_Null_ShouldReturnFalse()
         {

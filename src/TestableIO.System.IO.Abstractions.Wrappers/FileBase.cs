@@ -74,7 +74,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.GetAttributes(string)"/>
         public abstract FileAttributes GetAttributes(string path);
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc cref="IFile.GetCreationTime(SafeFileHandle)"/>
         public abstract FileAttributes GetAttributes(SafeFileHandle fileHandle);
 #endif
@@ -82,7 +82,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.GetCreationTime(string)"/>
         public abstract DateTime GetCreationTime(string path);
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc cref="IFile.GetCreationTime(SafeFileHandle)"/>
         public abstract DateTime GetCreationTime(SafeFileHandle fileHandle);
 #endif
@@ -90,7 +90,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.GetCreationTimeUtc(string)"/>
         public abstract DateTime GetCreationTimeUtc(string path);
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc cref="IFile.GetCreationTimeUtc(SafeFileHandle)"/>
         public abstract DateTime GetCreationTimeUtc(SafeFileHandle fileHandle);
 #endif
@@ -98,7 +98,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.GetLastAccessTime(string)"/>
         public abstract DateTime GetLastAccessTime(string path);
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc cref="IFile.GetLastAccessTime(SafeFileHandle)"/>
         public abstract DateTime GetLastAccessTime(SafeFileHandle fileHandle);
 #endif
@@ -106,7 +106,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.GetLastAccessTimeUtc(string)"/>
         public abstract DateTime GetLastAccessTimeUtc(string path);
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc cref="IFile.GetLastAccessTimeUtc(SafeFileHandle)"/>
         public abstract DateTime GetLastAccessTimeUtc(SafeFileHandle fileHandle);
 #endif
@@ -114,7 +114,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.GetLastWriteTime(string)"/>
         public abstract DateTime GetLastWriteTime(string path);
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc cref="IFile.GetLastWriteTime(SafeFileHandle)"/>
         public abstract DateTime GetLastWriteTime(SafeFileHandle fileHandle);
 #endif
@@ -122,17 +122,17 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.GetLastWriteTimeUtc(string)"/>
         public abstract DateTime GetLastWriteTimeUtc(string path);
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc cref="IFile.GetLastWriteTimeUtc(SafeFileHandle)"/>
         public abstract DateTime GetLastWriteTimeUtc(SafeFileHandle fileHandle);
 #endif
 
-#if FEATURE_FILESYSTEM_UNIXFILEMODE
+#if FEATURE_UNIX_FILE_MODE
         /// <inheritdoc cref="IFile.GetUnixFileMode(string)"/>
         public abstract UnixFileMode GetUnixFileMode(string path);
 #endif
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc cref="IFile.GetUnixFileMode(SafeFileHandle)"/>
         public abstract UnixFileMode GetUnixFileMode(SafeFileHandle fileHandle);
 #endif
@@ -203,7 +203,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.SetAttributes(string, FileAttributes)"/>
         public abstract void SetAttributes(string path, FileAttributes fileAttributes);
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc cref="IFile.SetAttributes(SafeFileHandle, FileAttributes)"/>
         public abstract void SetAttributes(SafeFileHandle fileHandle, FileAttributes fileAttributes);
 #endif
@@ -211,7 +211,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.SetCreationTime(string, DateTime)"/>
         public abstract void SetCreationTime(string path, DateTime creationTime);
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc cref="IFile.SetCreationTime(SafeFileHandle, DateTime)"/>
         public abstract void SetCreationTime(SafeFileHandle fileHandle, DateTime creationTime);
 #endif
@@ -219,7 +219,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.SetCreationTimeUtc(string, DateTime)"/>
         public abstract void SetCreationTimeUtc(string path, DateTime creationTimeUtc);
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc cref="IFile.SetCreationTimeUtc(SafeFileHandle, DateTime)"/>
         public abstract void SetCreationTimeUtc(SafeFileHandle fileHandle, DateTime creationTimeUtc);
 #endif
@@ -227,7 +227,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.SetLastAccessTime(string, DateTime)"/>
         public abstract void SetLastAccessTime(string path, DateTime lastAccessTime);
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc cref="IFile.SetLastAccessTime(SafeFileHandle, DateTime)"/>
         public abstract void SetLastAccessTime(SafeFileHandle fileHandle, DateTime lastAccessTime);
 #endif
@@ -235,7 +235,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.SetLastAccessTimeUtc(string, DateTime)"/>
         public abstract void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc);
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc cref="IFile.SetLastAccessTimeUtc(SafeFileHandle, DateTime)"/>
         public abstract void SetLastAccessTimeUtc(SafeFileHandle fileHandle, DateTime lastAccessTimeUtc);
 #endif
@@ -243,7 +243,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.SetLastWriteTime(string, DateTime)"/>
         public abstract void SetLastWriteTime(string path, DateTime lastWriteTime);
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc cref="IFile.SetLastWriteTime(SafeFileHandle, DateTime)"/>
         public abstract void SetLastWriteTime(SafeFileHandle fileHandle, DateTime lastWriteTime);
 #endif
@@ -251,17 +251,17 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFile.SetLastWriteTimeUtc(string, DateTime)"/>
         public abstract void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc);
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc cref="IFile.SetLastWriteTimeUtc(SafeFileHandle, DateTime)"/>
         public abstract void SetLastWriteTimeUtc(SafeFileHandle fileHandle, DateTime lastWriteTimeUtc);
 #endif
 
-#if FEATURE_FILESYSTEM_UNIXFILEMODE
+#if FEATURE_UNIX_FILE_MODE
         /// <inheritdoc cref="IFile.SetUnixFileMode(string, UnixFileMode)"/>
         public abstract void SetUnixFileMode(string path, UnixFileMode mode);
 #endif
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc cref="IFile.SetUnixFileMode(SafeFileHandle, UnixFileMode)"/>
         public abstract void SetUnixFileMode(SafeFileHandle fileHandle, UnixFileMode mode);
 #endif

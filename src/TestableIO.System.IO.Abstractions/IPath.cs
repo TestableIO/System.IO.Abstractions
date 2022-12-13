@@ -41,7 +41,7 @@ namespace System.IO.Abstractions
 	    bool EndsInDirectorySeparator(string path);
 #endif
 
-#if FEATURE_FILESYSTEM_NET7
+#if FEATURE_PATH_EXISTS
         /// <inheritdoc cref="Path.Exists(string)" />
         bool Exists([NotNullWhen(true)] string? path);
 #endif

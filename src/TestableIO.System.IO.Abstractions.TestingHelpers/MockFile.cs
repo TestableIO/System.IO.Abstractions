@@ -312,7 +312,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return result;
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override FileAttributes GetAttributes(SafeFileHandle fileHandle)
         {
@@ -328,7 +328,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetTimeFromFile(path, data => data.CreationTime.LocalDateTime, () => MockFileData.DefaultDateTimeOffset.LocalDateTime);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override DateTime GetCreationTime(SafeFileHandle fileHandle)
         {
@@ -344,7 +344,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetTimeFromFile(path, data => data.CreationTime.UtcDateTime, () => MockFileData.DefaultDateTimeOffset.UtcDateTime);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override DateTime GetCreationTimeUtc(SafeFileHandle fileHandle)
         {
@@ -360,7 +360,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetTimeFromFile(path, data => data.LastAccessTime.LocalDateTime, () => MockFileData.DefaultDateTimeOffset.LocalDateTime);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override DateTime GetLastAccessTime(SafeFileHandle fileHandle)
         {
@@ -376,7 +376,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetTimeFromFile(path, data => data.LastAccessTime.UtcDateTime, () => MockFileData.DefaultDateTimeOffset.UtcDateTime);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override DateTime GetLastAccessTimeUtc(SafeFileHandle fileHandle)
         {
@@ -392,7 +392,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetTimeFromFile(path, data => data.LastWriteTime.LocalDateTime, () => MockFileData.DefaultDateTimeOffset.LocalDateTime);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override DateTime GetLastWriteTime(SafeFileHandle fileHandle)
         {
@@ -408,7 +408,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetTimeFromFile(path, data => data.LastWriteTime.UtcDateTime, () => MockFileData.DefaultDateTimeOffset.UtcDateTime);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override DateTime GetLastWriteTimeUtc(SafeFileHandle fileHandle)
         {
@@ -416,7 +416,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 #endif
 
-#if FEATURE_FILESYSTEM_UNIXFILEMODE
+#if FEATURE_UNIX_FILE_MODE
         /// <inheritdoc />
         public override UnixFileMode GetUnixFileMode(string path)
         {
@@ -424,7 +424,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 #endif
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override UnixFileMode GetUnixFileMode(SafeFileHandle fileHandle)
         {
@@ -806,7 +806,7 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override void SetAttributes(SafeFileHandle fileHandle, FileAttributes fileAttributes)
         {
@@ -822,7 +822,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.GetFile(path).CreationTime = new DateTimeOffset(creationTime);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override void SetCreationTime(SafeFileHandle fileHandle, DateTime creationTime)
         {
@@ -838,7 +838,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.GetFile(path).CreationTime = new DateTimeOffset(creationTimeUtc, TimeSpan.Zero);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override void SetCreationTimeUtc(SafeFileHandle fileHandle, DateTime creationTimeUtc)
         {
@@ -854,7 +854,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.GetFile(path).LastAccessTime = new DateTimeOffset(lastAccessTime);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override void SetLastAccessTime(SafeFileHandle fileHandle, DateTime lastAccessTime)
         {
@@ -870,7 +870,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.GetFile(path).LastAccessTime = new DateTimeOffset(lastAccessTimeUtc, TimeSpan.Zero);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override void SetLastAccessTimeUtc(SafeFileHandle fileHandle, DateTime lastAccessTimeUtc)
         {
@@ -886,7 +886,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.GetFile(path).LastWriteTime = new DateTimeOffset(lastWriteTime);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override void SetLastWriteTime(SafeFileHandle fileHandle, DateTime lastWriteTime)
         {
@@ -902,7 +902,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.GetFile(path).LastWriteTime = new DateTimeOffset(lastWriteTimeUtc, TimeSpan.Zero);
         }
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override void SetLastWriteTimeUtc(SafeFileHandle fileHandle, DateTime lastWriteTimeUtc)
         {
@@ -910,7 +910,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 #endif
 
-#if FEATURE_FILESYSTEM_UNIXFILEMODE
+#if FEATURE_UNIX_FILE_MODE
         /// <inheritdoc />
         public override void SetUnixFileMode(string path, UnixFileMode mode)
         {
@@ -918,7 +918,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 #endif
 
-#if FEATURE_FILESYSTEM_SAFEFILEHANDLE
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
         /// <inheritdoc />
         public override void SetUnixFileMode(SafeFileHandle fileHandle, UnixFileMode mode)
         {

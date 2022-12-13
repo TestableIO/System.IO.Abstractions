@@ -25,7 +25,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IDirectory.CreateDirectory(string)"/>
         public abstract IDirectoryInfo CreateDirectory(string path);
 
-#if FEATURE_FILESYSTEM_UNIXFILEMODE
+#if FEATURE_UNIX_FILE_MODE
         /// <inheritdoc cref="IDirectory.CreateDirectory(string, UnixFileMode)"/>
         public abstract IDirectoryInfo CreateDirectory(string path, UnixFileMode unixCreateMode);
 #endif
@@ -35,7 +35,7 @@ namespace System.IO.Abstractions
         public abstract IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget);
 #endif
 
-#if FEATURE_FILESYSTEM_NET7
+#if FEATURE_CREATE_TEMP_SUBDIRECTORY
         /// <inheritdoc cref="IDirectory.CreateTempSubdirectory(string)"/>
         public abstract IDirectoryInfo CreateTempSubdirectory(string prefix = null);
 #endif

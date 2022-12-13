@@ -51,7 +51,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Path.Combine(string,string,string,string)"/>
         public abstract string Combine(string path1, string path2, string path3, string path4);
 
-#if FEATURE_FILESYSTEM_NET7
+#if FEATURE_PATH_EXISTS
         /// <inheritdoc cref="Path.Exists(string)" />
         public abstract bool Exists(string path);
 #endif

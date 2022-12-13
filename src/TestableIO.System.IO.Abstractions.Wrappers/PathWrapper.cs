@@ -72,7 +72,7 @@ namespace System.IO.Abstractions
             return Path.Combine(path1, path2, path3, path4);
         }
 
-#if FEATURE_FILESYSTEM_NET7
+#if FEATURE_PATH_EXISTS
         /// <inheritdoc />
         public override bool Exists(string path)
         {

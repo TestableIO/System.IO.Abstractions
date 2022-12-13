@@ -153,7 +153,7 @@ namespace System.IO.Abstractions
             return new WaitForChangedResultWrapper(watcher.WaitForChanged(changeType, timeout));
         }
 
-#if FEATURE_FILESYSTEM_NET7
+#if FEATURE_FILE_SYSTEM_WATCHER_WAIT_WITH_TIMESPAN
         /// <inheritdoc />
         public override IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, TimeSpan timeout)
         {
