@@ -85,7 +85,7 @@ namespace System.IO.Abstractions.TestingHelpers
             // unc paths need at least two segments, the others need one segment
             var isUnixRooted = mockFileDataAccessor.StringOperations.StartsWith(
                 mockFileDataAccessor.Directory.GetCurrentDirectory(),
-                string.Format(CultureInfo.InvariantCulture, "{0}", DirectorySeparatorChar));
+                "/");
 
             var minPathSegments = isUnc
                 ? 2
@@ -121,7 +121,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (isUnixRooted && !isUnc)
             {
-                fullPath = DirectorySeparatorChar + fullPath;
+                fullPath = "/" + fullPath;
             }
             else if (isUnixRooted)
             {
