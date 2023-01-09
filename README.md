@@ -7,6 +7,8 @@
 
 At the core of the library is `IFileSystem` and `FileSystem`. Instead of calling methods like `File.ReadAllText` directly, use `IFileSystem.File.ReadAllText`. We have exactly the same API, except that ours is injectable and testable.
 
+## Usage
+
 ```shell
 dotnet add package TestableIO.System.IO.Abstractions
 ```
@@ -41,6 +43,8 @@ public class MyComponent
     }
 }
 ```
+
+### Test helpers
 
 The library also ships with a series of test helpers to save you from having to mock out every call, for basic scenarios. They are not a complete copy of a real-life file system, but they'll get you most of the way there.
 
@@ -94,6 +98,8 @@ void MyFancyMethod()
 }
 ```
 
+### Mock support
+
 Since version 4.0 the top-level APIs expose interfaces instead of abstract base classes (these still exist, though), allowing you to completely mock the file system. Here's a small example, using [Moq](https://github.com/moq/moq4):
 
 ```csharp
@@ -142,3 +148,9 @@ public class SomeClassUsingFileSystemWatcher
     }
 }
 ```
+
+## Related projects
+
+- [`System.IO.Abstractions.Extensions`](https://github.com/TestableIO/System.IO.Abstractions.Extensions) provides convenience functionality on top of the core abstractions.
+- [`System.IO.Abstractions.Analyzers`](https://github.com/TestableIO/System.IO.Abstractions.Analyzers) provides Roslyn analyzers to help use abstractions over static methods. 
+- [`Testably.Abstractions`](https://github.com/Testably/Testably.Abstractions) provides alternative test helpers and additional abstractions.
