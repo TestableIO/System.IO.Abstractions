@@ -151,6 +151,6 @@ public class SomeClassUsingFileSystemWatcher
 
 ## Related projects
 
-- [`System.IO.Abstractions.Extensions`](https://github.com/TestableIO/System.IO.Abstractions.Extensions) provides convenience functionality on top of the core abstractions.
-- [`System.IO.Abstractions.Analyzers`](https://github.com/TestableIO/System.IO.Abstractions.Analyzers) provides Roslyn analyzers to help use abstractions over static methods. 
-- [`Testably.Abstractions`](https://github.com/Testably/Testably.Abstractions) provides alternative test helpers and additional abstractions.
+  - [`System.IO.Abstractions.Extensions`](https://github.com/TestableIO/System.IO.Abstractions.Extensions) provides convenience functionality on top of the core abstractions.
+  - [`System.IO.Abstractions.Analyzers`](https://github.com/TestableIO/System.IO.Abstractions.Analyzers) provides Roslyn analyzers to help use abstractions over static methods. 
+  - [`Testably.Abstractions`](https://github.com/Testably/Testably.Abstractions) provides alternative test helpers and additional abstractions.
