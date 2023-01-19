@@ -63,7 +63,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockFileSystem = new MockFileSystem();
 
             var act = new TestDelegate(() =>
-                mockFileSystem.File.ReadAllText(absentFileNameFullPath)
+                mockFileSystem.File.ReadAllLines(absentFileNameFullPath)
             );
 
             var exception = Assert.Catch<FileNotFoundException>(act);
@@ -149,7 +149,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockFileSystem = new MockFileSystem();
 
             var act = new AsyncTestDelegate(async () =>
-                await mockFileSystem.File.ReadAllTextAsync(absentFileNameFullPath)
+                await mockFileSystem.File.ReadAllLinesAsync(absentFileNameFullPath)
             );
 
             var exception = Assert.CatchAsync<FileNotFoundException>(act);
