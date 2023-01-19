@@ -1,15 +1,15 @@
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using Collections.Generic;
+    using Collections.Specialized;
+    using Threading;
+    using Threading.Tasks;
 
     using NUnit.Framework;
 
     using Text;
 
     using XFS = MockUnixSupport;
-
-    using System.Threading.Tasks;
-    using System.Threading;
 
     public class MockFileReadAllLinesTests
     {
@@ -156,6 +156,88 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.FileName, Is.EqualTo(absentFileNameFullPath));
             Assert.That(exception.Message, Is.EqualTo("Could not find file '" + absentFileNameFullPath + "'."));
         }
+
+#if FEATURE_READ_LINES_ASYNC
+        [Test]
+        public async Task MockFile_ReadLinesAsync_ShouldReturnOriginalTextData()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\something\demo.txt"), new MockFileData("Demo\r\ntext\ncontent\rvalue") },
+                { XFS.Path(@"c:\something\other.gif"), new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+            });
+
+            var file = new MockFile(fileSystem);
+
+            // Act
+            var enumerable = file.ReadLinesAsync(XFS.Path(@"c:\something\demo.txt"));
+            StringCollection result = new();
+            await foreach (var line in enumerable)
+                result.Add(line);
+
+            // Assert
+            CollectionAssert.AreEqual(
+                new[] { "Demo", "text", "content", "value" },
+                result);
+        }
+
+        [Test]
+        public async Task MockFile_ReadLinesAsync_ShouldReturnOriginalDataWithCustomEncoding()
+        {
+            // Arrange
+            string text = "Hello\r\nthere\rBob\nBob!";
+            var encodedText = Encoding.BigEndianUnicode.GetBytes(text);
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\something\demo.txt"), new MockFileData(encodedText) }
+            });
+
+            var file = new MockFile(fileSystem);
+
+            // Act
+            var enumerable = file.ReadLinesAsync(XFS.Path(@"c:\something\demo.txt"), Encoding.BigEndianUnicode);
+            StringCollection result = new();
+            await foreach (var line in enumerable)
+                result.Add(line);
+
+            // Assert
+            CollectionAssert.AreEqual(
+                new[] { "Hello", "there", "Bob", "Bob!" },
+                result);
+        }
+
+        [Test]
+        public void MockFile_ReadLinesAsync_ShouldThrowOperationCanceledExceptionIfCanceled()
+        {
+            var fileSystem = new MockFileSystem();
+
+            AsyncTestDelegate action = async () =>
+            {
+                var enumerable = fileSystem.File.ReadLinesAsync(@"C:\a.txt", new CancellationToken(canceled: true));
+                await foreach (var line in enumerable);
+            };
+
+            Assert.ThrowsAsync<OperationCanceledException>(action);
+        }
+
+        [Test]
+        public void MockFile_ReadLinesAsync_NotExistingFile_ThrowsCorrectFileNotFoundException()
+        {
+            var absentFileNameFullPath = XFS.Path(@"c:\you surely don't have such file.hope-so");
+            var mockFileSystem = new MockFileSystem();
+
+            AsyncTestDelegate action = async () =>
+            {
+                var enumerable = mockFileSystem.File.ReadLinesAsync(absentFileNameFullPath);
+                await foreach (var line in enumerable) ;
+            };
+
+            var exception = Assert.CatchAsync<FileNotFoundException>(action);
+            Assert.That(exception.FileName, Is.EqualTo(absentFileNameFullPath));
+            Assert.That(exception.Message, Is.EqualTo("Could not find file '" + absentFileNameFullPath + "'."));
+        }
+#endif
 #endif
     }
 }

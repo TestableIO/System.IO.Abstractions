@@ -1,6 +1,7 @@
 ﻿#if FEATURE_ASYNC_FILE
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         /// <inheritdoc />
         public override Task AppendAllTextAsync(string path, string contents, CancellationToken cancellationToken = default(CancellationToken)) =>
-       AppendAllTextAsync(path, contents, MockFileData.DefaultEncoding, cancellationToken);
+            AppendAllTextAsync(path, contents, MockFileData.DefaultEncoding, cancellationToken);
 
 
         /// <inheritdoc />
@@ -43,7 +44,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         /// <inheritdoc />
         public override Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken = default(CancellationToken)) =>
-      ReadAllLinesAsync(path, MockFileData.DefaultEncoding, cancellationToken);
+            ReadAllLinesAsync(path, MockFileData.DefaultEncoding, cancellationToken);
 
         /// <inheritdoc />
 
@@ -55,7 +56,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         /// <inheritdoc />
         public override Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken) =>
- ReadAllTextAsync(path, MockFileData.DefaultEncoding, cancellationToken);
+            ReadAllTextAsync(path, MockFileData.DefaultEncoding, cancellationToken);
 
 
         /// <inheritdoc />
@@ -67,17 +68,16 @@ namespace System.IO.Abstractions.TestingHelpers
 
 #if FEATURE_READ_LINES_ASYNC
         /// <inheritdoc />
-        public override IAsyncEnumerable<string> ReadLinesAsync(string path,
-            CancellationToken cancellationToken = default)
-        {
-            throw CommonExceptions.NotImplemented();
-        }
+        public override IAsyncEnumerable<string> ReadLinesAsync(string path, CancellationToken cancellationToken = default) =>
+            ReadLinesAsync(path, MockFileData.DefaultEncoding, cancellationToken);
 
         /// <inheritdoc />
-        public override IAsyncEnumerable<string> ReadLinesAsync(string path, Encoding encoding,
-            CancellationToken cancellationToken = default)
+        public override async IAsyncEnumerable<string> ReadLinesAsync(string path, Encoding encoding,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {
-            throw CommonExceptions.NotImplemented();
+            var lines = await ReadAllLinesAsync(path, encoding, cancellationToken);
+            foreach (var line in lines)
+                yield return line;
         }
 #endif
 
@@ -103,7 +103,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         /// <inheritdoc />
         public override Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken) =>
-WriteAllTextAsync(path, contents, MockFileData.DefaultEncoding, cancellationToken);
+            WriteAllTextAsync(path, contents, MockFileData.DefaultEncoding, cancellationToken);
 
         /// <inheritdoc />
         public override Task WriteAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken)
