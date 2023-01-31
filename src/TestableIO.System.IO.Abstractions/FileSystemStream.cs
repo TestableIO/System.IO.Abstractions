@@ -204,5 +204,15 @@ namespace System.IO.Abstractions
             _stream.Dispose();
             base.Dispose(disposing);
         }
+
+        /// <summary>
+        /// Allows to cast the internal Stream to a FileStream
+        /// </summary>
+        /// <param name="fsStream">The FileSystemStream to cast</param>
+        /// <exception cref="InvalidCastException"></exception>
+        public static explicit operator FileStream(FileSystemStream fsStream)
+        {
+            return (FileStream) fsStream._stream;
+        }
     }
 }
