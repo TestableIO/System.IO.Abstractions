@@ -67,7 +67,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectoryInfo_Attributes_SetterShouldThrowDirectoryNotFoundEceptionOnNonExistingFileOrDirectory()
+        public void MockDirectoryInfo_Attributes_SetterShouldThrowDirectoryNotFoundExceptionOnNonExistingFileOrDirectory()
         {
             var fileSystem = new MockFileSystem();
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));

@@ -121,7 +121,7 @@
         }
 
         [Test]
-        public void MockFileStream_Close_MultipleCallsDontThrow()
+        public void MockFileStream_Close_MultipleCallsDoNotThrow()
         {
             var fileSystem = new MockFileSystem();
             var path = XFS.Path("C:\\test");
@@ -136,7 +136,7 @@
         }
 
         [Test]
-        public void MockFileStream_Dispose_MultipleCallsDontThrow()
+        public void MockFileStream_Dispose_MultipleCallsDoNotThrow()
         {
             var fileSystem = new MockFileSystem();
             var path = XFS.Path("C:\\test");

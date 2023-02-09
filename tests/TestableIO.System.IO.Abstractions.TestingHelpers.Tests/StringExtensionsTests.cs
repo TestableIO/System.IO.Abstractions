@@ -98,7 +98,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void TrimSlashes_RootedPath_DontAlterPathWithoutTrailingSlashes()
+        public void TrimSlashes_RootedPath_DoNotAlterPathWithoutTrailingSlashes()
         {
             Assert.AreEqual(XFS.Path(@"c:\x"), XFS.Path(@"c:\x").TrimSlashes());
         }

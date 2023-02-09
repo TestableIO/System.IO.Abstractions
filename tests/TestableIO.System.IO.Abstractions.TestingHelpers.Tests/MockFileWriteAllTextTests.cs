@@ -32,7 +32,7 @@
         }
 
         [Test]
-        public void MockFile_WriteAllText_ShouldOverriteAnExistingFile()
+        public void MockFile_WriteAllText_ShouldOverwriteAnExistingFile()
         {
             // http://msdn.microsoft.com/en-us/library/ms143375.aspx
 

@@ -178,31 +178,31 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_GetLastWriteTimeOfNonExistantFile_ShouldReturnDefaultValue()
+        public void MockFile_GetLastWriteTimeOfNonExistentFile_ShouldReturnDefaultValue()
         {
             ExecuteDefaultValueTest((f, p) => f.GetLastWriteTime(p));
         }
 
         [Test]
-        public void MockFile_GetLastWriteTimeUtcOfNonExistantFile_ShouldReturnDefaultValue()
+        public void MockFile_GetLastWriteTimeUtcOfNonExistentFile_ShouldReturnDefaultValue()
         {
             ExecuteDefaultValueTest((f, p) => f.GetLastWriteTimeUtc(p));
         }
 
         [Test]
-        public void MockFile_GetLastAccessTimeUtcOfNonExistantFile_ShouldReturnDefaultValue()
+        public void MockFile_GetLastAccessTimeUtcOfNonExistentFile_ShouldReturnDefaultValue()
         {
             ExecuteDefaultValueTest((f, p) => f.GetLastAccessTimeUtc(p));
         }
 
         [Test]
-        public void MockFile_GetLastAccessTimeOfNonExistantFile_ShouldReturnDefaultValue()
+        public void MockFile_GetLastAccessTimeOfNonExistentFile_ShouldReturnDefaultValue()
         {
             ExecuteDefaultValueTest((f, p) => f.GetLastAccessTime(p));
         }
 
         [Test]
-        public void MockFile_GetAttributeOfNonExistantFileButParentDirectoryExists_ShouldThrowOneFileNotFoundException()
+        public void MockFile_GetAttributeOfNonExistentFileButParentDirectoryExists_ShouldThrowOneFileNotFoundException()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -216,7 +216,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_GetAttributeOfNonExistantFile_ShouldThrowOneDirectoryNotFoundException()
+        public void MockFile_GetAttributeOfNonExistentFile_ShouldThrowOneDirectoryNotFoundException()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -288,13 +288,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_GetCreationTimeOfNonExistantFile_ShouldReturnDefaultValue()
+        public void MockFile_GetCreationTimeOfNonExistentFile_ShouldReturnDefaultValue()
         {
             ExecuteDefaultValueTest((f, p) => f.GetCreationTime(p));
         }
 
         [Test]
-        public void MockFile_GetCreationTimeUtcOfNonExistantFile_ShouldReturnDefaultValue()
+        public void MockFile_GetCreationTimeUtcOfNonExistentFile_ShouldReturnDefaultValue()
         {
             ExecuteDefaultValueTest((f, p) => f.GetCreationTimeUtc(p));
         }
@@ -498,7 +498,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_AppendText_AppendTextToanExistingFile()
+        public void MockFile_AppendText_AppendTextToAnExistingFile()
         {
             string filepath = XFS.Path(@"c:\something\does\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>

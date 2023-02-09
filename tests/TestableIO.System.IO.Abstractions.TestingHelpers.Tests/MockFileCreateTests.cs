@@ -248,7 +248,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Create_EncryptedOption_FileNotYetEncryptedsWhenStreamIsOpen()
+        public void MockFile_Create_EncryptedOption_FileNotYetEncryptedWhenStreamIsOpen()
         {
             var root = XFS.Path(@"C:\");
             var filePath = XFS.Path(@"C:\test.txt");
