@@ -51,7 +51,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileInfo_Exists_ShouldRetunFalseIfPathLeadsToDirectory()
+        public void MockFileInfo_Exists_ShouldReturnFalseIfPathLeadsToDirectory()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
@@ -211,7 +211,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileInfo_Attributes_SetterShouldThrowFileNotFoundEceptionOnNonExistingFileOrDirectory()
+        public void MockFileInfo_Attributes_SetterShouldThrowFileNotFoundExceptionOnNonExistingFileOrDirectory()
         {
             var fileSystem = new MockFileSystem();
             var fileInfo = new MockFileInfo(fileSystem, XFS.Path(@"c:\non\existing\file.txt"));
@@ -578,7 +578,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileInfo_MoveTo_SameSourceAndTargetThrowsExceptionIfSourceDoesntExist()
+        public void MockFileInfo_MoveTo_SameSourceAndTargetThrowsExceptionIfSourceDoesNotExist()
         {
             var fileSystem = new MockFileSystem();
             var fileInfo = fileSystem.FileInfo.New(XFS.Path(@"c:\temp\file.txt"));
@@ -590,7 +590,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileInfo_MoveTo_ThrowsExceptionIfSourceDoesntExist()
+        public void MockFileInfo_MoveTo_ThrowsExceptionIfSourceDoesNotExist()
         {
             var fileSystem = new MockFileSystem();
             var fileInfo = fileSystem.FileInfo.New(XFS.Path(@"c:\temp\file.txt"));
@@ -640,7 +640,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileInfo_CopyTo_ThrowsExceptionIfSourceDoesntExist()
+        public void MockFileInfo_CopyTo_ThrowsExceptionIfSourceDoesNotExist()
         {
             var fileSystem = new MockFileSystem();
             var fileInfo = fileSystem.FileInfo.New(XFS.Path(@"c:\temp\file.txt"));

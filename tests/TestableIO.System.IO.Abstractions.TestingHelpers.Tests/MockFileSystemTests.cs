@@ -103,7 +103,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileSystem_AddFile_ShouldRepaceExistingFile()
+        public void MockFileSystem_AddFile_ShouldReplaceExistingFile()
         {
             var path = XFS.Path(@"c:\some\file.txt");
             const string existingContent = "Existing content";

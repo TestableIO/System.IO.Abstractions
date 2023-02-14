@@ -22,17 +22,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     fileSystem.AddDirectory(XFS.Path(@"c:\something"));
                     var fileContentEnumerable = new List<string> { "first line", "second line", "third line", "fourth and last line" };
                     var fileContentArray = fileContentEnumerable.ToArray();
-                    Action writeEnumberable = () => fileSystem.File.WriteAllLines(Path, fileContentEnumerable);
-                    Action writeEnumberableUtf32 = () => fileSystem.File.WriteAllLines(Path, fileContentEnumerable, Encoding.UTF32);
+                    Action writeEnumerable = () => fileSystem.File.WriteAllLines(Path, fileContentEnumerable);
+                    Action writeEnumerableUtf32 = () => fileSystem.File.WriteAllLines(Path, fileContentEnumerable, Encoding.UTF32);
                     Action writeArray = () => fileSystem.File.WriteAllLines(Path, fileContentArray);
                     Action writeArrayUtf32 = () => fileSystem.File.WriteAllLines(Path, fileContentArray, Encoding.UTF32);
                     var expectedContent = string.Format(CultureInfo.InvariantCulture,
                         "first line{0}second line{0}third line{0}fourth and last line{0}", Environment.NewLine);
 
                     // IEnumerable
-                    yield return new TestCaseData(fileSystem, writeEnumberable, expectedContent)
+                    yield return new TestCaseData(fileSystem, writeEnumerable, expectedContent)
                         .SetName("WriteAllLines(string, IEnumerable<string>)");
-                    yield return new TestCaseData(fileSystem, writeEnumberableUtf32, expectedContent)
+                    yield return new TestCaseData(fileSystem, writeEnumerableUtf32, expectedContent)
                         .SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
 
                     // string[]
@@ -66,15 +66,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var fileSystem = new MockFileSystem();
                 var fileContentEnumerable = new List<string>();
                 var fileContentArray = fileContentEnumerable.ToArray();
-                TestDelegate writeEnumberable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
-                TestDelegate writeEnumberableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
+                TestDelegate writeEnumerable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
+                TestDelegate writeEnumerableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
                 TestDelegate writeArray = () => fileSystem.File.WriteAllLines(path, fileContentArray);
                 TestDelegate writeArrayUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentArray, Encoding.UTF32);
 
                 // IEnumerable
-                yield return new TestCaseData(writeEnumberable)
+                yield return new TestCaseData(writeEnumerable)
                     .SetName("WriteAllLines(string, IEnumerable<string>) input: " + path);
-                yield return new TestCaseData(writeEnumberableUtf32)
+                yield return new TestCaseData(writeEnumerableUtf32)
                     .SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32) input: " + path);
 
                 // string[]
@@ -91,11 +91,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     var fileSystem = new MockFileSystem();
                     var fileContentEnumerable = new List<string>();
                     var fileContentArray = fileContentEnumerable.ToArray();
-                    TestDelegate writeEnumberableNull = () => fileSystem.File.WriteAllLines(Path, fileContentEnumerable, null);
+                    TestDelegate writeEnumerableNull = () => fileSystem.File.WriteAllLines(Path, fileContentEnumerable, null);
                     TestDelegate writeArrayNull = () => fileSystem.File.WriteAllLines(Path, fileContentArray, null);
 
                     // IEnumerable
-                    yield return new TestCaseData(writeEnumberableNull)
+                    yield return new TestCaseData(writeEnumerableNull)
                         .SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
 
                     // string[]
@@ -113,15 +113,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     fileSystem.Directory.CreateDirectory(path);
                     var fileContentEnumerable = new List<string>();
                     var fileContentArray = fileContentEnumerable.ToArray();
-                    TestDelegate writeEnumberable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
-                    TestDelegate writeEnumberableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
+                    TestDelegate writeEnumerable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
+                    TestDelegate writeEnumerableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
                     TestDelegate writeArray = () => fileSystem.File.WriteAllLines(path, fileContentArray);
                     TestDelegate writeArrayUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentArray, Encoding.UTF32);
 
                     // IEnumerable
-                    yield return new TestCaseData(writeEnumberable, path)
+                    yield return new TestCaseData(writeEnumerable, path)
                         .SetName("WriteAllLines(string, IEnumerable<string>)");
-                    yield return new TestCaseData(writeEnumberableUtf32, path)
+                    yield return new TestCaseData(writeEnumerableUtf32, path)
                         .SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
 
                     // string[]
@@ -143,15 +143,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     fileSystem.AddFile(path, mockFileData);
                     var fileContentEnumerable = new List<string>();
                     var fileContentArray = fileContentEnumerable.ToArray();
-                    TestDelegate writeEnumberable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
-                    TestDelegate writeEnumberableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
+                    TestDelegate writeEnumerable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
+                    TestDelegate writeEnumerableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
                     TestDelegate writeArray = () => fileSystem.File.WriteAllLines(path, fileContentArray);
                     TestDelegate writeArrayUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentArray, Encoding.UTF32);
 
                     // IEnumerable
-                    yield return new TestCaseData(writeEnumberable, path)
+                    yield return new TestCaseData(writeEnumerable, path)
                         .SetName("WriteAllLines(string, IEnumerable<string>)");
-                    yield return new TestCaseData(writeEnumberableUtf32, path)
+                    yield return new TestCaseData(writeEnumerableUtf32, path)
                         .SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
 
                     // string[]
@@ -176,16 +176,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     string[] fileContentArray = null;
 
                     // ReSharper disable ExpressionIsAlwaysNull
-                    TestDelegate writeEnumberable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
-                    TestDelegate writeEnumberableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
+                    TestDelegate writeEnumerable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
+                    TestDelegate writeEnumerableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
                     TestDelegate writeArray = () => fileSystem.File.WriteAllLines(path, fileContentArray);
                     TestDelegate writeArrayUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentArray, Encoding.UTF32);
                     // ReSharper restore ExpressionIsAlwaysNull
 
                     // IEnumerable
-                    yield return new TestCaseData(writeEnumberable)
+                    yield return new TestCaseData(writeEnumerable)
                         .SetName("WriteAllLines(string, IEnumerable<string>)");
-                    yield return new TestCaseData(writeEnumberableUtf32)
+                    yield return new TestCaseData(writeEnumerableUtf32)
                         .SetName("WriteAllLines(string, IEnumerable<string>, Encoding.UTF32)");
 
                     // string[]

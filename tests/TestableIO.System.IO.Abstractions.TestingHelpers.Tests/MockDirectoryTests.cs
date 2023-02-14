@@ -139,7 +139,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternWithThreeCharacterLongFileExtension_RepectingAllDirectorySearchOption()
+        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternWithThreeCharacterLongFileExtension_RespectingAllDirectorySearchOption()
         {
             // Arrange
             var additionalFilePath = XFS.Path(@"c:\a\a\c.gifx");
@@ -163,7 +163,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternWithThreeCharacterLongFileExtension_RepectingTopDirectorySearchOption()
+        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternWithThreeCharacterLongFileExtension_RespectingTopDirectorySearchOption()
         {
             // Arrange
             var additionalFilePath = XFS.Path(@"c:\a\c.gifx");
@@ -1485,7 +1485,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectory_Move_ShouldMoveDirectoryAtrributes()
+        public void MockDirectory_Move_ShouldMoveDirectoryAttributes()
         {
             // Arrange
             var sourceDirName = XFS.Path(@"a:\folder1\");
@@ -1731,7 +1731,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectory_Move_ShouldThrowADirectoryNotFoundExceptionIfDesinationDirectoryDoesNotExist()
+        public void MockDirectory_Move_ShouldThrowADirectoryNotFoundExceptionIfDestinationDirectoryDoesNotExist()
         {
             // Arrange
             string sourcePath = XFS.Path(@"c:\a");
@@ -1746,7 +1746,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectory_Move_ShouldThrowAnIOExceptionIfDesinationDirectoryExists()
+        public void MockDirectory_Move_ShouldThrowAnIOExceptionIfDestinationDirectoryExists()
         {
             // Arrange
             string sourcePath = XFS.Path(@"c:\a");

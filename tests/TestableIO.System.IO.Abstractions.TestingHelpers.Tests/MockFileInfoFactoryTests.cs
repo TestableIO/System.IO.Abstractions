@@ -25,7 +25,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileInfoFactory_New_ShouldReturnFileInfoForNonExistantFile()
+        public void MockFileInfoFactory_New_ShouldReturnFileInfoForNonExistentFile()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>

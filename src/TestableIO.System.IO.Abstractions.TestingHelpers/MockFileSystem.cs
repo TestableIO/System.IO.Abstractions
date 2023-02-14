@@ -275,15 +275,15 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
-        public void AddFilesFromEmbeddedNamespace(string path, Assembly resourceAssembly, string embeddedRresourcePath)
+        public void AddFilesFromEmbeddedNamespace(string path, Assembly resourceAssembly, string embeddedResourcePath)
         {
-            var matchingResources = resourceAssembly.GetManifestResourceNames().Where(f => f.StartsWith(embeddedRresourcePath));
+            var matchingResources = resourceAssembly.GetManifestResourceNames().Where(f => f.StartsWith(embeddedResourcePath));
             foreach (var resource in matchingResources)
             {
                 using (var embeddedResourceStream = resourceAssembly.GetManifestResourceStream(resource))
                 using (var streamReader = new BinaryReader(embeddedResourceStream))
                 {
-                    var fileName = resource.Substring(embeddedRresourcePath.Length + 1);
+                    var fileName = resource.Substring(embeddedResourcePath.Length + 1);
                     var fileData = streamReader.ReadBytes((int)embeddedResourceStream.Length);
                     var filePath = Path.Combine(path, fileName);
                     AddFile(filePath, new MockFileData(fileData));
