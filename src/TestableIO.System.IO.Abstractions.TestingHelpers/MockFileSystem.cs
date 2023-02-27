@@ -209,6 +209,53 @@ namespace System.IO.Abstractions.TestingHelpers
             }
         }
 
+        /// <summary>
+        /// Add a new file that is empty.
+        /// </summary>
+        /// <param name="path">A string representing the path of the new file to add.</param>
+        public void AddEmptyFile(string path)
+        {
+            AddFile(path, new MockFileData(""));
+        }
+
+        /// <summary>
+        /// Add a new file that is empty.
+        /// </summary>
+        /// <param name="path">An <see cref="IFileInfo"/> representing the path of the new file to add.</param>
+        public void AddEmptyFile(IFileInfo path)
+        {
+            AddEmptyFile(path.FullName);
+        }
+
+        /// <summary>
+        /// Add a new, empty directory.
+        /// </summary>
+        /// <param name="path">An <see cref="IDirectoryInfo"/> representing the path of the new directory to add.</param>
+        public void AddDirectory(IDirectoryInfo path)
+        {
+            AddDirectory(path.FullName);
+        }
+
+        /// <summary>
+        /// Add a new file with its contents set to a specified <see cref="MockFileData"/>.
+        /// </summary>
+        /// <param name="path">An <see cref="IFileInfo"/> representing the path of the new file to add.</param>
+        /// <param name="data">The data to use for the contents of the new file.</param>
+        public void AddFile(IFileInfo path, MockFileData data)
+        {
+            AddFile(path.FullName, data);
+        }
+
+        /// <summary>
+        /// Gets a file.
+        /// </summary>
+        /// <param name="path">The path of the file to get.</param>
+        /// <returns>The file. <see langword="null"/> if the file does not exist.</returns>
+        public MockFileData GetFile(IFileInfo path)
+        {
+            return GetFile(path.FullName);
+        }
+
         /// <inheritdoc />
         public void AddDirectory(string path)
         {
