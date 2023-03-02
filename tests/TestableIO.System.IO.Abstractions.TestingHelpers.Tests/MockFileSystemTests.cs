@@ -120,6 +120,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileSystem_AddEmptyFile_ShouldBeEmpty()
+        {
+            var path = XFS.Path(@"c:\some\file.txt");
+            var fileSystem = new MockFileSystem();
+
+            fileSystem.AddEmptyFile(path);
+
+            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(""));
+        }
+
+        [Test]
         public void MockFileSystem_ByDefault_IsSerializable()
         {
             var file1 = new MockFileData("Demo\r\ntext\ncontent\rvalue");
