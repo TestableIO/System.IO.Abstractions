@@ -1,6 +1,7 @@
 ﻿namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     using NUnit.Framework;
 
@@ -22,6 +23,27 @@
             // Act
             cut.WriteByte(255);
             cut.Flush();
+
+            // Assert
+            CollectionAssert.AreEqual(new byte[] { 255 }, fileSystem.GetFile(filepath).Contents);
+        }
+
+        [Test]
+        public async Task MockFileStream_FlushAsync_WritesByteToFile()
+        {
+            // bug replication test for issue
+            // https://github.com/TestableIO/System.IO.Abstractions/issues/959
+
+            // Arrange
+            var filepath = XFS.Path(@"C:\something\foo.txt");
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
+            fileSystem.AddDirectory(XFS.Path(@"C:\something"));
+
+            var cut = new MockFileStream(fileSystem, filepath, FileMode.Create);
+
+            // Act
+            await cut.WriteAsync(new byte[] { 255 });
+            await cut.FlushAsync();
 
             // Assert
             CollectionAssert.AreEqual(new byte[] { 255 }, fileSystem.GetFile(filepath).Contents);
