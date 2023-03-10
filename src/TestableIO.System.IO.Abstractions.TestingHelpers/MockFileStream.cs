@@ -198,6 +198,13 @@ namespace System.IO.Abstractions.TestingHelpers
             InternalFlush();
         }
 
+        /// <inheritdoc />
+        public override Task FlushAsync(CancellationToken cancellationToken)
+        {
+            InternalFlush();
+            return Task.CompletedTask;
+        }
+
         /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl()" />
         [SupportedOSPlatform("windows")]
         public object GetAccessControl()
