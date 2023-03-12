@@ -42,7 +42,7 @@
             var cut = new MockFileStream(fileSystem, filepath, FileMode.Create);
 
             // Act
-            await cut.WriteAsync(new byte[] { 255 });
+            await cut.WriteAsync(new byte[] { 255 }, 0, 1);
             await cut.FlushAsync();
 
             // Assert
