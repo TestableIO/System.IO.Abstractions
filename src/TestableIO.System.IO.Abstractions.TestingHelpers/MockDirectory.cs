@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace System.IO.Abstractions.TestingHelpers
@@ -14,8 +16,15 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockDirectory : DirectoryBase
     {
+        private static readonly char[] ValidRandomSubdirChars = 
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
+
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private string currentDirectory;
+        
+        // Random is not thread-safe, create our own instance and lock when accessing it.
+        [NonSerialized]
+        private Random random;
 
         /// <inheritdoc />
         public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory) :
@@ -30,6 +39,14 @@ namespace System.IO.Abstractions.TestingHelpers
             this.currentDirectory = currentDirectory;
             this.mockFileDataAccessor =
                 mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
+            this.random = new Random();
+        }
+
+        [OnDeserializing]
+        private void OnDeserializing(StreamingContext context)
+        {
+            // Random can't be serialized, create a new random when deserialized.
+            this.random = new Random();
         }
 
 
@@ -110,7 +127,17 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override IDirectoryInfo CreateTempSubdirectory(string prefix = null)
         {
-            throw CommonExceptions.NotImplemented();
+            prefix ??= "";
+            var randomChars = new StringBuilder();
+            lock (random)
+            {
+                for (var i = 0; i < 6; i++)
+                {
+                    randomChars.Append(ValidRandomSubdirChars[random.Next(ValidRandomSubdirChars.Length)]);
+                }
+            }
+            var randomDir = $"{prefix}{randomChars}";
+            return CreateDirectoryInternal(Path.Combine(Path.GetTempPath(), randomDir));
         }
 #endif
 

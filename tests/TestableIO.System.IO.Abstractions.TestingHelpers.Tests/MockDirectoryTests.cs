@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using NUnit.Framework;
@@ -812,6 +813,104 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.IsTrue(fileSystem.Directory.Exists(@"\\server\share\"));
         }
+
+#if FEATURE_CREATE_TEMP_SUBDIRECTORY
+        [Test]
+        public void MockDirectory_CreateTempSubdirectory_ShouldCreateSubdirectoryInTempDirectory()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            var result = fileSystem.Directory.CreateTempSubdirectory();
+
+            // Assert
+            Assert.IsTrue(fileSystem.Directory.Exists(result.FullName));
+            Assert.IsTrue(result.FullName.StartsWith(Path.GetTempPath()));
+        }
+
+        [Test]
+        public void MockDirectory_CreateTempSubdirectory_ShouldHaveCharactersFromUpperLowerOrDigits()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            var result = fileSystem.Directory.CreateTempSubdirectory();
+
+            // Assert
+            var name = Path.GetFileName(result.FullName);
+            for (var i = 0; i < name.Length; i++)
+            {
+                var c = name[i];
+                if (!char.IsUpper(c) && !char.IsLower(c) && !char.IsDigit(c))
+                {
+                    Assert.Fail($"Character '{c}' at position {i} of directory {name} is not upper, lower or digit", c, i);
+                }
+            }
+        }
+
+        [Test]
+        public void MockDirectory_CreateTempSubdirectoryWithPrefix_ShouldCreateDirectoryWithGivenPrefixInTempDirectory()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            var result = fileSystem.Directory.CreateTempSubdirectory("foo-");
+
+            // Assert
+            Assert.IsTrue(fileSystem.Directory.Exists(result.FullName));
+            Assert.IsTrue(Path.GetFileName(result.FullName).StartsWith("foo-"));
+            Assert.IsTrue(result.FullName.StartsWith(Path.GetTempPath()));
+        }
+
+        [Test]
+        public void MockDirectory_CreateTempSubdirectoryWithPrefix_ShouldEndWithCharactersFromUpperLowerOfDigits()
+        {
+            // Arrange
+            var prefix = "foo-";
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            var result = fileSystem.Directory.CreateTempSubdirectory(prefix);
+
+            // Assert
+            var name = Path.GetFileName(result.FullName);
+            for (var i = prefix.Length; i < name.Length; i++)
+            {
+                var c = name[i];
+                if (!char.IsUpper(c) && !char.IsLower(c) && !char.IsDigit(c))
+                {
+                    Assert.Fail($"Character '{c}' at position {i} of directoy {name} is not upper, lower or digit", c, i);
+                }
+            }
+        }
+
+        [Test]
+        public void MockDirectory_CreateTempSubdirectory_ShouldCreateDirectoryAfterDeserialization()
+        {
+            // The random number generator used by CreateTempSubdirectory cannot be serialized, so
+            // we create a new Random after deserialization. Check that the random number generator
+            // is created after deserialization and we can still create a temp subdirectory.
+
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            using var stream = new MemoryStream();
+            var formatter = new BinaryFormatter();
+            formatter.Serialize(stream, fileSystem);
+            stream.Position = 0;
+#pragma warning disable SYSLIB0011 // Allow call to obsolete Deserialize method            
+            var deserializedFileSystem = (MockFileSystem)formatter.Deserialize(stream);
+#pragma warning restore SYSLIB0011
+
+            // Act
+            var result = deserializedFileSystem.Directory.CreateTempSubdirectory();
+
+            // Assert
+            Assert.IsTrue(deserializedFileSystem.Directory.Exists(result.FullName));
+        }
+#endif
 
         [Test]
         public void MockDirectory_Delete_ShouldDeleteDirectory()

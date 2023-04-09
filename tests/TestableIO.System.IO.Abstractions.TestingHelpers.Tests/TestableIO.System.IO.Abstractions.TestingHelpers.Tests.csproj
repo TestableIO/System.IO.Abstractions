@@ -7,6 +7,7 @@
     <RootNamespace>System.IO.Abstractions.TestingHelpers.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
     <IsTestable>true</IsTestable>
+    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>    
   </PropertyGroup>
   <PropertyGroup>
     <!--  
