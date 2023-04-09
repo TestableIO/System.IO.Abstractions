@@ -128,16 +128,24 @@ namespace System.IO.Abstractions.TestingHelpers
         public override IDirectoryInfo CreateTempSubdirectory(string prefix = null)
         {
             prefix ??= "";
-            var randomChars = new StringBuilder();
-            lock (random)
+            string potentialTempDirectory;
+
+            // Perform directory name generation is a loop, just in case the randomly generated name already exists.
+            do
             {
-                for (var i = 0; i < 6; i++)
+                var randomChars = new StringBuilder();
+                lock (random)
                 {
-                    randomChars.Append(ValidRandomSubdirChars[random.Next(ValidRandomSubdirChars.Length)]);
+                    for (var i = 0; i < 6; i++)
+                    {
+                        randomChars.Append(ValidRandomSubdirChars[random.Next(ValidRandomSubdirChars.Length)]);
+                    }
                 }
-            }
-            var randomDir = $"{prefix}{randomChars}";
-            return CreateDirectoryInternal(Path.Combine(Path.GetTempPath(), randomDir));
+                var randomDir = $"{prefix}{randomChars}";
+                potentialTempDirectory = Path.Combine(Path.GetTempPath(), randomDir);
+            } while (Exists(potentialTempDirectory));
+
+            return CreateDirectoryInternal(Path.Combine(Path.GetTempPath(), potentialTempDirectory));
         }
 #endif
 
