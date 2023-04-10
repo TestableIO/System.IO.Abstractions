@@ -79,7 +79,8 @@ namespace System.IO.Abstractions
         /// <inheritdoc />
         public override IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget)
         {
-            return File.CreateSymbolicLink(path, pathToTarget).WrapFileSystemInfo(FileSystem);
+            return File.CreateSymbolicLink(path, pathToTarget)
+                .WrapFileSystemInfo(FileSystem);
         }
 #endif
         /// <inheritdoc />
@@ -347,7 +348,8 @@ namespace System.IO.Abstractions
         /// <inheritdoc />
         public override IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget)
         {
-            throw new NotImplementedException();
+            return File.ResolveLinkTarget(linkPath, returnFinalTarget)
+                .WrapFileSystemInfo(FileSystem);
         }
 #endif
 

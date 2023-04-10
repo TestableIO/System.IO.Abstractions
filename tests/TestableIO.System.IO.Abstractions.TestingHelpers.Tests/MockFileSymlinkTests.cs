@@ -231,6 +231,57 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.That(ex.Message.Contains(path));
         }
+
+        [Test]
+        public void MockFile_ResolveLinkTarget_ShouldReturnPathOfTargetLink()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.File.WriteAllText("bar", "some content");
+            fileSystem.File.CreateSymbolicLink("foo", "bar");
+
+            var result = fileSystem.File.ResolveLinkTarget("foo", false);
+
+            Assert.AreEqual("bar", result.Name);
+        }
+
+        [Test]
+        public void MockFile_ResolveLinkTarget_WithFinalTarget_ShouldReturnPathOfTargetLink()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.File.WriteAllText("bar", "some content");
+            fileSystem.File.CreateSymbolicLink("foo", "bar");
+            fileSystem.File.CreateSymbolicLink("foo1", "foo");
+
+            var result = fileSystem.File.ResolveLinkTarget("foo1", true);
+
+            Assert.AreEqual("bar", result.Name);
+        }
+
+        [Test]
+        public void MockFile_ResolveLinkTarget_WithoutFinalTarget_ShouldReturnFirstLink()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.File.WriteAllText("bar", "some content");
+            fileSystem.File.CreateSymbolicLink("foo", "bar");
+            fileSystem.File.CreateSymbolicLink("foo1", "foo");
+
+            var result = fileSystem.File.ResolveLinkTarget("foo1", false);
+
+            Assert.AreEqual("foo", result.Name);
+        }
+
+        [Test]
+        public void MockFile_ResolveLinkTarget_WithoutTargetLink_ShouldThrowIOException()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.File.WriteAllText("bar", "some content");
+            fileSystem.File.CreateSymbolicLink("foo", "bar");
+
+            Assert.Throws<IOException>(() =>
+            {
+                fileSystem.File.ResolveLinkTarget("bar", false);
+            });
+        }
 #endif
     }
 }

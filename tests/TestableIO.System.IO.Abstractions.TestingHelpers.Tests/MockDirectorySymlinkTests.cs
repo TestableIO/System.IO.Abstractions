@@ -201,6 +201,57 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.That(ex.Message.Contains(pathToTarget));
         }
+
+        [Test]
+        public void MockDirectory_ResolveLinkTarget_ShouldReturnPathOfTargetLink()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("bar");
+            fileSystem.Directory.CreateSymbolicLink("foo", "bar");
+
+            var result = fileSystem.Directory.ResolveLinkTarget("foo", false);
+
+            Assert.AreEqual("bar", result.Name);
+        }
+
+        [Test]
+        public void MockDirectory_ResolveLinkTarget_WithFinalTarget_ShouldReturnPathOfTargetLink()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("bar");
+            fileSystem.Directory.CreateSymbolicLink("foo", "bar");
+            fileSystem.Directory.CreateSymbolicLink("foo1", "foo");
+
+            var result = fileSystem.Directory.ResolveLinkTarget("foo1", true);
+
+            Assert.AreEqual("bar", result.Name);
+        }
+
+        [Test]
+        public void MockDirectory_ResolveLinkTarget_WithoutFinalTarget_ShouldReturnFirstLink()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("bar");
+            fileSystem.Directory.CreateSymbolicLink("foo", "bar");
+            fileSystem.Directory.CreateSymbolicLink("foo1", "foo");
+
+            var result = fileSystem.Directory.ResolveLinkTarget("foo1", false);
+
+            Assert.AreEqual("foo", result.Name);
+        }
+
+        [Test]
+        public void MockDirectory_ResolveLinkTarget_WithoutTargetLink_ShouldThrowIOException()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("bar");
+            fileSystem.Directory.CreateSymbolicLink("foo", "bar");
+
+            Assert.Throws<IOException>(() =>
+            {
+                fileSystem.Directory.ResolveLinkTarget("bar", false);
+            });
+        }
 #endif
     }
 }

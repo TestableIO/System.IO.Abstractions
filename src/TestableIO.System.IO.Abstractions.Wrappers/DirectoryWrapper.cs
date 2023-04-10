@@ -34,7 +34,8 @@ namespace System.IO.Abstractions
         /// <inheritdoc />
         public override IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget)
         {
-            return Directory.CreateSymbolicLink(path, pathToTarget).WrapFileSystemInfo(FileSystem);
+            return Directory.CreateSymbolicLink(path, pathToTarget)
+                .WrapFileSystemInfo(FileSystem);
         }
 #endif
 
@@ -219,7 +220,8 @@ namespace System.IO.Abstractions
         /// <inheritdoc />
         public override IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget)
         {
-            throw new NotSupportedException("TODO: Missing object implementing `IFileSystemInfo`");
+            return Directory.ResolveLinkTarget(linkPath, returnFinalTarget)
+                .WrapFileSystemInfo(FileSystem);
         }
 #endif
 

@@ -52,7 +52,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void CreateAsSymbolicLink(string pathToTarget)
         {
-            throw CommonExceptions.NotImplemented();
+            FileSystem.Directory.CreateSymbolicLink(FullName, pathToTarget);
         }
 #endif
 
@@ -74,7 +74,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override IFileSystemInfo ResolveLinkTarget(bool returnFinalTarget)
         {
-            throw CommonExceptions.NotImplemented();
+            return FileSystem.Directory.ResolveLinkTarget(FullName, returnFinalTarget);
         }
 #endif
 
