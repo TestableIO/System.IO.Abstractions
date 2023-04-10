@@ -162,7 +162,7 @@ namespace System.IO.Abstractions
         /// <inheritdoc />
         public override string[] GetFileSystemEntries(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
-            throw new NotImplementedException();
+            return Directory.GetFileSystemEntries(path, searchPattern, enumerationOptions);
         }
 #endif
 
