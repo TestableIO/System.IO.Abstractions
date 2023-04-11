@@ -113,14 +113,14 @@ namespace System.IO.Abstractions.TestingHelpers
             prefix ??= "";
             string potentialTempDirectory;
 
-            // Perform directory name generation is a loop, just in case the randomly generated name already exists.
+            // Perform directory name generation in a loop, just in case the randomly generated name already exists.
             do
             {
                 var randomDir = $"{prefix}{Path.GetRandomFileName()}";
                 potentialTempDirectory = Path.Combine(Path.GetTempPath(), randomDir);
             } while (Exists(potentialTempDirectory));
 
-            return CreateDirectoryInternal(Path.Combine(Path.GetTempPath(), potentialTempDirectory));
+            return CreateDirectoryInternal(potentialTempDirectory);
         }
 #endif
 
