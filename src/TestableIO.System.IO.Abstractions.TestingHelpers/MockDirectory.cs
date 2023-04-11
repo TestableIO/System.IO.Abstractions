@@ -550,6 +550,11 @@ namespace System.IO.Abstractions.TestingHelpers
                         nextLocation = nextContainer.LinkTarget;
                         nextContainer = mockFileDataAccessor.GetFile(nextLocation);
                     }
+
+                    if (nextContainer.LinkTarget != null)
+                    {
+                        throw new IOException($"The name of the file cannot be resolved by the system. : '{linkPath}'");
+                    }
                 }
 
                 if (nextContainer.IsDirectory)

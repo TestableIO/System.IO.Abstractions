@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Versioning;
-using System.Security.AccessControl;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -217,14 +213,42 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         public void MockDirectory_ResolveLinkTarget_WithFinalTarget_ShouldReturnPathOfTargetLink()
         {
+            // The maximum number of symbolic links that are followed:
+            // https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.resolvelinktarget?view=net-6.0#remarks
+            var maxResolveLinks = XFS.IsWindowsPlatform() ? 63 : 40;
             var fileSystem = new MockFileSystem();
             fileSystem.Directory.CreateDirectory("bar");
-            fileSystem.Directory.CreateSymbolicLink("foo", "bar");
-            fileSystem.Directory.CreateSymbolicLink("foo1", "foo");
+            var previousPath = "bar";
+            for (int i = 0; i < maxResolveLinks; i++)
+            {
+                string newPath = $"foo-{i}";
+                fileSystem.Directory.CreateSymbolicLink(newPath, previousPath);
+                previousPath = newPath;
+            }
 
-            var result = fileSystem.Directory.ResolveLinkTarget("foo1", true);
+            var result = fileSystem.Directory.ResolveLinkTarget(previousPath, true);
 
             Assert.AreEqual("bar", result.Name);
+        }
+
+        [Test]
+        public void MockDirectory_ResolveLinkTarget_WithFinalTargetWithTooManyLinks_ShouldThrowIOException()
+        {
+            // The maximum number of symbolic links that are followed:
+            // https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.resolvelinktarget?view=net-6.0#remarks
+            var maxResolveLinks = XFS.IsWindowsPlatform() ? 63 : 40;
+            maxResolveLinks++;
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("bar");
+            var previousPath = "bar";
+            for (int i = 0; i < maxResolveLinks; i++)
+            {
+                string newPath = $"foo-{i}";
+                fileSystem.Directory.CreateSymbolicLink(newPath, previousPath);
+                previousPath = newPath;
+            }
+
+            Assert.Throws<IOException>(() => fileSystem.Directory.ResolveLinkTarget(previousPath, true));
         }
 
         [Test]
