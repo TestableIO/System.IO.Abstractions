@@ -843,30 +843,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(Path.GetFileName(result.FullName).StartsWith("foo-"));
             Assert.IsTrue(result.FullName.Contains(Path.GetTempPath()));
         }
-
-        [Test]
-        public void MockDirectory_CreateTempSubdirectory_ShouldCreateDirectoryAfterDeserialization()
-        {
-            // The random number generator used by CreateTempSubdirectory cannot be serialized, so
-            // we create a new Random after deserialization. Check that the random number generator
-            // is created after deserialization and we can still create a temp subdirectory.
-
-            // Arrange
-            var fileSystem = new MockFileSystem();
-            using var stream = new MemoryStream();
-            var formatter = new BinaryFormatter();
-            formatter.Serialize(stream, fileSystem);
-            stream.Position = 0;
-#pragma warning disable SYSLIB0011 // Allow call to obsolete Deserialize method            
-            var deserializedFileSystem = (MockFileSystem)formatter.Deserialize(stream);
-#pragma warning restore SYSLIB0011
-
-            // Act
-            var result = deserializedFileSystem.Directory.CreateTempSubdirectory();
-
-            // Assert
-            Assert.IsTrue(deserializedFileSystem.Directory.Exists(result.FullName));
-        }
 #endif
 
         [Test]

@@ -15,16 +15,9 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockDirectory : DirectoryBase
     {
-        private static readonly char[] ValidRandomSubdirChars = 
-            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
-
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private string currentDirectory;
         
-        // Random is not thread-safe, create our own instance and lock when accessing it.
-        [NonSerialized]
-        private Random random;
-
         /// <inheritdoc />
         public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory) :
             this(mockFileDataAccessor, currentDirectory)
@@ -38,16 +31,7 @@ namespace System.IO.Abstractions.TestingHelpers
             this.currentDirectory = currentDirectory;
             this.mockFileDataAccessor =
                 mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
-            this.random = new Random();
         }
-
-        [OnDeserializing]
-        private void OnDeserializing(StreamingContext context)
-        {
-            // Random can't be serialized, create a new random when deserialized.
-            this.random = new Random();
-        }
-
 
         /// <inheritdoc />
         public override IDirectoryInfo CreateDirectory(string path)
