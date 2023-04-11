@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Versioning;
-using System.Security.AccessControl;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -200,6 +196,85 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.That(ex.Message.Contains(pathToTarget));
+        }
+
+        [Test]
+        public void MockDirectory_ResolveLinkTarget_ShouldReturnPathOfTargetLink()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("bar");
+            fileSystem.Directory.CreateSymbolicLink("foo", "bar");
+
+            var result = fileSystem.Directory.ResolveLinkTarget("foo", false);
+
+            Assert.AreEqual("bar", result.Name);
+        }
+
+        [Test]
+        public void MockDirectory_ResolveLinkTarget_WithFinalTarget_ShouldReturnPathOfTargetLink()
+        {
+            // The maximum number of symbolic links that are followed:
+            // https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.resolvelinktarget?view=net-6.0#remarks
+            var maxResolveLinks = XFS.IsWindowsPlatform() ? 63 : 40;
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("bar");
+            var previousPath = "bar";
+            for (int i = 0; i < maxResolveLinks; i++)
+            {
+                string newPath = $"foo-{i}";
+                fileSystem.Directory.CreateSymbolicLink(newPath, previousPath);
+                previousPath = newPath;
+            }
+
+            var result = fileSystem.Directory.ResolveLinkTarget(previousPath, true);
+
+            Assert.AreEqual("bar", result.Name);
+        }
+
+        [Test]
+        public void MockDirectory_ResolveLinkTarget_WithFinalTargetWithTooManyLinks_ShouldThrowIOException()
+        {
+            // The maximum number of symbolic links that are followed:
+            // https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.resolvelinktarget?view=net-6.0#remarks
+            var maxResolveLinks = XFS.IsWindowsPlatform() ? 63 : 40;
+            maxResolveLinks++;
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("bar");
+            var previousPath = "bar";
+            for (int i = 0; i < maxResolveLinks; i++)
+            {
+                string newPath = $"foo-{i}";
+                fileSystem.Directory.CreateSymbolicLink(newPath, previousPath);
+                previousPath = newPath;
+            }
+
+            Assert.Throws<IOException>(() => fileSystem.Directory.ResolveLinkTarget(previousPath, true));
+        }
+
+        [Test]
+        public void MockDirectory_ResolveLinkTarget_WithoutFinalTarget_ShouldReturnFirstLink()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("bar");
+            fileSystem.Directory.CreateSymbolicLink("foo", "bar");
+            fileSystem.Directory.CreateSymbolicLink("foo1", "foo");
+
+            var result = fileSystem.Directory.ResolveLinkTarget("foo1", false);
+
+            Assert.AreEqual("foo", result.Name);
+        }
+
+        [Test]
+        public void MockDirectory_ResolveLinkTarget_WithoutTargetLink_ShouldThrowIOException()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("bar");
+            fileSystem.Directory.CreateSymbolicLink("foo", "bar");
+
+            Assert.Throws<IOException>(() =>
+            {
+                fileSystem.Directory.ResolveLinkTarget("bar", false);
+            });
         }
 #endif
     }
