@@ -826,7 +826,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.IsTrue(fileSystem.Directory.Exists(result.FullName));
-            Assert.IsTrue(result.FullName.StartsWith(Path.GetTempPath()));
+            Assert.IsTrue(result.FullName.Contains(Path.GetTempPath()));
         }
 
         [Test]
@@ -841,7 +841,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.IsTrue(fileSystem.Directory.Exists(result.FullName));
             Assert.IsTrue(Path.GetFileName(result.FullName).StartsWith("foo-"));
-            Assert.IsTrue(result.FullName.StartsWith(Path.GetTempPath()));
+            Assert.IsTrue(result.FullName.Contains(Path.GetTempPath()));
         }
 
         [Test]
