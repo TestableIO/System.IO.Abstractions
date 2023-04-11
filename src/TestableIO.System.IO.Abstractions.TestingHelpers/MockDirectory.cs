@@ -133,15 +133,7 @@ namespace System.IO.Abstractions.TestingHelpers
             // Perform directory name generation is a loop, just in case the randomly generated name already exists.
             do
             {
-                var randomChars = new StringBuilder();
-                lock (random)
-                {
-                    for (var i = 0; i < 6; i++)
-                    {
-                        randomChars.Append(ValidRandomSubdirChars[random.Next(ValidRandomSubdirChars.Length)]);
-                    }
-                }
-                var randomDir = $"{prefix}{randomChars}";
+                var randomDir = $"{prefix}{Path.GetRandomFileName()}";
                 potentialTempDirectory = Path.Combine(Path.GetTempPath(), randomDir);
             } while (Exists(potentialTempDirectory));
 

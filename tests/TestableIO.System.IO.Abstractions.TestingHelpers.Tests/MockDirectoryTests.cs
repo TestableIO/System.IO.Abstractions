@@ -830,27 +830,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectory_CreateTempSubdirectory_ShouldHaveCharactersFromUpperLowerOrDigits()
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem();
-
-            // Act
-            var result = fileSystem.Directory.CreateTempSubdirectory();
-
-            // Assert
-            var name = Path.GetFileName(result.FullName);
-            for (var i = 0; i < name.Length; i++)
-            {
-                var c = name[i];
-                if (!char.IsUpper(c) && !char.IsLower(c) && !char.IsDigit(c))
-                {
-                    Assert.Fail($"Character '{c}' at position {i} of directory {name} is not upper, lower or digit", c, i);
-                }
-            }
-        }
-
-        [Test]
         public void MockDirectory_CreateTempSubdirectoryWithPrefix_ShouldCreateDirectoryWithGivenPrefixInTempDirectory()
         {
             // Arrange
@@ -863,28 +842,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(fileSystem.Directory.Exists(result.FullName));
             Assert.IsTrue(Path.GetFileName(result.FullName).StartsWith("foo-"));
             Assert.IsTrue(result.FullName.StartsWith(Path.GetTempPath()));
-        }
-
-        [Test]
-        public void MockDirectory_CreateTempSubdirectoryWithPrefix_ShouldEndWithCharactersFromUpperLowerOfDigits()
-        {
-            // Arrange
-            var prefix = "foo-";
-            var fileSystem = new MockFileSystem();
-
-            // Act
-            var result = fileSystem.Directory.CreateTempSubdirectory(prefix);
-
-            // Assert
-            var name = Path.GetFileName(result.FullName);
-            for (var i = prefix.Length; i < name.Length; i++)
-            {
-                var c = name[i];
-                if (!char.IsUpper(c) && !char.IsLower(c) && !char.IsDigit(c))
-                {
-                    Assert.Fail($"Character '{c}' at position {i} of directoy {name} is not upper, lower or digit", c, i);
-                }
-            }
         }
 
         [Test]
