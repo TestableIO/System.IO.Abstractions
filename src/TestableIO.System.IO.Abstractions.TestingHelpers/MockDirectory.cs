@@ -32,6 +32,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
         }
 
+
         /// <inheritdoc />
         public override IDirectoryInfo CreateDirectory(string path)
         {
