@@ -16,6 +16,7 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private string currentDirectory;
+
         /// <inheritdoc />
         public MockDirectory(IMockFileDataAccessor mockFileDataAccessor, FileBase fileBase, string currentDirectory) :
             this(mockFileDataAccessor, currentDirectory)
