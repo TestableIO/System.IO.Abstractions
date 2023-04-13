@@ -110,7 +110,17 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override IDirectoryInfo CreateTempSubdirectory(string prefix = null)
         {
-            throw CommonExceptions.NotImplemented();
+            prefix ??= "";
+            string potentialTempDirectory;
+
+            // Perform directory name generation in a loop, just in case the randomly generated name already exists.
+            do
+            {
+                var randomDir = $"{prefix}{Path.GetRandomFileName()}";
+                potentialTempDirectory = Path.Combine(Path.GetTempPath(), randomDir);
+            } while (Exists(potentialTempDirectory));
+
+            return CreateDirectoryInternal(potentialTempDirectory);
         }
 #endif
 

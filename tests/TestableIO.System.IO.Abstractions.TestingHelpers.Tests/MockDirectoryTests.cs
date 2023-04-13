@@ -813,6 +813,37 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(fileSystem.Directory.Exists(@"\\server\share\"));
         }
 
+#if FEATURE_CREATE_TEMP_SUBDIRECTORY
+        [Test]
+        public void MockDirectory_CreateTempSubdirectory_ShouldCreateSubdirectoryInTempDirectory()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            var result = fileSystem.Directory.CreateTempSubdirectory();
+
+            // Assert
+            Assert.IsTrue(fileSystem.Directory.Exists(result.FullName));
+            Assert.IsTrue(result.FullName.Contains(Path.GetTempPath()));
+        }
+
+        [Test]
+        public void MockDirectory_CreateTempSubdirectoryWithPrefix_ShouldCreateDirectoryWithGivenPrefixInTempDirectory()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            var result = fileSystem.Directory.CreateTempSubdirectory("foo-");
+
+            // Assert
+            Assert.IsTrue(fileSystem.Directory.Exists(result.FullName));
+            Assert.IsTrue(Path.GetFileName(result.FullName).StartsWith("foo-"));
+            Assert.IsTrue(result.FullName.Contains(Path.GetTempPath()));
+        }
+#endif
+
         [Test]
         public void MockDirectory_Delete_ShouldDeleteDirectory()
         {
