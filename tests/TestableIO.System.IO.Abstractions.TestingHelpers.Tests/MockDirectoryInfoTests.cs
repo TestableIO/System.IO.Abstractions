@@ -355,7 +355,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         {
             // Arrange
             var path = XFS.Path(@"c:\source");
-            var destination = @"c:\destination";
+            var destination = XFS.Path(@"c:\destination");
             var fileSystem = new MockFileSystem();
             fileSystem.Directory.CreateDirectory(path);
             var directoryInfo = fileSystem.DirectoryInfo.New(path);
