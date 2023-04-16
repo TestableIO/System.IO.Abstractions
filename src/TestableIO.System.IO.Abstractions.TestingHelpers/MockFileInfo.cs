@@ -66,7 +66,7 @@ namespace System.IO.Abstractions.TestingHelpers
             set
             {
                 var mockFileData = GetMockFileDataForWrite();
-                mockFileData.Attributes = value;
+                mockFileData.Attributes = value & ~FileAttributes.Directory;
             }
         }
 
