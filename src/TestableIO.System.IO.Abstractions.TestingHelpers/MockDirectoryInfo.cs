@@ -12,8 +12,8 @@ namespace System.IO.Abstractions.TestingHelpers
     public class MockDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
-        private readonly string directoryPath;
-        private readonly string originalPath;
+        private string directoryPath;
+        private string originalPath;
         private MockFileData cachedMockFileData;
         private bool refreshOnNextRead;
 
@@ -36,15 +36,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw CommonExceptions.PathIsNotOfALegalForm("path");
             }
             
-            originalPath = directoryPath;
-            directoryPath = mockFileDataAccessor.Path.GetFullPath(directoryPath);
-
-            directoryPath = directoryPath.TrimSlashes();
-            if (XFS.IsWindowsPlatform())
-            {
-                directoryPath = directoryPath.TrimEnd(' ');
-            }
-            this.directoryPath = directoryPath;
+            SetDirectoryPath(directoryPath);
             Refresh();
         }
 
@@ -378,6 +370,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void MoveTo(string destDirName)
         {
             mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
+            SetDirectoryPath(destDirName);
         }
         
         /// <inheritdoc />
@@ -442,6 +435,19 @@ namespace System.IO.Abstractions.TestingHelpers
             GetMockDirectoryData().AccessControl = value as DirectorySecurity;
         }
         
+        private void SetDirectoryPath(string path)
+        {
+            originalPath = path;
+            path = mockFileDataAccessor.Path.GetFullPath(path);
+
+            path = path.TrimSlashes();
+            if (XFS.IsWindowsPlatform())
+            {
+                path = path.TrimEnd(' ');
+            }
+            this.directoryPath = path;
+        }
+
         private MockDirectoryData GetMockDirectoryData()
         {
             return mockFileDataAccessor.GetFile(directoryPath) as MockDirectoryData

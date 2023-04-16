@@ -350,6 +350,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.AreEqual(expectedFullName, actualFullName);
         }
 
+        [Test]
+        public void MockDirectoryInfo_MoveTo_ShouldUpdateFullName()
+        {
+            // Arrange
+            var path = XFS.Path(@"c:\source");
+            var destination = @"c:\destination";
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory(path);
+            var directoryInfo = fileSystem.DirectoryInfo.New(path);
+
+            // Act
+            directoryInfo.MoveTo(destination);
+
+            // Assert
+            Assert.AreEqual(destination, directoryInfo.FullName);
+        }
+
         [TestCase(@"c:\temp\\folder ", @"folder")]
         [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockDirectoryInfo_Name_ShouldReturnNameWithTrimmedTrailingSpaces(string directoryPath, string expectedName)
