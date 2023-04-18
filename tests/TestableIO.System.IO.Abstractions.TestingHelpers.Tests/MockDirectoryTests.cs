@@ -663,6 +663,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_CreateDirectory_WithConflictingFile_ShouldThrowIOException()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(XFS.Path(@"c:\foo\bar.txt"), new MockFileData("Demo text content"));
+            
+            // Act
+            TestDelegate action = () => fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo\bar.txt"));
+
+            // Assert
+            Assert.Throws<IOException>(action);
+        }
+
+        [Test]
         public void MockDirectory_Exists_ShouldReturnFalseForFiles()
         {
             // Arrange
