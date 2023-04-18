@@ -67,6 +67,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectoryInfo_Attributes_Clear_ShouldRemainDirectory()
+        {
+            var fileSystem = new MockFileSystem();
+            var path = XFS.Path(@"c:\existing\directory");
+            fileSystem.Directory.CreateDirectory(path);
+            var directoryInfo = fileSystem.DirectoryInfo.New(path);
+            directoryInfo.Attributes = 0;
+
+            Assert.That(fileSystem.File.Exists(path), Is.False);
+            Assert.That(directoryInfo.Attributes, Is.EqualTo(FileAttributes.Directory));
+        }
+
+        [Test]
         public void MockDirectoryInfo_Attributes_SetterShouldThrowDirectoryNotFoundExceptionOnNonExistingFileOrDirectory()
         {
             var fileSystem = new MockFileSystem();

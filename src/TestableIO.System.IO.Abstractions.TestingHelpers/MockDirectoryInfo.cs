@@ -82,7 +82,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override FileAttributes Attributes
         {
             get { return GetMockFileDataForRead().Attributes; }
-            set { GetMockFileDataForWrite().Attributes = value; }
+            set { GetMockFileDataForWrite().Attributes = value | FileAttributes.Directory; }
         }
 
         /// <inheritdoc />
