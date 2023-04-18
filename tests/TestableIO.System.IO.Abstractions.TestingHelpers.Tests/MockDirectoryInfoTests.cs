@@ -67,6 +67,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectoryInfo_Attributes_Clear_ShouldRemainDirectory()
+        {
+            var fileSystem = new MockFileSystem();
+            var path = XFS.Path(@"c:\existing\directory");
+            fileSystem.Directory.CreateDirectory(path);
+            var directoryInfo = fileSystem.DirectoryInfo.New(path);
+            directoryInfo.Attributes = 0;
+
+            Assert.That(fileSystem.File.Exists(path), Is.False);
+            Assert.That(directoryInfo.Attributes, Is.EqualTo(FileAttributes.Directory));
+        }
+
+        [Test]
         public void MockDirectoryInfo_Attributes_SetterShouldThrowDirectoryNotFoundExceptionOnNonExistingFileOrDirectory()
         {
             var fileSystem = new MockFileSystem();
@@ -636,6 +649,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = directoryInfo.LastWriteTimeUtc;
 
             Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.UtcDateTime));
+        }
+
+        [Test]
+        public void MockDirectoryInfo_Create_WithConflictingFile_ShouldThrowIOException()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(XFS.Path(@"c:\foo\bar.txt"), new MockFileData("Demo text content"));
+            var sut = fileSystem.DirectoryInfo.New(XFS.Path(@"c:\foo\bar.txt"));
+
+            // Act
+            TestDelegate action = () => sut.Create();
+
+            // Assert
+            Assert.Throws<IOException>(action);
         }
 
         public void MockDirectoryInfo_CreationTime_SetterShouldThrowDirectoryNotFoundExceptionForNonExistingDirectory()

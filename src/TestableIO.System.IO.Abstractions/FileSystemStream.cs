@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 namespace System.IO.Abstractions
 {
     /// <summary>
-    ///     Wraps the <see cref="FileStream" />.
+    ///     Wrapper around a <see cref="Stream"/> which is used as a replacement
+    ///     for a <see cref="FileStream"/>. As such it implements the same
+    ///     properties and methods as a <see cref="FileStream"/>.
     /// </summary>
     public abstract class FileSystemStream : Stream
     {
