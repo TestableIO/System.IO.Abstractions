@@ -28,6 +28,8 @@ namespace System.IO.Abstractions.TestingHelpers
                (options & FileOptions.Asynchronous) != 0)
 
         {
+            ThrowIfInvalidModeAccess(mode, access);
+
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
             this.path = path;
             this.options = options;
@@ -76,6 +78,29 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             this.access = access;
+        }
+
+        private static void ThrowIfInvalidModeAccess(FileMode mode, FileAccess access)
+        {
+            if (mode == FileMode.Append)
+            {
+                if (access == FileAccess.Read)
+                {
+                    throw CommonExceptions.InvalidAccessCombination(mode, access);
+                }
+
+                if (access != FileAccess.Write)
+                {
+                    throw CommonExceptions.AppendAccessOnlyInWriteOnlyMode();
+                }
+            }
+
+            if (!access.HasFlag(FileAccess.Write) &&
+                (mode == FileMode.Truncate || mode == FileMode.CreateNew ||
+                 mode == FileMode.Create || mode == FileMode.Append))
+            {
+                throw CommonExceptions.InvalidAccessCombination(mode, access);
+            }
         }
 
         /// <inheritdoc />
