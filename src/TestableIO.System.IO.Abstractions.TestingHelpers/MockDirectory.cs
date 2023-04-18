@@ -71,9 +71,14 @@ namespace System.IO.Abstractions.TestingHelpers
                 path = path.TrimEnd(' ');
             }
 
-            if (!Exists(path))
+            var existingFile = mockFileDataAccessor.GetFile(path);
+            if (existingFile == null)
             {
                 mockFileDataAccessor.AddDirectory(path);
+            }
+            else if (!existingFile.IsDirectory)
+            {
+                throw CommonExceptions.FileAlreadyExists("path");
             }
 
             var created = new MockDirectoryInfo(mockFileDataAccessor, path);

@@ -634,6 +634,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.UtcDateTime));
         }
 
+        [Test]
+        public void MockDirectoryInfo_Create_WithConflictingFile_ShouldThrowIOException()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddFile(XFS.Path(@"c:\foo\bar.txt"), new MockFileData("Demo text content"));
+            var sut = fileSystem.DirectoryInfo.New(XFS.Path(@"c:\foo\bar.txt"));
+
+            // Act
+            TestDelegate action = () => sut.Create();
+
+            // Assert
+            Assert.Throws<IOException>(action);
+        }
+
         public void MockDirectoryInfo_CreationTime_SetterShouldThrowDirectoryNotFoundExceptionForNonExistingDirectory()
         {
             var newTime = new DateTime(2022, 04, 06);
