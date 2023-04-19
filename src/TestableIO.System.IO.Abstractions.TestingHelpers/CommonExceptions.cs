@@ -65,6 +65,12 @@ namespace System.IO.Abstractions.TestingHelpers
         public static IOException FileAlreadyExists(string paramName) =>
             new IOException(string.Format(StringResources.Manager.GetString("FILE_ALREADY_EXISTS"), paramName));
 
+        public static ArgumentException InvalidAccessCombination(FileMode mode, FileAccess access)
+            => new ArgumentException(string.Format(StringResources.Manager.GetString("INVALID_ACCESS_COMBINATION"), mode, access), nameof(access));
+
+        public static ArgumentException AppendAccessOnlyInWriteOnlyMode()
+            => new ArgumentException(string.Format(StringResources.Manager.GetString("APPEND_ACCESS_ONLY_IN_WRITE_ONLY_MODE")), "access");
+
         public static NotImplementedException NotImplemented() =>
             new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
     }

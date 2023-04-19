@@ -76,7 +76,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [TestCase(FileMode.Open, FileAccess.ReadWrite)]
         [TestCase(FileMode.OpenOrCreate, FileAccess.Write)]
-        [TestCase(FileMode.Append, FileAccess.ReadWrite)]
+        [TestCase(FileMode.Append, FileAccess.Write)]
         public void MockFile_AfterOpen_WithWriteAccess_ShouldUpdateLastAccessAndLastWriteTime(FileMode fileMode, FileAccess fileAccess)
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
@@ -98,7 +98,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [TestCase(FileMode.Open, FileAccess.Read)]
         [TestCase(FileMode.OpenOrCreate, FileAccess.Read)]
-        [TestCase(FileMode.Append, FileAccess.Read)]
         public void MockFile_AfterOpen_WithReadOnlyAccess_ShouldUpdateLastAccessTime(FileMode fileMode, FileAccess fileAccess)
         {
             var creationTime = DateTime.UtcNow.AddDays(10);

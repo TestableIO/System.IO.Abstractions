@@ -544,7 +544,7 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-            return Open(path, mode, FileAccess.ReadWrite, FileShare.None);
+            return Open(path, mode, mode == FileMode.Append ? FileAccess.Write : FileAccess.ReadWrite, FileShare.None);
         }
 
         /// <inheritdoc />
