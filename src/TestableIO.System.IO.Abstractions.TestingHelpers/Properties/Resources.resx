@@ -156,4 +156,10 @@
   <data name="FILE_ALREADY_EXISTS" xml:space="preserve">
     <value>The file '{0}' already exists.</value>
   </data>
+  <data name="APPEND_ACCESS_ONLY_IN_WRITE_ONLY_MODE" xml:space="preserve">
+    <value>Append access can be requested only in write-only mode.</value>
+  </data>
+  <data name="INVALID_ACCESS_COMBINATION" xml:space="preserve">
+    <value>Combining FileMode: {0} with FileAccess: {1} is invalid.</value>
+  </data>
 </root>

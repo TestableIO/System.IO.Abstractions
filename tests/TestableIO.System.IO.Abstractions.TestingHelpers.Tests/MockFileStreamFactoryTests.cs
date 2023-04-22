@@ -23,7 +23,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
 
             // Act
-            var result = fileStreamFactory.Create(@"c:\existing.txt", fileMode);
+            var result = fileStreamFactory.Create(@"c:\existing.txt", fileMode, FileAccess.Write);
 
             // Assert
             Assert.IsNotNull(result);
@@ -39,7 +39,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
 
             // Act
-            var result = fileStreamFactory.Create(XFS.Path(@"c:\not_existing.txt"), fileMode);
+            var result = fileStreamFactory.Create(XFS.Path(@"c:\not_existing.txt"), fileMode, FileAccess.Write);
 
             // Assert
             Assert.IsNotNull(result);
@@ -72,7 +72,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(FileMode.Create)]
         [TestCase(FileMode.Open)]
         [TestCase(FileMode.CreateNew)]
-        [TestCase(FileMode.Append)]
         public void MockFileStreamFactory_CreateInNonExistingDirectory_ShouldThrowDirectoryNotFoundException(FileMode fileMode)
         {
             // Arrange
@@ -84,6 +83,33 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.Throws<DirectoryNotFoundException>(() => fileStreamFactory.Create(XFS.Path(@"C:\Test\NonExistingDirectory\some_random_file.txt"), fileMode));
+        }
+
+        [Test]
+        public void MockFileStreamFactory_AppendAccessWithReadWriteMode_ShouldThrowArgumentException()
+        {
+            var fileSystem = new MockFileSystem();
+            
+            Assert.Throws<ArgumentException>(() =>
+            {
+                fileSystem.FileStream.New(XFS.Path(@"c:\path.txt"), FileMode.Append, FileAccess.ReadWrite);
+            });
+        }
+
+        [Test]
+        [TestCase(FileMode.Append)]
+        [TestCase(FileMode.Truncate)]
+        [TestCase(FileMode.Create)]
+        [TestCase(FileMode.CreateNew)]
+        [TestCase(FileMode.Append)]
+        public void MockFileStreamFactory_InvalidModeForReadAccess_ShouldThrowArgumentException(FileMode fileMode)
+        {
+            var fileSystem = new MockFileSystem();
+
+            Assert.Throws<ArgumentException>(() =>
+            {
+                fileSystem.FileStream.New(XFS.Path(@"c:\path.txt"), fileMode, FileAccess.Read);
+            });
         }
 
         [Test]

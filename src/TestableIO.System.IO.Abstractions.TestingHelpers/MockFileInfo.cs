@@ -208,7 +208,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override StreamWriter AppendText()
         {
-            return new StreamWriter(new MockFileStream(mockFileSystem, FullName, FileMode.Append));
+            return new StreamWriter(new MockFileStream(mockFileSystem, FullName, FileMode.Append, FileAccess.Write));
         }
 
         /// <inheritdoc />
