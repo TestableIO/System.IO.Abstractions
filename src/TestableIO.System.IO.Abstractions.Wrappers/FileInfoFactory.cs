@@ -1,4 +1,6 @@
-﻿namespace System.IO.Abstractions
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace System.IO.Abstractions
 {
     [Serializable]
     internal class FileInfoFactory : IFileInfoFactory
@@ -28,10 +30,15 @@
             var realFileInfo = new FileInfo(fileName);
             return new FileInfoWrapper(fileSystem, realFileInfo);
         }
-
+        
         /// <inheritdoc />
         public IFileInfo Wrap(FileInfo fileInfo)
         {
+            if (fileInfo == null)
+            {
+                return null;
+            }
+
             return new FileInfoWrapper(fileSystem, fileInfo);
         }
     }
