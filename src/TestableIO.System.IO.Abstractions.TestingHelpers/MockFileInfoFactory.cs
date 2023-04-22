@@ -32,6 +32,11 @@
         /// <inheritdoc />
         public IFileInfo Wrap(FileInfo fileInfo)
         {
+            if (fileInfo == null)
+            {
+                return null;
+            }
+
             return new MockFileInfo(mockFileSystem, fileInfo.Name);
         }
     }

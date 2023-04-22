@@ -33,6 +33,11 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public IDirectoryInfo Wrap(DirectoryInfo directoryInfo)
         {
+            if (directoryInfo == null)
+            {
+                return null;
+            }
+
             return new MockDirectoryInfo(mockFileSystem, directoryInfo.Name);
         }
     }

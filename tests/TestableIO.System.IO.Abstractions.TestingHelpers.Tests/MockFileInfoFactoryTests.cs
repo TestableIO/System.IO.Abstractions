@@ -41,5 +41,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.IsNotNull(result);
         }
+
+        [Test]
+        public void MockFileInfoFactory_Wrap_WithNull_ShouldReturnNull()
+        {
+            var fileSystem = new MockFileSystem();
+
+            var result = fileSystem.FileInfo.Wrap(null);
+
+            Assert.IsNull(result);
+        }
     }
 }
