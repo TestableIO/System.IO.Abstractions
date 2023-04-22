@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace System.IO.Abstractions
+﻿namespace System.IO.Abstractions
 {
     [Serializable]
     internal class FileInfoFactory : IFileInfoFactory
