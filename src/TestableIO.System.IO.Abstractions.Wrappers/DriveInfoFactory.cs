@@ -38,6 +38,11 @@
         /// <inheritdoc />
         public IDriveInfo Wrap(DriveInfo driveInfo)
         {
+            if (driveInfo == null)
+            {
+                return null;
+            }
+
             return new DriveInfoWrapper(fileSystem, driveInfo);
         }
 

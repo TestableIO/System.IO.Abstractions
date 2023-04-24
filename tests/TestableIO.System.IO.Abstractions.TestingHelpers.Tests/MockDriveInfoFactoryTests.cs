@@ -97,5 +97,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.That(actualResult.Name, Is.EquivalentTo(@"Z:\"));
         }
+
+        [Test]
+        public void MockDriveInfoFactory_Wrap_WithNull_ShouldReturnNull()
+        {
+            var fileSystem = new MockFileSystem();
+
+            var result = fileSystem.DriveInfo.Wrap(null);
+
+            Assert.IsNull(result);
+        }
     }
 }
