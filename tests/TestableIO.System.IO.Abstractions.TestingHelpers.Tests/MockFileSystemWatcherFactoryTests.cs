@@ -37,5 +37,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var factory = new MockFileSystemWatcherFactory(new MockFileSystem());
             Assert.Throws<NotImplementedException>(() => factory.New(path));
         }
+
+        [Test]
+        public void MockFileSystemWatcherFactory_Wrap_WithNull_ShouldReturnNull()
+        {
+            var fileSystem = new MockFileSystem();
+
+            var result = fileSystem.FileSystemWatcher.Wrap(null);
+
+            Assert.IsNull(result);
+        }
     }
 }

@@ -56,6 +56,11 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public IDriveInfo Wrap(DriveInfo driveInfo)
         {
+            if (driveInfo == null)
+            {
+                return null;
+            }
+
             return New(driveInfo.Name);
         }
 

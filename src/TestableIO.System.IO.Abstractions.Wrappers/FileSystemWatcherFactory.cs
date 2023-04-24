@@ -42,6 +42,13 @@
 
         /// <inheritdoc />
         public IFileSystemWatcher Wrap(FileSystemWatcher fileSystemWatcher)
-            => new FileSystemWatcherWrapper(FileSystem, fileSystemWatcher);
+        {
+            if (fileSystemWatcher == null)
+            {
+                return null;
+            }
+
+            return new FileSystemWatcherWrapper(FileSystem, fileSystemWatcher);
+        }
     }
 }
