@@ -29,6 +29,11 @@ namespace System.IO.Abstractions
 
         private static FileSystemInfoBase WrapFileSystemInfo(IFileSystem fileSystem, FileSystemInfo item)
         {
+            if (item is null)
+            {
+                return null;
+            }
+
             if (item is FileInfo fileInfo)
             {
                 return WrapFileInfo(fileSystem, fileInfo);
@@ -47,8 +52,10 @@ namespace System.IO.Abstractions
             }
         }
 
-        private static FileInfoBase WrapFileInfo(IFileSystem fileSystem, FileInfo f) => new FileInfoWrapper(fileSystem, f);
+        private static FileInfoBase WrapFileInfo(IFileSystem fileSystem, FileInfo f)
+            => f is null ? null : new FileInfoWrapper(fileSystem, f);
 
-        private static DirectoryInfoBase WrapDirectoryInfo(IFileSystem fileSystem, DirectoryInfo d) => new DirectoryInfoWrapper(fileSystem, d);
+        private static DirectoryInfoBase WrapDirectoryInfo(IFileSystem fileSystem, DirectoryInfo d)
+            => d is null ? null : new DirectoryInfoWrapper(fileSystem, d);
     }
 }
