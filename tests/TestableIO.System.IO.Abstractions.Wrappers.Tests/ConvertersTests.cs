@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace System.IO.Abstractions.Tests
@@ -42,6 +43,7 @@ namespace System.IO.Abstractions.Tests
 
             Assert.DoesNotThrow(() => crashingFileInfos.WrapFiles(new FileSystem()));
         }
+
         [Test]
         public void WrapDirectories_with_IEnumerable_is_lazy()
         {
@@ -50,5 +52,24 @@ namespace System.IO.Abstractions.Tests
             Assert.DoesNotThrow(() => crashingDirectoryInfos.WrapDirectories(new FileSystem()));
         }
 
+        [Test]
+        public void WrapFileSystemInfo_handles_null_FileSystemInfo()
+        {
+            Assert.IsNull(Converters.WrapFileSystemInfo(null, new FileSystem()));
+        }
+
+        [Test]
+        public void WrapDirectories_handles_null_DirectoryInfo()
+        {
+            List<DirectoryInfo> directoryInfos = new() { null };
+            Assert.IsNull(directoryInfos.WrapDirectories(new FileSystem()).Single());
+        }
+
+        [Test]
+        public void WrapFiles_handles_null_FileInfo()
+        {
+            List<FileInfo> fileInfos = new() { null };
+            Assert.IsNull(fileInfos.WrapFiles(new FileSystem()).Single());
+        }
     }
 }
