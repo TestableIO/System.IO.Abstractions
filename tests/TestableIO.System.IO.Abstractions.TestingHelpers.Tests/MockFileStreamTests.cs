@@ -206,5 +206,25 @@
                 Assert.AreEqual(200, stream.Position);
             }
         }
+
+        [Test]
+        public void MockFileStream_FlushBool_ShouldNotChangePosition([Values] bool flushToDisk)
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+            var path = XFS.Path("C:\\test");
+            fileSystem.AddFile(path, new MockFileData(new byte[0]));
+
+            using (var stream = fileSystem.FileInfo.New(path).OpenWrite())
+            {
+                // Act
+                stream.Write(new byte[400], 0, 400);
+                stream.Seek(200, SeekOrigin.Begin);
+                stream.Flush(flushToDisk);
+
+                // Assert
+                Assert.AreEqual(200, stream.Position);
+            }
+        }
     }
 }

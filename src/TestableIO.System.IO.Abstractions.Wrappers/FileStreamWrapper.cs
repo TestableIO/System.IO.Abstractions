@@ -41,5 +41,9 @@ namespace System.IO.Abstractions
                 throw new ArgumentException("value must be of type `FileSecurity`");
             }
         }
+
+        /// <inheritdoc />
+        public override void Flush(bool flushToDisk)
+            => fileStream.Flush(flushToDisk);
     }
 }
