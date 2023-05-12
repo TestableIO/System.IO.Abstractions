@@ -131,6 +131,39 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileSystem_AddEmptyFile_ShouldExist()
+        {
+            var fileSystem = new MockFileSystem();
+            var path = fileSystem.FileInfo.New(XFS.Path(@"c:\some\file.txt"));
+
+            fileSystem.AddEmptyFile(path);
+
+            Assert.That(path.Exists, Is.True);
+        }
+
+        [Test]
+        public void MockFileSystem_AddFile_ShouldExist()
+        {
+            var fileSystem = new MockFileSystem();
+            var path = fileSystem.FileInfo.New(XFS.Path(@"c:\some\file.txt"));
+
+            fileSystem.AddFile(path, new MockFileData("stuff"));
+
+            Assert.That(path.Exists, Is.True);
+        }
+
+        [Test]
+        public void MockFileSystem_AddDirectory_ShouldExist()
+        {
+            var fileSystem = new MockFileSystem();
+            var path = fileSystem.DirectoryInfo.New(XFS.Path(@"c:\thedir"));
+
+            fileSystem.AddDirectory(path);
+
+            Assert.That(path.Exists, Is.True);
+        }
+
+        [Test]
         public void MockFileSystem_ByDefault_IsSerializable()
         {
             var file1 = new MockFileData("Demo\r\ntext\ncontent\rvalue");

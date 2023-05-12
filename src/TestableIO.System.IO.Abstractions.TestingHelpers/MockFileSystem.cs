@@ -225,6 +225,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public void AddEmptyFile(IFileInfo path)
         {
             AddEmptyFile(path.FullName);
+            path.Refresh();
         }
 
         /// <summary>
@@ -234,6 +235,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public void AddDirectory(IDirectoryInfo path)
         {
             AddDirectory(path.FullName);
+            path.Refresh();
         }
 
         /// <summary>
@@ -244,6 +246,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public void AddFile(IFileInfo path, MockFileData data)
         {
             AddFile(path.FullName, data);
+            path.Refresh();
         }
 
         /// <summary>
