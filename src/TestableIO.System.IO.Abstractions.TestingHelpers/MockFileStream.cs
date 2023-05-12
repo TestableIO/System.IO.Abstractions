@@ -224,6 +224,10 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
+        public override void Flush(bool flushToDisk)
+            => InternalFlush();
+
+        /// <inheritdoc />
         public override Task FlushAsync(CancellationToken cancellationToken)
         {
             InternalFlush();
