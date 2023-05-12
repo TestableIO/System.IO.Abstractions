@@ -128,6 +128,10 @@ namespace System.IO.Abstractions
         public override void Flush()
             => _stream.Flush();
 
+        /// <inheritDoc cref="FileStream.Flush(bool)" />
+        public virtual void Flush(bool flushToDisk)
+            => _stream.Flush();
+
         /// <inheritdoc cref="Stream.FlushAsync(CancellationToken)" />
         public override Task FlushAsync(CancellationToken cancellationToken)
             => _stream.FlushAsync(cancellationToken);
