@@ -265,7 +265,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override string[] GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
-            return GetFiles(path, "*", EnumerationOptionsToSearchOption(enumerationOptions));
+            return GetFiles(path, searchPattern, EnumerationOptionsToSearchOption(enumerationOptions));
         }
 #endif
 

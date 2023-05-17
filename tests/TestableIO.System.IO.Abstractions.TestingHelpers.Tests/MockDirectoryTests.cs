@@ -79,6 +79,30 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(result, Is.EquivalentTo(expected));
         }
 
+#if FEATURE_ENUMERATION_OPTIONS
+        [Test]
+        public void MockDirectory_GetFiles_ShouldReturnAllPatternMatchingFilesWhenEnumerationOptionHasRecurseSubdirectoriesSetToTrue()
+        {
+            // Arrange
+            var fileSystem = SetupFileSystem();
+            var expected = new[]
+            {
+                XFS.Path(@"c:\b.txt"),
+                XFS.Path(@"c:\c.txt"),
+                XFS.Path(@"c:\a\a.txt"),
+                XFS.Path(@"c:\a\c.txt"),
+                XFS.Path(@"c:\a\a\a.txt"),
+                XFS.Path(@"c:\a\a\b.txt")
+            };
+
+            // Act
+            var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), "*.txt", new EnumerationOptions { RecurseSubdirectories = true });
+
+            // Assert
+            Assert.That(result, Is.EquivalentTo(expected));
+        }
+#endif
+
         private MockFileSystem SetupFileSystem()
         {
             return new MockFileSystem(new Dictionary<string, MockFileData>
