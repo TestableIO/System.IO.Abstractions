@@ -38,6 +38,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public MockFileSystem(IDictionary<string, MockFileData> files, MockFileSystemOptions options)
         {
+            options ??= new MockFileSystemOptions();
             var currentDirectory = options.CurrentDirectory;
             if (string.IsNullOrEmpty(currentDirectory))
             {
