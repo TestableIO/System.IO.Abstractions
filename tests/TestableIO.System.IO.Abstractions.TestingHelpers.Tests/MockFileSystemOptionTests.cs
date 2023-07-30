@@ -26,6 +26,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(@"C:\foo\bar")]
         public void CurrentDirectory_ShouldBeConsidered(string currentDirectory)
         {
+            currentDirectory = XFS.Path(currentDirectory);
             var fileSystem = new MockFileSystem(new MockFileSystemOptions
             {
                 CurrentDirectory = currentDirectory
