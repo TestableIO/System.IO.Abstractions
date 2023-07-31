@@ -10,7 +10,7 @@ At the core of the library is `IFileSystem` and `FileSystem`. Instead of calling
 ## Usage
 
 ```shell
-dotnet add package TestableIO.System.IO.Abstractions
+dotnet add package TestableIO.System.IO.Abstractions.Wrappers
 ```
 
 *Note: This NuGet package is also published as `System.IO.Abstractions` but we suggest to use the prefix to make clear that this is not an official .NET package.*

@@ -155,5 +155,36 @@ namespace System.IO.Abstractions.TestingHelpers
 
         /// <inheritdoc />
         public override string GetTempPath() => defaultTempDirectory;
+
+#if FEATURE_ADVANCED_PATH_OPERATIONS
+        /// <inheritdoc />
+        public override string GetRelativePath(string relativeTo, string path)
+        {
+            if (relativeTo == null)
+            {
+                throw new ArgumentNullException(nameof(relativeTo), StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
+            }
+
+            if (relativeTo.Length == 0)
+            {
+                throw CommonExceptions.PathIsNotOfALegalForm(nameof(relativeTo));
+            }
+
+            if (path == null)
+            {
+                throw new ArgumentNullException(nameof(path), StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
+            }
+
+            if (path.Length == 0)
+            {
+                throw CommonExceptions.PathIsNotOfALegalForm(nameof(path));
+            }
+
+            relativeTo = GetFullPath(relativeTo);
+            path = GetFullPath(path);
+
+            return Path.GetRelativePath(relativeTo, path);
+        }
+#endif
     }
 }

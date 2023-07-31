@@ -557,5 +557,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(result);
         }
 #endif
+
+#if FEATURE_ADVANCED_PATH_OPERATIONS
+        [Test]
+        public void GetRelativePath_ShouldUseCurrentDirectoryFromMockFileSystem()
+        {
+            var fs = new MockFileSystem();
+
+            fs.AddDirectory("input");
+            fs.AddDirectory("output");
+            fs.Directory.SetCurrentDirectory("input");
+
+            fs.AddFile("input/a.txt", "foo");
+
+            var result = fs.Path.GetRelativePath("/input", "a.txt");
+
+            Assert.AreEqual("a.txt", result);
+        }
+#endif
     }
 }
