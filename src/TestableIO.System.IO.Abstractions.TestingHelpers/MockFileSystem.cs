@@ -25,7 +25,21 @@ namespace System.IO.Abstractions.TestingHelpers
 
         /// <inheritdoc />
         public MockFileSystem(IDictionary<string, MockFileData> files, string currentDirectory = "")
+            : this(files, new MockFileSystemOptions
+            {
+                CurrentDirectory = currentDirectory,
+                CreateDefaultTempDir = true
+            }) { }
+
+        /// <inheritdoc />
+        public MockFileSystem(MockFileSystemOptions options)
+            : this(null, options) { }
+
+        /// <inheritdoc />
+        public MockFileSystem(IDictionary<string, MockFileData> files, MockFileSystemOptions options)
         {
+            options ??= new MockFileSystemOptions();
+            var currentDirectory = options.CurrentDirectory;
             if (string.IsNullOrEmpty(currentDirectory))
             {
                 currentDirectory = XFS.Path(DEFAULT_CURRENT_DIRECTORY);
@@ -63,7 +77,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 AddDirectory(currentDirectory);
             }
 
-            if (!FileExists(defaultTempDirectory))
+            if (options.CreateDefaultTempDir && !FileExists(defaultTempDirectory))
             {
                 AddDirectory(defaultTempDirectory);
             }
