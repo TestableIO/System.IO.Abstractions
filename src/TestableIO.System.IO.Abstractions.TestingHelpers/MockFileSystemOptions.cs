@@ -8,11 +8,11 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <summary>
         ///     The <see cref="Directory.GetCurrentDirectory()" /> with which the <see cref="MockFileSystem" /> is initialized.
         /// </summary>
-        public string CurrentDirectory { get; set; } = "";
+        public string CurrentDirectory { get; init; } = "";
 
         /// <summary>
         /// Flag indicating, if a temporary directory should be created.
         /// </summary>
-        public bool CreateDefaultTempDir { get; set; } = true;
+        public bool CreateDefaultTempDir { get; init; } = true;
     }
 }
