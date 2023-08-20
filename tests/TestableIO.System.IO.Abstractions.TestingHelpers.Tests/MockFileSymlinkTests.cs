@@ -229,6 +229,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_CreateSymbolicLink_ShouldSetReparsePointAttribute()
+        {
+            var path = "foo.txt";
+            var pathToTarget = "bar.txt";
+            var fileSystem = new MockFileSystem();
+            fileSystem.File.WriteAllText(pathToTarget, "some content");
+
+            fileSystem.File.CreateSymbolicLink(path, pathToTarget);
+
+            var attributes = fileSystem.FileInfo.New(path).Attributes;
+            Assert.IsTrue(attributes.HasFlag(FileAttributes.ReparsePoint));
+        }
+
+        [Test]
         public void MockFile_ResolveLinkTarget_ShouldReturnPathOfTargetLink()
         {
             var fileSystem = new MockFileSystem();
