@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using NUnit.Framework;
-
-namespace System.IO.Abstractions.TestingHelpers.Tests
+﻿namespace System.IO.Abstractions.TestingHelpers.Tests
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
+    using NUnit.Framework;
+
     using XFS = MockUnixSupport;
 
     [TestFixture]
@@ -79,8 +80,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(XFS.Path(@"C:\something"));
 
             // Act
-            Assert.Throws<FileNotFoundException>(() =>
-                new MockFileStream(fileSystem, nonexistentFilePath, FileMode.Open));
+            Assert.Throws<FileNotFoundException>(() => new MockFileStream(fileSystem, nonexistentFilePath, FileMode.Open));
 
             // Assert - expect an exception
         }
