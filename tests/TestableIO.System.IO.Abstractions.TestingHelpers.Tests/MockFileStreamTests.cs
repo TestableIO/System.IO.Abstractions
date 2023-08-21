@@ -1,10 +1,9 @@
-﻿namespace System.IO.Abstractions.TestingHelpers.Tests
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using NUnit.Framework;
+
+namespace System.IO.Abstractions.TestingHelpers.Tests
 {
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-
-    using NUnit.Framework;
-
     using XFS = MockUnixSupport;
 
     [TestFixture]
@@ -80,7 +79,8 @@
             fileSystem.AddDirectory(XFS.Path(@"C:\something"));
 
             // Act
-            Assert.Throws<FileNotFoundException>(() => new MockFileStream(fileSystem, nonexistentFilePath, FileMode.Open));
+            Assert.Throws<FileNotFoundException>(() =>
+                new MockFileStream(fileSystem, nonexistentFilePath, FileMode.Open));
 
             // Assert - expect an exception
         }
@@ -225,6 +225,25 @@
                 // Assert
                 Assert.AreEqual(200, stream.Position);
             }
+        }
+
+        [Test]
+        public void MockFileStream_Null_ShouldReturnSingletonObject()
+        {
+            var result1 = MockFileStream.Null;
+            var result2 = MockFileStream.Null;
+
+            Assert.AreSame(result1, result2);
+        }
+
+        [Test]
+        public void MockFileStream_Null_ShouldHaveExpectedProperties()
+        {
+            var result = MockFileStream.Null;
+
+            Assert.AreEqual(result.Name, ".");
+            Assert.AreEqual(result.Length, 0);
+            Assert.AreEqual(result.IsAsync, true);
         }
     }
 }
