@@ -195,7 +195,9 @@ namespace System.IO.Abstractions.TestingHelpers
             destFileData.LinkTarget = pathToTarget;
             mockFileDataAccessor.AddFile(path, destFileData);
 
-            return new MockFileInfo(mockFileDataAccessor, path);
+            var mockFileInfo = new MockFileInfo(mockFileDataAccessor, path);
+            mockFileInfo.Attributes |= FileAttributes.ReparsePoint;
+            return mockFileInfo;
         }
 #endif
         /// <inheritdoc />
