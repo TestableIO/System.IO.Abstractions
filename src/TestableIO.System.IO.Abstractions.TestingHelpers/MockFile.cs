@@ -117,7 +117,7 @@ namespace System.IO.Abstractions.TestingHelpers
             {
                 if (!overwrite)
                 {
-                    throw new IOException(string.Format(CultureInfo.InvariantCulture, "The file {0} already exists.", destFileName));
+                    throw CommonExceptions.FileAlreadyExists(destFileName);
                 }
 
                 mockFileDataAccessor.RemoveFile(destFileName);
@@ -581,7 +581,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (mode == FileMode.CreateNew && exists)
             {
-                throw new IOException(string.Format(CultureInfo.InvariantCulture, "The file '{0}' already exists.", path));
+                throw CommonExceptions.FileAlreadyExists(path);
             }
 
             if ((mode == FileMode.Open || mode == FileMode.Truncate) && !exists)
@@ -802,7 +802,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
                     if (nextContainer.LinkTarget != null)
                     {
-                        throw new IOException($"The name of the file cannot be resolved by the system. : '{linkPath}'");
+                        throw CommonExceptions.NameCannotBeResolvedByTheSystem(linkPath);
                     }
                 }
 
@@ -815,7 +815,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     return new MockFileInfo(mockFileDataAccessor, nextLocation);
                 }
             }
-            throw new IOException($"The name of the file cannot be resolved by the system. : '{linkPath}'");
+            throw CommonExceptions.NameCannotBeResolvedByTheSystem(linkPath);
         }
 #endif
 
