@@ -982,7 +982,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var ex = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.Directory.Delete(XFS.Path(@"c:\baz")));
 
-            Assert.That(ex.Message, Is.EqualTo(XFS.Path("c:\\baz") + " does not exist or could not be found."));
+            Assert.That(ex.Message, Is.EqualTo($"'{XFS.Path("c:\\baz")}' does not exist or could not be found."));
         }
 
         [Test]
