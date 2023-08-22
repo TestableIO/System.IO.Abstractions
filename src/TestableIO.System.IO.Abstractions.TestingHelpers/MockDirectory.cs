@@ -603,7 +603,7 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void SetCurrentDirectory(string path)
         {
-            currentDirectory = path;
+            currentDirectory = mockFileDataAccessor.Path.GetFullPath(path);
         }
 
         /// <inheritdoc />
