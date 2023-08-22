@@ -1662,6 +1662,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_SetCurrentDirectory_WithRelativePath_ShouldUseFullPath()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.SetCurrentDirectory(".");
+
+            var result = fileSystem.Directory.GetCurrentDirectory();
+
+            Assert.IsTrue(fileSystem.Path.IsPathRooted(result));
+        }
+
+        [Test]
         public void MockDirectory_GetParent_ShouldThrowArgumentNullExceptionIfPathIsNull()
         {
             // Arrange
