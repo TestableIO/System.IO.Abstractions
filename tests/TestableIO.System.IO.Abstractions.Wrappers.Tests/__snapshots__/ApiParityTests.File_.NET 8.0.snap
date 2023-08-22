@@ -1,0 +1,6 @@
+﻿{
+  "ExtraMembers": [],
+  "MissingMembers": [
+    "Microsoft.Win32.SafeHandles.SafeFileHandle OpenHandle(System.String, System.IO.FileMode, System.IO.FileAccess, System.IO.FileShare, System.IO.FileOptions, Int64)"
+  ]
+}
