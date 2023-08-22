@@ -5,7 +5,7 @@ namespace System.IO.Abstractions.TestingHelpers
     internal static class CommonExceptions
     {
         private const int _fileLockHResult = unchecked((int)0x80070020);
-
+        
         public static FileNotFoundException FileNotFound(string path) =>
             new FileNotFoundException(
                 string.Format(
@@ -34,10 +34,10 @@ namespace System.IO.Abstractions.TestingHelpers
                 )
             );
 
-        public static Exception InvalidUseOfVolumeSeparator() =>
+        public static NotSupportedException InvalidUseOfVolumeSeparator() =>
             new NotSupportedException(StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"));
 
-        public static Exception PathIsNotOfALegalForm(string paramName) =>
+        public static ArgumentException PathIsNotOfALegalForm(string paramName) =>
             new ArgumentException(
                 StringResources.Manager.GetString("THE_PATH_IS_NOT_OF_A_LEGAL_FORM"),
                 paramName
@@ -54,7 +54,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 ? new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"), paramName)
                 : new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
 
-        public static Exception InvalidUncPath(string paramName) =>
+        public static ArgumentException InvalidUncPath(string paramName) =>
             new ArgumentException(@"The UNC path should be of the form \\server\share.", paramName);
 
         public static IOException ProcessCannotAccessFileInUse(string paramName = null) =>
@@ -73,5 +73,32 @@ namespace System.IO.Abstractions.TestingHelpers
 
         public static NotImplementedException NotImplemented() =>
             new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
+
+        public static IOException CannotCreateBecauseSameNameAlreadyExists(string path) =>
+            new IOException(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    StringResources.Manager.GetString("CANNOT_CREATE_BECAUSE_SAME_NAME_ALREADY_EXISTS"),
+                    path
+                )
+            );
+
+        public static IOException NameCannotBeResolvedByTheSystem(string path) =>
+            new IOException(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    StringResources.Manager.GetString("NAME_CANNOT_BE_RESOLVED_BY_THE_SYSTEM"),
+                    path
+                )
+            );
+
+        public static DirectoryNotFoundException PathDoesNotExistOrCouldNotBeFound(string path) =>
+            new DirectoryNotFoundException(
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    StringResources.Manager.GetString("PATH_DOES_NOT_EXIST_OR_COULD_NOT_BE_FOUND"),
+                    path
+                )
+            );
     }
 }

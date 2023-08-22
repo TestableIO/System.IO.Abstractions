@@ -153,7 +153,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!affectedPaths.Any())
             {
-                throw new DirectoryNotFoundException(path + " does not exist or could not be found.");
+                throw CommonExceptions.PathDoesNotExistOrCouldNotBeFound(path);
             }
 
             if (!recursive && affectedPaths.Count > 1)
@@ -526,18 +526,17 @@ namespace System.IO.Abstractions.TestingHelpers
 
             if (!mockFileDataAccessor.Directory.Exists(fullSourcePath))
             {
-                throw new DirectoryNotFoundException($"Could not find a part of the path '{sourceDirName}'.");
+                throw CommonExceptions.CouldNotFindPartOfPath(sourceDirName);
             }
 
             if (!mockFileDataAccessor.Directory.GetParent(fullDestPath).Exists)
             {
-                throw new DirectoryNotFoundException($"Could not find a part of the path.");
+                throw CommonExceptions.CouldNotFindPartOfPath(destDirName);
             }
 
             if (mockFileDataAccessor.Directory.Exists(fullDestPath) || mockFileDataAccessor.File.Exists(fullDestPath))
             {
-                throw new IOException(
-                    $"Cannot create '{fullDestPath}' because a file or directory with the same name already exists.");
+                throw CommonExceptions.CannotCreateBecauseSameNameAlreadyExists(fullDestPath);
             }
 
             mockFileDataAccessor.MoveDirectory(fullSourcePath, fullDestPath);
@@ -570,7 +569,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
                     if (nextContainer.LinkTarget != null)
                     {
-                        throw new IOException($"The name of the file cannot be resolved by the system. : '{linkPath}'");
+                        throw CommonExceptions.NameCannotBeResolvedByTheSystem(linkPath);
                     }
                 }
 
@@ -583,7 +582,7 @@ namespace System.IO.Abstractions.TestingHelpers
                     return new MockFileInfo(mockFileDataAccessor, nextLocation);
                 }
             }
-            throw new IOException($"The name of the file cannot be resolved by the system. : '{linkPath}'");
+            throw CommonExceptions.NameCannotBeResolvedByTheSystem(linkPath);
         }
     
 #endif
