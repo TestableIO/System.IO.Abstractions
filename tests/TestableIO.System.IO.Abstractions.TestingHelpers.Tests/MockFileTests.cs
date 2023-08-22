@@ -541,10 +541,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             MockFileData data = new MockFileData("Text Contents");
 
             //Act
+#pragma warning disable SYSLIB0011
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new MemoryStream();
 
-#pragma warning disable SYSLIB0011
             formatter.Serialize(stream, data);
 #pragma warning restore SYSLIB0011
 
@@ -561,9 +561,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             //Act
             MockFileData data = new MockFileData(textContentStr);
 
+#pragma warning disable SYSLIB0011
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new MemoryStream();
-#pragma warning disable SYSLIB0011
             formatter.Serialize(stream, data);
 
             stream.Seek(0, SeekOrigin.Begin);
