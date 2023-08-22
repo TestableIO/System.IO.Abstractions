@@ -101,7 +101,9 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFileDataAccessor.AddDirectory(path);
             mockFileDataAccessor.GetFile(path).LinkTarget = pathToTarget;
 
-            return new MockDirectoryInfo(mockFileDataAccessor, path);
+            var directoryInfo = new MockDirectoryInfo(mockFileDataAccessor, path);
+            directoryInfo.Attributes |= FileAttributes.ReparsePoint;
+            return directoryInfo;
         }
 #endif
 
