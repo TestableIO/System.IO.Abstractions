@@ -267,6 +267,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void GetFullPath_WithWhiteSpace_ShouldThrowArgumentException()
+        {
+            var mockFileSystem = new MockFileSystem();
+
+            TestDelegate action = () => mockFileSystem.Path.GetFullPath("  ");
+
+            Assert.Throws<ArgumentException>(action);
+        }
+
+        [Test]
         public void GetFullPath_WithMultipleDirectorySeparators_ShouldReturnTheNormalizedForm()
         {
             //Arrange
