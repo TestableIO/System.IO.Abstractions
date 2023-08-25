@@ -9,7 +9,9 @@ namespace System.IO.Abstractions.TestingHelpers
     using XFS = MockUnixSupport;
 
     /// <inheritdoc />
+#if !NET8_0_OR_GREATER
     [Serializable]
+#endif
     public partial class MockFile : FileBase
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;

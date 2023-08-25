@@ -7,7 +7,9 @@ namespace System.IO.Abstractions.TestingHelpers
     /// <summary>
     /// Provides helper methods for verifying paths.
     /// </summary>
+#if !NET8_0_OR_GREATER
     [Serializable]
+#endif
     public class PathVerifier
     {
         private static readonly char[] AdditionalInvalidPathChars = { '*', '?' };

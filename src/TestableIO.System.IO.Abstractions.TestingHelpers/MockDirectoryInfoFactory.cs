@@ -1,7 +1,9 @@
 namespace System.IO.Abstractions.TestingHelpers
 {
     /// <inheritdoc />
+#if !NET8_0_OR_GREATER
     [Serializable]
+#endif
     public class MockDirectoryInfoFactory : IDirectoryInfoFactory
     {
         readonly IMockFileDataAccessor mockFileSystem;

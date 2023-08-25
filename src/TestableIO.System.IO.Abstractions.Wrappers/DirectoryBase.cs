@@ -5,7 +5,9 @@ using System.Security.AccessControl;
 namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="Directory"/>
+#if !NET8_0_OR_GREATER
     [Serializable]
+#endif
     public abstract class DirectoryBase : IDirectory
     {
         /// <inheritdoc />

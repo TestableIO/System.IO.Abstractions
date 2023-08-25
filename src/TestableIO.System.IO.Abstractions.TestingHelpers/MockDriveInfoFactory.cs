@@ -3,7 +3,9 @@
 namespace System.IO.Abstractions.TestingHelpers
 {
     /// <inheritdoc />
+#if !NET8_0_OR_GREATER
     [Serializable]
+#endif
     public class MockDriveInfoFactory : IDriveInfoFactory
     {
         private readonly IMockFileDataAccessor mockFileSystem;

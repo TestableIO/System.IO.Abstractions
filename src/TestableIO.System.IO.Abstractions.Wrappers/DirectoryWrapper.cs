@@ -4,7 +4,9 @@ using System.Runtime.Versioning;
 namespace System.IO.Abstractions
 {
     /// <inheritdoc />
+#if !NET8_0_OR_GREATER
     [Serializable]
+#endif
     public class DirectoryWrapper : DirectoryBase
     {
         /// <inheritdoc />

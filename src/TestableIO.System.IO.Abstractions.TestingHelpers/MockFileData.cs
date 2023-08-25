@@ -8,7 +8,9 @@ namespace System.IO.Abstractions.TestingHelpers
     /// <summary>
     /// The class represents the associated data of a file.
     /// </summary>
+#if !NET8_0_OR_GREATER
     [Serializable]
+#endif
     public class MockFileData
     {
         /// <summary>
@@ -36,7 +38,9 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <summary>
         /// The access control of the <see cref="MockFileData"/>.
         /// </summary>
+#if !NET8_0_OR_GREATER
         [NonSerialized]
+#endif
         private FileSecurity accessControl;
 
         /// <summary>

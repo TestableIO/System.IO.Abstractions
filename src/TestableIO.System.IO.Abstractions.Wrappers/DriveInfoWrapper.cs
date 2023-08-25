@@ -5,7 +5,9 @@ namespace System.IO.Abstractions
     /// <summary>
     /// The wrapper for a <see cref="DriveInfo"/>.
     /// </summary>
+#if !NET8_0_OR_GREATER
     [Serializable]
+#endif
     public class DriveInfoWrapper : DriveInfoBase
     {
         /// <summary>

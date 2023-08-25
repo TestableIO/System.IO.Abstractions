@@ -1,6 +1,8 @@
 ﻿namespace System.IO.Abstractions
 {
+#if !NET8_0_OR_GREATER
     [Serializable]
+#endif
     internal class FileInfoFactory : IFileInfoFactory
     {
         private readonly IFileSystem fileSystem;

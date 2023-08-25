@@ -10,8 +10,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
 
     /// <inheritdoc />
-
+#if !NET8_0_OR_GREATER
     [Serializable]
+#endif
     public class MockDirectory : DirectoryBase
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;

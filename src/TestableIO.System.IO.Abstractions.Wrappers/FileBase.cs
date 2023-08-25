@@ -5,7 +5,9 @@ using Microsoft.Win32.SafeHandles;
 namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="File"/>
+#if !NET8_0_OR_GREATER
     [Serializable]
+#endif
     public abstract partial class FileBase : IFile
     {
         ///

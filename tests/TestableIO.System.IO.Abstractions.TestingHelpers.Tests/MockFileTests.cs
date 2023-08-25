@@ -534,6 +534,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(filesystem.FileExists(filepath));
         }
 
+#if !NET8_0_OR_GREATER
         [Test]
         public void Serializable_works()
         {
@@ -574,6 +575,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             //Assert
             Assert.That(deserialized.TextContents, Is.EqualTo(textContentStr));
         }
+#endif
 
         [Test]
         public void MockFile_Encrypt_ShouldSetEncryptedAttribute()

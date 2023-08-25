@@ -2,7 +2,9 @@
 
 namespace System.IO.Abstractions
 {
+#if !NET8_0_OR_GREATER
     [Serializable]
+#endif
     internal sealed class FileStreamFactory : IFileStreamFactory
     {
         public FileStreamFactory(IFileSystem fileSystem)
