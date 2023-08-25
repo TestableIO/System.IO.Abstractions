@@ -9,6 +9,24 @@ namespace System.IO.Abstractions.TestingHelpers
     [Serializable]
     public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     {
+        /// <summary>
+        ///     Wrapper around a <see cref="Stream" /> with no backing store, which
+        ///     is used as a replacement for a <see cref="FileSystemStream" />. As such
+        ///     it implements the same properties and methods as a <see cref="FileSystemStream" />.
+        /// </summary>
+        public new static FileSystemStream Null { get; } = new NullFileSystemStream();
+
+        private class NullFileSystemStream : FileSystemStream
+        {
+            /// <summary>
+            /// Initializes a new instance of <see cref="NullFileSystemStream" />.
+            /// </summary>
+            public NullFileSystemStream() : base(Null, ".", true)
+            {
+                
+            }
+        }
+
         private readonly IMockFileDataAccessor mockFileDataAccessor;
         private readonly string path;
         private readonly FileAccess access = FileAccess.ReadWrite;
