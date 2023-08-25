@@ -98,12 +98,6 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw CommonExceptions.FileAlreadyExists(nameof(path));
             }
 
-            var targetExists = Exists(pathToTarget);
-            if (!targetExists)
-            {
-                throw CommonExceptions.FileNotFound(pathToTarget);
-            }
-
             mockFileDataAccessor.AddDirectory(path);
             mockFileDataAccessor.GetFile(path).LinkTarget = pathToTarget;
 

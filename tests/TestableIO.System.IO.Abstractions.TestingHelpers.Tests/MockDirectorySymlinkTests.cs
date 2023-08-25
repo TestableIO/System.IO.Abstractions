@@ -184,7 +184,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectory_CreateSymbolicLink_ShouldFailIfTargetDoesNotExist()
+        public void MockDirectory_CreateSymbolicLink_ShouldNotFailIfTargetDoesNotExist()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -192,10 +192,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string pathToTarget = XFS.Path(@"C:\Target");
 
             // Act
-            var ex = Assert.Throws<FileNotFoundException>(() => fileSystem.Directory.CreateSymbolicLink(path, pathToTarget));
+            var fileSystemInfo = fileSystem.Directory.CreateSymbolicLink(path, pathToTarget);
 
             // Assert
-            Assert.That(ex.Message.Contains(pathToTarget));
+            Assert.IsTrue(fileSystemInfo.Exists);
         }
 
         [Test]
