@@ -39,7 +39,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentNullException(nameof(path), StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
             }
 
-            if (path.Length == 0)
+            if (string.IsNullOrWhiteSpace(path))
             {
                 throw CommonExceptions.PathIsNotOfALegalForm(nameof(path));
             }
