@@ -494,8 +494,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsFalse(result);
         }
 
-
-
         [Test]
         public void GetRelativePath_Works()
         {
@@ -507,6 +505,58 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             //Assert
             Assert.AreEqual(XFS.Path("e\\f.txt"), result);
+        }
+
+        [Test]
+        public void GetRelativePath_WhenPathIsNull_ShouldThrowArgumentNullException()
+        {
+            var mockPath = new MockFileSystem().Path;
+
+            var exception = Assert.Throws<ArgumentNullException>(() =>
+            {
+                mockPath.GetRelativePath("foo", null);
+            });
+
+            Assert.AreEqual("path", exception.ParamName);
+        }
+
+        [Test]
+        public void GetRelativePath_WhenPathIsWhitespace_ShouldThrowArgumentException()
+        {
+            var mockPath = new MockFileSystem().Path;
+
+            var exception = Assert.Throws<ArgumentException>(() =>
+            {
+                mockPath.GetRelativePath("foo", " ");
+            });
+
+            Assert.AreEqual("path", exception.ParamName);
+        }
+
+        [Test]
+        public void GetRelativePath_WhenRelativeToNull_ShouldThrowArgumentNullException()
+        {
+            var mockPath = new MockFileSystem().Path;
+
+            var exception = Assert.Throws<ArgumentNullException>(() =>
+            {
+                mockPath.GetRelativePath(null, "foo");
+            });
+
+            Assert.AreEqual("relativeTo", exception.ParamName);
+        }
+
+        [Test]
+        public void GetRelativePath_WhenRelativeToIsWhitespace_ShouldThrowArgumentException()
+        {
+            var mockPath = new MockFileSystem().Path;
+
+            var exception = Assert.Throws<ArgumentException>(() =>
+            {
+                mockPath.GetRelativePath(" ", "foo");
+            });
+
+            Assert.AreEqual("relativeTo", exception.ParamName);
         }
 #endif
 

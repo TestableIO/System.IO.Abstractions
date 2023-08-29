@@ -167,7 +167,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentNullException(nameof(relativeTo), StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
             }
 
-            if (relativeTo.Length == 0)
+            if (string.IsNullOrWhiteSpace(relativeTo))
             {
                 throw CommonExceptions.PathIsNotOfALegalForm(nameof(relativeTo));
             }
