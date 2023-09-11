@@ -4,7 +4,7 @@ using System.Security.AccessControl;
 namespace System.IO.Abstractions.TestingHelpers
 {
     /// <inheritdoc />
-#if !NET8_0_OR_GREATER
+#if FEATURE_SERIALIZABLE
     [Serializable]
 #endif
     public class MockFileInfo : FileInfoBase, IFileSystemAclSupport

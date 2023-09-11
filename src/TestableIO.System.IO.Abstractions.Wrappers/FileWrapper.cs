@@ -6,7 +6,7 @@ using Microsoft.Win32.SafeHandles;
 namespace System.IO.Abstractions
 {
     /// <inheritdoc />
-#if !NET8_0_OR_GREATER
+#if FEATURE_SERIALIZABLE
     [Serializable]
 #endif
     public partial class FileWrapper : FileBase

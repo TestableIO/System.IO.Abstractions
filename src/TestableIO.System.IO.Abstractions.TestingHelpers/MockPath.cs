@@ -7,7 +7,7 @@ namespace System.IO.Abstractions.TestingHelpers
     /// <summary>
     /// PathWrapper calls direct to Path but all this does is string manipulation so we can inherit directly from PathWrapper as no IO is done
     /// </summary>
-#if !NET8_0_OR_GREATER
+#if FEATURE_SERIALIZABLE
     [Serializable]
 #endif
     public class MockPath : PathWrapper

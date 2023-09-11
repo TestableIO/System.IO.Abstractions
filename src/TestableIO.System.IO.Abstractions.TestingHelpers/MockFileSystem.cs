@@ -8,7 +8,7 @@ namespace System.IO.Abstractions.TestingHelpers
     using XFS = MockUnixSupport;
 
     /// <inheritdoc />
-#if !NET8_0_OR_GREATER
+#if FEATURE_SERIALIZABLE
     [Serializable]
 #endif
     public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
@@ -18,7 +18,7 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private readonly IDictionary<string, FileSystemEntry> files;
         private readonly PathVerifier pathVerifier;
-#if !NET8_0_OR_GREATER
+#if FEATURE_SERIALIZABLE
         [NonSerialized]
 #endif
         private Func<DateTime> dateTimeProvider = defaultDateTimeProvider;
@@ -520,7 +520,7 @@ namespace System.IO.Abstractions.TestingHelpers
             return (GetFile(path).Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
         }
 
-#if !NET8_0_OR_GREATER
+#if FEATURE_SERIALIZABLE
     [Serializable]
 #endif
         private class FileSystemEntry

@@ -4,7 +4,7 @@
     /// <summary>
     /// Provides operations against path strings dependeing on the case-senstivity of the runtime platform.
     /// </summary>
-#if !NET8_0_OR_GREATER
+#if FEATURE_SERIALIZABLE
     [Serializable]
 #endif
     public class StringOperations

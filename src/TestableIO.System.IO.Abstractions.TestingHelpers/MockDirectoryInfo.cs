@@ -8,7 +8,7 @@ namespace System.IO.Abstractions.TestingHelpers
     using XFS = MockUnixSupport;
 
     /// <inheritdoc />
-#if !NET8_0_OR_GREATER
+#if FEATURE_SERIALIZABLE
     [Serializable]
 #endif
     public class MockDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport

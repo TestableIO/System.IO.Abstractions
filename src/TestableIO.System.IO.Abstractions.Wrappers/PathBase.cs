@@ -3,7 +3,7 @@
 namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="Path"/>
-#if !NET8_0_OR_GREATER
+#if FEATURE_SERIALIZABLE
     [Serializable]
 #endif
     public abstract class PathBase : IPath

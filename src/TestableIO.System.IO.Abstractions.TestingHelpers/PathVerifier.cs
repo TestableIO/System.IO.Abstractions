@@ -7,7 +7,7 @@ namespace System.IO.Abstractions.TestingHelpers
     /// <summary>
     /// Provides helper methods for verifying paths.
     /// </summary>
-#if !NET8_0_OR_GREATER
+#if FEATURE_SERIALIZABLE
     [Serializable]
 #endif
     public class PathVerifier
