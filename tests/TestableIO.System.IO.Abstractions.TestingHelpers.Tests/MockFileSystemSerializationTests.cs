@@ -1,4 +1,3 @@
-#if !NET8_0_OR_GREATER
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
     using NUnit.Framework;
@@ -43,4 +42,3 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
     }
 }
-#endif

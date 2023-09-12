@@ -163,7 +163,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(path.Exists, Is.True);
         }
 
-#if !NET8_0_OR_GREATER
         [Test]
         public void MockFileSystem_ByDefault_IsSerializable()
         {
@@ -183,7 +182,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(memoryStream.Length > 0, "Length didn't increase after serialization task.");
         }
-#endif
 
         [Test]
         public void MockFileSystem_AddDirectory_ShouldCreateDirectory()

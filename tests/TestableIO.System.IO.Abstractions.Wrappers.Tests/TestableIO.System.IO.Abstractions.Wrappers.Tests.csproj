@@ -23,4 +23,10 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
     <PackageReference Include="Snapshooter.NUnit" Version="0.13.0" />
   </ItemGroup>
+  <PropertyGroup>
+    <!--
+      Allow deprecated binary formatter functionality on .NET 8 so that we can test it
+    -->
+    <EnableUnsafeBinaryFormatterSerialization Condition="'$(TargetFramework)' == 'net8.0'">true</EnableUnsafeBinaryFormatterSerialization>
+  </PropertyGroup>
 </Project>
