@@ -7,7 +7,9 @@ using System.Security.AccessControl;
 namespace System.IO.Abstractions
 {
     /// <inheritdoc />
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     public class DirectoryInfoWrapper : DirectoryInfoBase, IFileSystemAclSupport
     {
         private readonly DirectoryInfo instance;

@@ -15,6 +15,7 @@
     <DefineConstants Condition="'$(TargetFramework)' == 'net7.0' OR '$(TargetFramework)' == 'net6.0' OR '$(TargetFramework)' == 'net5.0'">$(DefineConstants);FEATURE_FILE_MOVE_WITH_OVERWRITE;FEATURE_SUPPORTED_OS_ATTRIBUTE;FEATURE_FILE_SYSTEM_WATCHER_FILTERS;FEATURE_ENDS_IN_DIRECTORY_SEPARATOR;FEATURE_PATH_JOIN_WITH_PARAMS;FEATURE_PATH_JOIN_WITH_FOUR_PATHS</DefineConstants>
     <DefineConstants Condition="'$(TargetFramework)' == 'net7.0' OR '$(TargetFramework)' == 'net6.0'">$(DefineConstants);FEATURE_FILE_SYSTEM_INFO_LINK_TARGET;FEATURE_CREATE_SYMBOLIC_LINK;FEATURE_FILESTREAM_OPTIONS</DefineConstants>
     <DefineConstants Condition="'$(TargetFramework)' == 'net7.0'">$(DefineConstants);FEATURE_PATH_EXISTS;FEATURE_FILE_SYSTEM_WATCHER_WAIT_WITH_TIMESPAN;FEATURE_FILE_ATTRIBUTES_VIA_HANDLE;FEATURE_CREATE_TEMP_SUBDIRECTORY;FEATURE_READ_LINES_ASYNC;FEATURE_UNIX_FILE_MODE</DefineConstants>
+    <DefineConstants>$(DefineConstants);FEATURE_SERIALIZABLE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.6.133">

@@ -1,6 +1,8 @@
 namespace System.IO.Abstractions
 {
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     internal class DirectoryInfoFactory : IDirectoryInfoFactory
     {
         private readonly IFileSystem fileSystem;

@@ -4,7 +4,9 @@ using System.Security.AccessControl;
 namespace System.IO.Abstractions.TestingHelpers
 {
     /// <inheritdoc />
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     public class MockFileInfo : FileInfoBase, IFileSystemAclSupport
     {
         private readonly IMockFileDataAccessor mockFileSystem;
