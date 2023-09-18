@@ -4,7 +4,9 @@ using System.Security.AccessControl;
 namespace System.IO.Abstractions
 {
     /// <inheritdoc />
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     public class FileInfoWrapper : FileInfoBase, IFileSystemAclSupport
     {
         private readonly FileInfo instance;

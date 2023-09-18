@@ -1,7 +1,9 @@
 ﻿namespace System.IO.Abstractions.TestingHelpers
 {
     /// <inheritdoc />
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     public class MockFileInfoFactory : IFileInfoFactory
     {
         private readonly IMockFileDataAccessor mockFileSystem;

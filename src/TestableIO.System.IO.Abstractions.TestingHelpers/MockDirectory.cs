@@ -10,8 +10,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
 
     /// <inheritdoc />
-
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     public class MockDirectory : DirectoryBase
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
@@ -96,12 +97,6 @@ namespace System.IO.Abstractions.TestingHelpers
             if (Exists(path))
             {
                 throw CommonExceptions.FileAlreadyExists(nameof(path));
-            }
-
-            var targetExists = Exists(pathToTarget);
-            if (!targetExists)
-            {
-                throw CommonExceptions.FileNotFound(pathToTarget);
             }
 
             mockFileDataAccessor.AddDirectory(path);

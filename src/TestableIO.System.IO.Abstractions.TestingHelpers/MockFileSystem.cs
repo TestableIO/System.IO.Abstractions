@@ -8,7 +8,9 @@ namespace System.IO.Abstractions.TestingHelpers
     using XFS = MockUnixSupport;
 
     /// <inheritdoc />
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     {
         private const string DEFAULT_CURRENT_DIRECTORY = @"C:\";
@@ -16,7 +18,9 @@ namespace System.IO.Abstractions.TestingHelpers
 
         private readonly IDictionary<string, FileSystemEntry> files;
         private readonly PathVerifier pathVerifier;
+#if FEATURE_SERIALIZABLE
         [NonSerialized]
+#endif
         private Func<DateTime> dateTimeProvider = defaultDateTimeProvider;
         private static Func<DateTime> defaultDateTimeProvider = () => DateTime.UtcNow;
 
@@ -516,7 +520,9 @@ namespace System.IO.Abstractions.TestingHelpers
             return (GetFile(path).Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
         }
 
-        [Serializable]
+#if FEATURE_SERIALIZABLE
+    [Serializable]
+#endif
         private class FileSystemEntry
         {
             public string Path { get; set; }

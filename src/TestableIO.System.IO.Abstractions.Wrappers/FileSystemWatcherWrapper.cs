@@ -3,10 +3,14 @@
 namespace System.IO.Abstractions
 {
     /// <inheritdoc />
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     public class FileSystemWatcherWrapper : FileSystemWatcherBase
     {
+#if FEATURE_SERIALIZABLE
         [NonSerialized]
+#endif
         private readonly FileSystemWatcher watcher;
 
         /// <inheritdoc />

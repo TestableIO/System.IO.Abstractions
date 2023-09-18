@@ -4,7 +4,9 @@ using System.Runtime.Versioning;
 namespace System.IO.Abstractions
 {
     /// <inheritdoc />
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     public class DirectoryWrapper : DirectoryBase
     {
         /// <inheritdoc />

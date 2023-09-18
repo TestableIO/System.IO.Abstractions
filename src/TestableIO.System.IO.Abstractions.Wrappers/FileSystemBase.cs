@@ -1,7 +1,9 @@
 ﻿namespace System.IO.Abstractions
 {
     /// <inheritdoc />
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     public abstract class FileSystemBase : IFileSystem
     {
         /// <inheritdoc />

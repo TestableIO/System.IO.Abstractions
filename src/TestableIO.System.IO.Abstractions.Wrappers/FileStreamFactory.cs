@@ -2,7 +2,9 @@
 
 namespace System.IO.Abstractions
 {
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     internal sealed class FileStreamFactory : IFileStreamFactory
     {
         public FileStreamFactory(IFileSystem fileSystem)

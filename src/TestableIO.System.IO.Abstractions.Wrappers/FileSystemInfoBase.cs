@@ -3,7 +3,9 @@
 namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="FileSystemInfo"/>
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     public abstract class FileSystemInfoBase : IFileSystemInfo
     {
         ///

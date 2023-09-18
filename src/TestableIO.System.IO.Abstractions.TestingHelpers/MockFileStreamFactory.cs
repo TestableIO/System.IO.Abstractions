@@ -4,7 +4,9 @@ using Microsoft.Win32.SafeHandles;
 namespace System.IO.Abstractions.TestingHelpers
 {
     /// <inheritdoc />
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     public class MockFileStreamFactory : IFileStreamFactory
     {
         private readonly IMockFileDataAccessor mockFileSystem;

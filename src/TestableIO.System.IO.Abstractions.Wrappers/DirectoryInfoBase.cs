@@ -4,7 +4,9 @@ using System.Security.AccessControl;
 namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="IDirectoryInfo"/>
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     public abstract class DirectoryInfoBase : FileSystemInfoBase, IDirectoryInfo
     {
         /// <inheritdoc />

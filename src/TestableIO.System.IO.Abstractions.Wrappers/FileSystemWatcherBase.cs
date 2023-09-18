@@ -3,7 +3,9 @@
 namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="FileSystemWatcher"/>
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     public abstract class FileSystemWatcherBase : IFileSystemWatcher
     {
         /// <inheritdoc />

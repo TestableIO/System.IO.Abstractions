@@ -7,7 +7,9 @@ namespace System.IO.Abstractions.TestingHelpers
     /// <summary>
     /// PathWrapper calls direct to Path but all this does is string manipulation so we can inherit directly from PathWrapper as no IO is done
     /// </summary>
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     public class MockPath : PathWrapper
     {
         private readonly IMockFileDataAccessor mockFileDataAccessor;
@@ -39,7 +41,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentNullException(nameof(path), StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
             }
 
-            if (path.Length == 0)
+            if (string.IsNullOrWhiteSpace(path))
             {
                 throw CommonExceptions.PathIsNotOfALegalForm(nameof(path));
             }
@@ -165,7 +167,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw new ArgumentNullException(nameof(relativeTo), StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
             }
 
-            if (relativeTo.Length == 0)
+            if (string.IsNullOrWhiteSpace(relativeTo))
             {
                 throw CommonExceptions.PathIsNotOfALegalForm(nameof(relativeTo));
             }

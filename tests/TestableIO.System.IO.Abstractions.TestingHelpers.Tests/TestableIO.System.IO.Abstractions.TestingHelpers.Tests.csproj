@@ -32,7 +32,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="GitHubActionsTestLogger" Version="2.3.3" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
     <PackageReference Include="Moq" Version="4.20.69" />
     <PackageReference Include="nunit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
@@ -40,4 +40,10 @@
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
+  <PropertyGroup>
+    <!--
+      Allow deprecated binary formatter functionality on .NET 8 so that we can test it
+    -->
+    <EnableUnsafeBinaryFormatterSerialization Condition="'$(TargetFramework)' == 'net8.0'">true</EnableUnsafeBinaryFormatterSerialization>
+  </PropertyGroup>
 </Project>

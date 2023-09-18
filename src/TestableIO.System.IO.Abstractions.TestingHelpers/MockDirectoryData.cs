@@ -4,11 +4,14 @@ using System.Security.AccessControl;
 namespace System.IO.Abstractions.TestingHelpers
 {
     /// <inheritdoc />
+#if FEATURE_SERIALIZABLE
     [Serializable]
+#endif
     public class MockDirectoryData : MockFileData
     {
-
+#if FEATURE_SERIALIZABLE
         [NonSerialized]
+#endif
         private DirectorySecurity accessControl;
 
         /// <inheritdoc />
