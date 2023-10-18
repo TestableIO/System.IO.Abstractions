@@ -1321,7 +1321,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             CollectionAssert.AreEqual(
-                new[] { XFS.Path(currentDirectory + @"\" + relativeDirPath + @"\child") },
+                new[] { XFS.Path(relativeDirPath + @"\child") },
                 actualResult
             );
         }

@@ -627,16 +627,12 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override IEnumerable<string> EnumerateDirectories(string path)
         {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-
             return EnumerateDirectories(path, "*");
         }
 
         /// <inheritdoc />
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern)
         {
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-
             return EnumerateDirectories(path, searchPattern, SearchOption.TopDirectoryOnly);
         }
 
@@ -644,22 +640,26 @@ namespace System.IO.Abstractions.TestingHelpers
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, SearchOption searchOption)
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+            var originalPath = path;
             path = path.TrimSlashes();
             path = mockFileDataAccessor.Path.GetFullPath(path);
             return GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption)
-                .Where(p => !mockFileDataAccessor.StringOperations.Equals(p, path));
+                .Where(p => !mockFileDataAccessor.StringOperations.Equals(p, path))
+                .Select(p => FixPrefix(p, originalPath));
         }
-
+        
+        private string FixPrefix(string path, string originalPath)
+        {
+            var normalizedOriginalPath = mockFileDataAccessor.Path.GetFullPath(originalPath);
+            return originalPath + path.Substring(normalizedOriginalPath.Length);
+        }
+        
 #if FEATURE_ENUMERATION_OPTIONS
         /// <inheritdoc />
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
             var searchOption = enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-            path = path.TrimSlashes();
-            path = mockFileDataAccessor.Path.GetFullPath(path);
-            return GetFilesInternal(mockFileDataAccessor.AllDirectories, path, searchPattern, searchOption)
-                .Where(p => !mockFileDataAccessor.StringOperations.Equals(p, path));
+            return EnumerateDirectories(path, searchPattern, searchOption);
         }
 #endif
 
