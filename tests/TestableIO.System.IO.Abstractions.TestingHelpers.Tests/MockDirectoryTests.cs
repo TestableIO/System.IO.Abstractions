@@ -1486,6 +1486,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.Throws<DirectoryNotFoundException>(action);
         }
+        
+        
+        [TestCase("Folder", "Folder/SubFolder")]
+        [TestCase("/Folder", "/Folder/SubFolder")]
+        [TestCase("Folder/", "Folder/SubFolder")]
+        [TestCase("Folder/.././Folder", "Folder/.././Folder/SubFolder")]
+        public void MockDirectory_EnumerateDirectories_ShouldReturnPathsPrefixedWithQueryPath(
+            string queryPath, string expectedPath)
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("Folder/SubFolder");
+            
+            var actualResult = fileSystem.Directory.EnumerateDirectories(queryPath);
+            
+            CollectionAssert.AreEqual(new[] { expectedPath }, actualResult);
+        }
 
         public static IEnumerable<object[]> GetPathsForMoving()
         {
