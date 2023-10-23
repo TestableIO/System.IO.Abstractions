@@ -1488,10 +1488,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
         
         
-        [TestCase("Folder", "Folder/SubFolder")]
-        [TestCase("/Folder", "/Folder/SubFolder")]
-        [TestCase("Folder/", "Folder/SubFolder")]
-        [TestCase("Folder/.././Folder", "Folder/.././Folder/SubFolder")]
+        [TestCase("Folder", @"Folder\SubFolder")]
+        [TestCase(@"Folder\", @"Folder\SubFolder")]
+        [TestCase(@"Folder\..\.\Folder", @"Folder\..\.\Folder\SubFolder")]
         public void MockDirectory_EnumerateDirectories_ShouldReturnPathsPrefixedWithQueryPath(
             string queryPath, string expectedPath)
         {
