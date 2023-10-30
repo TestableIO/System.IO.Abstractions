@@ -651,7 +651,9 @@ namespace System.IO.Abstractions.TestingHelpers
         private string FixPrefix(string path, string originalPath)
         {
             var normalizedOriginalPath = mockFileDataAccessor.Path.GetFullPath(originalPath);
-            return originalPath + path.Substring(normalizedOriginalPath.Length);
+            var pathWithoutOriginalPath = path.Substring(normalizedOriginalPath.Length)
+                .TrimStart(mockFileDataAccessor.Path.DirectorySeparatorChar);
+            return mockFileDataAccessor.Path.Combine(originalPath, pathWithoutOriginalPath);
         }
         
 #if FEATURE_ENUMERATION_OPTIONS
