@@ -1487,10 +1487,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.Throws<DirectoryNotFoundException>(action);
         }
         
-        
-        [TestCase("Folder", @"Folder\SubFolder")]
-        [TestCase(@"Folder\", @"Folder\SubFolder")]
-        [TestCase(@"Folder\..\.\Folder", @"Folder\..\.\Folder\SubFolder")]
+        [TestCaseSource(nameof(GetPrefixTestPaths))]
         public void MockDirectory_EnumerateDirectories_ShouldReturnPathsPrefixedWithQueryPath(
             string queryPath, string expectedPath)
         {
@@ -1500,6 +1497,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.EnumerateDirectories(queryPath);
             
             CollectionAssert.AreEqual(new[] { expectedPath }, actualResult);
+        }
+        
+        private static IEnumerable<object[]> GetPrefixTestPaths()
+        {
+            var sep = Path.DirectorySeparatorChar;
+            yield return new object[] { "Folder", $"Folder{sep}SubFolder" };
+            yield return new object[] { $"Folder{sep}", $"Folder{sep}SubFolder" };
+            yield return new object[] { $"Folder{sep}..{sep}.{sep}Folder", $"Folder{sep}..{sep}.{sep}Folder{sep}SubFolder" };
         }
 
         public static IEnumerable<object[]> GetPathsForMoving()
