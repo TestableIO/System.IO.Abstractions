@@ -102,7 +102,7 @@ namespace System.IO.Abstractions
             => _stream.BeginWrite(buffer, offset, count, callback, state);
 
         /// <inheritdoc cref="Stream.CopyTo(Stream, int)" />
-#if NETSTANDARD2_0 || NET461
+#if NETSTANDARD2_0 || NET462
 	public new virtual void CopyTo(Stream destination, int bufferSize)
 		=> _stream.CopyTo(destination, bufferSize);
 #else

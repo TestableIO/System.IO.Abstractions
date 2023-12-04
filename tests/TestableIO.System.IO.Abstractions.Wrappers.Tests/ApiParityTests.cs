@@ -101,8 +101,8 @@ namespace System.IO.Abstractions.Tests
         private const string snapshotSuffix = ".NET Core 3.1";
 #elif NETCOREAPP2_1
         private const string snapshotSuffix = ".NET Core 2.1";
-#elif NET461
-        private const string snapshotSuffix = ".NET Framework 4.6.1";
+#elif NET462
+        private const string snapshotSuffix = ".NET Framework 4.6.2";
 #elif NET5_0
         private const string snapshotSuffix = ".NET 5.0";
 #elif NET6_0
