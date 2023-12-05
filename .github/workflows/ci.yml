@@ -18,13 +18,14 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: | 
             3.1.x
             5.0.x
             6.0.x
             7.0.x
+            8.0.x
       - name: Run tests
         run: dotnet test --collect:"XPlat Code Coverage"  --logger "GitHubActions"
       - name: Upload coverage
@@ -40,7 +41,7 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v4
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
       - uses: actions/download-artifact@v3
         with:
           name: Code coverage ubuntu-latest
@@ -54,7 +55,7 @@ jobs:
           name: Code coverage macos-latest
           path: coverage-macos
       - name: Generate coverage report
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.26
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.2.0
         with:
           reports: "**/coverage.cobertura.xml"
           targetdir: "coverage-report"
@@ -75,7 +76,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
       - name: Create packages
         run: dotnet pack --configuration Release --output ./packages
       - name: Upload a Build Artifact
@@ -101,7 +102,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
       - uses: actions/download-artifact@v3
         with:
           name: NuGet packages
