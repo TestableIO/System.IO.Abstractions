@@ -116,6 +116,17 @@ jobs:
         with:
           name: v${{ steps.nbgv.outputs.SemVer2 }}
           tag_name: v${{ steps.nbgv.outputs.SemVer2 }}
-          token: ${{ secrets.RELEASE_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           generate_release_notes: true
+      - name: Wait for GitHub release to be available
+        run: sleep 30s
+        shell: bash
+      - name: Comment on relevant PRs and issues
+        uses: apexskier/github-release-commenter@v1.2
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          comment-template: |
+            This is addressed in release {release_link}.
+          label-template: |
+            state: released
 
