@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net7.0;net6.0;net5.0;netcoreapp3.1</TargetFrameworks>
-    <TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net461</TargetFrameworks>
+    <TargetFrameworks>net8.0;net7.0;net6.0</TargetFrameworks>
+    <TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net462</TargetFrameworks>
     <Description>The unit tests for our pre-built mocks</Description>
     <AssemblyName>System.IO.Abstractions.TestingHelpers.Tests</AssemblyName>
     <RootNamespace>System.IO.Abstractions.TestingHelpers.Tests</RootNamespace>
