@@ -1271,7 +1271,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(XFS.Path(@"C:\Folder\.foo\bar"), new MockFileData(string.Empty));
 
             // Act
-            var actualResult = fileSystem.Directory.GetDirectories(XFS.Path(@"c:\Folder\"), "*.foo");
+            var actualResult = fileSystem.Directory.GetDirectories(XFS.Path(@"C:\Folder\"), "*.foo");
 
             // Assert
             Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo") }));
@@ -1321,7 +1321,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             CollectionAssert.AreEqual(
-                new[] { XFS.Path(currentDirectory + @"\" + relativeDirPath + @"\child") },
+                new[] { XFS.Path(relativeDirPath + @"\child") },
                 actualResult
             );
         }
@@ -1353,7 +1353,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(XFS.Path(@"C:\Folder\.foo\bar"), new MockFileData(string.Empty));
 
             // Act
-            var actualResult = fileSystem.Directory.GetDirectories(XFS.Path(@"c:\Folder\"), "*.foo", SearchOption.AllDirectories);
+            var actualResult = fileSystem.Directory.GetDirectories(XFS.Path(@"C:\Folder\"), "*.foo", SearchOption.AllDirectories);
 
             // Assert
             Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo"), XFS.Path(@"C:\Folder\.foo\.foo") }));
@@ -1415,7 +1415,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(XFS.Path(@"C:\Folder\.foo\bar"), new MockFileData(string.Empty));
 
             // Act
-            var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"c:\Folder\"), "*.foo");
+            var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"C:\Folder\"), "*.foo");
 
             // Assert
             Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo") }));
@@ -1439,7 +1439,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             };
 
             // Act
-            var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"c:\Folder\"), "*.foo", enumerationOptions);
+            var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"C:\Folder\"), "*.foo", enumerationOptions);
 
             // Assert
             Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo") }));
@@ -1457,7 +1457,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(XFS.Path(@"C:\Folder\.foo\bar"), new MockFileData(string.Empty));
 
             // Act
-            var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"c:\Folder\"), "*.foo", SearchOption.AllDirectories);
+            var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"C:\Folder\"), "*.foo", SearchOption.AllDirectories);
 
             // Assert
             Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo"), XFS.Path(@"C:\Folder\.foo\.foo") }));
@@ -1485,6 +1485,26 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.Throws<DirectoryNotFoundException>(action);
+        }
+        
+        [TestCaseSource(nameof(GetPrefixTestPaths))]
+        public void MockDirectory_EnumerateDirectories_ShouldReturnPathsPrefixedWithQueryPath(
+            string queryPath, string expectedPath)
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.Directory.CreateDirectory("Folder/SubFolder");
+            
+            var actualResult = fileSystem.Directory.EnumerateDirectories(queryPath);
+            
+            CollectionAssert.AreEqual(new[] { expectedPath }, actualResult);
+        }
+        
+        private static IEnumerable<object[]> GetPrefixTestPaths()
+        {
+            var sep = Path.DirectorySeparatorChar;
+            yield return new object[] { "Folder", $"Folder{sep}SubFolder" };
+            yield return new object[] { $"Folder{sep}", $"Folder{sep}SubFolder" };
+            yield return new object[] { $"Folder{sep}..{sep}.{sep}Folder", $"Folder{sep}..{sep}.{sep}Folder{sep}SubFolder" };
         }
 
         public static IEnumerable<object[]> GetPathsForMoving()
