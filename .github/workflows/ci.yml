@@ -116,6 +116,6 @@ jobs:
         with:
           name: v${{ steps.nbgv.outputs.SemVer2 }}
           tag_name: v${{ steps.nbgv.outputs.SemVer2 }}
-          token: ${{ secrets.GITHUB_RELEASE_TOKEN }}
+          token: ${{ secrets.RELEASE_TOKEN }}
           generate_release_notes: true
 
