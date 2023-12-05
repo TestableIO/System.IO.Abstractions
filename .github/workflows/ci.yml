@@ -116,13 +116,6 @@ jobs:
         with:
           name: v${{ steps.nbgv.outputs.SemVer2 }}
           tag_name: v${{ steps.nbgv.outputs.SemVer2 }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_RELEASE_TOKEN }}
           generate_release_notes: true
-      - name: Comment relevant issues and merge requests
-        uses: apexskier/github-release-commenter@v1.3.2
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          comment-template: |
-            This is addressed in release {release_link}.
-          label-template: |
-            state: released
+
