@@ -230,10 +230,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(XFS.Path(@"C:\test\SUBDirectory"));
             fileSystem.AddDirectory(XFS.Path(@"C:\LOUD\SUBDirectory"));
 
-            Assert.Contains(XFS.Path(@"C:\test\file.txt"), fileSystem.AllFiles.ToList());
-            Assert.Contains(XFS.Path(@"C:\LOUD\file.txt"), fileSystem.AllFiles.ToList());
-            Assert.Contains(XFS.Path(@"C:\test\SUBDirectory"), fileSystem.AllDirectories.ToList());
-            Assert.Contains(XFS.Path(@"C:\LOUD\SUBDirectory"), fileSystem.AllDirectories.ToList());
+            Assert.That(fileSystem.AllFiles.ToList(), Does.Contain(XFS.Path(@"C:\test\file.txt")));
+            Assert.That(fileSystem.AllFiles.ToList(), Does.Contain(XFS.Path(@"C:\LOUD\file.txt")));
+            Assert.That(fileSystem.AllDirectories.ToList(), Does.Contain(XFS.Path(@"C:\test\SUBDirectory")));
+            Assert.That(fileSystem.AllDirectories.ToList(), Does.Contain(XFS.Path(@"C:\LOUD\SUBDirectory")));
         }
 
         [Test]
@@ -249,10 +249,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(XFS.Path(@"C:\test\SUBTEST\SUBDirectory"));
             fileSystem.AddDirectory(XFS.Path(@"C:\LOUD\subloud\SUBDirectory"));
 
-            Assert.Contains(XFS.Path(@"C:\test\subtest\file.txt"), fileSystem.AllFiles.ToList());
-            Assert.Contains(XFS.Path(@"C:\LOUD\SUBLOUD\file.txt"), fileSystem.AllFiles.ToList());
-            Assert.Contains(XFS.Path(@"C:\test\subtest\SUBDirectory"), fileSystem.AllDirectories.ToList());
-            Assert.Contains(XFS.Path(@"C:\LOUD\SUBLOUD\SUBDirectory"), fileSystem.AllDirectories.ToList());
+            Assert.That(fileSystem.AllFiles.ToList(), Does.Contain(XFS.Path(@"C:\test\subtest\file.txt")));
+            Assert.That(fileSystem.AllFiles.ToList(), Does.Contain(XFS.Path(@"C:\LOUD\SUBLOUD\file.txt")));
+            Assert.That(fileSystem.AllDirectories.ToList(), Does.Contain(XFS.Path(@"C:\test\subtest\SUBDirectory")));
+            Assert.That(fileSystem.AllDirectories.ToList(), Does.Contain(XFS.Path(@"C:\LOUD\SUBLOUD\SUBDirectory")));
         }
 
         [Test]
@@ -268,10 +268,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(XFS.Path(@"C:\test\SUBTEST\new\SUBDirectory"));
             fileSystem.AddDirectory(XFS.Path(@"C:\LOUD\subloud\new\SUBDirectory"));
 
-            Assert.Contains(XFS.Path(@"C:\test\subtest\new\file.txt"), fileSystem.AllFiles.ToList());
-            Assert.Contains(XFS.Path(@"C:\LOUD\SUBLOUD\new\file.txt"), fileSystem.AllFiles.ToList());
-            Assert.Contains(XFS.Path(@"C:\test\subtest\new\SUBDirectory"), fileSystem.AllDirectories.ToList());
-            Assert.Contains(XFS.Path(@"C:\LOUD\SUBLOUD\new\SUBDirectory"), fileSystem.AllDirectories.ToList());
+            Assert.That(fileSystem.AllFiles.ToList(), Does.Contain(XFS.Path(@"C:\test\subtest\new\file.txt")));
+            Assert.That(fileSystem.AllFiles.ToList(), Does.Contain(XFS.Path(@"C:\LOUD\SUBLOUD\new\file.txt")));
+            Assert.That(fileSystem.AllDirectories.ToList(), Does.Contain(XFS.Path(@"C:\test\subtest\new\SUBDirectory")));
+            Assert.That(fileSystem.AllDirectories.ToList(), Does.Contain(XFS.Path(@"C:\LOUD\SUBLOUD\new\SUBDirectory")));
         }
 
         [Test]
@@ -292,8 +292,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.AddFilesFromEmbeddedNamespace(XFS.Path(@"C:\"), Assembly.GetExecutingAssembly(), "System.IO.Abstractions.TestingHelpers.Tests.TestFiles");
 
-            Assert.Contains(XFS.Path(@"C:\TestFile.txt"), fileSystem.AllFiles.ToList());
-            Assert.Contains(XFS.Path(@"C:\SecondTestFile.txt"), fileSystem.AllFiles.ToList());
+            Assert.That(fileSystem.AllFiles.ToList(), Does.Contain(XFS.Path(@"C:\TestFile.txt")));
+            Assert.That(fileSystem.AllFiles.ToList(), Does.Contain(XFS.Path(@"C:\SecondTestFile.txt")));
         }
 
         [Test]
