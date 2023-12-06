@@ -40,7 +40,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var sourceFileInfo = mockFileSystem.FileInfo.New(sourceFileName);
             var destFileInfo = mockFileSystem.FileInfo.New(destFileName);
             Assert.That(destFileInfo.LastWriteTime, Is.EqualTo(sourceFileInfo.LastWriteTime));
-            Assert.LessOrEqual(DateTime.Now - destFileInfo.CreationTime, TimeSpan.FromSeconds(1));
+            Assert.That(DateTime.Now - destFileInfo.CreationTime, Is.LessThanOrEqualTo( TimeSpan.FromSeconds(1)));
             Assert.That(destFileInfo.LastAccessTime, Is.EqualTo(destFileInfo.CreationTime));
         }
 
