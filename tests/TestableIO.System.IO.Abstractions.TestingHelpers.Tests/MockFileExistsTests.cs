@@ -21,7 +21,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.File.Exists(XFS.Path(@"C:\something\other.gif"));
 
             // Assert
-            Assert.IsTrue(result);
+            Assert.That(result, Is.True);
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.File.Exists(@"C:\SomeThing\DEMO.txt");
 
             // Assert
-            Assert.IsTrue(result);
+            Assert.That(result, Is.True);
         }
 
         [Test]

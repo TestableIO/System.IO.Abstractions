@@ -239,7 +239,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.CreateSymbolicLink(path, pathToTarget);
 
             var attributes = fileSystem.FileInfo.New(path).Attributes;
-            Assert.IsTrue(attributes.HasFlag(FileAttributes.ReparsePoint));
+            Assert.That(attributes.HasFlag(FileAttributes.ReparsePoint), Is.True);
         }
 
         [Test]

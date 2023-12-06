@@ -159,7 +159,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileStreamFactory.Create("some_random_file.txt", fileMode);
 
             // Assert
-            Assert.True(fileSystem.File.Exists(XFS.Path("./some_random_file.txt")));
+            Assert.That(fileSystem.File.Exists(XFS.Path("./some_random_file.txt")), Is.True);
         }
 
         [Test]

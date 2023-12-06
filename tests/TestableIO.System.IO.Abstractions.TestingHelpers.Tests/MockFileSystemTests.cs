@@ -85,7 +85,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileExists = fs.File.Exists(alternatePath);
 
             Assert.That(fileCount, Is.EqualTo(1));
-            Assert.IsTrue(fileExists);
+            Assert.That(fileExists, Is.True);
         }
 
         [Test]
@@ -191,7 +191,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.AddDirectory(baseDirectory);
 
-            Assert.IsTrue(fileSystem.Directory.Exists(baseDirectory));
+            Assert.That(fileSystem.Directory.Exists(baseDirectory), Is.True);
         }
 
         [Test]
@@ -385,7 +385,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.AddDirectory(path2);
 
-            Assert.IsTrue(fileSystem.FileExists(path2));
+            Assert.That(fileSystem.FileExists(path2), Is.True);
         }
 
         [Test]
@@ -412,7 +412,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var actualCurrentDirectory = fs.DirectoryInfo.New(".");
 
-            Assert.IsTrue(actualCurrentDirectory.Exists);
+            Assert.That(actualCurrentDirectory.Exists, Is.True);
         }
 
         [Test]
@@ -432,8 +432,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockFileSystem = new MockFileSystem();
             var mockFileSystemOverload = new MockFileSystem(null, string.Empty);
 
-            Assert.IsTrue(mockFileSystem.Directory.Exists(tempDirectory));
-            Assert.IsTrue(mockFileSystemOverload.Directory.Exists(tempDirectory));
+            Assert.That(mockFileSystem.Directory.Exists(tempDirectory), Is.True);
+            Assert.That(mockFileSystemOverload.Directory.Exists(tempDirectory), Is.True);
         }
 
         [Test]
@@ -459,8 +459,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             TestDelegate action = () => fileSystem.Directory.Delete(baseDirectory, true);
 
             Assert.Throws<UnauthorizedAccessException>(action);
-            Assert.True(fileSystem.File.Exists(textFile));
-            Assert.True(fileSystem.Directory.Exists(baseDirectory));
+            Assert.That(fileSystem.File.Exists(textFile), Is.True);
+            Assert.That(fileSystem.Directory.Exists(baseDirectory), Is.True);
         }
 
         private class TestFileSystem : MockFileSystem

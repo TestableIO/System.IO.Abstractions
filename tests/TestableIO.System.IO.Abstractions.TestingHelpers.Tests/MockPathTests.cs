@@ -300,7 +300,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetInvalidFileNameChars();
 
             //Assert
-            Assert.IsTrue(result.Length > 0);
+            Assert.That(result.Length > 0, Is.True);
         }
 
         [Test]
@@ -313,7 +313,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetInvalidPathChars();
 
             //Assert
-            Assert.IsTrue(result.Length > 0);
+            Assert.That(result.Length > 0, Is.True);
         }
 
         [Test]
@@ -339,7 +339,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetRandomFileName();
 
             //Assert
-            Assert.IsTrue(result.Length > 0);
+            Assert.That(result.Length > 0, Is.True);
         }
 
         [Test]
@@ -352,7 +352,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetTempFileName();
 
             //Assert
-            Assert.IsTrue(result.Length > 0);
+            Assert.That(result.Length > 0, Is.True);
         }
 
         [Test]
@@ -365,7 +365,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             //Act
             var result = mockPath.GetTempFileName();
 
-            Assert.True(fileSystem.FileExists(result));
+            Assert.That(fileSystem.FileExists(result), Is.True);
             Assert.That(fileSystem.FileInfo.New(result).Length, Is.Zero);
         }
 
@@ -379,7 +379,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetTempPath();
 
             //Assert
-            Assert.IsTrue(result.Length > 0);
+            Assert.That(result.Length > 0, Is.True);
         }
 
         [Test]
@@ -395,7 +395,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetTempPath();
 
             //Assert
-            Assert.IsTrue(result.Length > 0);
+            Assert.That(result.Length > 0, Is.True);
         }
 
         [Test]
@@ -425,7 +425,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetTempPath();
 
             //Assert
-            Assert.IsTrue(result.Length > 0);
+            Assert.That(result.Length > 0, Is.True);
         }
 
         [Test]
@@ -465,7 +465,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.IsPathFullyQualified(XFS.Path("C:\\directory\\file.txt"));
 
             //Assert
-            Assert.IsTrue(result);
+            Assert.That(result, Is.True);
         }
 
         [Test]
@@ -580,7 +580,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             bool result = fileSystem.Path.Exists(absolutePath);
 
-            Assert.IsTrue(result);
+            Assert.That(result, Is.True);
         }
 
         [Test]
@@ -592,7 +592,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             bool result = fileSystem.Path.Exists(path);
 
-            Assert.IsTrue(result);
+            Assert.That(result, Is.True);
         }
 
         [Test]
@@ -604,7 +604,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             bool result = fileSystem.Path.Exists(path);
 
-            Assert.IsTrue(result);
+            Assert.That(result, Is.True);
         }
 
         [Test]

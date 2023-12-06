@@ -32,7 +32,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.Exists;
 
-            Assert.IsTrue(result);
+            Assert.That(result, Is.True);
         }
 
         [Test]
@@ -574,7 +574,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileInfo.MoveTo(destination);
 
             Assert.That(fileInfo.FullName, Is.EqualTo(destination));
-            Assert.True(fileInfo.Exists);
+            Assert.That(fileInfo.Exists, Is.True);
         }
 
         [Test]
@@ -636,7 +636,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileInfo.MoveTo(destFilePath);
 
             Assert.That(fileInfo.FullName, Is.EqualTo(destFilePath));
-            Assert.True(fileInfo.Exists);
+            Assert.That(fileInfo.Exists, Is.True);
         }
 
         [Test]
@@ -821,7 +821,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileInfo.Refresh();
 
             // Assert
-            Assert.IsTrue(fileInfo.Exists);
+            Assert.That(fileInfo.Exists, Is.True);
         }
 
         [Test]
@@ -836,7 +836,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var result = fileInfo.Exists;
-            Assert.IsTrue(result);
+            Assert.That(result, Is.True);
         }
 
         [Test]
@@ -850,7 +850,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileInfo.CreateText().Dispose();
 
             // Assert
-            Assert.IsTrue(fileInfo.Exists);
+            Assert.That(fileInfo.Exists, Is.True);
         }
 
         [Test]

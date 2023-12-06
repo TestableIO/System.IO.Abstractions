@@ -493,7 +493,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             directoryInfo.Refresh();
 
             // Assert
-            Assert.IsTrue(directoryInfo.Exists);
+            Assert.That(directoryInfo.Exists, Is.True);
         }
 
         [Test]
@@ -507,7 +507,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             directoryInfo.Create();
 
             // Assert
-            Assert.IsTrue(directoryInfo.Exists);
+            Assert.That(directoryInfo.Exists, Is.True);
         }
 
         [Test, WindowsOnly(WindowsSpecifics.AccessControlLists)]
@@ -521,7 +521,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             directoryInfo.Create(new DirectorySecurity());
 
             // Assert
-            Assert.IsTrue(directoryInfo.Exists);
+            Assert.That(directoryInfo.Exists, Is.True);
         }
 
         [Test]
@@ -563,7 +563,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             directoryInfo.MoveTo(XFS.Path(@"c:\abc2"));
 
             // Assert
-            Assert.IsTrue(directoryInfo.Exists);
+            Assert.That(directoryInfo.Exists, Is.True);
         }
 
         [Test]

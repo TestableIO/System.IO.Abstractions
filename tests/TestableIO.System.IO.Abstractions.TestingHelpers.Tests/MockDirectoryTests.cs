@@ -572,7 +572,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.Exists(XFS.Path(@"c:\foo"));
 
             // Assert
-            Assert.IsTrue(result);
+            Assert.That(result, Is.True);
         }
 
         [Test]
@@ -588,7 +588,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.Exists(XFS.Path(@"c:\foo\"));
 
             // Assert
-            Assert.IsTrue(result);
+            Assert.That(result, Is.True);
         }
 
         [Test]
@@ -654,7 +654,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.Exists(XFS.Path(@"c:\bar"));
 
             // Assert
-            Assert.IsTrue(result);
+            Assert.That(result, Is.True);
         }
 
         [Test]
@@ -668,7 +668,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.Exists(XFS.Path(@"c:\foo\"));
 
             // Assert
-            Assert.IsTrue(result);
+            Assert.That(result, Is.True);
         }
 
         [TestCase(@"\\s")]
@@ -726,8 +726,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\bar"));
 
             // Assert
-            Assert.IsTrue(fileSystem.FileExists(XFS.Path(@"c:\bar\")));
-            Assert.IsTrue(fileSystem.AllDirectories.Any(d => d == XFS.Path(@"c:\bar")));
+            Assert.That(fileSystem.FileExists(XFS.Path(@"c:\bar\")), Is.True);
+            Assert.That(fileSystem.AllDirectories.Any(d => d == XFS.Path(@"c:\bar")), Is.True);
         }
 
         [Test]
@@ -788,7 +788,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\temp\folder "));
 
             // Assert
-            Assert.IsTrue(fileSystem.Directory.Exists(XFS.Path(@"c:\temp\folder")));
+            Assert.That(fileSystem.Directory.Exists(XFS.Path(@"c:\temp\folder")), Is.True);
         }
 
         [Test]
@@ -818,7 +818,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.CreateDirectory(@"\\server\share\path\to\create");
 
             // Assert
-            Assert.IsTrue(fileSystem.Directory.Exists(@"\\server\share\path\to\create\"));
+            Assert.That(fileSystem.Directory.Exists(@"\\server\share\path\to\create\"), Is.True);
         }
 
         [Test]
@@ -847,7 +847,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.CreateDirectory(@"\\server\share");
 
             // Assert
-            Assert.IsTrue(fileSystem.Directory.Exists(@"\\server\share\"));
+            Assert.That(fileSystem.Directory.Exists(@"\\server\share\"), Is.True);
         }
 
 #if FEATURE_CREATE_TEMP_SUBDIRECTORY
@@ -861,8 +861,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.CreateTempSubdirectory();
 
             // Assert
-            Assert.IsTrue(fileSystem.Directory.Exists(result.FullName));
-            Assert.IsTrue(result.FullName.Contains(Path.GetTempPath()));
+            Assert.That(fileSystem.Directory.Exists(result.FullName), Is.True);
+            Assert.That(result.FullName.Contains(Path.GetTempPath()), Is.True);
         }
 
         [Test]
@@ -875,9 +875,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.CreateTempSubdirectory("foo-");
 
             // Assert
-            Assert.IsTrue(fileSystem.Directory.Exists(result.FullName));
-            Assert.IsTrue(Path.GetFileName(result.FullName).StartsWith("foo-"));
-            Assert.IsTrue(result.FullName.Contains(Path.GetTempPath()));
+            Assert.That(fileSystem.Directory.Exists(result.FullName), Is.True);
+            Assert.That(Path.GetFileName(result.FullName).StartsWith("foo-"), Is.True);
+            Assert.That(result.FullName.Contains(Path.GetTempPath()), Is.True);
         }
 #endif
 
@@ -917,7 +917,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.That(fileSystem.Directory.Exists(folder1Path), Is.False);
             Assert.That(fileSystem.Directory.Exists(folder1SubFolderPath), Is.False);
-            Assert.IsTrue(fileSystem.Directory.Exists(folder2Path));
+            Assert.That(fileSystem.Directory.Exists(folder2Path), Is.True);
         }
 
         [Test]
@@ -1229,13 +1229,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             if (XFS.IsUnixPlatform())
             {
                 Assert.That(drives.Length, Is.EqualTo(1));
-                Assert.IsTrue(drives.Contains("/"));
+                Assert.That(drives.Contains("/"), Is.True);
             }
             else
             {
                 Assert.That(drives.Length, Is.EqualTo(2));
-                Assert.IsTrue(drives.Contains(@"C:\"));
-                Assert.IsTrue(drives.Contains(@"D:\"));
+                Assert.That(drives.Contains(@"C:\"), Is.True);
+                Assert.That(drives.Contains(@"D:\"), Is.True);
             }
         }
 
@@ -1255,8 +1255,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             //Check that it correctly returns all child directories
             Assert.That(directories.Count(), Is.EqualTo(2));
-            Assert.IsTrue(directories.Contains(XFS.Path(@"A:\folder1\folder2")));
-            Assert.IsTrue(directories.Contains(XFS.Path(@"A:\folder1\folder4")));
+            Assert.That(directories.Contains(XFS.Path(@"A:\folder1\folder2")), Is.True);
+            Assert.That(directories.Contains(XFS.Path(@"A:\folder1\folder4")), Is.True);
         }
 
         [Test]
@@ -1396,8 +1396,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             //Check that it correctly returns all child directories
             Assert.That(directories.Count(), Is.EqualTo(2));
-            Assert.IsTrue(directories.Contains(XFS.Path(@"A:\folder1\folder2")));
-            Assert.IsTrue(directories.Contains(XFS.Path(@"A:\folder1\folder4")));
+            Assert.That(directories.Contains(XFS.Path(@"A:\folder1\folder2")), Is.True);
+            Assert.That(directories.Contains(XFS.Path(@"A:\folder1\folder4")), Is.True);
         }
 
         [Test]
@@ -1527,7 +1527,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.Move(XFS.Path(@"C:\old_location"), XFS.Path(@"C:\NewLocation\"));
 
             // Assert
-            Assert.IsTrue(fileSystem.File.Exists(XFS.Path(@"C:\NewLocation\Data\someFile.txt")));
+            Assert.That(fileSystem.File.Exists(XFS.Path(@"C:\NewLocation\Data\someFile.txt")), Is.True);
         }
 
         [TestCaseSource(nameof(GetPathsForMoving))]
@@ -1545,8 +1545,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.That(fileSystem.Directory.Exists(sourceDirName), Is.False);
-            Assert.IsTrue(fileSystem.File.Exists(XFS.Path(destDirName + filePathOne)));
-            Assert.IsTrue(fileSystem.File.Exists(XFS.Path(destDirName + filePathTwo)));
+            Assert.That(fileSystem.File.Exists(XFS.Path(destDirName + filePathOne)), Is.True);
+            Assert.That(fileSystem.File.Exists(XFS.Path(destDirName + filePathTwo)), Is.True);
         }
 
         [Test]
@@ -1591,7 +1591,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var destDirectoryInfo = fileSystem.DirectoryInfo.New(destDirName);
-            Assert.IsTrue(destDirectoryInfo.Attributes.HasFlag(FileAttributes.System));
+            Assert.That(destDirectoryInfo.Attributes.HasFlag(FileAttributes.System), Is.True);
         }
 
         [Test]
@@ -1617,7 +1617,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.That(fileSystem.Directory.Exists(sourceSubDirName), Is.False);
-            Assert.IsTrue(fileSystem.FileExists(destSubDirName));
+            Assert.That(fileSystem.FileExists(destSubDirName), Is.True);
         }
 
         [Test]
@@ -1686,7 +1686,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.Directory.GetCurrentDirectory();
 
-            Assert.IsTrue(fileSystem.Path.IsPathRooted(result));
+            Assert.That(fileSystem.Path.IsPathRooted(result), Is.True);
         }
 
         [Test]
@@ -2134,7 +2134,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.That(fileSystem.Directory.Exists(targetDirName), Is.False);
-            Assert.IsTrue(fileSystem.Directory.Exists(sourceDirName));
+            Assert.That(fileSystem.Directory.Exists(sourceDirName), Is.True);
         }
 
         private static IEnumerable<TestCaseData> Success_DirectoryMoveFromToPaths
@@ -2171,7 +2171,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 fileSystem.Directory.Move(sourceDirName, targetDirName));
 
             // Assert
-            Assert.IsTrue(fileSystem.Directory.Exists(targetDirName));
+            Assert.That(fileSystem.Directory.Exists(targetDirName), Is.True);
             Assert.That(fileSystem.Directory.Exists(sourceDirName), Is.False);
         }
     }

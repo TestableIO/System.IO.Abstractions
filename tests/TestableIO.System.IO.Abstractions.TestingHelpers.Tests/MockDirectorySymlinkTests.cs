@@ -195,7 +195,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystemInfo = fileSystem.Directory.CreateSymbolicLink(path, pathToTarget);
 
             // Assert
-            Assert.IsTrue(fileSystemInfo.Exists);
+            Assert.That(fileSystemInfo.Exists, Is.True);
         }
 
         [Test]
@@ -209,7 +209,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.CreateSymbolicLink(path, pathToTarget);
 
             var attributes = fileSystem.DirectoryInfo.New(path).Attributes;
-            Assert.IsTrue(attributes.HasFlag(FileAttributes.ReparsePoint));
+            Assert.That(attributes.HasFlag(FileAttributes.ReparsePoint), Is.True);
         }
 
         [Test]
