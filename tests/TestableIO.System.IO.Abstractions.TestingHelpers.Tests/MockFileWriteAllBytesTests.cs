@@ -100,7 +100,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var readAgain = fileSystem.File.ReadAllBytes(path);
 
-            Assert.AreNotEqual(fileContent, readAgain);
+            Assert.That(fileContent, Is.Not.EqualTo(readAgain));
         }
 
 

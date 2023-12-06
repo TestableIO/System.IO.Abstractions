@@ -81,7 +81,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 firstRead[i] += 1;
             }
 
-            Assert.AreNotEqual(firstRead, secondRead);
+            Assert.That(firstRead, Is.Not.EqualTo(secondRead));
         }
 
 #if FEATURE_ASYNC_FILE
