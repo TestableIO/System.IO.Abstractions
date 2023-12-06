@@ -832,7 +832,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var ex = Assert.Throws<ArgumentException>(() => fileSystem.Directory.CreateDirectory(@"\\server"));
 
             // Assert
-            StringAssert.StartsWith("The UNC path should be of the form \\\\server\\share.", ex.Message);
+            Assert.That(ex.Message, Does.StartWith("The UNC path should be of the form \\\\server\\share."));
             Assert.That(ex.ParamName, Is.EqualTo("path"));
         }
 
