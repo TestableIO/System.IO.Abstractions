@@ -50,9 +50,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             file.AppendAllText(Path, "BB", Encoding.UTF8);
 
             // Assert
-            CollectionAssert.AreEqual(
-                new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66 },
-                fileSystem.GetFile(Path).Contents);
+            Assert.That(fileSystem.GetFile(Path).Contents,
+                Is.EqualTo(new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66 }));
         }
 
         [Test]
@@ -85,9 +84,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.AppendAllText(path, "AA", Encoding.UTF32);
 
             // Assert
-            CollectionAssert.AreEqual(
-                new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0 },
-                fileSystem.GetFile(path).Contents);
+            Assert.That(fileSystem.GetFile(path).Contents,
+                Is.EqualTo(new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0 }));
         }
 
         [Test]
@@ -139,9 +137,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 0, 32, 0, 116, 0, 101, 0, 120, 0, 116
             };
 
-            CollectionAssert.AreEqual(
-                expected,
-                file.ReadAllBytes(path));
+            Assert.That(file.ReadAllBytes(path), Is.EqualTo(expected));
         }
 
         [Test]
@@ -214,9 +210,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             await file.AppendAllTextAsync(Path, "BB", Encoding.UTF8);
 
             // Assert
-            CollectionAssert.AreEqual(
-                new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66 },
-                fileSystem.GetFile(Path).Contents);
+            Assert.That(fileSystem.GetFile(Path).Contents,
+                Is.EqualTo(new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66 }));
         }
 
         [Test]
@@ -249,9 +244,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             await fileSystem.File.AppendAllTextAsync(path, "AA", Encoding.UTF32);
 
             // Assert
-            CollectionAssert.AreEqual(
-                new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0 },
-                fileSystem.GetFile(path).Contents);
+            Assert.That(fileSystem.GetFile(path).Contents,
+                Is.EqualTo(new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0 }));
         }
 
         [Test]
@@ -303,9 +297,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 0, 32, 0, 116, 0, 101, 0, 120, 0, 116
             };
 
-            CollectionAssert.AreEqual(
-                expected,
-                file.ReadAllBytes(path));
+            Assert.That(file.ReadAllBytes(path), Is.EqualTo(expected));
         }
 
         [Test]

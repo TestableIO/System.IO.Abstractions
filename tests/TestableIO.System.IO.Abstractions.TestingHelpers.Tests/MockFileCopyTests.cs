@@ -84,7 +84,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 binaryWriter.Write("Modified");
             }
 
-            CollectionAssert.AreEqual(original, mockFileSystem.File.ReadAllBytes(destFileName));
+            Assert.That(mockFileSystem.File.ReadAllBytes(destFileName), Is.EqualTo(original));
         }
 
         [Test]

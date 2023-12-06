@@ -1320,10 +1320,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetDirectories(XFS.Path(relativeDirPath));
 
             // Assert
-            CollectionAssert.AreEqual(
-                new[] { XFS.Path(relativeDirPath + @"\child") },
-                actualResult
-            );
+            Assert.That(actualResult, Is.EqualTo(new[] { XFS.Path(relativeDirPath + @"\child") }));
         }
 
         [Test]
@@ -1496,7 +1493,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             
             var actualResult = fileSystem.Directory.EnumerateDirectories(queryPath);
             
-            CollectionAssert.AreEqual(new[] { expectedPath }, actualResult);
+            Assert.That(actualResult, Is.EqualTo(new[] { expectedPath }));
         }
         
         private static IEnumerable<object[]> GetPrefixTestPaths()

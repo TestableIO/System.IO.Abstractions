@@ -305,7 +305,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.MoveDirectory(XFS.Path(@"C:\dir1"), XFS.Path(@"C:\dir2"));
 
             var expected = new[] { XFS.Path(@"C:\dir2\dir1\dir1.txt") };
-            CollectionAssert.AreEquivalent(expected, fileSystem.AllFiles);
+            Assert.That(fileSystem.AllFiles, Is.EqualTo(expected));
         }
 
         [Test]
@@ -319,7 +319,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.Move(XFS.Path(@"C:\target\project.txt"), XFS.Path(@"C:\target\proj.txt"));
 
             var expected = new[] { XFS.Path(@"C:\target\proj.txt"), XFS.Path(@"C:\target\subdir\other.txt") };
-            CollectionAssert.AreEquivalent(expected, fileSystem.AllFiles);
+            Assert.That(fileSystem.AllFiles, Is.EqualTo(expected));
         }
 
         [Test]

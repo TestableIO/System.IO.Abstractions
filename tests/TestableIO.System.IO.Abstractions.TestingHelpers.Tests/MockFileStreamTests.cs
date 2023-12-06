@@ -25,7 +25,8 @@
             cut.Flush();
 
             // Assert
-            CollectionAssert.AreEqual(new byte[] { 255 }, fileSystem.GetFile(filepath).Contents);
+            Assert.That(fileSystem.GetFile(filepath).Contents,
+                Is.EqualTo(new byte[] { 255 }));
         }
 
         [Test]
@@ -46,7 +47,8 @@
             await cut.FlushAsync();
 
             // Assert
-            CollectionAssert.AreEqual(new byte[] { 255 }, fileSystem.GetFile(filepath).Contents);
+            Assert.That(fileSystem.GetFile(filepath).Contents,
+                Is.EqualTo(new byte[] { 255 }));
         }
 
         [Test]

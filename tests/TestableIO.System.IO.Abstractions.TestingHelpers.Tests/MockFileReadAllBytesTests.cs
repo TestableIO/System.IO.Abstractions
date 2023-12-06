@@ -21,9 +21,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = file.ReadAllBytes(XFS.Path(@"c:\something\other.gif"));
 
-            CollectionAssert.AreEqual(
-                new byte[] { 0x21, 0x58, 0x3f, 0xa9 },
-                result);
+            Assert.That(result,
+                Is.EqualTo(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }));
         }
 
         [Test]
@@ -98,9 +97,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = await file.ReadAllBytesAsync(XFS.Path(@"c:\something\other.gif"));
 
-            CollectionAssert.AreEqual(
-                new byte[] { 0x21, 0x58, 0x3f, 0xa9 },
-                result);
+            Assert.That(result,
+                Is.EqualTo(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }));
         }
 
         [Test]
