@@ -99,7 +99,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.File.ReadAllText(path);
 
-            Assert.IsEmpty(result, "Null MockFileData should be allowed for and result in an empty file.");
+            Assert.That(result, Is.Empty, "Null MockFileData should be allowed for and result in an empty file.");
         }
 
         [Test]
