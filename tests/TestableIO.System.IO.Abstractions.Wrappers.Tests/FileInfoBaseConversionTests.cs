@@ -20,7 +20,7 @@
             FileInfoBase actual = fileInfo;
 
             // Assert
-            Assert.IsNull(actual);
+            Assert.That(actual, Is.Null);
         }
     }
 }

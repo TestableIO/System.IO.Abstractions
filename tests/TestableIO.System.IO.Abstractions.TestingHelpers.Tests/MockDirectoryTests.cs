@@ -1753,7 +1753,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetParent(XFS.Path(@"c:\"));
 
             // Assert
-            Assert.IsNull(actualResult);
+            Assert.That(actualResult, Is.Null);
         }
 
         [Test]

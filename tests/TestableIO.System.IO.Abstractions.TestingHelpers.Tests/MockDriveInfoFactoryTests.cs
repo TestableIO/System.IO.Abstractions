@@ -105,7 +105,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.DriveInfo.Wrap(null);
 
-            Assert.IsNull(result);
+            Assert.That(result, Is.Null);
         }
     }
 }

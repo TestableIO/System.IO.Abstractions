@@ -23,7 +23,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.GetFile(@"c:\something\else.txt");
 
-            Assert.IsNull(result);
+            Assert.That(result, Is.Null);
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.GetFile("/SomeThing/DEMO.txt");
 
-            Assert.IsNull(result);
+            Assert.That(result, Is.Null);
         }
 
         [Test]

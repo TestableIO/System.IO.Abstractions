@@ -16,7 +16,7 @@ namespace System.IO.Abstractions.Tests
             var result = wrapperFilesystem.Directory.GetParent(root);
 
             // Assert
-            Assert.IsNull(result);
+            Assert.That(result, Is.Null);
         }
 
         [Test]
