@@ -893,7 +893,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             };
 
             Assert.AreEqual(date, fileInfo.LastAccessTimeUtc);
-            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastAccessTimeUtc);
+            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastAccessTimeUtc.Kind);
         }
 
         [Test]
@@ -909,7 +909,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             };
 
             Assert.AreEqual(date, fileInfo.LastAccessTime);
-            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastAccessTime);
+            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastAccessTime.Kind);
         }
 
         [Test]
@@ -925,7 +925,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             };
 
             Assert.AreEqual(date, fileInfo.CreationTimeUtc);
-            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.CreationTimeUtc);
+            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.CreationTimeUtc.Kind);
         }
 
         [Test]
@@ -941,7 +941,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             };
 
             Assert.AreEqual(date, fileInfo.CreationTime);
-            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.CreationTime);
+            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.CreationTime.Kind);
         }
 
         [Test]
@@ -957,7 +957,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             };
 
             Assert.AreEqual(date, fileInfo.LastWriteTimeUtc);
-            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastWriteTimeUtc);
+            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastWriteTimeUtc.Kind);
         }
 
         [Test]
@@ -973,7 +973,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             };
 
             Assert.AreEqual(date, fileInfo.LastWriteTime);
-            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastWriteTime);
+            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastWriteTime.Kind);
         }
     }
 }
