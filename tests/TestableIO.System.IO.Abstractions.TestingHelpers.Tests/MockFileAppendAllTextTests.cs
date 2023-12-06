@@ -30,9 +30,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             file.AppendAllText(path, "+ some text");
 
             // Assert
-            Assert.AreEqual(
-                "Demo text content+ some text",
-                file.ReadAllText(path));
+            Assert.That(file.ReadAllText(path),
+              Is.EqualTo("Demo text content+ some text"));
         }
 
         [Test]
@@ -70,9 +69,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.AppendAllText(path, " some text");
 
             // Assert
-            Assert.AreEqual(
-                "Demo text content some text",
-                fileSystem.File.ReadAllText(path));
+            Assert.That(fileSystem.File.ReadAllText(path),
+              Is.EqualTo("Demo text content some text"));
         }
 
         [Test]
@@ -174,9 +172,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             await file.AppendAllTextAsync(path, "+ some text");
 
             // Assert
-            Assert.AreEqual(
-                "Demo text content+ some text",
-                file.ReadAllText(path));
+            Assert.That(file.ReadAllText(path),
+              Is.EqualTo("Demo text content+ some text"));
         }
 
         [Test]
@@ -198,7 +195,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             );
 
             // Assert
-            Assert.AreEqual("line 1", fileSystem.File.ReadAllText(path));
+            Assert.That(fileSystem.File.ReadAllText(path), Is.EqualTo("line 1"));
         }
 
         [Test]
@@ -236,9 +233,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             await fileSystem.File.AppendAllTextAsync(path, " some text");
 
             // Assert
-            Assert.AreEqual(
-                "Demo text content some text",
-                fileSystem.File.ReadAllText(path));
+            Assert.That(fileSystem.File.ReadAllText(path),
+              Is.EqualTo("Demo text content some text"));
         }
 
         [Test]

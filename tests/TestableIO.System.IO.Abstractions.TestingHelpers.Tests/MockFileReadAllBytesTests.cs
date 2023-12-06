@@ -36,7 +36,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.File.WriteAllBytes(path, fileContent);
 
-            Assert.AreEqual(fileContent, fileSystem.File.ReadAllBytes(path));
+            Assert.That(fileSystem.File.ReadAllBytes(path), Is.EqualTo(fileContent));
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.AddFile(path, new MockFileData(data));
 
-            Assert.AreEqual(data, fileSystem.File.ReadAllBytes(altPath));
+            Assert.That(fileSystem.File.ReadAllBytes(altPath), Is.EqualTo(data));
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.File.WriteAllBytes(path, fileContent);
 
-            Assert.AreEqual(fileContent, await fileSystem.File.ReadAllBytesAsync(path));
+            Assert.That(await fileSystem.File.ReadAllBytesAsync(path), Is.EqualTo(fileContent));
         }
 
         [Test]
@@ -148,7 +148,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.AddFile(path, new MockFileData(data));
 
-            Assert.AreEqual(data, await fileSystem.File.ReadAllBytesAsync(altPath));
+            Assert.That(await fileSystem.File.ReadAllBytesAsync(altPath), Is.EqualTo(data));
         }
 #endif
     }

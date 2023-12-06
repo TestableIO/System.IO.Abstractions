@@ -11,14 +11,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [UnixOnly(UnixSpecifics.SlashRoot)]
         public void Should_Convert_Backslashes_To_Slashes_On_Unix()
         {
-            Assert.AreEqual("/test/", XFS.Path(@"\test\"));
+            Assert.That(XFS.Path(@"\test\"), Is.EqualTo("/test/"));
         }
 
         [Test]
         [UnixOnly(UnixSpecifics.SlashRoot)]
         public void Should_Remove_Drive_Letter_On_Unix()
         {
-            Assert.AreEqual("/test/", XFS.Path(@"c:\test\"));
+            Assert.That(XFS.Path(@"c:\test\"), Is.EqualTo("/test/"));
         }
     }
 }

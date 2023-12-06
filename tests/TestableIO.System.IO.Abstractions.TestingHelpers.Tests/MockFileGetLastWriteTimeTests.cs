@@ -30,7 +30,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastWriteTime = fileSystem.File.GetLastWriteTime(@"c:\does\not\exist.txt");
 
             // Assert
-            Assert.AreEqual(new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc).ToLocalTime(), actualLastWriteTime);
+            Assert.That(actualLastWriteTime, Is.EqualTo(new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc).ToLocalTime()));
         }
 
         [Test]

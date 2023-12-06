@@ -23,7 +23,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.FileInfo.New("foo").ResolveLinkTarget(false);
 
-            Assert.AreEqual("bar", result.Name);
+            Assert.That(result.Name, Is.EqualTo("bar"));
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.FileInfo.New("foo1").ResolveLinkTarget(true);
 
-            Assert.AreEqual("bar", result.Name);
+            Assert.That(result.Name, Is.EqualTo("bar"));
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.FileInfo.New("foo1").ResolveLinkTarget(false);
 
-            Assert.AreEqual("foo", result.Name);
+            Assert.That(result.Name, Is.EqualTo("foo"));
         }
 
         [Test]

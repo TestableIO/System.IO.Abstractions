@@ -19,8 +19,8 @@
             fileSystem.File.Delete(path);
             var fileCount2 = fileSystem.Directory.GetFiles(directory, "*").Length;
 
-            Assert.AreEqual(1, fileCount1, "File should have existed");
-            Assert.AreEqual(0, fileCount2, "File should have been deleted");
+            Assert.That(fileCount1, Is.EqualTo(1), "File should have existed");
+            Assert.That(fileCount2, Is.EqualTo(0), "File should have been deleted");
         }
 
         [TestCase(" ")]

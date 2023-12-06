@@ -19,7 +19,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.ChangeExtension(TestPath, "doc");
 
             //Assert
-            Assert.AreEqual(XFS.Path("C:\\test\\test.doc"), result);
+            Assert.That(result, Is.EqualTo(XFS.Path("C:\\test\\test.doc")));
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.Combine(XFS.Path("C:\\test"), "test.bmp");
 
             //Assert
-            Assert.AreEqual(XFS.Path("C:\\test\\test.bmp"), result);
+            Assert.That(result, Is.EqualTo(XFS.Path("C:\\test\\test.bmp")));
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.Combine(XFS.Path("C:\\test"), "subdir1", "test.bmp");
 
             //Assert
-            Assert.AreEqual(XFS.Path("C:\\test\\subdir1\\test.bmp"), result);
+            Assert.That(result, Is.EqualTo(XFS.Path("C:\\test\\subdir1\\test.bmp")));
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.Combine(XFS.Path("C:\\test"), "subdir1", "subdir2", "test.bmp");
 
             //Assert
-            Assert.AreEqual(XFS.Path("C:\\test\\subdir1\\subdir2\\test.bmp"), result);
+            Assert.That(result, Is.EqualTo(XFS.Path("C:\\test\\subdir1\\subdir2\\test.bmp")));
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.Combine(XFS.Path("C:\\test"), "subdir1", "subdir2", "subdir3", "test.bmp");
 
             //Assert
-            Assert.AreEqual(XFS.Path("C:\\test\\subdir1\\subdir2\\subdir3\\test.bmp"), result);
+            Assert.That(result, Is.EqualTo(XFS.Path("C:\\test\\subdir1\\subdir2\\subdir3\\test.bmp")));
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetDirectoryName(TestPath);
 
             //Assert
-            Assert.AreEqual(XFS.Path("C:\\test"), result);
+            Assert.That(result, Is.EqualTo(XFS.Path("C:\\test")));
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetExtension(TestPath);
 
             //Assert
-            Assert.AreEqual(".bmp", result);
+            Assert.That(result, Is.EqualTo(".bmp"));
         }
 
         [Test]
@@ -110,7 +110,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetFileName(TestPath);
 
             //Assert
-            Assert.AreEqual("test.bmp", result);
+            Assert.That(result, Is.EqualTo("test.bmp"));
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetFileNameWithoutExtension(TestPath);
 
             //Assert
-            Assert.AreEqual("test", result);
+            Assert.That(result, Is.EqualTo("test"));
         }
 
         [Test]
@@ -136,7 +136,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetFullPath(TestPath);
 
             //Assert
-            Assert.AreEqual(TestPath, result);
+            Assert.That(result, Is.EqualTo(TestPath));
         }
 
         public static IEnumerable<string[]> GetFullPath_RelativePaths_Cases
@@ -165,7 +165,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = mockPath.GetFullPath(relativePath);
 
             //Assert
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
 
         public static IEnumerable<string[]> GetFullPath_RootedPathWithRelativeSegments_Cases
@@ -191,7 +191,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = mockPath.GetFullPath(rootedPath);
 
             //Assert
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
 
         public static IEnumerable<string[]> GetFullPath_AbsolutePaths_Cases
@@ -221,7 +221,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = mockPath.GetFullPath(absolutePath);
 
             //Assert
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.That(actualResult, Is.EqualTo(expectedResult));
         }
 
         [Test]
@@ -287,7 +287,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualFullPath = mockPath.GetFullPath(XFS.Path(@"c:\foo\\//bar\file.dat"));
 
             //Assert
-            Assert.AreEqual(XFS.Path(@"c:\foo\bar\file.dat"), actualFullPath);
+            Assert.That(actualFullPath, Is.EqualTo(XFS.Path(@"c:\foo\bar\file.dat")));
         }
 
         [Test]
@@ -326,7 +326,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetPathRoot(TestPath);
 
             //Assert
-            Assert.AreEqual(XFS.Path("C:\\"), result);
+            Assert.That(result, Is.EqualTo(XFS.Path("C:\\")));
         }
 
         [Test]
@@ -366,7 +366,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetTempFileName();
 
             Assert.True(fileSystem.FileExists(result));
-            Assert.AreEqual(0, fileSystem.FileInfo.New(result).Length);
+            Assert.That(fileSystem.FileInfo.New(result).Length, Is.Zero);
         }
 
         [Test]
@@ -410,7 +410,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetTempPath();
 
             //Assert
-            Assert.AreEqual(tempDirectory, result);
+            Assert.That(result, Is.EqualTo(tempDirectory));
         }
 
         [Test]
@@ -438,7 +438,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.HasExtension(TestPath);
 
             //Assert
-            Assert.AreEqual(true, result);
+            Assert.That(result, Is.True);
         }
 
         [Test]
@@ -451,7 +451,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.IsPathRooted(TestPath);
 
             //Assert
-            Assert.AreEqual(true, result);
+            Assert.That(result, Is.True);
         }
 
 #if FEATURE_ADVANCED_PATH_OPERATIONS
@@ -504,7 +504,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.GetRelativePath(XFS.Path("c:\\d"), XFS.Path("c:\\d\\e\\f.txt"));
 
             //Assert
-            Assert.AreEqual(XFS.Path("e\\f.txt"), result);
+            Assert.That(result, Is.EqualTo(XFS.Path("e\\f.txt")));
         }
 
         [Test]
@@ -517,7 +517,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 mockPath.GetRelativePath("foo", null);
             });
 
-            Assert.AreEqual("path", exception.ParamName);
+            Assert.That(exception.ParamName, Is.EqualTo("path"));
         }
 
         [Test]
@@ -530,7 +530,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 mockPath.GetRelativePath("foo", " ");
             });
 
-            Assert.AreEqual("path", exception.ParamName);
+            Assert.That(exception.ParamName, Is.EqualTo("path"));
         }
 
         [Test]
@@ -543,7 +543,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 mockPath.GetRelativePath(null, "foo");
             });
 
-            Assert.AreEqual("relativeTo", exception.ParamName);
+            Assert.That(exception.ParamName, Is.EqualTo("relativeTo"));
         }
 
         [Test]
@@ -556,7 +556,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 mockPath.GetRelativePath(" ", "foo");
             });
 
-            Assert.AreEqual("relativeTo", exception.ParamName);
+            Assert.That(exception.ParamName, Is.EqualTo("relativeTo"));
         }
 #endif
 
@@ -632,7 +632,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fs.Path.GetRelativePath("/input", "a.txt");
 
-            Assert.AreEqual("a.txt", result);
+            Assert.That(result, Is.EqualTo("a.txt"));
         }
 #endif
     }

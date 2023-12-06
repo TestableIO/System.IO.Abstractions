@@ -21,7 +21,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var driveInfo = new MockDriveInfo(fileSystem, path);
 
             // Assert
-            Assert.AreEqual(@"c:\", driveInfo.Name);
+            Assert.That(driveInfo.Name, Is.EqualTo(@"c:\"));
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var driveInfo = new MockDriveInfo(fileSystem, "c");
 
             // Assert
-            Assert.AreEqual(@"c:\", driveInfo.Name);
+            Assert.That(driveInfo.Name, Is.EqualTo(@"c:\"));
         }
 
         [TestCase(@"\\unc\share")]
@@ -65,7 +65,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualDirectory = driveInfo.RootDirectory;
 
             // Assert
-            Assert.AreEqual(expectedDirectory, actualDirectory.FullName);
+            Assert.That(actualDirectory.FullName, Is.EqualTo(expectedDirectory));
         }
 
         [TestCase("c:", "c:\\")]
@@ -82,7 +82,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockDriveInfo = new MockDriveInfo(new MockFileSystem(), directoryPath);
 
             // Assert
-            Assert.AreEqual(expectedPath, mockDriveInfo.ToString());
+            Assert.That(mockDriveInfo.ToString(), Is.EqualTo(expectedPath));
         }
     }
 }

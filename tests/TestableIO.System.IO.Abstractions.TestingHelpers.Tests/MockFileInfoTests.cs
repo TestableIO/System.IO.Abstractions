@@ -77,7 +77,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.Length;
 
-            Assert.AreEqual(fileContent.Length, result);
+            Assert.That(result, Is.EqualTo(fileContent.Length));
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var ex = Assert.Throws<FileNotFoundException>(() => fileInfo.Length.ToString(CultureInfo.InvariantCulture));
 
-            Assert.AreEqual(XFS.Path(@"c:\foo.txt"), ex.FileName);
+            Assert.That(ex.FileName, Is.EqualTo(XFS.Path(@"c:\foo.txt")));
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var ex = Assert.Throws<FileNotFoundException>(() => fileInfo.Length.ToString(CultureInfo.InvariantCulture));
 
-            Assert.AreEqual(XFS.Path(@"c:\a\b"), ex.FileName);
+            Assert.That(ex.FileName, Is.EqualTo(XFS.Path(@"c:\a\b")));
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.CreationTimeUtc;
 
-            Assert.AreEqual(creationTime.ToUniversalTime(), result);
+            Assert.That(result, Is.EqualTo(creationTime.ToUniversalTime()));
         }
 
         [Test]
@@ -135,7 +135,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.CreationTimeUtc;
 
-            Assert.AreEqual(MockFileData.DefaultDateTimeOffset.UtcDateTime, result);
+            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.UtcDateTime));
         }
 
         [Test]
@@ -152,7 +152,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var newUtcTime = DateTime.UtcNow;
             fileInfo.CreationTimeUtc = newUtcTime;
 
-            Assert.AreEqual(newUtcTime, fileInfo.CreationTimeUtc);
+            Assert.That(fileInfo.CreationTimeUtc, Is.EqualTo(newUtcTime));
         }
 
 
@@ -169,7 +169,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.CreationTime;
 
-            Assert.AreEqual(creationTime, result);
+            Assert.That(result, Is.EqualTo(creationTime));
         }
 
         [Test]
@@ -180,7 +180,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.CreationTime;
 
-            Assert.AreEqual(MockFileData.DefaultDateTimeOffset.LocalDateTime, result);
+            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.LocalDateTime));
         }
 
         [Test]
@@ -197,7 +197,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileInfo.CreationTime = newTime;
 
-            Assert.AreEqual(newTime, fileInfo.CreationTime);
+            Assert.That(fileInfo.CreationTime, Is.EqualTo(newTime));
         }
 
         [Test]
@@ -231,7 +231,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileInfo.IsReadOnly = true;
 
-            Assert.AreEqual(FileAttributes.ReadOnly, fileData.Attributes & FileAttributes.ReadOnly);
+            Assert.That(fileData.Attributes & FileAttributes.ReadOnly, Is.EqualTo(FileAttributes.ReadOnly));
         }
 
         [Test]
@@ -268,7 +268,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 newcontents = newfile.ReadToEnd();
             }
 
-            Assert.AreEqual($"Demo text contentThis should be at the end{Environment.NewLine}", newcontents);
+            Assert.That(newcontents, Is.EqualTo($"Demo text contentThis should be at the end{Environment.NewLine}"));
         }
 
         [Test]
@@ -288,7 +288,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
             Assert.That(fileSystem.File.Exists(targetFile), Is.True);
-            Assert.AreEqual($"This should be the contents{Environment.NewLine}", newcontents);
+            Assert.That(newcontents, Is.EqualTo($"This should be the contents{Environment.NewLine}"));
         }
 
         [Test]
@@ -314,7 +314,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 newcontents = newfile.ReadToEnd();
             }
 
-            Assert.AreEqual("ABCDEtext content", newcontents);
+            Assert.That(newcontents, Is.EqualTo("ABCDEtext content"));
         }
 
         [Test]
@@ -329,7 +329,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileInfo.Encrypt();
 
-            Assert.AreEqual(FileAttributes.Encrypted, fileData.Attributes & FileAttributes.Encrypted);
+            Assert.That(fileData.Attributes & FileAttributes.Encrypted, Is.EqualTo(FileAttributes.Encrypted));
         }
 
         [Test]
@@ -361,7 +361,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.LastAccessTimeUtc;
 
-            Assert.AreEqual(lastAccessTime.ToUniversalTime(), result);
+            Assert.That(result, Is.EqualTo(lastAccessTime.ToUniversalTime()));
         }
 
         [Test]
@@ -372,7 +372,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.LastAccessTimeUtc;
 
-            Assert.AreEqual(MockFileData.DefaultDateTimeOffset.UtcDateTime, result);
+            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.UtcDateTime));
         }
 
         [Test]
@@ -389,7 +389,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var newUtcTime = DateTime.UtcNow;
             fileInfo.LastAccessTimeUtc = newUtcTime;
 
-            Assert.AreEqual(newUtcTime, fileInfo.LastAccessTimeUtc);
+            Assert.That(fileInfo.LastAccessTimeUtc, Is.EqualTo(newUtcTime));
         }
 
         [Test]
@@ -400,7 +400,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.LastWriteTime;
 
-            Assert.AreEqual(MockFileData.DefaultDateTimeOffset.LocalDateTime, result);
+            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.LocalDateTime));
         }
 
         [Test]
@@ -416,7 +416,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.LastWriteTimeUtc;
 
-            Assert.AreEqual(lastWriteTime.ToUniversalTime(), result);
+            Assert.That(result, Is.EqualTo(lastWriteTime.ToUniversalTime()));
         }
 
         [Test]
@@ -427,7 +427,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.LastWriteTimeUtc;
 
-            Assert.AreEqual(MockFileData.DefaultDateTimeOffset.UtcDateTime, result);
+            Assert.That(result, Is.EqualTo(MockFileData.DefaultDateTimeOffset.UtcDateTime));
         }
 
         [Test]
@@ -444,7 +444,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var newUtcTime = DateTime.UtcNow;
             fileInfo.LastWriteTimeUtc = newUtcTime;
 
-            Assert.AreEqual(newUtcTime, fileInfo.LastWriteTimeUtc);
+            Assert.That(fileInfo.LastWriteTimeUtc, Is.EqualTo(newUtcTime));
         }
 
         [Test]
@@ -455,7 +455,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.Extension;
 
-            Assert.AreEqual(".txt", result);
+            Assert.That(result, Is.EqualTo(".txt"));
         }
 
         [Test]
@@ -466,7 +466,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.Extension;
 
-            Assert.AreEqual(string.Empty, result);
+            Assert.That(result, Is.Empty);
         }
 
         [Test]
@@ -476,7 +476,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.DirectoryName;
 
-            Assert.AreEqual(XFS.Path(@"c:\temp\level1\level2"), result);
+            Assert.That(result, Is.EqualTo(XFS.Path(@"c:\temp\level1\level2")));
         }
 
         [Test]
@@ -486,7 +486,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.Directory;
 
-            Assert.AreEqual(XFS.Path(@"c:\temp\level1\level2"), result.FullName);
+            Assert.That(result.FullName, Is.EqualTo(XFS.Path(@"c:\temp\level1\level2")));
         }
 
         [Test]
@@ -502,7 +502,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 stream.Read(result, 0, 2);
             }
 
-            Assert.AreEqual(new byte[] { 1, 2 }, result);
+            Assert.That(result, Is.EqualTo(new byte[] { 1, 2 }));
         }
 
         [Test]
@@ -518,7 +518,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 result = streamReader.ReadToEnd();
             }
 
-            Assert.AreEqual(@"line 1\r\nline 2", result);
+            Assert.That(result, Is.EqualTo(@"line 1\r\nline 2"));
         }
 
         [Test]
@@ -534,8 +534,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileInfo.MoveTo(destinationPath);
 
-            Assert.AreEqual(fileInfo.DirectoryName, destinationFolder);
-            Assert.AreEqual(fileInfo.FullName, destinationPath);
+            Assert.That(fileInfo.DirectoryName, Is.EqualTo(destinationFolder));
+            Assert.That(fileInfo.FullName, Is.EqualTo(destinationPath));
         }
 
         [Test]
@@ -573,7 +573,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileInfo.MoveTo(destination);
 
-            Assert.AreEqual(fileInfo.FullName, destination);
+            Assert.That(fileInfo.FullName, Is.EqualTo(destination));
             Assert.True(fileInfo.Exists);
         }
 
@@ -635,7 +635,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileInfo = fileSystem.FileInfo.New(sourceFilePath);
             fileInfo.MoveTo(destFilePath);
 
-            Assert.AreEqual(fileInfo.FullName, destFilePath);
+            Assert.That(fileInfo.FullName, Is.EqualTo(destFilePath));
             Assert.True(fileInfo.Exists);
         }
 
@@ -664,7 +664,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockFileInfo = new MockFileInfo(new MockFileSystem(), filePath);
 
             //Assert
-            Assert.AreEqual(filePath, mockFileInfo.ToString());
+            Assert.That(mockFileInfo.ToString(), Is.EqualTo(filePath));
         }
 
 
@@ -682,7 +682,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockFileInfo.FullName;
 
             // Assert
-            Assert.AreEqual(expected, result);
+            Assert.That(result, Is.EqualTo(expected));
         }
 
         public static IEnumerable<string[]> New_Paths_NormalizePaths_Cases
@@ -711,7 +711,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Act
             fileInfo1.Replace(path2, null);
 
-            Assert.AreEqual("1", fileInfo2.OpenText().ReadToEnd());
+            Assert.That(fileInfo2.OpenText().ReadToEnd(), Is.EqualTo("1"));
         }
 
         [Test]
@@ -730,7 +730,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Act
             fileInfo1.Replace(path2, path3);
 
-            Assert.AreEqual("2", fileInfo3.OpenText().ReadToEnd());
+            Assert.That(fileInfo3.OpenText().ReadToEnd(), Is.EqualTo("2"));
         }
 
         [Test]
@@ -764,7 +764,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Act
             var result = fileInfo1.Replace(path2, null);
 
-            Assert.AreEqual(fileInfo2.FullName, result.FullName);
+            Assert.That(result.FullName, Is.EqualTo(fileInfo2.FullName));
         }
 
         [Test]
@@ -892,7 +892,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 LastAccessTimeUtc = date
             };
 
-            Assert.AreEqual(date, fileInfo.LastAccessTimeUtc);
+            Assert.That(fileInfo.LastAccessTimeUtc, Is.EqualTo(date));
             Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastAccessTimeUtc.Kind);
         }
 
@@ -908,7 +908,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 LastAccessTime = date
             };
 
-            Assert.AreEqual(date, fileInfo.LastAccessTime);
+            Assert.That(fileInfo.LastAccessTime, Is.EqualTo(date));
             Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastAccessTime.Kind);
         }
 
@@ -924,7 +924,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 CreationTimeUtc = date
             };
 
-            Assert.AreEqual(date, fileInfo.CreationTimeUtc);
+            Assert.That(fileInfo.CreationTimeUtc, Is.EqualTo(date));
             Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.CreationTimeUtc.Kind);
         }
 
@@ -940,7 +940,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 CreationTime = date
             };
 
-            Assert.AreEqual(date, fileInfo.CreationTime);
+            Assert.That(fileInfo.CreationTime, Is.EqualTo(date));
             Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.CreationTime.Kind);
         }
 
@@ -956,7 +956,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 LastWriteTimeUtc = date
             };
 
-            Assert.AreEqual(date, fileInfo.LastWriteTimeUtc);
+            Assert.That(fileInfo.LastWriteTimeUtc, Is.EqualTo(date));
             Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastWriteTimeUtc.Kind);
         }
 
@@ -972,7 +972,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 LastWriteTime = date
             };
 
-            Assert.AreEqual(date, fileInfo.LastWriteTime);
+            Assert.That(fileInfo.LastWriteTime, Is.EqualTo(date));
             Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastWriteTime.Kind);
         }
     }

@@ -23,8 +23,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             IFileSystemInfo fileSystemInfo = fileSystem.Directory.CreateSymbolicLink(path, pathToTarget);
 
             // Assert
-            Assert.AreEqual(path, fileSystemInfo.FullName);
-            Assert.AreEqual(pathToTarget, fileSystemInfo.LinkTarget);
+            Assert.That(fileSystemInfo.FullName, Is.EqualTo(path));
+            Assert.That(fileSystemInfo.LinkTarget, Is.EqualTo(pathToTarget));
         }
 
         [Test]
@@ -41,8 +41,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             IDirectoryInfo directoryInfo = fileSystem.DirectoryInfo.New(path);
 
             // Assert
-            Assert.AreEqual(path, directoryInfo.FullName);
-            Assert.AreEqual(pathToTarget, directoryInfo.LinkTarget);
+            Assert.That(directoryInfo.FullName, Is.EqualTo(path));
+            Assert.That(directoryInfo.LinkTarget, Is.EqualTo(pathToTarget));
         }
 
         [Test]
@@ -221,7 +221,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.Directory.ResolveLinkTarget("foo", false);
 
-            Assert.AreEqual("bar", result.Name);
+            Assert.That(result.Name, Is.EqualTo("bar"));
         }
 
         [Test]
@@ -242,7 +242,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.Directory.ResolveLinkTarget(previousPath, true);
 
-            Assert.AreEqual("bar", result.Name);
+            Assert.That(result.Name, Is.EqualTo("bar"));
         }
 
         [Test]
@@ -275,7 +275,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.Directory.ResolveLinkTarget("foo1", false);
 
-            Assert.AreEqual("foo", result.Name);
+            Assert.That(result.Name, Is.EqualTo("foo"));
         }
 
         [Test]

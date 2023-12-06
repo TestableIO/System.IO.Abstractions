@@ -24,9 +24,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             file.AppendAllLines(path, new[] { "line 1", "line 2", "line 3" });
 
             // Assert
-            Assert.AreEqual(
-                "Demo text contentline 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine,
-                file.ReadAllText(path));
+            Assert.That(file.ReadAllText(path),
+              Is.EqualTo("Demo text contentline 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine));
         }
 
         [Test]
@@ -44,9 +43,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             file.AppendAllLines(path, new[] { "line 1", "line 2", "line 3" });
 
             // Assert
-            Assert.AreEqual(
-                "line 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine,
-                file.ReadAllText(path));
+            Assert.That(file.ReadAllText(path),
+              Is.EqualTo("line 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine));
         }
 
         [Test]
@@ -138,9 +136,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             await file.AppendAllLinesAsync(path, new[] { "line 1", "line 2", "line 3" });
 
             // Assert
-            Assert.AreEqual(
-                "Demo text contentline 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine,
-                file.ReadAllText(path));
+            Assert.That(file.ReadAllText(path),
+              Is.EqualTo("Demo text contentline 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine));
         }
 
         [Test]
@@ -158,10 +155,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             await file.AppendAllLinesAsync(path, new[] { "line 1", "line 2", "line 3" });
 
             // Assert
-            Assert.AreEqual(
-                "line 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine,
-                file.ReadAllText(path)
-            );
+            Assert.That(file.ReadAllText(path),
+              Is.EqualTo("line 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine));
         }
 
         [Test]
@@ -183,7 +178,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             );
 
             // Assert
-            Assert.AreEqual("line 1", fileSystem.File.ReadAllText(path));
+            Assert.That(fileSystem.File.ReadAllText(path), Is.EqualTo("line 1"));
         }
 
         [Test]

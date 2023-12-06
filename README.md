@@ -75,7 +75,7 @@ public void MyComponent_Validate_ShouldThrowNotSupportedExceptionIfTestingIsNotA
     catch (NotSupportedException ex)
     {
         // Assert
-        Assert.AreEqual("We can't go on together. It's not me, it's you.", ex.Message);
+        Assert.That(ex.Message, Is.EqualTo("We can't go on together. It's not me, it's you."));
         return;
     }
 

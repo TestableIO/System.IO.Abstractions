@@ -38,7 +38,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.GetFile(@"c:\something\demo.txt");
 
-            Assert.AreEqual(file1, result);
+            Assert.That(result, Is.EqualTo(file1));
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.GetFile(@"c:\SomeThing\DEMO.txt");
 
-            Assert.AreEqual(file1, result);
+            Assert.That(result, Is.EqualTo(file1));
         }
 
         [Test]
@@ -84,7 +84,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileCount = fs.Directory.GetFiles(alternateParentPath).Length;
             var fileExists = fs.File.Exists(alternatePath);
 
-            Assert.AreEqual(1, fileCount);
+            Assert.That(fileCount, Is.EqualTo(1));
             Assert.IsTrue(fileExists);
         }
 
@@ -282,7 +282,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFileFromEmbeddedResource(XFS.Path(@"C:\TestFile.txt"), Assembly.GetExecutingAssembly(), "System.IO.Abstractions.TestingHelpers.Tests.TestFiles.TestFile.txt");
             var result = fileSystem.GetFile(XFS.Path(@"C:\TestFile.txt"));
 
-            Assert.AreEqual(new UTF8Encoding().GetBytes("This is a test file."), result.Contents);
+            Assert.That(result.Contents, Is.EqualTo(new UTF8Encoding().GetBytes("This is a test file.")));
         }
 
         [Test]
@@ -372,7 +372,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.AllNodes;
 
-            Assert.AreEqual(expectedNodes, result);
+            Assert.That(result, Is.EqualTo(expectedNodes));
         }
 
         [Test]
@@ -421,7 +421,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var ae = Assert.Throws<ArgumentException>(() =>
                 new MockFileSystem(null, "non-rooted")
             );
-            Assert.AreEqual("currentDirectory", ae.ParamName);
+            Assert.That(ae.ParamName, Is.EqualTo("currentDirectory"));
         }
 
         [Test]
@@ -442,7 +442,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var path = XFS.Path(@"C:\root");
             var fileSystem = new TestFileSystem(new TestFileSystemWatcherFactory());
             var watcher = fileSystem.FileSystemWatcher.New(path);
-            Assert.AreEqual(path, watcher.Path);
+            Assert.That(watcher.Path, Is.EqualTo(path));
         }
 
         [Test]

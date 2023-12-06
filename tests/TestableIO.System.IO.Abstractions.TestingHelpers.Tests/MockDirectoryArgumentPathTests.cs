@@ -39,7 +39,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(wrapped);
-            Assert.AreEqual("path", exception.ParamName);
+            Assert.That(exception.ParamName, Is.EqualTo("path"));
         }
     }
 }

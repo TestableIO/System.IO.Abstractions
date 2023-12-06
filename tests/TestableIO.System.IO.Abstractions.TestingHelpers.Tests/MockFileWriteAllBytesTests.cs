@@ -30,7 +30,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.File.WriteAllBytes(path, fileContent);
 
-            Assert.AreEqual(fileContent, fileSystem.GetFile(path).Contents);
+            Assert.That(fileSystem.GetFile(path).Contents, Is.EqualTo(fileContent));
         }
 
         [Test]
@@ -146,7 +146,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             await fileSystem.File.WriteAllBytesAsync(path, fileContent);
 
-            Assert.AreEqual(fileContent, fileSystem.GetFile(path).Contents);
+            Assert.That(fileSystem.GetFile(path).Contents, Is.EqualTo(fileContent));
         }
 
         [Test]

@@ -65,7 +65,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
             var text = fileSystem.File.ReadAllText(FilePath);
-            Assert.AreEqual("AAAAA", text);
+            Assert.That(text, Is.EqualTo("AAAAA"));
         }
 
         [Test]

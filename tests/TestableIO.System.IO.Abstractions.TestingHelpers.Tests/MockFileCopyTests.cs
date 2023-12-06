@@ -24,7 +24,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.Copy(sourceFileName, destFileName, true);
 
             var copyResult = fileSystem.GetFile(destFileName);
-            Assert.AreEqual(copyResult.Contents, sourceContents.Contents);
+            Assert.That(sourceContents.Contents, Is.EqualTo(copyResult.Contents));
         }
 
         [Test]
@@ -39,9 +39,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var sourceFileInfo = mockFileSystem.FileInfo.New(sourceFileName);
             var destFileInfo = mockFileSystem.FileInfo.New(destFileName);
-            Assert.AreEqual(sourceFileInfo.LastWriteTime, destFileInfo.LastWriteTime);
+            Assert.That(destFileInfo.LastWriteTime, Is.EqualTo(sourceFileInfo.LastWriteTime));
             Assert.LessOrEqual(DateTime.Now - destFileInfo.CreationTime, TimeSpan.FromSeconds(1));
-            Assert.AreEqual(destFileInfo.CreationTime, destFileInfo.LastAccessTime);
+            Assert.That(destFileInfo.LastAccessTime, Is.EqualTo(destFileInfo.CreationTime));
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 binaryWriter.Write("Modified");
             }
 
-            Assert.AreEqual("Original", mockFileSystem.File.ReadAllText(destFileName));
+            Assert.That(mockFileSystem.File.ReadAllText(destFileName), Is.EqualTo("Original"));
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.Copy(sourceFileName, destFileName, false);
 
             var copyResult = fileSystem.GetFile(destFileName);
-            Assert.AreEqual(copyResult.Contents, sourceContents.Contents);
+            Assert.That(sourceContents.Contents, Is.EqualTo(copyResult.Contents));
         }
 
         [Test]

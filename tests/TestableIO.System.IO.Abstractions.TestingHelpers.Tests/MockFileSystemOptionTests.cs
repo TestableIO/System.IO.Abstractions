@@ -18,7 +18,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.Directory.Exists(fileSystem.Path.GetTempPath());
 
-            Assert.AreEqual(createTempDir, result);
+            Assert.That(result, Is.EqualTo(createTempDir));
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.Directory.GetCurrentDirectory();
 
-            Assert.AreEqual(currentDirectory, result);
+            Assert.That(result, Is.EqualTo(currentDirectory));
         }
     }
 }
