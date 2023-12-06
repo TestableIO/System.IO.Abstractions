@@ -26,7 +26,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileStreamFactory.Create(@"c:\existing.txt", fileMode, FileAccess.Write);
 
             // Assert
-            Assert.IsNotNull(result);
+            Assert.That(result, Is.Not.Null);
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileStreamFactory.Create(XFS.Path(@"c:\not_existing.txt"), fileMode, FileAccess.Write);
 
             // Assert
-            Assert.IsNotNull(result);
+            Assert.That(result, Is.Not.Null);
         }
 
         [Test]

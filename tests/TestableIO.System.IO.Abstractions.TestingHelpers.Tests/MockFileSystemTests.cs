@@ -215,7 +215,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var actualResults = fileSystem.DriveInfo.GetDrives();
 
-            Assert.IsNotNull(actualResults);
+            Assert.That(actualResults, Is.Not.Null);
         }
 
         [Test]
