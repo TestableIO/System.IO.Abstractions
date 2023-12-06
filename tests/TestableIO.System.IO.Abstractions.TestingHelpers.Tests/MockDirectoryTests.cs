@@ -1533,7 +1533,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.IsTrue(fileSystem.File.Exists(XFS.Path(@"C:\NewLocation\Data\someFile.txt")));
         }
 
-        [TestCaseSource("GetPathsForMoving")]
+        [TestCaseSource(nameof(GetPathsForMoving))]
         public void MockDirectory_Move_ShouldMoveDirectories(string sourceDirName, string destDirName, string filePathOne, string filePathTwo)
         {
             // Arrange

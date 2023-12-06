@@ -401,7 +401,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         }
 
-        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForDifferentEncoding")]
+        [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForDifferentEncoding))]
         public void MockFile_WriteAllLinesGeneric_ShouldWriteTheCorrectContent(IMockFileDataAccessor fileSystem, Action action, string expectedContent)
         {
             // Arrange
@@ -415,7 +415,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(actualContent, Is.EqualTo(expectedContent));
         }
 
-        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForNullPath")]
+        [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForNullPath))]
         public void MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentNullExceptionIfPathIsNull(TestDelegate action)
         {
             // Arrange
@@ -445,7 +445,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.ParamName, Does.StartWith("encoding"));
         }
 
-        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForIllegalPath")]
+        [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForIllegalPath))]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentExceptionIfPathContainsIllegalCharacters(TestDelegate action)
         {
@@ -460,7 +460,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."));
         }
 
-        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForPathIsDirectory")]
+        [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForPathIsDirectory))]
         public void MockFile_WriteAllLinesGeneric_ShouldThrowAnUnauthorizedAccessExceptionIfPathIsOneDirectory(TestDelegate action, string path)
         {
             // Arrange
@@ -475,7 +475,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.Message, Is.EqualTo(expectedMessage));
         }
 
-        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForFileIsReadOnly")]
+        [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForFileIsReadOnly))]
         public void MockFile_WriteAllLinesGeneric_ShouldThrowOneUnauthorizedAccessExceptionIfFileIsReadOnly(TestDelegate action, string path)
         {
             // Arrange
@@ -490,7 +490,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.Message, Is.EqualTo(expectedMessage));
         }
 
-        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForContentsIsNull")]
+        [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForContentsIsNull))]
         public void MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentNullExceptionIfContentsIsNull(TestDelegate action)
         {
             // Arrange
@@ -506,7 +506,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
 #if FEATURE_ASYNC_FILE
-        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForDifferentEncodingAsync")]
+        [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForDifferentEncodingAsync))]
         public void MockFile_WriteAllLinesAsyncGeneric_ShouldWriteTheCorrectContent(IMockFileDataAccessor fileSystem, Action action, string expectedContent)
         {
             // Arrange
@@ -520,7 +520,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(actualContent, Is.EqualTo(expectedContent));
         }
 
-        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForNullPathAsync")]
+        [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForNullPathAsync))]
         public void MockFile_WriteAllLinesAsyncGeneric_ShouldThrowAnArgumentNullExceptionIfPathIsNull(AsyncTestDelegate action)
         {
             // Arrange
@@ -550,7 +550,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.ParamName, Does.StartWith("encoding"));
         }
 
-        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForIllegalPathAsync")]
+        [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForIllegalPathAsync))]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public void MockFile_WriteAllLinesAsyncGeneric_ShouldThrowAnArgumentExceptionIfPathContainsIllegalCharacters(AsyncTestDelegate action)
         {
@@ -565,7 +565,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."));
         }
 
-        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForPathIsDirectoryAsync")]
+        [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForPathIsDirectoryAsync))]
         public void MockFile_WriteAllLinesAsyncGeneric_ShouldThrowAnUnauthorizedAccessExceptionIfPathIsOneDirectory(AsyncTestDelegate action, string path)
         {
             // Arrange
@@ -580,7 +580,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.Message, Is.EqualTo(expectedMessage));
         }
 
-        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForFileIsReadOnlyAsync")]
+        [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForFileIsReadOnlyAsync))]
         public void MockFile_WriteAllLinesAsyncGeneric_ShouldThrowOneUnauthorizedAccessExceptionIfFileIsReadOnly(AsyncTestDelegate action, string path)
         {
             // Arrange
@@ -595,7 +595,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(exception.Message, Is.EqualTo(expectedMessage));
         }
 
-        [TestCaseSource(typeof(TestDataForWriteAllLines), "ForContentsIsNullAsync")]
+        [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForContentsIsNullAsync))]
         public void MockFile_WriteAllLinesAsyncGeneric_ShouldThrowAnArgumentNullExceptionIfContentsIsNull(AsyncTestDelegate action)
         {
             // Arrange

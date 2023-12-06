@@ -184,7 +184,7 @@
             };
         }
 
-        [TestCaseSource(typeof(MockFileWriteAllTextTests), "GetEncodingsWithExpectedBytes")]
+        [TestCaseSource(typeof(MockFileWriteAllTextTests), nameof(GetEncodingsWithExpectedBytes))]
         public void MockFile_WriteAllText_Encoding_ShouldWriteTextFileToMemoryFileSystem(KeyValuePair<Encoding, byte[]> encodingsWithContents)
         {
             // Arrange
@@ -375,7 +375,7 @@
             Assert.ThrowsAsync<DirectoryNotFoundException>(action);
         }
 
-        [TestCaseSource(typeof(MockFileWriteAllTextTests), "GetEncodingsWithExpectedBytes")]
+        [TestCaseSource(typeof(MockFileWriteAllTextTests), nameof(GetEncodingsWithExpectedBytes))]
         public async Task MockFile_WriteAllTextAsync_Encoding_ShouldWriteTextFileToMemoryFileSystem(KeyValuePair<Encoding, byte[]> encodingsWithContents)
         {
             // Arrange

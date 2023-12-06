@@ -392,7 +392,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return new ASCIIEncoding();
         }
 
-        [TestCaseSource(typeof(MockFileTests), "GetEncodingsForReadAllText")]
+        [TestCaseSource(typeof(MockFileTests), nameof(GetEncodingsForReadAllText))]
         public void MockFile_ReadAllText_ShouldReturnTheOriginalContentWhenTheFileContainsDifferentEncodings(Encoding encoding)
         {
             // Arrange

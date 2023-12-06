@@ -19,7 +19,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        [TestCaseSource("MockDirectoryInfo_GetExtension_Cases")]
+        [TestCaseSource(nameof(MockDirectoryInfo_GetExtension_Cases))]
         public void MockDirectoryInfo_GetExtension_ShouldReturnEmptyString(string directoryPath)
         {
             // Arrange
@@ -42,7 +42,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        [TestCaseSource("MockDirectoryInfo_Exists_Cases")]
+        [TestCaseSource(nameof(MockDirectoryInfo_Exists_Cases))]
         public void MockDirectoryInfo_Exists(string path, bool expected)
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>

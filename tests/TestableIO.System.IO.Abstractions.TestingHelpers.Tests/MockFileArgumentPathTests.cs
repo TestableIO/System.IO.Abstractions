@@ -55,7 +55,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return fs => fs.Encrypt(null);
         }
 
-        [TestCaseSource("GetFileSystemActionsForArgumentNullException")]
+        [TestCaseSource(nameof(GetFileSystemActionsForArgumentNullException))]
         public void Operations_ShouldThrowArgumentNullExceptionIfPathIsNull(Action<IFile> action)
         {
             // Arrange
