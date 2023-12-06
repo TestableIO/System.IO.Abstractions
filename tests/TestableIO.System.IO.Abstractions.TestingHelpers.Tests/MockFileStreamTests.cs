@@ -241,9 +241,9 @@
         {
             var result = MockFileStream.Null;
 
-            Assert.AreEqual(result.Name, ".");
-            Assert.AreEqual(result.Length, 0);
-            Assert.AreEqual(result.IsAsync, true);
+            Assert.That(result.Name, Is.EqualTo("."));
+            Assert.That(result.Length, Is.Zero);
+            Assert.That(result.IsAsync, Is.True);
         }
     }
 }
