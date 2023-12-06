@@ -253,7 +253,7 @@
             );
 
             // Assert
-            Assert.IsFalse(fileSystem.File.Exists(path));
+            Assert.That(fileSystem.File.Exists(path), Is.False);
         }
 
         [Test]

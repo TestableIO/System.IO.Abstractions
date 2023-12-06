@@ -478,7 +478,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.IsPathRooted(XFS.Path("directory\\file.txt"));
 
             //Assert
-            Assert.IsFalse(result);
+            Assert.That(result, Is.False);
         }
 
         [Test]
@@ -491,7 +491,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = mockPath.IsPathRooted(XFS.Path("directory\\..\\file.txt"));
 
             //Assert
-            Assert.IsFalse(result);
+            Assert.That(result, Is.False);
         }
 
         [Test]
@@ -567,7 +567,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
             bool result = fileSystem.Path.Exists(null);
 
-            Assert.IsFalse(result);
+            Assert.That(result, Is.False);
         }
 
         [Test]
@@ -614,7 +614,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string path = "some-path";
             bool result = fileSystem.Path.Exists(path);
 
-            Assert.IsFalse(result);
+            Assert.That(result, Is.False);
         }
 #endif
 

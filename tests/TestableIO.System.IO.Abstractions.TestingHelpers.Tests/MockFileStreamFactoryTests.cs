@@ -172,7 +172,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileStream = fileSystem.FileStream.New("file.txt", FileMode.CreateNew, FileAccess.Write);
 
             // Assert
-            Assert.IsFalse(fileStream.CanRead);
+            Assert.That(fileStream.CanRead, Is.False);
         }
     }
 }

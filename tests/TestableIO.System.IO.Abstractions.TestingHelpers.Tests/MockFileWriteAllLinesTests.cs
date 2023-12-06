@@ -395,7 +395,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 );
 
                 // Assert
-                Assert.IsFalse(fileSystem.File.Exists(path));
+                Assert.That(fileSystem.File.Exists(path), Is.False);
             }
 #endif
 

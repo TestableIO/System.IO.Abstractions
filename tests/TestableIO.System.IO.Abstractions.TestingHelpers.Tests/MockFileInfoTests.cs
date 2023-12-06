@@ -47,7 +47,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.Exists;
 
-            Assert.IsFalse(result);
+            Assert.That(result, Is.False);
         }
 
         [Test]
@@ -61,7 +61,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileInfo.Exists;
 
-            Assert.IsFalse(result);
+            Assert.That(result, Is.False);
         }
 
         [Test]
@@ -805,7 +805,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(path1, new MockFileData("1"));
 
             // Assert
-            Assert.IsFalse(fileInfo.Exists);
+            Assert.That(fileInfo.Exists, Is.False);
         }
 
         [Test]
@@ -864,7 +864,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileInfo.Delete();
 
             // Assert
-            Assert.IsFalse(fileInfo.Exists);
+            Assert.That(fileInfo.Exists, Is.False);
         }
 
         [Test]

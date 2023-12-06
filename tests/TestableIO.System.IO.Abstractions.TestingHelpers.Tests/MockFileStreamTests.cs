@@ -100,7 +100,7 @@
             // Act
             var stream = new MockFileStream(fileSystem, filePath, FileMode.Open, FileAccess.Read);
 
-            Assert.IsFalse(stream.CanWrite);
+            Assert.That(stream.CanWrite, Is.False);
             Assert.Throws<NotSupportedException>(() => stream.WriteByte(1));
         }
 

@@ -477,7 +477,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(path);
 
             // Assert
-            Assert.IsFalse(directoryInfo.Exists);
+            Assert.That(directoryInfo.Exists, Is.False);
         }
 
         [Test]
@@ -535,7 +535,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             directoryInfo.Delete();
 
             // Assert
-            Assert.IsFalse(directoryInfo.Exists);
+            Assert.That(directoryInfo.Exists, Is.False);
         }
 
         [Test]
@@ -549,7 +549,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             directoryInfo.Delete(true);
 
             // Assert
-            Assert.IsFalse(directoryInfo.Exists);
+            Assert.That(directoryInfo.Exists, Is.False);
         }
 
         [Test]

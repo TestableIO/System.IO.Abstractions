@@ -55,7 +55,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.File.Exists("/SomeThing/DEMO.txt");
 
             // Assert
-            Assert.IsFalse(result);
+            Assert.That(result, Is.False);
         }
 
         [Test]
@@ -72,7 +72,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.File.Exists(XFS.Path(@"C:\SomeThing\DoesNotExist.gif"));
 
             // Assert
-            Assert.IsFalse(result);
+            Assert.That(result, Is.False);
         }
 
         [Test]
@@ -85,7 +85,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.File.Exists(null);
 
             // Assert
-            Assert.IsFalse(result);
+            Assert.That(result, Is.False);
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.File.Exists(string.Empty);
 
             // Assert
-            Assert.IsFalse(result);
+            Assert.That(result, Is.False);
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.File.Exists(@"C:""*/:<>?|abc");
 
             // Assert
-            Assert.IsFalse(result);
+            Assert.That(result, Is.False);
         }
 
         [Test]
@@ -128,7 +128,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.File.Exists(XFS.Path(@"C:\something\"));
 
             // Assert
-            Assert.IsFalse(result);
+            Assert.That(result, Is.False);
         }
     }
 }

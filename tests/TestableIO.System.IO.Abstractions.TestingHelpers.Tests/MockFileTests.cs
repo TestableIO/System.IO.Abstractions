@@ -701,7 +701,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var stream = fileSystem.File.OpenRead(filePath);
 
             // Assert
-            Assert.IsFalse(stream.CanWrite);
+            Assert.That(stream.CanWrite, Is.False);
             Assert.Throws<NotSupportedException>(() => stream.WriteByte(0));
         }
     }

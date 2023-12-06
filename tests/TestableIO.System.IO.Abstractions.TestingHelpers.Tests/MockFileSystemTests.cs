@@ -330,7 +330,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.RemoveFile(@"C:\file.txt");
 
-            Assert.False(fileSystem.FileExists(@"C:\file.txt"));
+            Assert.That(fileSystem.FileExists(@"C:\file.txt"), Is.False);
         }
 
         [Test]
