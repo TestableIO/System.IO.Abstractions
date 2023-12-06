@@ -235,7 +235,7 @@
             var result1 = MockFileStream.Null;
             var result2 = MockFileStream.Null;
 
-            Assert.AreSame(result1, result2);
+            Assert.That(result1, Is.SameAs(result2));
         }
 
         [Test]
