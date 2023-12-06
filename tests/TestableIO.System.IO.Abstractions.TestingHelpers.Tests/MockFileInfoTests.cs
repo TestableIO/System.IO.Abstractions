@@ -246,7 +246,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileInfo.IsReadOnly = false;
 
-            Assert.AreNotEqual(FileAttributes.ReadOnly, fileData.Attributes & FileAttributes.ReadOnly);
+            Assert.That(fileData.Attributes & FileAttributes.ReadOnly, Is.Not.EqualTo(FileAttributes.ReadOnly));
         }
 
         [Test]
@@ -345,7 +345,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileInfo.Decrypt();
 
-            Assert.AreNotEqual(FileAttributes.Encrypted, fileData.Attributes & FileAttributes.Encrypted);
+            Assert.That(fileData.Attributes & FileAttributes.Encrypted, Is.Not.EqualTo(FileAttributes.Encrypted));
         }
 
         [Test]
@@ -893,7 +893,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             };
 
             Assert.That(fileInfo.LastAccessTimeUtc, Is.EqualTo(date));
-            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastAccessTimeUtc.Kind);
+            Assert.That(fileInfo.LastAccessTimeUtc.Kind, Is.Not.EqualTo(DateTimeKind.Unspecified));
         }
 
         [Test]
@@ -909,7 +909,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             };
 
             Assert.That(fileInfo.LastAccessTime, Is.EqualTo(date));
-            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastAccessTime.Kind);
+            Assert.That(fileInfo.LastAccessTime.Kind, Is.Not.EqualTo(DateTimeKind.Unspecified));
         }
 
         [Test]
@@ -925,7 +925,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             };
 
             Assert.That(fileInfo.CreationTimeUtc, Is.EqualTo(date));
-            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.CreationTimeUtc.Kind);
+            Assert.That(fileInfo.CreationTimeUtc.Kind, Is.Not.EqualTo(DateTimeKind.Unspecified));
         }
 
         [Test]
@@ -941,7 +941,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             };
 
             Assert.That(fileInfo.CreationTime, Is.EqualTo(date));
-            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.CreationTime.Kind);
+            Assert.That(fileInfo.CreationTime.Kind, Is.Not.EqualTo(DateTimeKind.Unspecified));
         }
 
         [Test]
@@ -957,7 +957,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             };
 
             Assert.That(fileInfo.LastWriteTimeUtc, Is.EqualTo(date));
-            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastWriteTimeUtc.Kind);
+            Assert.That(fileInfo.LastWriteTimeUtc.Kind, Is.Not.EqualTo(DateTimeKind.Unspecified));
         }
 
         [Test]
@@ -973,7 +973,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             };
 
             Assert.That(fileInfo.LastWriteTime, Is.EqualTo(date));
-            Assert.AreNotEqual(DateTimeKind.Unspecified, fileInfo.LastWriteTime.Kind);
+            Assert.That(fileInfo.LastWriteTime.Kind, Is.Not.EqualTo(DateTimeKind.Unspecified));
         }
     }
 }

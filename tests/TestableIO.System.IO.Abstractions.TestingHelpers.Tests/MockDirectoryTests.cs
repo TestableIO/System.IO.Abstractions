@@ -1671,7 +1671,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             // Precondition
-            Assert.AreNotEqual(directory, fileSystem.Directory.GetCurrentDirectory());
+            Assert.That(fileSystem.Directory.GetCurrentDirectory(), Is.Not.EqualTo(directory));
 
             fileSystem.Directory.SetCurrentDirectory(directory);
 

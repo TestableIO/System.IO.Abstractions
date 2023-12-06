@@ -610,7 +610,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var attributes = fileSystem.File.GetAttributes(filePath);
 
             // Assert
-            Assert.AreNotEqual(FileAttributes.Encrypted, attributes & FileAttributes.Encrypted);
+            Assert.That(attributes & FileAttributes.Encrypted, Is.Not.EqualTo(FileAttributes.Encrypted));
         }
 
         [Test]
