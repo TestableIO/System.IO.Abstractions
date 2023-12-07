@@ -12,7 +12,7 @@ namespace System.IO.Abstractions.Tests
 
             var result = fileSystem.DirectoryInfo.Wrap(null);
             
-            Assert.IsNull(result);
+            Assert.That(result, Is.Null);
         }
     }
 }

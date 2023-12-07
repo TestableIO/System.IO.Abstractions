@@ -21,9 +21,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = file.ReadAllBytes(XFS.Path(@"c:\something\other.gif"));
 
-            CollectionAssert.AreEqual(
-                new byte[] { 0x21, 0x58, 0x3f, 0xa9 },
-                result);
+            Assert.That(result,
+                Is.EqualTo(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }));
         }
 
         [Test]
@@ -36,7 +35,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.File.WriteAllBytes(path, fileContent);
 
-            Assert.AreEqual(fileContent, fileSystem.File.ReadAllBytes(path));
+            Assert.That(fileSystem.File.ReadAllBytes(path), Is.EqualTo(fileContent));
         }
 
         [Test]
@@ -60,7 +59,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.AddFile(path, new MockFileData(data));
 
-            Assert.AreEqual(data, fileSystem.File.ReadAllBytes(altPath));
+            Assert.That(fileSystem.File.ReadAllBytes(altPath), Is.EqualTo(data));
         }
 
         [Test]
@@ -81,7 +80,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 firstRead[i] += 1;
             }
 
-            Assert.AreNotEqual(firstRead, secondRead);
+            Assert.That(firstRead, Is.Not.EqualTo(secondRead));
         }
 
 #if FEATURE_ASYNC_FILE
@@ -98,9 +97,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = await file.ReadAllBytesAsync(XFS.Path(@"c:\something\other.gif"));
 
-            CollectionAssert.AreEqual(
-                new byte[] { 0x21, 0x58, 0x3f, 0xa9 },
-                result);
+            Assert.That(result,
+                Is.EqualTo(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }));
         }
 
         [Test]
@@ -113,7 +111,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.File.WriteAllBytes(path, fileContent);
 
-            Assert.AreEqual(fileContent, await fileSystem.File.ReadAllBytesAsync(path));
+            Assert.That(await fileSystem.File.ReadAllBytesAsync(path), Is.EqualTo(fileContent));
         }
 
         [Test]
@@ -148,7 +146,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.AddFile(path, new MockFileData(data));
 
-            Assert.AreEqual(data, await fileSystem.File.ReadAllBytesAsync(altPath));
+            Assert.That(await fileSystem.File.ReadAllBytesAsync(altPath), Is.EqualTo(data));
         }
 #endif
     }

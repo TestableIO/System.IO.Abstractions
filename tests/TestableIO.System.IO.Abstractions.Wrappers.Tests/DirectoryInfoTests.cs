@@ -13,7 +13,7 @@ namespace System.IO.Abstractions.Tests
             var current = wrapperFilesystem.Directory.GetCurrentDirectory();
             var root = wrapperFilesystem.DirectoryInfo.New(current).Root;
             var rootsParent = root.Parent;
-            Assert.IsNull(rootsParent);
+            Assert.That(rootsParent, Is.Null);
         }
     }
 }

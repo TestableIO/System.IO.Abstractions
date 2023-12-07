@@ -228,7 +228,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             using (fileSystem.File.Create(filePath, 4096, FileOptions.DeleteOnClose))
             {
-                Assert.IsTrue(fileSystem.File.Exists(filePath));
+                Assert.That(fileSystem.File.Exists(filePath), Is.True);
             }
         }
 
@@ -244,7 +244,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             {
             }
 
-            Assert.IsFalse(fileSystem.File.Exists(filePath));
+            Assert.That(fileSystem.File.Exists(filePath), Is.False);
         }
 
         [Test]
@@ -258,7 +258,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             using (var stream = fileSystem.File.Create(filePath, 4096, FileOptions.Encrypted))
             {
                 var fileInfo = fileSystem.FileInfo.New(filePath);
-                Assert.IsFalse(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted));
+                Assert.That(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted), Is.False);
             }
         }
 
@@ -275,7 +275,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
             var fileInfo = fileSystem.FileInfo.New(filePath);
-            Assert.IsTrue(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted));
+            Assert.That(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted), Is.True);
         }
 
         [Test]

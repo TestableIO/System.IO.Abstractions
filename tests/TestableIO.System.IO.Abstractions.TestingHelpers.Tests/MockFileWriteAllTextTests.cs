@@ -26,9 +26,7 @@
             fileSystem.File.WriteAllText(path, fileContent);
 
             // Assert
-            Assert.AreEqual(
-                fileContent,
-                fileSystem.GetFile(path).TextContents);
+            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(fileContent));
         }
 
         [Test]
@@ -46,7 +44,7 @@
             fileSystem.File.WriteAllText(path, "bar");
 
             // Assert
-            Assert.AreEqual("bar", fileSystem.GetFile(path).TextContents);
+            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo("bar"));
         }
 
         [Test]
@@ -184,7 +182,7 @@
             };
         }
 
-        [TestCaseSource(typeof(MockFileWriteAllTextTests), "GetEncodingsWithExpectedBytes")]
+        [TestCaseSource(typeof(MockFileWriteAllTextTests), nameof(GetEncodingsWithExpectedBytes))]
         public void MockFile_WriteAllText_Encoding_ShouldWriteTextFileToMemoryFileSystem(KeyValuePair<Encoding, byte[]> encodingsWithContents)
         {
             // Arrange
@@ -200,7 +198,7 @@
 
             // Assert
             var actualBytes = fileSystem.GetFile(path).Contents;
-            Assert.AreEqual(expectedBytes, actualBytes);
+            Assert.That(actualBytes, Is.EqualTo(expectedBytes));
         }
 
         [Test]
@@ -219,9 +217,7 @@
             fileSystem.File.WriteAllLines(path, fileContent);
 
             // Assert
-            Assert.AreEqual(
-                expected,
-                fileSystem.GetFile(path).TextContents);
+            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(expected));
         }
 
 #if FEATURE_ASYNC_FILE
@@ -238,9 +234,7 @@
             await fileSystem.File.WriteAllTextAsync(path, fileContent);
 
             // Assert
-            Assert.AreEqual(
-                fileContent,
-                fileSystem.GetFile(path).TextContents);
+            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(fileContent));
         }
 
         [Test]
@@ -259,7 +253,7 @@
             );
 
             // Assert
-            Assert.IsFalse(fileSystem.File.Exists(path));
+            Assert.That(fileSystem.File.Exists(path), Is.False);
         }
 
         [Test]
@@ -277,7 +271,7 @@
             await fileSystem.File.WriteAllTextAsync(path, "bar");
 
             // Assert
-            Assert.AreEqual("bar", fileSystem.GetFile(path).TextContents);
+            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo("bar"));
         }
 
         [Test]
@@ -375,7 +369,7 @@
             Assert.ThrowsAsync<DirectoryNotFoundException>(action);
         }
 
-        [TestCaseSource(typeof(MockFileWriteAllTextTests), "GetEncodingsWithExpectedBytes")]
+        [TestCaseSource(typeof(MockFileWriteAllTextTests), nameof(GetEncodingsWithExpectedBytes))]
         public async Task MockFile_WriteAllTextAsync_Encoding_ShouldWriteTextFileToMemoryFileSystem(KeyValuePair<Encoding, byte[]> encodingsWithContents)
         {
             // Arrange
@@ -391,7 +385,7 @@
 
             // Assert
             var actualBytes = fileSystem.GetFile(path).Contents;
-            Assert.AreEqual(expectedBytes, actualBytes);
+            Assert.That(actualBytes, Is.EqualTo(expectedBytes));
         }
 
         [Test]
@@ -410,9 +404,7 @@
             await fileSystem.File.WriteAllLinesAsync(path, fileContent);
 
             // Assert
-            Assert.AreEqual(
-                expected,
-                fileSystem.GetFile(path).TextContents);
+            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(expected));
         }
 #endif
     }

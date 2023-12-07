@@ -33,12 +33,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             memoryStream.Dispose();
 
             // Assert
-            Assert.AreEqual(
-                expected,
-                fileSystem.GetFile(path).Contents);
-            Assert.AreEqual(
-                content,
-                fileSystem.File.ReadAllBytes(path));
+            Assert.That(fileSystem.GetFile(path).Contents, Is.EqualTo(expected));
+            Assert.That(fileSystem.File.ReadAllBytes(path), Is.EqualTo(content));
         }
     }
 }

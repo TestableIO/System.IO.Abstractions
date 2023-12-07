@@ -16,7 +16,7 @@ namespace System.IO.Abstractions.Tests
             var result = wrapperFilesystem.Directory.GetParent(root);
 
             // Assert
-            Assert.IsNull(result);
+            Assert.That(result, Is.Null);
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace System.IO.Abstractions.Tests
             var result = wrapperFilesystem.Directory.GetParent(subfolder);
 
             // Assert
-            Assert.AreEqual(root, result.FullName);
+            Assert.That(result.FullName, Is.EqualTo(root));
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace System.IO.Abstractions.Tests
             var result = wrapperFilesystem.Directory.GetParent(file);
 
             // Assert
-            Assert.AreEqual(subfolder, result.FullName);
+            Assert.That(result.FullName, Is.EqualTo(subfolder));
         }
     }
 }

@@ -66,55 +66,55 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [WindowsOnly(WindowsSpecifics.Drives)]
         public void TrimSlashes_DriveRoot_PreserveTrailingSlash()
         {
-            Assert.AreEqual(@"c:\", @"c:\".TrimSlashes());
+            Assert.That(@"c:\".TrimSlashes(), Is.EqualTo(@"c:\"));
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.Drives)]
         public void TrimSlashes_DriveRoot_AppendsTrailingSlash()
         {
-            Assert.AreEqual(@"c:\", @"c:".TrimSlashes());
+            Assert.That(@"c:".TrimSlashes(), Is.EqualTo(@"c:\"));
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.Drives)]
         public void TrimSlashes_DriveRoot_TrimsExcessTrailingSlash()
         {
-            Assert.AreEqual(@"c:\", @"c:\\".TrimSlashes());
+            Assert.That(@"c:\\".TrimSlashes(), Is.EqualTo(@"c:\"));
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.Drives)]
         public void TrimSlashes_DriveRoot_NormalizeAlternateSlash()
         {
-            Assert.AreEqual(@"c:\", @"c:/".TrimSlashes());
+            Assert.That(@"c:/".TrimSlashes(), Is.EqualTo(@"c:\"));
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.Drives)]
         public void TrimSlashes_RootedPath_TrimsAllTrailingSlashes()
         {
-            Assert.AreEqual(@"c:\x", @"c:\x\".TrimSlashes());
+            Assert.That(@"c:\x\".TrimSlashes(), Is.EqualTo(@"c:\x"));
         }
 
         [Test]
         public void TrimSlashes_RootedPath_DoNotAlterPathWithoutTrailingSlashes()
         {
-            Assert.AreEqual(XFS.Path(@"c:\x"), XFS.Path(@"c:\x").TrimSlashes());
+            Assert.That(XFS.Path(@"c:\x").TrimSlashes(), Is.EqualTo(XFS.Path(@"c:\x")));
         }
 
         [Test]
         [UnixOnly(UnixSpecifics.SlashRoot)]
         public void TrimSlashes_SlashRoot_TrimsExcessTrailingSlash()
         {
-            Assert.AreEqual("/", "//".TrimSlashes());
+            Assert.That("//".TrimSlashes(), Is.EqualTo("/"));
         }
 
         [Test]
         [UnixOnly(UnixSpecifics.SlashRoot)]
         public void TrimSlashes_SlashRoot_PreserveSlashRoot()
         {
-            Assert.AreEqual("/", "/".TrimSlashes());
+            Assert.That("/".TrimSlashes(), Is.EqualTo("/"));
         }
 
         [TestCase(@"\\unc\folder\file.txt", @"\\unc\folder\file.txt")]
@@ -122,7 +122,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [WindowsOnly(WindowsSpecifics.UNCPaths)]
         public void NormalizeSlashes_KeepsUNCPathPrefix(string path, string expectedValue)
         {
-            Assert.AreEqual(expectedValue, path.NormalizeSlashes());
+            Assert.That(path.NormalizeSlashes(), Is.EqualTo(expectedValue));
         }
     }
 }

@@ -24,8 +24,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             IFileSystemInfo fileSystemInfo = fileSystem.File.CreateSymbolicLink(path, pathToTarget);
 
             // Assert
-            Assert.AreEqual(path, fileSystemInfo.FullName);
-            Assert.AreEqual(pathToTarget, fileSystemInfo.LinkTarget);
+            Assert.That(fileSystemInfo.FullName, Is.EqualTo(path));
+            Assert.That(fileSystemInfo.LinkTarget, Is.EqualTo(pathToTarget));
         }
 
         [Test]
@@ -43,8 +43,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             IFileInfo directoryInfo = fileSystem.FileInfo.New(path);
 
             // Assert
-            Assert.AreEqual(path, directoryInfo.FullName);
-            Assert.AreEqual(pathToTarget, directoryInfo.LinkTarget);
+            Assert.That(directoryInfo.FullName, Is.EqualTo(path));
+            Assert.That(directoryInfo.LinkTarget, Is.EqualTo(pathToTarget));
         }
 
         [Test]
@@ -239,7 +239,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.CreateSymbolicLink(path, pathToTarget);
 
             var attributes = fileSystem.FileInfo.New(path).Attributes;
-            Assert.IsTrue(attributes.HasFlag(FileAttributes.ReparsePoint));
+            Assert.That(attributes.HasFlag(FileAttributes.ReparsePoint), Is.True);
         }
 
         [Test]
@@ -251,7 +251,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.File.ResolveLinkTarget("foo", false);
 
-            Assert.AreEqual("bar", result.Name);
+            Assert.That(result.Name, Is.EqualTo("bar"));
         }
 
         [Test]
@@ -272,7 +272,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.File.ResolveLinkTarget(previousPath, true);
 
-            Assert.AreEqual("bar", result.Name);
+            Assert.That(result.Name, Is.EqualTo("bar"));
         }
 
         [Test]
@@ -305,7 +305,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.File.ResolveLinkTarget("foo1", false);
 
-            Assert.AreEqual("foo", result.Name);
+            Assert.That(result.Name, Is.EqualTo("foo"));
         }
 
         [Test]

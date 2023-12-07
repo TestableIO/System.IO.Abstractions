@@ -25,7 +25,8 @@
             cut.Flush();
 
             // Assert
-            CollectionAssert.AreEqual(new byte[] { 255 }, fileSystem.GetFile(filepath).Contents);
+            Assert.That(fileSystem.GetFile(filepath).Contents,
+                Is.EqualTo(new byte[] { 255 }));
         }
 
         [Test]
@@ -46,7 +47,8 @@
             await cut.FlushAsync();
 
             // Assert
-            CollectionAssert.AreEqual(new byte[] { 255 }, fileSystem.GetFile(filepath).Contents);
+            Assert.That(fileSystem.GetFile(filepath).Contents,
+                Is.EqualTo(new byte[] { 255 }));
         }
 
         [Test]
@@ -66,9 +68,9 @@
             stream.Dispose();
             var fileCount3 = fileSystem.Directory.GetFiles(directory, "*").Length;
 
-            Assert.AreEqual(1, fileCount1, "File should have existed");
-            Assert.AreEqual(0, fileCount2, "File should have been deleted");
-            Assert.AreEqual(0, fileCount3, "Disposing stream should not have resurrected the file");
+            Assert.That(fileCount1, Is.EqualTo(1), "File should have existed");
+            Assert.That(fileCount2, Is.EqualTo(0), "File should have been deleted");
+            Assert.That(fileCount3, Is.EqualTo(0), "Disposing stream should not have resurrected the file");
         }
 
         [Test]
@@ -98,7 +100,7 @@
             // Act
             var stream = new MockFileStream(fileSystem, filePath, FileMode.Open, FileAccess.Read);
 
-            Assert.IsFalse(stream.CanWrite);
+            Assert.That(stream.CanWrite, Is.False);
             Assert.Throws<NotSupportedException>(() => stream.WriteByte(1));
         }
 
@@ -203,7 +205,7 @@
                 stream.Flush();
 
                 // Assert
-                Assert.AreEqual(200, stream.Position);
+                Assert.That(stream.Position, Is.EqualTo(200));
             }
         }
 
@@ -223,7 +225,7 @@
                 stream.Flush(flushToDisk);
 
                 // Assert
-                Assert.AreEqual(200, stream.Position);
+                Assert.That(stream.Position, Is.EqualTo(200));
             }
         }
 
@@ -233,7 +235,7 @@
             var result1 = MockFileStream.Null;
             var result2 = MockFileStream.Null;
 
-            Assert.AreSame(result1, result2);
+            Assert.That(result1, Is.SameAs(result2));
         }
 
         [Test]
@@ -241,9 +243,9 @@
         {
             var result = MockFileStream.Null;
 
-            Assert.AreEqual(result.Name, ".");
-            Assert.AreEqual(result.Length, 0);
-            Assert.AreEqual(result.IsAsync, true);
+            Assert.That(result.Name, Is.EqualTo("."));
+            Assert.That(result.Length, Is.Zero);
+            Assert.That(result.IsAsync, Is.True);
         }
     }
 }

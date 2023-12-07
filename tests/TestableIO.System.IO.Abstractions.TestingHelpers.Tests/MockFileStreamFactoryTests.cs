@@ -26,7 +26,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileStreamFactory.Create(@"c:\existing.txt", fileMode, FileAccess.Write);
 
             // Assert
-            Assert.IsNotNull(result);
+            Assert.That(result, Is.Not.Null);
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileStreamFactory.Create(XFS.Path(@"c:\not_existing.txt"), fileMode, FileAccess.Write);
 
             // Assert
-            Assert.IsNotNull(result);
+            Assert.That(result, Is.Not.Null);
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
             var text = fileSystem.File.ReadAllText(FilePath);
-            Assert.AreEqual("AAAAA", text);
+            Assert.That(text, Is.EqualTo("AAAAA"));
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileStreamFactory.Create("some_random_file.txt", fileMode);
 
             // Assert
-            Assert.True(fileSystem.File.Exists(XFS.Path("./some_random_file.txt")));
+            Assert.That(fileSystem.File.Exists(XFS.Path("./some_random_file.txt")), Is.True);
         }
 
         [Test]
@@ -172,7 +172,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileStream = fileSystem.FileStream.New("file.txt", FileMode.CreateNew, FileAccess.Write);
 
             // Assert
-            Assert.IsFalse(fileStream.CanRead);
+            Assert.That(fileStream.CanRead, Is.False);
         }
     }
 }

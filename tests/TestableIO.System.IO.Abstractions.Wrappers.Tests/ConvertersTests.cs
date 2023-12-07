@@ -55,21 +55,21 @@ namespace System.IO.Abstractions.Tests
         [Test]
         public void WrapFileSystemInfo_handles_null_FileSystemInfo()
         {
-            Assert.IsNull(Converters.WrapFileSystemInfo(null, new FileSystem()));
+            Assert.That(Converters.WrapFileSystemInfo(null, new FileSystem()), Is.Null);
         }
 
         [Test]
         public void WrapDirectories_handles_null_DirectoryInfo()
         {
             List<DirectoryInfo> directoryInfos = new() { null };
-            Assert.IsNull(directoryInfos.WrapDirectories(new FileSystem()).Single());
+            Assert.That(directoryInfos.WrapDirectories(new FileSystem()).Single(), Is.Null);
         }
 
         [Test]
         public void WrapFiles_handles_null_FileInfo()
         {
             List<FileInfo> fileInfos = new() { null };
-            Assert.IsNull(fileInfos.WrapFiles(new FileSystem()).Single());
+            Assert.That(fileInfos.WrapFiles(new FileSystem()).Single(), Is.Null);
         }
     }
 }

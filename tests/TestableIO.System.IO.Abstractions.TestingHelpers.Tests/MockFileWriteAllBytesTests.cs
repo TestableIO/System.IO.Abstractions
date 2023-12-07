@@ -30,7 +30,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.File.WriteAllBytes(path, fileContent);
 
-            Assert.AreEqual(fileContent, fileSystem.GetFile(path).Contents);
+            Assert.That(fileSystem.GetFile(path).Contents, Is.EqualTo(fileContent));
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var readAgain = fileSystem.File.ReadAllBytes(path);
 
-            Assert.AreNotEqual(fileContent, readAgain);
+            Assert.That(fileContent, Is.Not.EqualTo(readAgain));
         }
 
 
@@ -133,7 +133,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             );
 
             // Assert
-            Assert.IsFalse(fileSystem.File.Exists(path));
+            Assert.That(fileSystem.File.Exists(path), Is.False);
         }
 
         [Test]
@@ -146,7 +146,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             await fileSystem.File.WriteAllBytesAsync(path, fileContent);
 
-            Assert.AreEqual(fileContent, fileSystem.GetFile(path).Contents);
+            Assert.That(fileSystem.GetFile(path).Contents, Is.EqualTo(fileContent));
         }
 
         [Test]

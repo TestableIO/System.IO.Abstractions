@@ -29,9 +29,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadAllLines(XFS.Path(@"c:\something\demo.txt"));
 
             // Assert
-            CollectionAssert.AreEqual(
-                new[] { "Demo", "text", "content", "value" },
-                result);
+            Assert.That(result,
+                Is.EqualTo(new[] { "Demo", "text", "content", "value" }));
         }
 
         [Test]
@@ -51,9 +50,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadAllLines(XFS.Path(@"c:\something\demo.txt"), Encoding.BigEndianUnicode);
 
             // Assert
-            CollectionAssert.AreEqual(
-                new[] { "Hello", "there", "Bob", "Bob!" },
-                result);
+            Assert.That(result,
+                Is.EqualTo(new[] { "Hello", "there", "Bob", "Bob!" }));
         }
 
         [Test]
@@ -104,9 +102,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = await file.ReadAllLinesAsync(XFS.Path(@"c:\something\demo.txt"));
 
             // Assert
-            CollectionAssert.AreEqual(
-                new[] { "Demo", "text", "content", "value" },
-                result);
+            Assert.That(result, Is.EqualTo(new[] { "Demo", "text", "content", "value" }));
         }
 
         [Test]
@@ -126,9 +122,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = await file.ReadAllLinesAsync(XFS.Path(@"c:\something\demo.txt"), Encoding.BigEndianUnicode);
 
             // Assert
-            CollectionAssert.AreEqual(
-                new[] { "Hello", "there", "Bob", "Bob!" },
-                result);
+            Assert.That(result, Is.EqualTo(new[] { "Hello", "there", "Bob", "Bob!" }));
         }
 
         [Test]
@@ -177,9 +171,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 result.Add(line);
 
             // Assert
-            CollectionAssert.AreEqual(
-                new[] { "Demo", "text", "content", "value" },
-                result);
+            Assert.That(result, Is.EqualTo(new[] { "Demo", "text", "content", "value" }));
         }
 
         [Test]
@@ -202,9 +194,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 result.Add(line);
 
             // Assert
-            CollectionAssert.AreEqual(
-                new[] { "Hello", "there", "Bob", "Bob!" },
-                result);
+            Assert.That(result, Is.EqualTo(new[] { "Hello", "there", "Bob", "Bob!" }));
         }
 
         [Test]

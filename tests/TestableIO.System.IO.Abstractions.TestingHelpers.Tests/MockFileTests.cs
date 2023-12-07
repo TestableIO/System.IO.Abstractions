@@ -42,7 +42,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetCreationTime(path);
 
             // Assert
-            Assert.AreEqual(creationTime, result);
+            Assert.That(result, Is.EqualTo(creationTime));
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetCreationTime(path);
 
             // Assert
-            Assert.AreEqual(creationTime, result);
+            Assert.That(result, Is.EqualTo(creationTime));
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetCreationTimeUtc(path);
 
             // Assert
-            Assert.AreEqual(creationTime.ToUniversalTime(), result);
+            Assert.That(result, Is.EqualTo(creationTime.ToUniversalTime()));
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetLastAccessTime(path);
 
             // Assert
-            Assert.AreEqual(lastAccessTime, result);
+            Assert.That(result, Is.EqualTo(lastAccessTime));
         }
 
         [Test]
@@ -122,7 +122,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetLastAccessTime(path);
 
             // Assert
-            Assert.AreEqual(lastAccessTime, result);
+            Assert.That(result, Is.EqualTo(lastAccessTime));
         }
 
         [Test]
@@ -142,7 +142,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetLastAccessTimeUtc(path);
 
             // Assert
-            Assert.AreEqual(lastAccessTime.ToUniversalTime(), result);
+            Assert.That(result, Is.EqualTo(lastAccessTime.ToUniversalTime()));
         }
 
         [Test]
@@ -162,7 +162,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetLastWriteTime(path);
 
             // Assert
-            Assert.AreEqual(lastWriteTime, result);
+            Assert.That(result, Is.EqualTo(lastWriteTime));
         }
 
         static void ExecuteDefaultValueTest(Func<MockFile, string, DateTime> getDateValue)
@@ -316,7 +316,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetLastWriteTime(path);
 
             // Assert
-            Assert.AreEqual(lastWriteTime, result);
+            Assert.That(result, Is.EqualTo(lastWriteTime));
         }
 
         [Test]
@@ -336,7 +336,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetLastWriteTimeUtc(path);
 
             // Assert
-            Assert.AreEqual(lastWriteTime.ToUniversalTime(), result);
+            Assert.That(result, Is.EqualTo(lastWriteTime.ToUniversalTime()));
         }
 
         [Test]
@@ -355,9 +355,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadAllText(XFS.Path(@"c:\something\demo.txt"));
 
             // Assert
-            Assert.AreEqual(
-                "Demo text content",
-                result);
+            Assert.That(result, Is.EqualTo("Demo text content"));
         }
 
         [Test]
@@ -377,7 +375,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadAllText(XFS.Path(@"c:\something\demo.txt"), Encoding.BigEndianUnicode);
 
             // Assert
-            Assert.AreEqual(text, result);
+            Assert.That(result, Is.EqualTo(text));
         }
 
         public static IEnumerable<Encoding> GetEncodingsForReadAllText()
@@ -392,7 +390,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return new ASCIIEncoding();
         }
 
-        [TestCaseSource(typeof(MockFileTests), "GetEncodingsForReadAllText")]
+        [TestCaseSource(typeof(MockFileTests), nameof(GetEncodingsForReadAllText))]
         public void MockFile_ReadAllText_ShouldReturnTheOriginalContentWhenTheFileContainsDifferentEncodings(Encoding encoding)
         {
             // Arrange
@@ -408,7 +406,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualText = fileSystem.File.ReadAllText(path);
 
             // Assert
-            Assert.AreEqual(text, actualText);
+            Assert.That(actualText, Is.EqualTo(text));
         }
 
         [Test]
@@ -479,9 +477,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string filePath = XFS.Path(@"c:\something\demo.txt");
             string fileContent = "this is some content";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { { filePath, new MockFileData(fileContent) } });
-            Assert.AreEqual(1, fileSystem.AllFiles.Count());
+            Assert.That(fileSystem.AllFiles.Count(), Is.EqualTo(1));
             fileSystem.File.Delete(filePath);
-            Assert.AreEqual(0, fileSystem.AllFiles.Count());
+            Assert.That(fileSystem.AllFiles.Count(), Is.EqualTo(0));
         }
 
         [Test]
@@ -591,7 +589,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var attributes = fileSystem.File.GetAttributes(filePath);
 
             // Assert
-            Assert.AreEqual(FileAttributes.Encrypted, attributes & FileAttributes.Encrypted);
+            Assert.That(attributes & FileAttributes.Encrypted, Is.EqualTo(FileAttributes.Encrypted));
         }
 
         [Test]
@@ -612,7 +610,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var attributes = fileSystem.File.GetAttributes(filePath);
 
             // Assert
-            Assert.AreNotEqual(FileAttributes.Encrypted, attributes & FileAttributes.Encrypted);
+            Assert.That(attributes & FileAttributes.Encrypted, Is.Not.EqualTo(FileAttributes.Encrypted));
         }
 
         [Test]
@@ -628,7 +626,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Act
             fileSystem.File.Replace(path1, path2, null);
 
-            Assert.AreEqual("1", fileSystem.File.ReadAllText(path2));
+            Assert.That(fileSystem.File.ReadAllText(path2), Is.EqualTo("1"));
         }
 
         [Test]
@@ -645,8 +643,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Act
             fileSystem.File.Replace(path1, path2, path3);
 
-            Assert.AreEqual("2", fileSystem.File.ReadAllText(path3));
-        }
+            Assert.That(fileSystem.File.ReadAllText(path3), Is.EqualTo("2"));
+        } 
 
         [Test]
         public void MockFile_Replace_ShouldThrowIfDirectoryOfBackupPathDoesNotExist()
@@ -703,7 +701,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var stream = fileSystem.File.OpenRead(filePath);
 
             // Assert
-            Assert.IsFalse(stream.CanWrite);
+            Assert.That(stream.CanWrite, Is.False);
             Assert.Throws<NotSupportedException>(() => stream.WriteByte(0));
         }
     }

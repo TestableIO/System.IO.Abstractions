@@ -55,7 +55,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return fs => fs.Encrypt(null);
         }
 
-        [TestCaseSource("GetFileSystemActionsForArgumentNullException")]
+        [TestCaseSource(nameof(GetFileSystemActionsForArgumentNullException))]
         public void Operations_ShouldThrowArgumentNullExceptionIfPathIsNull(Action<IFile> action)
         {
             // Arrange
@@ -66,7 +66,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var exception = Assert.Throws<ArgumentNullException>(wrapped);
-            Assert.AreEqual("path", exception.ParamName);
+            Assert.That(exception.ParamName, Is.EqualTo("path"));
         }
     }
 }

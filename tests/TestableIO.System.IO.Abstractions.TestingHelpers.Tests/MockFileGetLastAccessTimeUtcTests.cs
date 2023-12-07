@@ -30,7 +30,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastAccessTime = fileSystem.File.GetLastAccessTimeUtc(@"c:\does\not\exist.txt");
 
             // Assert
-            Assert.AreEqual(new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc), actualLastAccessTime);
+            Assert.That(actualLastAccessTime, Is.EqualTo(new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc)));
         }
 
         [Test]

@@ -19,7 +19,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        [TestCaseSource("MockDirectoryInfo_GetExtension_Cases")]
+        [TestCaseSource(nameof(MockDirectoryInfo_GetExtension_Cases))]
         public void MockDirectoryInfo_GetExtension_ShouldReturnEmptyString(string directoryPath)
         {
             // Arrange
@@ -30,7 +30,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = directoryInfo.Extension;
 
             // Assert
-            Assert.AreEqual(string.Empty, result);
+            Assert.That(result, Is.Empty);
         }
 
         public static IEnumerable<object[]> MockDirectoryInfo_Exists_Cases
@@ -42,7 +42,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        [TestCaseSource("MockDirectoryInfo_Exists_Cases")]
+        [TestCaseSource(nameof(MockDirectoryInfo_Exists_Cases))]
         public void MockDirectoryInfo_Exists(string path, bool expected)
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -106,7 +106,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var files = directoryInfo.GetFiles();
 
             // Assert
-            Assert.AreEqual(fileName, files[0].FullName);
+            Assert.That(files[0].FullName, Is.EqualTo(fileName));
         }
 
         [Test]
@@ -129,7 +129,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var files = directoryInfo.GetFiles();
 
             // Assert
-            Assert.AreEqual(fileName, files[0].FullName);
+            Assert.That(files[0].FullName, Is.EqualTo(fileName));
         }
 
         [Test]
@@ -263,7 +263,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = directoryInfo.Parent;
 
             // Assert
-            Assert.AreEqual(XFS.Path(@"c:\a\b"), result.FullName);
+            Assert.That(result.FullName, Is.EqualTo(XFS.Path(@"c:\a\b")));
         }
 
         [Test]
@@ -287,7 +287,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\temp\folder"));
 
             // Assert
-            Assert.AreEqual(new[] { "b.txt", "c.txt" }, directoryInfo.EnumerateFiles().ToList().Select(x => x.Name).ToArray());
+            Assert.That(directoryInfo.EnumerateFiles().ToList().Select(x => x.Name).ToArray(), Is.EqualTo(new[] { "b.txt", "c.txt" }));
         }
 
         [Test]
@@ -309,7 +309,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var directories = directoryInfo.EnumerateDirectories().Select(a => a.Name).ToArray();
 
             // Assert
-            Assert.AreEqual(new[] { "b", "c" }, directories);
+            Assert.That(directories, Is.EqualTo(new[] { "b", "c" }));
         }
 
         [TestCase(@"\\unc\folder", @"\\unc\folder")]
@@ -327,7 +327,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualFullName = directoryInfo.FullName;
 
             // Assert
-            Assert.AreEqual(expectedFullName, actualFullName);
+            Assert.That(actualFullName, Is.EqualTo(expectedFullName));
         }
 
         [TestCase(@"c:\temp\\folder", @"c:\temp\folder")]
@@ -345,7 +345,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualFullName = directoryInfo.FullName;
 
             // Assert
-            Assert.AreEqual(expectedFullName, actualFullName);
+            Assert.That(actualFullName, Is.EqualTo(expectedFullName));
         }
 
         [TestCase(@"c:\temp\folder  ", @"c:\temp\folder")]
@@ -360,7 +360,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualFullName = directoryInfo.FullName;
 
             // Assert
-            Assert.AreEqual(expectedFullName, actualFullName);
+            Assert.That(actualFullName, Is.EqualTo(expectedFullName));
         }
 
         [Test]
@@ -377,7 +377,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             directoryInfo.MoveTo(destination);
 
             // Assert
-            Assert.AreEqual(destination, directoryInfo.FullName);
+            Assert.That(directoryInfo.FullName, Is.EqualTo(destination));
         }
 
         [TestCase(@"c:\temp\\folder ", @"folder")]
@@ -392,7 +392,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualName = directoryInfo.Name;
 
             // Assert
-            Assert.AreEqual(expectedName, actualName);
+            Assert.That(actualName, Is.EqualTo(expectedName));
         }
 
         [TestCase(@"c:\", @"c:\")]
@@ -407,7 +407,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualName = directoryInfo.Name;
 
             // Assert
-            Assert.AreEqual(expectedName, actualName);
+            Assert.That(actualName, Is.EqualTo(expectedName));
         }
 
         [Test]
@@ -462,7 +462,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockDirectoryInfo = new MockDirectoryInfo(new MockFileSystem(), directoryPath);
 
             // Assert
-            Assert.AreEqual(directoryPath, mockDirectoryInfo.ToString());
+            Assert.That(mockDirectoryInfo.ToString(), Is.EqualTo(directoryPath));
         }
 
         [Test]
@@ -477,7 +477,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(path);
 
             // Assert
-            Assert.IsFalse(directoryInfo.Exists);
+            Assert.That(directoryInfo.Exists, Is.False);
         }
 
         [Test]
@@ -493,7 +493,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             directoryInfo.Refresh();
 
             // Assert
-            Assert.IsTrue(directoryInfo.Exists);
+            Assert.That(directoryInfo.Exists, Is.True);
         }
 
         [Test]
@@ -507,7 +507,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             directoryInfo.Create();
 
             // Assert
-            Assert.IsTrue(directoryInfo.Exists);
+            Assert.That(directoryInfo.Exists, Is.True);
         }
 
         [Test, WindowsOnly(WindowsSpecifics.AccessControlLists)]
@@ -521,7 +521,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             directoryInfo.Create(new DirectorySecurity());
 
             // Assert
-            Assert.IsTrue(directoryInfo.Exists);
+            Assert.That(directoryInfo.Exists, Is.True);
         }
 
         [Test]
@@ -535,7 +535,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             directoryInfo.Delete();
 
             // Assert
-            Assert.IsFalse(directoryInfo.Exists);
+            Assert.That(directoryInfo.Exists, Is.False);
         }
 
         [Test]
@@ -549,7 +549,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             directoryInfo.Delete(true);
 
             // Assert
-            Assert.IsFalse(directoryInfo.Exists);
+            Assert.That(directoryInfo.Exists, Is.False);
         }
 
         [Test]
@@ -563,7 +563,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             directoryInfo.MoveTo(XFS.Path(@"c:\abc2"));
 
             // Assert
-            Assert.IsTrue(directoryInfo.Exists);
+            Assert.That(directoryInfo.Exists, Is.True);
         }
 
         [Test]
@@ -582,7 +582,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             directoryInfo.LastAccessTime = lastAccessTime;
 
             // Assert
-            Assert.AreEqual(lastAccessTime, directoryInfo.LastAccessTime);
+            Assert.That(directoryInfo.LastAccessTime, Is.EqualTo(lastAccessTime));
         }
 
         [Test]

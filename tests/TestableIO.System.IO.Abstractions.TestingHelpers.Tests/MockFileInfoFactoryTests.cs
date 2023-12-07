@@ -21,7 +21,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileInfoFactory.New(@"c:\a.txt");
 
             // Assert
-            Assert.IsNotNull(result);
+            Assert.That(result, Is.Not.Null);
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileInfoFactory.New(@"c:\foo.txt");
 
             // Assert
-            Assert.IsNotNull(result);
+            Assert.That(result, Is.Not.Null);
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.FileInfo.Wrap(null);
 
-            Assert.IsNull(result);
+            Assert.That(result, Is.Null);
         }
     }
 }
