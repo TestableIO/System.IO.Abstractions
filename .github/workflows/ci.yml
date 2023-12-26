@@ -122,7 +122,7 @@ jobs:
         run: sleep 30s
         shell: bash
       - name: Comment on relevant PRs and issues
-        uses: apexskier/github-release-commenter@v1.3.2
+        uses: apexskier/github-release-commenter@v1.3.6
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           comment-template: |
