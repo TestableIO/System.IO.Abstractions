@@ -30,4 +30,14 @@
     -->
     <EnableUnsafeBinaryFormatterSerialization Condition="'$(TargetFramework)' == 'net8.0'">true</EnableUnsafeBinaryFormatterSerialization>
   </PropertyGroup>
+  <!--
+    Snapshooter is currently broken when referencing NUnit 4 from a .NET 4.6.2 project.
+    The following blocks work around this by referencing NUnit 3 in that case.
+  -->
+  <PropertyGroup>
+    <_Net462NUnitVersion>3.14.0</_Net462NUnitVersion>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
+    <PackageReference Update="NUnit" Version="$(_Net462NUnitVersion)" />
+  </ItemGroup>
 </Project>
