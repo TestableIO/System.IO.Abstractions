@@ -40,7 +40,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 return null;
             }
 
-            return new MockDirectoryInfo(mockFileSystem, directoryInfo.Name);
+            return new MockDirectoryInfo(mockFileSystem, directoryInfo.FullName);
         }
     }
 }

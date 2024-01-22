@@ -39,7 +39,7 @@
                 return null;
             }
 
-            return new MockFileInfo(mockFileSystem, fileInfo.Name);
+            return new MockFileInfo(mockFileSystem, fileInfo.FullName);
         }
     }
 }

@@ -51,5 +51,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             Assert.That(result, Is.Null);
         }
+
+        [Test]
+        public void MockFileInfoFactory_Wrap_ShouldKeepNameAndFullName()
+        {
+            var fs = new MockFileSystem();
+            var fileInfo = new FileInfo(@"C:\subfolder\file");
+            var wrappedFileInfo = fs.FileInfo.Wrap(fileInfo);
+
+            Assert.That(wrappedFileInfo.FullName, Is.EqualTo(fileInfo.FullName));
+            Assert.That(wrappedFileInfo.Name, Is.EqualTo(fileInfo.Name));
+        }
     }
 }
