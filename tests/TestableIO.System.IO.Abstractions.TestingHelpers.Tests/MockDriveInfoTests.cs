@@ -84,5 +84,124 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.That(mockDriveInfo.ToString(), Is.EqualTo(expectedPath));
         }
+
+        [Test]
+        public void MockDriveInfo_AvailableFreeSpace_ShouldReturnAvailableFreeSpaceOfDriveInMemoryFileSystem()
+        {
+            // Arrange
+            var availableFreeSpace = 1024L;
+            var driveData = new MockDriveData { AvailableFreeSpace = availableFreeSpace };
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDrive("C:", driveData);
+            var mockDriveInfo = new MockDriveInfo(fileSystem, "C:");
+
+            // Act
+            var result = mockDriveInfo.AvailableFreeSpace;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(availableFreeSpace));
+        }
+
+        [Test]
+        public void MockDriveInfo_DriveFormat_ShouldReturnDriveFormatOfDriveInMemoryFileSystem()
+        {
+            // Arrange
+            var driveFormat = "NTFS";
+            var driveData = new MockDriveData { DriveFormat = driveFormat };
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDrive("C:", driveData);
+            var mockDriveInfo = new MockDriveInfo(fileSystem, "C:");
+
+            // Act
+            var result = mockDriveInfo.DriveFormat;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(driveFormat));
+        }
+
+        [Test]
+        public void MockDriveInfo_DriveType_ShouldReturnDriveTypeOfDriveInMemoryFileSystem()
+        {
+            // Arrange
+            var driveType = DriveType.Fixed;
+            var driveData = new MockDriveData { DriveType = driveType };
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDrive("C:", driveData);
+            var mockDriveInfo = new MockDriveInfo(fileSystem, "C:");
+
+            // Act
+            var result = mockDriveInfo.DriveType;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(driveType));
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void MockDriveInfo_IsReady_ShouldReturnIsReadyOfDriveInMemoryFileSystem(bool isReady)
+        {
+            // Arrange
+            var driveData = new MockDriveData { IsReady = isReady };
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDrive("C:", driveData);
+            var mockDriveInfo = new MockDriveInfo(fileSystem, "C:");
+
+            // Act
+            var result = mockDriveInfo.IsReady;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(isReady));
+        }
+
+        [Test]
+        public void MockDriveInfo_TotalFreeSpace_ShouldReturnTotalFreeSpaceOfDriveInMemoryFileSystem()
+        {
+            // Arrange
+            var totalFreeSpace = 4096L;
+            var driveData = new MockDriveData { TotalFreeSpace = totalFreeSpace };
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDrive("C:", driveData);
+            var mockDriveInfo = new MockDriveInfo(fileSystem, "C:");
+
+            // Act
+            var result = mockDriveInfo.TotalFreeSpace;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(totalFreeSpace));
+        }
+
+        [Test]
+        public void MockDriveInfo_TotalSize_ShouldReturnTotalSizeOfDriveInMemoryFileSystem()
+        {
+            // Arrange
+            var totalSize = 8192L;
+            var driveData = new MockDriveData { TotalSize = totalSize };
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDrive("C:", driveData);
+            var mockDriveInfo = new MockDriveInfo(fileSystem, "C:");
+
+            // Act
+            var result = mockDriveInfo.TotalSize;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(totalSize));
+        }
+
+        [Test]
+        public void MockDriveInfo_VolumeLabel_ShouldReturnVolumeLabelOfDriveInMemoryFileSystem()
+        {
+            // Arrange
+            var volumeLabel = "Windows";
+            var driveData = new MockDriveData { VolumeLabel = volumeLabel };
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDrive("C:", driveData);
+            var mockDriveInfo = new MockDriveInfo(fileSystem, "C:");
+
+            // Act
+            var result = mockDriveInfo.VolumeLabel;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(volumeLabel));
+        }
     }
 }

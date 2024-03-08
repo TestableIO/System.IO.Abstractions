@@ -208,6 +208,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileSystem_AddDrive_ShouldExist()
+        {
+            string name = @"D:\";
+            var fileSystem = new MockFileSystem();
+            fileSystem.AddDrive(name, new MockDriveData());
+
+            var actualResults = fileSystem.DriveInfo.GetDrives().Select(d => d.Name);
+
+            Assert.That(actualResults, Does.Contain(name));
+        }
+
+        [Test]
         public void MockFileSystem_DriveInfo_ShouldNotThrowAnyException()
         {
             var fileSystem = new MockFileSystem();

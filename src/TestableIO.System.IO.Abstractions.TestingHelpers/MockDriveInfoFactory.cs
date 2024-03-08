@@ -23,15 +23,8 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public IDriveInfo[] GetDrives()
         {
-            var driveLetters = new HashSet<string>(new DriveEqualityComparer(mockFileSystem));
-            foreach (var path in mockFileSystem.AllPaths)
-            {
-                var pathRoot = mockFileSystem.Path.GetPathRoot(path);
-                driveLetters.Add(pathRoot);
-            }
-
             var result = new List<DriveInfoBase>();
-            foreach (string driveLetter in driveLetters)
+            foreach (string driveLetter in mockFileSystem.AllDrives)
             {
                 try
                 {

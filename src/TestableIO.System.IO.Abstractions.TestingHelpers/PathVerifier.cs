@@ -118,5 +118,38 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw CommonExceptions.IllegalCharactersInPath();
             }
         }
+
+        /// <summary>
+        /// Determines the normalized drive name used for drive identification.
+        /// </summary>
+        public string NormalizeDriveName(string name)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            const string DRIVE_SEPARATOR = @":\";
+
+            if (name.Length == 1
+                || (name.Length == 2 && name[1] == ':')
+                || (name.Length == 3 && _mockFileDataAccessor.StringOperations.EndsWith(name, DRIVE_SEPARATOR)))
+            {
+                name = name[0] + DRIVE_SEPARATOR;
+            }
+            else
+            {
+                CheckInvalidPathChars(name);
+                name = _mockFileDataAccessor.Path.GetPathRoot(name);
+
+                if (string.IsNullOrEmpty(name) || _mockFileDataAccessor.StringOperations.StartsWith(name, @"\\"))
+                {
+                    throw new ArgumentException(
+                        @"Object must be a root directory (""C:\"") or a drive letter (""C"").");
+                }
+            }
+
+            return name;
+        }
     }
 }

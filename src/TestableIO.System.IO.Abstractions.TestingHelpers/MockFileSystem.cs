@@ -17,6 +17,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private const string TEMP_DIRECTORY = @"C:\temp";
 
         private readonly IDictionary<string, FileSystemEntry> files;
+        private readonly IDictionary<string, MockDriveData> drives;
         private readonly PathVerifier pathVerifier;
 #if FEATURE_SERIALIZABLE
         [NonSerialized]
@@ -58,6 +59,7 @@ namespace System.IO.Abstractions.TestingHelpers
             StringOperations = new StringOperations(XFS.IsUnixPlatform());
             pathVerifier = new PathVerifier(this);
             this.files = new Dictionary<string, FileSystemEntry>(StringOperations.Comparer);
+            drives = new Dictionary<string, MockDriveData>(StringOperations.Comparer);
 
             Path = new MockPath(this, defaultTempDirectory);
             File = new MockFile(this);
@@ -186,6 +188,16 @@ namespace System.IO.Abstractions.TestingHelpers
         {
             path = FixPath(path).TrimSlashes();
             return GetFileWithoutFixingPath(path);
+        }
+
+        /// <inheritdoc />
+        public MockDriveData GetDrive(string name)
+        {
+            name = PathVerifier.NormalizeDriveName(name);
+            lock (drives)
+            {
+                return drives.TryGetValue(name, out var result) ? result : null;
+            }
         }
 
         private void SetEntry(string path, MockFileData mockFile)
@@ -322,6 +334,16 @@ namespace System.IO.Abstractions.TestingHelpers
                 var s = StringOperations.EndsWith(fixedPath, separator) ? fixedPath : fixedPath + separator;
                 SetEntry(s, new MockDirectoryData());
             }
+
+            lock (drives)
+            {
+                var driveLetter = Path.GetPathRoot(fixedPath);
+
+                if (!drives.ContainsKey(driveLetter))
+                {
+                    drives[driveLetter] = new MockDriveData();
+                }
+            }
         }
 
         /// <inheritdoc />
@@ -356,6 +378,16 @@ namespace System.IO.Abstractions.TestingHelpers
                     var filePath = Path.Combine(path, fileName);
                     AddFile(filePath, new MockFileData(fileData));
                 }
+            }
+        }
+
+        /// <inheritdoc />
+        public void AddDrive(string name, MockDriveData mockDrive)
+        {
+            name = PathVerifier.NormalizeDriveName(name);
+            lock (drives)
+            {
+                drives[name] = mockDrive;
             }
         }
 
@@ -479,6 +511,18 @@ namespace System.IO.Abstractions.TestingHelpers
                 lock (files)
                 {
                     return files.Where(f => f.Value.Data.IsDirectory).Select(f => f.Key).ToArray();
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<string> AllDrives
+        {
+            get
+            {
+                lock (drives)
+                {
+                    return drives.Keys.ToArray();
                 }
             }
         }

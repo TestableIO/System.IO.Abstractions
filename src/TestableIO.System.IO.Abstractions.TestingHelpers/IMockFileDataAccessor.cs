@@ -24,12 +24,23 @@ namespace System.IO.Abstractions.TestingHelpers
         MockFileData GetFile(string path);
 
         /// <summary>
+        /// Gets a drive.
+        /// </summary>
+        /// <param name="name">The name of the drive to get.</param>
+        /// <returns>The drive. <see langword="null"/> if the drive does not exist.</returns>
+        MockDriveData GetDrive(string name);
+
+        /// <summary>
         /// </summary>
         void AddFile(string path, MockFileData mockFile);
 
         /// <summary>
         /// </summary>
         void AddDirectory(string path);
+
+        /// <summary>
+        /// </summary>
+        void AddDrive(string name, MockDriveData mockDrive);
 
         /// <summary>
         /// </summary>
@@ -73,6 +84,11 @@ namespace System.IO.Abstractions.TestingHelpers
         /// Gets the paths of all directories.
         /// </summary>
         IEnumerable<string> AllDirectories { get; }
+
+        /// <summary>
+        /// Gets the names of all drives.
+        /// </summary>
+        IEnumerable<string> AllDrives { get; }
 
         /// <summary>
         /// Gets a helper for string operations.
