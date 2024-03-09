@@ -118,5 +118,51 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw CommonExceptions.IllegalCharactersInPath();
             }
         }
+
+        /// <summary>
+        /// Determines the normalized drive name used for drive identification.
+        /// </summary>
+        /// <exception cref="ArgumentException">Thrown if the <paramref name="name"/> is not a valid drive name.</exception>
+        public string NormalizeDriveName(string name)
+        {
+            return TryNormalizeDriveName(name, out var result)
+                ? result
+                : throw new ArgumentException(
+                      @"Object must be a root directory (""C:\"") or a drive letter (""C"").");
+        }
+
+        /// <summary>
+        /// Tries to determine the normalized drive name used for drive identification.
+        /// </summary>
+        public bool TryNormalizeDriveName(string name, out string result)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            const string DRIVE_SEPARATOR = @":\";
+
+            if (name.Length == 1
+                || (name.Length == 2 && name[1] == ':')
+                || (name.Length == 3 && _mockFileDataAccessor.StringOperations.EndsWith(name, DRIVE_SEPARATOR)))
+            {
+                name = name[0] + DRIVE_SEPARATOR;
+            }
+            else
+            {
+                CheckInvalidPathChars(name);
+                name = _mockFileDataAccessor.Path.GetPathRoot(name);
+
+                if (string.IsNullOrEmpty(name) || _mockFileDataAccessor.StringOperations.StartsWith(name, @"\\"))
+                {
+                    result = null;
+                    return false;
+                }
+            }
+
+            result = name;
+            return true;
+        }
     }
 }

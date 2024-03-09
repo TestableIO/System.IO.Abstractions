@@ -17,6 +17,7 @@ namespace System.IO.Abstractions.TestingHelpers
         private const string TEMP_DIRECTORY = @"C:\temp";
 
         private readonly IDictionary<string, FileSystemEntry> files;
+        private readonly IDictionary<string, MockDriveData> drives;
         private readonly PathVerifier pathVerifier;
 #if FEATURE_SERIALIZABLE
         [NonSerialized]
@@ -58,6 +59,7 @@ namespace System.IO.Abstractions.TestingHelpers
             StringOperations = new StringOperations(XFS.IsUnixPlatform());
             pathVerifier = new PathVerifier(this);
             this.files = new Dictionary<string, FileSystemEntry>(StringOperations.Comparer);
+            drives = new Dictionary<string, MockDriveData>(StringOperations.Comparer);
 
             Path = new MockPath(this, defaultTempDirectory);
             File = new MockFile(this);
@@ -188,43 +190,66 @@ namespace System.IO.Abstractions.TestingHelpers
             return GetFileWithoutFixingPath(path);
         }
 
+        /// <inheritdoc />
+        public MockDriveData GetDrive(string name)
+        {
+            name = PathVerifier.NormalizeDriveName(name);
+            lock (drives)
+            {
+                return drives.TryGetValue(name, out var result) ? result : null;
+            }
+        }
+
         private void SetEntry(string path, MockFileData mockFile)
         {
             path = FixPath(path, true).TrimSlashes();
-            files[path] = new FileSystemEntry { Path = path, Data = mockFile };
+
+            lock (files)
+            {
+                files[path] = new FileSystemEntry { Path = path, Data = mockFile };
+            }
+
+            lock (drives)
+            {
+                if (PathVerifier.TryNormalizeDriveName(path, out string driveLetter))
+                {
+                    if (!drives.ContainsKey(driveLetter))
+                    {
+                        drives[driveLetter] = new MockDriveData();
+                    }
+                }
+            }
         }
 
         /// <inheritdoc />
         public void AddFile(string path, MockFileData mockFile)
         {
             var fixedPath = FixPath(path, true);
-            lock (files)
+
+            mockFile ??= new MockFileData(string.Empty);
+            var file = GetFile(fixedPath);
+
+            if (file != null)
             {
-                mockFile ??= new MockFileData(string.Empty);
-                var file = GetFile(fixedPath);
+                var isReadOnly = (file.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
+                var isHidden = (file.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden;
 
-                if (file != null)
+                if (isReadOnly || isHidden)
                 {
-                    var isReadOnly = (file.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
-                    var isHidden = (file.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden;
-
-                    if (isReadOnly || isHidden)
-                    {
-                        throw CommonExceptions.AccessDenied(path);
-                    }
-                    file.CheckFileAccess(fixedPath, FileAccess.Write);
-                    mockFile.CreationTime = file.CreationTime;
+                    throw CommonExceptions.AccessDenied(path);
                 }
-
-                var directoryPath = Path.GetDirectoryName(fixedPath);
-
-                if (!DirectoryExistsWithoutFixingPath(directoryPath))
-                {
-                    AddDirectory(directoryPath);
-                }
-
-                SetEntry(fixedPath, mockFile);
+                file.CheckFileAccess(fixedPath, FileAccess.Write);
+                mockFile.CreationTime = file.CreationTime;
             }
+
+            var directoryPath = Path.GetDirectoryName(fixedPath);
+
+            if (!DirectoryExistsWithoutFixingPath(directoryPath))
+            {
+                AddDirectory(directoryPath);
+            }
+
+            SetEntry(fixedPath, mockFile);
         }
 
         /// <summary>
@@ -283,45 +308,42 @@ namespace System.IO.Abstractions.TestingHelpers
             var fixedPath = FixPath(path, true);
             var separator = Path.DirectorySeparatorChar.ToString();
 
-            lock (files)
+            if (FileExists(fixedPath) && FileIsReadOnly(fixedPath))
             {
-                if (FileExists(fixedPath) && FileIsReadOnly(fixedPath))
-                {
-                    throw CommonExceptions.AccessDenied(fixedPath);
-                }
-                var lastIndex = 0;
-                var isUnc =
-                    StringOperations.StartsWith(fixedPath, @"\\") ||
-                    StringOperations.StartsWith(fixedPath, @"//");
-
-                if (isUnc)
-                {
-                    //First, confirm they aren't trying to create '\\server\'
-                    lastIndex = StringOperations.IndexOf(fixedPath, separator, 2);
-
-                    if (lastIndex < 0)
-                    {
-                        throw CommonExceptions.InvalidUncPath(nameof(path));
-                    }
-
-                    /*
-                     * Although CreateDirectory(@"\\server\share\") is not going to work in real code, we allow it here for the purposes of setting up test doubles.
-                     * See PR https://github.com/TestableIO/System.IO.Abstractions/pull/90 for conversation
-                     */
-                }
-
-                while ((lastIndex = StringOperations.IndexOf(fixedPath, separator, lastIndex + 1)) > -1)
-                {
-                    var segment = fixedPath.Substring(0, lastIndex + 1);
-                    if (!DirectoryExistsWithoutFixingPath(segment))
-                    {
-                        SetEntry(segment, new MockDirectoryData());
-                    }
-                }
-
-                var s = StringOperations.EndsWith(fixedPath, separator) ? fixedPath : fixedPath + separator;
-                SetEntry(s, new MockDirectoryData());
+                throw CommonExceptions.AccessDenied(fixedPath);
             }
+            var lastIndex = 0;
+            var isUnc =
+                StringOperations.StartsWith(fixedPath, @"\\") ||
+                StringOperations.StartsWith(fixedPath, @"//");
+
+            if (isUnc)
+            {
+                //First, confirm they aren't trying to create '\\server\'
+                lastIndex = StringOperations.IndexOf(fixedPath, separator, 2);
+
+                if (lastIndex < 0)
+                {
+                    throw CommonExceptions.InvalidUncPath(nameof(path));
+                }
+
+                /*
+                    * Although CreateDirectory(@"\\server\share\") is not going to work in real code, we allow it here for the purposes of setting up test doubles.
+                    * See PR https://github.com/TestableIO/System.IO.Abstractions/pull/90 for conversation
+                    */
+            }
+
+            while ((lastIndex = StringOperations.IndexOf(fixedPath, separator, lastIndex + 1)) > -1)
+            {
+                var segment = fixedPath.Substring(0, lastIndex + 1);
+                if (!DirectoryExistsWithoutFixingPath(segment))
+                {
+                    SetEntry(segment, new MockDirectoryData());
+                }
+            }
+
+            var s = StringOperations.EndsWith(fixedPath, separator) ? fixedPath : fixedPath + separator;
+            SetEntry(s, new MockDirectoryData());
         }
 
         /// <inheritdoc />
@@ -356,6 +378,16 @@ namespace System.IO.Abstractions.TestingHelpers
                     var filePath = Path.Combine(path, fileName);
                     AddFile(filePath, new MockFileData(fileData));
                 }
+            }
+        }
+
+        /// <inheritdoc />
+        public void AddDrive(string name, MockDriveData mockDrive)
+        {
+            name = PathVerifier.NormalizeDriveName(name);
+            lock (drives)
+            {
+                drives[name] = mockDrive;
             }
         }
 
@@ -479,6 +511,18 @@ namespace System.IO.Abstractions.TestingHelpers
                 lock (files)
                 {
                     return files.Where(f => f.Value.Data.IsDirectory).Select(f => f.Key).ToArray();
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<string> AllDrives
+        {
+            get
+            {
+                lock (drives)
+                {
+                    return drives.Keys.ToArray();
                 }
             }
         }
