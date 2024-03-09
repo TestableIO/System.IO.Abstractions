@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -93,10 +94,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var driveData = new MockDriveData { AvailableFreeSpace = availableFreeSpace };
             var fileSystem = new MockFileSystem();
             fileSystem.AddDrive("C:", driveData);
-            var mockDriveInfo = new MockDriveInfo(fileSystem, "C:");
+            var driveInfo = fileSystem.DriveInfo
+                .GetDrives()
+                .Single(x => x.Name == @"C:\");
 
             // Act
-            var result = mockDriveInfo.AvailableFreeSpace;
+            var result = driveInfo.AvailableFreeSpace;
 
             // Assert
             Assert.That(result, Is.EqualTo(availableFreeSpace));
@@ -110,10 +113,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var driveData = new MockDriveData { DriveFormat = driveFormat };
             var fileSystem = new MockFileSystem();
             fileSystem.AddDrive("C:", driveData);
-            var mockDriveInfo = new MockDriveInfo(fileSystem, "C:");
+            var driveInfo = fileSystem.DriveInfo
+                .GetDrives()
+                .Single(x => x.Name == @"C:\");
 
             // Act
-            var result = mockDriveInfo.DriveFormat;
+            var result = driveInfo.DriveFormat;
 
             // Assert
             Assert.That(result, Is.EqualTo(driveFormat));
@@ -127,10 +132,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var driveData = new MockDriveData { DriveType = driveType };
             var fileSystem = new MockFileSystem();
             fileSystem.AddDrive("C:", driveData);
-            var mockDriveInfo = new MockDriveInfo(fileSystem, "C:");
+            var driveInfo = fileSystem.DriveInfo
+                .GetDrives()
+                .Single(x => x.Name == @"C:\");
 
             // Act
-            var result = mockDriveInfo.DriveType;
+            var result = driveInfo.DriveType;
 
             // Assert
             Assert.That(result, Is.EqualTo(driveType));
@@ -144,10 +151,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var driveData = new MockDriveData { IsReady = isReady };
             var fileSystem = new MockFileSystem();
             fileSystem.AddDrive("C:", driveData);
-            var mockDriveInfo = new MockDriveInfo(fileSystem, "C:");
+            var driveInfo = fileSystem.DriveInfo
+                .GetDrives()
+                .Single(x => x.Name == @"C:\");
 
             // Act
-            var result = mockDriveInfo.IsReady;
+            var result = driveInfo.IsReady;
 
             // Assert
             Assert.That(result, Is.EqualTo(isReady));
@@ -161,10 +170,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var driveData = new MockDriveData { TotalFreeSpace = totalFreeSpace };
             var fileSystem = new MockFileSystem();
             fileSystem.AddDrive("C:", driveData);
-            var mockDriveInfo = new MockDriveInfo(fileSystem, "C:");
+            var driveInfo = fileSystem.DriveInfo
+                .GetDrives()
+                .Single(x => x.Name == @"C:\");
 
             // Act
-            var result = mockDriveInfo.TotalFreeSpace;
+            var result = driveInfo.TotalFreeSpace;
 
             // Assert
             Assert.That(result, Is.EqualTo(totalFreeSpace));
@@ -178,10 +189,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var driveData = new MockDriveData { TotalSize = totalSize };
             var fileSystem = new MockFileSystem();
             fileSystem.AddDrive("C:", driveData);
-            var mockDriveInfo = new MockDriveInfo(fileSystem, "C:");
+            var driveInfo = fileSystem.DriveInfo
+                .GetDrives()
+                .Single(x => x.Name == @"C:\");
 
             // Act
-            var result = mockDriveInfo.TotalSize;
+            var result = driveInfo.TotalSize;
 
             // Assert
             Assert.That(result, Is.EqualTo(totalSize));
@@ -195,10 +208,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var driveData = new MockDriveData { VolumeLabel = volumeLabel };
             var fileSystem = new MockFileSystem();
             fileSystem.AddDrive("C:", driveData);
-            var mockDriveInfo = new MockDriveInfo(fileSystem, "C:");
+            var driveInfo = fileSystem.DriveInfo
+                .GetDrives()
+                .Single(x => x.Name == @"C:\");
 
             // Act
-            var result = mockDriveInfo.VolumeLabel;
+            var result = driveInfo.VolumeLabel;
 
             // Assert
             Assert.That(result, Is.EqualTo(volumeLabel));

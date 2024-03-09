@@ -122,7 +122,19 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <summary>
         /// Determines the normalized drive name used for drive identification.
         /// </summary>
+        /// <exception cref="ArgumentException">Thrown if the <paramref name="name"/> is not a valid drive name.</exception>
         public string NormalizeDriveName(string name)
+        {
+            return TryNormalizeDriveName(name, out var result)
+                ? result
+                : throw new ArgumentException(
+                      @"Object must be a root directory (""C:\"") or a drive letter (""C"").");
+        }
+
+        /// <summary>
+        /// Tries to determine the normalized drive name used for drive identification.
+        /// </summary>
+        public bool TryNormalizeDriveName(string name, out string result)
         {
             if (name == null)
             {
@@ -144,12 +156,13 @@ namespace System.IO.Abstractions.TestingHelpers
 
                 if (string.IsNullOrEmpty(name) || _mockFileDataAccessor.StringOperations.StartsWith(name, @"\\"))
                 {
-                    throw new ArgumentException(
-                        @"Object must be a root directory (""C:\"") or a drive letter (""C"").");
+                    result = null;
+                    return false;
                 }
             }
 
-            return name;
+            result = name;
+            return true;
         }
     }
 }

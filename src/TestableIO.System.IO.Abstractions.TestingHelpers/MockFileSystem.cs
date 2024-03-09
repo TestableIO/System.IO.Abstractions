@@ -203,40 +203,53 @@ namespace System.IO.Abstractions.TestingHelpers
         private void SetEntry(string path, MockFileData mockFile)
         {
             path = FixPath(path, true).TrimSlashes();
-            files[path] = new FileSystemEntry { Path = path, Data = mockFile };
+
+            lock (files)
+            {
+                files[path] = new FileSystemEntry { Path = path, Data = mockFile };
+            }
+
+            lock (drives)
+            {
+                if (PathVerifier.TryNormalizeDriveName(path, out string driveLetter))
+                {
+                    if (!drives.ContainsKey(driveLetter))
+                    {
+                        drives[driveLetter] = new MockDriveData();
+                    }
+                }
+            }
         }
 
         /// <inheritdoc />
         public void AddFile(string path, MockFileData mockFile)
         {
             var fixedPath = FixPath(path, true);
-            lock (files)
+
+            mockFile ??= new MockFileData(string.Empty);
+            var file = GetFile(fixedPath);
+
+            if (file != null)
             {
-                mockFile ??= new MockFileData(string.Empty);
-                var file = GetFile(fixedPath);
+                var isReadOnly = (file.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
+                var isHidden = (file.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden;
 
-                if (file != null)
+                if (isReadOnly || isHidden)
                 {
-                    var isReadOnly = (file.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
-                    var isHidden = (file.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden;
-
-                    if (isReadOnly || isHidden)
-                    {
-                        throw CommonExceptions.AccessDenied(path);
-                    }
-                    file.CheckFileAccess(fixedPath, FileAccess.Write);
-                    mockFile.CreationTime = file.CreationTime;
+                    throw CommonExceptions.AccessDenied(path);
                 }
-
-                var directoryPath = Path.GetDirectoryName(fixedPath);
-
-                if (!DirectoryExistsWithoutFixingPath(directoryPath))
-                {
-                    AddDirectory(directoryPath);
-                }
-
-                SetEntry(fixedPath, mockFile);
+                file.CheckFileAccess(fixedPath, FileAccess.Write);
+                mockFile.CreationTime = file.CreationTime;
             }
+
+            var directoryPath = Path.GetDirectoryName(fixedPath);
+
+            if (!DirectoryExistsWithoutFixingPath(directoryPath))
+            {
+                AddDirectory(directoryPath);
+            }
+
+            SetEntry(fixedPath, mockFile);
         }
 
         /// <summary>
@@ -295,55 +308,42 @@ namespace System.IO.Abstractions.TestingHelpers
             var fixedPath = FixPath(path, true);
             var separator = Path.DirectorySeparatorChar.ToString();
 
-            lock (files)
+            if (FileExists(fixedPath) && FileIsReadOnly(fixedPath))
             {
-                if (FileExists(fixedPath) && FileIsReadOnly(fixedPath))
+                throw CommonExceptions.AccessDenied(fixedPath);
+            }
+            var lastIndex = 0;
+            var isUnc =
+                StringOperations.StartsWith(fixedPath, @"\\") ||
+                StringOperations.StartsWith(fixedPath, @"//");
+
+            if (isUnc)
+            {
+                //First, confirm they aren't trying to create '\\server\'
+                lastIndex = StringOperations.IndexOf(fixedPath, separator, 2);
+
+                if (lastIndex < 0)
                 {
-                    throw CommonExceptions.AccessDenied(fixedPath);
-                }
-                var lastIndex = 0;
-                var isUnc =
-                    StringOperations.StartsWith(fixedPath, @"\\") ||
-                    StringOperations.StartsWith(fixedPath, @"//");
-
-                if (isUnc)
-                {
-                    //First, confirm they aren't trying to create '\\server\'
-                    lastIndex = StringOperations.IndexOf(fixedPath, separator, 2);
-
-                    if (lastIndex < 0)
-                    {
-                        throw CommonExceptions.InvalidUncPath(nameof(path));
-                    }
-
-                    /*
-                     * Although CreateDirectory(@"\\server\share\") is not going to work in real code, we allow it here for the purposes of setting up test doubles.
-                     * See PR https://github.com/TestableIO/System.IO.Abstractions/pull/90 for conversation
-                     */
+                    throw CommonExceptions.InvalidUncPath(nameof(path));
                 }
 
-                while ((lastIndex = StringOperations.IndexOf(fixedPath, separator, lastIndex + 1)) > -1)
-                {
-                    var segment = fixedPath.Substring(0, lastIndex + 1);
-                    if (!DirectoryExistsWithoutFixingPath(segment))
-                    {
-                        SetEntry(segment, new MockDirectoryData());
-                    }
-                }
-
-                var s = StringOperations.EndsWith(fixedPath, separator) ? fixedPath : fixedPath + separator;
-                SetEntry(s, new MockDirectoryData());
+                /*
+                    * Although CreateDirectory(@"\\server\share\") is not going to work in real code, we allow it here for the purposes of setting up test doubles.
+                    * See PR https://github.com/TestableIO/System.IO.Abstractions/pull/90 for conversation
+                    */
             }
 
-            lock (drives)
+            while ((lastIndex = StringOperations.IndexOf(fixedPath, separator, lastIndex + 1)) > -1)
             {
-                var driveLetter = Path.GetPathRoot(fixedPath);
-
-                if (!drives.ContainsKey(driveLetter))
+                var segment = fixedPath.Substring(0, lastIndex + 1);
+                if (!DirectoryExistsWithoutFixingPath(segment))
                 {
-                    drives[driveLetter] = new MockDriveData();
+                    SetEntry(segment, new MockDirectoryData());
                 }
             }
+
+            var s = StringOperations.EndsWith(fixedPath, separator) ? fixedPath : fixedPath + separator;
+            SetEntry(s, new MockDirectoryData());
         }
 
         /// <inheritdoc />
