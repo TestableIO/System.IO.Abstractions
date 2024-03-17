@@ -18,14 +18,6 @@ namespace System.IO.Abstractions.TestingHelpers
         public IFileSystem FileSystem
             => mockFileSystem;
 
-
-        /// <inheritdoc />
-        [Obsolete("Use `IDirectoryInfoFactory.New(string)` instead")]
-        public IDirectoryInfo FromDirectoryName(string directoryName)
-        {
-            return New(directoryName);
-        }
-
         /// <inheritdoc />
         public IDirectoryInfo New(string path)
         {

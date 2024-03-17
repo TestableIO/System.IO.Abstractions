@@ -17,12 +17,6 @@
         public IFileSystem FileSystem
             => fileSystem;
 
-        /// <inheritdoc />
-        [Obsolete("Use `IFileInfoFactory.New(string)` instead")]
-        public IFileInfo FromFileName(string fileName)
-        {
-            return New(fileName);
-        }
 
         /// <inheritdoc />
         public IFileInfo New(string fileName)

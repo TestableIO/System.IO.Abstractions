@@ -8,13 +8,6 @@ namespace System.IO.Abstractions
     public interface IDriveInfoFactory : IFileSystemEntity
     {
         /// <summary>
-        /// Initializes a new instance of a wrapper for <see cref="DriveInfo"/> which implements <see cref="IDriveInfo"/>.
-        /// </summary>
-        /// <param name="driveName">A valid drive path or drive letter.</param>
-        [Obsolete("Use `IDriveInfoFactory.New(string)` instead")]
-        IDriveInfo FromDriveName(string driveName);
-
-        /// <summary>
         /// Retrieves the drive names of all logical drives on a computer.
         /// </summary>
         /// <returns>An array of type <see cref="IDriveInfo"/> that represents the logical drives on a computer.</returns>
