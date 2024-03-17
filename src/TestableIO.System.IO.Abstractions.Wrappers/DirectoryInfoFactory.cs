@@ -18,13 +18,6 @@ namespace System.IO.Abstractions
             => fileSystem;
 
         /// <inheritdoc />
-        [Obsolete("Use `IDirectoryInfoFactory.New(string)` instead")]
-        public IDirectoryInfo FromDirectoryName(string directoryName)
-        {
-            return New(directoryName);
-        }
-
-        /// <inheritdoc />
         public IDirectoryInfo New(string path)
         {
             var realDirectoryInfo = new DirectoryInfo(path);

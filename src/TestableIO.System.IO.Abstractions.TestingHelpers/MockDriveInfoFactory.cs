@@ -59,13 +59,6 @@ namespace System.IO.Abstractions.TestingHelpers
             return New(driveInfo.Name);
         }
 
-        /// <inheritdoc />
-        [Obsolete("Use `IDirectoryInfoFactory.New(string)` instead")]
-        public IDriveInfo FromDriveName(string driveName)
-        {
-            return New(driveName);
-        }
-
         private string NormalizeDriveName(string driveName)
         {
             if (driveName.Length == 3 && mockFileSystem.StringOperations.EndsWith(driveName, @":\"))

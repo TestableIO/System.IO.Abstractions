@@ -47,15 +47,5 @@
 
             return new DriveInfoWrapper(fileSystem, driveInfo);
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DriveInfoBase"/> class, which acts as a wrapper for a logical drive.
-        /// </summary>
-        /// <param name="driveName">A valid drive path or drive letter.</param>
-        [Obsolete("Use `IDriveInfoFactory.New(string)` instead")]
-        public IDriveInfo FromDriveName(string driveName)
-        {
-            return New(driveName);
-        }
     }
 }

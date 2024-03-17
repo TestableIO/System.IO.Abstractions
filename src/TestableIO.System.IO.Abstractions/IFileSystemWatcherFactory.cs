@@ -10,30 +10,6 @@ namespace System.IO.Abstractions
         /// <summary>
         /// Initializes a new instance of a wrapper for <see cref="FileSystemWatcher"/> which implements <see cref="IFileSystemWatcher"/>.
         /// </summary>
-        /// <returns></returns>
-        [Obsolete("Use `IFileSystemWatcherFactory.New()` instead")]
-        IFileSystemWatcher CreateNew();
-
-        /// <summary>
-        /// Initializes a new instance of a wrapper for <see cref="FileSystemWatcher"/> which implements <see cref="IFileSystemWatcher"/>.
-        /// </summary>
-        /// <param name="path">The directory to monitor, in standard or Universal Naming Convention (UNC) notation.</param>
-        /// <returns></returns>
-        [Obsolete("Use `IFileSystemWatcherFactory.New(string)` instead")]
-        IFileSystemWatcher CreateNew(string path);
-
-        /// <summary>
-        /// Initializes a new instance of a wrapper for <see cref="FileSystemWatcher"/> which implements <see cref="IFileSystemWatcher"/>.
-        /// </summary>
-        /// <param name="path">The directory to monitor, in standard or Universal Naming Convention (UNC) notation.</param>
-        /// <param name="filter">The type of files to watch. For example, "*.txt" watches for changes to all text files.</param>
-        /// <returns></returns>
-        [Obsolete("Use `IFileSystemWatcherFactory.New(string, string)` instead")]
-        IFileSystemWatcher CreateNew(string path, string filter);
-
-        /// <summary>
-        /// Initializes a new instance of a wrapper for <see cref="FileSystemWatcher"/> which implements <see cref="IFileSystemWatcher"/>.
-        /// </summary>
         IFileSystemWatcher New();
 
         /// <summary>

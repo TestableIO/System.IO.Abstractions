@@ -23,7 +23,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
 
             // Act
-            var result = fileStreamFactory.Create(@"c:\existing.txt", fileMode, FileAccess.Write);
+            var result = fileStreamFactory.New(@"c:\existing.txt", fileMode, FileAccess.Write);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -39,7 +39,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
 
             // Act
-            var result = fileStreamFactory.Create(XFS.Path(@"c:\not_existing.txt"), fileMode, FileAccess.Write);
+            var result = fileStreamFactory.New(XFS.Path(@"c:\not_existing.txt"), fileMode, FileAccess.Write);
 
             // Assert
             Assert.That(result, Is.Not.Null);
@@ -82,7 +82,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
 
             // Assert
-            Assert.Throws<DirectoryNotFoundException>(() => fileStreamFactory.Create(XFS.Path(@"C:\Test\NonExistingDirectory\some_random_file.txt"), fileMode));
+            Assert.Throws<DirectoryNotFoundException>(() => fileStreamFactory.New(XFS.Path(@"C:\Test\NonExistingDirectory\some_random_file.txt"), fileMode));
         }
 
         [Test]
@@ -125,7 +125,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
 
             // Assert
-            Assert.Throws<FileNotFoundException>(() => fileStreamFactory.Create(XFS.Path(@"C:\Test\some_random_file.txt"), fileMode));
+            Assert.Throws<FileNotFoundException>(() => fileStreamFactory.New(XFS.Path(@"C:\Test\some_random_file.txt"), fileMode));
         }
 
         [Test]
@@ -141,7 +141,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
 
             // Assert
-            Assert.Throws<IOException>(() => fileStreamFactory.Create(path, fileMode));
+            Assert.Throws<IOException>(() => fileStreamFactory.New(path, fileMode));
 
         }
 
@@ -156,7 +156,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Act
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
-            fileStreamFactory.Create("some_random_file.txt", fileMode);
+            fileStreamFactory.New("some_random_file.txt", fileMode);
 
             // Assert
             Assert.That(fileSystem.File.Exists(XFS.Path("./some_random_file.txt")), Is.True);

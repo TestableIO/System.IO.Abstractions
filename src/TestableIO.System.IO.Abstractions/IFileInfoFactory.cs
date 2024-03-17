@@ -10,13 +10,6 @@ namespace System.IO.Abstractions
         /// <summary>
         /// Initializes a new instance of a wrapper for <see cref="FileInfo"/> which implements <see cref="IFileInfo"/>.
         /// </summary>
-        /// <param name="fileName">The fully qualified name of the new file, or the relative file name.</param>
-        [Obsolete("Use `IFileInfoFactory.New(string)` instead")]
-        IFileInfo FromFileName(string fileName);
-
-        /// <summary>
-        /// Initializes a new instance of a wrapper for <see cref="FileInfo"/> which implements <see cref="IFileInfo"/>.
-        /// </summary>
         /// <param name="fileName">
         /// The fully qualified name of the new file, or the relative file name.
         /// Do not end the path with the directory separator character.
