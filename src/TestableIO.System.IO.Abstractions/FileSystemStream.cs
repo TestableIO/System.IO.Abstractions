@@ -27,14 +27,14 @@ namespace System.IO.Abstractions
             => _stream.CanWrite;
 
         /// <inheritdoc cref="FileStream.IsAsync" />
-        public bool IsAsync { get; }
+        public virtual bool IsAsync { get; }
 
         /// <inheritdoc cref="Stream.Length" />
         public override long Length
             => _stream.Length;
 
         /// <inheritdoc cref="FileStream.Name" />
-        public string Name { get; }
+        public virtual string Name { get; }
 
         /// <inheritdoc cref="Stream.Position" />
         public override long Position
