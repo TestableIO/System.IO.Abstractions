@@ -862,7 +862,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Assert.That(fileSystem.Directory.Exists(result.FullName), Is.True);
-            Assert.That(result.FullName.Contains(Path.GetTempPath()), Is.True);
+            Assert.That(result.FullName, Does.StartWith(fileSystem.Path.GetTempPath()));
         }
 
         [Test]
@@ -877,16 +877,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Assert
             Assert.That(fileSystem.Directory.Exists(result.FullName), Is.True);
             Assert.That(Path.GetFileName(result.FullName).StartsWith("foo-"), Is.True);
-            Assert.That(result.FullName.Contains(Path.GetTempPath()), Is.True);
-        }
-
-        [Test]
-        public void MockDirectory_CreateTempSubdirectory_ShouldStartWithTempPath()
-        {
-            var fileSystem = new MockFileSystem();
-            var result = fileSystem.Directory.CreateTempSubdirectory();
-            var temp = fileSystem.Path.GetTempPath();
-            Assert.That(result.FullName, Does.StartWith(temp));
+            Assert.That(result.FullName.Contains(fileSystem.Path.GetTempPath()), Is.True);
         }
 #endif
 
