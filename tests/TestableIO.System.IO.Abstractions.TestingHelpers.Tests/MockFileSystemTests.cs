@@ -435,6 +435,26 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             );
             Assert.That(ae.ParamName, Is.EqualTo("currentDirectory"));
         }
+        
+        [Test]
+        public void MockFileSystem_Constructor_ShouldSupportDifferentRootDrives()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                [@"c:\"] = new MockDirectoryData(),
+                [@"z:\"] = new MockDirectoryData(),
+                [@"d:\"] = new MockDirectoryData(),
+            });
+
+            var cExists = fileSystem.Directory.Exists(@"c:\");
+            var zExists = fileSystem.Directory.Exists(@"z:\");
+            var dExists = fileSystem.Directory.Exists(@"d:\");
+            
+            Assert.That(fileSystem, Is.Not.Null);
+            Assert.That(cExists, Is.True);
+            Assert.That(zExists, Is.True);
+            Assert.That(dExists, Is.True);
+        }
 
         [Test]
         public void MockFileSystem_DefaultState_DefaultTempDirectoryExists()
