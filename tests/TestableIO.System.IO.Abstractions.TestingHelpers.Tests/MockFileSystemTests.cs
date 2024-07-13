@@ -435,6 +435,60 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             );
             Assert.That(ae.ParamName, Is.EqualTo("currentDirectory"));
         }
+        
+        [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void MockFileSystem_Constructor_ShouldSupportDifferentRootDrives()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                [@"c:\"] = new MockDirectoryData(),
+                [@"z:\"] = new MockDirectoryData(),
+                [@"d:\"] = new MockDirectoryData(),
+            });
+
+            var cExists = fileSystem.Directory.Exists(@"c:\");
+            var zExists = fileSystem.Directory.Exists(@"z:\");
+            var dExists = fileSystem.Directory.Exists(@"d:\");
+            
+            Assert.That(fileSystem, Is.Not.Null);
+            Assert.That(cExists, Is.True);
+            Assert.That(zExists, Is.True);
+            Assert.That(dExists, Is.True);
+        }
+
+        [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void MockFileSystem_Constructor_ShouldAddDifferentDrivesIfNotExist()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                [@"d:\foo\bar\"] = new MockDirectoryData(),
+            });
+
+            var drivesInfo = fileSystem.DriveInfo.GetDrives();
+            var fooExists = fileSystem.Directory.Exists(@"d:\foo\");
+            var barExists = fileSystem.Directory.Exists(@"d:\foo\bar\");
+
+            Assert.That(drivesInfo.Any(d => string.Equals(d.Name, @"D:\", StringComparison.InvariantCultureIgnoreCase)), Is.True);
+            Assert.That(fooExists, Is.True);
+            Assert.That(barExists, Is.True);
+        }
+
+        [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
+        public void MockFileSystem_Constructor_ShouldNotDuplicateDrives()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                [@"d:\foo\bar\"] = new MockDirectoryData(),
+                [@"d:\"] = new MockDirectoryData()
+            });
+            
+            var drivesInfo = fileSystem.DriveInfo.GetDrives();
+            
+            Assert.That(drivesInfo.Where(d => string.Equals(d.Name, @"D:\", StringComparison.InvariantCultureIgnoreCase)), Has.Exactly(1).Items);
+        }
 
         [Test]
         public void MockFileSystem_DefaultState_DefaultTempDirectoryExists()

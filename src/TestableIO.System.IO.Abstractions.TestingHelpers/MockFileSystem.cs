@@ -243,8 +243,11 @@ namespace System.IO.Abstractions.TestingHelpers
             }
 
             var directoryPath = Path.GetDirectoryName(fixedPath);
-
-            if (!DirectoryExistsWithoutFixingPath(directoryPath))
+            if (directoryPath == null)
+            {
+                AddDrive(fixedPath, new MockDriveData());
+            }
+            else if (!DirectoryExistsWithoutFixingPath(directoryPath))
             {
                 AddDirectory(directoryPath);
             }
