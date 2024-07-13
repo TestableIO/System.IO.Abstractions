@@ -16,3 +16,19 @@ The base version represents the MAJOR and MINOR parts of [SemVer](https://semver
 ## Commits and PR title
 
 - Please use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) to name your commits and PR title
+  Available types:
+  - feat: A new feature
+  - fix: A bug fix
+  - docs: Documentation only changes
+  - style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+  - refactor: A code change that neither fixes a bug nor adds a feature
+  - perf: A code change that improves performance
+  - test: Adding missing tests or correcting existing tests
+  - build: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
+  - ci: Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
+  - chore: Other changes that don't modify src or test files
+  - revert: Reverts a previous commit
+- Examples:
+  - fix: Resolved mock file system not able to return mock data
+  - docs: Added more details to readme.md and examples
+  - feat: Added a new MockFileStream features for more robust unit testing experience
