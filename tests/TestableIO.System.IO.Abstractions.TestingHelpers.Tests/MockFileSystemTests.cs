@@ -457,6 +457,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileSystem_Constructor_ShouldAddDifferentDrivesIfNotExist()
+        {
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                [@"d:\foo\bar\"] = new MockDirectoryData()
+            });
+
+            var driveInfo = fileSystem.DriveInfo.GetDrives();
+            var fooExists = fileSystem.Directory.Exists(@"d:\foo\");
+            var barExists = fileSystem.Directory.Exists(@"d:\foo\bar\");
+
+            Assert.That(driveInfo.Any(d => string.Equals(d.Name, @"D:\", StringComparison.InvariantCultureIgnoreCase)), Is.True);
+            Assert.That(fooExists, Is.True);
+            Assert.That(barExists, Is.True);
+        }
+
+        [Test]
         public void MockFileSystem_DefaultState_DefaultTempDirectoryExists()
         {
             var tempDirectory = XFS.Path(@"C:\temp");
