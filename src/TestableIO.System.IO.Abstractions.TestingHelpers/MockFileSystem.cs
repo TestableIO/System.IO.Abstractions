@@ -246,7 +246,6 @@ namespace System.IO.Abstractions.TestingHelpers
             if (directoryPath == null)
             {
                 AddDrive(fixedPath, new MockDriveData());
-                SetEntry(fixedPath, mockFile);
             }
             else if (!DirectoryExistsWithoutFixingPath(directoryPath))
             {
