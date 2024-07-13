@@ -12,3 +12,7 @@ The base version represents the MAJOR and MINOR parts of [SemVer](https://semver
 
 - `main` contains the latest sources. Each merge there triggers a deploy to `nuget.org`.
 - All versions on `nuget.org` have a matching GitHub release/tag.
+
+## Commits and PR title
+
+- Please use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) to name your commits and PR title
