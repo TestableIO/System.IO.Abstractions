@@ -437,6 +437,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
         
         [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockFileSystem_Constructor_ShouldSupportDifferentRootDrives()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -457,6 +458,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockFileSystem_Constructor_ShouldAddDifferentDrivesIfNotExist()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -474,6 +476,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockFileSystem_Constructor_ShouldNotDuplicateDrives()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
