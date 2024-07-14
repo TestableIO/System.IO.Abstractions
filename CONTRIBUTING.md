@@ -12,3 +12,20 @@ The base version represents the MAJOR and MINOR parts of [SemVer](https://semver
 
 - `main` contains the latest sources. Each merge there triggers a deploy to `nuget.org`.
 - All versions on `nuget.org` have a matching GitHub release/tag.
+
+## Commits and PR title
+
+- Please use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) to name your commits and PR title.
+  We use [action-semantic-pull-request](https://github.com/amannn/action-semantic-pull-request?tab=readme-ov-file#configuration) to enforce this policy, feel free to have a closer look.
+- Available prefixes:
+  - `feat:` A new feature
+  - `fix:` A bug fix
+  - `docs:` Documentation only changes
+  - `style:` Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+  - `refactor:` A code change that neither fixes a bug nor adds a feature
+  - `perf:` A code change that improves performance
+  - `test:` Adding missing tests or correcting existing tests
+  - `build:` Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
+  - `ci:` Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
+  - `chore:` Other changes that don't modify src or test files
+  - `revert:` Reverts a previous commit
