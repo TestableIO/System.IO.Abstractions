@@ -105,6 +105,52 @@
         }
 
         [Test]
+        [TestCase(FileAccess.Write)]
+        [TestCase(FileAccess.ReadWrite)]
+        public void MockFileStream_Constructor_WriteAccessOnReadOnlyFile_Throws_Exception(
+            FileAccess fileAccess)
+        {
+            // Arrange
+            var filePath = @"C:\test.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { filePath, new MockFileData("hi") { Attributes = FileAttributes.ReadOnly } }
+            });
+
+            // Act
+            Assert.Throws<UnauthorizedAccessException>(() => new MockFileStream(fileSystem, filePath, FileMode.Open, fileAccess));
+        }
+
+        [Test]
+        public void MockFileStream_Constructor_ReadAccessOnReadOnlyFile_Does_Not_Throw_Exception()
+        {
+            // Arrange
+            var filePath = @"C:\test.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { filePath, new MockFileData("hi") { Attributes = FileAttributes.ReadOnly } }
+            });
+
+            // Act
+            Assert.DoesNotThrow(() => new MockFileStream(fileSystem, filePath, FileMode.Open, FileAccess.Read));
+        }
+
+
+        [Test]
+        public void MockFileStream_Constructor_WriteAccessOnNonReadOnlyFile_Does_Not_Throw_Exception()
+        {
+            // Arrange
+            var filePath = @"C:\test.txt";
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { filePath, new MockFileData("hi") { Attributes = FileAttributes.Normal } }
+            });
+
+            // Act
+            Assert.DoesNotThrow(() => new MockFileStream(fileSystem, filePath, FileMode.Open, FileAccess.Write));
+        }
+
+        [Test]
         [TestCase(FileShare.None, FileAccess.Read)]
         [TestCase(FileShare.None, FileAccess.ReadWrite)]
         [TestCase(FileShare.None, FileAccess.Write)]
