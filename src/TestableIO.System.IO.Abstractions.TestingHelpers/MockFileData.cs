@@ -203,17 +203,23 @@ namespace System.IO.Abstractions.TestingHelpers
         public FileShare AllowedFileShare { get; set; } = FileShare.ReadWrite | FileShare.Delete;
         /// <summary>
         /// Checks whether the file is accessible for this type of FileAccess. 
-        /// MockfileData can be configured to have FileShare.None, which indicates it is locked by a 'different process'.
+        /// MockFileData can be configured to have FileShare.None, which indicates it is locked by a 'different process'.
         /// 
         /// If the file is 'locked by a different process', an IOException will be thrown.
+        /// If the file is read-only and is accessed for writing, an UnauthorizedAccessException will be thrown.
         /// </summary>
-        /// <param name="path">The path is used in the IOException message to match the message in real life situations</param>
+        /// <param name="path">The path is used in the exception message to match the message in real life situations</param>
         /// <param name="access">The access type to check</param>
         internal void CheckFileAccess(string path, FileAccess access)
         {
             if (!AllowedFileShare.HasFlag((FileShare)access))
             {
                 throw CommonExceptions.ProcessCannotAccessFileInUse(path);
+            }
+
+            if (Attributes.HasFlag(FileAttributes.ReadOnly) && access.HasFlag(FileAccess.Write))
+            {
+                throw CommonExceptions.AccessDenied(path);
             }
         }
 
