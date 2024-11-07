@@ -424,7 +424,15 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override UnixFileMode GetUnixFileMode(string path)
         {
-            throw CommonExceptions.NotImplemented();
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                throw CommonExceptions.FileNotFound(path);
+            }
+            
+            var mockFileData = mockFileDataAccessor.GetFile(path);
+            return mockFileData.UnixMode;
         }
 #endif
 
@@ -954,7 +962,15 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public override void SetUnixFileMode(string path, UnixFileMode mode)
         {
-            throw CommonExceptions.NotImplemented();
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                throw CommonExceptions.FileNotFound(path);
+            }
+            
+            var mockFileData = mockFileDataAccessor.GetFile(path);
+            mockFileData.UnixMode = mode;
         }
 #endif
 

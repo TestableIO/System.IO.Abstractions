@@ -201,6 +201,16 @@ namespace System.IO.Abstractions.TestingHelpers
         /// Gets or sets the File sharing mode for this file, this allows you to lock a file for reading or writing.
         /// </summary>
         public FileShare AllowedFileShare { get; set; } = FileShare.ReadWrite | FileShare.Delete;
+
+#if FEATURE_UNIX_FILE_MODE
+        /// <summary>
+        /// Gets or sets the Unix file mode (permissions) for this file.
+        /// This allows you to configure the read, write and execute access for user, group and other.
+        /// </summary>
+        public UnixFileMode UnixMode { get; set; } = UnixFileMode.UserRead | UnixFileMode.GroupRead |
+                                                     UnixFileMode.OtherRead | UnixFileMode.UserWrite;
+#endif
+
         /// <summary>
         /// Checks whether the file is accessible for this type of FileAccess. 
         /// MockFileData can be configured to have FileShare.None, which indicates it is locked by a 'different process'.
