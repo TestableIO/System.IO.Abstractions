@@ -283,6 +283,18 @@
 
             Assert.That(result1, Is.SameAs(result2));
         }
+        
+        #if FEATURE_ASYNC_FILE
+        [Test]
+        public async Task MockFileStream_DisposeAsync_ShouldNotThrow()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.File.WriteAllText("foo.txt", "");
+            {
+                await using var reportStream = fileSystem.File.OpenRead("foo.txt");
+            }
+        }
+        #endif
 
         [Test]
         public void MockFileStream_Null_ShouldHaveExpectedProperties()

@@ -223,15 +223,6 @@ namespace System.IO.Abstractions
             base.Dispose(disposing);
         }
 
-#if FEATURE_ASYNC_FILE
-        /// <inheritdoc cref="Stream.DisposeAsync()" />
-        public override async ValueTask DisposeAsync()
-        {
-            await _stream.DisposeAsync();
-            await base.DisposeAsync();
-        }
-#endif
-
         /// <summary>
         /// Allows to cast the internal Stream to a FileStream
         /// </summary>
