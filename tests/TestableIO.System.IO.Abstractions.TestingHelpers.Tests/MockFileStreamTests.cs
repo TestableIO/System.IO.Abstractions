@@ -293,5 +293,84 @@
             Assert.That(result.Length, Is.Zero);
             Assert.That(result.IsAsync, Is.True);
         }
+        
+        [Test]
+        [TestCase(0)]
+        [TestCase(-1)]
+        public void MockFileStream_WhenBufferSizeIsNotPositive_ShouldThrowArgumentNullException(int bufferSize)
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.File.WriteAllText("foo.txt", "");
+            fileSystem.File.WriteAllText("bar.txt", "");
+            using var source = fileSystem.FileInfo.New(@"foo.txt").OpenRead();
+            using var destination = fileSystem.FileInfo.New(@"bar.txt").OpenWrite();
+            
+            Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => 
+                await source.CopyToAsync(destination, bufferSize));
+        }
+        
+        [Test]
+        public void MockFileStream_WhenDestinationIsClosed_ShouldThrowObjectDisposedException()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.File.WriteAllText("foo.txt", "");
+            using var source = fileSystem.FileInfo.New(@"foo.txt").OpenRead();
+            using var destination = new MemoryStream();
+            destination.Close();
+            
+            Assert.ThrowsAsync<ObjectDisposedException>(async () => 
+                await source.CopyToAsync(destination));
+        }
+        
+        [Test]
+        public void MockFileStream_WhenDestinationIsNull_ShouldThrowArgumentNullException()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.File.WriteAllText("foo.txt", "");
+            using var source = fileSystem.FileInfo.New(@"foo.txt").OpenRead();
+            
+            Assert.ThrowsAsync<ArgumentNullException>(async () => 
+                await source.CopyToAsync(null));
+        }
+        
+        [Test]
+        public void MockFileStream_WhenDestinationIsReadOnly_ShouldThrowNotSupportedException()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.File.WriteAllText("foo.txt", "");
+            fileSystem.File.WriteAllText("bar.txt", "");
+            using var source = fileSystem.FileInfo.New(@"foo.txt").OpenRead();
+            using var destination = fileSystem.FileInfo.New(@"bar.txt").OpenRead();
+            
+            Assert.ThrowsAsync<NotSupportedException>(async () => 
+                await source.CopyToAsync(destination));
+        }
+
+        [Test]
+        public void MockFileStream_WhenSourceIsClosed_ShouldThrowObjectDisposedException()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.File.WriteAllText("foo.txt", "");
+            fileSystem.File.WriteAllText("bar.txt", "");
+            using var source = fileSystem.FileInfo.New(@"foo.txt").OpenRead();
+            using var destination = fileSystem.FileInfo.New(@"bar.txt").OpenWrite();
+            source.Close();
+            
+            Assert.ThrowsAsync<ObjectDisposedException>(async () => 
+                await source.CopyToAsync(destination));
+        }
+
+        [Test]
+        public void MockFileStream_WhenSourceIsWriteOnly_ShouldThrowNotSupportedException()
+        {
+            var fileSystem = new MockFileSystem();
+            fileSystem.File.WriteAllText("foo.txt", "");
+            fileSystem.File.WriteAllText("bar.txt", "");
+            using var source = fileSystem.FileInfo.New(@"foo.txt").OpenWrite();
+            using var destination = fileSystem.FileInfo.New(@"bar.txt").OpenWrite();
+            
+            Assert.ThrowsAsync<NotSupportedException>(async () => 
+                await source.CopyToAsync(destination));
+        }
     }
 }
