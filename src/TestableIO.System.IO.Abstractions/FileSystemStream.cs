@@ -101,20 +101,32 @@ namespace System.IO.Abstractions
             object? state)
             => _stream.BeginWrite(buffer, offset, count, callback, state);
 
+        /// <inheritdoc cref="Stream.Close()" />
+        public override void Close()
+        {
+            base.Close();
+            _stream.Close();
+        }
+
         /// <inheritdoc cref="Stream.CopyTo(Stream, int)" />
 #if NETSTANDARD2_0 || NET462
-	public new virtual void CopyTo(Stream destination, int bufferSize)
-		=> _stream.CopyTo(destination, bufferSize);
+	    public new virtual void CopyTo(Stream destination, int bufferSize)
 #else
         public override void CopyTo(Stream destination, int bufferSize)
-            => _stream.CopyTo(destination, bufferSize);
 #endif
+        {
+            ValidateCopyToArguments(this, destination, bufferSize);
+            _stream.CopyTo(destination, bufferSize);
+        }
 
         /// <inheritdoc cref="Stream.CopyToAsync(Stream, int, CancellationToken)" />
         public override Task CopyToAsync(Stream destination,
             int bufferSize,
             CancellationToken cancellationToken)
-            => _stream.CopyToAsync(destination, bufferSize, cancellationToken);
+        {
+            ValidateCopyToArguments(this, destination, bufferSize);
+            return _stream.CopyToAsync(destination, bufferSize, cancellationToken);
+        }
 
         /// <inheritdoc cref="Stream.EndRead(IAsyncResult)" />
         public override int EndRead(IAsyncResult asyncResult)
@@ -141,9 +153,9 @@ namespace System.IO.Abstractions
             => _stream.Read(buffer, offset, count);
 
 #if FEATURE_SPAN
-	/// <inheritdoc cref="Stream.Read(Span{byte})" />
-	public override int Read(Span<byte> buffer)
-		=> _stream.Read(buffer);
+	    /// <inheritdoc cref="Stream.Read(Span{byte})" />
+	    public override int Read(Span<byte> buffer)
+		    => _stream.Read(buffer);
 #endif
 
         /// <inheritdoc cref="Stream.ReadAsync(byte[], int, int, CancellationToken)" />
@@ -154,10 +166,10 @@ namespace System.IO.Abstractions
             => _stream.ReadAsync(buffer, offset, count, cancellationToken);
 
 #if FEATURE_SPAN
-	/// <inheritdoc cref="Stream.ReadAsync(Memory{byte}, CancellationToken)" />
-	public override ValueTask<int> ReadAsync(Memory<byte> buffer,
-	                                         CancellationToken cancellationToken = new())
-		=> _stream.ReadAsync(buffer, cancellationToken);
+	    /// <inheritdoc cref="Stream.ReadAsync(Memory{byte}, CancellationToken)" />
+	    public override ValueTask<int> ReadAsync(Memory<byte> buffer,
+	                                             CancellationToken cancellationToken = new())
+		    => _stream.ReadAsync(buffer, cancellationToken);
 #endif
 
         /// <inheritdoc cref="Stream.ReadByte()" />
@@ -181,9 +193,9 @@ namespace System.IO.Abstractions
             => _stream.Write(buffer, offset, count);
 
 #if FEATURE_SPAN
-	/// <inheritdoc cref="Stream.Write(ReadOnlySpan{byte})" />
-	public override void Write(ReadOnlySpan<byte> buffer)
-		=> _stream.Write(buffer);
+	    /// <inheritdoc cref="Stream.Write(ReadOnlySpan{byte})" />
+	    public override void Write(ReadOnlySpan<byte> buffer)
+		    => _stream.Write(buffer);
 #endif
 
         /// <inheritdoc cref="Stream.WriteAsync(byte[], int, int, CancellationToken)" />
@@ -194,10 +206,10 @@ namespace System.IO.Abstractions
             => _stream.WriteAsync(buffer, offset, count, cancellationToken);
 
 #if FEATURE_SPAN
-	/// <inheritdoc cref="Stream.WriteAsync(ReadOnlyMemory{byte}, CancellationToken)" />
-	public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer,
-	                                     CancellationToken cancellationToken = new())
-		=> _stream.WriteAsync(buffer, cancellationToken);
+	    /// <inheritdoc cref="Stream.WriteAsync(ReadOnlyMemory{byte}, CancellationToken)" />
+	    public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer,
+	                                         CancellationToken cancellationToken = new())
+		    => _stream.WriteAsync(buffer, cancellationToken);
 #endif
 
         /// <inheritdoc cref="Stream.WriteByte(byte)" />
@@ -211,6 +223,15 @@ namespace System.IO.Abstractions
             base.Dispose(disposing);
         }
 
+#if FEATURE_ASYNC_FILE
+        /// <inheritdoc cref="Stream.DisposeAsync()" />
+        public override async ValueTask DisposeAsync()
+        {
+            await _stream.DisposeAsync();
+            await base.DisposeAsync();
+        }
+#endif
+
         /// <summary>
         /// Allows to cast the internal Stream to a FileStream
         /// </summary>
@@ -219,6 +240,39 @@ namespace System.IO.Abstractions
         public static explicit operator FileStream(FileSystemStream fsStream)
         {
             return (FileStream) fsStream._stream;
+        }
+
+        private static void ValidateCopyToArguments(Stream source, Stream destination, int bufferSize)
+        {
+            if (destination == null)
+            {
+                throw new ArgumentNullException(nameof(destination), "Destination cannot be null.");
+            }
+
+            if (bufferSize <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(bufferSize), "Buffer size must be greater than zero.");
+            }
+
+            if (!destination.CanWrite)
+            {
+                if (destination.CanRead)
+                {
+                    throw new NotSupportedException("Stream does not support writing.");
+                }
+
+                throw new ObjectDisposedException("Cannot access a closed Stream.");
+            }
+            
+            if (!source.CanRead)
+            {
+                if (source.CanWrite)
+                {
+                    throw new NotSupportedException("Stream does not support reading.");
+                }
+
+                throw new ObjectDisposedException("Cannot access a closed Stream.");
+            }
         }
     }
 }
