@@ -14,7 +14,7 @@ namespace System.IO.Abstractions.TestingHelpers
     public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     {
         private const string DEFAULT_CURRENT_DIRECTORY = @"C:\";
-        private const string TEMP_DIRECTORY = @"C:\temp";
+        private const string TEMP_DIRECTORY = @"C:\temp\";
 
         private readonly IDictionary<string, FileSystemEntry> files;
         private readonly IDictionary<string, MockDriveData> drives;
