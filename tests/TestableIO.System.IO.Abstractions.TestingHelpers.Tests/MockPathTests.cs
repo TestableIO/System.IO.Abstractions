@@ -383,6 +383,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void GetTempPath_ShouldEndWithDirectorySeparator()
+        {
+            //Arrange
+            var mockPath = new MockFileSystem().Path;
+            var directorySeparator = mockPath.DirectorySeparatorChar.ToString();
+
+            //Act
+            var result = mockPath.GetTempPath();
+
+            //Assert
+            Assert.That(result, Does.EndWith(directorySeparator));
+        }
+
+        [Test]
         [TestCase(null)]
         [TestCase("")]
         [TestCase(@"C:\temp")]
