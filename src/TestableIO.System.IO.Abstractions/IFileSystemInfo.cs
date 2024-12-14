@@ -9,7 +9,7 @@ namespace System.IO.Abstractions
         /// Exposes the underlying filesystem implementation. This is useful for implementing extension methods.
         /// </summary>
         /// <remarks>
-        /// The property is always a global object related to a global current directory.
+        /// The property is always a global object related to the global current directory.
         /// </remarks>        
         IFileSystem FileSystem { get; }
 
