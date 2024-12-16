@@ -490,29 +490,6 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFileInfo_GetFileVersionInfo_ShouldReturnTheFileVersionInfoOfTheMockFileData()
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem();
-
-            var fileVersionInfo = new MockFileVersionInfo();
-            var mockFileData = new MockFileData(string.Empty)
-            {
-                FileVersionInfo = fileVersionInfo
-            };
-
-            fileSystem.AddFile(XFS.Path(@"c:\temp\file.txt"), mockFileData);
-
-            var fileInfo = fileSystem.FileInfo.New(XFS.Path(@"c:\temp\file.txt"));
-
-            // Act
-            var result = fileInfo.FileVersionInfo;
-
-            // Assert
-            Assert.That(result, Is.EqualTo(fileVersionInfo));
-        }
-
-        [Test]
         public void MockFileInfo_OpenRead_ShouldReturnByteContentOfFile()
         {
             var fileSystem = new MockFileSystem();

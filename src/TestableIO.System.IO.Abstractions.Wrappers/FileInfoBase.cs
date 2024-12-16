@@ -77,9 +77,6 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFileInfo.Directory"/>
         public abstract IDirectoryInfo Directory { get; }
 
-        /// <inheritdoc cref="IFileVersionInfo"/>
-        public abstract IFileVersionInfo FileVersionInfo { get; }
-
         /// <inheritdoc cref="IFileInfo.DirectoryName"/>
         public abstract string DirectoryName { get; }
 

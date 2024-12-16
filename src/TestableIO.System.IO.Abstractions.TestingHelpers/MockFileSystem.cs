@@ -65,6 +65,7 @@ namespace System.IO.Abstractions.TestingHelpers
             File = new MockFile(this);
             Directory = new MockDirectory(this, currentDirectory);
             FileInfo = new MockFileInfoFactory(this);
+            FileVersionInfo = new MockFileVersionInfoFactory(this);
             FileStream = new MockFileStreamFactory(this);
             DirectoryInfo = new MockDirectoryInfoFactory(this);
             DriveInfo = new MockDriveInfoFactory(this);
@@ -97,6 +98,8 @@ namespace System.IO.Abstractions.TestingHelpers
         public override IDirectory Directory { get; }
         /// <inheritdoc />
         public override IFileInfoFactory FileInfo { get; }
+        /// <inheritdoc />
+        public override IFileVersionInfoFactory FileVersionInfo { get; }
         /// <inheritdoc />
         public override IFileStreamFactory FileStream { get; }
         /// <inheritdoc />

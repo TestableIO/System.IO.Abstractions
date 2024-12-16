@@ -16,6 +16,9 @@
         public abstract IFileInfoFactory FileInfo { get; }
 
         /// <inheritdoc />
+        public abstract IFileVersionInfoFactory FileVersionInfo { get; }
+
+        /// <inheritdoc />
         public abstract IFileStreamFactory FileStream { get; }
 
         /// <inheritdoc />
