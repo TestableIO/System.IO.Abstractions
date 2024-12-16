@@ -19,10 +19,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             {
                 { @"c:\a.txt", new MockFileData("Demo text content") { FileVersionInfo = fileVersionInfo } }
             });
-            _ = new MockFileVersionInfoFactory(fileSystem); // file system injection
 
             // Act
-            var result = MockFileVersionInfoFactory.GetVersionInfo(@"c:\a.txt");
+            var result = fileSystem.FileVersionInfo.GetVersionInfo(@"c:\a.txt");
 
             // Assert
             Assert.That(result, Is.EqualTo(fileVersionInfo));
@@ -37,10 +36,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { @"c:\a.txt", new MockFileData("Demo text content") },
                 { @"c:\a\b\c.txt", new MockFileData("Demo text content") },
             });
-            _ = new MockFileVersionInfoFactory(fileSystem); // file system injection
 
             // Act
-            TestDelegate code = () => MockFileVersionInfoFactory.GetVersionInfo(@"c:\foo.txt");
+            TestDelegate code = () => fileSystem.FileVersionInfo.GetVersionInfo(@"c:\foo.txt");
             
             // Assert
             Assert.Throws<FileNotFoundException>(code);
