@@ -296,7 +296,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(XFS.Path(@"C:\file.txt"), string.Empty);
 
             // Assert
-            IFileVersionInfo fileVersionInfo = fileSystem.GetFile(XFS.Path(@"C:\file.txt")).FileVersionInfo;
+            IFileVersionInfo fileVersionInfo = fileSystem.FileVersionInfo.GetFileVersion(XFS.Path(@"C:\file.txt"));
             Assert.That(fileVersionInfo, Is.Not.Null);
             Assert.That(fileVersionInfo.FileName, Is.EqualTo(XFS.Path(@"C:\file.txt")));
         }
