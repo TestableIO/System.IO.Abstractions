@@ -12,43 +12,30 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         /// <inheritdoc />
         public MockFileVersionInfo(
-            [Optional] string comments,
-            [Optional] string companyName,
-            [Optional] int fileBuildPart,
-            [Optional] string fileDescription,
-            [Optional] int fileMajorPart,
-            [Optional] int fileMinorPart,
-            [Optional] string fileName,
-            [Optional] int filePrivatePart,
-            [Optional] string fileVersion,
-            [Optional] string internalName,
-            [Optional] bool isDebug,
-            [Optional] bool isPatched,
-            [Optional] bool isPrivateBuild,
-            [Optional] bool isPreRelease,
-            [Optional] bool isSpecialBuild,
-            [Optional] string language,
-            [Optional] string legalCopyright,
-            [Optional] string legalTrademarks,
-            [Optional] string originalFilename,
-            [Optional] string privateBuild,
-            [Optional] int productBuildPart,
-            [Optional] int productMajorPart,
-            [Optional] int productMinorPart,
-            [Optional] string productName,
-            [Optional] int productPrivatePart,
-            [Optional] string productVersion,
-            [Optional] string specialBuild)
+            string comments = null,
+            string companyName = null,
+            string fileDescription = null,
+            string fileName = null,
+            string fileVersion = null,
+            string internalName = null,
+            bool isDebug = false,
+            bool isPatched = false,
+            bool isPrivateBuild = false,
+            bool isPreRelease = false,
+            bool isSpecialBuild = false,
+            string language = null,
+            string legalCopyright = null,
+            string legalTrademarks = null,
+            string originalFilename = null,
+            string privateBuild = null,
+            string productName = null,
+            string productVersion = null,
+            string specialBuild = null)
         {
             Comments = comments;
             CompanyName = companyName;
-            FileBuildPart = fileBuildPart;
             FileDescription = fileDescription;
-            FileMajorPart = fileMajorPart;
-            FileMinorPart = fileMinorPart;
             FileName = fileName;
-            FilePrivatePart = filePrivatePart;
-            FileVersion = fileVersion;
             InternalName = internalName;
             IsDebug = isDebug;
             IsPatched = isPatched;
@@ -60,95 +47,195 @@ namespace System.IO.Abstractions.TestingHelpers
             LegalTrademarks = legalTrademarks;
             OriginalFilename = originalFilename;
             PrivateBuild = privateBuild;
-            ProductBuildPart = productBuildPart;
-            ProductMajorPart = productMajorPart;
-            ProductMinorPart = productMinorPart;
             ProductName = productName;
-            ProductPrivatePart = productPrivatePart;
-            ProductVersion = productVersion;
             SpecialBuild = specialBuild;
+
+            if (fileVersion != null)
+            {
+                ParseVersion(fileVersion, out int fileMajor, out int fileMinor, out int fileBuild, out int filePrivate);
+                FileMajorPart = fileMajor;
+                FileMinorPart = fileMinor;
+                FileBuildPart = fileBuild;
+                FilePrivatePart = filePrivate;
+            }
+
+            if (productVersion != null)
+            {
+                ParseVersion(productVersion, out int productMajor, out int productMinor, out int productBuild, out int productPrivate);
+                ProductMajorPart = productMajor;
+                ProductMinorPart = productMinor;
+                ProductBuildPart = productBuild;
+                ProductPrivatePart = productPrivate;
+            }
         }
 
         /// <inheritdoc/>
-        public override string Comments { get; }
+        public override string Comments
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override string CompanyName { get; }
+        public override string CompanyName
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override int FileBuildPart { get; }
+        public override int FileBuildPart
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override string FileDescription { get; }
+        public override string FileDescription
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override int FileMajorPart { get; }
+        public override int FileMajorPart
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override int FileMinorPart { get; }
+        public override int FileMinorPart
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override string FileName { get; }
+        public override string FileName
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override int FilePrivatePart { get; }
+        public override int FilePrivatePart
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override string FileVersion { get; }
+        public override string FileVersion
+        {
+            get
+            {
+                return $"{FileMajorPart}.{FileMinorPart}.{FileBuildPart}.{FilePrivatePart}";
+            }
+        }
 
         /// <inheritdoc/>
-        public override string InternalName { get; }
+        public override string InternalName
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override bool IsDebug { get; }
+        public override bool IsDebug
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override bool IsPatched { get; }
+        public override bool IsPatched
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override bool IsPrivateBuild { get; }
+        public override bool IsPrivateBuild
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override bool IsPreRelease { get; }
+        public override bool IsPreRelease
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override bool IsSpecialBuild { get; }
+        public override bool IsSpecialBuild
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override string Language { get; }
+        public override string Language
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override string LegalCopyright { get; }
+        public override string LegalCopyright
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override string LegalTrademarks { get; }
+        public override string LegalTrademarks
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override string OriginalFilename { get; }
+        public override string OriginalFilename
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override string PrivateBuild { get; }
+        public override string PrivateBuild
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override int ProductBuildPart { get; }
+        public override int ProductBuildPart
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override int ProductMajorPart { get; }
+        public override int ProductMajorPart
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override int ProductMinorPart { get; }
+        public override int ProductMinorPart
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override string ProductName { get; }
+        public override string ProductName
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override int ProductPrivatePart { get; }
+        public override int ProductPrivatePart
+        {
+            get;
+        }
 
         /// <inheritdoc/>
-        public override string ProductVersion { get; }
+        public override string ProductVersion
+        {
+            get
+            {
+                return $"{ProductMajorPart}.{ProductMinorPart}.{ProductBuildPart}.{ProductPrivatePart}";
+            }
+        }
 
         /// <inheritdoc/>
-        public override string SpecialBuild { get; }
+        public override string SpecialBuild
+        {
+            get;
+        }
 
         /// <inheritdoc cref="FileVersionInfo.ToString" />
         public override string ToString()
@@ -171,6 +258,23 @@ namespace System.IO.Abstractions.TestingHelpers
             sb.Append("SpecialBuild:     ").AppendLine(IsSpecialBuild.ToString());
             sb.Append("Language:         ").AppendLine(Language);
             return sb.ToString();
+        }
+
+        private static void ParseVersion(string version, out int major, out int minor, out int build, out int revision)
+        {
+            var parts = version.Split('.');
+            if (parts.Length != 4)
+            {
+                throw new FormatException("Version string must have the format 'major.minor.build.revision'.");
+            }
+
+            if (!int.TryParse(parts[0], out major) ||
+                !int.TryParse(parts[1], out minor) ||
+                !int.TryParse(parts[2], out build) ||
+                !int.TryParse(parts[3], out revision))
+            {
+                throw new FormatException("Version parts must be numeric.");
+            }
         }
     }
 }
