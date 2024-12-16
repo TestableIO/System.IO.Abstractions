@@ -25,6 +25,13 @@ namespace System.IO.Abstractions.Tests
             );
 
         [Test]
+        public void FileVersionInfo() =>
+            AssertParity(
+                typeof(System.Diagnostics.FileVersionInfo),
+                typeof(System.IO.Abstractions.FileVersionInfoBase)
+            );
+
+        [Test]
         public void Directory() =>
             AssertParity(
                 typeof(System.IO.Directory),
@@ -72,13 +79,12 @@ namespace System.IO.Abstractions.Tests
                 .Select(x => x.Replace("System.IO.FileInfo", "System.IO.Abstractions.IFileInfo"))
                 .Select(x => x.Replace("System.IO.DirectoryInfo", "System.IO.Abstractions.IDirectoryInfo"))
                 .Select(x => x.Replace("System.IO.DriveInfo", "System.IO.Abstractions.IDriveInfo"))
-                .Select(x => x.Replace("System.IO.WaitForChangedResult", "System.IO.Abstractions.IWaitForChangedResult"));
+                .Select(x => x.Replace("System.IO.WaitForChangedResult", "System.IO.Abstractions.IWaitForChangedResult"))
+                .Where(x => x != "System.Diagnostics.FileVersionInfo GetVersionInfo(System.String)");
             var abstractionMembers = GetMembers(abstractionType)
                 .Where(x => !x.Contains("op_Implicit"))
                 .Where(x => x != "System.IO.Abstractions.IFileSystem get_FileSystem()")
-                .Where(x => x != "System.IO.Abstractions.IFileSystem FileSystem")
-                .Where(x => x != "System.IO.Abstractions.IFileVersionInfo get_FileVersionInfo()")
-                .Where(x => x != "System.IO.Abstractions.IFileVersionInfo FileVersionInfo");
+                .Where(x => x != "System.IO.Abstractions.IFileSystem FileSystem");
             var diff = new ApiDiff(
                 extraMembers: abstractionMembers.Except(referenceMembers),
                 missingMembers: referenceMembers.Except(abstractionMembers)

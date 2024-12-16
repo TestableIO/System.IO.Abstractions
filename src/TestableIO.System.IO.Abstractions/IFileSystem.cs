@@ -30,6 +30,9 @@
         /// </summary>
         IFileInfoFactory FileInfo { get; }
 
+        /// <inheritdoc cref="IFileVersionInfoFactory" />
+        IFileVersionInfoFactory FileVersionInfo { get; }
+
         /// <summary>
         /// A factory for the creation of wrappers for <see cref="System.IO.FileStream" />.
         /// </summary>

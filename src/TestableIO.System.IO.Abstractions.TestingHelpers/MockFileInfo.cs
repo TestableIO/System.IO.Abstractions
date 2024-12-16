@@ -334,15 +334,6 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
         /// <inheritdoc />
-        public override IFileVersionInfo FileVersionInfo
-        {
-            get
-            {
-                return mockFileSystem.GetFile(path).FileVersionInfo;
-            }
-        }
-
-        /// <inheritdoc />
         public override string DirectoryName
         {
             get

@@ -8,9 +8,6 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="FileInfo.Directory" />
         IDirectoryInfo? Directory { get; }
 
-        /// <inheritdoc cref="IFileVersionInfo" />
-        IFileVersionInfo? FileVersionInfo { get; }
-
         /// <inheritdoc cref="FileInfo.DirectoryName" />
         string? DirectoryName { get; }
 
