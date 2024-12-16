@@ -76,7 +76,9 @@ namespace System.IO.Abstractions.Tests
             var abstractionMembers = GetMembers(abstractionType)
                 .Where(x => !x.Contains("op_Implicit"))
                 .Where(x => x != "System.IO.Abstractions.IFileSystem get_FileSystem()")
-                .Where(x => x != "System.IO.Abstractions.IFileSystem FileSystem");
+                .Where(x => x != "System.IO.Abstractions.IFileSystem FileSystem")
+                .Where(x => x != "System.IO.Abstractions.IFileVersionInfo get_FileVersionInfo()")
+                .Where(x => x != "System.IO.Abstractions.IFileVersionInfo FileVersionInfo");
             var diff = new ApiDiff(
                 extraMembers: abstractionMembers.Except(referenceMembers),
                 missingMembers: referenceMembers.Except(abstractionMembers)

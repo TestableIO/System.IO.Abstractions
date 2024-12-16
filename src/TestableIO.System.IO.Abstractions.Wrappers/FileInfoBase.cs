@@ -36,7 +36,7 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="IFileInfo.Encrypt"/>
         public abstract void Encrypt();
-        
+
         /// <inheritdoc cref="IFileInfo.MoveTo(string)"/>
         public abstract void MoveTo(string destFileName);
 
@@ -73,9 +73,12 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="IFileInfo.Replace(string,string,bool)"/>
         public abstract IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
-        
+
         /// <inheritdoc cref="IFileInfo.Directory"/>
         public abstract IDirectoryInfo Directory { get; }
+
+        /// <inheritdoc cref="IFileVersionInfo"/>
+        public abstract IFileVersionInfo FileVersionInfo { get; }
 
         /// <inheritdoc cref="IFileInfo.DirectoryName"/>
         public abstract string DirectoryName { get; }

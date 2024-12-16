@@ -252,6 +252,8 @@ namespace System.IO.Abstractions.TestingHelpers
                 AddDirectory(directoryPath);
             }
 
+            mockFile.FileVersionInfo ??= new MockFileVersionInfo(fileName: fixedPath);
+
             SetEntry(fixedPath, mockFile);
         }
 
@@ -568,7 +570,7 @@ namespace System.IO.Abstractions.TestingHelpers
         }
 
 #if FEATURE_SERIALIZABLE
-    [Serializable]
+        [Serializable]
 #endif
         private class FileSystemEntry
         {

@@ -248,6 +248,12 @@ namespace System.IO.Abstractions
         }
 
         /// <inheritdoc />
+        public override IFileVersionInfo FileVersionInfo
+        {
+            get { return new FileVersionInfoWrapper(Diagnostics.FileVersionInfo.GetVersionInfo(FullName)); }
+        }
+
+        /// <inheritdoc />
         public override string DirectoryName
         {
             get { return instance.DirectoryName; }
