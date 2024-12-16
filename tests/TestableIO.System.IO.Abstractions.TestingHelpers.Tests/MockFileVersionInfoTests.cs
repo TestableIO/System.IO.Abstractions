@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System.Collections;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -24,22 +25,73 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 isSpecialBuild: true,
                 language: "English");
 
-            string expected = "File:             c:\\b.txt\r\n" +
-                "InternalName:     b.txt\r\n" +
-                "OriginalFilename: b.txt\r\n" +
-                "FileVersion:      1.0.0.0\r\n" +
-                "FileDescription:  b\r\n" +
-                "Product:          b\r\n" +
-                "ProductVersion:   1.0.0.0\r\n" +
-                "Debug:            True\r\n" +
-                "Patched:          True\r\n" +
-                "PreRelease:       True\r\n" +
-                "PrivateBuild:     True\r\n" +
-                "SpecialBuild:     True\r\n" +
-                "Language:         English\r\n";
+            string expected = @"File:             c:\b.txt
+InternalName:     b.txt
+OriginalFilename: b.txt
+FileVersion:      1.0.0.0
+FileDescription:  b
+Product:          b
+ProductVersion:   1.0.0.0
+Debug:            True
+Patched:          True
+PreRelease:       True
+PrivateBuild:     True
+SpecialBuild:     True
+Language:         English
+";
 
             // Act & Assert
             Assert.That(mockFileVersionInfo.ToString(), Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void MockFileVersionInfo_Constructor_ShouldSetFileVersionNumbersIfFileVersionIsNotNull()
+        {
+            // Arrange
+            var mockFileVersionInfo = new MockFileVersionInfo(fileVersion: "1.2.3.4");
+
+            // Assert
+            Assert.That(mockFileVersionInfo.FileMajorPart, Is.EqualTo(1));
+            Assert.That(mockFileVersionInfo.FileMinorPart, Is.EqualTo(2));
+            Assert.That(mockFileVersionInfo.FileBuildPart, Is.EqualTo(3));
+            Assert.That(mockFileVersionInfo.FilePrivatePart, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void MockFileVersionInfo_Constructor_ShouldSetProductVersionNumbersIfProductVersionIsNotNull()
+        {
+            // Act
+            var mockFileVersionInfo = new MockFileVersionInfo(productVersion: "1.2.3.4");
+
+            // Assert
+            Assert.That(mockFileVersionInfo.ProductMajorPart, Is.EqualTo(1));
+            Assert.That(mockFileVersionInfo.ProductMinorPart, Is.EqualTo(2));
+            Assert.That(mockFileVersionInfo.ProductBuildPart, Is.EqualTo(3));
+            Assert.That(mockFileVersionInfo.ProductPrivatePart, Is.EqualTo(4));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetInvalidVersionStrings))]
+        public void MockFileVersionInfo_Constructor_ShouldThrowFormatExceptionIfFileVersionFormatIsInvalid(string version)
+        {
+            // Assert
+            Assert.Throws<FormatException>(() => new MockFileVersionInfo(fileVersion: version));
+        }
+
+        [Test]
+        [TestCaseSource(nameof(GetInvalidVersionStrings))]
+        public void MockFileVersionInfo_Constructor_ShouldThrowFormatExceptionIfProductVersionFormatIsInvalid(string version)
+        {
+            // Assert
+            Assert.Throws<FormatException>(() => new MockFileVersionInfo(productVersion: version));
+        }
+
+        private static IEnumerable GetInvalidVersionStrings()
+        {
+            yield return "";
+            yield return "1,2,3,4";
+            yield return "1.2.34";
+            yield return "1.2.build.4";
         }
     }
 }
