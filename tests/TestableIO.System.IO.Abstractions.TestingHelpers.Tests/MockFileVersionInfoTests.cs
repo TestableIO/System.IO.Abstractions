@@ -12,18 +12,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Arrange
             var mockFileVersionInfo = new MockFileVersionInfo(
                 fileName: @"c:\b.txt",
-                internalName: "b.txt",
-                originalFilename: "b.txt",
                 fileVersion: "1.0.0.0",
+                productVersion: "1.0.0.0",
                 fileDescription: "b",
                 productName: "b",
-                productVersion: "1.0.0.0",
+                companyName: null,
+                comments: null,
+                internalName: "b.txt",
                 isDebug: true,
                 isPatched: true,
-                isPreRelease: true,
                 isPrivateBuild: true,
+                isPreRelease: true,
                 isSpecialBuild: true,
-                language: "English");
+                language: "English",
+                legalCopyright: null,
+                legalTrademarks: null,
+                originalFilename: "b.txt",
+                privateBuild: null,
+                specialBuild: null);
 
             string expected = @"File:             c:\b.txt
 InternalName:     b.txt
@@ -45,29 +51,37 @@ Language:         English
         }
 
         [Test]
-        public void MockFileVersionInfo_Constructor_ShouldSetFileVersionNumbersIfFileVersionIsNotNull()
+        public void MockFileVersionInfo_Constructor_ShouldSetFileAndProductVersionNumbersIfFileAndProductVersionAreNotNull()
         {
             // Arrange
-            var mockFileVersionInfo = new MockFileVersionInfo(fileVersion: "1.2.3.4");
+            var mockFileVersionInfo = new MockFileVersionInfo(@"c:\file.txt", fileVersion: "1.2.3.4", productVersion: "5.6.7.8");
 
             // Assert
             Assert.That(mockFileVersionInfo.FileMajorPart, Is.EqualTo(1));
             Assert.That(mockFileVersionInfo.FileMinorPart, Is.EqualTo(2));
             Assert.That(mockFileVersionInfo.FileBuildPart, Is.EqualTo(3));
             Assert.That(mockFileVersionInfo.FilePrivatePart, Is.EqualTo(4));
+            Assert.That(mockFileVersionInfo.ProductMajorPart, Is.EqualTo(5));
+            Assert.That(mockFileVersionInfo.ProductMinorPart, Is.EqualTo(6));
+            Assert.That(mockFileVersionInfo.ProductBuildPart, Is.EqualTo(7));
+            Assert.That(mockFileVersionInfo.ProductPrivatePart, Is.EqualTo(8));
         }
 
         [Test]
-        public void MockFileVersionInfo_Constructor_ShouldSetProductVersionNumbersIfProductVersionIsNotNull()
+        public void MockFileVersionInfo_Constructor_ShouldNotSetFileAndProductVersionNumbersIfFileAndProductVersionAreNull()
         {
             // Act
-            var mockFileVersionInfo = new MockFileVersionInfo(productVersion: "1.2.3.4");
+            var mockFileVersionInfo = new MockFileVersionInfo();
 
             // Assert
-            Assert.That(mockFileVersionInfo.ProductMajorPart, Is.EqualTo(1));
-            Assert.That(mockFileVersionInfo.ProductMinorPart, Is.EqualTo(2));
-            Assert.That(mockFileVersionInfo.ProductBuildPart, Is.EqualTo(3));
-            Assert.That(mockFileVersionInfo.ProductPrivatePart, Is.EqualTo(4));
+            Assert.That(mockFileVersionInfo.FileMajorPart, Is.EqualTo(0));
+            Assert.That(mockFileVersionInfo.FileMinorPart, Is.EqualTo(0));
+            Assert.That(mockFileVersionInfo.FileBuildPart, Is.EqualTo(0));
+            Assert.That(mockFileVersionInfo.FilePrivatePart, Is.EqualTo(0));
+            Assert.That(mockFileVersionInfo.ProductMajorPart, Is.EqualTo(0));
+            Assert.That(mockFileVersionInfo.ProductMinorPart, Is.EqualTo(0));
+            Assert.That(mockFileVersionInfo.ProductBuildPart, Is.EqualTo(0));
+            Assert.That(mockFileVersionInfo.ProductPrivatePart, Is.EqualTo(0));
         }
 
         [Test]
@@ -75,7 +89,7 @@ Language:         English
         public void MockFileVersionInfo_Constructor_ShouldThrowFormatExceptionIfFileVersionFormatIsInvalid(string version)
         {
             // Assert
-            Assert.Throws<FormatException>(() => new MockFileVersionInfo(fileVersion: version));
+            Assert.Throws<FormatException>(() => new MockFileVersionInfo(@"c:\file.txt", fileVersion: version, productVersion: null));
         }
 
         [Test]
@@ -83,7 +97,7 @@ Language:         English
         public void MockFileVersionInfo_Constructor_ShouldThrowFormatExceptionIfProductVersionFormatIsInvalid(string version)
         {
             // Assert
-            Assert.Throws<FormatException>(() => new MockFileVersionInfo(productVersion: version));
+            Assert.Throws<FormatException>(() => new MockFileVersionInfo(@"c:\file.txt", fileVersion: null, productVersion: version));
         }
 
         private static IEnumerable GetInvalidVersionStrings()

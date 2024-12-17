@@ -255,7 +255,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 AddDirectory(directoryPath);
             }
 
-            mockFile.FileVersionInfo ??= new MockFileVersionInfo(fileName: fixedPath);
+            mockFile.FileVersionInfo ??= new MockFileVersionInfo(fixedPath);
 
             SetEntry(fixedPath, mockFile);
         }
