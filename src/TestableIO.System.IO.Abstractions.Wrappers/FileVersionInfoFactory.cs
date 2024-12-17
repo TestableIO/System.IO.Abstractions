@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace System.IO.Abstractions
+﻿namespace System.IO.Abstractions
 {
 #if FEATURE_SERIALIZABLE
     [Serializable]
@@ -22,16 +16,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc />
         public IFileSystem FileSystem => fileSystem;
 
-        IFileVersionInfo IFileVersionInfoFactory.GetVersionInfo(string fileName)
-        {
-            return GetVersionInfo(fileName);
-        }
-
-        /// <inheritdoc cref="Diagnostics.FileVersionInfo.GetVersionInfo(string)" />
-        public static IFileVersionInfo GetVersionInfo(string fileName)
+        /// <inheritdoc />
+        public IFileVersionInfo GetVersionInfo(string fileName)
         {
             Diagnostics.FileVersionInfo fileVersionInfo = Diagnostics.FileVersionInfo.GetVersionInfo(fileName);
-            
+
             return new FileVersionInfoWrapper(fileVersionInfo);
         }
     }
