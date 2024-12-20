@@ -22,7 +22,7 @@
     <PackageReference Include="NUnit" Version="4.2.2" />
     <PackageReference Include="NUnit.Analyzers" Version="4.4.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
-    <PackageReference Include="Snapshooter.NUnit" Version="0.14.1" />
+    <PackageReference Include="Snapshooter.NUnit" Version="0.15.0" />
   </ItemGroup>
   <PropertyGroup>
     <!--
