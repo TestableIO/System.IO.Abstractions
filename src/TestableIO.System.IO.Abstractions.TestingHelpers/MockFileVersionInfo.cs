@@ -52,23 +52,25 @@ namespace System.IO.Abstractions.TestingHelpers
             PrivateBuild = privateBuild;
             SpecialBuild = specialBuild;
 
-            if (fileVersion != null)
+            if (Version.TryParse(fileVersion, out Version version))
             {
-                ParseVersion(fileVersion, out int fileMajor, out int fileMinor, out int fileBuild, out int filePrivate);
-                FileMajorPart = fileMajor;
-                FileMinorPart = fileMinor;
-                FileBuildPart = fileBuild;
-                FilePrivatePart = filePrivate;
+                FileMajorPart = version.Major;
+                FileMinorPart = version.Minor;
+                FileBuildPart = version.Build;
+                FilePrivatePart = version.Revision;
             }
 
-            if (productVersion != null)
-            {
-                ParseVersion(productVersion, out int productMajor, out int productMinor, out int productBuild, out int productPrivate);
-                ProductMajorPart = productMajor;
-                ProductMinorPart = productMinor;
-                ProductBuildPart = productBuild;
-                ProductPrivatePart = productPrivate;
-            }
+            ProductVersionParser.Parse(
+                productVersion,
+                out int productMajor,
+                out int productMinor,
+                out int productBuild,
+                out int productPrivate);
+
+            ProductMajorPart = productMajor;
+            ProductMinorPart = productMinor;
+            ProductBuildPart = productBuild;
+            ProductPrivatePart = productPrivate;
         }
 
         /// <inheritdoc/>
@@ -185,23 +187,6 @@ namespace System.IO.Abstractions.TestingHelpers
             sb.Append("SpecialBuild:     ").AppendLine(IsSpecialBuild.ToString());
             sb.Append("Language:         ").AppendLine(Language);
             return sb.ToString();
-        }
-
-        private static void ParseVersion(string version, out int major, out int minor, out int build, out int revision)
-        {
-            var parts = version.Split('.');
-            if (parts.Length != 4)
-            {
-                throw new FormatException("Version string must have the format 'major.minor.build.revision'.");
-            }
-
-            if (!int.TryParse(parts[0], out major) ||
-                !int.TryParse(parts[1], out minor) ||
-                !int.TryParse(parts[2], out build) ||
-                !int.TryParse(parts[3], out revision))
-            {
-                throw new FormatException("Version parts must be numeric.");
-            }
         }
     }
 }
