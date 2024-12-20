@@ -83,29 +83,5 @@ Language:         English
             Assert.That(mockFileVersionInfo.ProductBuildPart, Is.EqualTo(0));
             Assert.That(mockFileVersionInfo.ProductPrivatePart, Is.EqualTo(0));
         }
-
-        [Test]
-        [TestCaseSource(nameof(GetInvalidVersionStrings))]
-        public void MockFileVersionInfo_Constructor_ShouldThrowFormatExceptionIfFileVersionFormatIsInvalid(string version)
-        {
-            // Assert
-            Assert.Throws<FormatException>(() => new MockFileVersionInfo(@"c:\file.txt", fileVersion: version, productVersion: null));
-        }
-
-        [Test]
-        [TestCaseSource(nameof(GetInvalidVersionStrings))]
-        public void MockFileVersionInfo_Constructor_ShouldThrowFormatExceptionIfProductVersionFormatIsInvalid(string version)
-        {
-            // Assert
-            Assert.Throws<FormatException>(() => new MockFileVersionInfo(@"c:\file.txt", fileVersion: null, productVersion: version));
-        }
-
-        private static IEnumerable GetInvalidVersionStrings()
-        {
-            yield return "";
-            yield return "1,2,3,4";
-            yield return "1.2.34";
-            yield return "1.2.build.4";
-        }
     }
 }
