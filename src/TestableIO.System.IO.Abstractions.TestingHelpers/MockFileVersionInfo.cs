@@ -13,24 +13,24 @@ namespace System.IO.Abstractions.TestingHelpers
         /// <inheritdoc />
         public MockFileVersionInfo(
             string fileName,
-            string fileVersion,
-            string productVersion,
-            string fileDescription,
-            string productName,
-            string companyName,
-            string comments,
-            string internalName,
-            bool isDebug,
-            bool isPatched,
-            bool isPrivateBuild,
-            bool isPreRelease,
-            bool isSpecialBuild,
-            string language,
-            string legalCopyright,
-            string legalTrademarks,
-            string originalFilename,
-            string privateBuild,
-            string specialBuild)
+            string fileVersion = null,
+            string productVersion = null,
+            string fileDescription = null,
+            string productName = null,
+            string companyName = null,
+            string comments = null,
+            string internalName = null,
+            bool isDebug = false,
+            bool isPatched = false,
+            bool isPrivateBuild = false,
+            bool isPreRelease = false,
+            bool isSpecialBuild = false,
+            string language = null,
+            string legalCopyright = null,
+            string legalTrademarks = null,
+            string originalFilename = null,
+            string privateBuild = null,
+            string specialBuild = null)
         {
             FileName = fileName;
             FileVersion = fileVersion;
@@ -72,18 +72,6 @@ namespace System.IO.Abstractions.TestingHelpers
             ProductBuildPart = productBuild;
             ProductPrivatePart = productPrivate;
         }
-
-        /// <inheritdoc/>
-        public MockFileVersionInfo(string fileName)
-            : this(fileName, null, null, null, null, null, null, null, false, false, false, false, false, null, null, null, null, null, null) { }
-
-        /// <inheritdoc/>
-        public MockFileVersionInfo(string fileName, string fileVersion, string productVersion)
-            : this(fileName, fileVersion, productVersion, null, null, null, null, null, false, false, false, false, false, null, null, null, null, null, null) { }
-
-        /// <inheritdoc/>
-        public MockFileVersionInfo()
-            : this(null, null, null, null, null, null, null, null, false, false, false, false, false, null, null, null, null, null, null) { }
 
         /// <inheritdoc/>
         public override string FileName { get; }
