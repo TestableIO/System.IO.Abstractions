@@ -13,38 +13,28 @@ namespace System.IO.Abstractions.TestingHelpers
         /// mimicking the behavior of the <see cref="AssemblyInformationalVersionAttribute"/> attribute.
         /// </summary>
         /// <param name="productVersion">The product version string to parse.</param>
-        /// <param name="productMajorPart">Outputs the major part of the version. Defaults to 0 if not found.</param>
-        /// <param name="productMinorPart">Outputs the minor part of the version. Defaults to 0 if not found.</param>
-        /// <param name="productBuildPart">Outputs the build part of the version. Defaults to 0 if not found.</param>
-        /// <param name="productPrivatePart">Outputs the private part of the version. Defaults to 0 if not found.</param>
+        /// <returns>
+        /// A <see cref="ProductVersion"/> object containing the parsed major, minor, build, and private parts. 
+        /// If the input is invalid, returns a <see cref="ProductVersion"/> with all parts set to 0.
+        /// </returns>
         /// <remarks>
         /// The method splits the input string into segments separated by dots ('.') and attempts to extract
         /// the leading numeric value from each segment. A maximum of 4 segments are processed; if more than
         /// 4 segments are present, all segments are ignored. Additionally, if a segment does not contain 
         /// a valid numeric part at its start or it contains more than just a number, the rest of the segments are ignored.
         /// </remarks>
-        public static void Parse(
-           string productVersion,
-           out int productMajorPart,
-           out int productMinorPart,
-           out int productBuildPart,
-           out int productPrivatePart)
+        public static ProductVersion Parse(string productVersion)
         {
-            productMajorPart = 0;
-            productMinorPart = 0;
-            productBuildPart = 0;
-            productPrivatePart = 0;
-
             if (string.IsNullOrWhiteSpace(productVersion))
             {
-                return;
+                return new();
             }
 
             var segments = productVersion.Split('.');
             if (segments.Length > 4)
             {
                 // if more than 4 segments are present, all segments are ignored
-                return;
+                return new();
             }
 
             var regex = new Regex(@"^\d+");
@@ -71,10 +61,39 @@ namespace System.IO.Abstractions.TestingHelpers
                 }
             }
 
-            productMajorPart = parts[0];
-            productMinorPart = parts[1];
-            productBuildPart = parts[2];
-            productPrivatePart = parts[3];
+            return new()
+            {
+                Major = parts[0],
+                Minor = parts[1],
+                Build = parts[2],
+                PrivatePart = parts[3]
+            };
+        }
+
+        /// <summary>
+        /// Represents a product version with numeric parts for major, minor, build, and private versions.
+        /// </summary>
+        public class ProductVersion
+        {
+            /// <summary>
+            /// Gets the major part of the version number
+            /// </summary>
+            public int Major { get; init; }
+
+            /// <summary>
+            /// Gets the minor part of the version number
+            /// </summary>
+            public int Minor { get; init; }
+
+            /// <summary>
+            /// Gets the build part of the version number
+            /// </summary>
+            public int Build { get; init; }
+
+            /// <summary>
+            /// Gets the private part of the version number
+            /// </summary>
+            public int PrivatePart { get; init; }
         }
     }
 }
