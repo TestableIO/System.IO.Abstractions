@@ -259,7 +259,7 @@ namespace System.IO.Abstractions.TestingHelpers
             var mockFileData = GetMockFileDataForWrite();
             mockFileData.Attributes |= FileAttributes.Encrypted;
         }
-        
+
         /// <inheritdoc />
         public override void MoveTo(string destFileName)
         {
@@ -323,7 +323,7 @@ namespace System.IO.Abstractions.TestingHelpers
             mockFile.Replace(path, destinationFileName, destinationBackupFileName, ignoreMetadataErrors);
             return mockFileSystem.FileInfo.New(destinationFileName);
         }
-        
+
         /// <inheritdoc />
         public override IDirectoryInfo Directory
         {
