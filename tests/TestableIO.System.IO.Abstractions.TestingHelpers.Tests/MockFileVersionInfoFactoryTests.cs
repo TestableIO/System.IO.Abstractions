@@ -14,7 +14,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         public void MockFileVersionInfoFactory_GetVersionInfo_ShouldReturnTheFileVersionInfoOfTheMockFileData()
         {
             // Arrange
-            var fileVersionInfo = new MockFileVersionInfo();
+            var fileVersionInfo = new MockFileVersionInfo(@"c:\a.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
                 { @"c:\a.txt", new MockFileData("Demo text content") { FileVersionInfo = fileVersionInfo } }

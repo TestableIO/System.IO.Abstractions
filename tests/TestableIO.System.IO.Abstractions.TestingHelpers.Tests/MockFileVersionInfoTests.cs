@@ -71,7 +71,7 @@ Language:         English
         public void MockFileVersionInfo_Constructor_ShouldNotSetFileAndProductVersionNumbersIfFileAndProductVersionAreNull()
         {
             // Act
-            var mockFileVersionInfo = new MockFileVersionInfo();
+            var mockFileVersionInfo = new MockFileVersionInfo(@"c:\a.txt");
 
             // Assert
             Assert.That(mockFileVersionInfo.FileMajorPart, Is.EqualTo(0));
