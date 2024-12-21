@@ -60,17 +60,12 @@ namespace System.IO.Abstractions.TestingHelpers
                 FilePrivatePart = version.Revision;
             }
 
-            ProductVersionParser.Parse(
-                productVersion,
-                out int productMajor,
-                out int productMinor,
-                out int productBuild,
-                out int productPrivate);
+            var parsedProductVersion = ProductVersionParser.Parse(productVersion);
 
-            ProductMajorPart = productMajor;
-            ProductMinorPart = productMinor;
-            ProductBuildPart = productBuild;
-            ProductPrivatePart = productPrivate;
+            ProductMajorPart = parsedProductVersion.Major;
+            ProductMinorPart = parsedProductVersion.Minor;
+            ProductBuildPart = parsedProductVersion.Build;
+            ProductPrivatePart = parsedProductVersion.PrivatePart;
         }
 
         /// <inheritdoc/>

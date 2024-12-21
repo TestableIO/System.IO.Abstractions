@@ -12,20 +12,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             string productVersion = "1.2.3.4.5";
 
             // Act
-            ProductVersionParser.Parse(
-                productVersion,
-                out int productMajor,
-                out int productMinor,
-                out int productBuild,
-                out int productPrivate);
+            var parsedProductVersion = ProductVersionParser.Parse(productVersion);
 
             // Assert
             Assert.Multiple(() =>
             {
-                Assert.That(productMajor, Is.Zero);
-                Assert.That(productMinor, Is.Zero);
-                Assert.That(productBuild, Is.Zero);
-                Assert.That(productPrivate, Is.Zero);
+                Assert.That(parsedProductVersion.Major, Is.Zero);
+                Assert.That(parsedProductVersion.Minor, Is.Zero);
+                Assert.That(parsedProductVersion.Build, Is.Zero);
+                Assert.That(parsedProductVersion.PrivatePart, Is.Zero);
             });
         }
 
@@ -42,20 +37,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             int expectedRevision)
         {
             // Act
-            ProductVersionParser.Parse(
-                productVersion,
-                out int productMajor,
-                out int productMinor,
-                out int productBuild,
-                out int productPrivate);
+            var parsedProductVersion = ProductVersionParser.Parse(productVersion);
 
             // Assert
             Assert.Multiple(() =>
             {
-                Assert.That(productMajor, Is.EqualTo(expectedMajor));
-                Assert.That(productMinor, Is.EqualTo(expectedMinor));
-                Assert.That(productBuild, Is.EqualTo(expectedBuild));
-                Assert.That(productPrivate, Is.EqualTo(expectedRevision));
+                Assert.That(parsedProductVersion.Major, Is.EqualTo(expectedMajor));
+                Assert.That(parsedProductVersion.Minor, Is.EqualTo(expectedMinor));
+                Assert.That(parsedProductVersion.Build, Is.EqualTo(expectedBuild));
+                Assert.That(parsedProductVersion.PrivatePart, Is.EqualTo(expectedRevision));
             });
         }
 
@@ -76,20 +66,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             int expectedRevision)
         {
             // Act
-            ProductVersionParser.Parse(
-                productVersion,
-                out int productMajor,
-                out int productMinor,
-                out int productBuild,
-                out int productPrivate);
+            var parsedProductVersion = ProductVersionParser.Parse(productVersion);
 
             // Assert
             Assert.Multiple(() =>
             {
-                Assert.That(productMajor, Is.EqualTo(expectedMajor));
-                Assert.That(productMinor, Is.EqualTo(expectedMinor));
-                Assert.That(productBuild, Is.EqualTo(expectedBuild));
-                Assert.That(productPrivate, Is.EqualTo(expectedRevision));
+                Assert.That(parsedProductVersion.Major, Is.EqualTo(expectedMajor));
+                Assert.That(parsedProductVersion.Minor, Is.EqualTo(expectedMinor));
+                Assert.That(parsedProductVersion.Build, Is.EqualTo(expectedBuild));
+                Assert.That(parsedProductVersion.PrivatePart, Is.EqualTo(expectedRevision));
             });
         }
 
@@ -107,20 +92,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             int expectedRevision)
         {
             // Act
-            ProductVersionParser.Parse(
-                productVersion,
-                out int productMajor,
-                out int productMinor,
-                out int productBuild,
-                out int productPrivate);
+            var parsedProductVersion = ProductVersionParser.Parse(productVersion);
 
             // Assert
             Assert.Multiple(() =>
             {
-                Assert.That(productMajor, Is.EqualTo(expectedMajor));
-                Assert.That(productMinor, Is.EqualTo(expectedMinor));
-                Assert.That(productBuild, Is.EqualTo(expectedBuild));
-                Assert.That(productPrivate, Is.EqualTo(expectedRevision));
+                Assert.That(parsedProductVersion.Major, Is.EqualTo(expectedMajor));
+                Assert.That(parsedProductVersion.Minor, Is.EqualTo(expectedMinor));
+                Assert.That(parsedProductVersion.Build, Is.EqualTo(expectedBuild));
+                Assert.That(parsedProductVersion.PrivatePart, Is.EqualTo(expectedRevision));
             });
         }
     }
