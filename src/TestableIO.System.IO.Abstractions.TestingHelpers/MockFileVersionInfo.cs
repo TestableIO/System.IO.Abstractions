@@ -68,6 +68,12 @@ namespace System.IO.Abstractions.TestingHelpers
             ProductPrivatePart = parsedProductVersion.PrivatePart;
         }
 
+        /// <inheritdoc />
+        public MockFileVersionInfo(string fileName)
+        {
+            FileName = fileName;
+        }
+
         /// <inheritdoc/>
         public override string FileName { get; }
 
