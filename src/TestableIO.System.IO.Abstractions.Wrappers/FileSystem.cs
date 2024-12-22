@@ -12,6 +12,7 @@
             DriveInfo = new DriveInfoFactory(this);
             DirectoryInfo = new DirectoryInfoFactory(this);
             FileInfo = new FileInfoFactory(this);
+            FileVersionInfo = new FileVersionInfoFactory(this);
             Path = new PathWrapper(this);
             File = new FileWrapper(this);
             Directory = new DirectoryWrapper(this);
@@ -27,6 +28,9 @@
 
         /// <inheritdoc />
         public override IFileInfoFactory FileInfo { get; }
+
+        /// <inheritdoc />
+        public override IFileVersionInfoFactory FileVersionInfo { get; }
 
         /// <inheritdoc />
         public override IFileStreamFactory FileStream { get; }

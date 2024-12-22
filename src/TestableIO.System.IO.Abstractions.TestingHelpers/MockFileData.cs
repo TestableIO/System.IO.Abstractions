@@ -120,6 +120,11 @@ namespace System.IO.Abstractions.TestingHelpers
         public byte[] Contents { get; set; }
 
         /// <summary>
+        /// Gets or sets the file version info of the <see cref="MockFileData"/>
+        /// </summary>
+        public IFileVersionInfo FileVersionInfo { get; set; }
+
+        /// <summary>
         /// Gets or sets the string contents of the <see cref="MockFileData"/>.
         /// </summary>
         /// <remarks>
