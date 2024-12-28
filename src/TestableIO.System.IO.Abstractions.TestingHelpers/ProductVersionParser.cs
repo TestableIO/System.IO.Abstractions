@@ -6,7 +6,7 @@ namespace System.IO.Abstractions.TestingHelpers
     /// <summary>
     /// Provides functionality to parse a product version string into its major, minor, build, and private parts.
     /// </summary>
-    public static class ProductVersionParser
+    internal static class ProductVersionParser
     {
         /// <summary>
         /// Parses a product version string and extracts the numeric values for the major, minor, build, and private parts,

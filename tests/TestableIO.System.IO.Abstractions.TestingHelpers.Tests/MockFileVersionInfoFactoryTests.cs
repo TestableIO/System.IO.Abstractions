@@ -1,9 +1,5 @@
 ﻿using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
 {
@@ -39,7 +35,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Act
             TestDelegate code = () => fileSystem.FileVersionInfo.GetVersionInfo(@"c:\foo.txt");
-            
+
             // Assert
             Assert.Throws<FileNotFoundException>(code);
         }
