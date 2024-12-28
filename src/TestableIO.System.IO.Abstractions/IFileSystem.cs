@@ -31,6 +31,11 @@
         IFileInfoFactory FileInfo { get; }
 
         /// <summary>
+        /// A factory for the creation of wrappers for <see cref="System.Diagnostics.FileVersionInfo" />.
+        /// </summary>
+        IFileVersionInfoFactory FileVersionInfo { get; }
+
+        /// <summary>
         /// A factory for the creation of wrappers for <see cref="System.IO.FileStream" />.
         /// </summary>
         IFileStreamFactory FileStream { get; }

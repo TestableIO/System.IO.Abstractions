@@ -287,6 +287,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFileSystem_AddFile_InitializesMockFileDataFileVersionInfoIfNull()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem();
+
+            // Act
+            fileSystem.AddFile(XFS.Path(@"C:\file.txt"), string.Empty);
+
+            // Assert
+            IFileVersionInfo fileVersionInfo = fileSystem.FileVersionInfo.GetVersionInfo(XFS.Path(@"C:\file.txt"));
+            Assert.That(fileVersionInfo, Is.Not.Null);
+            Assert.That(fileVersionInfo.FileName, Is.EqualTo(XFS.Path(@"C:\file.txt")));
+        }
+
+        [Test]
         public void MockFileSystem_AddFileFromEmbeddedResource_ShouldAddTheFile()
         {
             var fileSystem = new MockFileSystem();
@@ -435,7 +450,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             );
             Assert.That(ae.ParamName, Is.EqualTo("currentDirectory"));
         }
-        
+
         [Test]
         [WindowsOnly(WindowsSpecifics.Drives)]
         public void MockFileSystem_Constructor_ShouldSupportDifferentRootDrives()
@@ -450,7 +465,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var cExists = fileSystem.Directory.Exists(@"c:\");
             var zExists = fileSystem.Directory.Exists(@"z:\");
             var dExists = fileSystem.Directory.Exists(@"d:\");
-            
+
             Assert.That(fileSystem, Is.Not.Null);
             Assert.That(cExists, Is.True);
             Assert.That(zExists, Is.True);
@@ -484,9 +499,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 [@"d:\foo\bar\"] = new MockDirectoryData(),
                 [@"d:\"] = new MockDirectoryData()
             });
-            
+
             var drivesInfo = fileSystem.DriveInfo.GetDrives();
-            
+
             Assert.That(drivesInfo.Where(d => string.Equals(d.Name, @"D:\", StringComparison.InvariantCultureIgnoreCase)), Has.Exactly(1).Items);
         }
 
