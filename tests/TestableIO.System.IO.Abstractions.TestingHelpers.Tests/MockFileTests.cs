@@ -496,6 +496,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockFile_Delete_ShouldThrowUnauthorizedAccessException_WhenPathIsADirectory()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\bar"), new MockDirectoryData() },
+            });
+
+            // Act
+            TestDelegate action = () => fileSystem.File.Delete(XFS.Path(@"c:\bar"));
+
+            // Assert
+            Assert.Throws<UnauthorizedAccessException>(action);
+        }
+
+        [Test]
         public void MockFile_AppendText_AppendTextToAnExistingFile()
         {
             string filepath = XFS.Path(@"c:\something\does\exist.txt");
