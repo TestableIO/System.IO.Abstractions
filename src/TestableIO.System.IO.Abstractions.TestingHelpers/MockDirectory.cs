@@ -158,6 +158,12 @@ namespace System.IO.Abstractions.TestingHelpers
                                       " is not an empty directory.");
             }
 
+            bool isFile = !mockFileDataAccessor.GetFile(path).IsDirectory;
+            if (isFile)
+            {
+                throw new IOException("The directory name is invalid.");
+            }
+
             foreach (var affectedPath in affectedPaths)
             {
                 mockFileDataAccessor.RemoveFile(affectedPath);
