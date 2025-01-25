@@ -1019,6 +1019,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
+        public void MockDirectory_Delete_ShouldThrowIOException_WhenPathIsAFile()
+        {
+            // Arrange
+            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+            {
+                { XFS.Path(@"c:\foo.txt"), new MockFileData("Demo text content") },
+            });
+
+            // Act
+            TestDelegate action = () => fileSystem.Directory.Delete(XFS.Path(@"c:\foo.txt"));
+
+            // Assert
+            Assert.Throws<IOException>(action);
+        }
+
+        [Test]
         public void MockDirectory_GetFileSystemEntries_Returns_Files_And_Directories()
         {
             string testPath = XFS.Path(@"c:\foo\bar.txt");

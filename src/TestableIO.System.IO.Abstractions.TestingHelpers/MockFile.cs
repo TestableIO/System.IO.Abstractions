@@ -231,6 +231,11 @@ namespace System.IO.Abstractions.TestingHelpers
                 throw CommonExceptions.ProcessCannotAccessFileInUse(path);
             }
 
+            if (file != null && file.IsDirectory)
+            {
+                throw new UnauthorizedAccessException($"Access to the path '{path}' is denied.");
+            }
+
             mockFileDataAccessor.RemoveFile(path);
         }
 
