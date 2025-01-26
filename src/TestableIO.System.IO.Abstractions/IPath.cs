@@ -33,6 +33,11 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="Path.Combine(string[])" />
         string Combine(params string[] paths);
 
+#if FEATURE_PATH_SPAN
+        /// <inheritdoc cref="Path.Combine(ReadOnlySpan{string})" />
+        string Combine(params ReadOnlySpan<string> paths);
+#endif
+
 #if FEATURE_ENDS_IN_DIRECTORY_SEPARATOR
         /// <inheritdoc cref="Path.EndsInDirectorySeparator(ReadOnlySpan{char})" />
         bool EndsInDirectorySeparator(ReadOnlySpan<char> path);
@@ -147,6 +152,11 @@ namespace System.IO.Abstractions
         string Join(ReadOnlySpan<char> path1,
             ReadOnlySpan<char> path2,
             ReadOnlySpan<char> path3);
+
+#if FEATURE_PATH_SPAN
+        /// <inheritdoc cref="Path.Join(ReadOnlySpan{string?})" />
+        string Join(params ReadOnlySpan<string?> paths);
+#endif
 
         /// <inheritdoc cref="Path.TryJoin(ReadOnlySpan{char}, ReadOnlySpan{char}, Span{char}, out int)" />
         bool TryJoin(ReadOnlySpan<char> path1,
