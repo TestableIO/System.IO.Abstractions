@@ -547,7 +547,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             Assert.That(file.TextContents, Is.EqualTo("New too!"));
             Assert.That(filesystem.FileExists(filepath));
         }
-
+        
+#if !NET9_0_OR_GREATER
         [Test]
         public void Serializable_works()
         {
@@ -565,7 +566,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             //Assert
             Assert.Pass();
         }
-
+#endif
+        
+#if !NET9_0_OR_GREATER
         [Test]
         public void Serializable_can_deserialize()
         {
@@ -588,6 +591,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             //Assert
             Assert.That(deserialized.TextContents, Is.EqualTo(textContentStr));
         }
+#endif
 
         [Test]
         public void MockFile_Encrypt_ShouldSetEncryptedAttribute()
