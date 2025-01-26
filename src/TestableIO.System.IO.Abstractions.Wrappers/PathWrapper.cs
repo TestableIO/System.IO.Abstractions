@@ -56,6 +56,14 @@ namespace System.IO.Abstractions
             return Path.Combine(paths);
         }
 
+#if FEATURE_PATH_SPAN
+        /// <inheritdoc />
+        public override string Combine(params ReadOnlySpan<string> paths)
+        {
+            return Path.Combine(paths);
+        }
+#endif
+
         /// <inheritdoc />
         public override string Combine(string path1, string path2)
         {
@@ -184,6 +192,14 @@ namespace System.IO.Abstractions
         /// <inheritdoc />
         public override string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3) =>
             Path.Join(path1, path2, path3);
+
+#if FEATURE_PATH_SPAN
+        /// <inheritdoc />
+        public override string Join(params ReadOnlySpan<string> paths)
+        {
+            return Path.Join(paths);
+        }
+#endif
 
         /// <inheritdoc />
         public override bool TryJoin(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, Span<char> destination, out int charsWritten) =>

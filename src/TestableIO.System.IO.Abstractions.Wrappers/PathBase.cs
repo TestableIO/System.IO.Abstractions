@@ -43,6 +43,11 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="Path.Combine(string[])"/>
         public abstract string Combine(params string[] paths);
+        
+#if FEATURE_PATH_SPAN
+        /// <inheritdoc cref="Path.Combine(ReadOnlySpan{string})"/>
+        public abstract string Combine(params ReadOnlySpan<string> paths);
+#endif
 
         /// <inheritdoc cref="Path.Combine(string,string)"/>
         public abstract string Combine(string path1, string path2);
@@ -116,6 +121,11 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc />
         public abstract string Join(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3);
+
+#if FEATURE_PATH_SPAN
+        /// <inheritdoc cref="Path.Join(ReadOnlySpan{string})"/>
+        public abstract string Join(params ReadOnlySpan<string> paths);
+#endif
 
         /// <inheritdoc />
         public abstract bool TryJoin(ReadOnlySpan<char> path1, ReadOnlySpan<char> path2, ReadOnlySpan<char> path3, Span<char> destination, out int charsWritten);
