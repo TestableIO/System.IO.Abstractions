@@ -6,6 +6,7 @@ namespace System.IO.Abstractions.Tests
     [TestFixture]
     public class FileSystemTests
     {
+#if !NET9_0_OR_GREATER
         [Test]
         public void Is_Serializable()
         {
@@ -20,6 +21,7 @@ namespace System.IO.Abstractions.Tests
 
             Assert.That(memoryStream.Length > 0, "Length didn't increase after serialization task.");
         }
+#endif
 
         [Test]
         public void Mock_File_Succeeds()

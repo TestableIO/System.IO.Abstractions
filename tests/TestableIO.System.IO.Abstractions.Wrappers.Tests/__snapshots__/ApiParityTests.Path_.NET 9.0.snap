@@ -1,0 +1,13 @@
+﻿{
+  "ExtraMembers": [
+    "Char get_AltDirectorySeparatorChar()",
+    "Char get_DirectorySeparatorChar()",
+    "Char get_PathSeparator()",
+    "Char get_VolumeSeparatorChar()",
+    "Char[] get_InvalidPathChars()"
+  ],
+  "MissingMembers": [
+    "System.String Combine(System.ReadOnlySpan`1[System.String])",
+    "System.String Join(System.ReadOnlySpan`1[System.String])"
+  ]
+}

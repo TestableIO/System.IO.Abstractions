@@ -1,0 +1,20 @@
+﻿{
+  "ExtraMembers": [],
+  "MissingMembers": [
+    "Microsoft.Win32.SafeHandles.SafeFileHandle OpenHandle(System.String, System.IO.FileMode, System.IO.FileAccess, System.IO.FileShare, System.IO.FileOptions, Int64)",
+    "System.Threading.Tasks.Task AppendAllBytesAsync(System.String, Byte[], System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task AppendAllBytesAsync(System.String, System.ReadOnlyMemory`1[System.Byte], System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task AppendAllTextAsync(System.String, System.ReadOnlyMemory`1[System.Char], System.Text.Encoding, System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task AppendAllTextAsync(System.String, System.ReadOnlyMemory`1[System.Char], System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task WriteAllBytesAsync(System.String, System.ReadOnlyMemory`1[System.Byte], System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task WriteAllTextAsync(System.String, System.ReadOnlyMemory`1[System.Char], System.Text.Encoding, System.Threading.CancellationToken)",
+    "System.Threading.Tasks.Task WriteAllTextAsync(System.String, System.ReadOnlyMemory`1[System.Char], System.Threading.CancellationToken)",
+    "Void AppendAllBytes(System.String, Byte[])",
+    "Void AppendAllBytes(System.String, System.ReadOnlySpan`1[System.Byte])",
+    "Void AppendAllText(System.String, System.ReadOnlySpan`1[System.Char])",
+    "Void AppendAllText(System.String, System.ReadOnlySpan`1[System.Char], System.Text.Encoding)",
+    "Void WriteAllBytes(System.String, System.ReadOnlySpan`1[System.Byte])",
+    "Void WriteAllText(System.String, System.ReadOnlySpan`1[System.Char])",
+    "Void WriteAllText(System.String, System.ReadOnlySpan`1[System.Char], System.Text.Encoding)"
+  ]
+}

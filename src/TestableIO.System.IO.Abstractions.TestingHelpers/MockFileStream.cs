@@ -291,7 +291,7 @@ namespace System.IO.Abstractions.TestingHelpers
                 Seek(0, SeekOrigin.Begin);
                 /* .. read everything out */
                 var data = new byte[Length];
-                Read(data, 0, (int)Length);
+                _ = Read(data, 0, (int)Length);
                 /* restore to original position */
                 Seek(position, SeekOrigin.Begin);
                 /* .. put it in the mock system */
