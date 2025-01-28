@@ -9,6 +9,18 @@ namespace System.IO.Abstractions
 {
     partial interface IFile
     {
+#if FEATURE_FILE_SPAN
+        /// <inheritdoc cref="File.AppendAllBytesAsync(string, byte[], CancellationToken)" />
+        Task AppendAllBytesAsync(string path,
+            byte[] bytes,
+            CancellationToken cancellationToken = default);
+        
+        /// <inheritdoc cref="File.AppendAllBytesAsync(string, ReadOnlyMemory{byte}, CancellationToken)" />
+        Task AppendAllBytesAsync(string path,
+            ReadOnlyMemory<byte> bytes,
+            CancellationToken cancellationToken = default);
+#endif
+        
         /// <inheritdoc cref="File.AppendAllLinesAsync(string, IEnumerable{string}, CancellationToken)" />
         Task AppendAllLinesAsync(string path,
             IEnumerable<string> contents,
@@ -31,6 +43,19 @@ namespace System.IO.Abstractions
             Encoding encoding,
             CancellationToken cancellationToken = default);
 
+#if FEATURE_FILE_SPAN
+        /// <inheritdoc cref="File.AppendAllTextAsync(string, ReadOnlyMemory{char}, CancellationToken)" />
+        Task AppendAllTextAsync(string path,
+            ReadOnlyMemory<char> contents,
+            CancellationToken cancellationToken = default);
+        
+        /// <inheritdoc cref="File.AppendAllTextAsync(string, ReadOnlyMemory{char}, Encoding, CancellationToken)" />
+        Task AppendAllTextAsync(string path,
+            ReadOnlyMemory<char> contents,
+            Encoding encoding,
+            CancellationToken cancellationToken = default);
+#endif
+        
         /// <inheritdoc cref="File.ReadAllBytesAsync(string, CancellationToken)" />
         Task<byte[]> ReadAllBytesAsync(string path,
             CancellationToken cancellationToken = default);
@@ -71,6 +96,13 @@ namespace System.IO.Abstractions
             byte[] bytes,
             CancellationToken cancellationToken = default);
 
+#if FEATURE_FILE_SPAN
+        /// <inheritdoc cref="File.WriteAllBytesAsync(string, ReadOnlyMemory{byte}, CancellationToken)" />
+        Task WriteAllBytesAsync(string path,
+            ReadOnlyMemory<byte> bytes,
+            CancellationToken cancellationToken = default);
+#endif
+
         /// <inheritdoc cref="File.WriteAllLinesAsync(string, IEnumerable{string}, CancellationToken)" />
         Task WriteAllLinesAsync(string path,
             IEnumerable<string> contents,
@@ -92,6 +124,19 @@ namespace System.IO.Abstractions
             string? contents,
             Encoding encoding,
             CancellationToken cancellationToken = default);
+
+#if FEATURE_FILE_SPAN
+        /// <inheritdoc cref="File.WriteAllTextAsync(string, ReadOnlyMemory{char}, CancellationToken)" />
+        Task WriteAllTextAsync(string path,
+            ReadOnlyMemory<char> contents,
+            CancellationToken cancellationToken = default);
+        
+        /// <inheritdoc cref="File.WriteAllTextAsync(string, ReadOnlyMemory{char}, Encoding, CancellationToken)" />
+        Task WriteAllTextAsync(string path,
+            ReadOnlyMemory<char> contents,
+            Encoding encoding,
+            CancellationToken cancellationToken = default);
+#endif
     }
 }
 
