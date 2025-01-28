@@ -315,7 +315,7 @@
             fileSystem.AddDirectory(directoryPath);
 
             // Act
-            await fileSystem.File.WriteAllTextAsync(filePath, null);
+            await fileSystem.File.WriteAllTextAsync(filePath, "");
 
             // Assert
             // no exception should be thrown, also the documentation says so
@@ -334,7 +334,7 @@
             fileSystem.AddFile(filePath, mockFileData);
 
             // Act
-            AsyncTestDelegate action = () => fileSystem.File.WriteAllTextAsync(filePath, null);
+            AsyncTestDelegate action = () => fileSystem.File.WriteAllTextAsync(filePath, "");
 
             // Assert
             Assert.ThrowsAsync<UnauthorizedAccessException>(action);
@@ -349,7 +349,7 @@
             fileSystem.AddDirectory(directoryPath);
 
             // Act
-            AsyncTestDelegate action = () => fileSystem.File.WriteAllTextAsync(directoryPath, null);
+            AsyncTestDelegate action = () => fileSystem.File.WriteAllTextAsync(directoryPath, "");
 
             // Assert
             Assert.ThrowsAsync<UnauthorizedAccessException>(action);

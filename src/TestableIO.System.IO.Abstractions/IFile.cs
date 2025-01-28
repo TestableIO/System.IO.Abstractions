@@ -15,6 +15,16 @@ namespace System.IO.Abstractions
     public interface IFile : IFileSystemEntity
 #endif
     {
+#if FEATURE_FILE_SPAN
+        /// <inheritdoc cref="File.AppendAllBytes(string, byte[])" />
+        void AppendAllBytes(string path,
+            byte[] bytes);
+        
+        /// <inheritdoc cref="File.AppendAllBytes(string, ReadOnlySpan{byte})" />
+        void AppendAllBytes(string path,
+            ReadOnlySpan<byte> bytes);
+#endif
+        
         /// <inheritdoc cref="File.AppendAllLines(string, IEnumerable{string})" />
         void AppendAllLines(string path, IEnumerable<string> contents);
 
@@ -26,6 +36,17 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="File.AppendAllText(string, string?, Encoding)" />
         void AppendAllText(string path, string? contents, Encoding encoding);
+
+#if FEATURE_FILE_SPAN
+        /// <inheritdoc cref="File.AppendAllText(string, ReadOnlySpan{char})" />
+        void AppendAllText(string path,
+            ReadOnlySpan<char> contents);
+        
+        /// <inheritdoc cref="File.AppendAllText(string, ReadOnlySpan{char}, Encoding)" />
+        void AppendAllText(string path,
+            ReadOnlySpan<char> contents,
+            Encoding encoding);
+#endif
 
         /// <inheritdoc cref="File.AppendText(string)" />
         StreamWriter AppendText(string path);
@@ -274,6 +295,12 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="File.WriteAllBytes(string, byte[])" />
         void WriteAllBytes(string path, byte[] bytes);
 
+#if FEATURE_FILE_SPAN
+        /// <inheritdoc cref="File.WriteAllBytes(string, ReadOnlySpan{byte})" />
+        void WriteAllBytes(string path,
+            ReadOnlySpan<byte> bytes);
+#endif
+
         /// <inheritdoc cref="File.WriteAllLines(string, string[])" />
         void WriteAllLines(string path, string[] contents);
 
@@ -291,5 +318,16 @@ namespace System.IO.Abstractions
 
         /// <inheritdoc cref="File.WriteAllText(string, string, Encoding)" />
         void WriteAllText(string path, string? contents, Encoding encoding);
+
+#if FEATURE_FILE_SPAN
+        /// <inheritdoc cref="File.WriteAllText(string, ReadOnlySpan{char})" />
+        void WriteAllText(string path,
+            ReadOnlySpan<char> contents);
+        
+        /// <inheritdoc cref="File.WriteAllText(string, ReadOnlySpan{char}, Encoding)" />
+        void WriteAllText(string path,
+            ReadOnlySpan<char> contents,
+            Encoding encoding);
+#endif
     }
 }

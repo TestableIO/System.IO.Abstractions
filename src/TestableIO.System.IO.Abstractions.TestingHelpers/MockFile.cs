@@ -22,6 +22,33 @@ namespace System.IO.Abstractions.TestingHelpers
             this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
         }
 
+#if FEATURE_FILE_SPAN
+        /// <inheritdoc cref="IFile.AppendAllBytes(string,byte[])"/>
+        public override void AppendAllBytes(string path, byte[] bytes)
+        {
+            mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
+
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                VerifyDirectoryExists(path);
+                mockFileDataAccessor.AddFile(path, mockFileDataAccessor.AdjustTimes(new MockFileData(bytes), TimeAdjustments.All));
+            }
+            else
+            {
+                var file = mockFileDataAccessor.GetFile(path);
+                file.CheckFileAccess(path, FileAccess.Write);
+                mockFileDataAccessor.AdjustTimes(file, TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
+                file.Contents = file.Contents.Concat(bytes).ToArray();
+            }
+        }
+
+        /// <inheritdoc cref="IFile.AppendAllBytes(string,ReadOnlySpan{byte})"/>
+        public override void AppendAllBytes(string path, ReadOnlySpan<byte> bytes)
+        {
+            AppendAllBytes(path, bytes.ToArray());
+        }
+#endif
+        
         /// <inheritdoc />
         public override void AppendAllLines(string path, IEnumerable<string> contents)
         {
@@ -69,6 +96,20 @@ namespace System.IO.Abstractions.TestingHelpers
                 file.Contents = file.Contents.Concat(bytesToAppend).ToArray();
             }
         }
+
+#if FEATURE_FILE_SPAN
+        /// <inheritdoc cref="IFile.AppendAllText(string,ReadOnlySpan{char})"/>
+        public override void AppendAllText(string path, ReadOnlySpan<char> contents)
+        {
+            AppendAllText(path, contents.ToString());
+        }
+
+        /// <inheritdoc cref="IFile.AppendAllText(string,ReadOnlySpan{char},Encoding)"/>
+        public override void AppendAllText(string path, ReadOnlySpan<char> contents, Encoding encoding)
+        {
+            AppendAllText(path, contents.ToString(), encoding);
+        }
+#endif
 
         /// <inheritdoc />
         public override StreamWriter AppendText(string path)
@@ -1025,6 +1066,14 @@ namespace System.IO.Abstractions.TestingHelpers
 
             mockFileDataAccessor.AddFile(path, mockFileDataAccessor.AdjustTimes(new MockFileData(bytes.ToArray()), TimeAdjustments.All));
         }
+        
+#if FEATURE_FILE_SPAN
+        /// <inheritdoc cref="IFile.WriteAllBytes(string,ReadOnlySpan{byte})"/>
+        public override void WriteAllBytes(string path, ReadOnlySpan<byte> bytes)
+        {
+            WriteAllBytes(path, bytes.ToArray());
+        }
+#endif
 
         /// <summary>
         /// Creates a new file, writes a collection of strings to the file, and then closes the file.
@@ -1295,6 +1344,20 @@ namespace System.IO.Abstractions.TestingHelpers
             MockFileData data = contents == null ? new MockFileData(new byte[0]) : new MockFileData(contents, encoding);
             mockFileDataAccessor.AddFile(path, mockFileDataAccessor.AdjustTimes(data, TimeAdjustments.All));
         }
+
+#if FEATURE_FILE_SPAN
+        /// <inheritdoc cref="IFile.WriteAllText(string,ReadOnlySpan{char})"/>
+        public override void WriteAllText(string path, ReadOnlySpan<char> contents)
+        {
+            WriteAllText(path, contents.ToString());
+        }
+
+        /// <inheritdoc cref="IFile.WriteAllText(string,ReadOnlySpan{char},Encoding)"/>
+        public override void WriteAllText(string path, ReadOnlySpan<char> contents, Encoding encoding)
+        {
+            WriteAllText(path, contents.ToString(), encoding);
+        }
+#endif
 
         internal static string ReadAllBytes(byte[] contents, Encoding encoding)
         {
