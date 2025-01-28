@@ -10,7 +10,9 @@ namespace System.IO.Abstractions
 #endif
     public abstract partial class FileBase : IFile
     {
-        ///
+        /// <summary>
+        /// Base class for calling static methods of <see cref="File"/>
+        /// </summary>
         protected FileBase(IFileSystem fileSystem)
         {
             FileSystem = fileSystem;

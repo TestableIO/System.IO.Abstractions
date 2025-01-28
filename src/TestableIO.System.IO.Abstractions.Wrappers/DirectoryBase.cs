@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Runtime.Versioning;
-using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
@@ -10,7 +8,9 @@ namespace System.IO.Abstractions
 #endif
     public abstract class DirectoryBase : IDirectory
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// Base class for calling static methods of <see cref="Directory"/>
+        /// </summary>
         protected DirectoryBase(IFileSystem fileSystem)
         {
             FileSystem = fileSystem;

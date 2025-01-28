@@ -1,6 +1,4 @@
-﻿using System.Security.AccessControl;
-
-namespace System.IO.Abstractions
+﻿namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="FileInfo"/>
 #if FEATURE_SERIALIZABLE
@@ -8,7 +6,9 @@ namespace System.IO.Abstractions
 #endif
     public abstract class FileInfoBase : FileSystemInfoBase, IFileInfo
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// Base class for calling methods of <see cref="FileInfo"/>
+        /// </summary>
         protected FileInfoBase(IFileSystem fileSystem) : base(fileSystem)
         {
         }
@@ -86,7 +86,9 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFileInfo.Length"/>
         public abstract long Length { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Implicitly converts a <see cref="FileInfo"/> to a <see cref="FileInfoBase"/>.
+        /// </summary>
         public static implicit operator FileInfoBase(FileInfo fileInfo)
         {
             if (fileInfo == null)

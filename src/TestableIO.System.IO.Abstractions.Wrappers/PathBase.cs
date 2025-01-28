@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace System.IO.Abstractions
+﻿namespace System.IO.Abstractions
 {
     /// <inheritdoc cref="Path"/>
 #if FEATURE_SERIALIZABLE
@@ -8,7 +6,9 @@ namespace System.IO.Abstractions
 #endif
     public abstract class PathBase : IPath
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// Base class for calling static methods of <see cref="Path"/>
+        /// </summary>
         protected PathBase(IFileSystem fileSystem)
         {
             this.FileSystem = fileSystem;

@@ -7,7 +7,9 @@
     {
         private readonly IFileSystem fileSystem;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Base factory class for creating a <see cref="IFileInfo"/>
+        /// </summary>
         public FileInfoFactory(IFileSystem fileSystem)
         {
             this.fileSystem = fileSystem;

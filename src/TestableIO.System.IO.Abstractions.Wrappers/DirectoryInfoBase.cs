@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
@@ -9,7 +8,9 @@ namespace System.IO.Abstractions
 #endif
     public abstract class DirectoryInfoBase : FileSystemInfoBase, IDirectoryInfo
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// Base class for calling methods of <see cref="DirectoryInfo"/>
+        /// </summary>
         protected DirectoryInfoBase(IFileSystem fileSystem) : base(fileSystem)
         {
         }
@@ -120,7 +121,9 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IDirectoryInfo.Root"/>
         public abstract IDirectoryInfo Root { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Implicitly converts a <see cref="DirectoryInfo"/> to a <see cref="DirectoryInfoBase"/>.
+        /// </summary>
         public static implicit operator DirectoryInfoBase(DirectoryInfo directoryInfo)
         {
             if (directoryInfo == null)
