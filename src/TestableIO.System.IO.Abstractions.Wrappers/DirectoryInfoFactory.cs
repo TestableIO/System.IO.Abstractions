@@ -7,7 +7,9 @@ namespace System.IO.Abstractions
     {
         private readonly IFileSystem fileSystem;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Base factory class for creating a <see cref="IDirectoryInfo"/>
+        /// </summary>
         public DirectoryInfoFactory(IFileSystem fileSystem)
         {
             this.fileSystem = fileSystem;

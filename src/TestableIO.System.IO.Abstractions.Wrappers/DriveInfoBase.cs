@@ -6,7 +6,9 @@
 #endif
     public abstract class DriveInfoBase : IDriveInfo
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// Base class for calling methods of <see cref="DriveInfo"/>
+        /// </summary>
         protected DriveInfoBase(IFileSystem fileSystem)
         {
             FileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
@@ -48,9 +50,8 @@
         public abstract string VolumeLabel { get; set; }
 
         /// <summary>
-        /// Converts a <see cref="DriveInfo"/> into a <see cref="DriveInfoBase"/>.
+        /// Implicitly converts a <see cref="DriveInfo"/> to a <see cref="DriveInfoBase"/>.
         /// </summary>
-        /// <param name="driveInfo">The drive info to be converted.</param>
         public static implicit operator DriveInfoBase(DriveInfo driveInfo)
         {
             if (driveInfo == null)

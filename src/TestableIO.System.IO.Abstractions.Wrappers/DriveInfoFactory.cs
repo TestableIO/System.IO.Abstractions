@@ -7,6 +7,9 @@
     {
         private readonly IFileSystem fileSystem;
 
+        /// <summary>
+        /// Base factory class for creating a <see cref="IDriveInfo"/>
+        /// </summary>
         public DriveInfoFactory(IFileSystem fileSystem)
         {
             this.fileSystem = fileSystem;

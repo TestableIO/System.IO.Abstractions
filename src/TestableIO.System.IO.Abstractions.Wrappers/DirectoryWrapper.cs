@@ -3,7 +3,7 @@ using System.Runtime.Versioning;
 
 namespace System.IO.Abstractions
 {
-    /// <inheritdoc />
+    /// <inheritdoc cref="DirectoryBase" />
 #if FEATURE_SERIALIZABLE
     [Serializable]
 #endif

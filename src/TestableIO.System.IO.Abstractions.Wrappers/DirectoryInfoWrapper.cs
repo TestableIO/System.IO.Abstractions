@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.IO.Pipes;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
-    /// <inheritdoc />
+    /// <inheritdoc cref="DirectoryInfoBase" />
 #if FEATURE_SERIALIZABLE
     [Serializable]
 #endif
@@ -14,7 +13,9 @@ namespace System.IO.Abstractions
     {
         private readonly DirectoryInfo instance;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Wrapper class for calling methods of <see cref="DirectoryInfo"/>
+        /// </summary>
         public DirectoryInfoWrapper(IFileSystem fileSystem, DirectoryInfo instance) : base(fileSystem)
         {
             this.instance = instance ?? throw new ArgumentNullException(nameof(instance));

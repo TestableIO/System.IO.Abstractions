@@ -89,7 +89,9 @@ namespace System.IO.Abstractions
         /// <inheritdoc cref="IFileVersionInfo.SpecialBuild" />
         public abstract string SpecialBuild { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Implicitly converts a <see cref="FileVersionInfo"/> to a <see cref="FileVersionInfoBase"/>.
+        /// </summary>
         public static implicit operator FileVersionInfoBase(FileVersionInfo fileVersionInfo)
         {
             if (fileVersionInfo == null)
@@ -100,7 +102,7 @@ namespace System.IO.Abstractions
             return new FileVersionInfoWrapper(fileVersionInfo);
         }
 
-        /// <inheritdoc />
+        /// <inheritdoc cref="FileVersionInfo.ToString()" />
         public new abstract string ToString();
     }
 }

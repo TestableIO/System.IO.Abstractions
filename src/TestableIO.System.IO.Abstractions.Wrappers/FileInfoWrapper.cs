@@ -3,7 +3,7 @@ using System.Security.AccessControl;
 
 namespace System.IO.Abstractions
 {
-    /// <inheritdoc />
+    /// <inheritdoc cref="FileInfoBase" />
 #if FEATURE_SERIALIZABLE
     [Serializable]
 #endif
@@ -11,7 +11,9 @@ namespace System.IO.Abstractions
     {
         private readonly FileInfo instance;
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Wrapper class for calling methods of <see cref="FileInfo"/>
+        /// </summary>
         public FileInfoWrapper(IFileSystem fileSystem, FileInfo instance) : base(fileSystem)
         {
             this.instance = instance ?? throw new ArgumentNullException(nameof(instance));

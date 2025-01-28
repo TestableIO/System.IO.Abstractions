@@ -6,7 +6,9 @@
 #endif
     public class FileSystemWatcherFactory : IFileSystemWatcherFactory
     {
-        ///
+        /// <summary>
+        /// Base factory class for creating a <see cref="IFileSystemWatcher"/>
+        /// </summary>
         public FileSystemWatcherFactory(IFileSystem fileSystem)
         {
             FileSystem = fileSystem;

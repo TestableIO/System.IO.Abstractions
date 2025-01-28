@@ -7,6 +7,9 @@ namespace System.IO.Abstractions
 #endif
     internal sealed class FileStreamFactory : IFileStreamFactory
     {
+        /// <summary>
+        /// Base factory class for creating a <see cref="FileSystemStream"/>
+        /// </summary>
         public FileStreamFactory(IFileSystem fileSystem)
         {
             FileSystem = fileSystem;

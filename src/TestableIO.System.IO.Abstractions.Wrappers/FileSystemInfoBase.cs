@@ -8,7 +8,9 @@ namespace System.IO.Abstractions
 #endif
     public abstract class FileSystemInfoBase : IFileSystemInfo
     {
-        ///
+        /// <summary>
+        /// Base class for calling methods of <see cref="FileSystemInfo"/>
+        /// </summary>
         protected FileSystemInfoBase(IFileSystem fileSystem)
         {
             FileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));

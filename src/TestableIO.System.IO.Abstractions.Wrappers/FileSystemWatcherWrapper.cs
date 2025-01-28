@@ -76,7 +76,7 @@ namespace System.IO.Abstractions
 
 #if FEATURE_FILE_SYSTEM_WATCHER_FILTERS
         /// <inheritdoc />
-        public override System.Collections.ObjectModel.Collection<string> Filters
+        public override Collections.ObjectModel.Collection<string> Filters
         {
             get { return watcher.Filters; }
         }
@@ -168,33 +168,33 @@ namespace System.IO.Abstractions
         private readonly struct WaitForChangedResultWrapper
             : IWaitForChangedResult, IEquatable<WaitForChangedResultWrapper>
         {
-            private readonly WaitForChangedResult _instance;
+            private readonly WaitForChangedResult instance;
 
             public WaitForChangedResultWrapper(WaitForChangedResult instance)
             {
-                _instance = instance;
+                this.instance = instance;
             }
 
             /// <inheritdoc cref="IWaitForChangedResult.ChangeType" />
             public WatcherChangeTypes ChangeType
-                => _instance.ChangeType;
+                => instance.ChangeType;
 
             /// <inheritdoc cref="IWaitForChangedResult.Name" />
             public string Name
-                => _instance.Name;
+                => instance.Name;
 
             /// <inheritdoc cref="IWaitForChangedResult.OldName" />
             public string OldName
-                => _instance.OldName;
+                => instance.OldName;
 
             /// <inheritdoc cref="IWaitForChangedResult.TimedOut" />
             public bool TimedOut
-                => _instance.TimedOut;
+                => instance.TimedOut;
 
             /// <inheritdoc cref="IEquatable{WaitForChangedResultWrapper}.Equals(WaitForChangedResultWrapper)" />
             public bool Equals(WaitForChangedResultWrapper other)
             {
-                return _instance.Equals(other._instance);
+                return instance.Equals(other.instance);
             }
 
             /// <inheritdoc cref="object.Equals(object)" />
@@ -207,7 +207,7 @@ namespace System.IO.Abstractions
             /// <inheritdoc cref="object.GetHashCode()" />
             public override int GetHashCode()
             {
-                return _instance.GetHashCode();
+                return instance.GetHashCode();
             }
         }
     }

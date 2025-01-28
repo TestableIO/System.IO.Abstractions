@@ -25,7 +25,7 @@ namespace System.IO.Abstractions
 
 #if FEATURE_FILE_SYSTEM_WATCHER_FILTERS
         /// <inheritdoc cref="FileSystemWatcher.Filters"/>
-        public abstract System.Collections.ObjectModel.Collection<string> Filters { get; }
+        public abstract Collections.ObjectModel.Collection<string> Filters { get; }
 #endif
 
         /// <inheritdoc cref="FileSystemWatcher.InternalBufferSize"/>
@@ -82,7 +82,9 @@ namespace System.IO.Abstractions
         public abstract IWaitForChangedResult WaitForChanged(WatcherChangeTypes changeType, TimeSpan timeout);
 #endif
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Implicitly converts a <see cref="FileSystemWatcher"/> to a <see cref="FileSystemWatcherBase"/>.
+        /// </summary>
         public static implicit operator FileSystemWatcherBase(FileSystemWatcher watcher)
         {
             if (watcher == null)
@@ -93,37 +95,49 @@ namespace System.IO.Abstractions
             return new FileSystemWatcherWrapper(new FileSystem(), watcher);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Callback executed during <see cref="IDisposable.Dispose()"/>
+        /// </summary>
         public virtual void Dispose(bool disposing)
         {
             // do nothing
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Invokes the <see cref="Created"/> event.
+        /// </summary>
         protected void OnCreated(object sender, FileSystemEventArgs args)
         {
             Created?.Invoke(sender, args);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Invokes the <see cref="Changed"/> event.
+        /// </summary>
         protected void OnChanged(object sender, FileSystemEventArgs args)
         {
             Changed?.Invoke(sender, args);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Invokes the <see cref="Deleted"/> event.
+        /// </summary>
         protected void OnDeleted(object sender, FileSystemEventArgs args)
         {
             Deleted?.Invoke(sender, args);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Invokes the <see cref="Renamed"/> event.
+        /// </summary>
         protected void OnRenamed(object sender, RenamedEventArgs args)
         {
             Renamed?.Invoke(sender, args);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Invokes the <see cref="Error"/> event.
+        /// </summary>
         protected void OnError(object sender, ErrorEventArgs args)
         {
             Error?.Invoke(sender, args);
