@@ -19,6 +19,6 @@
     <None Include="..\..\images\icon_256x256.png" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Testably.Abstractions.FileSystem.Interface" Version="9.0.0-pre.2" />
+    <PackageReference Include="Testably.Abstractions.FileSystem.Interface" />
   </ItemGroup>
 </Project>
