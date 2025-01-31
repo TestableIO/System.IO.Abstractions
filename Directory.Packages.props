@@ -19,4 +19,9 @@
     <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
     <PackageVersion Include="Snapshooter.NUnit" Version="1.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageVersion Include="Nerdbank.GitVersioning" Version="3.7.115" />
+    <PackageVersion Include="SauceControl.InheritDoc" Version="2.0.2" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+  </ItemGroup>
 </Project>
