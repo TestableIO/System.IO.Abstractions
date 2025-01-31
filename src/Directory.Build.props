@@ -6,6 +6,5 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile >true</GenerateDocumentationFile>
-    <InheritDocEnabled>true</InheritDocEnabled>
   </PropertyGroup>
 </Project>
