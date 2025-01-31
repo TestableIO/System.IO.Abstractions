@@ -152,9 +152,30 @@ $RECYCLE.BIN/
 # Mac crap
 .DS_Store
 
-# JetBrains Rider IDE files
-.idea/
-
 #System.IO.Abstractions specific ignores
 Releases
 System.IO.Abstractions.*.nupkg
+
+# Common IntelliJ Platform excludes
+# https://github.com/JetBrains/resharper-rider-samples/blob/master/.gitignore
+
+# User specific
+**/.idea/**/workspace.xml
+**/.idea/**/tasks.xml
+**/.idea/shelf/*
+**/.idea/dictionaries
+**/.idea/httpRequests/
+
+# Sensitive or high-churn files
+**/.idea/**/dataSources/
+**/.idea/**/dataSources.ids
+**/.idea/**/dataSources.xml
+**/.idea/**/dataSources.local.xml
+**/.idea/**/sqlDataSources.xml
+**/.idea/**/dynamic.xml
+
+# Rider
+# Rider auto-generates .iml files, and contentModel.xml
+**/.idea/**/*.iml
+**/.idea/**/contentModel.xml
+**/.idea/**/modules.xml
