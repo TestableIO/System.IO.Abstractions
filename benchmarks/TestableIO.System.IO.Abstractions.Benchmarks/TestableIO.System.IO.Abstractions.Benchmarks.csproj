@@ -3,7 +3,7 @@
 		<AssemblyName>TestableIO.System.IO.Abstractions.Benchmarks</AssemblyName>
 		<RootNamespace>TestableIO.System.IO.Abstractions.Benchmarks</RootNamespace>
 		<Description>Bencharmks comparisons.</Description>
-		<TargetFrameworks>net8.0;net462</TargetFrameworks>
+		<TargetFramework>net9.0</TargetFramework>
 		<PackageProjectUrl>https://github.com/TestableIO/System.IO.Abstractions</PackageProjectUrl>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageTags>testing</PackageTags>
@@ -17,10 +17,6 @@
 		<ProjectReference Include="../../src/TestableIO.System.IO.Abstractions.TestingHelpers/TestableIO.System.IO.Abstractions.TestingHelpers.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net462">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="BenchmarkDotNet" />
 	</ItemGroup>
 </Project>
