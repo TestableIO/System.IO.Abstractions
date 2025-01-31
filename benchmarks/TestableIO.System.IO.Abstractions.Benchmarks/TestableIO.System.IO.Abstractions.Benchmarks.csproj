@@ -17,10 +17,10 @@
 		<ProjectReference Include="../../src/TestableIO.System.IO.Abstractions.TestingHelpers/TestableIO.System.IO.Abstractions.TestingHelpers.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net462" Version="1.0.3">
+		<PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net462">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
+		<PackageReference Include="BenchmarkDotNet" />
 	</ItemGroup>
 </Project>
