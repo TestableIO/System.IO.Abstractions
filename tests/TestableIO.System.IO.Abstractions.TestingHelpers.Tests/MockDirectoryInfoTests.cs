@@ -518,7 +518,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var directoryInfo = fileSystem.DirectoryInfo.New(XFS.Path(@"c:\abc"));
 
             // Act
+#pragma warning disable CA1416
             directoryInfo.Create(new DirectorySecurity());
+#pragma warning restore CA1416
 
             // Assert
             Assert.That(directoryInfo.Exists, Is.True);
