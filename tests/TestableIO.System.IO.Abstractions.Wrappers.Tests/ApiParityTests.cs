@@ -109,8 +109,6 @@ namespace System.IO.Abstractions.Tests
         private const string snapshotSuffix = ".NET Framework 4.6.2";
 #elif NET6_0
         private const string snapshotSuffix = ".NET 6.0";
-#elif NET7_0
-        private const string snapshotSuffix = ".NET 7.0";
 #elif NET8_0
         private const string snapshotSuffix = ".NET 8.0";
 #elif NET9_0
