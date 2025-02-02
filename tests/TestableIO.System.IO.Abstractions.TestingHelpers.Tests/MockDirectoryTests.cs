@@ -2085,7 +2085,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             // Act
+#pragma warning disable CA1416
             Assert.Throws<DirectoryNotFoundException>(() => fileSystem.Directory.GetAccessControl(XFS.Path(@"c:\foo")));
+#pragma warning restore CA1416
         }
 
         [Test]
