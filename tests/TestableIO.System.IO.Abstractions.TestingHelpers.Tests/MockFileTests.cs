@@ -605,7 +605,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
+#pragma warning disable CA1416
             fileSystem.File.Encrypt(filePath);
+#pragma warning restore CA1416
             var attributes = fileSystem.File.GetAttributes(filePath);
 
             // Assert
@@ -623,10 +625,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             {
                 {filePath, fileData }
             });
+#pragma warning disable CA1416
             fileSystem.File.Encrypt(filePath);
+#pragma warning restore CA1416
 
             // Act
+#pragma warning disable CA1416
             fileSystem.File.Decrypt(filePath);
+#pragma warning restore CA1416
             var attributes = fileSystem.File.GetAttributes(filePath);
 
             // Assert

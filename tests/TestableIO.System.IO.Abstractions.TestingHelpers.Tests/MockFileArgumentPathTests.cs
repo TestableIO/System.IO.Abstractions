@@ -51,8 +51,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             yield return fs => fs.SetLastAccessTimeUtc((string)null, DateTime.Now);
             yield return fs => fs.SetLastWriteTime((string)null, DateTime.Now);
             yield return fs => fs.SetLastWriteTimeUtc((string)null, DateTime.Now);
+#pragma warning disable CA1416
             yield return fs => fs.Decrypt(null);
             yield return fs => fs.Encrypt(null);
+#pragma warning restore CA1416
         }
 
         [TestCaseSource(nameof(GetFileSystemActionsForArgumentNullException))]

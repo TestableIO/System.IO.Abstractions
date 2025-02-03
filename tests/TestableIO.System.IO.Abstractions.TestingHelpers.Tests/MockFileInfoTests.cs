@@ -499,7 +499,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             byte[] result = new byte[2];
             using (var stream = fileInfo.OpenRead())
             {
+#pragma warning disable CA2022
+                // ReSharper disable once MustUseReturnValue
                 stream.Read(result, 0, 2);
+#pragma warning restore CA2022
             }
 
             Assert.That(result, Is.EqualTo(new byte[] { 1, 2 }));
