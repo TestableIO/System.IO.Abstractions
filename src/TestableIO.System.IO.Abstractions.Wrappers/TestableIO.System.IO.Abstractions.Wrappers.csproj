@@ -19,6 +19,6 @@
     <None Include="..\..\images\icon_256x256.png" Pack="true" PackagePath="\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TestableIO.System.IO.Abstractions\TestableIO.System.IO.Abstractions.csproj" />
+    <PackageReference Include="Testably.Abstractions.FileSystem.Interface" />
   </ItemGroup>
 </Project>
