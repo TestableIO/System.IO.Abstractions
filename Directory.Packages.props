@@ -17,7 +17,7 @@
     <PackageVersion Include="NUnit" Version="4.3.2" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.6.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
-    <PackageVersion Include="Snapshooter.NUnit" Version="1.0.0" />
+    <PackageVersion Include="Snapshooter.NUnit" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Nerdbank.GitVersioning" Version="3.7.115" />
