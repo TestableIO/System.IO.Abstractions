@@ -54,7 +54,7 @@ jobs:
           name: Code coverage macos-latest
           path: coverage-macos
       - name: Generate coverage report
-        uses: danielpalme/ReportGenerator-GitHub-Action@v5.4.3
+        uses: danielpalme/ReportGenerator-GitHub-Action@v5.4.4
         with:
           reports: "**/coverage.cobertura.xml"
           targetdir: "coverage-report"
