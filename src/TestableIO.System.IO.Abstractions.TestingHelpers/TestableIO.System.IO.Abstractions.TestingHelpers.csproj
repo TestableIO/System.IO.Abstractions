@@ -7,7 +7,7 @@
         <PackageIcon>icon_256x256.png</PackageIcon>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="../TestableIO.System.IO.Abstractions/TestableIO.System.IO.Abstractions.csproj" />
+        <PackageReference Include="Testably.Abstractions.FileSystem.Interface" />
         <ProjectReference Include="../TestableIO.System.IO.Abstractions.Wrappers/TestableIO.System.IO.Abstractions.Wrappers.csproj" />
     </ItemGroup>
     <ItemGroup>

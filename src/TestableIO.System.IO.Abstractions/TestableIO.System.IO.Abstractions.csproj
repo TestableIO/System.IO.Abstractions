@@ -17,6 +17,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Testably.Abstractions.FileSystem.Interface" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\images\icon_256x256.png" Pack="true" PackagePath="\" />
