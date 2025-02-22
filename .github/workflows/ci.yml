@@ -20,7 +20,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: | 
+          dotnet-version: |
             6.0.x
             7.0.x
             8.0.x
@@ -32,9 +32,29 @@ jobs:
         with:
           name: Code coverage ${{ matrix.os }}
           path: "**/coverage.cobertura.xml"
+  api-test:
+    name: API Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            7.0.x
+            8.0.x
+            9.0.x
+      - name: Build solution
+        run: dotnet build
+      - name: Run tests
+        run: dotnet test --filter FullyQualifiedName~TestableIO.System.IO.Abstractions.Api.Tests --logger "GitHubActions"
   coverage:
     name: Coverage
-    needs: [test]
+    needs: [test, api-test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
@@ -67,7 +87,7 @@ jobs:
           coverage-reports: coverage-report/Cobertura.xml
   pack:
     name: Pack
-    needs: [test]
+    needs: [test, api-test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
