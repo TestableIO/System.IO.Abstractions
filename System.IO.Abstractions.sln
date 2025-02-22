@@ -1,3 +1,4 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
@@ -24,18 +25,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestableIO.System.IO.Abstra
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{BBF7AD8D-5522-48C0-A906-00CBB72308A0}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
 		global.json = global.json
 		README.md = README.md
 		version.json = version.json
-		Directory.Packages.props = Directory.Packages.props
-		.gitignore = .gitignore
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{2BE9161B-A3F3-4511-81DB-DB1DCB6375C9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{D905E09D-6DC3-4F7C-8E83-82FADAE2C9E5}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
 		.github\workflows\ci.yml = .github\workflows\ci.yml
 		.github\workflows\pr.yml = .github\workflows\pr.yml
 	EndProjectSection
@@ -44,6 +46,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B66A0B3F-6A0
 	ProjectSection(SolutionItems) = preProject
 		src\Directory.Build.props = src\Directory.Build.props
 	EndProjectSection
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Benchmarks", "Benchmarks", "{10F39E91-97F2-4812-9D2F-79BE18EC6B08}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestableIO.System.IO.Abstractions.Api.Tests", "tests\TestableIO.System.IO.Abstractions.Api.Tests\TestableIO.System.IO.Abstractions.Api.Tests.csproj", "{7DE6AD74-E2B3-498E-90C5-DDF3188F333A}"
@@ -52,6 +55,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{5971F640
 	ProjectSection(SolutionItems) = preProject
 		tests\Directory.Build.props = tests\Directory.Build.props
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Build", "Pipeline\Build.csproj", "{DC39543E-0A17-4869-96C9-B876EB1BB117}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pipeline", "Pipeline", "{8091BCA3-70F8-4506-9701-C3074E79A66D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -95,6 +102,8 @@ Global
 		{7DE6AD74-E2B3-498E-90C5-DDF3188F333A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DE6AD74-E2B3-498E-90C5-DDF3188F333A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DE6AD74-E2B3-498E-90C5-DDF3188F333A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC39543E-0A17-4869-96C9-B876EB1BB117}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC39543E-0A17-4869-96C9-B876EB1BB117}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,15 +111,16 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{B7DA254D-496F-4C50-969C-CF925758E2ED} = {C078E0B6-9747-475F-A999-B9E775DF6643}
 		{0103D32A-6124-4A1A-AD6C-30EB957F09B0} = {C078E0B6-9747-475F-A999-B9E775DF6643}
+		{015B3812-E01D-479C-895D-BDDF16E798CA} = {10F39E91-97F2-4812-9D2F-79BE18EC6B08}
 		{7105D748-1253-409F-A624-4879412EF3C2} = {BCEC61BD-4941-41EC-975A-ACEFC7AC1780}
+		{1B8388D2-58A7-47B8-89EC-C5A94A0FEED5} = {C078E0B6-9747-475F-A999-B9E775DF6643}
 		{919888D2-E37D-40E7-8AD0-600F9429316D} = {BCEC61BD-4941-41EC-975A-ACEFC7AC1780}
 		{2BE9161B-A3F3-4511-81DB-DB1DCB6375C9} = {BBF7AD8D-5522-48C0-A906-00CBB72308A0}
 		{D905E09D-6DC3-4F7C-8E83-82FADAE2C9E5} = {2BE9161B-A3F3-4511-81DB-DB1DCB6375C9}
-		{1B8388D2-58A7-47B8-89EC-C5A94A0FEED5} = {C078E0B6-9747-475F-A999-B9E775DF6643}
 		{B66A0B3F-6A00-482E-99E2-27D8DECB075E} = {BBF7AD8D-5522-48C0-A906-00CBB72308A0}
-		{015B3812-E01D-479C-895D-BDDF16E798CA} = {10F39E91-97F2-4812-9D2F-79BE18EC6B08}
 		{7DE6AD74-E2B3-498E-90C5-DDF3188F333A} = {BCEC61BD-4941-41EC-975A-ACEFC7AC1780}
 		{5971F640-8BBA-4264-BCD6-60A97DD54B4A} = {BBF7AD8D-5522-48C0-A906-00CBB72308A0}
+		{DC39543E-0A17-4869-96C9-B876EB1BB117} = {8091BCA3-70F8-4506-9701-C3074E79A66D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8885C59C-F6A0-4C2F-A3BC-B720E9BD161F}

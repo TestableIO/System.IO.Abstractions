@@ -17,6 +17,12 @@
     <DefineConstants Condition="'$(TargetFramework)' == 'net9.0'">$(DefineConstants);FEATURE_PATH_SPAN;FEATURE_FILE_SPAN</DefineConstants>
     <DefineConstants>$(DefineConstants);FEATURE_SERIALIZABLE</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Nerdbank.GitVersioning">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
