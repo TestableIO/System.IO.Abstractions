@@ -2,6 +2,7 @@
 [![NuGet](https://img.shields.io/nuget/v/TestableIO.System.IO.Abstractions.svg)](https://www.nuget.org/packages/TestableIO.System.IO.Abstractions)
 [![Build](https://github.com/TestableIO/System.IO.Abstractions/actions/workflows/build.yml/badge.svg)](https://github.com/TestableIO/System.IO.Abstractions/actions/workflows/build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=TestableIO_System.IO.Abstractions&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=TestableIO_System.IO.Abstractions)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=TestableIO_System.IO.Abstractions&metric=coverage)](https://sonarcloud.io/summary/new_code?id=TestableIO_System.IO.Abstractions)
 [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FTestableIO%2FSystem.IO.Abstractions.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FTestableIO%2FSystem.IO.Abstractions?ref=badge_shield)
 
