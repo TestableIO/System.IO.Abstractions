@@ -35,7 +35,10 @@ public sealed class ApiApprovalTests
     private static IEnumerable<string> TargetFrameworksTheoryData()
     {
         List<string> theoryData = new();
-        foreach (var targetFramework in Helper.GetTargetFrameworks()) theoryData.Add(targetFramework);
+        foreach (var targetFramework in Helper.GetTargetFrameworks())
+        {
+            theoryData.Add(targetFramework);
+        }
 
         return theoryData;
     }
