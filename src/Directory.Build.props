@@ -19,7 +19,7 @@
         <PackageIcon>icon_256x256.png</PackageIcon>
     </PropertyGroup>
     <ItemGroup>
-        <None Include="..\..\images\icon_256x256.png" Pack="true" PackagePath="\"/>
+        <None Include="$(SolutionDir)/images/icon_256x256.png" Pack="true" PackagePath="/" Link="/icon_256x256.png"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -28,5 +28,5 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
-    
+
 </Project>
