@@ -1,7 +1,7 @@
 ![System.IO.Abstractions](https://socialify.git.ci/TestableIO/System.IO.Abstractions/image?description=1&font=Source%20Code%20Pro&forks=1&issues=1&pattern=Charlie%20Brown&pulls=1&stargazers=1&theme=Dark)
 [![NuGet](https://img.shields.io/nuget/v/TestableIO.System.IO.Abstractions.svg)](https://www.nuget.org/packages/TestableIO.System.IO.Abstractions)
-![Continuous Integration](https://github.com/TestableIO/System.IO.Abstractions/workflows/Continuous%20Integration/badge.svg)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/54479b054d194adfb4ff476ef0182fe0)](https://app.codacy.com/gh/TestableIO/System.IO.Abstractions/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Build](https://github.com/TestableIO/System.IO.Abstractions/actions/workflows/build.yml/badge.svg)](https://github.com/TestableIO/System.IO.Abstractions/actions/workflows/build.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=TestableIO_System.IO.Abstractions&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=TestableIO_System.IO.Abstractions)
 [![Renovate enabled](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com/)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FTestableIO%2FSystem.IO.Abstractions.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FTestableIO%2FSystem.IO.Abstractions?ref=badge_shield)
 
