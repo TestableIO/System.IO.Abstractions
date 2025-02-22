@@ -1,0 +1,207 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v[0-9]+.[0-9]+.[0-9]+*' ]
+
+jobs:
+  unit-tests:
+    name: "Unit tests"
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            7.0.x
+            8.0.x
+            9.0.x
+      - name: Run unit tests (windows)
+        if: matrix.os == 'windows-latest'
+        run: ./build.ps1 CodeCoverage
+      - name: Run unit tests (ubuntu|macos)
+        if: matrix.os != 'windows-latest'
+        run: ./build.sh CodeCoverage
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ runner.os }}-artifacts
+          path: |
+            ./Artifacts/*
+            ./TestResults/*.trx
+  
+  api-tests:
+    name: "API tests"
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_NOLOGO: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            7.0.x
+            8.0.x
+            9.0.x
+      - name: API checks
+        run: ./build.sh ApiChecks
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: API-tests
+          path: |
+            ./Artifacts/*
+            ./TestResults/*.trx
+  
+  static-code-analysis:
+    name: "Static code analysis"
+    runs-on: ubuntu-latest
+    env:
+      REPORTGENERATOR_LICENSE: ${{ secrets.REPORTGENERATOR_LICENSE }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      DOTNET_NOLOGO: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            7.0.x
+            8.0.x
+            9.0.x
+      - name: Run sonarcloud analysis
+        run: ./build.sh CodeAnalysis
+  
+  publish-test-results:
+    name: "Publish Tests Results"
+    needs: [ api-tests, unit-tests ]
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+    if: always()
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          comment_mode: always
+          files: "artifacts/**/**/*.trx"
+  
+  pack:
+    name: "Pack"
+    runs-on: ubuntu-latest
+    needs: [ publish-test-results, static-code-analysis ]
+    env:
+      DOTNET_NOLOGO: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup .NET SDKs
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            6.0.x
+            7.0.x
+            8.0.x
+            9.0.x
+      - name: Pack nuget packages
+        run: ./build.sh Pack
+      - name: Upload packages
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          path: Artifacts/Packages
+          name: Packages
+  
+  push:
+    name: "Push"
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    runs-on: macos-latest
+    environment: production
+    needs: [ pack ]
+    permissions:
+      contents: write
+    steps:
+      - name: Download packages
+        uses: actions/download-artifact@v4
+        with:
+          name: Packages
+          path: Artifacts/Packages
+      - name: Publish
+        run: |
+          echo "Found the following packages to push:"
+          search_dir=Artifacts/Packages
+          for entry in Artifacts/Packages/*.nupkg
+          do
+            echo "- $entry"
+          done
+          for entry in Artifacts/Packages/*.nupkg
+          do
+            nuget push $entry -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}} -SkipDuplicate
+          done
+      - name: Check pre-release
+        id: check-pre-release
+        run: |
+          if [[ ${{ github.event.ref }} =~ ^refs/tags/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "release=true" >> $GITHUB_OUTPUT
+          fi
+      - name: Create GitHub release
+        if: steps.check-pre-release.outputs.release == 'true'
+        continue-on-error: true
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ steps.tag.outputs.release_version }}
+          tag_name: ${{ steps.tag.outputs.release_version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          generate_release_notes: true
+  
+  finalize-release:
+    name: "Finalize release"
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    needs: [ push ]
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Check pre-release
+        id: check-pre-release
+        run: |
+          if [[ ${{ github.event.ref }} =~ ^refs/tags/v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "release=true" >> $GITHUB_OUTPUT
+          fi
+      - name: Comment relevant issues and pull requests
+        if: steps.check-pre-release.outputs.release == 'true'
+        continue-on-error: true
+        uses: apexskier/github-release-commenter@v1.3.6
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          comment-template: |
+            This is addressed in release {release_link}.
+          label-template: |
+            state: released
+          skip-label: |
+            state: released

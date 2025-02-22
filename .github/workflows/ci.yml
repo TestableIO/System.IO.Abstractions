@@ -1,23 +1,22 @@
-name: Continuous Integration
+name: CI
+
 on:
-  push:
-    branches: [main]
+  workflow_dispatch:
   pull_request:
-    branches: [main]
+    branches: [ main ]
+
 jobs:
-  test:
-    name: Test
+  unit-tests:
+    name: "Unit tests"
     strategy:
-      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Checkout sources
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Setup .NET
+      - name: Setup .NET SDKs
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
@@ -25,22 +24,31 @@ jobs:
             7.0.x
             8.0.x
             9.0.x
-      - name: Run tests
-        run: dotnet test --filter FullyQualifiedName\!~TestableIO.System.IO.Abstractions.Api.Tests --collect:"XPlat Code Coverage" --logger "GitHubActions"
-      - name: Upload coverage
+      - name: Run unit tests (windows)
+        if: matrix.os == 'windows-latest'
+        run: ./build.ps1 CodeCoverage
+      - name: Run unit tests (ubuntu|macos)
+        if: matrix.os != 'windows-latest'
+        run: ./build.sh CodeCoverage
+      - name: Upload artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Code coverage ${{ matrix.os }}
-          path: "**/coverage.cobertura.xml"
-  api-test:
-    name: API Test
+          name: ${{ runner.os }}-artifacts
+          path: |
+            ./Artifacts/*
+            ./TestResults/*.trx
+  
+  api-tests:
+    name: "API tests"
     runs-on: ubuntu-latest
+    env:
+      DOTNET_NOLOGO: true
     steps:
-      - name: Checkout sources
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Setup .NET
+      - name: Setup .NET SDKs
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
@@ -48,106 +56,55 @@ jobs:
             7.0.x
             8.0.x
             9.0.x
-      - name: Build solution
-        run: dotnet build
-      - name: Run tests
-        run: dotnet test --filter FullyQualifiedName~TestableIO.System.IO.Abstractions.Api.Tests --logger "GitHubActions"
-  coverage:
-    name: Coverage
-    needs: [test, api-test]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v4
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: Code coverage ubuntu-latest
-          path: coverage-ubuntu
-      - uses: actions/download-artifact@v4
-        with:
-          name: Code coverage windows-latest
-          path: coverage-windows
-      - uses: actions/download-artifact@v4
-        with:
-          name: Code coverage macos-latest
-          path: coverage-macos
-      - name: Generate coverage report
-        uses: danielpalme/ReportGenerator-GitHub-Action@v5.4.4
-        with:
-          reports: "**/coverage.cobertura.xml"
-          targetdir: "coverage-report"
-          reporttypes: "Cobertura"
-      - name: Publish coverage report to Codacy
-        uses: codacy/codacy-coverage-reporter-action@master
-        if: github.repository == 'TestableIO/System.IO.Abstractions' && github.event_name == 'push'
-        with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: coverage-report/Cobertura.xml
-  pack:
-    name: Pack
-    needs: [test, api-test]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-      - name: Create packages
-        run: dotnet pack --configuration Release --output ./packages
-      - name: Upload a Build Artifact
+      - name: API checks
+        run: ./build.sh ApiChecks
+      - name: Upload artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: NuGet packages
-          path: packages/*.*
-  deploy:
-    name: Deploy
-    if: |
-      github.ref == 'refs/heads/main' && 
-      github.event_name == 'push' &&
-      (
-        startsWith(github.event.head_commit.message, 'feat:') ||
-        startsWith(github.event.head_commit.message, 'feat!:') ||
-        startsWith(github.event.head_commit.message, 'fix:') ||
-        startsWith(github.event.head_commit.message, 'fix!:') ||
-        contains(github.event.head_commit.message, 'breaking change')
-      )
-    needs: [pack]
+          name: API-tests
+          path: |
+            ./Artifacts/*
+            ./TestResults/*.trx
+  
+  static-code-analysis:
+    name: "Static code analysis"
+    if: ${{ github.actor != 'dependabot[bot]' }}
     runs-on: ubuntu-latest
+    env:
+      REPORTGENERATOR_LICENSE: ${{ secrets.REPORTGENERATOR_LICENSE }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      DOTNET_NOLOGO: true
     steps:
-      - name: Checkout sources
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Setup .NET
+      - name: Setup .NET SDKs
         uses: actions/setup-dotnet@v4
-      - uses: actions/download-artifact@v4
         with:
-          name: NuGet packages
-          path: packages
-      - name: Push packages
-        run: dotnet nuget push "packages/*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
-      - uses: dotnet/nbgv@v0.4.2
-        id: nbgv
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v2
+          dotnet-version: |
+            6.0.x
+            7.0.x
+            8.0.x
+            9.0.x
+      - name: Run sonarcloud analysis
+        run: ./build.sh CodeAnalysis
+  
+  publish-test-results:
+    name: "Publish Tests Results"
+    needs: [ api-tests, unit-tests ]
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+    if: always()
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
         with:
-          name: v${{ steps.nbgv.outputs.SemVer2 }}
-          tag_name: v${{ steps.nbgv.outputs.SemVer2 }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          generate_release_notes: true
-      - name: Wait for GitHub release to be available
-        run: sleep 30s
-        shell: bash
-      - name: Comment on relevant PRs and issues
-        uses: apexskier/github-release-commenter@v1.3.6
+          path: artifacts
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          comment-template: |
-            This is addressed in release {release_link}.
-          label-template: |
-            state: released
-
+          comment_mode: always
+          files: "artifacts/**/**/*.trx"
