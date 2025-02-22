@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net8.0</TargetFrameworks>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\TestableIO.System.IO.Abstractions.TestingHelpers\TestableIO.System.IO.Abstractions.TestingHelpers.csproj" />
+		<ProjectReference Include="..\..\src\TestableIO.System.IO.Abstractions.Wrappers\TestableIO.System.IO.Abstractions.Wrappers.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="GitHubActionsTestLogger" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" />
+		<PackageReference Include="NUnit"/>
+		<PackageReference Include="NUnit.Analyzers"/>
+		<PackageReference Include="NUnit3TestAdapter"/>
+		<PackageReference Include="PublicApiGenerator"/>
+		<PackageReference Include="aweXpect"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Expected\"/>
+	</ItemGroup>
+</Project>
