@@ -45,7 +45,7 @@ partial class Build
                 var currentDirectory = Path.GetDirectoryName(testAssembly);
 
                 NUnitTasks.NUnit3(s => s
-                    .SetInputFiles(testAssemblies)
+                    .SetInputFiles(testAssembly)
                     .SetProcessWorkingDirectory(currentDirectory)
                 );
             }
