@@ -1,33 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net8.0;net6.0</TargetFrameworks>
-    <TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net472</TargetFrameworks>
     <Description>The unit tests for our the core abstractions</Description>
     <AssemblyName>System.IO.Abstractions.Tests</AssemblyName>
     <RootNamespace>System.IO.Abstractions.Tests</RootNamespace>
-    <IsPackable>false</IsPackable>
-    <IsTestable>true</IsTestable>
   </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\src\TestableIO.System.IO.Abstractions.Wrappers\TestableIO.System.IO.Abstractions.Wrappers.csproj" />
   </ItemGroup>
+  
   <ItemGroup>
-    <PackageReference Include="coverlet.collector">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="GitHubActionsTestLogger" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="Moq" />
-    <PackageReference Include="NUnit" />
-    <PackageReference Include="NUnit.Analyzers" />
-    <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="Snapshooter.NUnit" />
   </ItemGroup>
-  <PropertyGroup>
-    <!--
-      Allow deprecated binary formatter functionality on .NET 8 so that we can test it
-    -->
-    <EnableUnsafeBinaryFormatterSerialization Condition="'$(TargetFramework)' == 'net8.0'">true</EnableUnsafeBinaryFormatterSerialization>
-  </PropertyGroup>
+  
 </Project>
