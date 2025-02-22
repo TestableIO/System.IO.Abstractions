@@ -22,10 +22,6 @@
     <PackageVersion Include="aweXpect" Version="1.0.1"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="Nerdbank.GitVersioning" Version="3.7.115" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageVersion Include="Nuke.Common" Version="9.0.4"/>
     <PackageVersion Include="Nuke.Components" Version="9.0.4"/>
     <PackageVersion Include="LibGit2Sharp" Version="0.31.0"/>
