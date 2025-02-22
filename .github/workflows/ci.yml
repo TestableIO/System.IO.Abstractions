@@ -48,6 +48,8 @@ jobs:
             7.0.x
             8.0.x
             9.0.x
+      - name: Build solution
+        run: dotnet build
       - name: Run tests
         run: dotnet test --filter FullyQualifiedName~TestableIO.System.IO.Abstractions.Api.Tests --logger "GitHubActions"
   coverage:
