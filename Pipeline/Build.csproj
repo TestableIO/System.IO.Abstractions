@@ -12,19 +12,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LibGit2Sharp"/>
-    <PackageReference Include="Nuke.Common"/>
-    <PackageReference Include="Nuke.Components"/>
-    <PackageReference Include="SharpCompress"/>
+    <PackageReference Include="LibGit2Sharp" />
+    <PackageReference Include="Nuke.Common" />
+    <PackageReference Include="Nuke.Components" />
+    <PackageReference Include="SharpCompress" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageDownload Include="coverlet.console" Version="[3.1.2]"/>
-    <PackageDownload Include="dotnet-sonarscanner" Version="[9.0.2]"/>
-    <PackageDownload Include="dotnet-stryker" Version="[4.4.1]"/>
-    <PackageDownload Include="GitVersion.Tool" Version="[6.0.5]"/>
-    <PackageDownload Include="ReportGenerator" Version="[5.4.1]"/>
-    <PackageDownload Include="xunit.runner.console" Version="[2.9.2]"/>
+    <PackageDownload Include="coverlet.console" Version="[3.1.2]" />
+    <PackageDownload Include="dotnet-sonarscanner" Version="[9.0.2]" />
+    <PackageDownload Include="dotnet-stryker" Version="[4.4.1]" />
+    <PackageDownload Include="GitVersion.Tool" Version="[6.0.5]" />
+    <PackageDownload Include="NUnit.ConsoleRunner" Version="[3.19.2]" />
+    <PackageDownload Include="ReportGenerator" Version="[5.4.1]" />
+    <PackageDownload Include="xunit.runner.console" Version="[2.9.2]" />
   </ItemGroup>
 
 </Project>

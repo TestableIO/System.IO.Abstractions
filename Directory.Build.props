@@ -8,6 +8,7 @@
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)StrongName.snk</AssemblyOriginatorKeyFile>
     <LangVersion>latest</LangVersion>
     <PackageTags>testing</PackageTags>
+    <NoWarn>CS1591</NoWarn>
     <PackageProjectUrl>https://github.com/TestableIO/System.IO.Abstractions</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
