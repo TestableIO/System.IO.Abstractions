@@ -24,6 +24,7 @@
     "ExecutableTarget": {
       "type": "string",
       "enum": [
+        "ApiChecks",
         "CalculateNugetVersion",
         "Clean",
         "CodeAnalysis",
