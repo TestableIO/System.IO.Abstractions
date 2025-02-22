@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <Description>The unit tests for our the parity checks</Description>
+    <AssemblyName>System.IO.Abstractions.Parity.Tests</AssemblyName>
+    <RootNamespace>System.IO.Abstractions.Parity.Tests</RootNamespace>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\TestableIO.System.IO.Abstractions.Wrappers\TestableIO.System.IO.Abstractions.Wrappers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="aweXpect"/>
+    <PackageReference Include="System.Text.Json"/>
+  </ItemGroup>
+  
+</Project>
