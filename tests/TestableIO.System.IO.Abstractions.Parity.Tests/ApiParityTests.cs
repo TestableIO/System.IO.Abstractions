@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
+using aweXpect;
 using NUnit.Framework;
-using Snapshooter;
-using Snapshooter.NUnit;
 using static System.Reflection.BindingFlags;
 
 namespace System.IO.Abstractions.Tests
@@ -11,62 +12,62 @@ namespace System.IO.Abstractions.Tests
     public class ApiParityTests
     {
         [Test]
-        public void File() =>
-            AssertParity(
+        public async Task File() =>
+            await AssertParity(
                 typeof(System.IO.File),
                 typeof(System.IO.Abstractions.FileBase)
             );
 
         [Test]
-        public void FileInfo() =>
-            AssertParity(
+        public async Task FileInfo() =>
+            await AssertParity(
                 typeof(System.IO.FileInfo),
                 typeof(System.IO.Abstractions.FileInfoBase)
             );
 
         [Test]
-        public void FileVersionInfo() =>
-            AssertParity(
+        public async Task FileVersionInfo() =>
+            await AssertParity(
                 typeof(System.Diagnostics.FileVersionInfo),
                 typeof(System.IO.Abstractions.FileVersionInfoBase)
             );
 
         [Test]
-        public void Directory() =>
-            AssertParity(
+        public async Task Directory() =>
+            await AssertParity(
                 typeof(System.IO.Directory),
                 typeof(System.IO.Abstractions.DirectoryBase)
             );
 
         [Test]
-        public void DirectoryInfo() =>
-            AssertParity(
+        public async Task DirectoryInfo() =>
+            await AssertParity(
                 typeof(System.IO.DirectoryInfo),
                 typeof(System.IO.Abstractions.DirectoryInfoBase)
             );
 
         [Test]
-        public void DriveInfo() =>
-            AssertParity(
+        public async Task DriveInfo() =>
+            await AssertParity(
                 typeof(System.IO.DriveInfo),
                 typeof(System.IO.Abstractions.DriveInfoBase)
             );
 
         [Test]
-        public void Path() =>
-            AssertParity(
+        public async Task Path() =>
+            await AssertParity(
                 typeof(System.IO.Path),
                 typeof(System.IO.Abstractions.PathBase)
             );
 
         [Test]
-        public void FileSystemWatcher() =>
-            AssertParity(
+        public async Task FileSystemWatcher() =>
+            await AssertParity(
                 typeof(System.IO.FileSystemWatcher),
                 typeof(System.IO.Abstractions.FileSystemWatcherBase)
             );
 
-        private void AssertParity(Type referenceType, Type abstractionType)
+        private async Task AssertParity(Type referenceType, Type abstractionType)
         {
             static IEnumerable<string> GetMembers(Type type) => type
                 .GetMembers(bindingAttr: Instance | Static | Public | FlattenHierarchy)
@@ -89,9 +90,23 @@ namespace System.IO.Abstractions.Tests
                 extraMembers: abstractionMembers.Except(referenceMembers),
                 missingMembers: referenceMembers.Except(abstractionMembers)
             );
-            Snapshot.Match(diff, SnapshotNameExtension.Create(snapshotSuffix));
+
+            var serializedDiff = JsonSerializer.Serialize(diff, SerializerOptions);
+
+            var snapshotPath = IO.Path.GetFullPath("../../../__snapshots__/");
+            var fileName = $"ApiParityTests.{referenceType.Name}_{snapshotSuffix}.snap";
+            var fileContent = IO.File.ReadAllText(IO.Path.Combine(snapshotPath, fileName));
+
+            await Expect.That(fileContent).IsEqualTo(serializedDiff)
+                .IgnoringNewlineStyle()
+                .IgnoringTrailingWhiteSpace();
         }
 
+        private static JsonSerializerOptions SerializerOptions = new()
+        {
+            WriteIndented = true
+        };
+        
         private readonly struct ApiDiff
         {
             public ApiDiff(IEnumerable<string> extraMembers, IEnumerable<string> missingMembers)

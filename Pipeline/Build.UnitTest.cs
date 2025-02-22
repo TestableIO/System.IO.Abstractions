@@ -22,6 +22,7 @@ partial class Build
 	[
 		Solution.Tests.TestableIO_System_IO_Abstractions_Wrappers_Tests,
 		Solution.Tests.TestableIO_System_IO_Abstractions_TestingHelpers_Tests,
+		Solution.Tests.TestableIO_System_IO_Abstractions_Parity_Tests,
 	];
 
 	Target DotNetFrameworkUnitTests => _ => _

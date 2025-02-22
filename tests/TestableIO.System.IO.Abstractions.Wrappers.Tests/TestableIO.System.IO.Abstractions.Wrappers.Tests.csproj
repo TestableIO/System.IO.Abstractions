@@ -10,8 +10,4 @@
     <ProjectReference Include="..\..\src\TestableIO.System.IO.Abstractions.Wrappers\TestableIO.System.IO.Abstractions.Wrappers.csproj" />
   </ItemGroup>
   
-  <ItemGroup>
-    <PackageReference Include="Snapshooter.NUnit" />
-  </ItemGroup>
-  
 </Project>
