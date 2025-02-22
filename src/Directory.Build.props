@@ -1,10 +1,32 @@
 <Project>
-  <Import Project="../Directory.Build.props" />
-  <PropertyGroup>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <GenerateDocumentationFile >true</GenerateDocumentationFile>
-  </PropertyGroup>
+
+    <Import Project="$(MSBuildThisFileDirectory)/../Directory.Build.props"
+            Condition="Exists('$(MSBuildThisFileDirectory)/../Directory.Build.props')"/>
+
+    <PropertyGroup>
+        <TargetFrameworks>net472;netstandard2.0;netstandard2.1;net6.0;net8.0;net9.0</TargetFrameworks>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <PackageIcon>icon_256x256.png</PackageIcon>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="..\..\images\icon_256x256.png" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="IsExternalInit">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+    
 </Project>
