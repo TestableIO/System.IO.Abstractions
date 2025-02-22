@@ -1,13 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  
   <PropertyGroup>
-    <TargetFrameworks>net9.0;net8.0;net6.0</TargetFrameworks>
-    <TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net472</TargetFrameworks>
     <Description>The unit tests for our pre-built mocks</Description>
     <AssemblyName>System.IO.Abstractions.TestingHelpers.Tests</AssemblyName>
     <RootNamespace>System.IO.Abstractions.TestingHelpers.Tests</RootNamespace>
-    <IsPackable>false</IsPackable>
-    <IsTestable>true</IsTestable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/TestableIO.System.IO.Abstractions.TestingHelpers/TestableIO.System.IO.Abstractions.TestingHelpers.csproj" />
+  </ItemGroup>
+  
   <PropertyGroup>
     <!--  
       Ensure that test logger is copied to output directory, see 
@@ -15,39 +17,12 @@
     -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
+  
   <ItemGroup>
     <None Remove="TestFiles\SecondTestFile.txt" />
     <None Remove="TestFiles\TestFile.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="TestFiles\SecondTestFile.txt" />
     <EmbeddedResource Include="TestFiles\TestFile.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="../../src/TestableIO.System.IO.Abstractions.TestingHelpers/TestableIO.System.IO.Abstractions.TestingHelpers.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="coverlet.collector">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="GitHubActionsTestLogger" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="Moq" />
-    <PackageReference Include="NUnit" />
-    <PackageReference Include="NUnit.Analyzers">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="NUnit3TestAdapter" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
-  </ItemGroup>
-  <PropertyGroup>
-    <!--
-      Allow deprecated binary formatter functionality on .NET 8 so that we can test it
-    -->
-    <EnableUnsafeBinaryFormatterSerialization Condition="'$(TargetFramework)' == 'net8.0'">true</EnableUnsafeBinaryFormatterSerialization>
-  </PropertyGroup>
+  
 </Project>
