@@ -5,7 +5,7 @@
         <RootNamespace>System.IO.Abstractions</RootNamespace>
         <Description>A set of abstractions to help make file system interactions testable.</Description>
     </PropertyGroup>
-  
+
     <ItemGroup>
         <ProjectReference Include="..\TestableIO.System.IO.Abstractions\TestableIO.System.IO.Abstractions.csproj"/>
         <ProjectReference Include="..\TestableIO.System.IO.Abstractions.Wrappers\TestableIO.System.IO.Abstractions.Wrappers.csproj"/>
