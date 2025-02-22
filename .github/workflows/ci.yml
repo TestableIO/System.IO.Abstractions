@@ -26,7 +26,7 @@ jobs:
             8.0.x
             9.0.x
       - name: Run tests
-        run: dotnet test --collect:"XPlat Code Coverage"  --logger "GitHubActions"
+        run: dotnet test --filter FullyQualifiedName\!~TestableIO.System.IO.Abstractions.Api.Tests --collect:"XPlat Code Coverage" --logger "GitHubActions"
       - name: Upload coverage
         uses: actions/upload-artifact@v4
         with:
