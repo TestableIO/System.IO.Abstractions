@@ -105,8 +105,8 @@ namespace System.IO.Abstractions.Tests
             public string[] MissingMembers { get; }
         }
 
-#if NET462
-        private const string snapshotSuffix = ".NET Framework 4.6.2";
+#if NET472
+        private const string snapshotSuffix = ".NET Framework 4.7.2";
 #elif NET6_0
         private const string snapshotSuffix = ".NET 6.0";
 #elif NET8_0

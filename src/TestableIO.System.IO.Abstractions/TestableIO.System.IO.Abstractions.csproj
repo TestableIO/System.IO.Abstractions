@@ -3,16 +3,12 @@
     <AssemblyName>TestableIO.System.IO.Abstractions</AssemblyName>
     <RootNamespace>System.IO.Abstractions</RootNamespace>
     <Description>A set of abstractions to help make file system interactions testable.</Description>
-    <TargetFrameworks>net9.0;net8.0;net6.0;netstandard2.1;netstandard2.0;net462</TargetFrameworks>
+    <TargetFrameworks>net9.0;net8.0;net6.0;netstandard2.1;netstandard2.0;net472</TargetFrameworks>
     <PackageIcon>icon_256x256.png</PackageIcon>
     <Nullable>enable</Nullable>
     <LangVersion>preview</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net462">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Nullable">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
