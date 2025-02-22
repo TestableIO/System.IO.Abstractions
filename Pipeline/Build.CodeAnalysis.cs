@@ -16,7 +16,7 @@ partial class Build
 		.Executes(() =>
 		{
 			SonarScannerTasks.SonarScannerBegin(s => s
-				.SetOrganization("TestableIO")
+				.SetOrganization("testableio")
 				.SetProjectKey("TestableIO_System.IO.Abstractions")
 				.AddVSTestReports(TestResultsDirectory / "*.trx")
 				.AddOpenCoverPaths(TestResultsDirectory / "reports" / "OpenCover.xml")
