@@ -4,120 +4,120 @@ using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace System.IO.Abstractions.TestingHelpers.Tests
+namespace System.IO.Abstractions.TestingHelpers.Tests;
+
+public class MockFileAppendAllLinesTests
 {
-    public class MockFileAppendAllLinesTests
+    [Test]
+    public async Task MockFile_AppendAllLines_ShouldPersistNewLinesToExistingFile()
     {
-        [Test]
-        public async Task MockFile_AppendAllLines_ShouldPersistNewLinesToExistingFile()
+        // Arrange
+        string path = XFS.Path(@"c:\something\demo.txt");
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
         {
-            // Arrange
-            string path = XFS.Path(@"c:\something\demo.txt");
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { path, new MockFileData("Demo text content") }
-            });
+            { path, new MockFileData("Demo text content") }
+        });
 
-            var file = new MockFile(fileSystem);
+        var file = new MockFile(fileSystem);
 
-            // Act
-            file.AppendAllLines(path, new[] { "line 1", "line 2", "line 3" });
+        // Act
+        file.AppendAllLines(path, new[] { "line 1", "line 2", "line 3" });
 
-            // Assert
-            await That(file.ReadAllText(path))
-                .IsEqualTo("Demo text contentline 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine);
-        }
+        // Assert
+        await That(file.ReadAllText(path))
+            .IsEqualTo("Demo text contentline 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine);
+    }
 
-        [Test]
-        public async Task MockFile_AppendAllLines_ShouldPersistNewLinesToNewFile()
+    [Test]
+    public async Task MockFile_AppendAllLines_ShouldPersistNewLinesToNewFile()
+    {
+        // Arrange
+        string path = XFS.Path(@"c:\something\demo.txt");
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
         {
-            // Arrange
-            string path = XFS.Path(@"c:\something\demo.txt");
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { XFS.Path(@"c:\something\"), new MockDirectoryData() }
-            });
-            var file = new MockFile(fileSystem);
+            { XFS.Path(@"c:\something\"), new MockDirectoryData() }
+        });
+        var file = new MockFile(fileSystem);
 
-            // Act
-            file.AppendAllLines(path, new[] { "line 1", "line 2", "line 3" });
+        // Act
+        file.AppendAllLines(path, new[] { "line 1", "line 2", "line 3" });
 
-            // Assert
-            await That(file.ReadAllText(path))
-                .IsEqualTo("line 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine);
-        }
+        // Assert
+        await That(file.ReadAllText(path))
+            .IsEqualTo("line 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine);
+    }
 
-        [Test]
-        public async Task MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathIsZeroLength()
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem();
+    [Test]
+    public async Task MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathIsZeroLength()
+    {
+        // Arrange
+        var fileSystem = new MockFileSystem();
 
-            // Act
-            Action action = () => fileSystem.File.AppendAllLines(string.Empty, new[] { "does not matter" });
+        // Act
+        Action action = () => fileSystem.File.AppendAllLines(string.Empty, new[] { "does not matter" });
 
-            // Assert
-            await That(action).Throws<ArgumentException>();
-        }
+        // Assert
+        await That(action).Throws<ArgumentException>();
+    }
 
-        [TestCase(" ")]
-        [TestCase("   ")]
-        public async Task MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem();
+    [TestCase(" ")]
+    [TestCase("   ")]
+    public async Task MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
+    {
+        // Arrange
+        var fileSystem = new MockFileSystem();
 
-            // Act
-            Action action = () => fileSystem.File.AppendAllLines(path, new[] { "does not matter" });
+        // Act
+        Action action = () => fileSystem.File.AppendAllLines(path, new[] { "does not matter" });
 
-            // Assert
-            await That(action).Throws<ArgumentException>();
-        }
+        // Assert
+        await That(action).Throws<ArgumentException>();
+    }
 
-        [TestCase("\"")]
-        [TestCase("<")]
-        [TestCase(">")]
-        [TestCase("|")]
-        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public async Task MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathContainsInvalidChar(string path)
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem();
+    [TestCase("\"")]
+    [TestCase("<")]
+    [TestCase(">")]
+    [TestCase("|")]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
+    public async Task MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathContainsInvalidChar(string path)
+    {
+        // Arrange
+        var fileSystem = new MockFileSystem();
 
-            // Act
-            Action action = () => fileSystem.File.AppendAllLines(path, new[] { "does not matter" });
+        // Act
+        Action action = () => fileSystem.File.AppendAllLines(path, new[] { "does not matter" });
 
-            // Assert
-            await That(action).Throws<ArgumentException>();
-        }
+        // Assert
+        await That(action).Throws<ArgumentException>();
+    }
 
-        [Test]
-        public async Task MockFile_AppendAllLines_ShouldThrowArgumentNullExceptionIfContentIsNull()
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem();
+    [Test]
+    public async Task MockFile_AppendAllLines_ShouldThrowArgumentNullExceptionIfContentIsNull()
+    {
+        // Arrange
+        var fileSystem = new MockFileSystem();
 
-            // Act
-            Action action = () => fileSystem.File.AppendAllLines("foo", null);
+        // Act
+        Action action = () => fileSystem.File.AppendAllLines("foo", null);
 
-            // Assert
-            var exception = await That(action).Throws<ArgumentNullException>();
-            await That(exception.ParamName).IsEqualTo("contents");
-        }
+        // Assert
+        var exception = await That(action).Throws<ArgumentNullException>();
+        await That(exception.ParamName).IsEqualTo("contents");
+    }
 
-        [Test]
-        public async Task MockFile_AppendAllLines_ShouldThrowArgumentNullExceptionIfEncodingIsNull()
-        {
-            // Arrange
-            var fileSystem = new MockFileSystem();
+    [Test]
+    public async Task MockFile_AppendAllLines_ShouldThrowArgumentNullExceptionIfEncodingIsNull()
+    {
+        // Arrange
+        var fileSystem = new MockFileSystem();
 
-            // Act
-            Action action = () => fileSystem.File.AppendAllLines("foo.txt", new[] { "bar" }, null);
+        // Act
+        Action action = () => fileSystem.File.AppendAllLines("foo.txt", new[] { "bar" }, null);
 
-            // Assert
-            var exception = await That(action).Throws<ArgumentNullException>();
-            await That(exception.ParamName).IsEqualTo("encoding");
-        }
+        // Assert
+        var exception = await That(action).Throws<ArgumentNullException>();
+        await That(exception.ParamName).IsEqualTo("encoding");
+    }
 
 #if FEATURE_ASYNC_FILE
         [Test]
@@ -253,5 +253,4 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             await That(exception.ParamName).IsEqualTo("encoding");
         }
 #endif
-    }
 }

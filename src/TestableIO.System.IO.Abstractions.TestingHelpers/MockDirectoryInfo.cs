@@ -3,457 +3,456 @@ using System.Linq;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
 
-namespace System.IO.Abstractions.TestingHelpers
+namespace System.IO.Abstractions.TestingHelpers;
+
+using XFS = MockUnixSupport;
+
+/// <inheritdoc />
+#if FEATURE_SERIALIZABLE
+[Serializable]
+#endif
+public class MockDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport
 {
-    using XFS = MockUnixSupport;
+    private readonly IMockFileDataAccessor mockFileDataAccessor;
+    private string directoryPath;
+    private string originalPath;
+    private MockFileData cachedMockFileData;
+    private bool refreshOnNextRead;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MockDirectoryInfo"/> class.
+    /// </summary>
+    /// <param name="mockFileDataAccessor">The mock file data accessor.</param>
+    /// <param name="directoryPath">The directory path.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="mockFileDataAccessor"/> or <paramref name="directoryPath"/> is <see langref="null"/>.</exception>
+    public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath) : base(mockFileDataAccessor?.FileSystem)
+    {
+        this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
+
+        if (directoryPath == null)
+        {
+            throw new ArgumentNullException("path", StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
+        }
+        if (directoryPath.Trim() == string.Empty)
+        {
+            throw CommonExceptions.PathIsNotOfALegalForm("path");
+        }
+            
+        SetDirectoryPath(directoryPath);
+        Refresh();
+    }
+
+#if FEATURE_CREATE_SYMBOLIC_LINK
+    /// <inheritdoc />
+    public override void CreateAsSymbolicLink(string pathToTarget)
+    {
+        FileSystem.Directory.CreateSymbolicLink(FullName, pathToTarget);
+    }
+#endif
 
     /// <inheritdoc />
-#if FEATURE_SERIALIZABLE
-    [Serializable]
-#endif
-    public class MockDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport
+    public override void Delete()
     {
-        private readonly IMockFileDataAccessor mockFileDataAccessor;
-        private string directoryPath;
-        private string originalPath;
-        private MockFileData cachedMockFileData;
-        private bool refreshOnNextRead;
+        mockFileDataAccessor.Directory.Delete(directoryPath);
+        refreshOnNextRead = true;
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MockDirectoryInfo"/> class.
-        /// </summary>
-        /// <param name="mockFileDataAccessor">The mock file data accessor.</param>
-        /// <param name="directoryPath">The directory path.</param>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="mockFileDataAccessor"/> or <paramref name="directoryPath"/> is <see langref="null"/>.</exception>
-        public MockDirectoryInfo(IMockFileDataAccessor mockFileDataAccessor, string directoryPath) : base(mockFileDataAccessor?.FileSystem)
-        {
-            this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
-
-            if (directoryPath == null)
-            {
-                throw new ArgumentNullException("path", StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
-            }
-            if (directoryPath.Trim() == string.Empty)
-            {
-                throw CommonExceptions.PathIsNotOfALegalForm("path");
-            }
-            
-            SetDirectoryPath(directoryPath);
-            Refresh();
-        }
+    /// <inheritdoc />
+    public override void Refresh()
+    {
+        var mockFileData = mockFileDataAccessor.GetFile(directoryPath) ?? MockFileData.NullObject;
+        cachedMockFileData = mockFileData.Clone();
+    }
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
-        /// <inheritdoc />
-        public override void CreateAsSymbolicLink(string pathToTarget)
-        {
-            FileSystem.Directory.CreateSymbolicLink(FullName, pathToTarget);
-        }
+    /// <inheritdoc />
+    public override IFileSystemInfo ResolveLinkTarget(bool returnFinalTarget)
+    {
+        return FileSystem.Directory.ResolveLinkTarget(FullName, returnFinalTarget);
+    }
 #endif
 
-        /// <inheritdoc />
-        public override void Delete()
-        {
-            mockFileDataAccessor.Directory.Delete(directoryPath);
-            refreshOnNextRead = true;
-        }
+    /// <inheritdoc />
+    public override FileAttributes Attributes
+    {
+        get { return GetMockFileDataForRead().Attributes; }
+        set { GetMockFileDataForWrite().Attributes = value | FileAttributes.Directory; }
+    }
 
-        /// <inheritdoc />
-        public override void Refresh()
-        {
-            var mockFileData = mockFileDataAccessor.GetFile(directoryPath) ?? MockFileData.NullObject;
-            cachedMockFileData = mockFileData.Clone();
-        }
+    /// <inheritdoc />
+    public override DateTime CreationTime
+    {
+        get { return GetMockFileDataForRead().CreationTime.LocalDateTime; }
+        set { GetMockFileDataForWrite().CreationTime = value; }
+    }
 
-#if FEATURE_CREATE_SYMBOLIC_LINK
-        /// <inheritdoc />
-        public override IFileSystemInfo ResolveLinkTarget(bool returnFinalTarget)
-        {
-            return FileSystem.Directory.ResolveLinkTarget(FullName, returnFinalTarget);
-        }
-#endif
+    /// <inheritdoc />
+    public override DateTime CreationTimeUtc
+    {
+        get { return GetMockFileDataForRead().CreationTime.UtcDateTime; }
+        set { GetMockFileDataForWrite().CreationTime = value; }
+    }
 
-        /// <inheritdoc />
-        public override FileAttributes Attributes
-        {
-            get { return GetMockFileDataForRead().Attributes; }
-            set { GetMockFileDataForWrite().Attributes = value | FileAttributes.Directory; }
+    /// <inheritdoc />
+    public override bool Exists
+    {
+        get {
+            var mockFileData = GetMockFileDataForRead();
+            return (int)mockFileData.Attributes != -1 && mockFileData.IsDirectory;
         }
+    }
 
-        /// <inheritdoc />
-        public override DateTime CreationTime
+    /// <inheritdoc />
+    public override string Extension
+    {
+        get
         {
-            get { return GetMockFileDataForRead().CreationTime.LocalDateTime; }
-            set { GetMockFileDataForWrite().CreationTime = value; }
+            // System.IO.Path.GetExtension does only string manipulation,
+            // so it's safe to delegate.
+            return Path.GetExtension(directoryPath);
         }
+    }
 
-        /// <inheritdoc />
-        public override DateTime CreationTimeUtc
+    /// <inheritdoc />
+    public override string FullName
+    {
+        get
         {
-            get { return GetMockFileDataForRead().CreationTime.UtcDateTime; }
-            set { GetMockFileDataForWrite().CreationTime = value; }
-        }
+            var root = mockFileDataAccessor.Path.GetPathRoot(directoryPath);
 
-        /// <inheritdoc />
-        public override bool Exists
-        {
-            get {
-                var mockFileData = GetMockFileDataForRead();
-                return (int)mockFileData.Attributes != -1 && mockFileData.IsDirectory;
-            }
-        }
-
-        /// <inheritdoc />
-        public override string Extension
-        {
-            get
+            if (mockFileDataAccessor.StringOperations.Equals(directoryPath, root))
             {
-                // System.IO.Path.GetExtension does only string manipulation,
-                // so it's safe to delegate.
-                return Path.GetExtension(directoryPath);
+                // drives have the trailing slash
+                return directoryPath;
             }
+
+            // directories do not have a trailing slash
+            return directoryPath.TrimEnd('\\').TrimEnd('/');
         }
+    }
 
-        /// <inheritdoc />
-        public override string FullName
-        {
-            get
-            {
-                var root = mockFileDataAccessor.Path.GetPathRoot(directoryPath);
+    /// <inheritdoc />
+    public override DateTime LastAccessTime
+    {
+        get { return GetMockFileDataForRead().LastAccessTime.LocalDateTime; }
+        set { GetMockFileDataForWrite().LastAccessTime = value; }
+    }
 
-                if (mockFileDataAccessor.StringOperations.Equals(directoryPath, root))
-                {
-                    // drives have the trailing slash
-                    return directoryPath;
-                }
+    /// <inheritdoc />
+    public override DateTime LastAccessTimeUtc
+    {
+        get { return GetMockFileDataForRead().LastAccessTime.UtcDateTime; }
+        set { GetMockFileDataForWrite().LastAccessTime = value; }
+    }
 
-                // directories do not have a trailing slash
-                return directoryPath.TrimEnd('\\').TrimEnd('/');
-            }
-        }
+    /// <inheritdoc />
+    public override DateTime LastWriteTime
+    {
+        get { return GetMockFileDataForRead().LastWriteTime.LocalDateTime; }
+        set { GetMockFileDataForWrite().LastWriteTime = value; }
+    }
 
-        /// <inheritdoc />
-        public override DateTime LastAccessTime
-        {
-            get { return GetMockFileDataForRead().LastAccessTime.LocalDateTime; }
-            set { GetMockFileDataForWrite().LastAccessTime = value; }
-        }
-
-        /// <inheritdoc />
-        public override DateTime LastAccessTimeUtc
-        {
-            get { return GetMockFileDataForRead().LastAccessTime.UtcDateTime; }
-            set { GetMockFileDataForWrite().LastAccessTime = value; }
-        }
-
-        /// <inheritdoc />
-        public override DateTime LastWriteTime
-        {
-            get { return GetMockFileDataForRead().LastWriteTime.LocalDateTime; }
-            set { GetMockFileDataForWrite().LastWriteTime = value; }
-        }
-
-        /// <inheritdoc />
-        public override DateTime LastWriteTimeUtc
-        {
-            get { return GetMockFileDataForRead().LastWriteTime.UtcDateTime; }
-            set { GetMockFileDataForWrite().LastWriteTime = value; }
-        }
+    /// <inheritdoc />
+    public override DateTime LastWriteTimeUtc
+    {
+        get { return GetMockFileDataForRead().LastWriteTime.UtcDateTime; }
+        set { GetMockFileDataForWrite().LastWriteTime = value; }
+    }
 
 #if FEATURE_FILE_SYSTEM_INFO_LINK_TARGET
-        /// <inheritdoc />
-        public override string LinkTarget
-        {
-            get { return GetMockFileDataForRead().LinkTarget; }
-        }
+    /// <inheritdoc />
+    public override string LinkTarget
+    {
+        get { return GetMockFileDataForRead().LinkTarget; }
+    }
 #endif
 
-        /// <inheritdoc />
-        public override string Name
+    /// <inheritdoc />
+    public override string Name
+    {
+        get
         {
-            get
-            {
-                var mockPath = new MockPath(mockFileDataAccessor);
-                return string.Equals(mockPath.GetPathRoot(directoryPath), directoryPath) ? directoryPath : mockPath.GetFileName(directoryPath.TrimEnd(mockFileDataAccessor.Path.DirectorySeparatorChar));
-            }
+            var mockPath = new MockPath(mockFileDataAccessor);
+            return string.Equals(mockPath.GetPathRoot(directoryPath), directoryPath) ? directoryPath : mockPath.GetFileName(directoryPath.TrimEnd(mockFileDataAccessor.Path.DirectorySeparatorChar));
         }
+    }
 
-        /// <inheritdoc />
-        public override void Create()
-        {
-            mockFileDataAccessor.Directory.CreateDirectory(FullName);
-            refreshOnNextRead = true;
-        }
+    /// <inheritdoc />
+    public override void Create()
+    {
+        mockFileDataAccessor.Directory.CreateDirectory(FullName);
+        refreshOnNextRead = true;
+    }
         
-        /// <inheritdoc />
-        public override IDirectoryInfo CreateSubdirectory(string path)
-        {
-            return mockFileDataAccessor.Directory.CreateDirectory(Path.Combine(FullName, path));
-        }
+    /// <inheritdoc />
+    public override IDirectoryInfo CreateSubdirectory(string path)
+    {
+        return mockFileDataAccessor.Directory.CreateDirectory(Path.Combine(FullName, path));
+    }
 
-        /// <inheritdoc />
-        public override void Delete(bool recursive)
-        {
-            mockFileDataAccessor.Directory.Delete(directoryPath, recursive);
-            refreshOnNextRead = true;
-        }
+    /// <inheritdoc />
+    public override void Delete(bool recursive)
+    {
+        mockFileDataAccessor.Directory.Delete(directoryPath, recursive);
+        refreshOnNextRead = true;
+    }
 
-        /// <inheritdoc />
-        public override IEnumerable<IDirectoryInfo> EnumerateDirectories()
-        {
-            return GetDirectories();
-        }
+    /// <inheritdoc />
+    public override IEnumerable<IDirectoryInfo> EnumerateDirectories()
+    {
+        return GetDirectories();
+    }
 
-        /// <inheritdoc />
-        public override IEnumerable<IDirectoryInfo> EnumerateDirectories(string searchPattern)
-        {
-            return GetDirectories(searchPattern);
-        }
+    /// <inheritdoc />
+    public override IEnumerable<IDirectoryInfo> EnumerateDirectories(string searchPattern)
+    {
+        return GetDirectories(searchPattern);
+    }
 
-        /// <inheritdoc />
-        public override IEnumerable<IDirectoryInfo> EnumerateDirectories(string searchPattern, SearchOption searchOption)
-        {
-            return GetDirectories(searchPattern, searchOption);
-        }
+    /// <inheritdoc />
+    public override IEnumerable<IDirectoryInfo> EnumerateDirectories(string searchPattern, SearchOption searchOption)
+    {
+        return GetDirectories(searchPattern, searchOption);
+    }
 
 #if FEATURE_ENUMERATION_OPTIONS
-        /// <inheritdoc />
-        public override IEnumerable<IDirectoryInfo> EnumerateDirectories(string searchPattern, EnumerationOptions enumerationOptions)
-        {
-            return GetDirectories(searchPattern, enumerationOptions);
-        }
+    /// <inheritdoc />
+    public override IEnumerable<IDirectoryInfo> EnumerateDirectories(string searchPattern, EnumerationOptions enumerationOptions)
+    {
+        return GetDirectories(searchPattern, enumerationOptions);
+    }
 #endif
 
-        /// <inheritdoc />
-        public override IEnumerable<IFileInfo> EnumerateFiles()
-        {
-            return GetFiles();
-        }
+    /// <inheritdoc />
+    public override IEnumerable<IFileInfo> EnumerateFiles()
+    {
+        return GetFiles();
+    }
 
-        /// <inheritdoc />
-        public override IEnumerable<IFileInfo> EnumerateFiles(string searchPattern)
-        {
-            return GetFiles(searchPattern);
-        }
+    /// <inheritdoc />
+    public override IEnumerable<IFileInfo> EnumerateFiles(string searchPattern)
+    {
+        return GetFiles(searchPattern);
+    }
 
-        /// <inheritdoc />
-        public override IEnumerable<IFileInfo> EnumerateFiles(string searchPattern, SearchOption searchOption)
-        {
-            return GetFiles(searchPattern, searchOption);
-        }
+    /// <inheritdoc />
+    public override IEnumerable<IFileInfo> EnumerateFiles(string searchPattern, SearchOption searchOption)
+    {
+        return GetFiles(searchPattern, searchOption);
+    }
 
 #if FEATURE_ENUMERATION_OPTIONS
-        /// <inheritdoc />
-        public override IEnumerable<IFileInfo> EnumerateFiles(string searchPattern, EnumerationOptions enumerationOptions)
-        {
-            return GetFiles(searchPattern, enumerationOptions);
-        }
+    /// <inheritdoc />
+    public override IEnumerable<IFileInfo> EnumerateFiles(string searchPattern, EnumerationOptions enumerationOptions)
+    {
+        return GetFiles(searchPattern, enumerationOptions);
+    }
 #endif
 
-        /// <inheritdoc />
-        public override IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos()
-        {
-            return GetFileSystemInfos();
-        }
+    /// <inheritdoc />
+    public override IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos()
+    {
+        return GetFileSystemInfos();
+    }
 
-        /// <inheritdoc />
-        public override IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern)
-        {
-            return GetFileSystemInfos(searchPattern);
-        }
+    /// <inheritdoc />
+    public override IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern)
+    {
+        return GetFileSystemInfos(searchPattern);
+    }
 
-        /// <inheritdoc />
-        public override IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, SearchOption searchOption)
-        {
-            return GetFileSystemInfos(searchPattern, searchOption);
-        }
+    /// <inheritdoc />
+    public override IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, SearchOption searchOption)
+    {
+        return GetFileSystemInfos(searchPattern, searchOption);
+    }
 
 #if FEATURE_ENUMERATION_OPTIONS
-        /// <inheritdoc />
-        public override IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, EnumerationOptions enumerationOptions)
-        {
-            return GetFileSystemInfos(searchPattern, enumerationOptions);
-        }
+    /// <inheritdoc />
+    public override IEnumerable<IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, EnumerationOptions enumerationOptions)
+    {
+        return GetFileSystemInfos(searchPattern, enumerationOptions);
+    }
 #endif
         
-        /// <inheritdoc />
-        public override IDirectoryInfo[] GetDirectories()
-        {
-            return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath));
-        }
+    /// <inheritdoc />
+    public override IDirectoryInfo[] GetDirectories()
+    {
+        return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath));
+    }
 
-        /// <inheritdoc />
-        public override IDirectoryInfo[] GetDirectories(string searchPattern)
-        {
-            return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath, searchPattern));
-        }
+    /// <inheritdoc />
+    public override IDirectoryInfo[] GetDirectories(string searchPattern)
+    {
+        return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath, searchPattern));
+    }
 
-        /// <inheritdoc />
-        public override IDirectoryInfo[] GetDirectories(string searchPattern, SearchOption searchOption)
-        {
-            return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath, searchPattern, searchOption));
-        }
-
-#if FEATURE_ENUMERATION_OPTIONS
-        /// <inheritdoc />
-        public override IDirectoryInfo[] GetDirectories(string searchPattern, EnumerationOptions enumerationOptions)
-        {
-            return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath, searchPattern, enumerationOptions));
-        }
-#endif
-
-        private DirectoryInfoBase[] ConvertStringsToDirectories(IEnumerable<string> paths)
-        {
-            return paths
-                .Select(path => new MockDirectoryInfo(mockFileDataAccessor, path))
-                .Cast<DirectoryInfoBase>()
-                .ToArray();
-        }
-
-        /// <inheritdoc />
-        public override IFileInfo[] GetFiles()
-        {
-            return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName));
-        }
-
-        /// <inheritdoc />
-        public override IFileInfo[] GetFiles(string searchPattern)
-        {
-            return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName, searchPattern));
-        }
-
-        /// <inheritdoc />
-        public override IFileInfo[] GetFiles(string searchPattern, SearchOption searchOption)
-        {
-            return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName, searchPattern, searchOption));
-        }
+    /// <inheritdoc />
+    public override IDirectoryInfo[] GetDirectories(string searchPattern, SearchOption searchOption)
+    {
+        return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath, searchPattern, searchOption));
+    }
 
 #if FEATURE_ENUMERATION_OPTIONS
-        /// <inheritdoc />
-        public override IFileInfo[] GetFiles(string searchPattern, EnumerationOptions enumerationOptions)
-        {
-            return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName, searchPattern, enumerationOptions));
-        }
+    /// <inheritdoc />
+    public override IDirectoryInfo[] GetDirectories(string searchPattern, EnumerationOptions enumerationOptions)
+    {
+        return ConvertStringsToDirectories(mockFileDataAccessor.Directory.GetDirectories(directoryPath, searchPattern, enumerationOptions));
+    }
 #endif
 
-        IFileInfo[] ConvertStringsToFiles(IEnumerable<string> paths)
-        {
-            return paths
-                  .Select(mockFileDataAccessor.FileInfo.New)
-                  .ToArray();
-        }
+    private DirectoryInfoBase[] ConvertStringsToDirectories(IEnumerable<string> paths)
+    {
+        return paths
+            .Select(path => new MockDirectoryInfo(mockFileDataAccessor, path))
+            .Cast<DirectoryInfoBase>()
+            .ToArray();
+    }
 
-        /// <inheritdoc />
-        public override IFileSystemInfo[] GetFileSystemInfos()
-        {
-            return GetFileSystemInfos("*");
-        }
+    /// <inheritdoc />
+    public override IFileInfo[] GetFiles()
+    {
+        return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName));
+    }
 
-        /// <inheritdoc />
-        public override IFileSystemInfo[] GetFileSystemInfos(string searchPattern)
-        {
-            return GetFileSystemInfos(searchPattern, SearchOption.TopDirectoryOnly);
-        }
+    /// <inheritdoc />
+    public override IFileInfo[] GetFiles(string searchPattern)
+    {
+        return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName, searchPattern));
+    }
 
-        /// <inheritdoc />
-        public override IFileSystemInfo[] GetFileSystemInfos(string searchPattern, SearchOption searchOption)
-        {
-            return GetDirectories(searchPattern, searchOption).OfType<IFileSystemInfo>().Concat(GetFiles(searchPattern, searchOption)).ToArray();
-        }
+    /// <inheritdoc />
+    public override IFileInfo[] GetFiles(string searchPattern, SearchOption searchOption)
+    {
+        return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName, searchPattern, searchOption));
+    }
 
 #if FEATURE_ENUMERATION_OPTIONS
-        /// <inheritdoc />
-        public override IFileSystemInfo[] GetFileSystemInfos(string searchPattern, EnumerationOptions enumerationOptions)
-        {
-            return GetDirectories(searchPattern, enumerationOptions).OfType<IFileSystemInfo>().Concat(GetFiles(searchPattern, enumerationOptions)).ToArray();
-        }
+    /// <inheritdoc />
+    public override IFileInfo[] GetFiles(string searchPattern, EnumerationOptions enumerationOptions)
+    {
+        return ConvertStringsToFiles(mockFileDataAccessor.Directory.GetFiles(FullName, searchPattern, enumerationOptions));
+    }
 #endif
 
-        /// <inheritdoc />
-        public override void MoveTo(string destDirName)
-        {
-            mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
-            SetDirectoryPath(destDirName);
-        }
+    IFileInfo[] ConvertStringsToFiles(IEnumerable<string> paths)
+    {
+        return paths
+            .Select(mockFileDataAccessor.FileInfo.New)
+            .ToArray();
+    }
+
+    /// <inheritdoc />
+    public override IFileSystemInfo[] GetFileSystemInfos()
+    {
+        return GetFileSystemInfos("*");
+    }
+
+    /// <inheritdoc />
+    public override IFileSystemInfo[] GetFileSystemInfos(string searchPattern)
+    {
+        return GetFileSystemInfos(searchPattern, SearchOption.TopDirectoryOnly);
+    }
+
+    /// <inheritdoc />
+    public override IFileSystemInfo[] GetFileSystemInfos(string searchPattern, SearchOption searchOption)
+    {
+        return GetDirectories(searchPattern, searchOption).OfType<IFileSystemInfo>().Concat(GetFiles(searchPattern, searchOption)).ToArray();
+    }
+
+#if FEATURE_ENUMERATION_OPTIONS
+    /// <inheritdoc />
+    public override IFileSystemInfo[] GetFileSystemInfos(string searchPattern, EnumerationOptions enumerationOptions)
+    {
+        return GetDirectories(searchPattern, enumerationOptions).OfType<IFileSystemInfo>().Concat(GetFiles(searchPattern, enumerationOptions)).ToArray();
+    }
+#endif
+
+    /// <inheritdoc />
+    public override void MoveTo(string destDirName)
+    {
+        mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
+        SetDirectoryPath(destDirName);
+    }
         
-        /// <inheritdoc />
-        public override IDirectoryInfo Parent
+    /// <inheritdoc />
+    public override IDirectoryInfo Parent
+    {
+        get
         {
-            get
-            {
-                return mockFileDataAccessor.Directory.GetParent(directoryPath);
-            }
+            return mockFileDataAccessor.Directory.GetParent(directoryPath);
         }
+    }
 
-        /// <inheritdoc />
-        public override IDirectoryInfo Root
+    /// <inheritdoc />
+    public override IDirectoryInfo Root
+    {
+        get
         {
-            get
-            {
-                return new MockDirectoryInfo(mockFileDataAccessor, mockFileDataAccessor.Directory.GetDirectoryRoot(FullName));
-            }
+            return new MockDirectoryInfo(mockFileDataAccessor, mockFileDataAccessor.Directory.GetDirectoryRoot(FullName));
         }
+    }
 
-        private MockFileData GetMockFileDataForRead()
+    private MockFileData GetMockFileDataForRead()
+    {
+        if (refreshOnNextRead)
         {
-            if (refreshOnNextRead)
-            {
-                Refresh();
-                refreshOnNextRead = false;
-            }
-            return cachedMockFileData;
+            Refresh();
+            refreshOnNextRead = false;
         }
+        return cachedMockFileData;
+    }
 
-        private MockFileData GetMockFileDataForWrite()
-        {
-            refreshOnNextRead = true;
-            return mockFileDataAccessor.GetFile(directoryPath)
-                ?? throw CommonExceptions.CouldNotFindPartOfPath(directoryPath);
-        }
+    private MockFileData GetMockFileDataForWrite()
+    {
+        refreshOnNextRead = true;
+        return mockFileDataAccessor.GetFile(directoryPath)
+               ?? throw CommonExceptions.CouldNotFindPartOfPath(directoryPath);
+    }
 
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            return originalPath;
-        }
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return originalPath;
+    }
 
-        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl()" />
-        [SupportedOSPlatform("windows")]
-        public object GetAccessControl()
-        {
-            return GetMockDirectoryData().AccessControl;
-        }
+    /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl()" />
+    [SupportedOSPlatform("windows")]
+    public object GetAccessControl()
+    {
+        return GetMockDirectoryData().AccessControl;
+    }
 
-        /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
-        [SupportedOSPlatform("windows")]
-        public object GetAccessControl(IFileSystemAclSupport.AccessControlSections includeSections)
-        {
-            return GetMockDirectoryData().AccessControl;
-        }
+    /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
+    [SupportedOSPlatform("windows")]
+    public object GetAccessControl(IFileSystemAclSupport.AccessControlSections includeSections)
+    {
+        return GetMockDirectoryData().AccessControl;
+    }
 
-        /// <inheritdoc cref="IFileSystemAclSupport.SetAccessControl(object)" />
-        [SupportedOSPlatform("windows")]
-        public void SetAccessControl(object value)
-        {
-            GetMockDirectoryData().AccessControl = value as DirectorySecurity;
-        }
+    /// <inheritdoc cref="IFileSystemAclSupport.SetAccessControl(object)" />
+    [SupportedOSPlatform("windows")]
+    public void SetAccessControl(object value)
+    {
+        GetMockDirectoryData().AccessControl = value as DirectorySecurity;
+    }
         
-        private void SetDirectoryPath(string path)
-        {
-            originalPath = path;
-            path = mockFileDataAccessor.Path.GetFullPath(path);
+    private void SetDirectoryPath(string path)
+    {
+        originalPath = path;
+        path = mockFileDataAccessor.Path.GetFullPath(path);
 
-            path = path.TrimSlashes();
-            if (XFS.IsWindowsPlatform())
-            {
-                path = path.TrimEnd(' ');
-            }
-            this.directoryPath = path;
-        }
-
-        private MockDirectoryData GetMockDirectoryData()
+        path = path.TrimSlashes();
+        if (XFS.IsWindowsPlatform())
         {
-            return mockFileDataAccessor.GetFile(directoryPath) as MockDirectoryData
-                ?? throw CommonExceptions.CouldNotFindPartOfPath(directoryPath);
+            path = path.TrimEnd(' ');
         }
+        this.directoryPath = path;
+    }
+
+    private MockDirectoryData GetMockDirectoryData()
+    {
+        return mockFileDataAccessor.GetFile(directoryPath) as MockDirectoryData
+               ?? throw CommonExceptions.CouldNotFindPartOfPath(directoryPath);
     }
 }

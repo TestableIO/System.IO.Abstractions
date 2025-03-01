@@ -1,121 +1,120 @@
-﻿namespace System.IO.Abstractions.TestingHelpers
-{
-    /// <inheritdoc />
+﻿namespace System.IO.Abstractions.TestingHelpers;
+
+/// <inheritdoc />
 #if FEATURE_SERIALIZABLE
-    [Serializable]
+[Serializable]
 #endif
-    public class MockDriveInfo : DriveInfoBase
+public class MockDriveInfo : DriveInfoBase
+{
+    private readonly IMockFileDataAccessor mockFileDataAccessor;
+    private readonly string name;
+
+    /// <inheritdoc />
+    public MockDriveInfo(IMockFileDataAccessor mockFileDataAccessor, string name) : base(mockFileDataAccessor?.FileSystem)
     {
-        private readonly IMockFileDataAccessor mockFileDataAccessor;
-        private readonly string name;
+        this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
+        this.name = mockFileDataAccessor.PathVerifier.NormalizeDriveName(name);
+    }
 
-        /// <inheritdoc />
-        public MockDriveInfo(IMockFileDataAccessor mockFileDataAccessor, string name) : base(mockFileDataAccessor?.FileSystem)
+    /// <inheritdoc />
+    public override long AvailableFreeSpace
+    {
+        get
         {
-            this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
-            this.name = mockFileDataAccessor.PathVerifier.NormalizeDriveName(name);
+            var mockDriveData = GetMockDriveData();
+            return mockDriveData.AvailableFreeSpace;
         }
+    }
 
-        /// <inheritdoc />
-        public override long AvailableFreeSpace
+    /// <inheritdoc />
+    public override string DriveFormat
+    {
+        get
         {
-            get
-            {
-                var mockDriveData = GetMockDriveData();
-                return mockDriveData.AvailableFreeSpace;
-            }
+            var mockDriveData = GetMockDriveData();
+            return mockDriveData.DriveFormat;
         }
+    }
 
-        /// <inheritdoc />
-        public override string DriveFormat
+    /// <inheritdoc />
+    public override DriveType DriveType
+    {
+        get
         {
-            get
-            {
-                var mockDriveData = GetMockDriveData();
-                return mockDriveData.DriveFormat;
-            }
+            var mockDriveData = GetMockDriveData();
+            return mockDriveData.DriveType;
         }
+    }
 
-        /// <inheritdoc />
-        public override DriveType DriveType
+    /// <inheritdoc />
+    public override bool IsReady
+    {
+        get
         {
-            get
-            {
-                var mockDriveData = GetMockDriveData();
-                return mockDriveData.DriveType;
-            }
+            var mockDriveData = GetMockDriveData();
+            return mockDriveData.IsReady;
         }
+    }
 
-        /// <inheritdoc />
-        public override bool IsReady
-        {
-            get
-            {
-                var mockDriveData = GetMockDriveData();
-                return mockDriveData.IsReady;
-            }
-        }
+    /// <inheritdoc />
+    public override string Name
+    {
+        get { return name; }
+    }
 
-        /// <inheritdoc />
-        public override string Name
+    /// <inheritdoc />
+    public override IDirectoryInfo RootDirectory
+    {
+        get
         {
-            get { return name; }
+            return mockFileDataAccessor.DirectoryInfo.New(Name);
         }
+    }
 
-        /// <inheritdoc />
-        public override IDirectoryInfo RootDirectory
+    /// <inheritdoc />
+    public override long TotalFreeSpace
+    {
+        get
         {
-            get
-            {
-                return mockFileDataAccessor.DirectoryInfo.New(Name);
-            }
+            var mockDriveData = GetMockDriveData();
+            return mockDriveData.TotalFreeSpace;
         }
+    }
 
-        /// <inheritdoc />
-        public override long TotalFreeSpace
+    /// <inheritdoc />
+    public override long TotalSize
+    {
+        get
         {
-            get
-            {
-                var mockDriveData = GetMockDriveData();
-                return mockDriveData.TotalFreeSpace;
-            }
+            var mockDriveData = GetMockDriveData();
+            return mockDriveData.TotalSize;
         }
+    }
 
-        /// <inheritdoc />
-        public override long TotalSize
+    /// <inheritdoc />
+    public override string VolumeLabel
+    {
+        get
         {
-            get
-            {
-                var mockDriveData = GetMockDriveData();
-                return mockDriveData.TotalSize;
-            }
+            var mockDriveData = GetMockDriveData();
+            return mockDriveData.VolumeLabel;
         }
+        set
+        {
+            var mockDriveData = GetMockDriveData();
+            mockDriveData.VolumeLabel = value;
+        }
+    }
 
-        /// <inheritdoc />
-        public override string VolumeLabel
-        {
-            get
-            {
-                var mockDriveData = GetMockDriveData();
-                return mockDriveData.VolumeLabel;
-            }
-            set
-            {
-                var mockDriveData = GetMockDriveData();
-                mockDriveData.VolumeLabel = value;
-            }
-        }
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return Name;
+    }
 
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            return Name;
-        }
-
-        private MockDriveData GetMockDriveData()
-        {
-            return mockFileDataAccessor.GetDrive(name)
-                ?? throw CommonExceptions.FileNotFound(name);
-        }
+    private MockDriveData GetMockDriveData()
+    {
+        return mockFileDataAccessor.GetDrive(name)
+               ?? throw CommonExceptions.FileNotFound(name);
     }
 }

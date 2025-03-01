@@ -1,52 +1,51 @@
-namespace System.IO.Abstractions.TestingHelpers.Tests
+namespace System.IO.Abstractions.TestingHelpers.Tests;
+
+using Collections.Generic;
+
+using NUnit.Framework;
+
+using Text;
+
+using XFS = MockUnixSupport;
+
+public class MockFileReadLinesTests
 {
-    using Collections.Generic;
-
-    using NUnit.Framework;
-
-    using Text;
-
-    using XFS = MockUnixSupport;
-
-    public class MockFileReadLinesTests
+    [Test]
+    public async Task MockFile_ReadLines_ShouldReturnOriginalTextData()
     {
-        [Test]
-        public async Task MockFile_ReadLines_ShouldReturnOriginalTextData()
+        // Arrange
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
         {
-            // Arrange
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { XFS.Path(@"c:\something\demo.txt"), new MockFileData("Demo\r\ntext\ncontent\rvalue") },
-                { XFS.Path(@"c:\something\other.gif"), new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
-            });
+            { XFS.Path(@"c:\something\demo.txt"), new MockFileData("Demo\r\ntext\ncontent\rvalue") },
+            { XFS.Path(@"c:\something\other.gif"), new MockFileData(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }) }
+        });
 
-            var file = new MockFile(fileSystem);
+        var file = new MockFile(fileSystem);
 
-            // Act
-            var result = file.ReadLines(XFS.Path(@"c:\something\demo.txt"));
+        // Act
+        var result = file.ReadLines(XFS.Path(@"c:\something\demo.txt"));
 
-            // Assert
-            await That(result).IsEqualTo(new[] { "Demo", "text", "content", "value" });
-        }
+        // Assert
+        await That(result).IsEqualTo(new[] { "Demo", "text", "content", "value" });
+    }
 
-        [Test]
-        public async Task MockFile_ReadLines_ShouldReturnOriginalDataWithCustomEncoding()
+    [Test]
+    public async Task MockFile_ReadLines_ShouldReturnOriginalDataWithCustomEncoding()
+    {
+        // Arrange
+        string text = "Hello\r\nthere\rBob\nBob!";
+        var encodedText = Encoding.BigEndianUnicode.GetBytes(text);
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
         {
-            // Arrange
-            string text = "Hello\r\nthere\rBob\nBob!";
-            var encodedText = Encoding.BigEndianUnicode.GetBytes(text);
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-            {
-                { XFS.Path(@"c:\something\demo.txt"), new MockFileData(encodedText) }
-            });
+            { XFS.Path(@"c:\something\demo.txt"), new MockFileData(encodedText) }
+        });
 
-            var file = new MockFile(fileSystem);
+        var file = new MockFile(fileSystem);
 
-            // Act
-            var result = file.ReadLines(XFS.Path(@"c:\something\demo.txt"), Encoding.BigEndianUnicode);
+        // Act
+        var result = file.ReadLines(XFS.Path(@"c:\something\demo.txt"), Encoding.BigEndianUnicode);
 
-            // Assert
-            await That(result).IsEqualTo(new[] { "Hello", "there", "Bob", "Bob!" });
-        }
+        // Assert
+        await That(result).IsEqualTo(new[] { "Hello", "there", "Bob", "Bob!" });
     }
 }

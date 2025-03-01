@@ -1,16 +1,15 @@
-﻿namespace System.IO.Abstractions.Tests
-{
-    [TestFixture]
-    public class FileInfoFactoryTests
-    {
-        [Test]
-        public async Task Wrap_WithNull_ShouldReturnNull()
-        {
-            var fileSystem = new FileSystem();
+﻿namespace System.IO.Abstractions.Tests;
 
-            var result = fileSystem.FileInfo.Wrap(null);
+[TestFixture]
+public class FileInfoFactoryTests
+{
+    [Test]
+    public async Task Wrap_WithNull_ShouldReturnNull()
+    {
+        var fileSystem = new FileSystem();
+
+        var result = fileSystem.FileInfo.Wrap(null);
             
-            await That(result).IsNull();
-        }
+        await That(result).IsNull();
     }
 }
