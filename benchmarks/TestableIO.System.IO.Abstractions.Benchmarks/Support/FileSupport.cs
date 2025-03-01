@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace System.IO.Abstractions.Benchmarks.Support;
+﻿namespace System.IO.Abstractions.Benchmarks.Support;
 
 public class FileSupport
 {
-    #region Members
-    private IFileSystem _fileSystem;
-    #endregion
+    private readonly IFileSystem _fileSystem;
 
-    #region CTOR's
     public FileSupport(IFileSystem fileSystem)
     {
         _fileSystem = fileSystem;
@@ -20,10 +13,8 @@ public class FileSupport
     {
         // Default implementation for FileSystem
     }
-    #endregion
 
-    #region Methods
-    public string GetRandomTempFile()
+    private static string GetRandomTempFile()
     {
         return Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
     }
@@ -44,5 +35,4 @@ public class FileSupport
             _fileSystem.File.Delete(filePath);
         }
     }
-    #endregion
 }

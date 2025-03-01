@@ -22,5 +22,5 @@ public class MockFileSystemBenchmarks
     }
 
     [Benchmark]
-    public MockFileSystem MockFileSystem_Constructor() => new MockFileSystem(testData);
+    public MockFileSystem MockFileSystem_Constructor() => new(testData);
 }

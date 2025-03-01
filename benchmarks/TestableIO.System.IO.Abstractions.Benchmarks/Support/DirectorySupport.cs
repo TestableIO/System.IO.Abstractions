@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace System.IO.Abstractions.Benchmarks.Support;
+﻿namespace System.IO.Abstractions.Benchmarks.Support;
 
 public class DirectorySupport
 {
-    #region Members
-    private IFileSystem _fileSystem;
-    #endregion
+    private readonly IFileSystem _fileSystem;
 
-    #region CTOR's
     public DirectorySupport(IFileSystem fileSystem)
     {
         _fileSystem = fileSystem;
@@ -20,22 +13,20 @@ public class DirectorySupport
     {
         // Default implementation for FileSystem
     }
-    #endregion
 
-    #region Methods
     public bool IsDirectory(string path)
     {
         return _fileSystem.Directory.Exists(path);
     }
 
-    private string GetRandomTempDirectory()
+    private static string GetRandomTempDirectory()
     {
         return Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
     }
 
     public string CreateRandomDirectory()
     {
-        var randomPath = this.GetRandomTempDirectory();
+        var randomPath = GetRandomTempDirectory();
         _fileSystem.Directory.CreateDirectory(randomPath);
         return randomPath;
     }
@@ -89,5 +80,4 @@ public class DirectorySupport
     {
         return _fileSystem.Directory.Exists(directory);
     }
-    #endregion
 }
