@@ -31,8 +31,12 @@ public interface IMockFileDataAccessor : IFileSystem
     MockDriveData GetDrive(string name);
 
     /// <summary>
+    /// Adds the file.
     /// </summary>
-    void AddFile(string path, MockFileData mockFile);
+    /// <param name="path">The path of the file to add.</param>
+    /// <param name="mockFile">The file data to add.</param>
+    /// <param name="verifyAccess">Flag indicating if the access conditions should be verified.</param>
+    void AddFile(string path, MockFileData mockFile, bool verifyAccess = true);
 
     /// <summary>
     /// </summary>
@@ -58,10 +62,11 @@ public interface IMockFileDataAccessor : IFileSystem
     /// Removes the file.
     /// </summary>
     /// <param name="path">The file to remove.</param>
+    /// <param name="verifyAccess">Flag indicating if the access conditions should be verified.</param>
     /// <remarks>
     /// The file must not exist.
     /// </remarks>
-    void RemoveFile(string path);
+    void RemoveFile(string path, bool verifyAccess = true);
 
     /// <summary>
     /// Determines whether the file exists.

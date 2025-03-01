@@ -13,7 +13,7 @@ namespace System.IO.Abstractions.TestingHelpers
         System.IO.Abstractions.TestingHelpers.StringOperations StringOperations { get; }
         void AddDirectory(string path);
         void AddDrive(string name, System.IO.Abstractions.TestingHelpers.MockDriveData mockDrive);
-        void AddFile(string path, System.IO.Abstractions.TestingHelpers.MockFileData mockFile);
+        void AddFile(string path, System.IO.Abstractions.TestingHelpers.MockFileData mockFile, bool verifyAccess = true);
         void AddFileFromEmbeddedResource(string path, System.Reflection.Assembly resourceAssembly, string embeddedResourcePath);
         void AddFilesFromEmbeddedNamespace(string path, System.Reflection.Assembly resourceAssembly, string embeddedResourcePath);
         System.IO.Abstractions.TestingHelpers.MockFileData AdjustTimes(System.IO.Abstractions.TestingHelpers.MockFileData fileData, System.IO.Abstractions.TestingHelpers.TimeAdjustments timeAdjustments);
@@ -21,7 +21,7 @@ namespace System.IO.Abstractions.TestingHelpers
         System.IO.Abstractions.TestingHelpers.MockDriveData GetDrive(string name);
         System.IO.Abstractions.TestingHelpers.MockFileData GetFile(string path);
         void MoveDirectory(string sourcePath, string destPath);
-        void RemoveFile(string path);
+        void RemoveFile(string path, bool verifyAccess = true);
     }
     [System.Serializable]
     public class MockDirectory : System.IO.Abstractions.DirectoryBase
@@ -453,8 +453,8 @@ namespace System.IO.Abstractions.TestingHelpers
         public void AddDrive(string name, System.IO.Abstractions.TestingHelpers.MockDriveData mockDrive) { }
         public void AddEmptyFile(System.IO.Abstractions.IFileInfo path) { }
         public void AddEmptyFile(string path) { }
-        public void AddFile(System.IO.Abstractions.IFileInfo path, System.IO.Abstractions.TestingHelpers.MockFileData data) { }
-        public void AddFile(string path, System.IO.Abstractions.TestingHelpers.MockFileData mockFile) { }
+        public void AddFile(System.IO.Abstractions.IFileInfo path, System.IO.Abstractions.TestingHelpers.MockFileData data, bool verifyAccess = true) { }
+        public void AddFile(string path, System.IO.Abstractions.TestingHelpers.MockFileData mockFile, bool verifyAccess = true) { }
         public void AddFileFromEmbeddedResource(string path, System.Reflection.Assembly resourceAssembly, string embeddedResourcePath) { }
         public void AddFilesFromEmbeddedNamespace(string path, System.Reflection.Assembly resourceAssembly, string embeddedResourcePath) { }
         public System.IO.Abstractions.TestingHelpers.MockFileData AdjustTimes(System.IO.Abstractions.TestingHelpers.MockFileData fileData, System.IO.Abstractions.TestingHelpers.TimeAdjustments timeAdjustments) { }
@@ -464,7 +464,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public System.IO.Abstractions.TestingHelpers.MockFileData GetFile(string path) { }
         public System.IO.Abstractions.TestingHelpers.MockFileSystem MockTime(System.Func<System.DateTime> dateTimeProvider) { }
         public void MoveDirectory(string sourcePath, string destPath) { }
-        public void RemoveFile(string path) { }
+        public void RemoveFile(string path, bool verifyAccess = true) { }
     }
     public class MockFileSystemOptions
     {

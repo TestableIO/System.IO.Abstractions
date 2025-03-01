@@ -225,7 +225,7 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     }
 
     /// <inheritdoc />
-    public void AddFile(string path, MockFileData mockFile)
+    public void AddFile(string path, MockFileData mockFile, bool verifyAccess = true)
     {
         var fixedPath = FixPath(path, true);
 
@@ -237,7 +237,7 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
             var isReadOnly = (file.Attributes & FileAttributes.ReadOnly) == FileAttributes.ReadOnly;
             var isHidden = (file.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden;
 
-            if (isReadOnly || isHidden)
+            if (verifyAccess && (isReadOnly || isHidden))
             {
                 throw CommonExceptions.AccessDenied(path);
             }
@@ -294,9 +294,10 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     /// </summary>
     /// <param name="path">An <see cref="IFileInfo"/> representing the path of the new file to add.</param>
     /// <param name="data">The data to use for the contents of the new file.</param>
-    public void AddFile(IFileInfo path, MockFileData data)
+    /// <param name="verifyAccess">Flag indicating if the access conditions should be verified.</param>
+    public void AddFile(IFileInfo path, MockFileData data, bool verifyAccess = true)
     {
-        AddFile(path.FullName, data);
+        AddFile(path.FullName, data, verifyAccess);
         path.Refresh();
     }
 
@@ -444,13 +445,13 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     }
 
     /// <inheritdoc />
-    public void RemoveFile(string path)
+    public void RemoveFile(string path, bool verifyAccess = true)
     {
         path = FixPath(path);
 
         lock (files)
         {
-            if (FileExists(path) && (FileIsReadOnly(path) || Directory.Exists(path) && AnyFileIsReadOnly(path)))
+            if (FileExists(path) && verifyAccess && (FileIsReadOnly(path) || Directory.Exists(path) && AnyFileIsReadOnly(path)))
             {
                 throw CommonExceptions.AccessDenied(path);
             }

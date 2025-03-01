@@ -28,7 +28,7 @@ public class MockFileMoveTests
     }
 
     [Test]
-    public async Task MockFile_Move_WithReadOnlyAttribute_ShouldThrowUnauthorizedAccessExceptionAndNotMoveFile()
+    public async Task MockFile_Move_WithReadOnlyAttribute_ShouldMoveFile()
     {
         var sourceFilePath = @"c:\foo.txt";
         var destFilePath = @"c:\bar.txt";
@@ -36,10 +36,10 @@ public class MockFileMoveTests
         fileSystem.File.WriteAllText(sourceFilePath, "this is some content");
         fileSystem.File.SetAttributes(sourceFilePath, FileAttributes.ReadOnly);
 
-        await That(() => fileSystem.File.Move(sourceFilePath, destFilePath)).Throws<UnauthorizedAccessException>();
+        fileSystem.File.Move(sourceFilePath, destFilePath);
 
-        await That(fileSystem.File.Exists(sourceFilePath)).IsEqualTo(true);
-        await That(fileSystem.File.Exists(destFilePath)).IsEqualTo(false);
+        await That(fileSystem.File.Exists(destFilePath)).IsTrue();
+        await That(fileSystem.File.Exists(sourceFilePath)).IsFalse();
     }
 
     [Test]
