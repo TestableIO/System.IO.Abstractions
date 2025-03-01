@@ -492,7 +492,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             string filePath = XFS.Path(@"c:\something\not_exist.txt");
 
-            fileSystem.File.Delete(filePath);
+            await That(() => fileSystem.File.Delete(filePath)).DoesNotThrow();
         }
 
         [Test]
@@ -550,7 +550,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         
 #if !NET9_0_OR_GREATER
         [Test]
-        public async Task Serializable_works()
+        public void Serializable_works()
         {
             //Arrange
             MockFileData data = new MockFileData("Text Contents");

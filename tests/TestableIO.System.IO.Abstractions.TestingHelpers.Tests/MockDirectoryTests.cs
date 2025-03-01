@@ -2113,7 +2113,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var path = XFS.Path(@"C:\NoTrailingBackslash");
             var fs = new MockFileSystem();
             fs.Directory.CreateDirectory(path);
-            fs.Directory.SetCreationTime(path, DateTime.Now);
+            await That(()=> fs.Directory.SetCreationTime(path, DateTime.Now)).DoesNotThrow();
             fs.Directory.Delete(path);
         }
 
