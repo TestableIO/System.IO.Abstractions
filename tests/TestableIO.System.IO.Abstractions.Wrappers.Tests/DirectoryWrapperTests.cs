@@ -1,12 +1,10 @@
-﻿using NUnit.Framework;
-
-namespace System.IO.Abstractions.Tests
+﻿namespace System.IO.Abstractions.Tests
 {
     [TestFixture]
     public class DirectoryWrapperTests
     {
         [Test]
-        public void GetParent_ForRootDirectory_ShouldReturnNull()
+        public async Task GetParent_ForRootDirectory_ShouldReturnNull()
         {
             // Arrange
             var wrapperFilesystem = new FileSystem();
@@ -16,11 +14,11 @@ namespace System.IO.Abstractions.Tests
             var result = wrapperFilesystem.Directory.GetParent(root);
 
             // Assert
-            Assert.That(result, Is.Null);
+            await That(result).IsNull();
         }
 
         [Test]
-        public void GetParent_ForSimpleSubfolderPath_ShouldReturnRoot()
+        public async Task GetParent_ForSimpleSubfolderPath_ShouldReturnRoot()
         {
             // Arrange
             var wrapperFilesystem = new FileSystem();
@@ -31,11 +29,11 @@ namespace System.IO.Abstractions.Tests
             var result = wrapperFilesystem.Directory.GetParent(subfolder);
 
             // Assert
-            Assert.That(result.FullName, Is.EqualTo(root));
+            await That(result.FullName).IsEqualTo(root);
         }
 
         [Test]
-        public void GetParent_ForSimpleFilePath_ShouldReturnSubfolder()
+        public async Task GetParent_ForSimpleFilePath_ShouldReturnSubfolder()
         {
             // Arrange
             var wrapperFilesystem = new FileSystem();
@@ -47,7 +45,7 @@ namespace System.IO.Abstractions.Tests
             var result = wrapperFilesystem.Directory.GetParent(file);
 
             // Assert
-            Assert.That(result.FullName, Is.EqualTo(subfolder));
+            await That(result.FullName).IsEqualTo(subfolder);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using aweXpect;
+using static aweXpect.Expect;
 using NUnit.Framework;
 using static System.Reflection.BindingFlags;
 
@@ -14,57 +15,57 @@ namespace System.IO.Abstractions.Tests
         [Test]
         public async Task File() =>
             await AssertParity(
-                typeof(System.IO.File),
-                typeof(System.IO.Abstractions.FileBase)
+                typeof(File),
+                typeof(FileBase)
             );
 
         [Test]
         public async Task FileInfo() =>
             await AssertParity(
-                typeof(System.IO.FileInfo),
-                typeof(System.IO.Abstractions.FileInfoBase)
+                typeof(FileInfo),
+                typeof(FileInfoBase)
             );
 
         [Test]
         public async Task FileVersionInfo() =>
             await AssertParity(
-                typeof(System.Diagnostics.FileVersionInfo),
-                typeof(System.IO.Abstractions.FileVersionInfoBase)
+                typeof(Diagnostics.FileVersionInfo),
+                typeof(FileVersionInfoBase)
             );
 
         [Test]
         public async Task Directory() =>
             await AssertParity(
-                typeof(System.IO.Directory),
-                typeof(System.IO.Abstractions.DirectoryBase)
+                typeof(Directory),
+                typeof(DirectoryBase)
             );
 
         [Test]
         public async Task DirectoryInfo() =>
             await AssertParity(
-                typeof(System.IO.DirectoryInfo),
-                typeof(System.IO.Abstractions.DirectoryInfoBase)
+                typeof(DirectoryInfo),
+                typeof(DirectoryInfoBase)
             );
 
         [Test]
         public async Task DriveInfo() =>
             await AssertParity(
-                typeof(System.IO.DriveInfo),
-                typeof(System.IO.Abstractions.DriveInfoBase)
+                typeof(DriveInfo),
+                typeof(DriveInfoBase)
             );
 
         [Test]
         public async Task Path() =>
             await AssertParity(
-                typeof(System.IO.Path),
-                typeof(System.IO.Abstractions.PathBase)
+                typeof(Path),
+                typeof(PathBase)
             );
 
         [Test]
         public async Task FileSystemWatcher() =>
             await AssertParity(
-                typeof(System.IO.FileSystemWatcher),
-                typeof(System.IO.Abstractions.FileSystemWatcherBase)
+                typeof(FileSystemWatcher),
+                typeof(FileSystemWatcherBase)
             );
 
         private async Task AssertParity(Type referenceType, Type abstractionType)
@@ -97,7 +98,7 @@ namespace System.IO.Abstractions.Tests
             var fileName = $"ApiParityTests.{referenceType.Name}_{snapshotSuffix}.snap";
             var fileContent = IO.File.ReadAllText(IO.Path.Combine(snapshotPath, fileName));
 
-            await Expect.That(fileContent).IsEqualTo(serializedDiff)
+            await That(fileContent).IsEqualTo(serializedDiff)
                 .IgnoringNewlineStyle()
                 .IgnoringTrailingWhiteSpace();
         }

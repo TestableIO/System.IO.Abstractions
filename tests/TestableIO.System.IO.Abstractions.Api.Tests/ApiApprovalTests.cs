@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using aweXpect;
 
 namespace TestableIO.System.IO.Abstractions.Api.Tests;
 
@@ -18,7 +17,7 @@ public sealed class ApiApprovalTests
         var publicApi = Helper.CreatePublicApi(framework, assemblyName);
         var expectedApi = Helper.GetExpectedApi(framework, assemblyName);
 
-        await Expect.That(publicApi).IsEqualTo(expectedApi);
+        await That(publicApi).IsEqualTo(expectedApi);
     }
 
     [TestCaseSource(nameof(TargetFrameworksTheoryData))]
@@ -29,7 +28,7 @@ public sealed class ApiApprovalTests
         var publicApi = Helper.CreatePublicApi(framework, assemblyName);
         var expectedApi = Helper.GetExpectedApi(framework, assemblyName);
 
-        await Expect.That(publicApi).IsEqualTo(expectedApi);
+        await That(publicApi).IsEqualTo(expectedApi);
     }
 
     private static IEnumerable<string> TargetFrameworksTheoryData()

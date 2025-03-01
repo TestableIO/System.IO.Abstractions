@@ -1,5 +1,4 @@
-﻿using NUnit.Framework;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace System.IO.Abstractions.Tests
 {
@@ -12,7 +11,7 @@ namespace System.IO.Abstractions.Tests
         /// Tests that a <c>null</c> <see cref="FileVersionInfo"/> is correctly converted to a <c>null</c> <see cref="FileVersionInfoBase"/> without exception.
         /// </summary>
         [Test]
-        public void FileVersionInfoBase_FromFileVersionInfo_ShouldReturnNullIfFileVersionInfoIsNull()
+        public async Task FileVersionInfoBase_FromFileVersionInfo_ShouldReturnNullIfFileVersionInfoIsNull()
         {
             // Arrange
             FileVersionInfo fileVersionInfo = null;
@@ -21,7 +20,7 @@ namespace System.IO.Abstractions.Tests
             FileVersionInfoBase actual = fileVersionInfo;
 
             // Assert
-            Assert.That(actual, Is.Null);
+            await That(actual).IsNull();
         }
     }
 }

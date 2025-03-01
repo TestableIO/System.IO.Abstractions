@@ -1,18 +1,16 @@
-﻿using NUnit.Framework;
-
-namespace System.IO.Abstractions.Tests
+﻿namespace System.IO.Abstractions.Tests
 {
     [TestFixture]
     public class DirectoryInfoFactoryTests
     {
         [Test]
-        public void Wrap_WithNull_ShouldReturnNull()
+        public async Task Wrap_WithNull_ShouldReturnNull()
         {
             var fileSystem = new FileSystem();
 
             var result = fileSystem.DirectoryInfo.Wrap(null);
-            
-            Assert.That(result, Is.Null);
+
+            await That(result).IsNull();
         }
     }
 }
