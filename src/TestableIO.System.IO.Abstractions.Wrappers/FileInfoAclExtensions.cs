@@ -1,68 +1,67 @@
 ﻿using System.Runtime.Versioning;
 using System.Security.AccessControl;
 
-namespace System.IO.Abstractions
+namespace System.IO.Abstractions;
+
+/// <summary>
+///     ACL (access control list) extension methods for <see cref="IFileInfo" />.
+/// </summary>
+public static class FileInfoAclExtensions
 {
-    /// <summary>
-    ///     ACL (access control list) extension methods for <see cref="IFileInfo" />.
-    /// </summary>
-    public static class FileInfoAclExtensions
-    {
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
-        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(FileInfo)"/>
+    /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(FileInfo)"/>
 #else
         /// <inheritdoc cref="FileInfo.GetAccessControl()"/>
 #endif
-        [SupportedOSPlatform("windows")]
-        public static FileSecurity GetAccessControl(
-            this IFileInfo fileInfo)
+    [SupportedOSPlatform("windows")]
+    public static FileSecurity GetAccessControl(
+        this IFileInfo fileInfo)
+    {
+        IFileSystemAclSupport aclSupport = fileInfo as IFileSystemAclSupport;
+        var fileSecurity = aclSupport?.GetAccessControl() as FileSecurity;
+        if (aclSupport == null || fileSecurity == null)
         {
-            IFileSystemAclSupport aclSupport = fileInfo as IFileSystemAclSupport;
-            var fileSecurity = aclSupport?.GetAccessControl() as FileSecurity;
-            if (aclSupport == null || fileSecurity == null)
-            {
-                throw new NotSupportedException("The file info does not support ACL extensions");
-            }
-
-            return fileSecurity;
+            throw new NotSupportedException("The file info does not support ACL extensions");
         }
 
+        return fileSecurity;
+    }
+
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
-        /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(FileInfo,AccessControlSections)"/>
+    /// <inheritdoc cref="FileSystemAclExtensions.GetAccessControl(FileInfo,AccessControlSections)"/>
 #else
         /// <inheritdoc cref="File.GetAccessControl(string,AccessControlSections)"/>
 #endif
-        [SupportedOSPlatform("windows")]
-        public static FileSecurity GetAccessControl(
-            this IFileInfo fileInfo,
-            AccessControlSections includeSections)
+    [SupportedOSPlatform("windows")]
+    public static FileSecurity GetAccessControl(
+        this IFileInfo fileInfo,
+        AccessControlSections includeSections)
+    {
+        IFileSystemAclSupport aclSupport = fileInfo as IFileSystemAclSupport;
+        var fileSecurity = aclSupport?.GetAccessControl((IFileSystemAclSupport.AccessControlSections)includeSections) as FileSecurity;
+        if (aclSupport == null || fileSecurity == null)
         {
-            IFileSystemAclSupport aclSupport = fileInfo as IFileSystemAclSupport;
-            var fileSecurity = aclSupport?.GetAccessControl((IFileSystemAclSupport.AccessControlSections)includeSections) as FileSecurity;
-            if (aclSupport == null || fileSecurity == null)
-            {
-                throw new NotSupportedException("The file info does not support ACL extensions");
-            }
-
-            return fileSecurity;
+            throw new NotSupportedException("The file info does not support ACL extensions");
         }
 
+        return fileSecurity;
+    }
+
 #if FEATURE_FILE_SYSTEM_ACL_EXTENSIONS
-        /// <inheritdoc cref="FileSystemAclExtensions.SetAccessControl(FileInfo, FileSecurity)" />
+    /// <inheritdoc cref="FileSystemAclExtensions.SetAccessControl(FileInfo, FileSecurity)" />
 #else
         /// <inheritdoc cref="FileInfo.SetAccessControl(FileSecurity)"/>
 #endif
-        [SupportedOSPlatform("windows")]
-        public static void SetAccessControl(this IFileInfo fileInfo,
-            FileSecurity fileSecurity)
+    [SupportedOSPlatform("windows")]
+    public static void SetAccessControl(this IFileInfo fileInfo,
+        FileSecurity fileSecurity)
+    {
+        IFileSystemAclSupport aclSupport = fileInfo as IFileSystemAclSupport;
+        if (aclSupport == null)
         {
-            IFileSystemAclSupport aclSupport = fileInfo as IFileSystemAclSupport;
-            if (aclSupport == null)
-            {
-                throw new NotSupportedException("The file info does not support ACL extensions");
-            }
-
-            aclSupport.SetAccessControl(fileSecurity);
+            throw new NotSupportedException("The file info does not support ACL extensions");
         }
+
+        aclSupport.SetAccessControl(fileSecurity);
     }
 }

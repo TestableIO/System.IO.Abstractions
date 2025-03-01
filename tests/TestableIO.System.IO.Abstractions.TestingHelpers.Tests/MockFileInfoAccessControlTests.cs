@@ -4,62 +4,61 @@ using System.Runtime.Versioning;
 using System.Security.AccessControl;
 using XFS = System.IO.Abstractions.TestingHelpers.MockUnixSupport;
 
-namespace System.IO.Abstractions.TestingHelpers.Tests
+namespace System.IO.Abstractions.TestingHelpers.Tests;
+
+[TestFixture]
+[WindowsOnly(WindowsSpecifics.AccessControlLists)]
+[SupportedOSPlatform("windows")]
+public class MockFileInfoAccessControlTests
 {
-    [TestFixture]
-    [WindowsOnly(WindowsSpecifics.AccessControlLists)]
-    [SupportedOSPlatform("windows")]
-    public class MockFileInfoAccessControlTests
+    [Test]
+    public async Task MockFileInfo_GetAccessControl_ShouldReturnAccessControlOfFileData()
     {
-        [Test]
-        public async Task MockFileInfo_GetAccessControl_ShouldReturnAccessControlOfFileData()
+        // Arrange
+        var expectedFileSecurity = new FileSecurity();
+        expectedFileSecurity.SetAccessRuleProtection(false, false);
+
+        var filePath = XFS.Path(@"c:\a.txt");
+        var fileData = new MockFileData("Test content")
         {
-            // Arrange
-            var expectedFileSecurity = new FileSecurity();
-            expectedFileSecurity.SetAccessRuleProtection(false, false);
+            AccessControl = expectedFileSecurity,
+        };
 
-            var filePath = XFS.Path(@"c:\a.txt");
-            var fileData = new MockFileData("Test content")
-            {
-                AccessControl = expectedFileSecurity,
-            };
-
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
-            {
-                { filePath, fileData }
-            });
-
-            var fileInfo = fileSystem.FileInfo.New(filePath);
-
-            // Act
-            var fileSecurity = fileInfo.GetAccessControl();
-
-            // Assert
-            await That(fileSecurity).IsEqualTo(expectedFileSecurity);
-        }
-
-        [Test]
-        public async Task MockFile_SetAccessControl_ShouldSetAccessControlOfFileData()
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
         {
-            // Arrange
-            var filePath = XFS.Path(@"c:\a.txt");
-            var fileData = new MockFileData("Test content");
+            { filePath, fileData }
+        });
 
-            var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
-            {
-                { filePath, fileData }
-            });
+        var fileInfo = fileSystem.FileInfo.New(filePath);
 
-            var fileInfo = fileSystem.FileInfo.New(filePath);
+        // Act
+        var fileSecurity = fileInfo.GetAccessControl();
 
-            // Act
-            var expectedAccessControl = new FileSecurity();
-            expectedAccessControl.SetAccessRuleProtection(false, false);
-            fileInfo.SetAccessControl(expectedAccessControl);
+        // Assert
+        await That(fileSecurity).IsEqualTo(expectedFileSecurity);
+    }
 
-            // Assert
-            var accessControl = fileInfo.GetAccessControl();
-            await That(accessControl).IsEqualTo(expectedAccessControl);
-        }
+    [Test]
+    public async Task MockFile_SetAccessControl_ShouldSetAccessControlOfFileData()
+    {
+        // Arrange
+        var filePath = XFS.Path(@"c:\a.txt");
+        var fileData = new MockFileData("Test content");
+
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
+        {
+            { filePath, fileData }
+        });
+
+        var fileInfo = fileSystem.FileInfo.New(filePath);
+
+        // Act
+        var expectedAccessControl = new FileSecurity();
+        expectedAccessControl.SetAccessRuleProtection(false, false);
+        fileInfo.SetAccessControl(expectedAccessControl);
+
+        // Assert
+        var accessControl = fileInfo.GetAccessControl();
+        await That(accessControl).IsEqualTo(expectedAccessControl);
     }
 }

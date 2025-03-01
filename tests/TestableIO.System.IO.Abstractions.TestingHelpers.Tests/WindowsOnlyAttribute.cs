@@ -1,27 +1,26 @@
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
-namespace System.IO.Abstractions.TestingHelpers.Tests
+namespace System.IO.Abstractions.TestingHelpers.Tests;
+
+internal sealed class WindowsOnlyAttribute : Attribute, ITestAction
 {
-    internal sealed class WindowsOnlyAttribute : Attribute, ITestAction
+    private readonly string reason;
+
+    public WindowsOnlyAttribute(string reason)
     {
-        private readonly string reason;
-
-        public WindowsOnlyAttribute(string reason)
-        {
-            this.reason = reason;
-        }
-
-        public ActionTargets Targets => ActionTargets.Test;
-
-        public void BeforeTest(ITest test)
-        {
-            if (!MockUnixSupport.IsWindowsPlatform())
-            {
-                Assert.Inconclusive(reason);
-            }
-        }
-
-        public void AfterTest(ITest test) { }
+        this.reason = reason;
     }
+
+    public ActionTargets Targets => ActionTargets.Test;
+
+    public void BeforeTest(ITest test)
+    {
+        if (!MockUnixSupport.IsWindowsPlatform())
+        {
+            Assert.Inconclusive(reason);
+        }
+    }
+
+    public void AfterTest(ITest test) { }
 }

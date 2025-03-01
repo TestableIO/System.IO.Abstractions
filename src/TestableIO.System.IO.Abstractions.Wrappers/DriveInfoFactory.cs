@@ -1,54 +1,52 @@
-﻿namespace System.IO.Abstractions
-{
+﻿namespace System.IO.Abstractions;
 #if FEATURE_SERIALIZABLE
-    [Serializable]
+[Serializable]
 #endif
-    internal class DriveInfoFactory : IDriveInfoFactory
+internal class DriveInfoFactory : IDriveInfoFactory
+{
+    private readonly IFileSystem fileSystem;
+
+    /// <summary>
+    /// Base factory class for creating a <see cref="IDriveInfo"/>
+    /// </summary>
+    public DriveInfoFactory(IFileSystem fileSystem)
     {
-        private readonly IFileSystem fileSystem;
+        this.fileSystem = fileSystem;
+    }
 
-        /// <summary>
-        /// Base factory class for creating a <see cref="IDriveInfo"/>
-        /// </summary>
-        public DriveInfoFactory(IFileSystem fileSystem)
+    /// <inheritdoc />
+    public IFileSystem FileSystem
+        => fileSystem;
+
+    /// <inheritdoc />
+    public IDriveInfo[] GetDrives()
+    {
+        var driveInfos = DriveInfo.GetDrives();
+        var driveInfoWrappers = new DriveInfoBase[driveInfos.Length];
+        for (int index = 0; index < driveInfos.Length; index++)
         {
-            this.fileSystem = fileSystem;
+            var driveInfo = driveInfos[index];
+            driveInfoWrappers[index] = new DriveInfoWrapper(fileSystem, driveInfo);
         }
 
-        /// <inheritdoc />
-        public IFileSystem FileSystem
-            => fileSystem;
+        return driveInfoWrappers;
+    }
 
-        /// <inheritdoc />
-        public IDriveInfo[] GetDrives()
+    /// <inheritdoc />
+    public IDriveInfo New(string driveName)
+    {
+        var realDriveInfo = new DriveInfo(driveName);
+        return new DriveInfoWrapper(fileSystem, realDriveInfo);
+    }
+
+    /// <inheritdoc />
+    public IDriveInfo Wrap(DriveInfo driveInfo)
+    {
+        if (driveInfo == null)
         {
-            var driveInfos = DriveInfo.GetDrives();
-            var driveInfoWrappers = new DriveInfoBase[driveInfos.Length];
-            for (int index = 0; index < driveInfos.Length; index++)
-            {
-                var driveInfo = driveInfos[index];
-                driveInfoWrappers[index] = new DriveInfoWrapper(fileSystem, driveInfo);
-            }
-
-            return driveInfoWrappers;
+            return null;
         }
 
-        /// <inheritdoc />
-        public IDriveInfo New(string driveName)
-        {
-            var realDriveInfo = new DriveInfo(driveName);
-            return new DriveInfoWrapper(fileSystem, realDriveInfo);
-        }
-
-        /// <inheritdoc />
-        public IDriveInfo Wrap(DriveInfo driveInfo)
-        {
-            if (driveInfo == null)
-            {
-                return null;
-            }
-
-            return new DriveInfoWrapper(fileSystem, driveInfo);
-        }
+        return new DriveInfoWrapper(fileSystem, driveInfo);
     }
 }
