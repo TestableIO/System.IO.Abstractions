@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace System.IO.Abstractions.Benchmarks.Support;
+﻿namespace System.IO.Abstractions.Benchmarks.Support;
 
 public static class FileSupportStatic
 {

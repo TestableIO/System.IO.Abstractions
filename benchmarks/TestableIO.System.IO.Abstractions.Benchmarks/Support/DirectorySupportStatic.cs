@@ -2,7 +2,6 @@
 
 public static class DirectorySupportStatic
 {
-    #region Methods
     public static bool IsDirectory(string path)
     {
         return Directory.Exists(path);
@@ -67,5 +66,4 @@ public static class DirectorySupportStatic
     }
 
     public static bool Exists(string directory) => Directory.Exists(directory);
-    #endregion
 }
