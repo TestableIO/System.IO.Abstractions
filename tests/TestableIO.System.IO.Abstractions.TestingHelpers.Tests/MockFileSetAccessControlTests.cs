@@ -13,22 +13,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     {
         [TestCase(" ")]
         [TestCase("   ")]
-        public void MockFile_SetAccessControl_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
+        public async Task MockFile_SetAccessControl_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
             var fileSecurity = new FileSecurity();
 
             // Act
-            TestDelegate action = () => fileSystem.File.SetAccessControl(path, fileSecurity);
+            Action action = () => fileSystem.File.SetAccessControl(path, fileSecurity);
 
             // Assert
-            var exception = Assert.Throws<ArgumentException>(action);
-            Assert.That(exception.ParamName, Is.EqualTo("path"));
+            var exception = await That(action).Throws<ArgumentException>();
+            await That(exception.ParamName).IsEqualTo("path");
         }
 
         [Test]
-        public void MockFile_SetAccessControl_ShouldThrowFileNotFoundExceptionIfFileDoesNotExistInMockData()
+        public async Task MockFile_SetAccessControl_ShouldThrowFileNotFoundExceptionIfFileDoesNotExistInMockData()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -36,15 +36,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSecurity = new FileSecurity();
 
             // Act
-            TestDelegate action = () => fileSystem.File.SetAccessControl(expectedFileName, fileSecurity);
+            Action action = () => fileSystem.File.SetAccessControl(expectedFileName, fileSecurity);
 
             // Assert
-            var exception = Assert.Throws<FileNotFoundException>(action);
-            Assert.That(exception.FileName, Is.EqualTo(expectedFileName));
+            var exception = await That(action).Throws<FileNotFoundException>();
+            await That(exception.FileName).IsEqualTo(expectedFileName);
         }
 
         [Test]
-        public void MockFile_SetAccessControl_ShouldSetAccessControlOfFileData()
+        public async Task MockFile_SetAccessControl_ShouldSetAccessControlOfFileData()
         {
             // Arrange
             var filePath = XFS.Path(@"c:\a.txt");
@@ -62,7 +62,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var accessControl = fileSystem.File.GetAccessControl(filePath);
-            Assert.That(accessControl, Is.EqualTo(expectedAccessControl));
+            await That(accessControl).IsEqualTo(expectedAccessControl);
         }
     }
 }

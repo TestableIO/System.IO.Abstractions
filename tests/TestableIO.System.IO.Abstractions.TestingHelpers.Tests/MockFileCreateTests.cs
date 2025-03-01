@@ -13,7 +13,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileCreateTests
     {
         [Test]
-        public void Mockfile_Create_ShouldCreateNewStream()
+        public async Task Mockfile_Create_ShouldCreateNewStream()
         {
             string fullPath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
@@ -21,15 +21,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var sut = new MockFile(fileSystem);
 
-            Assert.That(fileSystem.FileExists(fullPath), Is.False);
+            await That(fileSystem.FileExists(fullPath)).IsFalse();
 
             sut.Create(fullPath).Dispose();
 
-            Assert.That(fileSystem.FileExists(fullPath), Is.True);
+            await That(fileSystem.FileExists(fullPath)).IsTrue();
         }
 
         [Test]
-        public void Mockfile_Create_CanWriteToNewStream()
+        public async Task Mockfile_Create_CanWriteToNewStream()
         {
             string fullPath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
@@ -45,11 +45,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockFileData = fileSystem.GetFile(fullPath);
             var fileData = mockFileData.Contents;
 
-            Assert.That(fileData, Is.EqualTo(data));
+            await That(fileData).IsEqualTo(data);
         }
 
         [Test]
-        public void Mockfile_Create_OverwritesExistingFile()
+        public async Task Mockfile_Create_OverwritesExistingFile()
         {
             string path = XFS.Path(@"c:\some\file.txt");
             var fileSystem = new MockFileSystem();
@@ -73,11 +73,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var actualContents = fileSystem.GetFile(path).Contents;
 
-            Assert.That(actualContents, Is.EqualTo(expectedContents));
+            await That(actualContents).IsEqualTo(expectedContents);
         }
 
         [Test]
-        public void Mockfile_Create_ShouldThrowUnauthorizedAccessExceptionIfPathIsReadOnly()
+        public async Task Mockfile_Create_ShouldThrowUnauthorizedAccessExceptionIfPathIsReadOnly()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\read-only.txt");
@@ -88,21 +88,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             mockFile.SetAttributes(path, FileAttributes.ReadOnly);
 
             // Assert
-            var exception = Assert.Throws<UnauthorizedAccessException>(() => mockFile.Create(path).Dispose());
-            Assert.That(exception.Message, Is.EqualTo(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path)));
+            var exception = await That(() => mockFile.Create(path).Dispose()).Throws<UnauthorizedAccessException>();
+            await That(exception.Message).IsEqualTo(string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path));
         }
 
         [Test]
-        public void Mockfile_Create_ShouldThrowArgumentExceptionIfPathIsZeroLength()
+        public async Task Mockfile_Create_ShouldThrowArgumentExceptionIfPathIsZeroLength()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.Create("");
+            Action action = () => fileSystem.File.Create("");
 
             // Assert
-            Assert.Throws<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [TestCase("\"")]
@@ -110,63 +110,63 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(">")]
         [TestCase("|")]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_Create_ShouldThrowArgumentNullExceptionIfPathIsNull1(string path)
+        public async Task MockFile_Create_ShouldThrowArgumentNullExceptionIfPathIsNull1(string path)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.Create(path);
+            Action action = () => fileSystem.File.Create(path);
 
             // Assert
-            Assert.Throws<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [TestCase(" ")]
         [TestCase("   ")]
-        public void MockFile_Create_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
+        public async Task MockFile_Create_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.Create(path);
+            Action action = () => fileSystem.File.Create(path);
 
             // Assert
-            Assert.Throws<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [Test]
-        public void MockFile_Create_ShouldThrowArgumentNullExceptionIfPathIsNull()
+        public async Task MockFile_Create_ShouldThrowArgumentNullExceptionIfPathIsNull()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.Create(null);
+            Action action = () => fileSystem.File.Create(null);
 
             // Assert
-            var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Does.StartWith("Path cannot be null."));
+            var exception = await That(action).Throws<ArgumentNullException>();
+            await That(exception.Message).StartsWith("Path cannot be null.");
         }
 
         [Test]
-        public void MockFile_Create_ShouldThrowDirectoryNotFoundExceptionIfCreatingAndParentPathDoesNotExist()
+        public async Task MockFile_Create_ShouldThrowDirectoryNotFoundExceptionIfCreatingAndParentPathDoesNotExist()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
             var file = XFS.Path("C:\\path\\NotFound.ext");
 
             // Act
-            TestDelegate action = () => fileSystem.File.Create(file);
+            Action action = () => fileSystem.File.Create(file);
 
             // Assert
-            var exception = Assert.Throws<DirectoryNotFoundException>(action);
-            Assert.That(exception.Message, Does.StartWith("Could not find a part of the path"));
+            var exception = await That(action).Throws<DirectoryNotFoundException>();
+            await That(exception.Message).StartsWith("Could not find a part of the path");
         }
 
         [Test]
-        public void MockFile_Create_TruncateShouldWriteNewContents()
+        public async Task MockFile_Create_TruncateShouldWriteNewContents()
         {
             // Arrange
             string testFileName = XFS.Path(@"c:\someFile.txt");
@@ -190,11 +190,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
             // Assert
-            Assert.That(fileSystem.File.ReadAllText(testFileName), Is.EqualTo("new_text"));
+            await That(fileSystem.File.ReadAllText(testFileName)).IsEqualTo("new_text");
         }
 
         [Test]
-        public void MockFile_Create_TruncateShouldClearFileContentsOnOpen()
+        public async Task MockFile_Create_TruncateShouldClearFileContentsOnOpen()
         {
             // Arrange
             string testFileName = XFS.Path(@"c:\someFile.txt");
@@ -215,11 +215,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
             // Assert
-            Assert.That(fileSystem.File.ReadAllText(testFileName), Is.EqualTo(string.Empty));
+            await That(fileSystem.File.ReadAllText(testFileName)).IsEqualTo(string.Empty);
         }
 
         [Test]
-        public void MockFile_Create_DeleteOnCloseOption_FileExistsWhileStreamIsOpen()
+        public async Task MockFile_Create_DeleteOnCloseOption_FileExistsWhileStreamIsOpen()
         {
             var root = XFS.Path(@"C:\");
             var filePath = XFS.Path(@"C:\test.txt");
@@ -228,12 +228,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             using (fileSystem.File.Create(filePath, 4096, FileOptions.DeleteOnClose))
             {
-                Assert.That(fileSystem.File.Exists(filePath), Is.True);
+                await That(fileSystem.File.Exists(filePath)).IsTrue();
             }
         }
 
         [Test]
-        public void MockFile_Create_DeleteOnCloseOption_FileDeletedWhenStreamIsClosed()
+        public async Task MockFile_Create_DeleteOnCloseOption_FileDeletedWhenStreamIsClosed()
         {
             var root = XFS.Path(@"C:\");
             var filePath = XFS.Path(@"C:\test.txt");
@@ -244,11 +244,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             {
             }
 
-            Assert.That(fileSystem.File.Exists(filePath), Is.False);
+            await That(fileSystem.File.Exists(filePath)).IsFalse();
         }
 
         [Test]
-        public void MockFile_Create_EncryptedOption_FileNotYetEncryptedWhenStreamIsOpen()
+        public async Task MockFile_Create_EncryptedOption_FileNotYetEncryptedWhenStreamIsOpen()
         {
             var root = XFS.Path(@"C:\");
             var filePath = XFS.Path(@"C:\test.txt");
@@ -258,12 +258,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             using (var stream = fileSystem.File.Create(filePath, 4096, FileOptions.Encrypted))
             {
                 var fileInfo = fileSystem.FileInfo.New(filePath);
-                Assert.That(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted), Is.False);
+                await That(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted)).IsFalse();
             }
         }
 
         [Test]
-        public void MockFile_Create_EncryptedOption_EncryptsFileWhenStreamIsClose()
+        public async Task MockFile_Create_EncryptedOption_EncryptsFileWhenStreamIsClose()
         {
             var root = XFS.Path(@"C:\");
             var filePath = XFS.Path(@"C:\test.txt");
@@ -275,22 +275,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
             var fileInfo = fileSystem.FileInfo.New(filePath);
-            Assert.That(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted), Is.True);
+            await That(fileInfo.Attributes.HasFlag(FileAttributes.Encrypted)).IsTrue();
         }
 
         [Test]
-        public void MockFile_Create_ShouldWorkWithRelativePath()
+        public async Task MockFile_Create_ShouldWorkWithRelativePath()
         {
             var relativeFile = "file.txt";
             var fileSystem = new MockFileSystem();
 
             fileSystem.File.Create(relativeFile).Close();
 
-            Assert.That(fileSystem.File.Exists(relativeFile));
+            await That(fileSystem.File.Exists(relativeFile)).IsTrue();
         }
 
         [Test]
-        public void MockFile_Create_CanReadFromNewStream()
+        public async Task MockFile_Create_CanReadFromNewStream()
         {
             string fullPath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
@@ -298,7 +298,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             using (var stream = fileSystem.File.Create(fullPath))
             {
-                Assert.That(stream.CanRead, Is.True);
+                await That(stream.CanRead).IsTrue();
             }
         }
     }

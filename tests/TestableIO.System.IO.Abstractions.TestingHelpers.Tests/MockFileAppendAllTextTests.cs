@@ -15,7 +15,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileAppendAllTextTests
     {
         [Test]
-        public void MockFile_AppendAllText_ShouldPersistNewText()
+        public async Task MockFile_AppendAllText_ShouldPersistNewText()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -30,12 +30,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             file.AppendAllText(path, "+ some text");
 
             // Assert
-            Assert.That(file.ReadAllText(path),
-              Is.EqualTo("Demo text content+ some text"));
+            await That(file.ReadAllText(path))
+              .IsEqualTo("Demo text content+ some text");
         }
 
         [Test]
-        public void MockFile_AppendAllText_ShouldPersistNewTextWithDifferentEncoding()
+        public async Task MockFile_AppendAllText_ShouldPersistNewTextWithDifferentEncoding()
         {
             // Arrange
             const string Path = @"c:\something\demo.txt";
@@ -50,12 +50,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             file.AppendAllText(Path, "BB", Encoding.UTF8);
 
             // Assert
-            Assert.That(fileSystem.GetFile(Path).Contents,
-                Is.EqualTo(new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66 }));
+            await That(fileSystem.GetFile(Path).Contents)
+              .IsEqualTo(new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66 });
         }
 
         [Test]
-        public void MockFile_AppendAllText_ShouldCreateIfNotExist()
+        public async Task MockFile_AppendAllText_ShouldCreateIfNotExist()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -68,12 +68,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.AppendAllText(path, " some text");
 
             // Assert
-            Assert.That(fileSystem.File.ReadAllText(path),
-              Is.EqualTo("Demo text content some text"));
+            await That(fileSystem.File.ReadAllText(path))
+              .IsEqualTo("Demo text content some text");
         }
 
         [Test]
-        public void MockFile_AppendAllText_ShouldCreateIfNotExistWithBom()
+        public async Task MockFile_AppendAllText_ShouldCreateIfNotExistWithBom()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
@@ -84,12 +84,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.AppendAllText(path, "AA", Encoding.UTF32);
 
             // Assert
-            Assert.That(fileSystem.GetFile(path).Contents,
-                Is.EqualTo(new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0 }));
+            await That(fileSystem.GetFile(path).Contents)
+              .IsEqualTo(new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0 });
         }
 
         [Test]
-        public void MockFile_AppendAllText_ShouldFailIfNotExistButDirectoryAlsoNotExist()
+        public async Task MockFile_AppendAllText_ShouldFailIfNotExistButDirectoryAlsoNotExist()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -103,19 +103,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Exception ex;
-            ex = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.AppendAllText(path, "some text"));
-            Assert.That(ex.Message,
-                Is.EqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path)));
+            ex = await That(() => fileSystem.File.AppendAllText(path, "some text")).Throws<DirectoryNotFoundException>();
+            await That(ex.Message)
+              .IsEqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
 
             ex =
-                Assert.Throws<DirectoryNotFoundException>(
-                    () => fileSystem.File.AppendAllText(path, "some text", Encoding.Unicode));
-            Assert.That(ex.Message,
-                Is.EqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path)));
+                await That(
+                    () => fileSystem.File.AppendAllText(path, "some text", Encoding.Unicode)).Throws<DirectoryNotFoundException>();
+            await That(ex.Message)
+              .IsEqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
         }
 
         [Test]
-        public void MockFile_AppendAllText_ShouldPersistNewTextWithCustomEncoding()
+        public async Task MockFile_AppendAllText_ShouldPersistNewTextWithCustomEncoding()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -137,18 +137,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 0, 32, 0, 116, 0, 101, 0, 120, 0, 116
             };
 
-            Assert.That(file.ReadAllBytes(path), Is.EqualTo(expected));
+            await That(file.ReadAllBytes(path)).IsEqualTo(expected);
         }
 
         [Test]
-        public void MockFile_AppendAllText_ShouldWorkWithRelativePath()
+        public async Task MockFile_AppendAllText_ShouldWorkWithRelativePath()
         {
             var file = "file.txt";
             var fileSystem = new MockFileSystem();
 
             fileSystem.File.AppendAllText(file, "Foo");
 
-            Assert.That(fileSystem.File.Exists(file));
+            await That(fileSystem.File.Exists(file)).IsTrue();
         }
 
 #if FEATURE_ASYNC_FILE
@@ -168,12 +168,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             await file.AppendAllTextAsync(path, "+ some text");
 
             // Assert
-            Assert.That(file.ReadAllText(path),
-              Is.EqualTo("Demo text content+ some text"));
+            await That(file.ReadAllText(path))
+              .IsEqualTo("Demo text content+ some text");
         }
 
         [Test]
-        public void MockFile_AppendAllTextAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
+        public async Task MockFile_AppendAllTextAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
         {
             // Arrange
             const string path = "test.txt";
@@ -183,15 +183,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            Assert.ThrowsAsync<OperationCanceledException>(async () =>
+            async Task Act() =>
                 await fileSystem.File.AppendAllTextAsync(
                     path,
                     "line 2",
-                    new CancellationToken(canceled: true))
-            );
+                    new CancellationToken(canceled: true));
+            await That(Act).Throws<OperationCanceledException>();
 
             // Assert
-            Assert.That(fileSystem.File.ReadAllText(path), Is.EqualTo("line 1"));
+            await That(fileSystem.File.ReadAllText(path)).IsEqualTo("line 1");
         }
 
         [Test]
@@ -210,8 +210,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             await file.AppendAllTextAsync(Path, "BB", Encoding.UTF8);
 
             // Assert
-            Assert.That(fileSystem.GetFile(Path).Contents,
-                Is.EqualTo(new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66 }));
+            await That(fileSystem.GetFile(Path).Contents)
+              .IsEqualTo(new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0, 66, 66 });
         }
 
         [Test]
@@ -228,8 +228,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             await fileSystem.File.AppendAllTextAsync(path, " some text");
 
             // Assert
-            Assert.That(fileSystem.File.ReadAllText(path),
-              Is.EqualTo("Demo text content some text"));
+            await That(fileSystem.File.ReadAllText(path))
+              .IsEqualTo("Demo text content some text");
         }
 
         [Test]
@@ -244,12 +244,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             await fileSystem.File.AppendAllTextAsync(path, "AA", Encoding.UTF32);
 
             // Assert
-            Assert.That(fileSystem.GetFile(path).Contents,
-                Is.EqualTo(new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0 }));
+            await That(fileSystem.GetFile(path).Contents)
+              .IsEqualTo(new byte[] { 255, 254, 0, 0, 65, 0, 0, 0, 65, 0, 0, 0 });
         }
 
         [Test]
-        public void MockFile_AppendAllTextAsync_ShouldFailIfNotExistButDirectoryAlsoNotExist()
+        public async Task MockFile_AppendAllTextAsync_ShouldFailIfNotExistButDirectoryAlsoNotExist()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -263,15 +263,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             Exception ex;
-            ex = Assert.ThrowsAsync<DirectoryNotFoundException>(async () => await fileSystem.File.AppendAllTextAsync(path, "some text"));
-            Assert.That(ex.Message,
-                Is.EqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path)));
+            Func<Task> action = async () => await fileSystem.File.AppendAllTextAsync(path, "some text");
+            ex = await That(action).Throws<DirectoryNotFoundException>();
+            await That(ex.Message)
+              .IsEqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
 
-            ex =
-                Assert.ThrowsAsync<DirectoryNotFoundException>(
-                    async () => await fileSystem.File.AppendAllTextAsync(path, "some text", Encoding.Unicode));
-            Assert.That(ex.Message,
-                Is.EqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path)));
+            async Task Act() => await fileSystem.File.AppendAllTextAsync(path, "some text", Encoding.Unicode);
+            ex = await That(Act).Throws<DirectoryNotFoundException>();
+            await That(ex.Message)
+              .IsEqualTo(String.Format(CultureInfo.InvariantCulture, "Could not find a part of the path '{0}'.", path));
         }
 
         [Test]
@@ -297,7 +297,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 0, 32, 0, 116, 0, 101, 0, 120, 0, 116
             };
 
-            Assert.That(file.ReadAllBytes(path), Is.EqualTo(expected));
+            await That(file.ReadAllBytes(path)).IsEqualTo(expected);
         }
 
         [Test]
@@ -308,7 +308,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             await fileSystem.File.AppendAllTextAsync(file, "Foo");
 
-            Assert.That(fileSystem.File.Exists(file));
+            await That(fileSystem.File.Exists(file)).IsTrue();
         }
 #endif
     }

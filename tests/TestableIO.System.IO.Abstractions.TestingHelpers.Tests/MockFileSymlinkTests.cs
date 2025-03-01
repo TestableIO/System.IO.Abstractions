@@ -11,7 +11,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 #if FEATURE_CREATE_SYMBOLIC_LINK
 
         [Test]
-        public void MockFile_CreateSymbolicLink_ShouldReturnFileSystemInfo()
+        public async Task MockFile_CreateSymbolicLink_ShouldReturnFileSystemInfo()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -24,12 +24,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             IFileSystemInfo fileSystemInfo = fileSystem.File.CreateSymbolicLink(path, pathToTarget);
 
             // Assert
-            Assert.That(fileSystemInfo.FullName, Is.EqualTo(path));
-            Assert.That(fileSystemInfo.LinkTarget, Is.EqualTo(pathToTarget));
+            await That(fileSystemInfo.FullName).IsEqualTo(path);
+            await That(fileSystemInfo.LinkTarget).IsEqualTo(pathToTarget);
         }
 
         [Test]
-        public void MockFile_CreateSymbolicLink_ShouldSucceedFromFileInfo()
+        public async Task MockFile_CreateSymbolicLink_ShouldSucceedFromFileInfo()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -43,12 +43,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             IFileInfo directoryInfo = fileSystem.FileInfo.New(path);
 
             // Assert
-            Assert.That(directoryInfo.FullName, Is.EqualTo(path));
-            Assert.That(directoryInfo.LinkTarget, Is.EqualTo(pathToTarget));
+            await That(directoryInfo.FullName).IsEqualTo(path);
+            await That(directoryInfo.LinkTarget).IsEqualTo(pathToTarget);
         }
 
         [Test]
-        public void MockFile_CreateSymbolicLink_ShouldFailWithNullPath()
+        public async Task MockFile_CreateSymbolicLink_ShouldFailWithNullPath()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -57,14 +57,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(pathToTarget, data);
 
             // Act
-            var ex = Assert.Throws<ArgumentNullException>(() => fileSystem.File.CreateSymbolicLink(null, pathToTarget));
+            var ex = await That(() => fileSystem.File.CreateSymbolicLink(null, pathToTarget)).Throws<ArgumentNullException>();
 
             // Assert
-            Assert.That(ex.ParamName, Is.EqualTo("path"));
+            await That(ex.ParamName).IsEqualTo("path");
         }
 
         [Test]
-        public void MockFile_CreateSymbolicLink_ShouldFailWithNullTarget()
+        public async Task MockFile_CreateSymbolicLink_ShouldFailWithNullTarget()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -73,14 +73,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(path, data);
 
             // Act
-            var ex = Assert.Throws<ArgumentNullException>(() => fileSystem.File.CreateSymbolicLink(path, null));
+            var ex = await That(() => fileSystem.File.CreateSymbolicLink(path, null)).Throws<ArgumentNullException>();
 
             // Assert
-            Assert.That(ex.ParamName, Is.EqualTo("pathToTarget"));
+            await That(ex.ParamName).IsEqualTo("pathToTarget");
         }
 
         [Test]
-        public void MockFile_CreateSymbolicLink_ShouldFailWithEmptyPath()
+        public async Task MockFile_CreateSymbolicLink_ShouldFailWithEmptyPath()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -89,14 +89,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(pathToTarget, data);
 
             // Act
-            var ex = Assert.Throws<ArgumentException>(() => fileSystem.File.CreateSymbolicLink("", pathToTarget));
+            var ex = await That(() => fileSystem.File.CreateSymbolicLink("", pathToTarget)).Throws<ArgumentException>();
 
             // Assert
-            Assert.That(ex.ParamName, Is.EqualTo("path"));
+            await That(ex.ParamName).IsEqualTo("path");
         }
 
         [Test]
-        public void MockFile_CreateSymbolicLink_ShouldFailWithEmptyTarget()
+        public async Task MockFile_CreateSymbolicLink_ShouldFailWithEmptyTarget()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -105,14 +105,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(path, data);
 
             // Act
-            var ex = Assert.Throws<ArgumentException>(() => fileSystem.File.CreateSymbolicLink(path, ""));
+            var ex = await That(() => fileSystem.File.CreateSymbolicLink(path, "")).Throws<ArgumentException>();
 
             // Assert
-            Assert.That(ex.ParamName, Is.EqualTo("pathToTarget"));
+            await That(ex.ParamName).IsEqualTo("pathToTarget");
         }
 
         [Test]
-        public void MockFile_CreateSymbolicLink_ShouldFailWithIllegalPath()
+        public async Task MockFile_CreateSymbolicLink_ShouldFailWithIllegalPath()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -121,14 +121,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(pathToTarget, data);
 
             // Act
-            var ex = Assert.Throws<ArgumentException>(() => fileSystem.File.CreateSymbolicLink(" ", pathToTarget));
+            var ex = await That(() => fileSystem.File.CreateSymbolicLink(" ", pathToTarget)).Throws<ArgumentException>();
 
             // Assert
-            Assert.That(ex.ParamName, Is.EqualTo("path"));
+            await That(ex.ParamName).IsEqualTo("path");
         }
 
         [Test]
-        public void MockFile_CreateSymbolicLink_ShouldFailWithIllegalTarget()
+        public async Task MockFile_CreateSymbolicLink_ShouldFailWithIllegalTarget()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -137,15 +137,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(path, data);
 
             // Act
-            var ex = Assert.Throws<ArgumentException>(() => fileSystem.File.CreateSymbolicLink(path, " "));
+            var ex = await That(() => fileSystem.File.CreateSymbolicLink(path, " ")).Throws<ArgumentException>();
 
             // Assert
-            Assert.That(ex.ParamName, Is.EqualTo("pathToTarget"));
+            await That(ex.ParamName).IsEqualTo("pathToTarget");
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_CreateSymbolicLink_ShouldFailWithIllegalCharactersInPath()
+        public async Task MockFile_CreateSymbolicLink_ShouldFailWithIllegalCharactersInPath()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -154,30 +154,30 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(pathToTarget, data);
 
             // Act
-            TestDelegate ex = () => fileSystem.File.CreateSymbolicLink(@"C:\bar.txt_?_", pathToTarget);
+            Action ex = () => fileSystem.File.CreateSymbolicLink(@"C:\bar.txt_?_", pathToTarget);
 
             // Assert
-            Assert.Throws<ArgumentException>(ex);
+            await That(ex).Throws<ArgumentException>();
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
 
-        public void MockFile_CreateSymbolicLink_ShouldFailWithIllegalCharactersInTarget()
+        public async Task MockFile_CreateSymbolicLink_ShouldFailWithIllegalCharactersInTarget()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
             string path = XFS.Path(@"C:\Folder\foo.txt");
 
             // Act
-            TestDelegate ex = () => fileSystem.File.CreateSymbolicLink(path, @"C:\bar.txt_?_");
+            Action ex = () => fileSystem.File.CreateSymbolicLink(path, @"C:\bar.txt_?_");
 
             // Assert
-            Assert.Throws<ArgumentException>(ex);
+            await That(ex).Throws<ArgumentException>();
         }
 
         [Test]
-        public void MockFile_CreateSymbolicLink_ShouldFailIfPathExists()
+        public async Task MockFile_CreateSymbolicLink_ShouldFailIfPathExists()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -188,14 +188,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(path, data);
 
             // Act
-            var ex = Assert.Throws<IOException>(() => fileSystem.File.CreateSymbolicLink(path, pathToTarget));
+            var ex = await That(() => fileSystem.File.CreateSymbolicLink(path, pathToTarget)).Throws<IOException>();
 
             // Assert
-            Assert.That(ex.Message.Contains("path"));
+            await That(ex.Message).Contains("path");
         }
 
         [Test]
-        public void MockFile_CreateSymbolicLink_ShouldFailIfTargetDoesNotExist()
+        public async Task MockFile_CreateSymbolicLink_ShouldFailIfTargetDoesNotExist()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -205,14 +205,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(dir);
 
             // Act
-            var ex = Assert.Throws<FileNotFoundException>(() => fileSystem.File.CreateSymbolicLink(path, pathToTarget));
+            var ex = await That(() => fileSystem.File.CreateSymbolicLink(path, pathToTarget)).Throws<FileNotFoundException>();
 
             // Assert
-            Assert.That(ex.Message.Contains(pathToTarget));
+            await That(ex.Message).Contains(pathToTarget);
         }
 
         [Test]
-        public void MockFile_CreateSymbolicLink_ShouldFailIfPathDirectoryDoesNotExist()
+        public async Task MockFile_CreateSymbolicLink_ShouldFailIfPathDirectoryDoesNotExist()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -222,14 +222,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(pathToTarget, data);
 
             // Act
-            var ex = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.CreateSymbolicLink(path, pathToTarget));
+            var ex = await That(() => fileSystem.File.CreateSymbolicLink(path, pathToTarget)).Throws<DirectoryNotFoundException>();
 
             // Assert
-            Assert.That(ex.Message.Contains(path));
+            await That(ex.Message).Contains(path);
         }
 
         [Test]
-        public void MockFile_CreateSymbolicLink_ShouldSetReparsePointAttribute()
+        public async Task MockFile_CreateSymbolicLink_ShouldSetReparsePointAttribute()
         {
             var path = "foo.txt";
             var pathToTarget = "bar.txt";
@@ -239,11 +239,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.CreateSymbolicLink(path, pathToTarget);
 
             var attributes = fileSystem.FileInfo.New(path).Attributes;
-            Assert.That(attributes.HasFlag(FileAttributes.ReparsePoint), Is.True);
+            await That(attributes.HasFlag(FileAttributes.ReparsePoint)).IsTrue();
         }
 
         [Test]
-        public void MockFile_ResolveLinkTarget_ShouldReturnPathOfTargetLink()
+        public async Task MockFile_ResolveLinkTarget_ShouldReturnPathOfTargetLink()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.File.WriteAllText("bar", "some content");
@@ -251,11 +251,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.File.ResolveLinkTarget("foo", false);
 
-            Assert.That(result.Name, Is.EqualTo("bar"));
+            await That(result.Name).IsEqualTo("bar");
         }
 
         [Test]
-        public void MockFile_ResolveLinkTarget_WithFinalTarget_ShouldReturnPathOfTargetLink()
+        public async Task MockFile_ResolveLinkTarget_WithFinalTarget_ShouldReturnPathOfTargetLink()
         {
             // The maximum number of symbolic links that are followed:
             // https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.resolvelinktarget?view=net-6.0#remarks
@@ -272,11 +272,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.File.ResolveLinkTarget(previousPath, true);
 
-            Assert.That(result.Name, Is.EqualTo("bar"));
+            await That(result.Name).IsEqualTo("bar");
         }
 
         [Test]
-        public void MockFile_ResolveLinkTarget_WithFinalTargetWithTooManyLinks_ShouldThrowIOException()
+        public async Task MockFile_ResolveLinkTarget_WithFinalTargetWithTooManyLinks_ShouldThrowIOException()
         {
             // The maximum number of symbolic links that are followed:
             // https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.resolvelinktarget?view=net-6.0#remarks
@@ -292,11 +292,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 previousPath = newPath;
             }
 
-            Assert.Throws<IOException>(() => fileSystem.File.ResolveLinkTarget(previousPath, true));
+            await That(() => fileSystem.File.ResolveLinkTarget(previousPath, true)).Throws<IOException>();
         }
 
         [Test]
-        public void MockFile_ResolveLinkTarget_WithoutFinalTarget_ShouldReturnFirstLink()
+        public async Task MockFile_ResolveLinkTarget_WithoutFinalTarget_ShouldReturnFirstLink()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.File.WriteAllText("bar", "some content");
@@ -305,20 +305,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.File.ResolveLinkTarget("foo1", false);
 
-            Assert.That(result.Name, Is.EqualTo("foo"));
+            await That(result.Name).IsEqualTo("foo");
         }
 
         [Test]
-        public void MockFile_ResolveLinkTarget_WithoutTargetLink_ShouldThrowIOException()
+        public async Task MockFile_ResolveLinkTarget_WithoutTargetLink_ShouldThrowIOException()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.File.WriteAllText("bar", "some content");
             fileSystem.File.CreateSymbolicLink("foo", "bar");
 
-            Assert.Throws<IOException>(() =>
+            await That(() =>
             {
                 fileSystem.File.ResolveLinkTarget("bar", false);
-            });
+            }).Throws<IOException>();
         }
 #endif
     }

@@ -7,7 +7,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileVersionInfoFactoryTests
     {
         [Test]
-        public void MockFileVersionInfoFactory_GetVersionInfo_ShouldReturnTheFileVersionInfoOfTheMockFileData()
+        public async Task MockFileVersionInfoFactory_GetVersionInfo_ShouldReturnTheFileVersionInfoOfTheMockFileData()
         {
             // Arrange
             var fileVersionInfo = new MockFileVersionInfo(@"c:\a.txt");
@@ -20,11 +20,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.FileVersionInfo.GetVersionInfo(@"c:\a.txt");
 
             // Assert
-            Assert.That(result, Is.EqualTo(fileVersionInfo));
+            await That(result).IsEqualTo(fileVersionInfo);
         }
 
         [Test]
-        public void MockFileVersionInfoFactory_GetVersionInfo_ShouldThrowFileNotFoundExceptionIfFileDoesNotExist()
+        public async Task MockFileVersionInfoFactory_GetVersionInfo_ShouldThrowFileNotFoundExceptionIfFileDoesNotExist()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -34,10 +34,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            TestDelegate code = () => fileSystem.FileVersionInfo.GetVersionInfo(@"c:\foo.txt");
+            Action code = () => fileSystem.FileVersionInfo.GetVersionInfo(@"c:\foo.txt");
 
             // Assert
-            Assert.Throws<FileNotFoundException>(code);
+            await That(code).Throws<FileNotFoundException>();
         }
     }
 }

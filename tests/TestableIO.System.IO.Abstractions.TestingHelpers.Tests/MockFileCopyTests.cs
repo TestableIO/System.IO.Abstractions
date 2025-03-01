@@ -10,7 +10,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     {
 
         [Test]
-        public void MockFile_Copy_ShouldOverwriteFileWhenOverwriteFlagIsTrue()
+        public async Task MockFile_Copy_ShouldOverwriteFileWhenOverwriteFlagIsTrue()
         {
             string sourceFileName = XFS.Path(@"c:\source\demo.txt");
             var sourceContents = new MockFileData("Source content");
@@ -24,11 +24,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.Copy(sourceFileName, destFileName, true);
 
             var copyResult = fileSystem.GetFile(destFileName);
-            Assert.That(sourceContents.Contents, Is.EqualTo(copyResult.Contents));
+            await That(sourceContents.Contents).IsEqualTo(copyResult.Contents);
         }
 
         [Test]
-        public void MockFile_Copy_ShouldAdjustTimestampsOnDestination()
+        public async Task MockFile_Copy_ShouldAdjustTimestampsOnDestination()
         {
             var sourceFileName = XFS.Path(@"c:\source\demo.txt");
             var destFileName = XFS.Path(@"c:\source\demo_copy.txt");
@@ -39,13 +39,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var sourceFileInfo = mockFileSystem.FileInfo.New(sourceFileName);
             var destFileInfo = mockFileSystem.FileInfo.New(destFileName);
-            Assert.That(destFileInfo.LastWriteTime, Is.EqualTo(sourceFileInfo.LastWriteTime));
-            Assert.That(DateTime.Now - destFileInfo.CreationTime, Is.LessThanOrEqualTo( TimeSpan.FromSeconds(1)));
-            Assert.That(destFileInfo.LastAccessTime, Is.EqualTo(destFileInfo.CreationTime));
+            await That(destFileInfo.LastWriteTime).IsEqualTo(sourceFileInfo.LastWriteTime);
+            await That(DateTime.Now - destFileInfo.CreationTime).IsLessThanOrEqualTo( TimeSpan.FromSeconds(1));
+            await That(destFileInfo.LastAccessTime).IsEqualTo(destFileInfo.CreationTime);
         }
 
         [Test]
-        public void MockFile_Copy_ShouldCloneContents()
+        public async Task MockFile_Copy_ShouldCloneContents()
         {
             var sourceFileName = XFS.Path(@"c:\source\demo.txt");
             var destFileName = XFS.Path(@"c:\source\demo_copy.txt");
@@ -62,11 +62,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 binaryWriter.Write("Modified");
             }
 
-            Assert.That(mockFileSystem.File.ReadAllText(destFileName), Is.EqualTo("Original"));
+            await That(mockFileSystem.File.ReadAllText(destFileName)).IsEqualTo("Original");
         }
 
         [Test]
-        public void MockFile_Copy_ShouldCloneBinaryContents()
+        public async Task MockFile_Copy_ShouldCloneBinaryContents()
         {
             var sourceFileName = XFS.Path(@"c:\source\demo.bin");
             var destFileName = XFS.Path(@"c:\source\demo_copy.bin");
@@ -84,11 +84,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 binaryWriter.Write("Modified");
             }
 
-            Assert.That(mockFileSystem.File.ReadAllBytes(destFileName), Is.EqualTo(original));
+            await That(mockFileSystem.File.ReadAllBytes(destFileName)).IsEqualTo(original);
         }
 
         [Test]
-        public void MockFile_Copy_ShouldCreateFileAtNewDestination()
+        public async Task MockFile_Copy_ShouldCreateFileAtNewDestination()
         {
             string sourceFileName = XFS.Path(@"c:\source\demo.txt");
             var sourceContents = new MockFileData("Source content");
@@ -101,11 +101,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.Copy(sourceFileName, destFileName, false);
 
             var copyResult = fileSystem.GetFile(destFileName);
-            Assert.That(sourceContents.Contents, Is.EqualTo(copyResult.Contents));
+            await That(sourceContents.Contents).IsEqualTo(copyResult.Contents);
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowExceptionWhenFileExistsAtDestination()
+        public async Task MockFile_Copy_ShouldThrowExceptionWhenFileExistsAtDestination()
         {
             string sourceFileName = XFS.Path(@"c:\source\demo.txt");
             var sourceContents = new MockFileData("Source content");
@@ -116,12 +116,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 {destFileName, new MockFileData("Destination content")}
             });
 
-            Assert.Throws<IOException>(() => fileSystem.File.Copy(sourceFileName, destFileName), XFS.Path(@"The file c:\destination\demo.txt already exists."));
+            await That(() => fileSystem.File.Copy(sourceFileName, destFileName), XFS.Path(@"The file c:\destination\demo.txt already exists.")).Throws<IOException>();
         }
 
         [TestCase(@"c:\source\demo.txt", @"c:\source\doesnotexist\demo.txt")]
         [TestCase(@"c:\source\demo.txt", @"c:\doesnotexist\demo.txt")]
-        public void MockFile_Copy_ShouldThrowExceptionWhenFolderInDestinationDoesNotExist(string sourceFilePath, string destFilePath)
+        public async Task MockFile_Copy_ShouldThrowExceptionWhenFolderInDestinationDoesNotExist(string sourceFilePath, string destFilePath)
         {
             string sourceFileName = XFS.Path(sourceFilePath);
             string destFileName = XFS.Path(destFilePath);
@@ -130,34 +130,34 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 {sourceFileName, string.Empty}
             });
 
-            Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Copy(sourceFileName, destFileName), string.Format(CultureInfo.InvariantCulture, @"Could not find a part of the path '{0}'.", destFilePath));
+            await That(() => fileSystem.File.Copy(sourceFileName, destFileName), string.Format(CultureInfo.InvariantCulture, @"Could not find a part of the path '{0}'.", destFilePath)).Throws<DirectoryNotFoundException>();
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowArgumentNullExceptionWhenSourceIsNull_Message()
+        public async Task MockFile_Copy_ShouldThrowArgumentNullExceptionWhenSourceIsNull_Message()
         {
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Copy(null, destFilePath));
+            var exception = await That(() => fileSystem.File.Copy(null, destFilePath)).Throws<ArgumentNullException>();
 
-            Assert.That(exception.Message, Does.StartWith("File name cannot be null."));
+            await That(exception.Message).StartsWith("File name cannot be null.");
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowArgumentNullExceptionWhenSourceIsNull_ParamName()
+        public async Task MockFile_Copy_ShouldThrowArgumentNullExceptionWhenSourceIsNull_ParamName()
         {
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Copy(null, destFilePath));
+            var exception = await That(() => fileSystem.File.Copy(null, destFilePath)).Throws<ArgumentNullException>();
 
-            Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
+            await That(exception.ParamName).IsEqualTo("sourceFileName");
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceFileNameContainsInvalidChars_Message()
+        public async Task MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceFileNameContainsInvalidChars_Message()
         {
             var destFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
@@ -168,16 +168,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var sourceFilePath = @"c:\something\demo.txt" + invalidChar;
 
                 var exception =
-                    Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
+                    await That(() => fileSystem.File.Copy(sourceFilePath, destFilePath)).Throws<ArgumentException>();
 
-                Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
-                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+                await That(exception.Message).IsEqualTo("Illegal characters in path.")
+                    .Because(string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
             }
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenSourcePathContainsInvalidChars_Message()
+        public async Task MockFile_Copy_ShouldThrowArgumentExceptionWhenSourcePathContainsInvalidChars_Message()
         {
             var destFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
@@ -187,16 +187,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var sourceFilePath = @"c:\some" + invalidChar + @"thing\demo.txt";
 
                 var exception =
-                    Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
+                    await That(() => fileSystem.File.Copy(sourceFilePath, destFilePath)).Throws<ArgumentException>();
 
-                Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
-                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+                await That(exception.Message).IsEqualTo("Illegal characters in path.")
+                    .Because(string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
             }
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetPathContainsInvalidChars_Message()
+        public async Task MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetPathContainsInvalidChars_Message()
         {
             var sourceFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
@@ -206,16 +206,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var destFilePath = @"c:\some" + invalidChar + @"thing\demo.txt";
 
                 var exception =
-                    Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
+                    await That(() => fileSystem.File.Copy(sourceFilePath, destFilePath)).Throws<ArgumentException>();
 
-                Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
-                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+                await That(exception.Message).IsEqualTo("Illegal characters in path.")
+                    .Because(string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
             }
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetFileNameContainsInvalidChars_Message()
+        public async Task MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetFileNameContainsInvalidChars_Message()
         {
             var sourceFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
@@ -226,168 +226,168 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var destFilePath = @"c:\something\demo.txt" + invalidChar;
 
                 var exception =
-                    Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
+                    await That(() => fileSystem.File.Copy(sourceFilePath, destFilePath)).Throws<ArgumentException>();
 
-                Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
-                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+                await That(exception.Message).IsEqualTo("Illegal characters in path.")
+                    .Because(string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
             }
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.Drives)]
-        public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidUseOfDriveSeparator()
+        public async Task MockFile_Copy_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidUseOfDriveSeparator()
         {
             var badSourcePath = @"C::\something\demo.txt";
             var destinationPath = @"C:\elsewhere\demo.txt";
             var fileSystem = new MockFileSystem();
 
-            TestDelegate action = () => fileSystem.File.Copy(badSourcePath, destinationPath);
+            Action action = () => fileSystem.File.Copy(badSourcePath, destinationPath);
 
-            Assert.Throws<NotSupportedException>(action);
+            await That(action).Throws<NotSupportedException>();
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.Drives)]
-        public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidDriveLetter()
+        public async Task MockFile_Copy_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidDriveLetter()
         {
             var badSourcePath = @"0:\something\demo.txt";
             var destinationPath = @"C:\elsewhere\demo.txt";
             var fileSystem = new MockFileSystem();
 
-            TestDelegate action = () => fileSystem.File.Copy(badSourcePath, destinationPath);
+            Action action = () => fileSystem.File.Copy(badSourcePath, destinationPath);
 
-            Assert.Throws<NotSupportedException>(action);
+            await That(action).Throws<NotSupportedException>();
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.Drives)]
-        public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidUseOfDriveSeparator()
+        public async Task MockFile_Copy_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidUseOfDriveSeparator()
         {
             var sourcePath = @"C:\something\demo.txt";
             var badDestinationPath = @"C:\elsewhere:\demo.txt";
             var fileSystem = new MockFileSystem();
 
-            TestDelegate action = () => fileSystem.File.Copy(sourcePath, badDestinationPath);
+            Action action = () => fileSystem.File.Copy(sourcePath, badDestinationPath);
 
-            Assert.Throws<NotSupportedException>(action);
+            await That(action).Throws<NotSupportedException>();
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.Drives)]
-        public void MockFile_Copy_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidDriveLetter()
+        public async Task MockFile_Copy_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidDriveLetter()
         {
             var sourcePath = @"C:\something\demo.txt";
             var badDestinationPath = @"^:\elsewhere\demo.txt";
             var fileSystem = new MockFileSystem();
 
-            TestDelegate action = () => fileSystem.File.Copy(sourcePath, badDestinationPath);
+            Action action = () => fileSystem.File.Copy(sourcePath, badDestinationPath);
 
-            Assert.Throws<NotSupportedException>(action);
+            await That(action).Throws<NotSupportedException>();
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceIsEmpty_Message()
+        public async Task MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceIsEmpty_Message()
         {
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(string.Empty, destFilePath));
+            var exception = await That(() => fileSystem.File.Copy(string.Empty, destFilePath)).Throws<ArgumentException>();
 
-            Assert.That(exception.Message, Does.StartWith("Empty file name is not legal."));
+            await That(exception.Message).StartsWith("Empty file name is not legal.");
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceIsEmpty_ParamName()
+        public async Task MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceIsEmpty_ParamName()
         {
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(string.Empty, destFilePath));
+            var exception = await That(() => fileSystem.File.Copy(string.Empty, destFilePath)).Throws<ArgumentException>();
 
-            Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
+            await That(exception.ParamName).IsEqualTo("sourceFileName");
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceIsStringOfBlanks()
+        public async Task MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceIsStringOfBlanks()
         {
             string sourceFilePath = "   ";
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
+            var exception = await That(() => fileSystem.File.Copy(sourceFilePath, destFilePath)).Throws<ArgumentException>();
 
-            Assert.That(exception.Message, Does.StartWith("The path is not of a legal form."));
+            await That(exception.Message).StartsWith("The path is not of a legal form.");
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowArgumentNullExceptionWhenTargetIsNull_Message()
+        public async Task MockFile_Copy_ShouldThrowArgumentNullExceptionWhenTargetIsNull_Message()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Copy(sourceFilePath, null));
+            var exception = await That(() => fileSystem.File.Copy(sourceFilePath, null)).Throws<ArgumentNullException>();
 
-            Assert.That(exception.Message, Does.StartWith("File name cannot be null."));
+            await That(exception.Message).StartsWith("File name cannot be null.");
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowArgumentNullExceptionWhenTargetIsNull_ParamName()
+        public async Task MockFile_Copy_ShouldThrowArgumentNullExceptionWhenTargetIsNull_ParamName()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Copy(sourceFilePath, null));
+            var exception = await That(() => fileSystem.File.Copy(sourceFilePath, null)).Throws<ArgumentNullException>();
 
-            Assert.That(exception.ParamName, Is.EqualTo("destFileName"));
+            await That(exception.ParamName).IsEqualTo("destFileName");
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetIsStringOfBlanks()
+        public async Task MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetIsStringOfBlanks()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             string destFilePath = "   ";
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, destFilePath));
+            var exception = await That(() => fileSystem.File.Copy(sourceFilePath, destFilePath)).Throws<ArgumentException>();
 
-            Assert.That(exception.Message, Does.StartWith("The path is not of a legal form."));
+            await That(exception.Message).StartsWith("The path is not of a legal form.");
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetIsEmpty_Message()
+        public async Task MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetIsEmpty_Message()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Copy(sourceFilePath, string.Empty));
+            var exception = await That(() => fileSystem.File.Copy(sourceFilePath, string.Empty)).Throws<ArgumentException>();
 
-            Assert.That(exception.Message, Does.StartWith("Empty file name is not legal."));
+            await That(exception.Message).StartsWith("Empty file name is not legal.");
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist()
+        public async Task MockFile_Copy_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            TestDelegate action = () => fileSystem.File.Copy(sourceFilePath, XFS.Path(@"c:\something\demo2.txt"));
+            Action action = () => fileSystem.File.Copy(sourceFilePath, XFS.Path(@"c:\something\demo2.txt"));
 
-            Assert.Throws<FileNotFoundException>(action);
+            await That(action).Throws<FileNotFoundException>();
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist_EvenWhenCopyingToItself()
+        public async Task MockFile_Copy_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist_EvenWhenCopyingToItself()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            TestDelegate action = () => fileSystem.File.Copy(sourceFilePath, XFS.Path(@"c:\something\demo.txt"));
+            Action action = () => fileSystem.File.Copy(sourceFilePath, XFS.Path(@"c:\something\demo.txt"));
 
-            Assert.Throws<FileNotFoundException>(action);
+            await That(action).Throws<FileNotFoundException>();
         }
 
         [Test]
-        public void MockFile_Copy_ShouldWorkWithRelativePaths()
+        public async Task MockFile_Copy_ShouldWorkWithRelativePaths()
         {
             var sourceFile = "source_file.txt";
             var destinationFile = "destination_file.txt";
@@ -396,11 +396,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.Create(sourceFile).Close();
             fileSystem.File.Copy(sourceFile, destinationFile);
 
-            Assert.That(fileSystem.File.Exists(destinationFile));
+            await That(fileSystem.File.Exists(destinationFile)).IsTrue();
         }
 
         [Test]
-        public void MockFile_Copy_ShouldThrowIOExceptionForInvalidFileShare()
+        public async Task MockFile_Copy_ShouldThrowIOExceptionForInvalidFileShare()
         {
             string sourceFileName = XFS.Path(@"c:\source\demo.txt");
             var sourceContents = new MockFileData("Source content")
@@ -413,9 +413,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
             fileSystem.AddDirectory(XFS.Path(@"c:\something"));
 
-            TestDelegate action = () => fileSystem.File.Copy(sourceFileName, XFS.Path(@"c:\something\demo.txt"));
+            Action action = () => fileSystem.File.Copy(sourceFileName, XFS.Path(@"c:\something\demo.txt"));
 
-            Assert.Throws<IOException>(action);
+            await That(action).Throws<IOException>();
         }
     }
 }

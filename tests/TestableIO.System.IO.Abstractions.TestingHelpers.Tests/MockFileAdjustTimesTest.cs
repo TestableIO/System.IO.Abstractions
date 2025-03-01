@@ -9,7 +9,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileAdjustTimesTest
     {
         [Test]
-        public void MockFile_AfterAppendAllText_ShouldUpdateLastAccessAndLastWriteTime()
+        public async Task MockFile_AfterAppendAllText_ShouldUpdateLastAccessAndLastWriteTime()
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
             var updateTime = creationTime.AddDays(10);
@@ -23,13 +23,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastAccessTime = fileSystem.File.GetLastAccessTimeUtc("foo.txt");
             var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
 
-            Assert.That(actualCreationTime, Is.EqualTo(creationTime));
-            Assert.That(actualLastAccessTime, Is.EqualTo(updateTime));
-            Assert.That(actualLastWriteTime, Is.EqualTo(updateTime));
+            await That(actualCreationTime).IsEqualTo(creationTime);
+            await That(actualLastAccessTime).IsEqualTo(updateTime);
+            await That(actualLastWriteTime).IsEqualTo(updateTime);
         }
 
         [Test]
-        public void MockFile_AfterCopy_ShouldUpdateCreationAndLastAccessTimeOfDestination()
+        public async Task MockFile_AfterCopy_ShouldUpdateCreationAndLastAccessTimeOfDestination()
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
             var updateTime = creationTime.AddDays(10);
@@ -46,16 +46,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualSourceLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
             var actualDestinationLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("bar.txt");
 
-            Assert.That(actualSourceCreationTime, Is.EqualTo(creationTime));
-            Assert.That(actualDestinationCreationTime, Is.EqualTo(updateTime));
-            Assert.That(actualSourceLastAccessTime, Is.EqualTo(creationTime));
-            Assert.That(actualDestinationLastAccessTime, Is.EqualTo(updateTime));
-            Assert.That(actualSourceLastWriteTime, Is.EqualTo(creationTime));
-            Assert.That(actualDestinationLastWriteTime, Is.EqualTo(creationTime));
+            await That(actualSourceCreationTime).IsEqualTo(creationTime);
+            await That(actualDestinationCreationTime).IsEqualTo(updateTime);
+            await That(actualSourceLastAccessTime).IsEqualTo(creationTime);
+            await That(actualDestinationLastAccessTime).IsEqualTo(updateTime);
+            await That(actualSourceLastWriteTime).IsEqualTo(creationTime);
+            await That(actualDestinationLastWriteTime).IsEqualTo(creationTime);
         }
 
         [Test]
-        public void MockFile_AfterMove_ShouldUpdateLastAccessTime()
+        public async Task MockFile_AfterMove_ShouldUpdateLastAccessTime()
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
             var updateTime = creationTime.AddDays(10);
@@ -69,15 +69,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastAccessTime = fileSystem.File.GetLastAccessTimeUtc("bar.txt");
             var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("bar.txt");
 
-            Assert.That(actualCreationTime, Is.EqualTo(creationTime));
-            Assert.That(actualLastAccessTime, Is.EqualTo(updateTime));
-            Assert.That(actualLastWriteTime, Is.EqualTo(creationTime));
+            await That(actualCreationTime).IsEqualTo(creationTime);
+            await That(actualLastAccessTime).IsEqualTo(updateTime);
+            await That(actualLastWriteTime).IsEqualTo(creationTime);
         }
 
         [TestCase(FileMode.Open, FileAccess.ReadWrite)]
         [TestCase(FileMode.OpenOrCreate, FileAccess.Write)]
         [TestCase(FileMode.Append, FileAccess.Write)]
-        public void MockFile_AfterOpen_WithWriteAccess_ShouldUpdateLastAccessAndLastWriteTime(FileMode fileMode, FileAccess fileAccess)
+        public async Task MockFile_AfterOpen_WithWriteAccess_ShouldUpdateLastAccessAndLastWriteTime(FileMode fileMode, FileAccess fileAccess)
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
             var updateTime = creationTime.AddDays(10);
@@ -91,14 +91,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastAccessTime = fileSystem.File.GetLastAccessTimeUtc("foo.txt");
             var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
 
-            Assert.That(actualCreationTime, Is.EqualTo(creationTime));
-            Assert.That(actualLastAccessTime, Is.EqualTo(updateTime));
-            Assert.That(actualLastWriteTime, Is.EqualTo(updateTime));
+            await That(actualCreationTime).IsEqualTo(creationTime);
+            await That(actualLastAccessTime).IsEqualTo(updateTime);
+            await That(actualLastWriteTime).IsEqualTo(updateTime);
         }
 
         [TestCase(FileMode.Open, FileAccess.Read)]
         [TestCase(FileMode.OpenOrCreate, FileAccess.Read)]
-        public void MockFile_AfterOpen_WithReadOnlyAccess_ShouldUpdateLastAccessTime(FileMode fileMode, FileAccess fileAccess)
+        public async Task MockFile_AfterOpen_WithReadOnlyAccess_ShouldUpdateLastAccessTime(FileMode fileMode, FileAccess fileAccess)
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
             var updateTime = creationTime.AddDays(10);
@@ -112,13 +112,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastAccessTime = fileSystem.File.GetLastAccessTimeUtc("foo.txt");
             var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
 
-            Assert.That(actualCreationTime, Is.EqualTo(creationTime));
-            Assert.That(actualLastAccessTime, Is.EqualTo(updateTime));
-            Assert.That(actualLastWriteTime, Is.EqualTo(creationTime));
+            await That(actualCreationTime).IsEqualTo(creationTime);
+            await That(actualLastAccessTime).IsEqualTo(updateTime);
+            await That(actualLastWriteTime).IsEqualTo(creationTime);
         }
 
         [Test]
-        public void MockFile_AfterReadAllBytes_ShouldUpdateLastAccessTime()
+        public async Task MockFile_AfterReadAllBytes_ShouldUpdateLastAccessTime()
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
             var updateTime = creationTime.AddDays(10);
@@ -132,13 +132,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastAccessTime = fileSystem.File.GetLastAccessTimeUtc("foo.txt");
             var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
 
-            Assert.That(actualCreationTime, Is.EqualTo(creationTime));
-            Assert.That(actualLastAccessTime, Is.EqualTo(updateTime));
-            Assert.That(actualLastWriteTime, Is.EqualTo(creationTime));
+            await That(actualCreationTime).IsEqualTo(creationTime);
+            await That(actualLastAccessTime).IsEqualTo(updateTime);
+            await That(actualLastWriteTime).IsEqualTo(creationTime);
         }
 
         [Test]
-        public void MockFile_AfterReadAllLines_ShouldUpdateLastAccessTime()
+        public async Task MockFile_AfterReadAllLines_ShouldUpdateLastAccessTime()
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
             var updateTime = creationTime.AddDays(10);
@@ -152,13 +152,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastAccessTime = fileSystem.File.GetLastAccessTimeUtc("foo.txt");
             var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
 
-            Assert.That(actualCreationTime, Is.EqualTo(creationTime));
-            Assert.That(actualLastAccessTime, Is.EqualTo(updateTime));
-            Assert.That(actualLastWriteTime, Is.EqualTo(creationTime));
+            await That(actualCreationTime).IsEqualTo(creationTime);
+            await That(actualLastAccessTime).IsEqualTo(updateTime);
+            await That(actualLastWriteTime).IsEqualTo(creationTime);
         }
 
         [Test]
-        public void MockFile_AfterReadAllText_ShouldUpdateLastAccessTime()
+        public async Task MockFile_AfterReadAllText_ShouldUpdateLastAccessTime()
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
             var updateTime = creationTime.AddDays(10);
@@ -172,13 +172,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastAccessTime = fileSystem.File.GetLastAccessTimeUtc("foo.txt");
             var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
 
-            Assert.That(actualCreationTime, Is.EqualTo(creationTime));
-            Assert.That(actualLastAccessTime, Is.EqualTo(updateTime));
-            Assert.That(actualLastWriteTime, Is.EqualTo(creationTime));
+            await That(actualCreationTime).IsEqualTo(creationTime);
+            await That(actualLastAccessTime).IsEqualTo(updateTime);
+            await That(actualLastWriteTime).IsEqualTo(creationTime);
         }
 
         [Test]
-        public void MockFile_AfterSetAttributes_ShouldUpdateLastAccessTime()
+        public async Task MockFile_AfterSetAttributes_ShouldUpdateLastAccessTime()
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
             var updateTime = creationTime.AddDays(10);
@@ -192,15 +192,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastAccessTime = fileSystem.File.GetLastAccessTimeUtc("foo.txt");
             var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
 
-            Assert.That(actualCreationTime, Is.EqualTo(creationTime));
-            Assert.That(actualLastAccessTime, Is.EqualTo(updateTime));
-            Assert.That(actualLastWriteTime, Is.EqualTo(creationTime));
+            await That(actualCreationTime).IsEqualTo(creationTime);
+            await That(actualLastAccessTime).IsEqualTo(updateTime);
+            await That(actualLastWriteTime).IsEqualTo(creationTime);
         }
 
         [Test]
         [SupportedOSPlatform("windows")]
         [WindowsOnly(WindowsSpecifics.AccessControlLists)]
-        public void MockFile_AfterSetAccessControl_ShouldUpdateLastAccessTime()
+        public async Task MockFile_AfterSetAccessControl_ShouldUpdateLastAccessTime()
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
             var updateTime = creationTime.AddDays(10);
@@ -214,13 +214,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastAccessTime = fileSystem.File.GetLastAccessTimeUtc("foo.txt");
             var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
 
-            Assert.That(actualCreationTime, Is.EqualTo(creationTime));
-            Assert.That(actualLastAccessTime, Is.EqualTo(creationTime));
-            Assert.That(actualLastWriteTime, Is.EqualTo(creationTime));
+            await That(actualCreationTime).IsEqualTo(creationTime);
+            await That(actualLastAccessTime).IsEqualTo(creationTime);
+            await That(actualLastWriteTime).IsEqualTo(creationTime);
         }
 
         [Test]
-        public void MockFile_AfterWriteAllBytes_ShouldUpdateLastAccessAndLastWriteTime()
+        public async Task MockFile_AfterWriteAllBytes_ShouldUpdateLastAccessAndLastWriteTime()
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
             var updateTime = creationTime.AddDays(10);
@@ -234,13 +234,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastAccessTime = fileSystem.File.GetLastAccessTimeUtc("foo.txt");
             var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
 
-            Assert.That(actualCreationTime, Is.EqualTo(creationTime));
-            Assert.That(actualLastAccessTime, Is.EqualTo(updateTime));
-            Assert.That(actualLastWriteTime, Is.EqualTo(updateTime));
+            await That(actualCreationTime).IsEqualTo(creationTime);
+            await That(actualLastAccessTime).IsEqualTo(updateTime);
+            await That(actualLastWriteTime).IsEqualTo(updateTime);
         }
 
         [Test]
-        public void MockFile_AfterWriteAllText_ShouldUpdateLastAccessAndLastWriteTime()
+        public async Task MockFile_AfterWriteAllText_ShouldUpdateLastAccessAndLastWriteTime()
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
             var updateTime = creationTime.AddDays(10);
@@ -254,13 +254,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastAccessTime = fileSystem.File.GetLastAccessTimeUtc("foo.txt");
             var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
 
-            Assert.That(actualCreationTime, Is.EqualTo(creationTime));
-            Assert.That(actualLastAccessTime, Is.EqualTo(updateTime));
-            Assert.That(actualLastWriteTime, Is.EqualTo(updateTime));
+            await That(actualCreationTime).IsEqualTo(creationTime);
+            await That(actualLastAccessTime).IsEqualTo(updateTime);
+            await That(actualLastWriteTime).IsEqualTo(updateTime);
         }
 
         [Test]
-        public void MockFileStream_OpenRead_ShouldUpdateLastAccessTime()
+        public async Task MockFileStream_OpenRead_ShouldUpdateLastAccessTime()
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
             var updateTime = creationTime.AddDays(10);
@@ -274,13 +274,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastAccessTime = fileSystem.File.GetLastAccessTimeUtc("foo.txt");
             var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
 
-            Assert.That(actualCreationTime, Is.EqualTo(creationTime));
-            Assert.That(actualLastAccessTime, Is.EqualTo(updateTime));
-            Assert.That(actualLastWriteTime, Is.EqualTo(creationTime));
+            await That(actualCreationTime).IsEqualTo(creationTime);
+            await That(actualLastAccessTime).IsEqualTo(updateTime);
+            await That(actualLastWriteTime).IsEqualTo(creationTime);
         }
 
         [Test]
-        public void MockFileStream_OpenWrite_ShouldUpdateLastAccessAndLastWriteTime()
+        public async Task MockFileStream_OpenWrite_ShouldUpdateLastAccessAndLastWriteTime()
         {
             var creationTime = DateTime.UtcNow.AddDays(10);
             var updateTime = creationTime.AddDays(10);
@@ -294,9 +294,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastAccessTime = fileSystem.File.GetLastAccessTimeUtc("foo.txt");
             var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
 
-            Assert.That(actualCreationTime, Is.EqualTo(creationTime));
-            Assert.That(actualLastAccessTime, Is.EqualTo(updateTime));
-            Assert.That(actualLastWriteTime, Is.EqualTo(updateTime));
+            await That(actualCreationTime).IsEqualTo(creationTime);
+            await That(actualLastAccessTime).IsEqualTo(updateTime);
+            await That(actualLastWriteTime).IsEqualTo(updateTime);
         }
     }
 }

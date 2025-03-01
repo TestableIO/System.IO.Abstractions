@@ -11,7 +11,7 @@
     public class MockFileStreamTests
     {
         [Test]
-        public void MockFileStream_Flush_WritesByteToFile()
+        public async Task MockFileStream_Flush_WritesByteToFile()
         {
             // Arrange
             var filepath = XFS.Path(@"C:\something\foo.txt");
@@ -25,8 +25,8 @@
             cut.Flush();
 
             // Assert
-            Assert.That(fileSystem.GetFile(filepath).Contents,
-                Is.EqualTo(new byte[] { 255 }));
+            await That(fileSystem.GetFile(filepath).Contents)
+                .IsEqualTo(new byte[] { 255 });
         }
 
         [Test]
@@ -47,12 +47,12 @@
             await cut.FlushAsync();
 
             // Assert
-            Assert.That(fileSystem.GetFile(filepath).Contents,
-                Is.EqualTo(new byte[] { 255 }));
+            await That(fileSystem.GetFile(filepath).Contents)
+                .IsEqualTo(new byte[] { 255 });
         }
 
         [Test]
-        public void MockFileStream_Dispose_ShouldNotResurrectFile()
+        public async Task MockFileStream_Dispose_ShouldNotResurrectFile()
         {
             // path in this test case is a subject to Directory.GetParent(path) Linux issue
             // https://github.com/TestableIO/System.IO.Abstractions/issues/395
@@ -68,13 +68,13 @@
             stream.Dispose();
             var fileCount3 = fileSystem.Directory.GetFiles(directory, "*").Length;
 
-            Assert.That(fileCount1, Is.EqualTo(1), "File should have existed");
-            Assert.That(fileCount2, Is.EqualTo(0), "File should have been deleted");
-            Assert.That(fileCount3, Is.EqualTo(0), "Disposing stream should not have resurrected the file");
+            await That(fileCount1).IsEqualTo(1).Because("File should have existed");
+            await That(fileCount2).IsEqualTo(0).Because("File should have been deleted");
+            await That(fileCount3).IsEqualTo(0).Because("Disposing stream should not have resurrected the file");
         }
 
         [Test]
-        public void MockFileStream_Constructor_Reading_Nonexistent_File_Throws_Exception()
+        public async Task MockFileStream_Constructor_Reading_Nonexistent_File_Throws_Exception()
         {
             // Arrange
             var nonexistentFilePath = XFS.Path(@"c:\something\foo.txt");
@@ -82,13 +82,13 @@
             fileSystem.AddDirectory(XFS.Path(@"C:\something"));
 
             // Act
-            Assert.Throws<FileNotFoundException>(() => new MockFileStream(fileSystem, nonexistentFilePath, FileMode.Open));
+            await That(() => new MockFileStream(fileSystem, nonexistentFilePath, FileMode.Open)).Throws<FileNotFoundException>();
 
             // Assert - expect an exception
         }
 
         [Test]
-        public void MockFileStream_Constructor_ReadTypeNotWritable()
+        public async Task MockFileStream_Constructor_ReadTypeNotWritable()
         {
             // Arrange
             var filePath = @"C:\test.txt";
@@ -100,14 +100,14 @@
             // Act
             var stream = new MockFileStream(fileSystem, filePath, FileMode.Open, FileAccess.Read);
 
-            Assert.That(stream.CanWrite, Is.False);
-            Assert.Throws<NotSupportedException>(() => stream.WriteByte(1));
+            await That(stream.CanWrite).IsFalse();
+            await That(() => stream.WriteByte(1)).Throws<NotSupportedException>();
         }
 
         [Test]
         [TestCase(FileAccess.Write)]
         [TestCase(FileAccess.ReadWrite)]
-        public void MockFileStream_Constructor_WriteAccessOnReadOnlyFile_Throws_Exception(
+        public async Task MockFileStream_Constructor_WriteAccessOnReadOnlyFile_Throws_Exception(
             FileAccess fileAccess)
         {
             // Arrange
@@ -118,11 +118,11 @@
             });
 
             // Act
-            Assert.Throws<UnauthorizedAccessException>(() => new MockFileStream(fileSystem, filePath, FileMode.Open, fileAccess));
+            await That(() => new MockFileStream(fileSystem, filePath, FileMode.Open, fileAccess)).Throws<UnauthorizedAccessException>();
         }
 
         [Test]
-        public void MockFileStream_Constructor_ReadAccessOnReadOnlyFile_Does_Not_Throw_Exception()
+        public async Task MockFileStream_Constructor_ReadAccessOnReadOnlyFile_Does_Not_Throw_Exception()
         {
             // Arrange
             var filePath = @"C:\test.txt";
@@ -132,12 +132,12 @@
             });
 
             // Act
-            Assert.DoesNotThrow(() => new MockFileStream(fileSystem, filePath, FileMode.Open, FileAccess.Read));
+            await That(() => new MockFileStream(fileSystem, filePath, FileMode.Open, FileAccess.Read)).DoesNotThrow();
         }
 
 
         [Test]
-        public void MockFileStream_Constructor_WriteAccessOnNonReadOnlyFile_Does_Not_Throw_Exception()
+        public async Task MockFileStream_Constructor_WriteAccessOnNonReadOnlyFile_Does_Not_Throw_Exception()
         {
             // Arrange
             var filePath = @"C:\test.txt";
@@ -147,7 +147,7 @@
             });
 
             // Act
-            Assert.DoesNotThrow(() => new MockFileStream(fileSystem, filePath, FileMode.Open, FileAccess.Write));
+            await That(() => new MockFileStream(fileSystem, filePath, FileMode.Open, FileAccess.Write)).DoesNotThrow();
         }
 
         [Test]
@@ -157,7 +157,7 @@
         [TestCase(FileShare.Read, FileAccess.Write)]
         [TestCase(FileShare.Read, FileAccess.ReadWrite)]
         [TestCase(FileShare.Write, FileAccess.Read)]
-        public void MockFileStream_Constructor_Insufficient_FileShare_Throws_Exception(
+        public async Task MockFileStream_Constructor_Insufficient_FileShare_Throws_Exception(
             FileShare allowedFileShare,
             FileAccess fileAccess)
         {
@@ -167,7 +167,7 @@
                 { filePath, new MockFileData("cannot access") { AllowedFileShare = allowedFileShare } }
             });
 
-            Assert.Throws<IOException>(() => new MockFileStream(fileSystem, filePath, FileMode.Open, fileAccess));
+            await That(() => new MockFileStream(fileSystem, filePath, FileMode.Open, fileAccess)).Throws<IOException>();
         }
 
         [Test]
@@ -177,7 +177,7 @@
         [TestCase(FileShare.ReadWrite, FileAccess.Read)]
         [TestCase(FileShare.ReadWrite, FileAccess.ReadWrite)]
         [TestCase(FileShare.ReadWrite, FileAccess.Write)]
-        public void MockFileStream_Constructor_Sufficient_FileShare_Does_Not_Throw_Exception(
+        public async Task MockFileStream_Constructor_Sufficient_FileShare_Does_Not_Throw_Exception(
             FileShare allowedFileShare,
             FileAccess fileAccess)
         {
@@ -187,11 +187,11 @@
                 { filePath, new MockFileData("cannot access") { AllowedFileShare = allowedFileShare } }
             });
 
-            Assert.DoesNotThrow(() => new MockFileStream(fileSystem, filePath, FileMode.Open, fileAccess));
+            await That(() => new MockFileStream(fileSystem, filePath, FileMode.Open, fileAccess)).DoesNotThrow();
         }
 
         [Test]
-        public void MockFileStream_Close_MultipleCallsDoNotThrow()
+        public async Task MockFileStream_Close_MultipleCallsDoNotThrow()
         {
             var fileSystem = new MockFileSystem();
             var path = XFS.Path("C:\\test");
@@ -202,11 +202,11 @@
             stream.Close();
 
             // Assert
-            Assert.DoesNotThrow(() => stream.Close());
+            await That(() => stream.Close()).DoesNotThrow();
         }
 
         [Test]
-        public void MockFileStream_Dispose_MultipleCallsDoNotThrow()
+        public async Task MockFileStream_Dispose_MultipleCallsDoNotThrow()
         {
             var fileSystem = new MockFileSystem();
             var path = XFS.Path("C:\\test");
@@ -217,11 +217,11 @@
             stream.Dispose();
 
             // Assert
-            Assert.DoesNotThrow(() => stream.Dispose());
+            await That(() => stream.Dispose()).DoesNotThrow();
         }
 
         [Test]
-        public void MockFileStream_Dispose_OperationsAfterDisposeThrow()
+        public async Task MockFileStream_Dispose_OperationsAfterDisposeThrow()
         {
             var fileSystem = new MockFileSystem();
             var path = XFS.Path("C:\\test");
@@ -232,11 +232,11 @@
             stream.Dispose();
 
             // Assert
-            Assert.Throws<ObjectDisposedException>(() => stream.WriteByte(0));
+            await That(() => stream.WriteByte(0)).Throws<ObjectDisposedException>();
         }
 
         [Test]
-        public void MockFileStream_Flush_ShouldNotChangePosition()
+        public async Task MockFileStream_Flush_ShouldNotChangePosition()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -251,12 +251,12 @@
                 stream.Flush();
 
                 // Assert
-                Assert.That(stream.Position, Is.EqualTo(200));
+                await That(stream.Position).IsEqualTo(200);
             }
         }
 
         [Test]
-        public void MockFileStream_FlushBool_ShouldNotChangePosition([Values] bool flushToDisk)
+        public async Task MockFileStream_FlushBool_ShouldNotChangePosition([Values] bool flushToDisk)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -271,17 +271,17 @@
                 stream.Flush(flushToDisk);
 
                 // Assert
-                Assert.That(stream.Position, Is.EqualTo(200));
+                await That(stream.Position).IsEqualTo(200);
             }
         }
 
         [Test]
-        public void MockFileStream_Null_ShouldReturnSingletonObject()
+        public async Task MockFileStream_Null_ShouldReturnSingletonObject()
         {
             var result1 = MockFileStream.Null;
             var result2 = MockFileStream.Null;
 
-            Assert.That(result1, Is.SameAs(result2));
+            await That(result1).IsSameAs(result2);
         }
         
         #if FEATURE_ASYNC_FILE
@@ -297,69 +297,73 @@
         #endif
 
         [Test]
-        public void MockFileStream_Null_ShouldHaveExpectedProperties()
+        public async Task MockFileStream_Null_ShouldHaveExpectedProperties()
         {
             var result = MockFileStream.Null;
 
-            Assert.That(result.Name, Is.EqualTo("."));
-            Assert.That(result.Length, Is.Zero);
-            Assert.That(result.IsAsync, Is.True);
+            await That(result.Name).IsEqualTo(".");
+            await That(result.Length).IsEqualTo(0);
+            await That(result.IsAsync).IsTrue();
         }
         
         [Test]
         [TestCase(0)]
         [TestCase(-1)]
-        public void MockFileStream_WhenBufferSizeIsNotPositive_ShouldThrowArgumentNullException(int bufferSize)
+        public async Task MockFileStream_WhenBufferSizeIsNotPositive_ShouldThrowArgumentNullException(int bufferSize)
         {
             var fileSystem = new MockFileSystem();
             fileSystem.File.WriteAllText("foo.txt", "");
             fileSystem.File.WriteAllText("bar.txt", "");
             using var source = fileSystem.FileInfo.New(@"foo.txt").OpenRead();
             using var destination = fileSystem.FileInfo.New(@"bar.txt").OpenWrite();
-            
-            Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () => 
-                await source.CopyToAsync(destination, bufferSize));
+
+            async Task Act() =>
+                await source.CopyToAsync(destination, bufferSize);
+            await That(Act).Throws<ArgumentOutOfRangeException>();
         }
         
         [Test]
-        public void MockFileStream_WhenDestinationIsClosed_ShouldThrowObjectDisposedException()
+        public async Task MockFileStream_WhenDestinationIsClosed_ShouldThrowObjectDisposedException()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.File.WriteAllText("foo.txt", "");
             using var source = fileSystem.FileInfo.New(@"foo.txt").OpenRead();
             using var destination = new MemoryStream();
             destination.Close();
-            
-            Assert.ThrowsAsync<ObjectDisposedException>(async () => 
-                await source.CopyToAsync(destination));
+
+            async Task Act() =>
+                await source.CopyToAsync(destination);
+            await That(Act).Throws<ObjectDisposedException>();
         }
         
         [Test]
-        public void MockFileStream_WhenDestinationIsNull_ShouldThrowArgumentNullException()
+        public async Task MockFileStream_WhenDestinationIsNull_ShouldThrowArgumentNullException()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.File.WriteAllText("foo.txt", "");
             using var source = fileSystem.FileInfo.New(@"foo.txt").OpenRead();
-            
-            Assert.ThrowsAsync<ArgumentNullException>(async () => 
-                await source.CopyToAsync(null));
+
+            async Task Act() =>
+                await source.CopyToAsync(null);
+            await That(Act).Throws<ArgumentNullException>();
         }
         
         [Test]
-        public void MockFileStream_WhenDestinationIsReadOnly_ShouldThrowNotSupportedException()
+        public async Task MockFileStream_WhenDestinationIsReadOnly_ShouldThrowNotSupportedException()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.File.WriteAllText("foo.txt", "");
             fileSystem.File.WriteAllText("bar.txt", "");
             using var source = fileSystem.FileInfo.New(@"foo.txt").OpenRead();
             using var destination = fileSystem.FileInfo.New(@"bar.txt").OpenRead();
-            
-            Assert.ThrowsAsync<NotSupportedException>(async () => 
-                await source.CopyToAsync(destination));
+
+            async Task Act() =>
+                await source.CopyToAsync(destination);
+            await That(Act).Throws<NotSupportedException>();
         }
 
         [Test]
-        public void MockFileStream_WhenSourceIsClosed_ShouldThrowObjectDisposedException()
+        public async Task MockFileStream_WhenSourceIsClosed_ShouldThrowObjectDisposedException()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.File.WriteAllText("foo.txt", "");
@@ -367,22 +371,24 @@
             using var source = fileSystem.FileInfo.New(@"foo.txt").OpenRead();
             using var destination = fileSystem.FileInfo.New(@"bar.txt").OpenWrite();
             source.Close();
-            
-            Assert.ThrowsAsync<ObjectDisposedException>(async () => 
-                await source.CopyToAsync(destination));
+
+            async Task Act() =>
+                await source.CopyToAsync(destination);
+            await That(Act).Throws<ObjectDisposedException>();
         }
 
         [Test]
-        public void MockFileStream_WhenSourceIsWriteOnly_ShouldThrowNotSupportedException()
+        public async Task MockFileStream_WhenSourceIsWriteOnly_ShouldThrowNotSupportedException()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.File.WriteAllText("foo.txt", "");
             fileSystem.File.WriteAllText("bar.txt", "");
             using var source = fileSystem.FileInfo.New(@"foo.txt").OpenWrite();
             using var destination = fileSystem.FileInfo.New(@"bar.txt").OpenWrite();
-            
-            Assert.ThrowsAsync<NotSupportedException>(async () => 
-                await source.CopyToAsync(destination));
+
+            async Task Act() =>
+                await source.CopyToAsync(destination);
+            await That(Act).Throws<NotSupportedException>();
         }
     }
 }

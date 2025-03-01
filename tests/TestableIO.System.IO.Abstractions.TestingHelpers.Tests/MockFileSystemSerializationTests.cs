@@ -8,7 +8,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     class MockFileSystemSerializationTests
     {
         [Test]
-        public void SerializationBytes()
+        public async Task SerializationBytes()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -34,8 +34,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             memoryStream.Dispose();
 
             // Assert
-            Assert.That(fileSystem.GetFile(path).Contents, Is.EqualTo(expected));
-            Assert.That(fileSystem.File.ReadAllBytes(path), Is.EqualTo(content));
+            await That(fileSystem.GetFile(path).Contents).IsEqualTo(expected);
+            await That(fileSystem.File.ReadAllBytes(path)).IsEqualTo(expected);
         }
     }
 }

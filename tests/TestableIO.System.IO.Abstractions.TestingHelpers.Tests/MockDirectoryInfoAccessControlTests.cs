@@ -12,7 +12,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockDirectoryInfoAccessControlTests
     {
         [Test]
-        public void MockDirectoryInfo_GetAccessControl_ShouldReturnAccessControlOfDirectoryData()
+        public async Task MockDirectoryInfo_GetAccessControl_ShouldReturnAccessControlOfDirectoryData()
         {
             // Arrange
             var expectedDirectorySecurity = new DirectorySecurity();
@@ -35,11 +35,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var directorySecurity = directorInfo.GetAccessControl();
 
             // Assert
-            Assert.That(directorySecurity, Is.EqualTo(expectedDirectorySecurity));
+            await That(directorySecurity).IsEqualTo(expectedDirectorySecurity);
         }
 
         [Test]
-        public void MockDirectoryInfo_SetAccessControl_ShouldSetAccessControlOfDirectoryData()
+        public async Task MockDirectoryInfo_SetAccessControl_ShouldSetAccessControlOfDirectoryData()
         {
             // Arrange
             var filePath = XFS.Path(@"c:\a\");
@@ -59,7 +59,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var accessControl = directorInfo.GetAccessControl();
-            Assert.That(accessControl, Is.EqualTo(expectedAccessControl));
+            await That(accessControl).IsEqualTo(expectedAccessControl);
         }
     }
 }

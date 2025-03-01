@@ -9,19 +9,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileWriteAllBytesTests
     {
         [Test]
-        public void MockFile_WriteAllBytes_ShouldThrowDirectoryNotFoundExceptionIfPathDoesNotExists()
+        public async Task MockFile_WriteAllBytes_ShouldThrowDirectoryNotFoundExceptionIfPathDoesNotExists()
         {
             var fileSystem = new MockFileSystem();
             string path = XFS.Path(@"c:\something\file.txt");
             var fileContent = new byte[] { 1, 2, 3, 4 };
 
-            TestDelegate action = () => fileSystem.File.WriteAllBytes(path, fileContent);
+            Action action = () => fileSystem.File.WriteAllBytes(path, fileContent);
 
-            Assert.Throws<DirectoryNotFoundException>(action);
+            await That(action).Throws<DirectoryNotFoundException>();
         }
 
         [Test]
-        public void MockFile_WriteAllBytes_ShouldWriteDataToMemoryFileSystem()
+        public async Task MockFile_WriteAllBytes_ShouldWriteDataToMemoryFileSystem()
         {
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
@@ -30,11 +30,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.File.WriteAllBytes(path, fileContent);
 
-            Assert.That(fileSystem.GetFile(path).Contents, Is.EqualTo(fileContent));
+            await That(fileSystem.GetFile(path).Contents).IsEqualTo(fileContent);
         }
 
         [Test]
-        public void MockFile_WriteAllBytes_ShouldThrowAnUnauthorizedAccessExceptionIfFileIsHidden()
+        public async Task MockFile_WriteAllBytes_ShouldThrowAnUnauthorizedAccessExceptionIfFileIsHidden()
         {
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -43,48 +43,49 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
             fileSystem.File.SetAttributes(path, FileAttributes.Hidden);
 
-            TestDelegate action = () => fileSystem.File.WriteAllBytes(path, new byte[] { 123 });
+            Action action = () => fileSystem.File.WriteAllBytes(path, new byte[] { 123 });
 
-            Assert.Throws<UnauthorizedAccessException>(action, "Access to the path '{0}' is denied.", path);
+            await That(action).Throws<UnauthorizedAccessException>()
+                .Because($"Access to the path '{path}' is denied.");
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_WriteAllBytes_ShouldThrowAnArgumentExceptionIfContainsIllegalCharacters()
+        public async Task MockFile_WriteAllBytes_ShouldThrowAnArgumentExceptionIfContainsIllegalCharacters()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(@"C:"));
 
-            TestDelegate action = () => fileSystem.File.WriteAllBytes(XFS.Path(@"C:\a<b.txt"), new byte[] { 123 });
+            Action action = () => fileSystem.File.WriteAllBytes(XFS.Path(@"C:\a<b.txt"), new byte[] { 123 });
 
-            Assert.Throws<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [Test]
-        public void MockFile_WriteAllBytes_ShouldThrowAnArgumentNullExceptionIfPathIsNull()
+        public async Task MockFile_WriteAllBytes_ShouldThrowAnArgumentNullExceptionIfPathIsNull()
         {
             var fileSystem = new MockFileSystem();
 
-            TestDelegate action = () => fileSystem.File.WriteAllBytes(null, new byte[] { 123 });
+            Action action = () => fileSystem.File.WriteAllBytes(null, new byte[] { 123 });
 
-            Assert.Throws<ArgumentNullException>(action);
+            await That(action).Throws<ArgumentNullException>();
         }
 
         [Test]
-        public void MockFile_WriteAllBytes_ShouldThrowAnArgumentNullExceptionIfBytesAreNull()
+        public async Task MockFile_WriteAllBytes_ShouldThrowAnArgumentNullExceptionIfBytesAreNull()
         {
             var fileSystem = new MockFileSystem();
             string path = XFS.Path(@"c:\something\demo.txt");
 
-            TestDelegate action = () => fileSystem.File.WriteAllBytes(path, null);
+            Action action = () => fileSystem.File.WriteAllBytes(path, null);
 
-            var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
-            Assert.That(exception.ParamName, Is.EqualTo("bytes"));
+            var exception = await That(action).Throws<ArgumentNullException>();
+            await That(exception.Message).StartsWith("Value cannot be null.");
+            await That(exception.ParamName).IsEqualTo("bytes");
         }
 
         [Test]
-        public void MockFile_WriteAllBytes_ShouldWriteASeparateCopyToTheFileSystem()
+        public async Task MockFile_WriteAllBytes_ShouldWriteASeparateCopyToTheFileSystem()
         {
             var fileSystem = new MockFileSystem();
             string path = XFS.Path(@"c:\something\file.bin");
@@ -100,40 +101,40 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var readAgain = fileSystem.File.ReadAllBytes(path);
 
-            Assert.That(fileContent, Is.Not.EqualTo(readAgain));
+            await That(fileContent).IsNotEqualTo(readAgain);
         }
 
 
 #if FEATURE_ASYNC_FILE
         [Test]
-        public void MockFile_WriteAllBytesAsync_ShouldThrowDirectoryNotFoundExceptionIfPathDoesNotExists()
+        public async Task MockFile_WriteAllBytesAsync_ShouldThrowDirectoryNotFoundExceptionIfPathDoesNotExists()
         {
             var fileSystem = new MockFileSystem();
             string path = XFS.Path(@"c:\something\file.txt");
             var fileContent = new byte[] { 1, 2, 3, 4 };
 
-            AsyncTestDelegate action = () => fileSystem.File.WriteAllBytesAsync(path, fileContent);
+            Func<Task> action = () => fileSystem.File.WriteAllBytesAsync(path, fileContent);
 
-            Assert.ThrowsAsync<DirectoryNotFoundException>(action);
+            await That(action).Throws<DirectoryNotFoundException>();
         }
 
         [Test]
-        public void MockFile_WriteAllTextAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
+        public async Task MockFile_WriteAllTextAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
         {
             // Arrange
             const string path = "test.txt";
             var fileSystem = new MockFileSystem();
 
             // Act
-            Assert.ThrowsAsync<OperationCanceledException>(async () =>
+            async Task Act() =>
                 await fileSystem.File.WriteAllTextAsync(
                     path,
                     "content",
-                    new CancellationToken(canceled: true))
-            );
+                    new CancellationToken(canceled: true));
+            await That(Act).Throws<OperationCanceledException>();
 
             // Assert
-            Assert.That(fileSystem.File.Exists(path), Is.False);
+            await That(fileSystem.File.Exists(path)).IsFalse();
         }
 
         [Test]
@@ -146,11 +147,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             await fileSystem.File.WriteAllBytesAsync(path, fileContent);
 
-            Assert.That(fileSystem.GetFile(path).Contents, Is.EqualTo(fileContent));
+            await That(fileSystem.GetFile(path).Contents).IsEqualTo(fileContent);
         }
 
         [Test]
-        public void MockFile_WriteAllBytesAsync_ShouldThrowAnUnauthorizedAccessExceptionIfFileIsHidden()
+        public async Task MockFile_WriteAllBytesAsync_ShouldThrowAnUnauthorizedAccessExceptionIfFileIsHidden()
         {
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -159,44 +160,45 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
             fileSystem.File.SetAttributes(path, FileAttributes.Hidden);
 
-            AsyncTestDelegate action = () => fileSystem.File.WriteAllBytesAsync(path, new byte[] { 123 });
+            Func<Task> action = () => fileSystem.File.WriteAllBytesAsync(path, new byte[] { 123 });
 
-            Assert.ThrowsAsync<UnauthorizedAccessException>(action, "Access to the path '{0}' is denied.", path);
+            await That(action).Throws<UnauthorizedAccessException>()
+                .Because($"Access to the path '{path}' is denied.");
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_WriteAllBytesAsync_ShouldThrowAnArgumentExceptionIfContainsIllegalCharacters()
+        public async Task MockFile_WriteAllBytesAsync_ShouldThrowAnArgumentExceptionIfContainsIllegalCharacters()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(@"C:"));
 
-            AsyncTestDelegate action = () => fileSystem.File.WriteAllBytesAsync(XFS.Path(@"C:\a<b.txt"), new byte[] { 123 });
+            Func<Task> action = () => fileSystem.File.WriteAllBytesAsync(XFS.Path(@"C:\a<b.txt"), new byte[] { 123 });
 
-            Assert.ThrowsAsync<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [Test]
-        public void MockFile_WriteAllBytesAsync_ShouldThrowAnArgumentNullExceptionIfPathIsNull()
+        public async Task MockFile_WriteAllBytesAsync_ShouldThrowAnArgumentNullExceptionIfPathIsNull()
         {
             var fileSystem = new MockFileSystem();
 
-            AsyncTestDelegate action = () => fileSystem.File.WriteAllBytesAsync(null, new byte[] { 123 });
+            Func<Task> action = () => fileSystem.File.WriteAllBytesAsync(null, new byte[] { 123 });
 
-            Assert.ThrowsAsync<ArgumentNullException>(action);
+            await That(action).Throws<ArgumentNullException>();
         }
 
         [Test]
-        public void MockFile_WriteAllBytesAsync_ShouldThrowAnArgumentNullExceptionIfBytesAreNull()
+        public async Task MockFile_WriteAllBytesAsync_ShouldThrowAnArgumentNullExceptionIfBytesAreNull()
         {
             var fileSystem = new MockFileSystem();
             string path = XFS.Path(@"c:\something\demo.txt");
 
-            AsyncTestDelegate action = () => fileSystem.File.WriteAllBytesAsync(path, null);
+            Func<Task> action = () => fileSystem.File.WriteAllBytesAsync(path, null);
 
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(action);
-            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
-            Assert.That(exception.ParamName, Is.EqualTo("bytes"));
+            var exception = await That(action).Throws<ArgumentNullException>();
+            await That(exception.Message).StartsWith("Value cannot be null.");
+            await That(exception.ParamName).IsEqualTo("bytes");
         }
 #endif
     }

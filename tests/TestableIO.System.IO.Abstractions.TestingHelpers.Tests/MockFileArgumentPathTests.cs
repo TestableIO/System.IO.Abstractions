@@ -58,17 +58,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [TestCaseSource(nameof(GetFileSystemActionsForArgumentNullException))]
-        public void Operations_ShouldThrowArgumentNullExceptionIfPathIsNull(Action<IFile> action)
+        public async Task Operations_ShouldThrowArgumentNullExceptionIfPathIsNull(Action<IFile> action)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate wrapped = () => action(fileSystem.File);
+            Action wrapped = () => action(fileSystem.File);
 
             // Assert
-            var exception = Assert.Throws<ArgumentNullException>(wrapped);
-            Assert.That(exception.ParamName, Is.EqualTo("path"));
+            var exception = await That(wrapped).Throws<ArgumentNullException>();
+            await That(exception.ParamName).IsEqualTo("path");
         }
     }
 }

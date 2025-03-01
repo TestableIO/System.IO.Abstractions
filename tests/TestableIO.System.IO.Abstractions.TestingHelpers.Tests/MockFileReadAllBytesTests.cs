@@ -9,7 +9,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileReadAllBytesTests
     {
         [Test]
-        public void MockFile_ReadAllBytes_ShouldReturnOriginalByteData()
+        public async Task MockFile_ReadAllBytes_ShouldReturnOriginalByteData()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
@@ -21,12 +21,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = file.ReadAllBytes(XFS.Path(@"c:\something\other.gif"));
 
-            Assert.That(result,
-                Is.EqualTo(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }));
+            await That(result)
+                .IsEqualTo(new byte[] { 0x21, 0x58, 0x3f, 0xa9 });
         }
 
         [Test]
-        public void MockFile_ReadAllBytes_ShouldReturnDataSavedByWriteAllBytes()
+        public async Task MockFile_ReadAllBytes_ShouldReturnDataSavedByWriteAllBytes()
         {
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
@@ -35,22 +35,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.File.WriteAllBytes(path, fileContent);
 
-            Assert.That(fileSystem.File.ReadAllBytes(path), Is.EqualTo(fileContent));
+            await That(fileSystem.File.ReadAllBytes(path)).IsEqualTo(fileContent);
         }
 
         [Test]
-        public void MockFile_ReadAllBytes_ShouldThrowFileNotFoundExceptionIfFileDoesNotExist()
+        public async Task MockFile_ReadAllBytes_ShouldThrowFileNotFoundExceptionIfFileDoesNotExist()
         {
             var fileSystem = new MockFileSystem();
             var file = new MockFile(fileSystem);
 
-            TestDelegate action = () => file.ReadAllBytes(@"C:\a.txt");
+            Action action = () => file.ReadAllBytes(@"C:\a.txt");
 
-            Assert.Throws<FileNotFoundException>(action);
+            await That(action).Throws<FileNotFoundException>();
         }
 
         [Test]
-        public void MockFile_ReadAllBytes_ShouldTolerateAltDirectorySeparatorInPath()
+        public async Task MockFile_ReadAllBytes_ShouldTolerateAltDirectorySeparatorInPath()
         {
             var fileSystem = new MockFileSystem();
             var path = XFS.Path("C:" + fileSystem.Path.DirectorySeparatorChar + "test.dat");
@@ -59,11 +59,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.AddFile(path, new MockFileData(data));
 
-            Assert.That(fileSystem.File.ReadAllBytes(altPath), Is.EqualTo(data));
+            await That(fileSystem.File.ReadAllBytes(altPath)).IsEqualTo(data);
         }
 
         [Test]
-        public void MockFile_ReadAllBytes_ShouldReturnANewCopyOfTheFileContents()
+        public async Task MockFile_ReadAllBytes_ShouldReturnANewCopyOfTheFileContents()
         {
             var path = XFS.Path(@"c:\something\demo.bin");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -80,7 +80,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 firstRead[i] += 1;
             }
 
-            Assert.That(firstRead, Is.Not.EqualTo(secondRead));
+            await That(firstRead).IsNotEqualTo(secondRead);
         }
 
 #if FEATURE_ASYNC_FILE
@@ -97,8 +97,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = await file.ReadAllBytesAsync(XFS.Path(@"c:\something\other.gif"));
 
-            Assert.That(result,
-                Is.EqualTo(new byte[] { 0x21, 0x58, 0x3f, 0xa9 }));
+            await That(result)
+                .IsEqualTo(new byte[] { 0x21, 0x58, 0x3f, 0xa9 });
         }
 
         [Test]
@@ -111,29 +111,29 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.File.WriteAllBytes(path, fileContent);
 
-            Assert.That(await fileSystem.File.ReadAllBytesAsync(path), Is.EqualTo(fileContent));
+            await That(await fileSystem.File.ReadAllBytesAsync(path)).IsEqualTo(fileContent);
         }
 
         [Test]
-        public void MockFile_ReadAllBytesAsync_ShouldThrowFileNotFoundExceptionIfFileDoesNotExist()
+        public async Task MockFile_ReadAllBytesAsync_ShouldThrowFileNotFoundExceptionIfFileDoesNotExist()
         {
             var fileSystem = new MockFileSystem();
             var file = new MockFile(fileSystem);
 
-            AsyncTestDelegate action = async () => await file.ReadAllBytesAsync(@"C:\a.txt");
+            Func<Task> action = async () => await file.ReadAllBytesAsync(@"C:\a.txt");
 
-            Assert.ThrowsAsync<FileNotFoundException>(action);
+            await That(action).Throws<FileNotFoundException>();
         }
 
         [Test]
-        public void MockFile_ReadAllBytesAsync_ShouldThrowOperationCanceledExceptionIfCanceled()
+        public async Task MockFile_ReadAllBytesAsync_ShouldThrowOperationCanceledExceptionIfCanceled()
         {
             var fileSystem = new MockFileSystem();
 
-            AsyncTestDelegate action = async () =>
+            Func<Task> action = async () =>
                 await fileSystem.File.ReadAllBytesAsync(@"C:\a.txt", new CancellationToken(canceled: true));
 
-            Assert.ThrowsAsync<OperationCanceledException>(action);
+            await That(action).Throws<OperationCanceledException>();
         }
 
         [Test]
@@ -146,7 +146,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.AddFile(path, new MockFileData(data));
 
-            Assert.That(await fileSystem.File.ReadAllBytesAsync(altPath), Is.EqualTo(data));
+            await That(await fileSystem.File.ReadAllBytesAsync(altPath)).IsEqualTo(data);
         }
 #endif
     }

@@ -13,20 +13,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileTests
     {
         [Test]
-        public void MockFile_Constructor_ShouldThrowArgumentNullExceptionIfMockFileDataAccessorIsNull()
+        public async Task MockFile_Constructor_ShouldThrowArgumentNullExceptionIfMockFileDataAccessorIsNull()
         {
             // Arrange
             // nothing to do
 
             // Act
-            TestDelegate action = () => new MockFile(null);
+            Action action = () => new MockFile(null);
 
             // Assert
-            Assert.Throws<ArgumentNullException>(action);
+            await That(action).Throws<ArgumentNullException>();
         }
 
         [Test]
-        public void MockFile_GetSetCreationTime_ShouldPersist()
+        public async Task MockFile_GetSetCreationTime_ShouldPersist()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -42,11 +42,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetCreationTime(path);
 
             // Assert
-            Assert.That(result, Is.EqualTo(creationTime));
+            await That(result).IsEqualTo(creationTime);
         }
 
         [Test]
-        public void MockFile_SetCreationTimeUtc_ShouldAffectCreationTime()
+        public async Task MockFile_SetCreationTimeUtc_ShouldAffectCreationTime()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -62,11 +62,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetCreationTime(path);
 
             // Assert
-            Assert.That(result, Is.EqualTo(creationTime));
+            await That(result).IsEqualTo(creationTime);
         }
 
         [Test]
-        public void MockFile_SetCreationTime_ShouldAffectCreationTimeUtc()
+        public async Task MockFile_SetCreationTime_ShouldAffectCreationTimeUtc()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -82,11 +82,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetCreationTimeUtc(path);
 
             // Assert
-            Assert.That(result, Is.EqualTo(creationTime.ToUniversalTime()));
+            await That(result).IsEqualTo(creationTime.ToUniversalTime());
         }
 
         [Test]
-        public void MockFile_GetSetLastAccessTime_ShouldPersist()
+        public async Task MockFile_GetSetLastAccessTime_ShouldPersist()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -102,11 +102,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetLastAccessTime(path);
 
             // Assert
-            Assert.That(result, Is.EqualTo(lastAccessTime));
+            await That(result).IsEqualTo(lastAccessTime);
         }
 
         [Test]
-        public void MockFile_SetLastAccessTimeUtc_ShouldAffectLastAccessTime()
+        public async Task MockFile_SetLastAccessTimeUtc_ShouldAffectLastAccessTime()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -122,11 +122,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetLastAccessTime(path);
 
             // Assert
-            Assert.That(result, Is.EqualTo(lastAccessTime));
+            await That(result).IsEqualTo(lastAccessTime);
         }
 
         [Test]
-        public void MockFile_SetLastAccessTime_ShouldAffectLastAccessTimeUtc()
+        public async Task MockFile_SetLastAccessTime_ShouldAffectLastAccessTimeUtc()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -142,11 +142,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetLastAccessTimeUtc(path);
 
             // Assert
-            Assert.That(result, Is.EqualTo(lastAccessTime.ToUniversalTime()));
+            await That(result).IsEqualTo(lastAccessTime.ToUniversalTime());
         }
 
         [Test]
-        public void MockFile_GetSetLastWriteTime_ShouldPersist()
+        public async Task MockFile_GetSetLastWriteTime_ShouldPersist()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -162,10 +162,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetLastWriteTime(path);
 
             // Assert
-            Assert.That(result, Is.EqualTo(lastWriteTime));
+            await That(result).IsEqualTo(lastWriteTime);
         }
 
-        static void ExecuteDefaultValueTest(Func<MockFile, string, DateTime> getDateValue)
+        static async Task ExecuteDefaultValueTest(Func<MockFile, string, DateTime> getDateValue)
         {
             var expected = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc);
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -174,62 +174,62 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var actual = getDateValue(file, path);
 
-            Assert.That(actual.ToUniversalTime(), Is.EqualTo(expected));
+            await That(actual.ToUniversalTime()).IsEqualTo(expected);
         }
 
         [Test]
-        public void MockFile_GetLastWriteTimeOfNonExistentFile_ShouldReturnDefaultValue()
+        public async Task MockFile_GetLastWriteTimeOfNonExistentFile_ShouldReturnDefaultValue()
         {
-            ExecuteDefaultValueTest((f, p) => f.GetLastWriteTime(p));
+            await ExecuteDefaultValueTest((f, p) => f.GetLastWriteTime(p));
         }
 
         [Test]
-        public void MockFile_GetLastWriteTimeUtcOfNonExistentFile_ShouldReturnDefaultValue()
+        public async Task MockFile_GetLastWriteTimeUtcOfNonExistentFile_ShouldReturnDefaultValue()
         {
-            ExecuteDefaultValueTest((f, p) => f.GetLastWriteTimeUtc(p));
+            await ExecuteDefaultValueTest((f, p) => f.GetLastWriteTimeUtc(p));
         }
 
         [Test]
-        public void MockFile_GetLastAccessTimeUtcOfNonExistentFile_ShouldReturnDefaultValue()
+        public async Task MockFile_GetLastAccessTimeUtcOfNonExistentFile_ShouldReturnDefaultValue()
         {
-            ExecuteDefaultValueTest((f, p) => f.GetLastAccessTimeUtc(p));
+            await ExecuteDefaultValueTest((f, p) => f.GetLastAccessTimeUtc(p));
         }
 
         [Test]
-        public void MockFile_GetLastAccessTimeOfNonExistentFile_ShouldReturnDefaultValue()
+        public async Task MockFile_GetLastAccessTimeOfNonExistentFile_ShouldReturnDefaultValue()
         {
-            ExecuteDefaultValueTest((f, p) => f.GetLastAccessTime(p));
+            await ExecuteDefaultValueTest((f, p) => f.GetLastAccessTime(p));
         }
 
         [Test]
-        public void MockFile_GetAttributeOfNonExistentFileButParentDirectoryExists_ShouldThrowOneFileNotFoundException()
+        public async Task MockFile_GetAttributeOfNonExistentFileButParentDirectoryExists_ShouldThrowOneFileNotFoundException()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
             fileSystem.AddDirectory(XFS.Path(@"c:\something"));
 
             // Act
-            TestDelegate action = () => fileSystem.File.GetAttributes(XFS.Path(@"c:\something\demo.txt"));
+            Action action = () => fileSystem.File.GetAttributes(XFS.Path(@"c:\something\demo.txt"));
 
             // Assert
-            Assert.Throws<FileNotFoundException>(action);
+            await That(action).Throws<FileNotFoundException>();
         }
 
         [Test]
-        public void MockFile_GetAttributeOfNonExistentFile_ShouldThrowOneDirectoryNotFoundException()
+        public async Task MockFile_GetAttributeOfNonExistentFile_ShouldThrowOneDirectoryNotFoundException()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.GetAttributes(XFS.Path(@"c:\something\demo.txt"));
+            Action action = () => fileSystem.File.GetAttributes(XFS.Path(@"c:\something\demo.txt"));
 
             // Assert
-            Assert.Throws<DirectoryNotFoundException>(action);
+            await That(action).Throws<DirectoryNotFoundException>();
         }
 
         [Test]
-        public void MockFile_GetAttributeOfExistingFile_ShouldReturnCorrectValue()
+        public async Task MockFile_GetAttributeOfExistingFile_ShouldReturnCorrectValue()
         {
             var filedata = new MockFileData("test")
             {
@@ -241,12 +241,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             var attributes = fileSystem.File.GetAttributes(XFS.Path(@"c:\something\demo.txt"));
-            Assert.That(attributes, Is.EqualTo(FileAttributes.Hidden));
+            await That(attributes).IsEqualTo(FileAttributes.Hidden);
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.UNCPaths)]
-        public void MockFile_GetAttributeOfExistingUncDirectory_ShouldReturnCorrectValue()
+        public async Task MockFile_GetAttributeOfExistingUncDirectory_ShouldReturnCorrectValue()
         {
             var filedata = new MockFileData("test");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -255,52 +255,52 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             var attributes = fileSystem.File.GetAttributes(XFS.Path(@"\\share\folder"));
-            Assert.That(attributes, Is.EqualTo(FileAttributes.Directory));
+            await That(attributes).IsEqualTo(FileAttributes.Directory);
         }
 
         [Test]
-        public void MockFile_GetAttributeWithEmptyParameter_ShouldThrowOneArgumentException()
+        public async Task MockFile_GetAttributeWithEmptyParameter_ShouldThrowOneArgumentException()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.GetAttributes(string.Empty);
+            Action action = () => fileSystem.File.GetAttributes(string.Empty);
 
             // Assert
-            var exception = Assert.Throws<ArgumentException>(action);
-            Assert.That(exception.Message, Does.StartWith("The path is not of a legal form."));
+            var exception = await That(action).Throws<ArgumentException>();
+            await That(exception.Message).StartsWith("The path is not of a legal form.");
         }
 
         [Test]
-        public void MockFile_GetAttributeWithIllegalParameter_ShouldThrowOneArgumentException()
+        public async Task MockFile_GetAttributeWithIllegalParameter_ShouldThrowOneArgumentException()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.GetAttributes(string.Empty);
+            Action action = () => fileSystem.File.GetAttributes(string.Empty);
 
             // Assert
             // Note: The actual type of the exception differs from the documentation.
             //       According to the documentation it should be of type NotSupportedException.
-            Assert.Throws<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [Test]
-        public void MockFile_GetCreationTimeOfNonExistentFile_ShouldReturnDefaultValue()
+        public async Task MockFile_GetCreationTimeOfNonExistentFile_ShouldReturnDefaultValue()
         {
-            ExecuteDefaultValueTest((f, p) => f.GetCreationTime(p));
+            await ExecuteDefaultValueTest((f, p) => f.GetCreationTime(p));
         }
 
         [Test]
-        public void MockFile_GetCreationTimeUtcOfNonExistentFile_ShouldReturnDefaultValue()
+        public async Task MockFile_GetCreationTimeUtcOfNonExistentFile_ShouldReturnDefaultValue()
         {
-            ExecuteDefaultValueTest((f, p) => f.GetCreationTimeUtc(p));
+            await ExecuteDefaultValueTest((f, p) => f.GetCreationTimeUtc(p));
         }
 
         [Test]
-        public void MockFile_SetLastWriteTimeUtc_ShouldAffectLastWriteTime()
+        public async Task MockFile_SetLastWriteTimeUtc_ShouldAffectLastWriteTime()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -316,11 +316,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetLastWriteTime(path);
 
             // Assert
-            Assert.That(result, Is.EqualTo(lastWriteTime));
+            await That(result).IsEqualTo(lastWriteTime);
         }
 
         [Test]
-        public void MockFile_SetLastWriteTime_ShouldAffectLastWriteTimeUtc()
+        public async Task MockFile_SetLastWriteTime_ShouldAffectLastWriteTimeUtc()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -336,11 +336,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.GetLastWriteTimeUtc(path);
 
             // Assert
-            Assert.That(result, Is.EqualTo(lastWriteTime.ToUniversalTime()));
+            await That(result).IsEqualTo(lastWriteTime.ToUniversalTime());
         }
 
         [Test]
-        public void MockFile_ReadAllText_ShouldReturnOriginalTextData()
+        public async Task MockFile_ReadAllText_ShouldReturnOriginalTextData()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -355,11 +355,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadAllText(XFS.Path(@"c:\something\demo.txt"));
 
             // Assert
-            Assert.That(result, Is.EqualTo("Demo text content"));
+            await That(result).IsEqualTo("Demo text content");
         }
 
         [Test]
-        public void MockFile_ReadAllText_ShouldReturnOriginalDataWithCustomEncoding()
+        public async Task MockFile_ReadAllText_ShouldReturnOriginalDataWithCustomEncoding()
         {
             // Arrange
             string text = "Hello there!";
@@ -375,7 +375,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadAllText(XFS.Path(@"c:\something\demo.txt"), Encoding.BigEndianUnicode);
 
             // Assert
-            Assert.That(result, Is.EqualTo(text));
+            await That(result).IsEqualTo(text);
         }
 
         public static IEnumerable<Encoding> GetEncodingsForReadAllText()
@@ -391,7 +391,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [TestCaseSource(typeof(MockFileTests), nameof(GetEncodingsForReadAllText))]
-        public void MockFile_ReadAllText_ShouldReturnTheOriginalContentWhenTheFileContainsDifferentEncodings(Encoding encoding)
+        public async Task MockFile_ReadAllText_ShouldReturnTheOriginalContentWhenTheFileContainsDifferentEncodings(Encoding encoding)
         {
             // Arrange
             string text = "Hello there!";
@@ -406,11 +406,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualText = fileSystem.File.ReadAllText(path);
 
             // Assert
-            Assert.That(actualText, Is.EqualTo(text));
+            await That(actualText).IsEqualTo(text);
         }
 
         [Test]
-        public void MockFile_OpenWrite_ShouldCreateNewFiles()
+        public async Task MockFile_OpenWrite_ShouldCreateNewFiles()
         {
             string filePath = XFS.Path(@"c:\something\demo.txt");
             string fileContent = "this is some content";
@@ -422,21 +422,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             stream.Write(bytes, 0, bytes.Length);
             stream.Dispose();
 
-            Assert.That(fileSystem.FileExists(filePath), Is.True);
-            Assert.That(fileSystem.GetFile(filePath).TextContents, Is.EqualTo(fileContent));
+            await That(fileSystem.FileExists(filePath)).IsTrue();
+            await That(fileSystem.GetFile(filePath).TextContents).IsEqualTo(fileContent);
         }
 
         [Test]
-        public void MockFile_OpenWrite_ShouldNotCreateFolders()
+        public async Task MockFile_OpenWrite_ShouldNotCreateFolders()
         {
             string filePath = XFS.Path(@"c:\something\demo.txt"); // c:\something does not exist: OpenWrite should fail
             var fileSystem = new MockFileSystem();
 
-            Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.OpenWrite(filePath));
+            await That(() => fileSystem.File.OpenWrite(filePath)).Throws<DirectoryNotFoundException>();
         }
 
         [Test]
-        public void MockFile_OpenWrite_ShouldOverwriteExistingFiles()
+        public async Task MockFile_OpenWrite_ShouldOverwriteExistingFiles()
         {
             string filePath = XFS.Path(@"c:\something\demo.txt");
             string startFileContent = "this is some content";
@@ -451,12 +451,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             stream.Write(bytes, 0, bytes.Length);
             stream.Dispose();
 
-            Assert.That(fileSystem.FileExists(filePath), Is.True);
-            Assert.That(fileSystem.GetFile(filePath).TextContents, Is.EqualTo(endFileContent));
+            await That(fileSystem.FileExists(filePath)).IsTrue();
+            await That(fileSystem.GetFile(filePath).TextContents).IsEqualTo(endFileContent);
         }
 
         [Test]
-        public void MockFile_Delete_ShouldRemoveFileFromFileSystem()
+        public async Task MockFile_Delete_ShouldRemoveFileFromFileSystem()
         {
             string fullPath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -468,22 +468,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             file.Delete(fullPath);
 
-            Assert.That(fileSystem.FileExists(fullPath), Is.False);
+            await That(fileSystem.FileExists(fullPath)).IsFalse();
         }
 
         [Test]
-        public void MockFile_Delete_Should_RemoveFiles()
+        public async Task MockFile_Delete_Should_RemoveFiles()
         {
             string filePath = XFS.Path(@"c:\something\demo.txt");
             string fileContent = "this is some content";
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData> { { filePath, new MockFileData(fileContent) } });
-            Assert.That(fileSystem.AllFiles.Count(), Is.EqualTo(1));
+            await That(fileSystem.AllFiles.Count()).IsEqualTo(1);
             fileSystem.File.Delete(filePath);
-            Assert.That(fileSystem.AllFiles.Count(), Is.EqualTo(0));
+            await That(fileSystem.AllFiles.Count()).IsEqualTo(0);
         }
 
         [Test]
-        public void MockFile_Delete_No_File_Does_Nothing()
+        public async Task MockFile_Delete_No_File_Does_Nothing()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
             {
@@ -496,7 +496,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockFile_Delete_ShouldThrowUnauthorizedAccessException_WhenPathIsADirectory()
+        public async Task MockFile_Delete_ShouldThrowUnauthorizedAccessException_WhenPathIsADirectory()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -505,14 +505,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            TestDelegate action = () => fileSystem.File.Delete(XFS.Path(@"c:\bar"));
+            Action action = () => fileSystem.File.Delete(XFS.Path(@"c:\bar"));
 
             // Assert
-            Assert.Throws<UnauthorizedAccessException>(action);
+            await That(action).Throws<UnauthorizedAccessException>();
         }
 
         [Test]
-        public void MockFile_AppendText_AppendTextToAnExistingFile()
+        public async Task MockFile_AppendText_AppendTextToAnExistingFile()
         {
             string filepath = XFS.Path(@"c:\something\does\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -527,11 +527,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             stream.Dispose();
 
             var file = filesystem.GetFile(filepath);
-            Assert.That(file.TextContents, Is.EqualTo("I'm here. Me too!"));
+            await That(file.TextContents).IsEqualTo("I'm here. Me too!");
         }
 
         [Test]
-        public void MockFile_AppendText_CreatesNewFileForAppendToNonExistingFile()
+        public async Task MockFile_AppendText_CreatesNewFileForAppendToNonExistingFile()
         {
             string filepath = XFS.Path(@"c:\something\doesnt\exist.txt");
             var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>());
@@ -544,13 +544,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             stream.Dispose();
 
             var file = filesystem.GetFile(filepath);
-            Assert.That(file.TextContents, Is.EqualTo("New too!"));
-            Assert.That(filesystem.FileExists(filepath));
+            await That(file.TextContents).IsEqualTo("New too!");
+            await That(filesystem.FileExists(filepath)).IsTrue();
         }
         
 #if !NET9_0_OR_GREATER
         [Test]
-        public void Serializable_works()
+        public async Task Serializable_works()
         {
             //Arrange
             MockFileData data = new MockFileData("Text Contents");
@@ -570,7 +570,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         
 #if !NET9_0_OR_GREATER
         [Test]
-        public void Serializable_can_deserialize()
+        public async Task Serializable_can_deserialize()
         {
             //Arrange
             string textContentStr = "Text Contents";
@@ -589,12 +589,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 #pragma warning restore SYSLIB0011
 
             //Assert
-            Assert.That(deserialized.TextContents, Is.EqualTo(textContentStr));
+            await That(deserialized.TextContents).IsEqualTo(textContentStr);
         }
 #endif
 
         [Test]
-        public void MockFile_Encrypt_ShouldSetEncryptedAttribute()
+        public async Task MockFile_Encrypt_ShouldSetEncryptedAttribute()
         {
             // Arrange
             var fileData = new MockFileData("Demo text content");
@@ -611,11 +611,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var attributes = fileSystem.File.GetAttributes(filePath);
 
             // Assert
-            Assert.That(attributes & FileAttributes.Encrypted, Is.EqualTo(FileAttributes.Encrypted));
+            await That(attributes & FileAttributes.Encrypted).IsEqualTo(FileAttributes.Encrypted);
         }
 
         [Test]
-        public void MockFile_Decrypt_ShouldRemoveEncryptedAttribute()
+        public async Task MockFile_Decrypt_ShouldRemoveEncryptedAttribute()
         {
             // Arrange
             const string Content = "Demo text content";
@@ -636,11 +636,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var attributes = fileSystem.File.GetAttributes(filePath);
 
             // Assert
-            Assert.That(attributes & FileAttributes.Encrypted, Is.Not.EqualTo(FileAttributes.Encrypted));
+            await That(attributes & FileAttributes.Encrypted).IsNotEqualTo(FileAttributes.Encrypted);
         }
 
         [Test]
-        public void MockFile_Replace_ShouldReplaceFileContents()
+        public async Task MockFile_Replace_ShouldReplaceFileContents()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -652,11 +652,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Act
             fileSystem.File.Replace(path1, path2, null);
 
-            Assert.That(fileSystem.File.ReadAllText(path2), Is.EqualTo("1"));
+            await That(fileSystem.File.ReadAllText(path2)).IsEqualTo("1");
         }
 
         [Test]
-        public void MockFile_Replace_ShouldCreateBackup()
+        public async Task MockFile_Replace_ShouldCreateBackup()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -669,11 +669,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // Act
             fileSystem.File.Replace(path1, path2, path3);
 
-            Assert.That(fileSystem.File.ReadAllText(path3), Is.EqualTo("2"));
+            await That(fileSystem.File.ReadAllText(path3)).IsEqualTo("2");
         } 
 
         [Test]
-        public void MockFile_Replace_ShouldThrowIfDirectoryOfBackupPathDoesNotExist()
+        public async Task MockFile_Replace_ShouldThrowIfDirectoryOfBackupPathDoesNotExist()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -684,11 +684,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddFile(path2, new MockFileData("2"));
 
             // Act
-            Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Replace(path1, path2, path3));
+            await That(() => fileSystem.File.Replace(path1, path2, path3)).Throws<DirectoryNotFoundException>();
         }
 
         [Test]
-        public void MockFile_Replace_ShouldThrowIfSourceFileDoesNotExist()
+        public async Task MockFile_Replace_ShouldThrowIfSourceFileDoesNotExist()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -696,11 +696,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var path2 = XFS.Path(@"c:\temp\file2.txt");
             fileSystem.AddFile(path2, new MockFileData("2"));
 
-            Assert.Throws<FileNotFoundException>(() => fileSystem.File.Replace(path1, path2, null));
+            await That(() => fileSystem.File.Replace(path1, path2, null)).Throws<FileNotFoundException>();
         }
 
         [Test]
-        public void MockFile_Replace_ShouldThrowIfDestinationFileDoesNotExist()
+        public async Task MockFile_Replace_ShouldThrowIfDestinationFileDoesNotExist()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -708,11 +708,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var path2 = XFS.Path(@"c:\temp\file2.txt");
             fileSystem.AddFile(path1, new MockFileData("1"));
 
-            Assert.Throws<FileNotFoundException>(() => fileSystem.File.Replace(path1, path2, null));
+            await That(() => fileSystem.File.Replace(path1, path2, null)).Throws<FileNotFoundException>();
         }
 
         [Test]
-        public void MockFile_OpenRead_ShouldReturnReadOnlyStream()
+        public async Task MockFile_OpenRead_ShouldReturnReadOnlyStream()
         {
             // Tests issue #230
             // Arrange
@@ -727,8 +727,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var stream = fileSystem.File.OpenRead(filePath);
 
             // Assert
-            Assert.That(stream.CanWrite, Is.False);
-            Assert.Throws<NotSupportedException>(() => stream.WriteByte(0));
+            await That(stream.CanWrite).IsFalse();
+            await That(() => stream.WriteByte(0)).Throws<NotSupportedException>();
         }
     }
 }

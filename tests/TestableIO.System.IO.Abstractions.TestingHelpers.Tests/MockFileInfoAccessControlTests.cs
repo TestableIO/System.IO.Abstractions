@@ -12,7 +12,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileInfoAccessControlTests
     {
         [Test]
-        public void MockFileInfo_GetAccessControl_ShouldReturnAccessControlOfFileData()
+        public async Task MockFileInfo_GetAccessControl_ShouldReturnAccessControlOfFileData()
         {
             // Arrange
             var expectedFileSecurity = new FileSecurity();
@@ -35,11 +35,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSecurity = fileInfo.GetAccessControl();
 
             // Assert
-            Assert.That(fileSecurity, Is.EqualTo(expectedFileSecurity));
+            await That(fileSecurity).IsEqualTo(expectedFileSecurity);
         }
 
         [Test]
-        public void MockFile_SetAccessControl_ShouldSetAccessControlOfFileData()
+        public async Task MockFile_SetAccessControl_ShouldSetAccessControlOfFileData()
         {
             // Arrange
             var filePath = XFS.Path(@"c:\a.txt");
@@ -59,7 +59,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var accessControl = fileInfo.GetAccessControl();
-            Assert.That(accessControl, Is.EqualTo(expectedAccessControl));
+            await That(accessControl).IsEqualTo(expectedAccessControl);
         }
     }
 }

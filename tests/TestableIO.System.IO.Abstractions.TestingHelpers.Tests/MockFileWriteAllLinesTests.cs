@@ -66,10 +66,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var fileSystem = new MockFileSystem();
                 var fileContentEnumerable = new List<string>();
                 var fileContentArray = fileContentEnumerable.ToArray();
-                TestDelegate writeEnumerable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
-                TestDelegate writeEnumerableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
-                TestDelegate writeArray = () => fileSystem.File.WriteAllLines(path, fileContentArray);
-                TestDelegate writeArrayUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentArray, Encoding.UTF32);
+                Action writeEnumerable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
+                Action writeEnumerableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
+                Action writeArray = () => fileSystem.File.WriteAllLines(path, fileContentArray);
+                Action writeArrayUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentArray, Encoding.UTF32);
 
                 // IEnumerable
                 yield return new TestCaseData(writeEnumerable)
@@ -91,8 +91,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     var fileSystem = new MockFileSystem();
                     var fileContentEnumerable = new List<string>();
                     var fileContentArray = fileContentEnumerable.ToArray();
-                    TestDelegate writeEnumerableNull = () => fileSystem.File.WriteAllLines(Path, fileContentEnumerable, null);
-                    TestDelegate writeArrayNull = () => fileSystem.File.WriteAllLines(Path, fileContentArray, null);
+                    Action writeEnumerableNull = () => fileSystem.File.WriteAllLines(Path, fileContentEnumerable, null);
+                    Action writeArrayNull = () => fileSystem.File.WriteAllLines(Path, fileContentArray, null);
 
                     // IEnumerable
                     yield return new TestCaseData(writeEnumerableNull)
@@ -113,10 +113,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     fileSystem.Directory.CreateDirectory(path);
                     var fileContentEnumerable = new List<string>();
                     var fileContentArray = fileContentEnumerable.ToArray();
-                    TestDelegate writeEnumerable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
-                    TestDelegate writeEnumerableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
-                    TestDelegate writeArray = () => fileSystem.File.WriteAllLines(path, fileContentArray);
-                    TestDelegate writeArrayUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentArray, Encoding.UTF32);
+                    Action writeEnumerable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
+                    Action writeEnumerableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
+                    Action writeArray = () => fileSystem.File.WriteAllLines(path, fileContentArray);
+                    Action writeArrayUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentArray, Encoding.UTF32);
 
                     // IEnumerable
                     yield return new TestCaseData(writeEnumerable, path)
@@ -143,10 +143,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     fileSystem.AddFile(path, mockFileData);
                     var fileContentEnumerable = new List<string>();
                     var fileContentArray = fileContentEnumerable.ToArray();
-                    TestDelegate writeEnumerable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
-                    TestDelegate writeEnumerableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
-                    TestDelegate writeArray = () => fileSystem.File.WriteAllLines(path, fileContentArray);
-                    TestDelegate writeArrayUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentArray, Encoding.UTF32);
+                    Action writeEnumerable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
+                    Action writeEnumerableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
+                    Action writeArray = () => fileSystem.File.WriteAllLines(path, fileContentArray);
+                    Action writeArrayUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentArray, Encoding.UTF32);
 
                     // IEnumerable
                     yield return new TestCaseData(writeEnumerable, path)
@@ -176,10 +176,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     string[] fileContentArray = null;
 
                     // ReSharper disable ExpressionIsAlwaysNull
-                    TestDelegate writeEnumerable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
-                    TestDelegate writeEnumerableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
-                    TestDelegate writeArray = () => fileSystem.File.WriteAllLines(path, fileContentArray);
-                    TestDelegate writeArrayUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentArray, Encoding.UTF32);
+                    Action writeEnumerable = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable);
+                    Action writeEnumerableUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentEnumerable, Encoding.UTF32);
+                    Action writeArray = () => fileSystem.File.WriteAllLines(path, fileContentArray);
+                    Action writeArrayUtf32 = () => fileSystem.File.WriteAllLines(path, fileContentArray, Encoding.UTF32);
                     // ReSharper restore ExpressionIsAlwaysNull
 
                     // IEnumerable
@@ -249,10 +249,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var fileSystem = new MockFileSystem();
                 var fileContentEnumerable = new List<string>();
                 var fileContentArray = fileContentEnumerable.ToArray();
-                AsyncTestDelegate writeEnumberable = () => fileSystem.File.WriteAllLinesAsync(path, fileContentEnumerable);
-                AsyncTestDelegate writeEnumberableUtf32 = () => fileSystem.File.WriteAllLinesAsync(path, fileContentEnumerable, Encoding.UTF32);
-                AsyncTestDelegate writeArray = () => fileSystem.File.WriteAllLinesAsync(path, fileContentArray);
-                AsyncTestDelegate writeArrayUtf32 = () => fileSystem.File.WriteAllLinesAsync(path, fileContentArray, Encoding.UTF32);
+                Func<Task> writeEnumberable = () => fileSystem.File.WriteAllLinesAsync(path, fileContentEnumerable);
+                Func<Task> writeEnumberableUtf32 = () => fileSystem.File.WriteAllLinesAsync(path, fileContentEnumerable, Encoding.UTF32);
+                Func<Task> writeArray = () => fileSystem.File.WriteAllLinesAsync(path, fileContentArray);
+                Func<Task> writeArrayUtf32 = () => fileSystem.File.WriteAllLinesAsync(path, fileContentArray, Encoding.UTF32);
 
                 // IEnumerable
                 yield return new TestCaseData(writeEnumberable)
@@ -274,8 +274,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     var fileSystem = new MockFileSystem();
                     var fileContentEnumerable = new List<string>();
                     var fileContentArray = fileContentEnumerable.ToArray();
-                    AsyncTestDelegate writeEnumberableNull = () => fileSystem.File.WriteAllLinesAsync(Path, fileContentEnumerable, null);
-                    AsyncTestDelegate writeArrayNull = () => fileSystem.File.WriteAllLinesAsync(Path, fileContentArray, null);
+                    Func<Task> writeEnumberableNull = () => fileSystem.File.WriteAllLinesAsync(Path, fileContentEnumerable, null);
+                    Func<Task> writeArrayNull = () => fileSystem.File.WriteAllLinesAsync(Path, fileContentArray, null);
 
                     // IEnumerable
                     yield return new TestCaseData(writeEnumberableNull)
@@ -296,10 +296,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     fileSystem.Directory.CreateDirectory(path);
                     var fileContentEnumerable = new List<string>();
                     var fileContentArray = fileContentEnumerable.ToArray();
-                    AsyncTestDelegate writeEnumberable = () => fileSystem.File.WriteAllLinesAsync(path, fileContentEnumerable);
-                    AsyncTestDelegate writeEnumberableUtf32 = () => fileSystem.File.WriteAllLinesAsync(path, fileContentEnumerable, Encoding.UTF32);
-                    AsyncTestDelegate writeArray = () => fileSystem.File.WriteAllLinesAsync(path, fileContentArray);
-                    AsyncTestDelegate writeArrayUtf32 = () => fileSystem.File.WriteAllLinesAsync(path, fileContentArray, Encoding.UTF32);
+                    Func<Task> writeEnumberable = () => fileSystem.File.WriteAllLinesAsync(path, fileContentEnumerable);
+                    Func<Task> writeEnumberableUtf32 = () => fileSystem.File.WriteAllLinesAsync(path, fileContentEnumerable, Encoding.UTF32);
+                    Func<Task> writeArray = () => fileSystem.File.WriteAllLinesAsync(path, fileContentArray);
+                    Func<Task> writeArrayUtf32 = () => fileSystem.File.WriteAllLinesAsync(path, fileContentArray, Encoding.UTF32);
 
                     // IEnumerable
                     yield return new TestCaseData(writeEnumberable, path)
@@ -326,10 +326,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     fileSystem.AddFile(path, mockFileData);
                     var fileContentEnumerable = new List<string>();
                     var fileContentArray = fileContentEnumerable.ToArray();
-                    AsyncTestDelegate writeEnumberable = () => fileSystem.File.WriteAllLinesAsync(path, fileContentEnumerable);
-                    AsyncTestDelegate writeEnumberableUtf32 = () => fileSystem.File.WriteAllLinesAsync(path, fileContentEnumerable, Encoding.UTF32);
-                    AsyncTestDelegate writeArray = () => fileSystem.File.WriteAllLinesAsync(path, fileContentArray);
-                    AsyncTestDelegate writeArrayUtf32 = () => fileSystem.File.WriteAllLinesAsync(path, fileContentArray, Encoding.UTF32);
+                    Func<Task> writeEnumberable = () => fileSystem.File.WriteAllLinesAsync(path, fileContentEnumerable);
+                    Func<Task> writeEnumberableUtf32 = () => fileSystem.File.WriteAllLinesAsync(path, fileContentEnumerable, Encoding.UTF32);
+                    Func<Task> writeArray = () => fileSystem.File.WriteAllLinesAsync(path, fileContentArray);
+                    Func<Task> writeArrayUtf32 = () => fileSystem.File.WriteAllLinesAsync(path, fileContentArray, Encoding.UTF32);
 
                     // IEnumerable
                     yield return new TestCaseData(writeEnumberable, path)
@@ -359,10 +359,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                     string[] fileContentArray = null;
 
                     // ReSharper disable ExpressionIsAlwaysNull
-                    AsyncTestDelegate writeEnumberable = () => fileSystem.File.WriteAllLinesAsync(path, fileContentEnumerable);
-                    AsyncTestDelegate writeEnumberableUtf32 = () => fileSystem.File.WriteAllLinesAsync(path, fileContentEnumerable, Encoding.UTF32);
-                    AsyncTestDelegate writeArray = () => fileSystem.File.WriteAllLinesAsync(path, fileContentArray);
-                    AsyncTestDelegate writeArrayUtf32 = () => fileSystem.File.WriteAllLinesAsync(path, fileContentArray, Encoding.UTF32);
+                    Func<Task> writeEnumberable = () => fileSystem.File.WriteAllLinesAsync(path, fileContentEnumerable);
+                    Func<Task> writeEnumberableUtf32 = () => fileSystem.File.WriteAllLinesAsync(path, fileContentEnumerable, Encoding.UTF32);
+                    Func<Task> writeArray = () => fileSystem.File.WriteAllLinesAsync(path, fileContentArray);
+                    Func<Task> writeArrayUtf32 = () => fileSystem.File.WriteAllLinesAsync(path, fileContentArray, Encoding.UTF32);
                     // ReSharper restore ExpressionIsAlwaysNull
 
                     // IEnumerable
@@ -380,29 +380,29 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
             [Test]
-            public void MockFile_WriteAllLinesAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
+            public async Task MockFile_WriteAllLinesAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
             {
                 // Arrange
                 const string path = "test.txt";
                 var fileSystem = new MockFileSystem();
 
                 // Act
-                Assert.ThrowsAsync<OperationCanceledException>(async () =>
+                async Task Act() =>
                     await fileSystem.File.WriteAllLinesAsync(
                         path,
                         new[] { "line 1", "line 2" },
-                        new CancellationToken(canceled: true))
-                );
+                        new CancellationToken(canceled: true));
+                await That(Act).Throws<OperationCanceledException>();
 
                 // Assert
-                Assert.That(fileSystem.File.Exists(path), Is.False);
+                await That(fileSystem.File.Exists(path)).IsFalse();
             }
 #endif
 
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForDifferentEncoding))]
-        public void MockFile_WriteAllLinesGeneric_ShouldWriteTheCorrectContent(IMockFileDataAccessor fileSystem, Action action, string expectedContent)
+        public async Task MockFile_WriteAllLinesGeneric_ShouldWriteTheCorrectContent(IMockFileDataAccessor fileSystem, Action action, string expectedContent)
         {
             // Arrange
             // is done in the test case source
@@ -412,11 +412,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var actualContent = fileSystem.GetFile(TestDataForWriteAllLines.Path).TextContents;
-            Assert.That(actualContent, Is.EqualTo(expectedContent));
+            await That(actualContent).IsEqualTo(expectedContent);
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForNullPath))]
-        public void MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentNullExceptionIfPathIsNull(TestDelegate action)
+        public async Task MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentNullExceptionIfPathIsNull(Action action)
         {
             // Arrange
             // is done in the test case source
@@ -425,13 +425,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // is done in the test case source
 
             // Assert
-            var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
-            Assert.That(exception.ParamName, Does.StartWith("path"));
+            var exception = await That(action).Throws<ArgumentNullException>();
+            await That(exception.Message).StartsWith("Value cannot be null.");
+            await That(exception.ParamName).StartsWith("path");
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), "ForNullEncoding")]
-        public void MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentNullExceptionIfEncodingIsNull(TestDelegate action)
+        public async Task MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentNullExceptionIfEncodingIsNull(Action action)
         {
             // Arrange
             // is done in the test case source
@@ -440,14 +440,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // is done in the test case source
 
             // Assert
-            var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
-            Assert.That(exception.ParamName, Does.StartWith("encoding"));
+            var exception = await That(action).Throws<ArgumentNullException>();
+            await That(exception.Message).StartsWith("Value cannot be null.");
+            await That(exception.ParamName).StartsWith("encoding");
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForIllegalPath))]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentExceptionIfPathContainsIllegalCharacters(TestDelegate action)
+        public async Task MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentExceptionIfPathContainsIllegalCharacters(Action action)
         {
             // Arrange
             // is done in the test case source
@@ -456,12 +456,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // is done in the test case source
 
             // Assert
-            var exception = Assert.Throws<ArgumentException>(action);
-            Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."));
+            var exception = await That(action).Throws<ArgumentException>();
+            await That(exception.Message).IsEqualTo("Illegal characters in path.");
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForPathIsDirectory))]
-        public void MockFile_WriteAllLinesGeneric_ShouldThrowAnUnauthorizedAccessExceptionIfPathIsOneDirectory(TestDelegate action, string path)
+        public async Task MockFile_WriteAllLinesGeneric_ShouldThrowAnUnauthorizedAccessExceptionIfPathIsOneDirectory(Action action, string path)
         {
             // Arrange
             // is done in the test case source
@@ -470,13 +470,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // is done in the test case source
 
             // Assert
-            var exception = Assert.Throws<UnauthorizedAccessException>(action);
+            var exception = await That(action).Throws<UnauthorizedAccessException>();
             var expectedMessage = string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path);
-            Assert.That(exception.Message, Is.EqualTo(expectedMessage));
+            await That(exception.Message).IsEqualTo(expectedMessage);
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForFileIsReadOnly))]
-        public void MockFile_WriteAllLinesGeneric_ShouldThrowOneUnauthorizedAccessExceptionIfFileIsReadOnly(TestDelegate action, string path)
+        public async Task MockFile_WriteAllLinesGeneric_ShouldThrowOneUnauthorizedAccessExceptionIfFileIsReadOnly(Action action, string path)
         {
             // Arrange
             // is done in the test case source
@@ -485,13 +485,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // is done in the test case source
 
             // Assert
-            var exception = Assert.Throws<UnauthorizedAccessException>(action);
+            var exception = await That(action).Throws<UnauthorizedAccessException>();
             var expectedMessage = string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path);
-            Assert.That(exception.Message, Is.EqualTo(expectedMessage));
+            await That(exception.Message).IsEqualTo(expectedMessage);
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForContentsIsNull))]
-        public void MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentNullExceptionIfContentsIsNull(TestDelegate action)
+        public async Task MockFile_WriteAllLinesGeneric_ShouldThrowAnArgumentNullExceptionIfContentsIsNull(Action action)
         {
             // Arrange
             // is done in the test case source
@@ -500,14 +500,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // is done in the test case sourceForContentsIsNull
 
             // Assert
-            var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
-            Assert.That(exception.ParamName, Is.EqualTo("contents"));
+            var exception = await That(action).Throws<ArgumentNullException>();
+            await That(exception.Message).StartsWith("Value cannot be null.");
+            await That(exception.ParamName).IsEqualTo("contents");
         }
 
 #if FEATURE_ASYNC_FILE
         [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForDifferentEncodingAsync))]
-        public void MockFile_WriteAllLinesAsyncGeneric_ShouldWriteTheCorrectContent(IMockFileDataAccessor fileSystem, Action action, string expectedContent)
+        public async Task MockFile_WriteAllLinesAsyncGeneric_ShouldWriteTheCorrectContent(IMockFileDataAccessor fileSystem, Action action, string expectedContent)
         {
             // Arrange
             // is done in the test case source
@@ -517,11 +517,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var actualContent = fileSystem.GetFile(TestDataForWriteAllLines.Path).TextContents;
-            Assert.That(actualContent, Is.EqualTo(expectedContent));
+            await That(actualContent).IsEqualTo(expectedContent);
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForNullPathAsync))]
-        public void MockFile_WriteAllLinesAsyncGeneric_ShouldThrowAnArgumentNullExceptionIfPathIsNull(AsyncTestDelegate action)
+        public async Task MockFile_WriteAllLinesAsyncGeneric_ShouldThrowAnArgumentNullExceptionIfPathIsNull(Func<Task> action)
         {
             // Arrange
             // is done in the test case source
@@ -530,13 +530,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // is done in the test case source
 
             // Assert
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(action);
-            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
-            Assert.That(exception.ParamName, Does.StartWith("path"));
+            var exception = await That(action).Throws<ArgumentNullException>();
+            await That(exception.Message).StartsWith("Value cannot be null.");
+            await That(exception.ParamName).StartsWith("path");
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), "ForNullEncodingAsync")]
-        public void MockFile_WriteAllLinesAsyncGeneric_ShouldThrowAnArgumentNullExceptionIfEncodingIsNull(AsyncTestDelegate action)
+        public async Task MockFile_WriteAllLinesAsyncGeneric_ShouldThrowAnArgumentNullExceptionIfEncodingIsNull(Func<Task> action)
         {
             // Arrange
             // is done in the test case source
@@ -545,14 +545,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // is done in the test case source
 
             // Assert
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(action);
-            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
-            Assert.That(exception.ParamName, Does.StartWith("encoding"));
+            var exception = await That(action).Throws<ArgumentNullException>();
+            await That(exception.Message).StartsWith("Value cannot be null.");
+            await That(exception.ParamName).StartsWith("encoding");
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForIllegalPathAsync))]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_WriteAllLinesAsyncGeneric_ShouldThrowAnArgumentExceptionIfPathContainsIllegalCharacters(AsyncTestDelegate action)
+        public async Task MockFile_WriteAllLinesAsyncGeneric_ShouldThrowAnArgumentExceptionIfPathContainsIllegalCharacters(Func<Task> action)
         {
             // Arrange
             // is done in the test case source
@@ -561,12 +561,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // is done in the test case source
 
             // Assert
-            var exception = Assert.ThrowsAsync<ArgumentException>(action);
-            Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."));
+            var exception = await That(action).Throws<ArgumentException>();
+            await That(exception.Message).IsEqualTo("Illegal characters in path.");
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForPathIsDirectoryAsync))]
-        public void MockFile_WriteAllLinesAsyncGeneric_ShouldThrowAnUnauthorizedAccessExceptionIfPathIsOneDirectory(AsyncTestDelegate action, string path)
+        public async Task MockFile_WriteAllLinesAsyncGeneric_ShouldThrowAnUnauthorizedAccessExceptionIfPathIsOneDirectory(Func<Task> action, string path)
         {
             // Arrange
             // is done in the test case source
@@ -575,13 +575,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // is done in the test case source
 
             // Assert
-            var exception = Assert.ThrowsAsync<UnauthorizedAccessException>(action);
+            var exception = await That(action).Throws<UnauthorizedAccessException>();
             var expectedMessage = string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path);
-            Assert.That(exception.Message, Is.EqualTo(expectedMessage));
+            await That(exception.Message).IsEqualTo(expectedMessage);
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForFileIsReadOnlyAsync))]
-        public void MockFile_WriteAllLinesAsyncGeneric_ShouldThrowOneUnauthorizedAccessExceptionIfFileIsReadOnly(AsyncTestDelegate action, string path)
+        public async Task MockFile_WriteAllLinesAsyncGeneric_ShouldThrowOneUnauthorizedAccessExceptionIfFileIsReadOnly(Func<Task> action, string path)
         {
             // Arrange
             // is done in the test case source
@@ -590,13 +590,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // is done in the test case source
 
             // Assert
-            var exception = Assert.ThrowsAsync<UnauthorizedAccessException>(action);
+            var exception = await That(action).Throws<UnauthorizedAccessException>();
             var expectedMessage = string.Format(CultureInfo.InvariantCulture, "Access to the path '{0}' is denied.", path);
-            Assert.That(exception.Message, Is.EqualTo(expectedMessage));
+            await That(exception.Message).IsEqualTo(expectedMessage);
         }
 
         [TestCaseSource(typeof(TestDataForWriteAllLines), nameof(TestDataForWriteAllLines.ForContentsIsNullAsync))]
-        public void MockFile_WriteAllLinesAsyncGeneric_ShouldThrowAnArgumentNullExceptionIfContentsIsNull(AsyncTestDelegate action)
+        public async Task MockFile_WriteAllLinesAsyncGeneric_ShouldThrowAnArgumentNullExceptionIfContentsIsNull(Func<Task> action)
         {
             // Arrange
             // is done in the test case source
@@ -605,9 +605,9 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             // is done in the test case sourceForContentsIsNull
 
             // Assert
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(action);
-            Assert.That(exception.Message, Does.StartWith("Value cannot be null."));
-            Assert.That(exception.ParamName, Is.EqualTo("contents"));
+            var exception = await That(action).Throws<ArgumentNullException>();
+            await That(exception.Message).StartsWith("Value cannot be null.");
+            await That(exception.ParamName).IsEqualTo("contents");
         }
 #endif
     }

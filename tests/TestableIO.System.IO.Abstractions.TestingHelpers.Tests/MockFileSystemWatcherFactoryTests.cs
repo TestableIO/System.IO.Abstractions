@@ -7,45 +7,45 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileSystemWatcherFactoryTests
     {
         [Test]
-        public void MockFileSystemWatcherFactory_CreateNew_ShouldThrowNotImplementedException()
+        public async Task MockFileSystemWatcherFactory_CreateNew_ShouldThrowNotImplementedException()
         {
             var factory = new MockFileSystemWatcherFactory(new MockFileSystem());
-            Assert.Throws<NotImplementedException>(() => factory.New());
+            await That(() => factory.New()).Throws<NotImplementedException>();
         }
 
         [Test]
-        public void MockFileSystemWatcherFactory_CreateNewWithPath_ShouldThrowNotImplementedException()
+        public async Task MockFileSystemWatcherFactory_CreateNewWithPath_ShouldThrowNotImplementedException()
         {
             var path = XFS.Path(@"y:\test");
             var factory = new MockFileSystemWatcherFactory(new MockFileSystem());
-            Assert.Throws<NotImplementedException>(() => factory.New(path));
+            await That(() => factory.New(path)).Throws<NotImplementedException>();
         }
 
         [Test]
-        public void MockFileSystemWatcherFactory_CreateNewWithPathAndFilter_ShouldThrowNotImplementedException()
+        public async Task MockFileSystemWatcherFactory_CreateNewWithPathAndFilter_ShouldThrowNotImplementedException()
         {
             var path = XFS.Path(@"y:\test");
             var filter = "*.txt";
             var factory = new MockFileSystemWatcherFactory(new MockFileSystem());
-            Assert.Throws<NotImplementedException>(() => factory.New(path, filter));
+            await That(() => factory.New(path, filter)).Throws<NotImplementedException>();
         }
 
         [Test]
-        public void MockFileSystemWatcherFactory_FromPath_ShouldThrowNotImplementedException()
+        public async Task MockFileSystemWatcherFactory_FromPath_ShouldThrowNotImplementedException()
         {
             var path = XFS.Path(@"y:\test");
             var factory = new MockFileSystemWatcherFactory(new MockFileSystem());
-            Assert.Throws<NotImplementedException>(() => factory.New(path));
+            await That(() => factory.New(path)).Throws<NotImplementedException>();
         }
 
         [Test]
-        public void MockFileSystemWatcherFactory_Wrap_WithNull_ShouldReturnNull()
+        public async Task MockFileSystemWatcherFactory_Wrap_WithNull_ShouldReturnNull()
         {
             var fileSystem = new MockFileSystem();
 
             var result = fileSystem.FileSystemWatcher.Wrap(null);
 
-            Assert.That(result, Is.Null);
+            await That(result).IsNull();
         }
     }
 }

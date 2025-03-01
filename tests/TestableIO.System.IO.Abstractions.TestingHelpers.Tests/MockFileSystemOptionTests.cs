@@ -9,7 +9,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         [TestCase(true)]
         [TestCase(false)]
-        public void CreateDefaultTempDir_ShouldBeConsidered(bool createTempDir)
+        public async Task CreateDefaultTempDir_ShouldBeConsidered(bool createTempDir)
         {
             var fileSystem = new MockFileSystem(new MockFileSystemOptions
             {
@@ -18,13 +18,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.Directory.Exists(fileSystem.Path.GetTempPath());
 
-            Assert.That(result, Is.EqualTo(createTempDir));
+            await That(result).IsEqualTo(createTempDir);
         }
 
         [Test]
         [TestCase(@"C:\path")]
         [TestCase(@"C:\foo\bar")]
-        public void CurrentDirectory_ShouldBeConsidered(string currentDirectory)
+        public async Task CurrentDirectory_ShouldBeConsidered(string currentDirectory)
         {
             currentDirectory = XFS.Path(currentDirectory);
             var fileSystem = new MockFileSystem(new MockFileSystemOptions
@@ -34,7 +34,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.Directory.GetCurrentDirectory();
 
-            Assert.That(result, Is.EqualTo(currentDirectory));
+            await That(result).IsEqualTo(currentDirectory);
         }
     }
 }

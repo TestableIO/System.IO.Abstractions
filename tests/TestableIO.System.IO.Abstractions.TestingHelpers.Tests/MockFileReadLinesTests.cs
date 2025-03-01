@@ -11,7 +11,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileReadLinesTests
     {
         [Test]
-        public void MockFile_ReadLines_ShouldReturnOriginalTextData()
+        public async Task MockFile_ReadLines_ShouldReturnOriginalTextData()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -26,11 +26,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadLines(XFS.Path(@"c:\something\demo.txt"));
 
             // Assert
-            Assert.That(result, Is.EqualTo(new[] { "Demo", "text", "content", "value" }));
+            await That(result).IsEqualTo(new[] { "Demo", "text", "content", "value" });
         }
 
         [Test]
-        public void MockFile_ReadLines_ShouldReturnOriginalDataWithCustomEncoding()
+        public async Task MockFile_ReadLines_ShouldReturnOriginalDataWithCustomEncoding()
         {
             // Arrange
             string text = "Hello\r\nthere\rBob\nBob!";
@@ -46,7 +46,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadLines(XFS.Path(@"c:\something\demo.txt"), Encoding.BigEndianUnicode);
 
             // Assert
-            Assert.That(result, Is.EqualTo(new[] { "Hello", "there", "Bob", "Bob!" }));
+            await That(result).IsEqualTo(new[] { "Hello", "there", "Bob", "Bob!" });
         }
     }
 }

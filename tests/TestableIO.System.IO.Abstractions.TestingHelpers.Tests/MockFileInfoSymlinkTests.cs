@@ -15,7 +15,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 #if FEATURE_CREATE_SYMBOLIC_LINK
 
         [Test]
-        public void MockFileInfo_ResolveLinkTarget_ShouldReturnPathOfTargetLink()
+        public async Task MockFileInfo_ResolveLinkTarget_ShouldReturnPathOfTargetLink()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.File.WriteAllText("bar", "some content");
@@ -23,11 +23,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.FileInfo.New("foo").ResolveLinkTarget(false);
 
-            Assert.That(result.Name, Is.EqualTo("bar"));
+            await That(result.Name).IsEqualTo("bar");
         }
 
         [Test]
-        public void MockFileInfo_ResolveLinkTarget_WithFinalTarget_ShouldReturnPathOfTargetLink()
+        public async Task MockFileInfo_ResolveLinkTarget_WithFinalTarget_ShouldReturnPathOfTargetLink()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.File.WriteAllText("bar", "some content");
@@ -36,11 +36,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.FileInfo.New("foo1").ResolveLinkTarget(true);
 
-            Assert.That(result.Name, Is.EqualTo("bar"));
+            await That(result.Name).IsEqualTo("bar");
         }
 
         [Test]
-        public void MockFileInfo_ResolveLinkTarget_WithoutFinalTarget_ShouldReturnFirstLink()
+        public async Task MockFileInfo_ResolveLinkTarget_WithoutFinalTarget_ShouldReturnFirstLink()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.File.WriteAllText("bar", "some content");
@@ -49,20 +49,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.FileInfo.New("foo1").ResolveLinkTarget(false);
 
-            Assert.That(result.Name, Is.EqualTo("foo"));
+            await That(result.Name).IsEqualTo("foo");
         }
 
         [Test]
-        public void MockFileInfo_ResolveLinkTarget_WithoutTargetLink_ShouldThrowIOException()
+        public async Task MockFileInfo_ResolveLinkTarget_WithoutTargetLink_ShouldThrowIOException()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.File.WriteAllText("bar", "some content");
             fileSystem.File.CreateSymbolicLink("foo", "bar");
 
-            Assert.Throws<IOException>(() =>
+            await That(() =>
             {
                 fileSystem.FileInfo.New("bar").ResolveLinkTarget(false);
-            });
+            }).Throws<IOException>();
         }
 #endif
     }
