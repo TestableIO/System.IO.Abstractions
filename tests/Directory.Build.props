@@ -6,6 +6,7 @@
     <PropertyGroup>
         <TargetFrameworks>net9.0;net8.0;net6.0</TargetFrameworks>
         <TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net472</TargetFrameworks>
+        <NoWarn>$(NoWarn);S2699</NoWarn>
         <IsPackable>false</IsPackable>
         <IsTestable>true</IsTestable>
     </PropertyGroup>
