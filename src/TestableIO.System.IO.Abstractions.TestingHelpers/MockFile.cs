@@ -546,8 +546,8 @@ public partial class MockFile : FileBase
         }
         VerifyDirectoryExists(destFileName);
 
-        mockFileDataAccessor.RemoveFile(sourceFileName);
-        mockFileDataAccessor.AddFile(destFileName, mockFileDataAccessor.AdjustTimes(new MockFileData(sourceFile), TimeAdjustments.LastAccessTime));
+        mockFileDataAccessor.RemoveFile(sourceFileName, false);
+        mockFileDataAccessor.AddFile(destFileName, mockFileDataAccessor.AdjustTimes(new MockFileData(sourceFile), TimeAdjustments.LastAccessTime), false);
     }
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
