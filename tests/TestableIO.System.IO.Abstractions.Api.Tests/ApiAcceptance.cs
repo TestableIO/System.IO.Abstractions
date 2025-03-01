@@ -1,6 +1,4 @@
-﻿using aweXpect;
-
-namespace TestableIO.System.IO.Abstractions.Api.Tests;
+﻿namespace TestableIO.System.IO.Abstractions.Api.Tests;
 
 public sealed class ApiAcceptance
 {
@@ -27,6 +25,6 @@ public sealed class ApiAcceptance
 			}
 		}
 
-        await Expect.That(assemblyNames).IsNotEmpty();
+        await That(assemblyNames).IsNotEmpty();
 	}
 }

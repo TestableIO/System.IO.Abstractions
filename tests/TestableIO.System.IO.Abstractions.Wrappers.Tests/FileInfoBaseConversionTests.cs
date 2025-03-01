@@ -1,7 +1,5 @@
 ﻿namespace System.IO.Abstractions.Tests
 {
-    using NUnit.Framework;
-
     /// <summary>
     /// Unit tests for the conversion operators of the <see cref="FileInfoBase"/> class.
     /// </summary>
@@ -11,7 +9,7 @@
         /// Tests that a <c>null</c> <see cref="FileInfo"/> is correctly converted to a <c>null</c> <see cref="FileInfoBase"/> without exception.
         /// </summary>
         [Test]
-        public void FileInfoBase_FromFileInfo_ShouldReturnNullIfFileInfoIsNull()
+        public async Task FileInfoBase_FromFileInfo_ShouldReturnNullIfFileInfoIsNull()
         {
             // Arrange
             FileInfo fileInfo = null;
@@ -20,7 +18,7 @@
             FileInfoBase actual = fileInfo;
 
             // Assert
-            Assert.That(actual, Is.Null);
+            await That(actual).IsNull();
         }
     }
 }

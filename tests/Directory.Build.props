@@ -24,6 +24,8 @@
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="NUnit3TestAdapter" />
+        <PackageReference Include="aweXpect"/>
+        <PackageReference Include="aweXpect.Testably"/>
     </ItemGroup>
 
     <PropertyGroup>
