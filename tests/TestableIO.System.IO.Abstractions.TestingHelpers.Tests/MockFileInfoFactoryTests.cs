@@ -7,7 +7,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileInfoFactoryTests
     {
         [Test]
-        public void MockFileInfoFactory_New_ShouldReturnFileInfoForExistingFile()
+        public async Task MockFileInfoFactory_New_ShouldReturnFileInfoForExistingFile()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -21,11 +21,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileInfoFactory.New(@"c:\a.txt");
 
             // Assert
-            Assert.That(result, Is.Not.Null);
+            await That(result).IsNotNull();
         }
 
         [Test]
-        public void MockFileInfoFactory_New_ShouldReturnFileInfoForNonExistentFile()
+        public async Task MockFileInfoFactory_New_ShouldReturnFileInfoForNonExistentFile()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -39,28 +39,28 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileInfoFactory.New(@"c:\foo.txt");
 
             // Assert
-            Assert.That(result, Is.Not.Null);
+            await That(result).IsNotNull();
         }
 
         [Test]
-        public void MockFileInfoFactory_Wrap_WithNull_ShouldReturnNull()
+        public async Task MockFileInfoFactory_Wrap_WithNull_ShouldReturnNull()
         {
             var fileSystem = new MockFileSystem();
 
             var result = fileSystem.FileInfo.Wrap(null);
 
-            Assert.That(result, Is.Null);
+            await That(result).IsNull();
         }
 
         [Test]
-        public void MockFileInfoFactory_Wrap_ShouldKeepNameAndFullName()
+        public async Task MockFileInfoFactory_Wrap_ShouldKeepNameAndFullName()
         {
             var fs = new MockFileSystem();
             var fileInfo = new FileInfo(@"C:\subfolder\file");
             var wrappedFileInfo = fs.FileInfo.Wrap(fileInfo);
 
-            Assert.That(wrappedFileInfo.FullName, Is.EqualTo(fileInfo.FullName));
-            Assert.That(wrappedFileInfo.Name, Is.EqualTo(fileInfo.Name));
+            await That(wrappedFileInfo.FullName).IsEqualTo(fileInfo.FullName);
+            await That(wrappedFileInfo.Name).IsEqualTo(fileInfo.Name);
         }
     }
 }

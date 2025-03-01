@@ -13,35 +13,35 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     {
         [TestCase(" ")]
         [TestCase("   ")]
-        public void MockDirectory_GetAccessControl_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
+        public async Task MockDirectory_GetAccessControl_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.Directory.GetAccessControl(path);
+            Action action = () => fileSystem.Directory.GetAccessControl(path);
 
             // Assert
-            var exception = Assert.Throws<ArgumentException>(action);
-            Assert.That(exception.ParamName, Is.EqualTo("path"));
+            var exception = await That(action).Throws<ArgumentException>();
+            await That(exception.ParamName).IsEqualTo("path");
         }
 
         [Test]
-        public void MockDirectory_GetAccessControl_ShouldThrowDirectoryNotFoundExceptionIfDirectoryDoesNotExistInMockData()
+        public async Task MockDirectory_GetAccessControl_ShouldThrowDirectoryNotFoundExceptionIfDirectoryDoesNotExistInMockData()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
             var expectedDirectoryName = XFS.Path(@"c:\a");
 
             // Act
-            TestDelegate action = () => fileSystem.Directory.GetAccessControl(expectedDirectoryName);
+            Action action = () => fileSystem.Directory.GetAccessControl(expectedDirectoryName);
 
             // Assert
-            Assert.Throws<DirectoryNotFoundException>(action);
+            await That(action).Throws<DirectoryNotFoundException>();
         }
 
         [Test]
-        public void MockDirectory_GetAccessControl_ShouldReturnAccessControlOfDirectoryData()
+        public async Task MockDirectory_GetAccessControl_ShouldReturnAccessControlOfDirectoryData()
         {
             // Arrange
             var expectedDirectorySecurity = new DirectorySecurity();
@@ -62,7 +62,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var directorySecurity = fileSystem.Directory.GetAccessControl(filePath);
 
             // Assert
-            Assert.That(directorySecurity, Is.EqualTo(expectedDirectorySecurity));
+            await That(directorySecurity).IsEqualTo(expectedDirectorySecurity);
         }
     }
 }

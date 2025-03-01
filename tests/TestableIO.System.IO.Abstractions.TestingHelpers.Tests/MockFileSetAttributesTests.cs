@@ -8,7 +8,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileSetAttributesTests
     {
         [Test]
-        public void MockFile_SetAttributes_ShouldSetAttributesOnFile()
+        public async Task MockFile_SetAttributes_ShouldSetAttributesOnFile()
         {
             var path = XFS.Path(@"c:\something\demo.txt");
             var filedata = new MockFileData("test");
@@ -20,11 +20,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.SetAttributes(path, FileAttributes.Hidden);
 
             var attributes = fileSystem.File.GetAttributes(path);
-            Assert.That(attributes, Is.EqualTo(FileAttributes.Hidden));
+            await That(attributes).IsEqualTo(FileAttributes.Hidden);
         }
 
         [Test]
-        public void MockFile_SetAttributes_ShouldSetAttributesOnDirectory()
+        public async Task MockFile_SetAttributes_ShouldSetAttributesOnDirectory()
         {
             var fileSystem = new MockFileSystem();
             var path = XFS.Path(@"c:\something");
@@ -35,32 +35,32 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.SetAttributes(path, FileAttributes.Directory | FileAttributes.Hidden);
 
             var attributes = fileSystem.File.GetAttributes(path);
-            Assert.That(attributes, Is.EqualTo(FileAttributes.Directory | FileAttributes.Hidden));
+            await That(attributes).IsEqualTo(FileAttributes.Directory | FileAttributes.Hidden);
         }
 
         [Test]
         [TestCase("", FileAttributes.Normal)]
         [TestCase("   ", FileAttributes.Normal)]
-        public void MockFile_SetAttributes_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path, FileAttributes attributes)
+        public async Task MockFile_SetAttributes_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path, FileAttributes attributes)
         {
             var fileSystem = new MockFileSystem();
 
-            TestDelegate action = () => fileSystem.File.SetAttributes(path, attributes);
+            Action action = () => fileSystem.File.SetAttributes(path, attributes);
 
-            Assert.Throws<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [Test]
-        public void MockFile_SetAttributes_ShouldThrowFileNotFoundExceptionIfMissingDirectory()
+        public async Task MockFile_SetAttributes_ShouldThrowFileNotFoundExceptionIfMissingDirectory()
         {
             var path = XFS.Path(@"C:\something");
             var attributes = FileAttributes.Normal;
             var fileSystem = new MockFileSystem();
 
-            TestDelegate action = () => fileSystem.File.SetAttributes(path, attributes);
+            Action action = () => fileSystem.File.SetAttributes(path, attributes);
 
-            var exception = Assert.Throws<FileNotFoundException>(action);
-            Assert.That(exception.FileName, Is.EqualTo(path));
+            var exception = await That(action).Throws<FileNotFoundException>();
+            await That(exception.FileName).IsEqualTo(path);
         }
     }
 }

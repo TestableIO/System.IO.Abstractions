@@ -14,7 +14,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileSetUnixFileModeTests
     {
         [Test]
-        public void MockFile_SetUnixFileMode_ShouldSetSpecifiedAccessMode([Values] UnixFileMode unixFileMode)
+        public async Task MockFile_SetUnixFileMode_ShouldSetSpecifiedAccessMode([Values] UnixFileMode unixFileMode)
         {
             // Arrange
             var mockFileData = new MockFileData("Demo text content");
@@ -27,13 +27,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.SetUnixFileMode(XFS.Path(@"C:\something\some.txt"), unixFileMode);
 
             // Assert
-            Assert.That(mockFileData.UnixMode, Is.EqualTo(unixFileMode));
+            await That(mockFileData.UnixMode).IsEqualTo(unixFileMode);
         }
         
         [TestCase(UnixFileMode.UserRead | UnixFileMode.GroupRead | UnixFileMode.OtherRead)]
         [TestCase(UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute)]
         [TestCase(UnixFileMode.UserExecute | UnixFileMode.OtherWrite | UnixFileMode.GroupRead)]
-        public void MockFile_SetUnixFileMode_ShouldSetSpecifiedAccessModeFlags(UnixFileMode unixFileMode)
+        public async Task MockFile_SetUnixFileMode_ShouldSetSpecifiedAccessModeFlags(UnixFileMode unixFileMode)
         {
             // Arrange
             var mockFileData = new MockFileData("Demo text content");
@@ -46,7 +46,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.SetUnixFileMode(XFS.Path(@"C:\something\some.txt"), unixFileMode);
 
             // Assert
-            Assert.That(mockFileData.UnixMode, Is.EqualTo(unixFileMode));
+            await That(mockFileData.UnixMode).IsEqualTo(unixFileMode);
         }
     }
 }

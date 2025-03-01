@@ -11,7 +11,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockDriveInfoFactoryTests
     {
         [Test]
-        public void MockDriveInfoFactory_GetDrives_ShouldReturnDrives()
+        public async Task MockDriveInfoFactory_GetDrives_ShouldReturnDrives()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -26,11 +26,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualNames = actualResults.Select(d => d.Name);
 
             // Assert
-            Assert.That(actualNames, Is.EquivalentTo(new[] { @"C:\", @"Z:\", @"d:\" }));
+            await That(actualNames).IsEquivalentTo(new[] { @"C:\", @"Z:\", @"d:\" });
         }
 
         [Test]
-        public void MockDriveInfoFactory_GetDrives_ShouldReturnDrivesWithNoDuplicates()
+        public async Task MockDriveInfoFactory_GetDrives_ShouldReturnDrivesWithNoDuplicates()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -47,11 +47,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualNames = actualResults.Select(d => d.Name);
 
             // Assert
-            Assert.That(actualNames, Is.EquivalentTo(new[] { @"C:\", @"Z:\", @"d:\" }));
+            await That(actualNames).IsEquivalentTo(new[] { @"C:\", @"Z:\", @"d:\" });
         }
 
         [Test]
-        public void MockDriveInfoFactory_GetDrives_ShouldReturnOnlyLocalDrives()
+        public async Task MockDriveInfoFactory_GetDrives_ShouldReturnOnlyLocalDrives()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -67,11 +67,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualNames = actualResults.Select(d => d.Name);
 
             // Assert
-            Assert.That(actualNames, Is.EquivalentTo(new[] { @"C:\", @"Z:\", @"d:\" }));
+            await That(actualNames).IsEquivalentTo(new[] { @"C:\", @"Z:\", @"d:\" });
         }
 
         [Test]
-        public void MockDriveInfoFactory_New_WithDriveShouldReturnDrive()
+        public async Task MockDriveInfoFactory_New_WithDriveShouldReturnDrive()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -81,11 +81,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = factory.New(@"Z:\");
 
             // Assert
-            Assert.That(actualResult.Name, Is.EquivalentTo(@"Z:\"));
+            await That(actualResult.Name).IsEquivalentTo(@"Z:\");
         }
 
         [Test]
-        public void MockDriveInfoFactory_New_WithPathShouldReturnDrive()
+        public async Task MockDriveInfoFactory_New_WithPathShouldReturnDrive()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -95,17 +95,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = factory.New(@"Z:\foo\bar\");
 
             // Assert
-            Assert.That(actualResult.Name, Is.EquivalentTo(@"Z:\"));
+            await That(actualResult.Name).IsEquivalentTo(@"Z:\");
         }
 
         [Test]
-        public void MockDriveInfoFactory_Wrap_WithNull_ShouldReturnNull()
+        public async Task MockDriveInfoFactory_Wrap_WithNull_ShouldReturnNull()
         {
             var fileSystem = new MockFileSystem();
 
             var result = fileSystem.DriveInfo.Wrap(null);
 
-            Assert.That(result, Is.Null);
+            await That(result).IsNull();
         }
     }
 }

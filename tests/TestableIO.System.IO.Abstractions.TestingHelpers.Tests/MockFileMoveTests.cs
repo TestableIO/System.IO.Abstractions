@@ -8,7 +8,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileMoveTests
     {
         [Test]
-        public void MockFile_Move_ShouldMoveFileWithinMemoryFileSystem()
+        public async Task MockFile_Move_ShouldMoveFileWithinMemoryFileSystem()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             string sourceFileContent = "this is some content";
@@ -22,13 +22,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.File.Move(sourceFilePath, destFilePath);
 
-            Assert.That(fileSystem.FileExists(destFilePath), Is.True);
-            Assert.That(fileSystem.GetFile(destFilePath).TextContents, Is.EqualTo(sourceFileContent));
-            Assert.That(fileSystem.FileExists(sourceFilePath), Is.False);
+            await That(fileSystem.FileExists(destFilePath)).IsTrue();
+            await That(fileSystem.GetFile(destFilePath).TextContents).IsEqualTo(sourceFileContent);
+            await That(fileSystem.FileExists(sourceFilePath)).IsFalse();
         }
 
         [Test]
-        public void MockFile_Move_WithReadOnlyAttribute_ShouldThrowUnauthorizedAccessExceptionAndNotMoveFile()
+        public async Task MockFile_Move_WithReadOnlyAttribute_ShouldThrowUnauthorizedAccessExceptionAndNotMoveFile()
         {
             var sourceFilePath = @"c:\foo.txt";
             var destFilePath = @"c:\bar.txt";
@@ -36,14 +36,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.File.WriteAllText(sourceFilePath, "this is some content");
             fileSystem.File.SetAttributes(sourceFilePath, FileAttributes.ReadOnly);
 
-            Assert.Throws<UnauthorizedAccessException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+            await That(() => fileSystem.File.Move(sourceFilePath, destFilePath)).Throws<UnauthorizedAccessException>();
 
-            Assert.That(fileSystem.File.Exists(sourceFilePath), Is.EqualTo(true));
-            Assert.That(fileSystem.File.Exists(destFilePath), Is.EqualTo(false));
+            await That(fileSystem.File.Exists(sourceFilePath)).IsEqualTo(true);
+            await That(fileSystem.File.Exists(destFilePath)).IsEqualTo(false);
         }
 
         [Test]
-        public void MockFile_Move_SameSourceAndTargetIsANoOp()
+        public async Task MockFile_Move_SameSourceAndTargetIsANoOp()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             string sourceFileContent = "this is some content";
@@ -57,12 +57,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.File.Move(sourceFilePath, destFilePath);
 
-            Assert.That(fileSystem.FileExists(destFilePath), Is.True);
-            Assert.That(fileSystem.GetFile(destFilePath).TextContents, Is.EqualTo(sourceFileContent));
+            await That(fileSystem.FileExists(destFilePath)).IsTrue();
+            await That(fileSystem.GetFile(destFilePath).TextContents).IsEqualTo(sourceFileContent);
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowIOExceptionWhenTargetAlreadyExists()
+        public async Task MockFile_Move_ShouldThrowIOExceptionWhenTargetAlreadyExists()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             string sourceFileContent = "this is some content";
@@ -73,14 +73,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 {destFilePath, new MockFileData(sourceFileContent)}
             });
 
-            var exception = Assert.Throws<IOException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+            var exception = await That(() => fileSystem.File.Move(sourceFilePath, destFilePath)).Throws<IOException>();
 
-            Assert.That(exception.Message, Is.EqualTo("A file can not be created if it already exists."));
+            await That(exception.Message).IsEqualTo("A file can not be created if it already exists.");
         }
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
         [Test]
-        public void MockFile_MoveWithOverwrite_ShouldSucceedWhenTargetAlreadyExists()
+        public async Task MockFile_MoveWithOverwrite_ShouldSucceedWhenTargetAlreadyExists()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             string sourceFileContent = "this is some content";
@@ -93,35 +93,35 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.File.Move(sourceFilePath, destFilePath, overwrite: true);
 
-            Assert.That(fileSystem.File.ReadAllText(destFilePath), Is.EqualTo(sourceFileContent));
+            await That(fileSystem.File.ReadAllText(destFilePath)).IsEqualTo(sourceFileContent);
         }
 #endif
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenSourceIsNull_Message()
+        public async Task MockFile_Move_ShouldThrowArgumentNullExceptionWhenSourceIsNull_Message()
         {
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(null, destFilePath));
+            var exception = await That(() => fileSystem.File.Move(null, destFilePath)).Throws<ArgumentNullException>();
 
-            Assert.That(exception.Message, Does.StartWith("File name cannot be null."));
+            await That(exception.Message).StartsWith("File name cannot be null.");
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenSourceIsNull_ParamName()
+        public async Task MockFile_Move_ShouldThrowArgumentNullExceptionWhenSourceIsNull_ParamName()
         {
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(null, destFilePath));
+            var exception = await That(() => fileSystem.File.Move(null, destFilePath)).Throws<ArgumentNullException>();
 
-            Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
+            await That(exception.ParamName).IsEqualTo("sourceFileName");
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceFileNameContainsInvalidChars_Message()
+        public async Task MockFile_Move_ShouldThrowArgumentExceptionWhenSourceFileNameContainsInvalidChars_Message()
         {
             var destFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
@@ -132,16 +132,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var sourceFilePath = @"c:\something\demo.txt" + invalidChar;
 
                 var exception =
-                    Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+                    await That(() => fileSystem.File.Move(sourceFilePath, destFilePath)).Throws<ArgumentException>();
 
-                Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
-                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+                await That(exception.Message).IsEqualTo("Illegal characters in path.")
+                    .Because(string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
             }
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourcePathContainsInvalidChars_Message()
+        public async Task MockFile_Move_ShouldThrowArgumentExceptionWhenSourcePathContainsInvalidChars_Message()
         {
             var destFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
@@ -151,16 +151,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var sourceFilePath = @"c:\some" + invalidChar + @"thing\demo.txt";
 
                 var exception =
-                    Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+                    await That(() => fileSystem.File.Move(sourceFilePath, destFilePath)).Throws<ArgumentException>();
 
-                Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
-                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+                await That(exception.Message).IsEqualTo("Illegal characters in path.")
+                    .Because(string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
             }
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetPathContainsInvalidChars_Message()
+        public async Task MockFile_Move_ShouldThrowArgumentExceptionWhenTargetPathContainsInvalidChars_Message()
         {
             var sourceFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
@@ -170,16 +170,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var destFilePath = @"c:\some" + invalidChar + @"thing\demo.txt";
 
                 var exception =
-                    Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+                    await That(() => fileSystem.File.Move(sourceFilePath, destFilePath)).Throws<ArgumentException>();
 
-                Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
-                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+                await That(exception.Message).IsEqualTo("Illegal characters in path.")
+                    .Because(string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
             }
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetFileNameContainsInvalidChars_Message()
+        public async Task MockFile_Move_ShouldThrowArgumentExceptionWhenTargetFileNameContainsInvalidChars_Message()
         {
             var sourceFilePath = @"c:\something\demo.txt";
             var fileSystem = new MockFileSystem();
@@ -190,181 +190,181 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 var destFilePath = @"c:\something\demo.txt" + invalidChar;
 
                 var exception =
-                    Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+                    await That(() => fileSystem.File.Move(sourceFilePath, destFilePath)).Throws<ArgumentException>();
 
-                Assert.That(exception.Message, Is.EqualTo("Illegal characters in path."),
-                    string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
+                await That(exception.Message).IsEqualTo("Illegal characters in path.")
+                    .Because(string.Format("Testing char: [{0:c}] \\{1:X4}", invalidChar, (int)invalidChar));
             }
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.Drives)]
-        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidUseOfDriveSeparator()
+        public async Task MockFile_Move_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidUseOfDriveSeparator()
         {
             var badSourcePath = @"C::\something\demo.txt";
             var destinationPath = @"C:\elsewhere\demo.txt";
             var fileSystem = new MockFileSystem();
 
-            TestDelegate action = () => fileSystem.File.Move(badSourcePath, destinationPath);
+            Action action = () => fileSystem.File.Move(badSourcePath, destinationPath);
 
-            Assert.Throws<NotSupportedException>(action);
+            await That(action).Throws<NotSupportedException>();
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.Drives)]
-        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidDriveLetter()
+        public async Task MockFile_Move_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidDriveLetter()
         {
             var badSourcePath = @"0:\something\demo.txt";
             var destinationPath = @"C:\elsewhere\demo.txt";
             var fileSystem = new MockFileSystem();
 
-            TestDelegate action = () => fileSystem.File.Move(badSourcePath, destinationPath);
+            Action action = () => fileSystem.File.Move(badSourcePath, destinationPath);
 
-            Assert.Throws<NotSupportedException>(action);
+            await That(action).Throws<NotSupportedException>();
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.Drives)]
-        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidUseOfDriveSeparator()
+        public async Task MockFile_Move_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidUseOfDriveSeparator()
         {
             var sourcePath = @"C:\something\demo.txt";
             var badDestinationPath = @"C:\elsewhere:\demo.txt";
             var fileSystem = new MockFileSystem();
 
-            TestDelegate action = () => fileSystem.File.Move(sourcePath, badDestinationPath);
+            Action action = () => fileSystem.File.Move(sourcePath, badDestinationPath);
 
-            Assert.Throws<NotSupportedException>(action);
+            await That(action).Throws<NotSupportedException>();
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.Drives)]
-        public void MockFile_Move_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidDriveLetter()
+        public async Task MockFile_Move_ShouldThrowNotSupportedExceptionWhenDestinationPathContainsInvalidDriveLetter()
         {
             var sourcePath = @"C:\something\demo.txt";
             var badDestinationPath = @"^:\elsewhere\demo.txt";
             var fileSystem = new MockFileSystem();
 
-            TestDelegate action = () => fileSystem.File.Move(sourcePath, badDestinationPath);
+            Action action = () => fileSystem.File.Move(sourcePath, badDestinationPath);
 
-            Assert.Throws<NotSupportedException>(action);
+            await That(action).Throws<NotSupportedException>();
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsEmpty_Message()
+        public async Task MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsEmpty_Message()
         {
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(string.Empty, destFilePath));
+            var exception = await That(() => fileSystem.File.Move(string.Empty, destFilePath)).Throws<ArgumentException>();
 
-            Assert.That(exception.Message, Does.StartWith("Empty file name is not legal."));
+            await That(exception.Message).StartsWith("Empty file name is not legal.");
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsEmpty_ParamName()
+        public async Task MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsEmpty_ParamName()
         {
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(string.Empty, destFilePath));
+            var exception = await That(() => fileSystem.File.Move(string.Empty, destFilePath)).Throws<ArgumentException>();
 
-            Assert.That(exception.ParamName, Is.EqualTo("sourceFileName"));
+            await That(exception.ParamName).IsEqualTo("sourceFileName");
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsStringOfBlanks()
+        public async Task MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsStringOfBlanks()
         {
             string sourceFilePath = "   ";
             string destFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+            var exception = await That(() => fileSystem.File.Move(sourceFilePath, destFilePath)).Throws<ArgumentException>();
 
-            Assert.That(exception.Message, Does.StartWith("The path is not of a legal form."));
+            await That(exception.Message).StartsWith("The path is not of a legal form.");
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenTargetIsNull_Message()
+        public async Task MockFile_Move_ShouldThrowArgumentNullExceptionWhenTargetIsNull_Message()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(sourceFilePath, null));
+            var exception = await That(() => fileSystem.File.Move(sourceFilePath, null)).Throws<ArgumentNullException>();
 
-            Assert.That(exception.Message, Does.StartWith("File name cannot be null."));
+            await That(exception.Message).StartsWith("File name cannot be null.");
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentNullExceptionWhenTargetIsNull_ParamName()
+        public async Task MockFile_Move_ShouldThrowArgumentNullExceptionWhenTargetIsNull_ParamName()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentNullException>(() => fileSystem.File.Move(sourceFilePath, null));
+            var exception = await That(() => fileSystem.File.Move(sourceFilePath, null)).Throws<ArgumentNullException>();
 
-            Assert.That(exception.ParamName, Is.EqualTo("destFileName"));
+            await That(exception.ParamName).IsEqualTo("destFileName");
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsStringOfBlanks()
+        public async Task MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsStringOfBlanks()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             string destFilePath = "   ";
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+            var exception = await That(() => fileSystem.File.Move(sourceFilePath, destFilePath)).Throws<ArgumentException>();
 
-            Assert.That(exception.Message, Does.StartWith("The path is not of a legal form."));
+            await That(exception.Message).StartsWith("The path is not of a legal form.");
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsEmpty_Message()
+        public async Task MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsEmpty_Message()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, string.Empty));
+            var exception = await That(() => fileSystem.File.Move(sourceFilePath, string.Empty)).Throws<ArgumentException>();
 
-            Assert.That(exception.Message, Does.StartWith("Empty file name is not legal."));
+            await That(exception.Message).StartsWith("Empty file name is not legal.");
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsEmpty_ParamName()
+        public async Task MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsEmpty_ParamName()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<ArgumentException>(() => fileSystem.File.Move(sourceFilePath, string.Empty));
+            var exception = await That(() => fileSystem.File.Move(sourceFilePath, string.Empty)).Throws<ArgumentException>();
 
-            Assert.That(exception.ParamName, Is.EqualTo("destFileName"));
+            await That(exception.ParamName).IsEqualTo("destFileName");
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist_Message()
-        {
-            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
-            string destFilePath = XFS.Path(@"c:\something\demo1.txt");
-            var fileSystem = new MockFileSystem();
-
-            var exception = Assert.Throws<FileNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
-
-            Assert.That(exception.Message, Is.EqualTo("Could not find file '" + XFS.Path("c:\\something\\demo.txt") + "'."));
-        }
-
-        [Test]
-        public void MockFile_Move_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist_FileName()
+        public async Task MockFile_Move_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist_Message()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             string destFilePath = XFS.Path(@"c:\something\demo1.txt");
             var fileSystem = new MockFileSystem();
 
-            var exception = Assert.Throws<FileNotFoundException>(() => fileSystem.File.Move(sourceFilePath, destFilePath));
+            var exception = await That(() => fileSystem.File.Move(sourceFilePath, destFilePath)).Throws<FileNotFoundException>();
 
-            Assert.That(exception.FileName, Is.EqualTo(XFS.Path(@"c:\something\demo.txt")));
+            await That(exception.Message).IsEqualTo("Could not find file '" + XFS.Path("c:\\something\\demo.txt") + "'.");
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowDirectoryNotFoundExceptionWhenSourcePathDoesNotExist_Message()
+        public async Task MockFile_Move_ShouldThrowFileNotFoundExceptionWhenSourceDoesNotExist_FileName()
+        {
+            string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
+            string destFilePath = XFS.Path(@"c:\something\demo1.txt");
+            var fileSystem = new MockFileSystem();
+
+            var exception = await That(() => fileSystem.File.Move(sourceFilePath, destFilePath)).Throws<FileNotFoundException>();
+
+            await That(exception.FileName).IsEqualTo(XFS.Path(@"c:\something\demo.txt"));
+        }
+
+        [Test]
+        public async Task MockFile_Move_ShouldThrowDirectoryNotFoundExceptionWhenSourcePathDoesNotExist_Message()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             string destFilePath = XFS.Path(@"c:\somethingelse\demo.txt");
@@ -373,34 +373,35 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 {sourceFilePath, new MockFileData(new byte[] {0})}
             });
 
-            Assert.That(() => fileSystem.File.Move(sourceFilePath, destFilePath),
-                Throws.InstanceOf<DirectoryNotFoundException>().With.Message.StartsWith(@"Could not find a part of the path"));
+            await That(() => fileSystem.File.Move(sourceFilePath, destFilePath))
+                .Throws<DirectoryNotFoundException>()
+                .WithMessage(@"Could not find a part of the path*").AsWildcard();
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowExceptionWhenSourceDoesNotExist()
+        public async Task MockFile_Move_ShouldThrowExceptionWhenSourceDoesNotExist()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            TestDelegate action = () => fileSystem.File.Move(sourceFilePath, XFS.Path(@"c:\something\demo2.txt"));
+            Action action = () => fileSystem.File.Move(sourceFilePath, XFS.Path(@"c:\something\demo2.txt"));
 
-            Assert.Throws<FileNotFoundException>(action);
+            await That(action).Throws<FileNotFoundException>();
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowExceptionWhenSourceDoesNotExist_EvenWhenCopyingToItself()
+        public async Task MockFile_Move_ShouldThrowExceptionWhenSourceDoesNotExist_EvenWhenCopyingToItself()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem();
 
-            TestDelegate action = () => fileSystem.File.Move(sourceFilePath, XFS.Path(@"c:\something\demo.txt"));
+            Action action = () => fileSystem.File.Move(sourceFilePath, XFS.Path(@"c:\something\demo.txt"));
 
-            Assert.Throws<FileNotFoundException>(action);
+            await That(action).Throws<FileNotFoundException>();
         }
 
         [Test]
-        public void MockFile_Move_ShouldRetainMetadata()
+        public async Task MockFile_Move_ShouldRetainMetadata()
         {
             string sourceFilePath = XFS.Path(@"c:\something\demo.txt");
             string sourceFileContent = "this is some content";
@@ -415,11 +416,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.File.Move(sourceFilePath, destFilePath);
 
-            Assert.That(fileSystem.File.GetCreationTimeUtc(destFilePath), Is.EqualTo(creationTime.UtcDateTime));
+            await That(fileSystem.File.GetCreationTimeUtc(destFilePath)).IsEqualTo(creationTime.UtcDateTime);
         }
 
         [Test]
-        public void MockFile_Move_ShouldThrowExceptionWhenSourceFileShare_Is_Not_Delete()
+        public async Task MockFile_Move_ShouldThrowExceptionWhenSourceFileShare_Is_Not_Delete()
         {
             string sourceFileReadDelete = XFS.Path(@"c:\something\IHaveReadDelete.txt");
             string sourceFileDelete = XFS.Path(@"c:\something\IHaveDelete.txt");
@@ -433,22 +434,22 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { sourceFileNone, new MockFileData("") { AllowedFileShare = FileShare.None } },
             });
 
-            AssertMoveSuccess(sourceFileReadDelete);
-            AssertMoveSuccess(sourceFileDelete);
-            AssertMoveThrowsIOException(sourceFileRead);
-            AssertMoveThrowsIOException(sourceFileNone);
+            await AssertMoveSuccess(sourceFileReadDelete);
+            await AssertMoveSuccess(sourceFileDelete);
+            await AssertMoveThrowsIOException(sourceFileRead);
+            await AssertMoveThrowsIOException(sourceFileNone);
 
-            void AssertMoveThrowsIOException(string sourceFile)
+            async Task AssertMoveThrowsIOException(string sourceFile)
             {
                 var target = sourceFile + ".moved";
-                Assert.Throws<IOException>(() => fileSystem.File.Move(sourceFile, target));
+                await That(() => fileSystem.File.Move(sourceFile, target)).Throws<IOException>();
             }
 
-            void AssertMoveSuccess(string sourceFile)
+            async Task AssertMoveSuccess(string sourceFile)
             {
                 var target = sourceFile + ".moved";
                 fileSystem.File.Move(sourceFile, target);
-                Assert.That(fileSystem.File.Exists(target), Is.True);
+                await That(fileSystem.File.Exists(target)).IsTrue();
             }
         }
     }

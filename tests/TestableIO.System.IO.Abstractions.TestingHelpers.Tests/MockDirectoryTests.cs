@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
+using aweXpect.Equivalency;
 using NUnit.Framework;
 
 namespace System.IO.Abstractions.TestingHelpers.Tests
@@ -12,7 +13,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockDirectoryTests
     {
         [Test]
-        public void MockDirectory_GetFiles_ShouldReturnAllFilesBelowPathWhenPatternIsEmptyAndSearchOptionIsAllDirectories()
+        public async Task MockDirectory_GetFiles_ShouldReturnAllFilesBelowPathWhenPatternIsEmptyAndSearchOptionIsAllDirectories()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -32,11 +33,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\a"), "", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldReturnFilesDirectlyBelowPathWhenPatternIsEmptyAndSearchOptionIsTopDirectoryOnly()
+        public async Task MockDirectory_GetFiles_ShouldReturnFilesDirectlyBelowPathWhenPatternIsEmptyAndSearchOptionIsTopDirectoryOnly()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -52,11 +53,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\a"), "", SearchOption.TopDirectoryOnly);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
+        public async Task MockDirectory_GetFiles_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -76,12 +77,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\a"), "*", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
         [Test]
-        public void MockDirectory_GetFiles_ShouldReturnAllPatternMatchingFilesWhenEnumerationOptionHasRecurseSubdirectoriesSetToTrue()
+        public async Task MockDirectory_GetFiles_ShouldReturnAllPatternMatchingFilesWhenEnumerationOptionHasRecurseSubdirectoriesSetToTrue()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -99,7 +100,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), "*.txt", new EnumerationOptions { RecurseSubdirectories = true });
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 #endif
 
@@ -124,7 +125,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldReturnFilesDirectlyBelowPathWhenPatternIsWildcardAndSearchOptionIsTopDirectoryOnly()
+        public async Task MockDirectory_GetFiles_ShouldReturnFilesDirectlyBelowPathWhenPatternIsWildcardAndSearchOptionIsTopDirectoryOnly()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -140,11 +141,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\a"), "*", SearchOption.TopDirectoryOnly);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPattern()
+        public async Task MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPattern()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -159,11 +160,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), "*.gif", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternWithThreeCharacterLongFileExtension_RespectingAllDirectorySearchOption()
+        public async Task MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternWithThreeCharacterLongFileExtension_RespectingAllDirectorySearchOption()
         {
             // Arrange
             var additionalFilePath = XFS.Path(@"c:\a\a\c.gifx");
@@ -183,11 +184,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), "*.gif", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternWithThreeCharacterLongFileExtension_RespectingTopDirectorySearchOption()
+        public async Task MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternWithThreeCharacterLongFileExtension_RespectingTopDirectorySearchOption()
         {
             // Arrange
             var additionalFilePath = XFS.Path(@"c:\a\c.gifx");
@@ -205,11 +206,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\a"), "*.gif", SearchOption.TopDirectoryOnly);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternOnlyIfTheFileExtensionIsThreeCharacterLong()
+        public async Task MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternOnlyIfTheFileExtensionIsThreeCharacterLong()
         {
             // Arrange
             var additionalFilePath = XFS.Path(@"c:\a\c.gi");
@@ -227,11 +228,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\a"), "*.gi", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternWithDotsInFilenames()
+        public async Task MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternWithDotsInFilenames()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -257,11 +258,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), "*.gif", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_FilterShouldFindFilesWithSpecialChars()
+        public async Task MockDirectory_GetFiles_FilterShouldFindFilesWithSpecialChars()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -279,11 +280,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), "*.*", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternAndSearchOptionTopDirectoryOnly()
+        public async Task MockDirectory_GetFiles_ShouldFilterByExtensionBasedSearchPatternAndSearchOptionTopDirectoryOnly()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -293,11 +294,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), "*.gif", SearchOption.TopDirectoryOnly);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldFilterForAllFilesWithNoExtensionsAndSearchOptionTopDirectoryOnly()
+        public async Task MockDirectory_GetFiles_ShouldFilterForAllFilesWithNoExtensionsAndSearchOptionTopDirectoryOnly()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -321,11 +322,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"C:\"), "*.", SearchOption.TopDirectoryOnly);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldFilterForAllFilesWithNoExtensionsAndSearchOptionAllDirectories()
+        public async Task MockDirectory_GetFiles_ShouldFilterForAllFilesWithNoExtensionsAndSearchOptionAllDirectories()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -351,11 +352,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), "*.", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldFilterForFilesWithNoExtensionsAndNonTrivialFilterAndSearchOptionTopDirectoryOnly()
+        public async Task MockDirectory_GetFiles_ShouldFilterForFilesWithNoExtensionsAndNonTrivialFilterAndSearchOptionTopDirectoryOnly()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -379,11 +380,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"C:\"), "my??s*.", SearchOption.TopDirectoryOnly);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldFilterForFilesWithNoExtensionsAndNonTrivialFilter2AndSearchOptionTopDirectoryOnly()
+        public async Task MockDirectory_GetFiles_ShouldFilterForFilesWithNoExtensionsAndNonTrivialFilter2AndSearchOptionTopDirectoryOnly()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -406,11 +407,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"C:\"), "my*.n*.", SearchOption.TopDirectoryOnly);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldFilterForFilesWithNoExtensionsAndFilterThatIncludesDotAndSearchOptionTopDirectoryOnly()
+        public async Task MockDirectory_GetFiles_ShouldFilterForFilesWithNoExtensionsAndFilterThatIncludesDotAndSearchOptionTopDirectoryOnly()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -432,10 +433,10 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.GetFiles(XFS.Path(@"C:\"), "my*.n*.", SearchOption.TopDirectoryOnly);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
-        private void ExecuteTimeAttributeTest(DateTime time, Action<IFileSystem, string, DateTime> setter, Func<IFileSystem, string, DateTime> getter)
+        private async Task ExecuteTimeAttributeTest(DateTime time, Action<IFileSystem, string, DateTime> setter, Func<IFileSystem, string, DateTime> getter)
         {
             string path = XFS.Path(@"c:\something\demo.txt");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -448,119 +449,119 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = getter(fileSystem, path);
 
             // Assert
-            Assert.That(result, Is.EqualTo(time));
+            await That(result).IsEqualTo(time);
         }
 
         [Test]
-        public void MockDirectory_GetCreationTime_ShouldReturnCreationTimeFromFile()
+        public async Task MockDirectory_GetCreationTime_ShouldReturnCreationTimeFromFile()
         {
-            ExecuteTimeAttributeTest(
+            await ExecuteTimeAttributeTest(
                 new DateTime(2010, 6, 4, 13, 26, 42),
                 (fs, p, d) => fs.File.SetCreationTime(p, d),
                 (fs, p) => fs.Directory.GetCreationTime(p));
         }
 
         [Test]
-        public void MockDirectory_GetCreationTimeUtc_ShouldReturnCreationTimeUtcFromFile()
+        public async Task MockDirectory_GetCreationTimeUtc_ShouldReturnCreationTimeUtcFromFile()
         {
-            ExecuteTimeAttributeTest(
+            await ExecuteTimeAttributeTest(
                 new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
                 (fs, p, d) => fs.File.SetCreationTimeUtc(p, d),
                 (fs, p) => fs.Directory.GetCreationTimeUtc(p));
         }
 
         [Test]
-        public void MockDirectory_GetLastAccessTime_ShouldReturnLastAccessTimeFromFile()
+        public async Task MockDirectory_GetLastAccessTime_ShouldReturnLastAccessTimeFromFile()
         {
-            ExecuteTimeAttributeTest(
+            await ExecuteTimeAttributeTest(
                 new DateTime(2010, 6, 4, 13, 26, 42),
                 (fs, p, d) => fs.File.SetLastAccessTime(p, d),
                 (fs, p) => fs.Directory.GetLastAccessTime(p));
         }
 
         [Test]
-        public void MockDirectory_GetLastAccessTimeUtc_ShouldReturnLastAccessTimeUtcFromFile()
+        public async Task MockDirectory_GetLastAccessTimeUtc_ShouldReturnLastAccessTimeUtcFromFile()
         {
-            ExecuteTimeAttributeTest(
+            await ExecuteTimeAttributeTest(
                 new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
                 (fs, p, d) => fs.File.SetLastAccessTimeUtc(p, d),
                 (fs, p) => fs.Directory.GetLastAccessTimeUtc(p));
         }
 
         [Test]
-        public void MockDirectory_GetLastWriteTime_ShouldReturnLastWriteTimeFromFile()
+        public async Task MockDirectory_GetLastWriteTime_ShouldReturnLastWriteTimeFromFile()
         {
-            ExecuteTimeAttributeTest(
+            await ExecuteTimeAttributeTest(
                 new DateTime(2010, 6, 4, 13, 26, 42),
                 (fs, p, d) => fs.File.SetLastWriteTime(p, d),
                 (fs, p) => fs.Directory.GetLastWriteTime(p));
         }
 
         [Test]
-        public void MockDirectory_GetLastWriteTimeUtc_ShouldReturnLastWriteTimeUtcFromFile()
+        public async Task MockDirectory_GetLastWriteTimeUtc_ShouldReturnLastWriteTimeUtcFromFile()
         {
-            ExecuteTimeAttributeTest(
+            await ExecuteTimeAttributeTest(
                 new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
                 (fs, p, d) => fs.File.SetLastWriteTimeUtc(p, d),
                 (fs, p) => fs.Directory.GetLastWriteTimeUtc(p));
         }
 
         [Test]
-        public void MockDirectory_SetCreationTime_ShouldSetCreationTimeOnFile()
+        public async Task MockDirectory_SetCreationTime_ShouldSetCreationTimeOnFile()
         {
-            ExecuteTimeAttributeTest(
+            await ExecuteTimeAttributeTest(
                 new DateTime(2010, 6, 4, 13, 26, 42),
                 (fs, p, d) => fs.Directory.SetCreationTime(p, d),
                 (fs, p) => fs.File.GetCreationTime(p));
         }
 
         [Test]
-        public void MockDirectory_SetCreationTimeUtc_ShouldSetCreationTimeUtcOnFile()
+        public async Task MockDirectory_SetCreationTimeUtc_ShouldSetCreationTimeUtcOnFile()
         {
-            ExecuteTimeAttributeTest(
+            await ExecuteTimeAttributeTest(
                 new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
                 (fs, p, d) => fs.Directory.SetCreationTimeUtc(p, d),
                 (fs, p) => fs.File.GetCreationTimeUtc(p));
         }
 
         [Test]
-        public void MockDirectory_SetLastAccessTime_ShouldSetLastAccessTimeOnFile()
+        public async Task MockDirectory_SetLastAccessTime_ShouldSetLastAccessTimeOnFile()
         {
-            ExecuteTimeAttributeTest(
+            await ExecuteTimeAttributeTest(
                 new DateTime(2010, 6, 4, 13, 26, 42),
                 (fs, p, d) => fs.Directory.SetLastAccessTime(p, d),
                 (fs, p) => fs.File.GetLastAccessTime(p));
         }
 
         [Test]
-        public void MockDirectory_SetLastAccessTimeUtc_ShouldSetLastAccessTimeUtcOnFile()
+        public async Task MockDirectory_SetLastAccessTimeUtc_ShouldSetLastAccessTimeUtcOnFile()
         {
-            ExecuteTimeAttributeTest(
+            await ExecuteTimeAttributeTest(
                 new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
                 (fs, p, d) => fs.Directory.SetLastAccessTimeUtc(p, d),
                 (fs, p) => fs.File.GetLastAccessTimeUtc(p));
         }
 
         [Test]
-        public void MockDirectory_SetLastWriteTime_ShouldSetLastWriteTimeOnFile()
+        public async Task MockDirectory_SetLastWriteTime_ShouldSetLastWriteTimeOnFile()
         {
-            ExecuteTimeAttributeTest(
+            await ExecuteTimeAttributeTest(
                 new DateTime(2010, 6, 4, 13, 26, 42),
                 (fs, p, d) => fs.Directory.SetLastWriteTime(p, d),
                 (fs, p) => fs.File.GetLastWriteTime(p));
         }
 
         [Test]
-        public void MockDirectory_SetLastWriteTimeUtc_ShouldSetLastWriteTimeUtcOnFile()
+        public async Task MockDirectory_SetLastWriteTimeUtc_ShouldSetLastWriteTimeUtcOnFile()
         {
-            ExecuteTimeAttributeTest(
+            await ExecuteTimeAttributeTest(
                 new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
                 (fs, p, d) => fs.Directory.SetLastWriteTimeUtc(p, d),
                 (fs, p) => fs.File.GetLastWriteTimeUtc(p));
         }
 
         [Test]
-        public void MockDirectory_Exists_ShouldReturnTrueForDirectoryDefinedInMemoryFileSystemWithoutTrailingSlash()
+        public async Task MockDirectory_Exists_ShouldReturnTrueForDirectoryDefinedInMemoryFileSystemWithoutTrailingSlash()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -572,11 +573,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.Exists(XFS.Path(@"c:\foo"));
 
             // Assert
-            Assert.That(result, Is.True);
+            await That(result).IsTrue();
         }
 
         [Test]
-        public void MockDirectory_Exists_ShouldReturnTrueForDirectoryDefinedInMemoryFileSystemWithTrailingSlash()
+        public async Task MockDirectory_Exists_ShouldReturnTrueForDirectoryDefinedInMemoryFileSystemWithTrailingSlash()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -588,11 +589,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.Exists(XFS.Path(@"c:\foo\"));
 
             // Assert
-            Assert.That(result, Is.True);
+            await That(result).IsTrue();
         }
 
         [Test]
-        public void MockDirectory_Exists_ShouldReturnFalseForDirectoryNotDefinedInMemoryFileSystemWithoutTrailingSlash()
+        public async Task MockDirectory_Exists_ShouldReturnFalseForDirectoryNotDefinedInMemoryFileSystemWithoutTrailingSlash()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -604,11 +605,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.Exists(XFS.Path(@"c:\baz"));
 
             // Assert
-            Assert.That(result, Is.False);
+            await That(result).IsFalse();
         }
 
         [Test]
-        public void MockDirectory_Exists_ShouldReturnFalseForDirectoryNotDefinedInMemoryFileSystemWithTrailingSlash()
+        public async Task MockDirectory_Exists_ShouldReturnFalseForDirectoryNotDefinedInMemoryFileSystemWithTrailingSlash()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -620,11 +621,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.Exists(XFS.Path(@"c:\baz\"));
 
             // Assert
-            Assert.That(result, Is.False);
+            await That(result).IsFalse();
         }
 
         [Test]
-        public void MockDirectory_Exists_ShouldReturnFalseForDirectoryNotDefinedInMemoryFileSystemWithSimilarFileName()
+        public async Task MockDirectory_Exists_ShouldReturnFalseForDirectoryNotDefinedInMemoryFileSystemWithSimilarFileName()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -637,11 +638,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.Exists(XFS.Path(@"c:\baz"));
 
             // Assert
-            Assert.That(result, Is.False);
+            await That(result).IsFalse();
         }
 
         [Test]
-        public void MockDirectory_Exists_ShouldReturnTrueForDirectoryCreatedViaMocks()
+        public async Task MockDirectory_Exists_ShouldReturnTrueForDirectoryCreatedViaMocks()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -654,11 +655,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.Exists(XFS.Path(@"c:\bar"));
 
             // Assert
-            Assert.That(result, Is.True);
+            await That(result).IsTrue();
         }
 
         [Test]
-        public void MockDirectory_Exists_ShouldReturnTrueForFolderContainingFileAddedToMockFileSystem()
+        public async Task MockDirectory_Exists_ShouldReturnTrueForFolderContainingFileAddedToMockFileSystem()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -668,13 +669,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.Exists(XFS.Path(@"c:\foo\"));
 
             // Assert
-            Assert.That(result, Is.True);
+            await That(result).IsTrue();
         }
 
         [TestCase(@"\\s")]
         [TestCase(@"<")]
         [TestCase("\t")]
-        public void MockDirectory_Exists_ShouldReturnFalseForIllegalPath(string path)
+        public async Task MockDirectory_Exists_ShouldReturnFalseForIllegalPath(string path)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -683,24 +684,24 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.Exists(path);
 
             // Assert
-            Assert.That(result, Is.False);
+            await That(result).IsFalse();
         }
 
         [Test]
-        public void MockDirectory_CreateDirectory_WithConflictingFile_ShouldThrowIOException()
+        public async Task MockDirectory_CreateDirectory_WithConflictingFile_ShouldThrowIOException()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.AddFile(XFS.Path(@"c:\foo\bar.txt"), new MockFileData("Demo text content"));
             
             // Act
-            TestDelegate action = () => fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo\bar.txt"));
+            Action action = () => fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo\bar.txt"));
 
             // Assert
-            Assert.Throws<IOException>(action);
+            await That(action).Throws<IOException>();
         }
 
         [Test]
-        public void MockDirectory_Exists_ShouldReturnFalseForFiles()
+        public async Task MockDirectory_Exists_ShouldReturnFalseForFiles()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -710,11 +711,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.Exists(XFS.Path(@"c:\foo\bar.txt"));
 
             // Assert
-            Assert.That(result, Is.False);
+            await That(result).IsFalse();
         }
 
         [Test]
-        public void MockDirectory_CreateDirectory_ShouldCreateFolderInMemoryFileSystem()
+        public async Task MockDirectory_CreateDirectory_ShouldCreateFolderInMemoryFileSystem()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -726,12 +727,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\bar"));
 
             // Assert
-            Assert.That(fileSystem.FileExists(XFS.Path(@"c:\bar\")), Is.True);
-            Assert.That(fileSystem.AllDirectories.Any(d => d == XFS.Path(@"c:\bar")), Is.True);
+            await That(fileSystem.FileExists(XFS.Path(@"c:\bar\"))).IsTrue();
+            await That(fileSystem.AllDirectories.Any(d => d == XFS.Path(@"c:\bar"))).IsTrue();
         }
 
         [Test]
-        public void MockDirectory_CreateDirectory_ShouldThrowIfIllegalCharacterInPath()
+        public async Task MockDirectory_CreateDirectory_ShouldThrowIfIllegalCharacterInPath()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -740,15 +741,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            TestDelegate createDelegate = () => fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\bar_?_"));
+            Action createDelegate = () => fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\bar_?_"));
 
             // Assert
-            Assert.Throws<ArgumentException>(createDelegate);
+            await That(createDelegate).Throws<ArgumentException>();
         }
 
         // Issue #210
         [Test]
-        public void MockDirectory_CreateDirectory_ShouldIgnoreExistingDirectoryRegardlessOfTrailingSlash()
+        public async Task MockDirectory_CreateDirectory_ShouldIgnoreExistingDirectoryRegardlessOfTrailingSlash()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -757,12 +758,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act/Assert
-            Assert.That(() => fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo")), Throws.Nothing);
-            Assert.That(() => fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo\")), Throws.Nothing);
+            await That(() => fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo"))).DoesNotThrow();
+            await That(() => fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo\"))).DoesNotThrow();
         }
 
         [Test]
-        public void MockDirectory_CreateDirectory_ShouldReturnDirectoryInfoBase()
+        public async Task MockDirectory_CreateDirectory_ShouldReturnDirectoryInfoBase()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -774,12 +775,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\bar"));
 
             // Assert
-            Assert.That(result, Is.Not.Null);
+            await That(result).IsNotNull();
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.Drives)]
-        public void MockDirectory_CreateDirectory_ShouldTrimTrailingSpaces()
+        public async Task MockDirectory_CreateDirectory_ShouldTrimTrailingSpaces()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -788,11 +789,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\temp\folder "));
 
             // Assert
-            Assert.That(fileSystem.Directory.Exists(XFS.Path(@"c:\temp\folder")), Is.True);
+            await That(fileSystem.Directory.Exists(XFS.Path(@"c:\temp\folder"))).IsTrue();
         }
 
         [Test]
-        public void MockDirectory_CreMockDirectory_CreateDirectory_ShouldReturnDirectoryInfoBaseWhenDirectoryExists()
+        public async Task MockDirectory_CreMockDirectory_CreateDirectory_ShouldReturnDirectoryInfoBaseWhenDirectoryExists()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -804,12 +805,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.CreateDirectory(XFS.Path(@"c:\foo\"));
 
             // Assert
-            Assert.That(result, Is.Not.Null);
+            await That(result).IsNotNull();
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.UNCPaths)]
-        public void MockDirectory_CreateDirectory_ShouldWorkWithUNCPath()
+        public async Task MockDirectory_CreateDirectory_ShouldWorkWithUNCPath()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -818,27 +819,27 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.CreateDirectory(@"\\server\share\path\to\create");
 
             // Assert
-            Assert.That(fileSystem.Directory.Exists(@"\\server\share\path\to\create\"), Is.True);
+            await That(fileSystem.Directory.Exists(@"\\server\share\path\to\create\")).IsTrue();
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.UNCPaths)]
-        public void MockDirectory_CreateDirectory_ShouldFailIfTryingToCreateUNCPathOnlyServer()
+        public async Task MockDirectory_CreateDirectory_ShouldFailIfTryingToCreateUNCPathOnlyServer()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            var ex = Assert.Throws<ArgumentException>(() => fileSystem.Directory.CreateDirectory(@"\\server"));
+            var ex = await That(() => fileSystem.Directory.CreateDirectory(@"\\server")).Throws<ArgumentException>();
 
             // Assert
-            Assert.That(ex.Message, Does.StartWith("The UNC path should be of the form \\\\server\\share."));
-            Assert.That(ex.ParamName, Is.EqualTo("path"));
+            await That(ex.Message).StartsWith("The UNC path should be of the form \\\\server\\share.");
+            await That(ex.ParamName).IsEqualTo("path");
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.UNCPaths)]
-        public void MockDirectory_CreateDirectory_ShouldSucceedIfTryingToCreateUNCPathShare()
+        public async Task MockDirectory_CreateDirectory_ShouldSucceedIfTryingToCreateUNCPathShare()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -847,12 +848,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.CreateDirectory(@"\\server\share");
 
             // Assert
-            Assert.That(fileSystem.Directory.Exists(@"\\server\share\"), Is.True);
+            await That(fileSystem.Directory.Exists(@"\\server\share\")).IsTrue();
         }
 
 #if FEATURE_CREATE_TEMP_SUBDIRECTORY
         [Test]
-        public void MockDirectory_CreateTempSubdirectory_ShouldCreateSubdirectoryInTempDirectory()
+        public async Task MockDirectory_CreateTempSubdirectory_ShouldCreateSubdirectoryInTempDirectory()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -861,12 +862,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.CreateTempSubdirectory();
 
             // Assert
-            Assert.That(fileSystem.Directory.Exists(result.FullName), Is.True);
-            Assert.That(result.FullName, Does.StartWith(fileSystem.Path.GetTempPath()));
+            await That(fileSystem.Directory.Exists(result.FullName)).IsTrue();
+            await That(result.FullName).StartsWith(fileSystem.Path.GetTempPath());
         }
 
         [Test]
-        public void MockDirectory_CreateTempSubdirectoryWithPrefix_ShouldCreateDirectoryWithGivenPrefixInTempDirectory()
+        public async Task MockDirectory_CreateTempSubdirectoryWithPrefix_ShouldCreateDirectoryWithGivenPrefixInTempDirectory()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -875,14 +876,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.CreateTempSubdirectory("foo-");
 
             // Assert
-            Assert.That(fileSystem.Directory.Exists(result.FullName), Is.True);
-            Assert.That(Path.GetFileName(result.FullName).StartsWith("foo-"), Is.True);
-            Assert.That(result.FullName.Contains(fileSystem.Path.GetTempPath()), Is.True);
+            await That(fileSystem.Directory.Exists(result.FullName)).IsTrue();
+            await That(Path.GetFileName(result.FullName).StartsWith("foo-")).IsTrue();
+            await That(result.FullName.Contains(fileSystem.Path.GetTempPath())).IsTrue();
         }
 #endif
 
         [Test]
-        public void MockDirectory_Delete_ShouldDeleteDirectory()
+        public async Task MockDirectory_Delete_ShouldDeleteDirectory()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -894,11 +895,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.Delete(XFS.Path(@"c:\bar"), true);
 
             // Assert
-            Assert.That(fileSystem.Directory.Exists(XFS.Path(@"c:\bar")), Is.False);
+            await That(fileSystem.Directory.Exists(XFS.Path(@"c:\bar"))).IsFalse();
         }
 
         [Test]
-        public void MockDirectory_Delete_ShouldNotDeleteAllDirectories()
+        public async Task MockDirectory_Delete_ShouldNotDeleteAllDirectories()
         {
             // Arrange
             var folder1Path = XFS.Path(@"D:\Test\Program");
@@ -915,14 +916,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.Delete(folder1Path, recursive: true);
 
             // Assert
-            Assert.That(fileSystem.Directory.Exists(folder1Path), Is.False);
-            Assert.That(fileSystem.Directory.Exists(folder1SubFolderPath), Is.False);
-            Assert.That(fileSystem.Directory.Exists(folder2Path), Is.True);
+            await That(fileSystem.Directory.Exists(folder1Path)).IsFalse();
+            await That(fileSystem.Directory.Exists(folder1SubFolderPath)).IsFalse();
+            await That(fileSystem.Directory.Exists(folder2Path)).IsTrue();
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.CaseInsensitivity)]
-        public void MockDirectory_Delete_ShouldDeleteDirectoryCaseInsensitively()
+        public async Task MockDirectory_Delete_ShouldDeleteDirectoryCaseInsensitively()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -934,12 +935,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.Delete(XFS.Path(@"c:\BAR"), true);
 
             // Assert
-            Assert.That(fileSystem.Directory.Exists(XFS.Path(@"c:\bar")), Is.False);
+            await That(fileSystem.Directory.Exists(XFS.Path(@"c:\bar"))).IsFalse();
         }
 
         [Test]
         [UnixOnly(UnixSpecifics.CaseSensitivity)]
-        public void MockDirectory_Delete_ShouldThrowDirectoryNotFoundException_WhenSpecifiedWithInDifferentCase()
+        public async Task MockDirectory_Delete_ShouldThrowDirectoryNotFoundException_WhenSpecifiedWithInDifferentCase()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -948,15 +949,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            TestDelegate action = () => fileSystem.Directory.Delete("/BAR", true);
+            Action action = () => fileSystem.Directory.Delete("/BAR", true);
 
             // Assert
-            Assert.Throws<DirectoryNotFoundException>(action);
+            await That(action).Throws<DirectoryNotFoundException>();
         }
 
         [Test]
         [UnixOnly(UnixSpecifics.CaseSensitivity)]
-        public void MockDirectory_Delete_ShouldDeleteDirectoryCaseSensitively()
+        public async Task MockDirectory_Delete_ShouldDeleteDirectoryCaseSensitively()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -968,11 +969,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.Delete("/bar", true);
 
             // Assert
-            Assert.That(fileSystem.Directory.Exists("/bar"), Is.False);
+            await That(fileSystem.Directory.Exists("/bar")).IsFalse();
         }
 
         [Test]
-        public void MockDirectory_Delete_ShouldThrowDirectoryNotFoundException()
+        public async Task MockDirectory_Delete_ShouldThrowDirectoryNotFoundException()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -980,13 +981,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { XFS.Path(@"c:\bar\foo.txt"), new MockFileData("Demo text content") }
             });
 
-            var ex = Assert.Throws<DirectoryNotFoundException>(() => fileSystem.Directory.Delete(XFS.Path(@"c:\baz")));
+            var ex = await That(() => fileSystem.Directory.Delete(XFS.Path(@"c:\baz"))).Throws<DirectoryNotFoundException>();
 
-            Assert.That(ex.Message, Is.EqualTo($"'{XFS.Path("c:\\baz")}' does not exist or could not be found."));
+            await That(ex.Message).IsEqualTo($"'{XFS.Path("c:\\baz")}' does not exist or could not be found.");
         }
 
         [Test]
-        public void MockDirectory_Delete_ShouldThrowIOException()
+        public async Task MockDirectory_Delete_ShouldThrowIOException()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -995,13 +996,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { XFS.Path(@"c:\bar\baz.txt"), new MockFileData("Demo text content") }
             });
 
-            var ex = Assert.Throws<IOException>(() => fileSystem.Directory.Delete(XFS.Path(@"c:\bar")));
+            var ex = await That(() => fileSystem.Directory.Delete(XFS.Path(@"c:\bar"))).Throws<IOException>();
 
-            Assert.That(ex.Message, Is.EqualTo("The directory specified by " + XFS.Path("c:\\bar") + " is read-only, or recursive is false and " + XFS.Path("c:\\bar") + " is not an empty directory."));
+            await That(ex.Message).IsEqualTo("The directory specified by " + XFS.Path("c:\\bar") + " is read-only, or recursive is false and " + XFS.Path("c:\\bar") + " is not an empty directory.");
         }
 
         [Test]
-        public void MockDirectory_Delete_ShouldDeleteDirectoryRecursively()
+        public async Task MockDirectory_Delete_ShouldDeleteDirectoryRecursively()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -1014,12 +1015,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.DirectoryInfo.New(XFS.Path(@"c:\bar")).Delete(true);
 
             // Assert
-            Assert.That(fileSystem.Directory.Exists(XFS.Path(@"c:\bar")), Is.False);
-            Assert.That(fileSystem.Directory.Exists(XFS.Path(@"c:\bar\bar2")), Is.False);
+            await That(fileSystem.Directory.Exists(XFS.Path(@"c:\bar"))).IsFalse();
+            await That(fileSystem.Directory.Exists(XFS.Path(@"c:\bar\bar2"))).IsFalse();
         }
 
         [Test]
-        public void MockDirectory_Delete_ShouldThrowIOException_WhenPathIsAFile()
+        public async Task MockDirectory_Delete_ShouldThrowIOException_WhenPathIsAFile()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -1028,14 +1029,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            TestDelegate action = () => fileSystem.Directory.Delete(XFS.Path(@"c:\foo.txt"));
+            Action action = () => fileSystem.Directory.Delete(XFS.Path(@"c:\foo.txt"));
 
             // Assert
-            Assert.Throws<IOException>(action);
+            await That(action).Throws<IOException>();
         }
 
         [Test]
-        public void MockDirectory_GetFileSystemEntries_Returns_Files_And_Directories()
+        public async Task MockDirectory_GetFileSystemEntries_Returns_Files_And_Directories()
         {
             string testPath = XFS.Path(@"c:\foo\bar.txt");
             string testDir = XFS.Path(@"c:\foo\bar");
@@ -1046,13 +1047,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             var entries = fileSystem.Directory.GetFileSystemEntries(XFS.Path(@"c:\foo")).OrderBy(k => k);
-            Assert.That(entries.Count(), Is.EqualTo(2));
-            Assert.That(entries.First(), Is.EqualTo(testDir));
-            Assert.That(entries.Last(), Is.EqualTo(testPath));
+            await That(entries.Count()).IsEqualTo(2);
+            await That(entries.First()).IsEqualTo(testDir);
+            await That(entries.Last()).IsEqualTo(testPath);
         }
 
         [Test]
-        public void MockDirectory_GetFileSystemEntries_ShouldNotReturnSubDirectory_WithSearchOption()
+        public async Task MockDirectory_GetFileSystemEntries_ShouldNotReturnSubDirectory_WithSearchOption()
         {
             string testPath = XFS.Path(@"c:\foo\bar.txt");
             string testDir = XFS.Path(@"c:\foo\bar");
@@ -1064,35 +1065,35 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             var entries = fileSystem.Directory.GetFileSystemEntries(XFS.Path(@"c:\foo"), "*", SearchOption.TopDirectoryOnly).OrderBy(k => k);
-            Assert.That(entries.Count(), Is.EqualTo(2));
-            Assert.That(entries.First(), Is.EqualTo(testDir));
-            Assert.That(entries.Last(), Is.EqualTo(testPath));
+            await That(entries.Count()).IsEqualTo(2);
+            await That(entries.First()).IsEqualTo(testDir);
+            await That(entries.Last()).IsEqualTo(testPath);
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldThrowArgumentNullException_IfPathParamIsNull()
+        public async Task MockDirectory_GetFiles_ShouldThrowArgumentNullException_IfPathParamIsNull()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
 
-            TestDelegate action = () => fileSystem.Directory.GetFiles(null);
-            Assert.Throws<ArgumentNullException>(action);
+            Action action = () => fileSystem.Directory.GetFiles(null);
+            await That(action).Throws<ArgumentNullException>();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldThrowDirectoryNotFoundException_IfPathDoesNotExists()
+        public async Task MockDirectory_GetFiles_ShouldThrowDirectoryNotFoundException_IfPathDoesNotExists()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.Directory.GetFiles(XFS.Path(@"c:\Foo"), "*a.txt");
+            Action action = () => fileSystem.Directory.GetFiles(XFS.Path(@"c:\Foo"), "*a.txt");
 
             // Assert
-            Assert.Throws<DirectoryNotFoundException>(action);
+            await That(action).Throws<DirectoryNotFoundException>();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_Returns_Files()
+        public async Task MockDirectory_GetFiles_Returns_Files()
         {
             string testPath = XFS.Path(@"c:\foo\bar.txt");
             string testDir = XFS.Path(@"c:\foo\bar\");
@@ -1103,12 +1104,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             var entries = fileSystem.Directory.GetFiles(XFS.Path(@"c:\foo")).OrderBy(k => k);
-            Assert.That(entries.Count(), Is.EqualTo(1));
-            Assert.That(entries.First(), Is.EqualTo(testPath));
+            await That(entries.Count()).IsEqualTo(1);
+            await That(entries.First()).IsEqualTo(testPath);
         }
 
         [Test]
-        public void MockDirectory_GetFiles_Returns_Files_WithRelativePath()
+        public async Task MockDirectory_GetFiles_Returns_Files_WithRelativePath()
         {
             // arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>());
@@ -1118,11 +1119,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.SetCurrentDirectory(directory);
             fileSystem.AddFile(XFS.Path(@"C:\test.txt"), new MockFileData("Some ASCII text."));
 
-            Assert.That(fileSystem.Directory.GetFiles(XFS.Path(@"..\")).Length, Is.EqualTo(1)); // Assert with relative path
+            await That(fileSystem.Directory.GetFiles(XFS.Path(@"..\")).Length).IsEqualTo(1); // Assert with relative path
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldThrowAnArgumentNullException_IfSearchPatternIsNull()
+        public async Task MockDirectory_GetFiles_ShouldThrowAnArgumentNullException_IfSearchPatternIsNull()
         {
             // Arrange
             var directoryPath = XFS.Path(@"c:\Foo");
@@ -1130,14 +1131,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(directoryPath);
 
             // Act
-            TestDelegate action = () => fileSystem.Directory.GetFiles(directoryPath, null);
+            Action action = () => fileSystem.Directory.GetFiles(directoryPath, null);
 
             // Assert
-            Assert.Throws<ArgumentNullException>(action);
+            await That(action).Throws<ArgumentNullException>();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternEndsWithTwoDots()
+        public async Task MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternEndsWithTwoDots()
         {
             // Arrange
             var directoryPath = XFS.Path(@"c:\Foo");
@@ -1145,17 +1146,17 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(directoryPath);
 
             // Act
-            TestDelegate action = () => fileSystem.Directory.GetFiles(directoryPath, "*a..");
+            Action action = () => fileSystem.Directory.GetFiles(directoryPath, "*a..");
 
             // Assert
-            Assert.Throws<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [TestCase(@"..\")]
         [TestCase(@"aaa\vv..\")]
         [TestCase(@"a..\b")]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneBackslash(string searchPattern)
+        public async Task MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneBackslash(string searchPattern)
         {
             // Arrange
             var directoryPath = XFS.Path(@"c:\Foo");
@@ -1163,15 +1164,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(directoryPath);
 
             // Act
-            TestDelegate action = () => fileSystem.Directory.GetFiles(directoryPath, searchPattern);
+            Action action = () => fileSystem.Directory.GetFiles(directoryPath, searchPattern);
 
             // Assert
-            Assert.Throws<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [TestCase(@"a../b")]
         [TestCase(@"../")]
-        public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneSlash(string searchPattern)
+        public async Task MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternContainsTwoDotsFollowedByOneSlash(string searchPattern)
         {
             // Arrange
             var directoryPath = XFS.Path(@"c:\Foo");
@@ -1179,14 +1180,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(directoryPath);
 
             // Act
-            TestDelegate action = () => fileSystem.Directory.GetFiles(directoryPath, searchPattern);
+            Action action = () => fileSystem.Directory.GetFiles(directoryPath, searchPattern);
 
             // Assert
-            Assert.Throws<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [Test]
-        public void MockDirectory_GetFiles_ShouldFindFilesContainingTwoOrMoreDots()
+        public async Task MockDirectory_GetFiles_ShouldFindFilesContainingTwoOrMoreDots()
         {
             // Arrange
             string testPath = XFS.Path(@"c:\foo..r\bar.txt");
@@ -1199,12 +1200,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetFiles(XFS.Path(@"c:\"), XFS.Path(@"foo..r\*"));
 
             // Assert
-            Assert.That(actualResult, Is.EquivalentTo(new[] { testPath }));
+            await That(actualResult).IsEquivalentTo(new[] { testPath });
         }
 
         [TestCase("aa\t")]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternHasIllegalCharacters(string searchPattern)
+        public async Task MockDirectory_GetFiles_ShouldThrowAnArgumentException_IfSearchPatternHasIllegalCharacters(string searchPattern)
         {
             // Arrange
             var directoryPath = XFS.Path(@"c:\Foo");
@@ -1212,14 +1213,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(directoryPath);
 
             // Act
-            TestDelegate action = () => fileSystem.Directory.GetFiles(directoryPath, searchPattern);
+            Action action = () => fileSystem.Directory.GetFiles(directoryPath, searchPattern);
 
             // Assert
-            Assert.Throws<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [Test]
-        public void MockDirectory_GetRoot_Returns_Root()
+        public async Task MockDirectory_GetRoot_Returns_Root()
         {
             string testDir = XFS.Path(@"c:\foo\bar\");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -1227,11 +1228,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
                 { testDir,  new MockDirectoryData() }
             });
 
-            Assert.That(fileSystem.Directory.GetDirectoryRoot(XFS.Path(@"C:\foo\bar")), Is.EqualTo(XFS.Path("C:\\")));
+            await That(fileSystem.Directory.GetDirectoryRoot(XFS.Path(@"C:\foo\bar"))).IsEqualTo(XFS.Path("C:\\"));
         }
 
         [Test]
-        public void MockDirectory_GetLogicalDrives_Returns_LogicalDrives()
+        public async Task MockDirectory_GetLogicalDrives_Returns_LogicalDrives()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
                 {
@@ -1244,19 +1245,19 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             if (XFS.IsUnixPlatform())
             {
-                Assert.That(drives.Length, Is.EqualTo(1));
-                Assert.That(drives.Contains("/"), Is.True);
+                await That(drives.Length).IsEqualTo(1);
+                await That(drives.Contains("/")).IsTrue();
             }
             else
             {
-                Assert.That(drives.Length, Is.EqualTo(2));
-                Assert.That(drives.Contains(@"C:\"), Is.True);
-                Assert.That(drives.Contains(@"D:\"), Is.True);
+                await That(drives.Length).IsEqualTo(2);
+                await That(drives.Contains(@"C:\")).IsTrue();
+                await That(drives.Contains(@"D:\")).IsTrue();
             }
         }
 
         [Test]
-        public void MockDirectory_GetDirectories_Returns_Child_Directories()
+        public async Task MockDirectory_GetDirectories_Returns_Child_Directories()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
@@ -1267,16 +1268,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var directories = fileSystem.Directory.GetDirectories(XFS.Path(@"A:\folder1")).ToArray();
 
             //Check that it does not returns itself
-            Assert.That(directories.Contains(XFS.Path(@"A:\folder1")), Is.False);
+            await That(directories.Contains(XFS.Path(@"A:\folder1"))).IsFalse();
 
             //Check that it correctly returns all child directories
-            Assert.That(directories.Count(), Is.EqualTo(2));
-            Assert.That(directories.Contains(XFS.Path(@"A:\folder1\folder2")), Is.True);
-            Assert.That(directories.Contains(XFS.Path(@"A:\folder1\folder4")), Is.True);
+            await That(directories.Count()).IsEqualTo(2);
+            await That(directories.Contains(XFS.Path(@"A:\folder1\folder2"))).IsTrue();
+            await That(directories.Contains(XFS.Path(@"A:\folder1\folder4"))).IsTrue();
         }
 
         [Test]
-        public void MockDirectory_GetDirectories_WithTopDirectories_ShouldOnlyReturnTopDirectories()
+        public async Task MockDirectory_GetDirectories_WithTopDirectories_ShouldOnlyReturnTopDirectories()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -1290,11 +1291,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetDirectories(XFS.Path(@"C:\Folder\"), "*.foo");
 
             // Assert
-            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo") }));
+            await That(actualResult).IsEquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo") });
         }
 
         [Test]
-        public void MockDirectory_GetDirectories_RelativeWithNoSubDirectories_ShouldReturnDirectories()
+        public async Task MockDirectory_GetDirectories_RelativeWithNoSubDirectories_ShouldReturnDirectories()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -1304,12 +1305,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetDirectories("Folder");
 
             // Assert
-            Assert.That(actualResult, Is.Empty);
+            await That(actualResult).IsEmpty();
         }
 
         [TestCase(@"Folder\SubFolder")]
         [TestCase(@"Folder")]
-        public void MockDirectory_GetDirectories_RelativeDirectory_WithoutChildren_ShouldReturnNoChildDirectories(string relativeDirPath)
+        public async Task MockDirectory_GetDirectories_RelativeDirectory_WithoutChildren_ShouldReturnNoChildDirectories(string relativeDirPath)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -1319,12 +1320,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetDirectories(relativeDirPath);
 
             // Assert
-            Assert.That(actualResult, Is.Empty);
+            await That(actualResult).IsEmpty();
         }
 
         [TestCase(@"Folder\SubFolder")]
         [TestCase(@"Folder")]
-        public void MockDirectory_GetDirectories_RelativeDirectory_WithChildren_ShouldReturnChildDirectories(string relativeDirPath)
+        public async Task MockDirectory_GetDirectories_RelativeDirectory_WithChildren_ShouldReturnChildDirectories(string relativeDirPath)
         {
             // Arrange
             var currentDirectory = XFS.Path(@"T:\foo");
@@ -1336,11 +1337,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetDirectories(XFS.Path(relativeDirPath));
 
             // Assert
-            Assert.That(actualResult, Is.EqualTo(new[] { XFS.Path(relativeDirPath + @"\child") }));
+            await That(actualResult).IsEqualTo(new[] { XFS.Path(relativeDirPath + @"\child") });
         }
 
         [Test]
-        public void MockDirectory_GetDirectories_AbsoluteWithNoSubDirectories_ShouldReturnDirectories()
+        public async Task MockDirectory_GetDirectories_AbsoluteWithNoSubDirectories_ShouldReturnDirectories()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -1351,11 +1352,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetDirectories(fullPath);
 
             // Assert
-            Assert.That(actualResult, Is.Empty);
+            await That(actualResult).IsEmpty();
         }
 
         [Test]
-        public void MockDirectory_GetDirectories_WithAllDirectories_ShouldReturnsAllMatchingSubFolders()
+        public async Task MockDirectory_GetDirectories_WithAllDirectories_ShouldReturnsAllMatchingSubFolders()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -1369,11 +1370,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetDirectories(XFS.Path(@"C:\Folder\"), "*.foo", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo"), XFS.Path(@"C:\Folder\.foo\.foo") }));
+            await That(actualResult).IsEquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo"), XFS.Path(@"C:\Folder\.foo\.foo") });
         }
 
         [Test]
-        public void MockDirectory_GetDirectories_ShouldThrowWhenPathIsNotMocked()
+        public async Task MockDirectory_GetDirectories_ShouldThrowWhenPathIsNotMocked()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -1390,14 +1391,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            TestDelegate action = () => fileSystem.Directory.GetDirectories(XFS.Path(@"c:\d"));
+            Action action = () => fileSystem.Directory.GetDirectories(XFS.Path(@"c:\d"));
 
             // Assert
-            Assert.Throws<DirectoryNotFoundException>(action);
+            await That(action).Throws<DirectoryNotFoundException>();
         }
 
         [Test]
-        public void MockDirectory_EnumerateDirectories_Returns_Child_Directories()
+        public async Task MockDirectory_EnumerateDirectories_Returns_Child_Directories()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
             {
@@ -1408,16 +1409,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var directories = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"A:\folder1")).ToArray();
 
             //Check that it does not returns itself
-            Assert.That(directories.Contains(XFS.Path(@"A:\folder1")), Is.False);
+            await That(directories.Contains(XFS.Path(@"A:\folder1"))).IsFalse();
 
             //Check that it correctly returns all child directories
-            Assert.That(directories.Count(), Is.EqualTo(2));
-            Assert.That(directories.Contains(XFS.Path(@"A:\folder1\folder2")), Is.True);
-            Assert.That(directories.Contains(XFS.Path(@"A:\folder1\folder4")), Is.True);
+            await That(directories.Count()).IsEqualTo(2);
+            await That(directories.Contains(XFS.Path(@"A:\folder1\folder2"))).IsTrue();
+            await That(directories.Contains(XFS.Path(@"A:\folder1\folder4"))).IsTrue();
         }
 
         [Test]
-        public void MockDirectory_EnumerateDirectories_WithTopDirectories_ShouldOnlyReturnTopDirectories()
+        public async Task MockDirectory_EnumerateDirectories_WithTopDirectories_ShouldOnlyReturnTopDirectories()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -1431,12 +1432,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"C:\Folder\"), "*.foo");
 
             // Assert
-            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo") }));
+            await That(actualResult).IsEquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo") });
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
         [Test]
-        public void MockDirectory_EnumerateDirectories_WithEnumerationOptionsTopDirectories_ShouldOnlyReturnTopDirectories()
+        public async Task MockDirectory_EnumerateDirectories_WithEnumerationOptionsTopDirectories_ShouldOnlyReturnTopDirectories()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -1455,11 +1456,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"C:\Folder\"), "*.foo", enumerationOptions);
 
             // Assert
-            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo") }));
+            await That(actualResult).IsEquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo") });
         }
 #endif
         [Test]
-        public void MockDirectory_EnumerateDirectories_WithAllDirectories_ShouldReturnsAllMatchingSubFolders()
+        public async Task MockDirectory_EnumerateDirectories_WithAllDirectories_ShouldReturnsAllMatchingSubFolders()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -1473,11 +1474,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.EnumerateDirectories(XFS.Path(@"C:\Folder\"), "*.foo", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(actualResult, Is.EquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo"), XFS.Path(@"C:\Folder\.foo\.foo") }));
+            await That(actualResult).IsEquivalentTo(new[] { XFS.Path(@"C:\Folder\.foo"), XFS.Path(@"C:\Folder\foo.foo"), XFS.Path(@"C:\Folder\.foo\.foo") });
         }
 
         [Test]
-        public void MockDirectory_EnumerateDirectories_ShouldThrowWhenPathIsNotMocked()
+        public async Task MockDirectory_EnumerateDirectories_ShouldThrowWhenPathIsNotMocked()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -1494,14 +1495,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            TestDelegate action = () => fileSystem.Directory.EnumerateDirectories(XFS.Path(@"c:\d"));
+            Action action = () => fileSystem.Directory.EnumerateDirectories(XFS.Path(@"c:\d"));
 
             // Assert
-            Assert.Throws<DirectoryNotFoundException>(action);
+            await That(action).Throws<DirectoryNotFoundException>();
         }
         
         [TestCaseSource(nameof(GetPrefixTestPaths))]
-        public void MockDirectory_EnumerateDirectories_ShouldReturnPathsPrefixedWithQueryPath(
+        public async Task MockDirectory_EnumerateDirectories_ShouldReturnPathsPrefixedWithQueryPath(
             string queryPath, string expectedPath)
         {
             var fileSystem = new MockFileSystem();
@@ -1509,7 +1510,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             
             var actualResult = fileSystem.Directory.EnumerateDirectories(queryPath);
             
-            Assert.That(actualResult, Is.EqualTo(new[] { expectedPath }));
+            await That(actualResult).IsEqualTo(new[] { expectedPath });
         }
         
         private static IEnumerable<object[]> GetPrefixTestPaths()
@@ -1532,7 +1533,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         }
 
         [Test]
-        public void Move_DirectoryExistsWithDifferentCase_DirectorySuccessfullyMoved()
+        public async Task Move_DirectoryExistsWithDifferentCase_DirectorySuccessfullyMoved()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -1543,11 +1544,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.Move(XFS.Path(@"C:\old_location"), XFS.Path(@"C:\NewLocation\"));
 
             // Assert
-            Assert.That(fileSystem.File.Exists(XFS.Path(@"C:\NewLocation\Data\someFile.txt")), Is.True);
+            await That(fileSystem.File.Exists(XFS.Path(@"C:\NewLocation\Data\someFile.txt"))).IsTrue();
         }
 
         [TestCaseSource(nameof(GetPathsForMoving))]
-        public void MockDirectory_Move_ShouldMoveDirectories(string sourceDirName, string destDirName, string filePathOne, string filePathTwo)
+        public async Task MockDirectory_Move_ShouldMoveDirectories(string sourceDirName, string destDirName, string filePathOne, string filePathTwo)
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -1560,13 +1561,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.DirectoryInfo.New(sourceDirName).MoveTo(destDirName);
 
             // Assert
-            Assert.That(fileSystem.Directory.Exists(sourceDirName), Is.False);
-            Assert.That(fileSystem.File.Exists(XFS.Path(destDirName + filePathOne)), Is.True);
-            Assert.That(fileSystem.File.Exists(XFS.Path(destDirName + filePathTwo)), Is.True);
+            await That(fileSystem.Directory.Exists(sourceDirName)).IsFalse();
+            await That(fileSystem.File.Exists(XFS.Path(destDirName + filePathOne))).IsTrue();
+            await That(fileSystem.File.Exists(XFS.Path(destDirName + filePathTwo))).IsTrue();
         }
 
         [Test]
-        public void MockDirectory_Move_ShouldMoveFiles()
+        public async Task MockDirectory_Move_ShouldMoveFiles()
         {
             string sourceFilePath = XFS.Path(@"c:\demo.txt");
             string sourceFileContent = "this is some content";
@@ -1580,13 +1581,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             fileSystem.Directory.Move(sourceFilePath, destFilePath);
 
-            Assert.That(fileSystem.FileExists(destFilePath), Is.True);
-            Assert.That(fileSystem.FileExists(sourceFilePath), Is.False);
-            Assert.That(fileSystem.GetFile(destFilePath).TextContents, Is.EqualTo(sourceFileContent));
+            await That(fileSystem.FileExists(destFilePath)).IsTrue();
+            await That(fileSystem.FileExists(sourceFilePath)).IsFalse();
+            await That(fileSystem.GetFile(destFilePath).TextContents).IsEqualTo(sourceFileContent);
         }
 
         [Test]
-        public void MockDirectory_Move_ShouldMoveDirectoryAttributes()
+        public async Task MockDirectory_Move_ShouldMoveDirectoryAttributes()
         {
             // Arrange
             var sourceDirName = XFS.Path(@"a:\folder1\");
@@ -1607,11 +1608,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Assert
             var destDirectoryInfo = fileSystem.DirectoryInfo.New(destDirName);
-            Assert.That(destDirectoryInfo.Attributes.HasFlag(FileAttributes.System), Is.True);
+            await That(destDirectoryInfo.Attributes.HasFlag(FileAttributes.System)).IsTrue();
         }
 
         [Test]
-        public void MockDirectory_Move_ShouldMoveDirectoryWithReadOnlySubDirectory()
+        public async Task MockDirectory_Move_ShouldMoveDirectoryWithReadOnlySubDirectory()
         {
             // Arrange
             var sourceDirName = XFS.Path(@"a:\folder1\");
@@ -1632,12 +1633,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.DirectoryInfo.New(sourceDirName).MoveTo(destDirName);
 
             // Assert
-            Assert.That(fileSystem.Directory.Exists(sourceSubDirName), Is.False);
-            Assert.That(fileSystem.FileExists(destSubDirName), Is.True);
+            await That(fileSystem.Directory.Exists(sourceSubDirName)).IsFalse();
+            await That(fileSystem.FileExists(destSubDirName)).IsTrue();
         }
 
         [Test]
-        public void MockDirectory_Move_ShouldOnlyMoveDirAndFilesWithinDir()
+        public async Task MockDirectory_Move_ShouldOnlyMoveDirAndFilesWithinDir()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -1653,23 +1654,23 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.Move(XFS.Path(@"c:\source\dummy"), XFS.Path(@"c:\destination\dummy"));
 
             // Assert
-            Assert.That(fileSystem.FileExists(XFS.Path(@"c:\source\dummy.txt")), Is.True);
-            Assert.That(fileSystem.Directory.Exists(XFS.Path(@"c:\source\dummy2")), Is.True);
+            await That(fileSystem.FileExists(XFS.Path(@"c:\source\dummy.txt"))).IsTrue();
+            await That(fileSystem.Directory.Exists(XFS.Path(@"c:\source\dummy2"))).IsTrue();
         }
 
         [Test]
-        public void MockDirectory_GetCurrentDirectory_ShouldReturnValueFromFileSystemConstructor()
+        public async Task MockDirectory_GetCurrentDirectory_ShouldReturnValueFromFileSystemConstructor()
         {
             string directory = XFS.Path(@"D:\folder1\folder2");
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>(), directory);
 
             var actual = fileSystem.Directory.GetCurrentDirectory();
 
-            Assert.That(actual, Is.EqualTo(directory));
+            await That(actual).IsEqualTo(directory);
         }
 
         [Test]
-        public void MockDirectory_GetCurrentDirectory_ShouldReturnDefaultPathWhenNotSet()
+        public async Task MockDirectory_GetCurrentDirectory_ShouldReturnDefaultPathWhenNotSet()
         {
             string directory = XFS.Path(@"C:\");
 
@@ -1677,62 +1678,62 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var actual = fileSystem.Directory.GetCurrentDirectory();
 
-            Assert.That(actual, Is.EqualTo(directory));
+            await That(actual).IsEqualTo(directory);
         }
 
         [Test]
-        public void MockDirectory_SetCurrentDirectory_ShouldChangeCurrentDirectory()
+        public async Task MockDirectory_SetCurrentDirectory_ShouldChangeCurrentDirectory()
         {
             string directory = XFS.Path(@"D:\folder1\folder2");
             var fileSystem = new MockFileSystem();
 
             // Precondition
-            Assert.That(fileSystem.Directory.GetCurrentDirectory(), Is.Not.EqualTo(directory));
+            await That(fileSystem.Directory.GetCurrentDirectory()).IsNotEqualTo(directory);
 
             fileSystem.Directory.SetCurrentDirectory(directory);
 
-            Assert.That(fileSystem.Directory.GetCurrentDirectory(), Is.EqualTo(directory));
+            await That(fileSystem.Directory.GetCurrentDirectory()).IsEqualTo(directory);
         }
 
         [Test]
-        public void MockDirectory_SetCurrentDirectory_WithRelativePath_ShouldUseFullPath()
+        public async Task MockDirectory_SetCurrentDirectory_WithRelativePath_ShouldUseFullPath()
         {
             var fileSystem = new MockFileSystem();
             fileSystem.Directory.SetCurrentDirectory(".");
 
             var result = fileSystem.Directory.GetCurrentDirectory();
 
-            Assert.That(fileSystem.Path.IsPathRooted(result), Is.True);
+            await That(fileSystem.Path.IsPathRooted(result)).IsTrue();
         }
 
         [Test]
-        public void MockDirectory_GetParent_ShouldThrowArgumentNullExceptionIfPathIsNull()
+        public async Task MockDirectory_GetParent_ShouldThrowArgumentNullExceptionIfPathIsNull()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate act = () => fileSystem.Directory.GetParent(null);
+            Action act = () => fileSystem.Directory.GetParent(null);
 
             // Assert
-            Assert.Throws<ArgumentNullException>(act);
+            await That(act).Throws<ArgumentNullException>();
         }
 
         [Test]
-        public void MockDirectory_GetParent_ShouldThrowArgumentExceptionIfPathIsEmpty()
+        public async Task MockDirectory_GetParent_ShouldThrowArgumentExceptionIfPathIsEmpty()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate act = () => fileSystem.Directory.GetParent(string.Empty);
+            Action act = () => fileSystem.Directory.GetParent(string.Empty);
 
             // Assert
-            Assert.Throws<ArgumentException>(act);
+            await That(act).Throws<ArgumentException>();
         }
 
         [Test]
-        public void MockDirectory_GetParent_ShouldReturnADirectoryInfoIfPathDoesNotExist()
+        public async Task MockDirectory_GetParent_ShouldReturnADirectoryInfoIfPathDoesNotExist()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -1741,25 +1742,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetParent(XFS.Path(@"c:\directory\does\not\exist"));
 
             // Assert
-            Assert.That(actualResult, Is.Not.Null);
+            await That(actualResult).IsNotNull();
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockDirectory_GetParent_ShouldThrowArgumentExceptionIfPathHasIllegalCharacters()
+        public async Task MockDirectory_GetParent_ShouldThrowArgumentExceptionIfPathHasIllegalCharacters()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate act = () => fileSystem.Directory.GetParent(XFS.Path("c:\\director\ty\\has\\illegal\\character"));
+            Action act = () => fileSystem.Directory.GetParent(XFS.Path("c:\\director\ty\\has\\illegal\\character"));
 
             // Assert
-            Assert.Throws<ArgumentException>(act);
+            await That(act).Throws<ArgumentException>();
         }
 
         [Test]
-        public void MockDirectory_GetParent_ShouldReturnNullIfPathIsRoot()
+        public async Task MockDirectory_GetParent_ShouldReturnNullIfPathIsRoot()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -1769,12 +1770,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetParent(XFS.Path(@"c:\"));
 
             // Assert
-            Assert.That(actualResult, Is.Null);
+            await That(actualResult).IsNull();
         }
 
         [Test]
         [UnixOnly(UnixSpecifics.SlashRoot)]
-        public void MockDirectory_GetParent_ShouldReturnRootIfDirectoryIsInRoot()
+        public async Task MockDirectory_GetParent_ShouldReturnRootIfDirectoryIsInRoot()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -1784,7 +1785,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var parent = fileSystem.Directory.GetParent("/bar");
 
             // Assert
-            Assert.That(parent.FullName, Is.EqualTo("/"));
+            await That(parent.FullName).IsEqualTo("/");
         }
 
         public static IEnumerable<string[]> MockDirectory_GetParent_Cases
@@ -1797,7 +1798,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
         }
 
-        public void MockDirectory_GetParent_ShouldReturnTheParentWithoutTrailingDirectorySeparatorChar(string path, string expectedResult)
+        public async Task MockDirectory_GetParent_ShouldReturnTheParentWithoutTrailingDirectorySeparatorChar(string path, string expectedResult)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -1807,11 +1808,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualResult = fileSystem.Directory.GetParent(path);
 
             // Assert
-            Assert.That(actualResult.FullName, Is.EqualTo(expectedResult));
+            await That(actualResult.FullName).IsEqualTo(expectedResult);
         }
 
         [Test]
-        public void MockDirectory_Move_ShouldThrowAnIOExceptionIfBothPathAreIdentical()
+        public async Task MockDirectory_Move_ShouldThrowAnIOExceptionIfBothPathAreIdentical()
         {
             // Arrange
             string path = XFS.Path(@"c:\a");
@@ -1819,15 +1820,15 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(path);
 
             // Act
-            TestDelegate action = () => fileSystem.Directory.Move(path, path);
+            Action action = () => fileSystem.Directory.Move(path, path);
 
             // Assert
-            Assert.Throws<IOException>(action, "Source and destination path must be different.");
+            await That(action, "Source and destination path must be different.").Throws<IOException>();
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.Drives)]
-        public void MockDirectory_Move_ShouldThrowAnIOExceptionIfDirectoriesAreOnDifferentVolumes()
+        public async Task MockDirectory_Move_ShouldThrowAnIOExceptionIfDirectoriesAreOnDifferentVolumes()
         {
             // Arrange
             string sourcePath = XFS.Path(@"c:\a");
@@ -1836,14 +1837,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(sourcePath);
 
             // Act
-            TestDelegate action = () => fileSystem.Directory.Move(sourcePath, destPath);
+            Action action = () => fileSystem.Directory.Move(sourcePath, destPath);
 
             // Assert
-            Assert.Throws<IOException>(action, "Source and destination path must have identical roots. Move will not work across volumes.");
+            await That(action, "Source and destination path must have identical roots. Move will not work across volumes.").Throws<IOException>();
         }
 
         [Test]
-        public void MockDirectory_Move_ShouldThrowADirectoryNotFoundExceptionIfDestinationDirectoryDoesNotExist()
+        public async Task MockDirectory_Move_ShouldThrowADirectoryNotFoundExceptionIfDestinationDirectoryDoesNotExist()
         {
             // Arrange
             string sourcePath = XFS.Path(@"c:\a");
@@ -1851,14 +1852,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.Directory.Move(sourcePath, destPath);
+            Action action = () => fileSystem.Directory.Move(sourcePath, destPath);
 
             // Assert
-            Assert.Throws<DirectoryNotFoundException>(action, "Could not find a part of the path 'c:\a'.");
+            await That(action, "Could not find a part of the path 'c:\a'.").Throws<DirectoryNotFoundException>();
         }
 
         [Test]
-        public void MockDirectory_Move_ShouldThrowAnIOExceptionIfDestinationDirectoryExists()
+        public async Task MockDirectory_Move_ShouldThrowAnIOExceptionIfDestinationDirectoryExists()
         {
             // Arrange
             string sourcePath = XFS.Path(@"c:\a");
@@ -1868,14 +1869,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.AddDirectory(destPath);
 
             // Act
-            TestDelegate action = () => fileSystem.Directory.Move(sourcePath, destPath);
+            Action action = () => fileSystem.Directory.Move(sourcePath, destPath);
 
             // Assert
-            Assert.Throws<IOException>(action, "Cannot create 'c:\b\' because a file or directory with the same name already exists.'");
+            await That(action, "Cannot create 'c:\b\' because a file or directory with the same name already exists.'").Throws<IOException>();
         }
 
         [Test]
-        public void MockDirectory_EnumerateFiles_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
+        public async Task MockDirectory_EnumerateFiles_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -1895,12 +1896,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.EnumerateFiles(XFS.Path(@"c:\a"), "*", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
         [Test]
-        public void MockDirectory_EnumerateFiles_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndEnumerationOptionsIsAllDirectories()
+        public async Task MockDirectory_EnumerateFiles_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndEnumerationOptionsIsAllDirectories()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -1925,13 +1926,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.EnumerateFiles(XFS.Path(@"c:\a"), "*", enumerationOptions);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
 #endif
 
         [Test]
-        public void MockDirectory_EnumerateFiles_ShouldFilterByExtensionBasedSearchPattern()
+        public async Task MockDirectory_EnumerateFiles_ShouldFilterByExtensionBasedSearchPattern()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -1946,11 +1947,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.EnumerateFiles(XFS.Path(@"c:\"), "*.gif", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_EnumerateFiles_WhenFilterIsUnRooted_ShouldFindFilesInCurrentDirectory()
+        public async Task MockDirectory_EnumerateFiles_WhenFilterIsUnRooted_ShouldFindFilesInCurrentDirectory()
         {
             // Arrange
             var someContent = new MockFileData(String.Empty);
@@ -1973,11 +1974,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.EnumerateFiles(XFS.Path("b"));
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_EnumerateFiles_WhenFilterIsUnRooted_ShouldNotFindFilesInPathOutsideCurrentDirectory()
+        public async Task MockDirectory_EnumerateFiles_WhenFilterIsUnRooted_ShouldNotFindFilesInPathOutsideCurrentDirectory()
         {
             // Arrange
             var someContent = new MockFileData(String.Empty);
@@ -1999,11 +2000,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.EnumerateFiles(XFS.Path("b"));
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_EnumerateFileSystemEntries_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
+        public async Task MockDirectory_EnumerateFileSystemEntries_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndSearchOptionIsAllDirectories()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -2024,11 +2025,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.EnumerateFileSystemEntries(XFS.Path(@"c:\a"), "*", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
         [Test]
-        public void MockDirectory_EnumerateFileSystemEntries_ShouldFilterByExtensionBasedSearchPattern()
+        public async Task MockDirectory_EnumerateFileSystemEntries_ShouldFilterByExtensionBasedSearchPattern()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -2043,12 +2044,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.EnumerateFileSystemEntries(XFS.Path(@"c:\"), "*.gif", SearchOption.AllDirectories);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 
 #if FEATURE_ENUMERATION_OPTIONS
         [Test]
-        public void MockDirectory_EnumerateFileSystemEntries_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndEnumerationOptionsIsAllDirectories()
+        public async Task MockDirectory_EnumerateFileSystemEntries_ShouldReturnAllFilesBelowPathWhenPatternIsWildcardAndEnumerationOptionsIsAllDirectories()
         {
             // Arrange
             var fileSystem = SetupFileSystem();
@@ -2074,26 +2075,26 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.Directory.EnumerateFileSystemEntries(XFS.Path(@"c:\a"), "*", enumerationOptions);
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(expected));
+            await That(result).IsEqualTo(expected).InAnyOrder();
         }
 #endif
 
         [Test]
-        public void MockDirectory_GetAccessControl_ShouldThrowExceptionOnDirectoryNotFound()
+        public async Task MockDirectory_GetAccessControl_ShouldThrowExceptionOnDirectoryNotFound()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
 #pragma warning disable CA1416
-            Assert.Throws<DirectoryNotFoundException>(() => fileSystem.Directory.GetAccessControl(XFS.Path(@"c:\foo")));
+            await That(() => fileSystem.Directory.GetAccessControl(XFS.Path(@"c:\foo"))).Throws<DirectoryNotFoundException>();
 #pragma warning restore CA1416
         }
 
         [Test]
         [WindowsOnly(WindowsSpecifics.AccessControlLists)]
         [SupportedOSPlatform("windows")]
-        public void MockDirectory_GetAccessControl_ShouldReturnNewDirectorySecurity()
+        public async Task MockDirectory_GetAccessControl_ShouldReturnNewDirectorySecurity()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -2103,16 +2104,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             DirectorySecurity result = fileSystem.Directory.GetAccessControl(XFS.Path(@"c:\foo\"));
 
             // Assert
-            Assert.That(result, Is.Not.Null);
+            await That(result).IsNotNull();
         }
 
         [Test]
-        public void MockDirectory_SetCreationTime_ShouldNotThrowWithoutTrailingBackslash()
+        public async Task MockDirectory_SetCreationTime_ShouldNotThrowWithoutTrailingBackslash()
         {
             var path = XFS.Path(@"C:\NoTrailingBackslash");
             var fs = new MockFileSystem();
             fs.Directory.CreateDirectory(path);
-            fs.Directory.SetCreationTime(path, DateTime.Now);
+            await That(()=> fs.Directory.SetCreationTime(path, DateTime.Now)).DoesNotThrow();
             fs.Directory.Delete(path);
         }
 
@@ -2138,7 +2139,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         [TestCaseSource(nameof(Failing_DirectoryMoveFromToPaths))]
-        public void Move_Directory_Throws_When_Target_Directory_Parent_Does_Not_Exist(
+        public async Task Move_Directory_Throws_When_Target_Directory_Parent_Does_Not_Exist(
             string sourceDirName,
             string targetDirName)
         {
@@ -2147,12 +2148,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.CreateDirectory(sourceDirName);
 
             // Act
-            Assert.Throws<DirectoryNotFoundException>(() =>
-                fileSystem.Directory.Move(sourceDirName, targetDirName));
+            await That(() => fileSystem.Directory.Move(sourceDirName, targetDirName))
+                .Throws<DirectoryNotFoundException>();
 
             // Assert
-            Assert.That(fileSystem.Directory.Exists(targetDirName), Is.False);
-            Assert.That(fileSystem.Directory.Exists(sourceDirName), Is.True);
+            await That(fileSystem.Directory.Exists(targetDirName)).IsFalse();
+            await That(fileSystem.Directory.Exists(sourceDirName)).IsTrue();
         }
 
         private static IEnumerable<TestCaseData> Success_DirectoryMoveFromToPaths
@@ -2176,7 +2177,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
         [Test]
         [TestCaseSource(nameof(Success_DirectoryMoveFromToPaths))]
-        public void Move_Directory_DoesNotThrow_When_Target_Directory_Parent_Exists(
+        public async Task Move_Directory_DoesNotThrow_When_Target_Directory_Parent_Exists(
             string sourceDirName,
             string targetDirName)
         {
@@ -2185,12 +2186,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileSystem.Directory.CreateDirectory(sourceDirName);
 
             // Act
-            Assert.DoesNotThrow(() =>
-                fileSystem.Directory.Move(sourceDirName, targetDirName));
+            await That(() => fileSystem.Directory.Move(sourceDirName, targetDirName)).DoesNotThrow();
 
             // Assert
-            Assert.That(fileSystem.Directory.Exists(targetDirName), Is.True);
-            Assert.That(fileSystem.Directory.Exists(sourceDirName), Is.False);
+            await That(fileSystem.Directory.Exists(targetDirName)).IsTrue();
+            await That(fileSystem.Directory.Exists(sourceDirName)).IsFalse();
         }
     }
 }

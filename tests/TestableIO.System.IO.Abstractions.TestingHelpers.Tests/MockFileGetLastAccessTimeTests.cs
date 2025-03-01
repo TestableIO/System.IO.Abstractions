@@ -7,21 +7,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     {
         [TestCase(" ")]
         [TestCase("   ")]
-        public void MockFile_GetLastAccessTime_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
+        public async Task MockFile_GetLastAccessTime_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.GetLastAccessTime(path);
+            Action action = () => fileSystem.File.GetLastAccessTime(path);
 
             // Assert
-            var exception = Assert.Throws<ArgumentException>(action);
-            Assert.That(exception.ParamName, Is.EqualTo("path"));
+            var exception = await That(action).Throws<ArgumentException>();
+            await That(exception.ParamName).IsEqualTo("path");
         }
 
         [Test]
-        public void MockFile_GetLastAccessTime_ShouldReturnDefaultTimeIfFileDoesNotExist()
+        public async Task MockFile_GetLastAccessTime_ShouldReturnDefaultTimeIfFileDoesNotExist()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -30,11 +30,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastAccessTime = fileSystem.File.GetLastAccessTime(@"c:\does\not\exist.txt");
 
             // Assert
-            Assert.That(actualLastAccessTime, Is.EqualTo(new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc).ToLocalTime()));
+            await That(actualLastAccessTime).IsEqualTo(new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc).ToLocalTime());
         }
 
         [Test]
-        public void MockFile_GetLastAccessTime_ShouldBeSet()
+        public async Task MockFile_GetLastAccessTime_ShouldBeSet()
         {
             var now = DateTime.Now.AddDays(10);
             var fileSystem = new MockFileSystem()
@@ -43,8 +43,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.File.GetLastAccessTime("foo.txt");
 
-            Assert.That(result.Kind, Is.EqualTo(DateTimeKind.Local));
-            Assert.That(result, Is.EqualTo(now.ToLocalTime()));
+            await That(result.Kind).IsEqualTo(DateTimeKind.Local);
+            await That(result).IsEqualTo(now.ToLocalTime());
         }
     }
 }

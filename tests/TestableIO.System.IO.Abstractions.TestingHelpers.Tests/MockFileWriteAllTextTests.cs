@@ -14,7 +14,7 @@
     public class MockFileWriteAllTextTests
     {
         [Test]
-        public void MockFile_WriteAllText_ShouldWriteTextFileToMemoryFileSystem()
+        public async Task MockFile_WriteAllText_ShouldWriteTextFileToMemoryFileSystem()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -26,11 +26,11 @@
             fileSystem.File.WriteAllText(path, fileContent);
 
             // Assert
-            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(fileContent));
+            await That(fileSystem.GetFile(path).TextContents).IsEqualTo(fileContent);
         }
 
         [Test]
-        public void MockFile_WriteAllText_ShouldOverwriteAnExistingFile()
+        public async Task MockFile_WriteAllText_ShouldOverwriteAnExistingFile()
         {
             // http://msdn.microsoft.com/en-us/library/ms143375.aspx
 
@@ -44,11 +44,11 @@
             fileSystem.File.WriteAllText(path, "bar");
 
             // Assert
-            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo("bar"));
+            await That(fileSystem.GetFile(path).TextContents).IsEqualTo("bar");
         }
 
         [Test]
-        public void MockFile_WriteAllText_ShouldThrowAnUnauthorizedAccessExceptionIfFileIsHidden()
+        public async Task MockFile_WriteAllText_ShouldThrowAnUnauthorizedAccessExceptionIfFileIsHidden()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -59,27 +59,28 @@
             fileSystem.File.SetAttributes(path, FileAttributes.Hidden);
 
             // Act
-            TestDelegate action = () => fileSystem.File.WriteAllText(path, "hello world");
+            Action action = () => fileSystem.File.WriteAllText(path, "hello world");
 
             // Assert
-            Assert.Throws<UnauthorizedAccessException>(action, "Access to the path '{0}' is denied.", path);
+            await That(action).Throws<UnauthorizedAccessException>()
+                .Because($"Access to the path '{path}' is denied.");
         }
 
         [Test]
-        public void MockFile_WriteAllText_ShouldThrowAnArgumentExceptionIfThePathIsEmpty()
+        public async Task MockFile_WriteAllText_ShouldThrowAnArgumentExceptionIfThePathIsEmpty()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.WriteAllText(string.Empty, "hello world");
+            Action action = () => fileSystem.File.WriteAllText(string.Empty, "hello world");
 
             // Assert
-            Assert.Throws<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [Test]
-        public void MockFile_WriteAllText_ShouldNotThrowAnArgumentNullExceptionIfTheContentIsNull()
+        public async Task MockFile_WriteAllText_ShouldNotThrowAnArgumentNullExceptionIfTheContentIsNull()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -93,11 +94,11 @@
             // Assert
             // no exception should be thrown, also the documentation says so
             var data = fileSystem.GetFile(filePath);
-            Assert.That(data.Contents, Is.Empty);
+            await That(data.Contents).IsEmpty();
         }
 
         [Test]
-        public void MockFile_WriteAllText_ShouldThrowAnUnauthorizedAccessExceptionIfTheFileIsReadOnly()
+        public async Task MockFile_WriteAllText_ShouldThrowAnUnauthorizedAccessExceptionIfTheFileIsReadOnly()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -107,14 +108,14 @@
             fileSystem.AddFile(filePath, mockFileData);
 
             // Act
-            TestDelegate action = () => fileSystem.File.WriteAllText(filePath, null);
+            Action action = () => fileSystem.File.WriteAllText(filePath, null);
 
             // Assert
-            Assert.Throws<UnauthorizedAccessException>(action);
+            await That(action).Throws<UnauthorizedAccessException>();
         }
 
         [Test]
-        public void MockFile_WriteAllText_ShouldThrowAnUnauthorizedAccessExceptionIfThePathIsOneDirectory()
+        public async Task MockFile_WriteAllText_ShouldThrowAnUnauthorizedAccessExceptionIfThePathIsOneDirectory()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -122,24 +123,24 @@
             fileSystem.AddDirectory(directoryPath);
 
             // Act
-            TestDelegate action = () => fileSystem.File.WriteAllText(directoryPath, null);
+            Action action = () => fileSystem.File.WriteAllText(directoryPath, null);
 
             // Assert
-            Assert.Throws<UnauthorizedAccessException>(action);
+            await That(action).Throws<UnauthorizedAccessException>();
         }
 
         [Test]
-        public void MockFile_WriteAllText_ShouldThrowDirectoryNotFoundExceptionIfPathDoesNotExists()
+        public async Task MockFile_WriteAllText_ShouldThrowDirectoryNotFoundExceptionIfPathDoesNotExists()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
             string path = XFS.Path(@"c:\something\file.txt");
 
             // Act
-            TestDelegate action = () => fileSystem.File.WriteAllText(path, string.Empty);
+            Action action = () => fileSystem.File.WriteAllText(path, string.Empty);
 
             // Assert
-            Assert.Throws<DirectoryNotFoundException>(action);
+            await That(action).Throws<DirectoryNotFoundException>();
         }
 
         public static IEnumerable<KeyValuePair<Encoding, byte[]>> GetEncodingsWithExpectedBytes()
@@ -183,7 +184,7 @@
         }
 
         [TestCaseSource(typeof(MockFileWriteAllTextTests), nameof(GetEncodingsWithExpectedBytes))]
-        public void MockFile_WriteAllText_Encoding_ShouldWriteTextFileToMemoryFileSystem(KeyValuePair<Encoding, byte[]> encodingsWithContents)
+        public async Task MockFile_WriteAllText_Encoding_ShouldWriteTextFileToMemoryFileSystem(KeyValuePair<Encoding, byte[]> encodingsWithContents)
         {
             // Arrange
             const string FileContent = "Hello there! Dzięki.";
@@ -198,11 +199,11 @@
 
             // Assert
             var actualBytes = fileSystem.GetFile(path).Contents;
-            Assert.That(actualBytes, Is.EqualTo(expectedBytes));
+            await That(actualBytes).IsEqualTo(expectedBytes);
         }
 
         [Test]
-        public void MockFile_WriteAllTextMultipleLines_ShouldWriteTextFileToMemoryFileSystem()
+        public async Task MockFile_WriteAllTextMultipleLines_ShouldWriteTextFileToMemoryFileSystem()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -217,7 +218,7 @@
             fileSystem.File.WriteAllLines(path, fileContent);
 
             // Assert
-            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(expected));
+            await That(fileSystem.GetFile(path).TextContents).IsEqualTo(expected);
         }
 
 #if FEATURE_ASYNC_FILE
@@ -234,26 +235,26 @@
             await fileSystem.File.WriteAllTextAsync(path, fileContent);
 
             // Assert
-            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(fileContent));
+            await That(fileSystem.GetFile(path).TextContents).IsEqualTo(fileContent);
         }
 
         [Test]
-        public void MockFile_WriteAllTextAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
+        public async Task MockFile_WriteAllTextAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
         {
             // Arrange
             const string path = "test.txt";
             var fileSystem = new MockFileSystem();
 
             // Act
-            Assert.ThrowsAsync<OperationCanceledException>(async () =>
+            async Task Act() =>
                 await fileSystem.File.WriteAllTextAsync(
                     path,
                     "line",
-                    new CancellationToken(canceled: true))
-            );
+                    new CancellationToken(canceled: true));
+            await That(Act).Throws<OperationCanceledException>();
 
             // Assert
-            Assert.That(fileSystem.File.Exists(path), Is.False);
+            await That(fileSystem.File.Exists(path)).IsFalse();
         }
 
         [Test]
@@ -271,11 +272,11 @@
             await fileSystem.File.WriteAllTextAsync(path, "bar");
 
             // Assert
-            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo("bar"));
+            await That(fileSystem.GetFile(path).TextContents).IsEqualTo("bar");
         }
 
         [Test]
-        public void MockFile_WriteAllTextAsync_ShouldThrowAnUnauthorizedAccessExceptionIfFileIsHidden()
+        public async Task MockFile_WriteAllTextAsync_ShouldThrowAnUnauthorizedAccessExceptionIfFileIsHidden()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -286,23 +287,24 @@
             fileSystem.File.SetAttributes(path, FileAttributes.Hidden);
 
             // Act
-            AsyncTestDelegate action = () => fileSystem.File.WriteAllTextAsync(path, "hello world");
+            Func<Task> action = () => fileSystem.File.WriteAllTextAsync(path, "hello world");
 
             // Assert
-            Assert.ThrowsAsync<UnauthorizedAccessException>(action, "Access to the path '{0}' is denied.", path);
+            await That(action).Throws<UnauthorizedAccessException>()
+                .Because($"Access to the path '{path}' is denied.");
         }
 
         [Test]
-        public void MockFile_WriteAllTextAsync_ShouldThrowAnArgumentExceptionIfThePathIsEmpty()
+        public async Task MockFile_WriteAllTextAsync_ShouldThrowAnArgumentExceptionIfThePathIsEmpty()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            AsyncTestDelegate action = () => fileSystem.File.WriteAllTextAsync(string.Empty, "hello world");
+            Func<Task> action = () => fileSystem.File.WriteAllTextAsync(string.Empty, "hello world");
 
             // Assert
-            Assert.ThrowsAsync<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [Test]
@@ -320,11 +322,11 @@
             // Assert
             // no exception should be thrown, also the documentation says so
             var data = fileSystem.GetFile(filePath);
-            Assert.That(data.Contents, Is.Empty);
+            await That(data.Contents).IsEmpty();
         }
 
         [Test]
-        public void MockFile_WriteAllTextAsync_ShouldThrowAnUnauthorizedAccessExceptionIfTheFileIsReadOnly()
+        public async Task MockFile_WriteAllTextAsync_ShouldThrowAnUnauthorizedAccessExceptionIfTheFileIsReadOnly()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -334,14 +336,14 @@
             fileSystem.AddFile(filePath, mockFileData);
 
             // Act
-            AsyncTestDelegate action = () => fileSystem.File.WriteAllTextAsync(filePath, "");
+            Func<Task> action = () => fileSystem.File.WriteAllTextAsync(filePath, "");
 
             // Assert
-            Assert.ThrowsAsync<UnauthorizedAccessException>(action);
+            await That(action).Throws<UnauthorizedAccessException>();
         }
 
         [Test]
-        public void MockFile_WriteAllTextAsync_ShouldThrowAnUnauthorizedAccessExceptionIfThePathIsOneDirectory()
+        public async Task MockFile_WriteAllTextAsync_ShouldThrowAnUnauthorizedAccessExceptionIfThePathIsOneDirectory()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -349,24 +351,24 @@
             fileSystem.AddDirectory(directoryPath);
 
             // Act
-            AsyncTestDelegate action = () => fileSystem.File.WriteAllTextAsync(directoryPath, "");
+            Func<Task> action = () => fileSystem.File.WriteAllTextAsync(directoryPath, "");
 
             // Assert
-            Assert.ThrowsAsync<UnauthorizedAccessException>(action);
+            await That(action).Throws<UnauthorizedAccessException>();
         }
 
         [Test]
-        public void MockFile_WriteAllTextAsync_ShouldThrowDirectoryNotFoundExceptionIfPathDoesNotExists()
+        public async Task MockFile_WriteAllTextAsync_ShouldThrowDirectoryNotFoundExceptionIfPathDoesNotExists()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
             string path = XFS.Path(@"c:\something\file.txt");
 
             // Act
-            AsyncTestDelegate action = () => fileSystem.File.WriteAllTextAsync(path, string.Empty);
+            Func<Task> action = () => fileSystem.File.WriteAllTextAsync(path, string.Empty);
 
             // Assert
-            Assert.ThrowsAsync<DirectoryNotFoundException>(action);
+            await That(action).Throws<DirectoryNotFoundException>();
         }
 
         [TestCaseSource(typeof(MockFileWriteAllTextTests), nameof(GetEncodingsWithExpectedBytes))]
@@ -385,7 +387,7 @@
 
             // Assert
             var actualBytes = fileSystem.GetFile(path).Contents;
-            Assert.That(actualBytes, Is.EqualTo(expectedBytes));
+            await That(actualBytes).IsEqualTo(expectedBytes);
         }
 
         [Test]
@@ -404,7 +406,7 @@
             await fileSystem.File.WriteAllLinesAsync(path, fileContent);
 
             // Assert
-            Assert.That(fileSystem.GetFile(path).TextContents, Is.EqualTo(expected));
+            await That(fileSystem.GetFile(path).TextContents).IsEqualTo(expected);
         }
 #endif
     }

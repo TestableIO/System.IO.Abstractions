@@ -12,7 +12,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [Test]
         [TestCase(FileMode.Create)]
         [TestCase(FileMode.Append)]
-        public void MockFileStreamFactory_CreateForExistingFile_ShouldReturnStream(FileMode fileMode)
+        public async Task MockFileStreamFactory_CreateForExistingFile_ShouldReturnStream(FileMode fileMode)
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -26,13 +26,13 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileStreamFactory.New(@"c:\existing.txt", fileMode, FileAccess.Write);
 
             // Assert
-            Assert.That(result, Is.Not.Null);
+            await That(result).IsNotNull();
         }
 
         [Test]
         [TestCase(FileMode.Create)]
         [TestCase(FileMode.Append)]
-        public void MockFileStreamFactory_CreateForNonExistingFile_ShouldReturnStream(FileMode fileMode)
+        public async Task MockFileStreamFactory_CreateForNonExistingFile_ShouldReturnStream(FileMode fileMode)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -42,12 +42,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileStreamFactory.New(XFS.Path(@"c:\not_existing.txt"), fileMode, FileAccess.Write);
 
             // Assert
-            Assert.That(result, Is.Not.Null);
+            await That(result).IsNotNull();
         }
 
         [Test]
         [TestCase(FileMode.Create)]
-        public void MockFileStreamFactory_CreateForAnExistingFile_ShouldReplaceFileContents(FileMode fileMode)
+        public async Task MockFileStreamFactory_CreateForAnExistingFile_ShouldReplaceFileContents(FileMode fileMode)
         {
             var fileSystem = new MockFileSystem();
             string FilePath = XFS.Path("C:\\File.txt");
@@ -65,14 +65,14 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             }
 
             var text = fileSystem.File.ReadAllText(FilePath);
-            Assert.That(text, Is.EqualTo("AAAAA"));
+            await That(text).IsEqualTo("AAAAA");
         }
 
         [Test]
         [TestCase(FileMode.Create)]
         [TestCase(FileMode.Open)]
         [TestCase(FileMode.CreateNew)]
-        public void MockFileStreamFactory_CreateInNonExistingDirectory_ShouldThrowDirectoryNotFoundException(FileMode fileMode)
+        public async Task MockFileStreamFactory_CreateInNonExistingDirectory_ShouldThrowDirectoryNotFoundException(FileMode fileMode)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -82,18 +82,18 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
 
             // Assert
-            Assert.Throws<DirectoryNotFoundException>(() => fileStreamFactory.New(XFS.Path(@"C:\Test\NonExistingDirectory\some_random_file.txt"), fileMode));
+            await That(() => fileStreamFactory.New(XFS.Path(@"C:\Test\NonExistingDirectory\some_random_file.txt"), fileMode)).Throws<DirectoryNotFoundException>();
         }
 
         [Test]
-        public void MockFileStreamFactory_AppendAccessWithReadWriteMode_ShouldThrowArgumentException()
+        public async Task MockFileStreamFactory_AppendAccessWithReadWriteMode_ShouldThrowArgumentException()
         {
             var fileSystem = new MockFileSystem();
             
-            Assert.Throws<ArgumentException>(() =>
+            await That(() =>
             {
                 fileSystem.FileStream.New(XFS.Path(@"c:\path.txt"), FileMode.Append, FileAccess.ReadWrite);
-            });
+            }).Throws<ArgumentException>();
         }
 
         [Test]
@@ -102,20 +102,20 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(FileMode.Create)]
         [TestCase(FileMode.CreateNew)]
         [TestCase(FileMode.Append)]
-        public void MockFileStreamFactory_InvalidModeForReadAccess_ShouldThrowArgumentException(FileMode fileMode)
+        public async Task MockFileStreamFactory_InvalidModeForReadAccess_ShouldThrowArgumentException(FileMode fileMode)
         {
             var fileSystem = new MockFileSystem();
 
-            Assert.Throws<ArgumentException>(() =>
+            await That(() =>
             {
                 fileSystem.FileStream.New(XFS.Path(@"c:\path.txt"), fileMode, FileAccess.Read);
-            });
+            }).Throws<ArgumentException>();
         }
 
         [Test]
         [TestCase(FileMode.Open)]
         [TestCase(FileMode.Truncate)]
-        public void MockFileStreamFactory_OpenNonExistingFile_ShouldThrowFileNotFoundException(FileMode fileMode)
+        public async Task MockFileStreamFactory_OpenNonExistingFile_ShouldThrowFileNotFoundException(FileMode fileMode)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -125,12 +125,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
 
             // Assert
-            Assert.Throws<FileNotFoundException>(() => fileStreamFactory.New(XFS.Path(@"C:\Test\some_random_file.txt"), fileMode));
+            await That(() => fileStreamFactory.New(XFS.Path(@"C:\Test\some_random_file.txt"), fileMode)).Throws<FileNotFoundException>();
         }
 
         [Test]
         [TestCase(FileMode.CreateNew)]
-        public void MockFileStreamFactory_CreateExistingFile_Should_Throw_IOException(FileMode fileMode)
+        public async Task MockFileStreamFactory_CreateExistingFile_Should_Throw_IOException(FileMode fileMode)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -141,7 +141,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileStreamFactory = new MockFileStreamFactory(fileSystem);
 
             // Assert
-            Assert.Throws<IOException>(() => fileStreamFactory.New(path, fileMode));
+            await That(() => fileStreamFactory.New(path, fileMode)).Throws<IOException>();
 
         }
 
@@ -149,7 +149,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(FileMode.Create)]
         [TestCase(FileMode.CreateNew)]
         [TestCase(FileMode.OpenOrCreate)]
-        public void MockFileStreamFactory_CreateWithRelativePath_CreatesFileInCurrentDirectory(FileMode fileMode)
+        public async Task MockFileStreamFactory_CreateWithRelativePath_CreatesFileInCurrentDirectory(FileMode fileMode)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -159,11 +159,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             fileStreamFactory.New("some_random_file.txt", fileMode);
 
             // Assert
-            Assert.That(fileSystem.File.Exists(XFS.Path("./some_random_file.txt")), Is.True);
+            await That(fileSystem.File.Exists(XFS.Path("./some_random_file.txt"))).IsTrue();
         }
 
         [Test]
-        public void MockFileStream_CanRead_ReturnsFalseForAWriteOnlyStream()
+        public async Task MockFileStream_CanRead_ReturnsFalseForAWriteOnlyStream()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -172,7 +172,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var fileStream = fileSystem.FileStream.New("file.txt", FileMode.CreateNew, FileAccess.Write);
 
             // Assert
-            Assert.That(fileStream.CanRead, Is.False);
+            await That(fileStream.CanRead).IsFalse();
         }
     }
 }

@@ -6,21 +6,21 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     {
         [TestCase(" ")]
         [TestCase("   ")]
-        public void MockFile_GetLastWriteTimeUtc_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
+        public async Task MockFile_GetLastWriteTimeUtc_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.GetLastWriteTimeUtc(path);
+            Action action = () => fileSystem.File.GetLastWriteTimeUtc(path);
 
             // Assert
-            var exception = Assert.Throws<ArgumentException>(action);
-            Assert.That(exception.ParamName, Is.EqualTo("path"));
+            var exception = await That(action).Throws<ArgumentException>();
+            await That(exception.ParamName).IsEqualTo("path");
         }
 
         [Test]
-        public void MockFile_GetLastWriteTimeUtc_ShouldReturnDefaultTimeIfFileDoesNotExist()
+        public async Task MockFile_GetLastWriteTimeUtc_ShouldReturnDefaultTimeIfFileDoesNotExist()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -29,11 +29,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc(@"c:\does\not\exist.txt");
 
             // Assert
-            Assert.That(actualLastWriteTime, Is.EqualTo(new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc)));
+            await That(actualLastWriteTime).IsEqualTo(new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc));
         }
 
         [Test]
-        public void MockFile_GetLastWriteTimeUtc_ShouldBeSet()
+        public async Task MockFile_GetLastWriteTimeUtc_ShouldBeSet()
         {
             var now = DateTime.Now.AddDays(10);
             var fileSystem = new MockFileSystem()
@@ -42,8 +42,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             var result = fileSystem.File.GetLastWriteTimeUtc("foo.txt");
 
-            Assert.That(result.Kind, Is.EqualTo(DateTimeKind.Utc));
-            Assert.That(result, Is.EqualTo(now.ToUniversalTime()));
+            await That(result.Kind).IsEqualTo(DateTimeKind.Utc);
+            await That(result).IsEqualTo(now.ToUniversalTime());
         }
     }
 }

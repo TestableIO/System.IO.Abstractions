@@ -9,7 +9,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileAppendAllLinesTests
     {
         [Test]
-        public void MockFile_AppendAllLines_ShouldPersistNewLinesToExistingFile()
+        public async Task MockFile_AppendAllLines_ShouldPersistNewLinesToExistingFile()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -24,12 +24,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             file.AppendAllLines(path, new[] { "line 1", "line 2", "line 3" });
 
             // Assert
-            Assert.That(file.ReadAllText(path),
-              Is.EqualTo("Demo text contentline 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine));
+            await That(file.ReadAllText(path))
+                .IsEqualTo("Demo text contentline 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine);
         }
 
         [Test]
-        public void MockFile_AppendAllLines_ShouldPersistNewLinesToNewFile()
+        public async Task MockFile_AppendAllLines_ShouldPersistNewLinesToNewFile()
         {
             // Arrange
             string path = XFS.Path(@"c:\something\demo.txt");
@@ -43,35 +43,35 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             file.AppendAllLines(path, new[] { "line 1", "line 2", "line 3" });
 
             // Assert
-            Assert.That(file.ReadAllText(path),
-              Is.EqualTo("line 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine));
+            await That(file.ReadAllText(path))
+                .IsEqualTo("line 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine);
         }
 
         [Test]
-        public void MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathIsZeroLength()
+        public async Task MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathIsZeroLength()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.AppendAllLines(string.Empty, new[] { "does not matter" });
+            Action action = () => fileSystem.File.AppendAllLines(string.Empty, new[] { "does not matter" });
 
             // Assert
-            Assert.Throws<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [TestCase(" ")]
         [TestCase("   ")]
-        public void MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
+        public async Task MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.AppendAllLines(path, new[] { "does not matter" });
+            Action action = () => fileSystem.File.AppendAllLines(path, new[] { "does not matter" });
 
             // Assert
-            Assert.Throws<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [TestCase("\"")]
@@ -79,44 +79,44 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(">")]
         [TestCase("|")]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathContainsInvalidChar(string path)
+        public async Task MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathContainsInvalidChar(string path)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.AppendAllLines(path, new[] { "does not matter" });
+            Action action = () => fileSystem.File.AppendAllLines(path, new[] { "does not matter" });
 
             // Assert
-            Assert.Throws<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [Test]
-        public void MockFile_AppendAllLines_ShouldThrowArgumentNullExceptionIfContentIsNull()
+        public async Task MockFile_AppendAllLines_ShouldThrowArgumentNullExceptionIfContentIsNull()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.AppendAllLines("foo", null);
+            Action action = () => fileSystem.File.AppendAllLines("foo", null);
 
             // Assert
-            var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.ParamName, Is.EqualTo("contents"));
+            var exception = await That(action).Throws<ArgumentNullException>();
+            await That(exception.ParamName).IsEqualTo("contents");
         }
 
         [Test]
-        public void MockFile_AppendAllLines_ShouldThrowArgumentNullExceptionIfEncodingIsNull()
+        public async Task MockFile_AppendAllLines_ShouldThrowArgumentNullExceptionIfEncodingIsNull()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.AppendAllLines("foo.txt", new[] { "bar" }, null);
+            Action action = () => fileSystem.File.AppendAllLines("foo.txt", new[] { "bar" }, null);
 
             // Assert
-            var exception = Assert.Throws<ArgumentNullException>(action);
-            Assert.That(exception.ParamName, Is.EqualTo("encoding"));
+            var exception = await That(action).Throws<ArgumentNullException>();
+            await That(exception.ParamName).IsEqualTo("encoding");
         }
 
 #if FEATURE_ASYNC_FILE
@@ -136,8 +136,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             await file.AppendAllLinesAsync(path, new[] { "line 1", "line 2", "line 3" });
 
             // Assert
-            Assert.That(file.ReadAllText(path),
-              Is.EqualTo("Demo text contentline 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine));
+            await That(file.ReadAllText(path))
+                .IsEqualTo("Demo text contentline 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine);
         }
 
         [Test]
@@ -155,12 +155,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             await file.AppendAllLinesAsync(path, new[] { "line 1", "line 2", "line 3" });
 
             // Assert
-            Assert.That(file.ReadAllText(path),
-              Is.EqualTo("line 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine));
+            await That(file.ReadAllText(path))
+                .IsEqualTo("line 1" + Environment.NewLine + "line 2" + Environment.NewLine + "line 3" + Environment.NewLine);
         }
 
         [Test]
-        public void MockFile_AppendAllLinesAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
+        public async Task MockFile_AppendAllLinesAsync_ShouldThrowOperationCanceledExceptionIfCancelled()
         {
             // Arrange
             const string path = "test.txt";
@@ -170,42 +170,42 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             });
 
             // Act
-            Assert.ThrowsAsync<OperationCanceledException>(async () =>
+            async Task Act() =>
                 await fileSystem.File.AppendAllLinesAsync(
                     path,
                     new[] { "line 2" },
-                    new CancellationToken(canceled: true))
-            );
+                    new CancellationToken(canceled: true));
+            await That(Act).Throws<OperationCanceledException>();
 
             // Assert
-            Assert.That(fileSystem.File.ReadAllText(path), Is.EqualTo("line 1"));
+            await That(fileSystem.File.ReadAllText(path)).IsEqualTo("line 1");
         }
 
         [Test]
-        public void MockFile_AppendAllLinesAsync_ShouldThrowArgumentExceptionIfPathIsZeroLength()
+        public async Task MockFile_AppendAllLinesAsync_ShouldThrowArgumentExceptionIfPathIsZeroLength()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            AsyncTestDelegate action = async () => await fileSystem.File.AppendAllLinesAsync(string.Empty, new[] { "does not matter" });
+            Func<Task> action = async () => await fileSystem.File.AppendAllLinesAsync(string.Empty, new[] { "does not matter" });
 
             // Assert
-            Assert.ThrowsAsync<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [TestCase(" ")]
         [TestCase("   ")]
-        public void MockFile_AppendAllLinesAsync_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
+        public async Task MockFile_AppendAllLinesAsync_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            AsyncTestDelegate action = async () => await fileSystem.File.AppendAllLinesAsync(path, new[] { "does not matter" });
+            Func<Task> action = async () => await fileSystem.File.AppendAllLinesAsync(path, new[] { "does not matter" });
 
             // Assert
-            Assert.ThrowsAsync<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [TestCase("\"")]
@@ -213,44 +213,44 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase(">")]
         [TestCase("|")]
         [WindowsOnly(WindowsSpecifics.StrictPathRules)]
-        public void MockFile_AppendAllLinesAsync_ShouldThrowArgumentExceptionIfPathContainsInvalidChar(string path)
+        public async Task MockFile_AppendAllLinesAsync_ShouldThrowArgumentExceptionIfPathContainsInvalidChar(string path)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            AsyncTestDelegate action = async () => await fileSystem.File.AppendAllLinesAsync(path, new[] { "does not matter" });
+            Func<Task> action = async () => await fileSystem.File.AppendAllLinesAsync(path, new[] { "does not matter" });
 
             // Assert
-            Assert.ThrowsAsync<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [Test]
-        public void MockFile_AppendAllLinesAsync_ShouldThrowArgumentNullExceptionIfContentIsNull()
+        public async Task MockFile_AppendAllLinesAsync_ShouldThrowArgumentNullExceptionIfContentIsNull()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            AsyncTestDelegate action = async () => await fileSystem.File.AppendAllLinesAsync("foo", null);
+            Func<Task> action = async () => await fileSystem.File.AppendAllLinesAsync("foo", null);
 
             // Assert
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(action);
-            Assert.That(exception.ParamName, Is.EqualTo("contents"));
+            var exception = await That(action).Throws<ArgumentNullException>();
+            await That(exception.ParamName).IsEqualTo("contents");
         }
 
         [Test]
-        public void MockFile_AppendAllLinesAsync_ShouldThrowArgumentNullExceptionIfEncodingIsNull()
+        public async Task MockFile_AppendAllLinesAsync_ShouldThrowArgumentNullExceptionIfEncodingIsNull()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            AsyncTestDelegate action = async () => await fileSystem.File.AppendAllLinesAsync("foo.txt", new[] { "bar" }, null);
+            Func<Task> action = async () => await fileSystem.File.AppendAllLinesAsync("foo.txt", new[] { "bar" }, null);
 
             // Assert
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(action);
-            Assert.That(exception.ParamName, Is.EqualTo("encoding"));
+            var exception = await That(action).Throws<ArgumentNullException>();
+            await That(exception.ParamName).IsEqualTo("encoding");
         }
 #endif
     }

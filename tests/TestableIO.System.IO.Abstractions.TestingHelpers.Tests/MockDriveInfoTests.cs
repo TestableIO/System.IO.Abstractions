@@ -11,7 +11,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     {
         [TestCase(@"c:")]
         [TestCase(@"c:\")]
-        public void MockDriveInfo_Constructor_ShouldInitializeLocalWindowsDrives(string driveName)
+        public async Task MockDriveInfo_Constructor_ShouldInitializeLocalWindowsDrives(string driveName)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -22,11 +22,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var driveInfo = new MockDriveInfo(fileSystem, path);
 
             // Assert
-            Assert.That(driveInfo.Name, Is.EqualTo(@"c:\"));
+            await That(driveInfo.Name).IsEqualTo(@"c:\");
         }
 
         [Test]
-        public void MockDriveInfo_Constructor_ShouldInitializeLocalWindowsDrives_SpecialForWindows()
+        public async Task MockDriveInfo_Constructor_ShouldInitializeLocalWindowsDrives_SpecialForWindows()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -36,25 +36,25 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var driveInfo = new MockDriveInfo(fileSystem, "c");
 
             // Assert
-            Assert.That(driveInfo.Name, Is.EqualTo(@"c:\"));
+            await That(driveInfo.Name).IsEqualTo(@"c:\");
         }
 
         [TestCase(@"\\unc\share")]
         [TestCase(@"\\unctoo")]
-        public void MockDriveInfo_Constructor_ShouldThrowExceptionIfUncPath(string driveName)
+        public async Task MockDriveInfo_Constructor_ShouldThrowExceptionIfUncPath(string driveName)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => new MockDriveInfo(fileSystem, XFS.Path(driveName));
+            Action action = () => new MockDriveInfo(fileSystem, XFS.Path(driveName));
 
             // Assert
-            Assert.Throws<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [Test]
-        public void MockDriveInfo_RootDirectory_ShouldReturnTheDirectoryBase()
+        public async Task MockDriveInfo_RootDirectory_ShouldReturnTheDirectoryBase()
         {
             // Arrange
             var fileSystem = new MockFileSystem();
@@ -66,7 +66,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var actualDirectory = driveInfo.RootDirectory;
 
             // Assert
-            Assert.That(actualDirectory.FullName, Is.EqualTo(expectedDirectory));
+            await That(actualDirectory.FullName).IsEqualTo(expectedDirectory);
         }
 
         [TestCase("c:", "c:\\")]
@@ -74,7 +74,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
         [TestCase("d:", "d:\\")]
         [TestCase("e:", "e:\\")]
         [TestCase("f:", "f:\\")]
-        public void MockDriveInfo_ToString_ShouldReturnTheDrivePath(string path, string expectedPath)
+        public async Task MockDriveInfo_ToString_ShouldReturnTheDrivePath(string path, string expectedPath)
         {
             // Arrange
             var directoryPath = XFS.Path(path);
@@ -83,11 +83,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var mockDriveInfo = new MockDriveInfo(new MockFileSystem(), directoryPath);
 
             // Assert
-            Assert.That(mockDriveInfo.ToString(), Is.EqualTo(expectedPath));
+            await That(mockDriveInfo.ToString()).IsEqualTo(expectedPath);
         }
 
         [Test]
-        public void MockDriveInfo_AvailableFreeSpace_ShouldReturnAvailableFreeSpaceOfDriveInMemoryFileSystem()
+        public async Task MockDriveInfo_AvailableFreeSpace_ShouldReturnAvailableFreeSpaceOfDriveInMemoryFileSystem()
         {
             // Arrange
             var availableFreeSpace = 1024L;
@@ -102,11 +102,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = driveInfo.AvailableFreeSpace;
 
             // Assert
-            Assert.That(result, Is.EqualTo(availableFreeSpace));
+            await That(result).IsEqualTo(availableFreeSpace);
         }
 
         [Test]
-        public void MockDriveInfo_DriveFormat_ShouldReturnDriveFormatOfDriveInMemoryFileSystem()
+        public async Task MockDriveInfo_DriveFormat_ShouldReturnDriveFormatOfDriveInMemoryFileSystem()
         {
             // Arrange
             var driveFormat = "NTFS";
@@ -121,11 +121,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = driveInfo.DriveFormat;
 
             // Assert
-            Assert.That(result, Is.EqualTo(driveFormat));
+            await That(result).IsEqualTo(driveFormat);
         }
 
         [Test]
-        public void MockDriveInfo_DriveType_ShouldReturnDriveTypeOfDriveInMemoryFileSystem()
+        public async Task MockDriveInfo_DriveType_ShouldReturnDriveTypeOfDriveInMemoryFileSystem()
         {
             // Arrange
             var driveType = DriveType.Fixed;
@@ -140,12 +140,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = driveInfo.DriveType;
 
             // Assert
-            Assert.That(result, Is.EqualTo(driveType));
+            await That(result).IsEqualTo(driveType);
         }
 
         [TestCase(true)]
         [TestCase(false)]
-        public void MockDriveInfo_IsReady_ShouldReturnIsReadyOfDriveInMemoryFileSystem(bool isReady)
+        public async Task MockDriveInfo_IsReady_ShouldReturnIsReadyOfDriveInMemoryFileSystem(bool isReady)
         {
             // Arrange
             var driveData = new MockDriveData { IsReady = isReady };
@@ -159,11 +159,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = driveInfo.IsReady;
 
             // Assert
-            Assert.That(result, Is.EqualTo(isReady));
+            await That(result).IsEqualTo(isReady);
         }
 
         [Test]
-        public void MockDriveInfo_TotalFreeSpace_ShouldReturnTotalFreeSpaceOfDriveInMemoryFileSystem()
+        public async Task MockDriveInfo_TotalFreeSpace_ShouldReturnTotalFreeSpaceOfDriveInMemoryFileSystem()
         {
             // Arrange
             var totalFreeSpace = 4096L;
@@ -178,11 +178,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = driveInfo.TotalFreeSpace;
 
             // Assert
-            Assert.That(result, Is.EqualTo(totalFreeSpace));
+            await That(result).IsEqualTo(totalFreeSpace);
         }
 
         [Test]
-        public void MockDriveInfo_TotalSize_ShouldReturnTotalSizeOfDriveInMemoryFileSystem()
+        public async Task MockDriveInfo_TotalSize_ShouldReturnTotalSizeOfDriveInMemoryFileSystem()
         {
             // Arrange
             var totalSize = 8192L;
@@ -197,11 +197,11 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = driveInfo.TotalSize;
 
             // Assert
-            Assert.That(result, Is.EqualTo(totalSize));
+            await That(result).IsEqualTo(totalSize);
         }
 
         [Test]
-        public void MockDriveInfo_VolumeLabel_ShouldReturnVolumeLabelOfDriveInMemoryFileSystem()
+        public async Task MockDriveInfo_VolumeLabel_ShouldReturnVolumeLabelOfDriveInMemoryFileSystem()
         {
             // Arrange
             var volumeLabel = "Windows";
@@ -216,7 +216,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = driveInfo.VolumeLabel;
 
             // Assert
-            Assert.That(result, Is.EqualTo(volumeLabel));
+            await That(result).IsEqualTo(volumeLabel);
         }
     }
 }

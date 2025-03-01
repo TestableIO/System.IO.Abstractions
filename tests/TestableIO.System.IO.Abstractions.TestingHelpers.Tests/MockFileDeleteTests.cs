@@ -8,7 +8,7 @@
     public class MockFileDeleteTests
     {
         [Test]
-        public void MockFile_Delete_ShouldDeleteFile()
+        public async Task MockFile_Delete_ShouldDeleteFile()
         {
             var fileSystem = new MockFileSystem();
             var path = XFS.Path("C:\\some_folder\\test");
@@ -19,35 +19,35 @@
             fileSystem.File.Delete(path);
             var fileCount2 = fileSystem.Directory.GetFiles(directory, "*").Length;
 
-            Assert.That(fileCount1, Is.EqualTo(1), "File should have existed");
-            Assert.That(fileCount2, Is.EqualTo(0), "File should have been deleted");
+            await That(fileCount1).IsEqualTo(1).Because("File should have existed");
+            await That(fileCount2).IsEqualTo(0).Because("File should have been deleted");
         }
 
         [TestCase(" ")]
         [TestCase("   ")]
-        public void MockFile_Delete_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
+        public async Task MockFile_Delete_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
         {
             // Arrange
             var fileSystem = new MockFileSystem();
 
             // Act
-            TestDelegate action = () => fileSystem.File.Delete(path);
+            Action action = () => fileSystem.File.Delete(path);
 
             // Assert
-            Assert.Throws<ArgumentException>(action);
+            await That(action).Throws<ArgumentException>();
         }
 
         [Test]
-        public void MockFile_Delete_ShouldThrowDirectoryNotFoundExceptionIfParentFolderAbsent()
+        public async Task MockFile_Delete_ShouldThrowDirectoryNotFoundExceptionIfParentFolderAbsent()
         {
             var fileSystem = new MockFileSystem();
             var path = XFS.Path("C:\\test\\somefile.txt");
 
-            Assert.Throws<DirectoryNotFoundException>(() => fileSystem.File.Delete(path));
+            await That(() => fileSystem.File.Delete(path)).Throws<DirectoryNotFoundException>();
         }
 
         [Test]
-        public void MockFile_Delete_ShouldSilentlyReturnIfNonExistingFileInExistingFolder()
+        public async Task MockFile_Delete_ShouldSilentlyReturnIfNonExistingFileInExistingFolder()
         {
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>()
             {
@@ -57,7 +57,7 @@
             string filePath = XFS.Path("C:\\temp\\somefile.txt");
 
             // Delete() returns void, so there is nothing to check here beside absense of an exception
-            Assert.DoesNotThrow(() => fileSystem.File.Delete(filePath));
+            await That(() => fileSystem.File.Delete(filePath)).DoesNotThrow();
         }
     }
 }

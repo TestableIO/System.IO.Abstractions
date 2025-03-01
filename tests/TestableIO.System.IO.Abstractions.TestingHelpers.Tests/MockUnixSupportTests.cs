@@ -9,16 +9,16 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     {
         [Test]
         [UnixOnly(UnixSpecifics.SlashRoot)]
-        public void Should_Convert_Backslashes_To_Slashes_On_Unix()
+        public async Task Should_Convert_Backslashes_To_Slashes_On_Unix()
         {
-            Assert.That(XFS.Path(@"\test\"), Is.EqualTo("/test/"));
+            await That(XFS.Path(@"\test\")).IsEqualTo("/test/");
         }
 
         [Test]
         [UnixOnly(UnixSpecifics.SlashRoot)]
-        public void Should_Remove_Drive_Letter_On_Unix()
+        public async Task Should_Remove_Drive_Letter_On_Unix()
         {
-            Assert.That(XFS.Path(@"c:\test\"), Is.EqualTo("/test/"));
+            await That(XFS.Path(@"c:\test\")).IsEqualTo("/test/");
         }
     }
 }

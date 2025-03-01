@@ -14,7 +14,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
     public class MockFileReadAllLinesTests
     {
         [Test]
-        public void MockFile_ReadAllLines_ShouldReturnOriginalTextData()
+        public async Task MockFile_ReadAllLines_ShouldReturnOriginalTextData()
         {
             // Arrange
             var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
@@ -29,12 +29,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadAllLines(XFS.Path(@"c:\something\demo.txt"));
 
             // Assert
-            Assert.That(result,
-                Is.EqualTo(new[] { "Demo", "text", "content", "value" }));
+            await That(result)
+                .IsEqualTo(new[] { "Demo", "text", "content", "value" });
         }
 
         [Test]
-        public void MockFile_ReadAllLines_ShouldReturnOriginalDataWithCustomEncoding()
+        public async Task MockFile_ReadAllLines_ShouldReturnOriginalDataWithCustomEncoding()
         {
             // Arrange
             string text = "Hello\r\nthere\rBob\nBob!";
@@ -50,27 +50,27 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = file.ReadAllLines(XFS.Path(@"c:\something\demo.txt"), Encoding.BigEndianUnicode);
 
             // Assert
-            Assert.That(result,
-                Is.EqualTo(new[] { "Hello", "there", "Bob", "Bob!" }));
+            await That(result)
+                .IsEqualTo(new[] { "Hello", "there", "Bob", "Bob!" });
         }
 
         [Test]
-        public void MockFile_ReadAllLines_NotExistingFile_ThrowsCorrectFileNotFoundException()
+        public async Task MockFile_ReadAllLines_NotExistingFile_ThrowsCorrectFileNotFoundException()
         {
             var absentFileNameFullPath = XFS.Path(@"c:\you surely don't have such file.hope-so");
             var mockFileSystem = new MockFileSystem();
 
-            var act = new TestDelegate(() =>
+            var act = new Action(() =>
                 mockFileSystem.File.ReadAllLines(absentFileNameFullPath)
             );
 
-            var exception = Assert.Catch<FileNotFoundException>(act);
-            Assert.That(exception.FileName, Is.EqualTo(absentFileNameFullPath));
-            Assert.That(exception.Message, Is.EqualTo("Could not find file '" + absentFileNameFullPath + "'."));
+            var exception = await That(act).Throws<FileNotFoundException>();
+            await That(exception.FileName).IsEqualTo(absentFileNameFullPath);
+            await That(exception.Message).IsEqualTo("Could not find file '" + absentFileNameFullPath + "'.");
         }
 
         [Test]
-        public void MockFile_ReadAllLines_ShouldNotReturnBom()
+        public async Task MockFile_ReadAllLines_ShouldNotReturnBom()
         {
             // Arrange
             var testFilePath = XFS.Path(@"c:\a test file.txt");
@@ -82,8 +82,8 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = fileSystem.File.ReadAllLines(testFilePath, Encoding.UTF8);
 
             // Assert
-            Assert.That(result.Length, Is.EqualTo(1));
-            Assert.That(result[0], Is.EqualTo(testText));
+            await That(result.Length).IsEqualTo(1);
+            await That(result[0]).IsEqualTo(testText);
         }
 #if FEATURE_ASYNC_FILE
         [Test]
@@ -102,7 +102,7 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = await file.ReadAllLinesAsync(XFS.Path(@"c:\something\demo.txt"));
 
             // Assert
-            Assert.That(result, Is.EqualTo(new[] { "Demo", "text", "content", "value" }));
+            await That(result).IsEqualTo(new[] { "Demo", "text", "content", "value" });
         }
 
         [Test]
@@ -122,33 +122,33 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
             var result = await file.ReadAllLinesAsync(XFS.Path(@"c:\something\demo.txt"), Encoding.BigEndianUnicode);
 
             // Assert
-            Assert.That(result, Is.EqualTo(new[] { "Hello", "there", "Bob", "Bob!" }));
+            await That(result).IsEqualTo(new[] { "Hello", "there", "Bob", "Bob!" });
         }
 
         [Test]
-        public void MockFile_ReadAllLinesAsync_ShouldThrowOperationCanceledExceptionIfCanceled()
+        public async Task MockFile_ReadAllLinesAsync_ShouldThrowOperationCanceledExceptionIfCanceled()
         {
             var fileSystem = new MockFileSystem();
 
-            AsyncTestDelegate action = async () =>
+            Func<Task> action = async () =>
                 await fileSystem.File.ReadAllLinesAsync(@"C:\a.txt", new CancellationToken(canceled: true));
 
-            Assert.ThrowsAsync<OperationCanceledException>(action);
+            await That(action).Throws<OperationCanceledException>();
         }
 
         [Test]
-        public void MockFile_ReadAllLinesAsync_NotExistingFile_ThrowsCorrectFileNotFoundException()
+        public async Task MockFile_ReadAllLinesAsync_NotExistingFile_ThrowsCorrectFileNotFoundException()
         {
             var absentFileNameFullPath = XFS.Path(@"c:\you surely don't have such file.hope-so");
             var mockFileSystem = new MockFileSystem();
 
-            var act = new AsyncTestDelegate(async () =>
+            var act = new Func<Task>(async () =>
                 await mockFileSystem.File.ReadAllLinesAsync(absentFileNameFullPath)
             );
 
-            var exception = Assert.CatchAsync<FileNotFoundException>(act);
-            Assert.That(exception.FileName, Is.EqualTo(absentFileNameFullPath));
-            Assert.That(exception.Message, Is.EqualTo("Could not find file '" + absentFileNameFullPath + "'."));
+            var exception = await That(act).Throws<FileNotFoundException>();
+            await That(exception.FileName).IsEqualTo(absentFileNameFullPath);
+            await That(exception.Message).IsEqualTo("Could not find file '" + absentFileNameFullPath + "'.");
         }
 
 #if FEATURE_READ_LINES_ASYNC
@@ -166,12 +166,12 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Act
             var enumerable = file.ReadLinesAsync(XFS.Path(@"c:\something\demo.txt"));
-            StringCollection result = new();
+            List<string> result = new();
             await foreach (var line in enumerable)
                 result.Add(line);
 
             // Assert
-            Assert.That(result, Is.EqualTo(new[] { "Demo", "text", "content", "value" }));
+            await That(result).IsEqualTo(new[] { "Demo", "text", "content", "value" });
         }
 
         [Test]
@@ -189,43 +189,43 @@ namespace System.IO.Abstractions.TestingHelpers.Tests
 
             // Act
             var enumerable = file.ReadLinesAsync(XFS.Path(@"c:\something\demo.txt"), Encoding.BigEndianUnicode);
-            StringCollection result = new();
+            List<string> result = new();
             await foreach (var line in enumerable)
                 result.Add(line);
 
             // Assert
-            Assert.That(result, Is.EqualTo(new[] { "Hello", "there", "Bob", "Bob!" }));
+            await That(result).IsEqualTo(new[] { "Hello", "there", "Bob", "Bob!" });
         }
 
         [Test]
-        public void MockFile_ReadLinesAsync_ShouldThrowOperationCanceledExceptionIfCanceled()
+        public async Task MockFile_ReadLinesAsync_ShouldThrowOperationCanceledExceptionIfCanceled()
         {
             var fileSystem = new MockFileSystem();
 
-            AsyncTestDelegate action = async () =>
+            Func<Task> action = async () =>
             {
                 var enumerable = fileSystem.File.ReadLinesAsync(@"C:\a.txt", new CancellationToken(canceled: true));
                 await foreach (var line in enumerable);
             };
 
-            Assert.ThrowsAsync<OperationCanceledException>(action);
+            await That(action).Throws<OperationCanceledException>();
         }
 
         [Test]
-        public void MockFile_ReadLinesAsync_NotExistingFile_ThrowsCorrectFileNotFoundException()
+        public async Task MockFile_ReadLinesAsync_NotExistingFile_ThrowsCorrectFileNotFoundException()
         {
             var absentFileNameFullPath = XFS.Path(@"c:\you surely don't have such file.hope-so");
             var mockFileSystem = new MockFileSystem();
 
-            AsyncTestDelegate action = async () =>
+            Func<Task> action = async () =>
             {
                 var enumerable = mockFileSystem.File.ReadLinesAsync(absentFileNameFullPath);
                 await foreach (var line in enumerable) ;
             };
 
-            var exception = Assert.CatchAsync<FileNotFoundException>(action);
-            Assert.That(exception.FileName, Is.EqualTo(absentFileNameFullPath));
-            Assert.That(exception.Message, Is.EqualTo("Could not find file '" + absentFileNameFullPath + "'."));
+            var exception = await That(action).Throws<FileNotFoundException>();
+            await That(exception.FileName).IsEqualTo(absentFileNameFullPath);
+            await That(exception.Message).IsEqualTo("Could not find file '" + absentFileNameFullPath + "'.");
         }
 #endif
 #endif
