@@ -290,8 +290,8 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         public static readonly System.DateTimeOffset DefaultDateTimeOffset;
         public static readonly System.Text.Encoding DefaultEncoding;
-        public MockFileData(byte[] contents) { }
         public MockFileData(System.IO.Abstractions.TestingHelpers.MockFileData template) { }
+        public MockFileData(byte[] contents) { }
         public MockFileData(string textContents) { }
         public MockFileData(string textContents, System.Text.Encoding encoding) { }
         [System.Runtime.Versioning.SupportedOSPlatform("windows")]
@@ -406,8 +406,8 @@ namespace System.IO.Abstractions.TestingHelpers
         public System.IO.Abstractions.FileSystemStream New(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.IO.FileAccess access, int bufferSize, bool isAsync) { }
         public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share) { }
         public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, int bufferSize) { }
-        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, int bufferSize, bool useAsync) { }
         public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, int bufferSize, System.IO.FileOptions options) { }
+        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, int bufferSize, bool useAsync) { }
         public System.IO.Abstractions.FileSystemStream Wrap(System.IO.FileStream fileStream) { }
     }
     [System.Serializable]
