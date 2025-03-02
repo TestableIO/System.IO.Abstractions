@@ -547,8 +547,8 @@ namespace System.IO.Abstractions
         protected void OnError(object sender, System.IO.ErrorEventArgs args) { }
         protected void OnRenamed(object sender, System.IO.RenamedEventArgs args) { }
         public abstract System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType);
-        public abstract System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, int timeout);
         public abstract System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, System.TimeSpan timeout);
+        public abstract System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, int timeout);
         public static System.IO.Abstractions.FileSystemWatcherBase op_Implicit(System.IO.FileSystemWatcher watcher) { }
     }
     [System.Serializable]
@@ -583,8 +583,8 @@ namespace System.IO.Abstractions
         public override void Dispose(bool disposing) { }
         public override void EndInit() { }
         public override System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType) { }
-        public override System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, int timeout) { }
         public override System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, System.TimeSpan timeout) { }
+        public override System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, int timeout) { }
     }
     [System.Serializable]
     public abstract class FileVersionInfoBase : System.IO.Abstractions.IFileVersionInfo

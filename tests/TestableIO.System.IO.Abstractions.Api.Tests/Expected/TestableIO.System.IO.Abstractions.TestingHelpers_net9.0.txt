@@ -193,10 +193,10 @@ namespace System.IO.Abstractions.TestingHelpers
     public class MockFile : System.IO.Abstractions.FileBase
     {
         public MockFile(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor) { }
-        public override void AppendAllBytes(string path, byte[] bytes) { }
         public override void AppendAllBytes(string path, System.ReadOnlySpan<byte> bytes) { }
-        public override System.Threading.Tasks.Task AppendAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default) { }
+        public override void AppendAllBytes(string path, byte[] bytes) { }
         public override System.Threading.Tasks.Task AppendAllBytesAsync(string path, System.ReadOnlyMemory<byte> bytes, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task AppendAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default) { }
         public override void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents) { }
         public override void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding) { }
         public override System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default) { }
@@ -280,10 +280,10 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void SetLastWriteTimeUtc(string path, System.DateTime lastWriteTimeUtc) { }
         public override void SetUnixFileMode(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.IO.UnixFileMode mode) { }
         public override void SetUnixFileMode(string path, System.IO.UnixFileMode mode) { }
-        public override void WriteAllBytes(string path, byte[] bytes) { }
         public override void WriteAllBytes(string path, System.ReadOnlySpan<byte> bytes) { }
-        public override System.Threading.Tasks.Task WriteAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default) { }
+        public override void WriteAllBytes(string path, byte[] bytes) { }
         public override System.Threading.Tasks.Task WriteAllBytesAsync(string path, System.ReadOnlyMemory<byte> bytes, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task WriteAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default) { }
         public override void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents) { }
         public override void WriteAllLines(string path, string[] contents) { }
         public override void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding) { }
@@ -304,8 +304,8 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         public static readonly System.DateTimeOffset DefaultDateTimeOffset;
         public static readonly System.Text.Encoding DefaultEncoding;
-        public MockFileData(byte[] contents) { }
         public MockFileData(System.IO.Abstractions.TestingHelpers.MockFileData template) { }
+        public MockFileData(byte[] contents) { }
         public MockFileData(string textContents) { }
         public MockFileData(string textContents, System.Text.Encoding encoding) { }
         [System.Runtime.Versioning.SupportedOSPlatform("windows")]
@@ -420,8 +420,8 @@ namespace System.IO.Abstractions.TestingHelpers
         public System.IO.Abstractions.FileSystemStream New(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.IO.FileAccess access, int bufferSize, bool isAsync) { }
         public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share) { }
         public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, int bufferSize) { }
-        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, int bufferSize, bool useAsync) { }
         public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, int bufferSize, System.IO.FileOptions options) { }
+        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, int bufferSize, bool useAsync) { }
         public System.IO.Abstractions.FileSystemStream Wrap(System.IO.FileStream fileStream) { }
     }
     [System.Serializable]

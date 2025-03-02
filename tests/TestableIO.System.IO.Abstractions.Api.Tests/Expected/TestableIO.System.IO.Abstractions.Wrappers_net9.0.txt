@@ -278,10 +278,10 @@ namespace System.IO.Abstractions
     {
         protected FileBase(System.IO.Abstractions.IFileSystem fileSystem) { }
         public System.IO.Abstractions.IFileSystem FileSystem { get; }
-        public abstract void AppendAllBytes(string path, byte[] bytes);
         public abstract void AppendAllBytes(string path, System.ReadOnlySpan<byte> bytes);
-        public abstract System.Threading.Tasks.Task AppendAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default);
+        public abstract void AppendAllBytes(string path, byte[] bytes);
         public abstract System.Threading.Tasks.Task AppendAllBytesAsync(string path, System.ReadOnlyMemory<byte> bytes, System.Threading.CancellationToken cancellationToken = default);
+        public abstract System.Threading.Tasks.Task AppendAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default);
         public abstract void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents);
         public abstract void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding);
         public abstract System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default);
@@ -364,10 +364,10 @@ namespace System.IO.Abstractions
         public abstract void SetLastWriteTimeUtc(string path, System.DateTime lastWriteTimeUtc);
         public abstract void SetUnixFileMode(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.IO.UnixFileMode mode);
         public abstract void SetUnixFileMode(string path, System.IO.UnixFileMode mode);
-        public abstract void WriteAllBytes(string path, byte[] bytes);
         public abstract void WriteAllBytes(string path, System.ReadOnlySpan<byte> bytes);
-        public abstract System.Threading.Tasks.Task WriteAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default);
+        public abstract void WriteAllBytes(string path, byte[] bytes);
         public abstract System.Threading.Tasks.Task WriteAllBytesAsync(string path, System.ReadOnlyMemory<byte> bytes, System.Threading.CancellationToken cancellationToken = default);
+        public abstract System.Threading.Tasks.Task WriteAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default);
         public abstract void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents);
         public abstract void WriteAllLines(string path, string[] contents);
         public abstract void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding);
@@ -561,8 +561,8 @@ namespace System.IO.Abstractions
         protected void OnError(object sender, System.IO.ErrorEventArgs args) { }
         protected void OnRenamed(object sender, System.IO.RenamedEventArgs args) { }
         public abstract System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType);
-        public abstract System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, int timeout);
         public abstract System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, System.TimeSpan timeout);
+        public abstract System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, int timeout);
         public static System.IO.Abstractions.FileSystemWatcherBase op_Implicit(System.IO.FileSystemWatcher watcher) { }
     }
     [System.Serializable]
@@ -597,8 +597,8 @@ namespace System.IO.Abstractions
         public override void Dispose(bool disposing) { }
         public override void EndInit() { }
         public override System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType) { }
-        public override System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, int timeout) { }
         public override System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, System.TimeSpan timeout) { }
+        public override System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, int timeout) { }
     }
     [System.Serializable]
     public abstract class FileVersionInfoBase : System.IO.Abstractions.IFileVersionInfo
@@ -671,10 +671,10 @@ namespace System.IO.Abstractions
     public class FileWrapper : System.IO.Abstractions.FileBase
     {
         public FileWrapper(System.IO.Abstractions.IFileSystem fileSystem) { }
-        public override void AppendAllBytes(string path, byte[] bytes) { }
         public override void AppendAllBytes(string path, System.ReadOnlySpan<byte> bytes) { }
-        public override System.Threading.Tasks.Task AppendAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default) { }
+        public override void AppendAllBytes(string path, byte[] bytes) { }
         public override System.Threading.Tasks.Task AppendAllBytesAsync(string path, System.ReadOnlyMemory<byte> bytes, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task AppendAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default) { }
         public override void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents) { }
         public override void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding) { }
         public override System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default) { }
@@ -763,10 +763,10 @@ namespace System.IO.Abstractions
         public override void SetUnixFileMode(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.IO.UnixFileMode mode) { }
         [System.Runtime.Versioning.UnsupportedOSPlatform("windows")]
         public override void SetUnixFileMode(string path, System.IO.UnixFileMode mode) { }
-        public override void WriteAllBytes(string path, byte[] bytes) { }
         public override void WriteAllBytes(string path, System.ReadOnlySpan<byte> bytes) { }
-        public override System.Threading.Tasks.Task WriteAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default) { }
+        public override void WriteAllBytes(string path, byte[] bytes) { }
         public override System.Threading.Tasks.Task WriteAllBytesAsync(string path, System.ReadOnlyMemory<byte> bytes, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task WriteAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default) { }
         public override void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents) { }
         public override void WriteAllLines(string path, string[] contents) { }
         public override void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding) { }
