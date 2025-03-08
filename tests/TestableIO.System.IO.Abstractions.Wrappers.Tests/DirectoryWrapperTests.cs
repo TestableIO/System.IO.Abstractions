@@ -47,4 +47,17 @@ public class DirectoryWrapperTests
         // Assert
         await That(result.FullName).IsEqualTo(subfolder);
     }
+
+    [Test]
+    public async Task Exists_RootDirectoryFrontSlash_ShouldBeTrue()
+    {
+        // Arrange
+        var wrapperFilesystem = new FileSystem();
+
+        // Act
+        var result = wrapperFilesystem.Directory.Exists("/");
+
+        // Assert
+        await That(result).IsTrue();
+    }
 }

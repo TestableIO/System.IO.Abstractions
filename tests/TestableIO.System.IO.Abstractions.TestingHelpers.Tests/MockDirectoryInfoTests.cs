@@ -721,4 +721,18 @@ public class MockDirectoryInfoTests
         await That(() => directoryInfo.LastWriteTime = newTime).Throws<DirectoryNotFoundException>();
     }
 
+    [Test]
+    public async Task MockDirectoryInfo_Exists_ShouldReturnTrue_IfArgIsFrontSlashAndRootDirExists()
+    {
+        string testDir = XFS.Path(@"c:\foo\bar\");
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        {
+            { testDir,  new MockDirectoryData() }
+        });
+
+        var dirInfo = fileSystem.DirectoryInfo.New("/");
+
+        await That(dirInfo.Exists).IsEqualTo(true);
+    }
+
 }
