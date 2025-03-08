@@ -2181,7 +2181,7 @@ public class MockDirectoryTests
         string sourceDirName,
         string targetDirName)
     {
-        // Arange
+        // Arrange
         var fileSystem = new MockFileSystem();
         fileSystem.Directory.CreateDirectory(sourceDirName);
 
@@ -2191,5 +2191,17 @@ public class MockDirectoryTests
         // Assert
         await That(fileSystem.Directory.Exists(targetDirName)).IsTrue();
         await That(fileSystem.Directory.Exists(sourceDirName)).IsFalse();
+    }
+
+    [Test]
+    public async Task MockDirectory_Exists_ShouldReturnTrue_IfArgIsFrontSlashAndRootDirExists()
+    {
+        string testDir = XFS.Path(@"c:\foo\bar\");
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        {
+            { testDir,  new MockDirectoryData() }
+        });
+
+        await That(fileSystem.Directory.Exists("/")).IsEqualTo(true);
     }
 }
