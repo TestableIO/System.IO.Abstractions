@@ -174,7 +174,7 @@ public class MockDirectory : DirectoryBase
     /// <inheritdoc />
     public override bool Exists(string path)
     {
-        if (path == "/" && XFS.IsUnixPlatform())
+        if (path == "/")
         {
             return true;
         }
