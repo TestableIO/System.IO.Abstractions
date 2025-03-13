@@ -38,6 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build.yml = .github\workflows\build.yml
 		.github\workflows\ci.yml = .github\workflows\ci.yml
+		.github\workflows\ci-analysis.yml = .github\workflows\ci-analysis.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B66A0B3F-6A00-482E-99E2-27D8DECB075E}"
