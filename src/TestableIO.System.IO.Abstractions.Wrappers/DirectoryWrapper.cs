@@ -215,6 +215,17 @@ public class DirectoryWrapper : DirectoryBase
     /// <inheritdoc />
     public override void Move(string sourceDirName, string destDirName)
     {
+        var fullSourcePath = Path.GetFullPath(sourceDirName);
+        var fullDestPath = Path.GetFullPath(destDirName);
+
+        if (fullDestPath.Equals(fullDestPath))
+        {
+            throw new IOException("Source and destination path must be different.");
+        }
+        else if (Directory.Exists(fullDestPath) || File.Exists(fullDestPath))
+        {
+            throw new IOException("Destination path already exists.");
+        }
         Directory.Move(sourceDirName, destDirName);
     }
 
