@@ -218,7 +218,7 @@ public class DirectoryWrapper : DirectoryBase
         var fullSourcePath = Path.GetFullPath(sourceDirName);
         var fullDestPath = Path.GetFullPath(destDirName);
 
-        if (fullDestPath.Equals(fullDestPath))
+        if (fullSourcePath.Equals(fullDestPath))
         {
             throw new IOException("Source and destination path must be different.");
         }
