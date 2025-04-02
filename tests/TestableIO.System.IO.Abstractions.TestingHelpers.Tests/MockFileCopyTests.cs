@@ -248,7 +248,7 @@ public class MockFileCopyTests
 
     [Test]
     [WindowsOnly(WindowsSpecifics.Drives)]
-    public async Task Copy_Should_ThrowIOException_When_OverwritingWithSameNameDifferentCase()
+    public async Task MockFile_Copy_ShouldThrowIOExceptionWhenOverwritingWithSameNameDifferentCase()
     {
         var fileSystem = new MockFileSystem();
         string path = @"C:\Temp\file.txt";
