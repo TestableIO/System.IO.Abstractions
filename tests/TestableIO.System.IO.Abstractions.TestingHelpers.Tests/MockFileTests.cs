@@ -547,7 +547,7 @@ public class MockFileTests
         await That(file.TextContents).IsEqualTo("New too!");
         await That(filesystem.FileExists(filepath)).IsTrue();
     }
-        
+
 #if !NET9_0_OR_GREATER
     [Test]
     public void Serializable_works()
@@ -567,7 +567,7 @@ public class MockFileTests
         Assert.Pass();
     }
 #endif
-        
+
 #if !NET9_0_OR_GREATER
     [Test]
     public async Task Serializable_can_deserialize()
@@ -670,7 +670,7 @@ public class MockFileTests
         fileSystem.File.Replace(path1, path2, path3);
 
         await That(fileSystem.File.ReadAllText(path3)).IsEqualTo("2");
-    } 
+    }
 
     [Test]
     public async Task MockFile_Replace_ShouldThrowIfDirectoryOfBackupPathDoesNotExist()
@@ -729,5 +729,21 @@ public class MockFileTests
         // Assert
         await That(stream.CanWrite).IsFalse();
         await That(() => stream.WriteByte(0)).Throws<NotSupportedException>();
+    }
+
+    [Test]
+    [WindowsOnly(WindowsSpecifics.Drives)]
+    public async Task MockFile_Replace_SameSourceAndDestination_ShouldThrowIOException()
+    {
+        string sourceFilePath = @"c:\something\demo.txt";
+        string destFilePath = @"c:\something\Demo.txt";
+        string fileContent = "content";
+
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        {
+            { sourceFilePath, new MockFileData(fileContent) }
+        });
+
+        await That(() => fileSystem.File.Replace(sourceFilePath, destFilePath, null, true)).Throws<IOException>().HasMessage("The process cannot access the file because it is being used by another process.");
     }
 }

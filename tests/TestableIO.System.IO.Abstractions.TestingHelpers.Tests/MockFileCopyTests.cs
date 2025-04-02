@@ -248,6 +248,19 @@ public class MockFileCopyTests
 
     [Test]
     [WindowsOnly(WindowsSpecifics.Drives)]
+    public async Task Copy_Should_ThrowIOException_When_OverwritingWithSameNameDifferentCase()
+    {
+        var fileSystem = new MockFileSystem();
+        string path = @"C:\Temp\file.txt";
+        string pathUpper = @"C:\Temp\FILE.TXT";
+
+        fileSystem.File.WriteAllText(path, "Hello");
+
+        await That(() => fileSystem.File.Copy(path, pathUpper, true)).Throws<IOException>().HasMessage($"The process cannot access the file '{pathUpper}' because it is being used by another process.");
+    }
+
+    [Test]
+    [WindowsOnly(WindowsSpecifics.Drives)]
     public async Task MockFile_Copy_ShouldThrowNotSupportedExceptionWhenSourcePathContainsInvalidDriveLetter()
     {
         var badSourcePath = @"0:\something\demo.txt";

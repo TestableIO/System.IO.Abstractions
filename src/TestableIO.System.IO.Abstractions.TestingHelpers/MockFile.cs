@@ -48,7 +48,7 @@ public partial class MockFile : FileBase
             AppendAllBytes(path, bytes.ToArray());
         }
 #endif
-        
+
     /// <inheritdoc />
     public override void AppendAllLines(string path, IEnumerable<string> contents)
     {
@@ -161,6 +161,11 @@ public partial class MockFile : FileBase
             if (!overwrite)
             {
                 throw CommonExceptions.FileAlreadyExists(destFileName);
+            }
+
+            if (string.Equals(sourceFileName, destFileName, StringComparison.OrdinalIgnoreCase) && XFS.IsWindowsPlatform())
+            {
+                throw CommonExceptions.ProcessCannotAccessFileInUse(destFileName);
             }
 
             mockFileDataAccessor.RemoveFile(destFileName);
@@ -522,10 +527,29 @@ public partial class MockFile : FileBase
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, nameof(sourceFileName));
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(destFileName, nameof(destFileName));
 
+        var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
+
+        if (sourceFile == null)
+        {
+            throw CommonExceptions.FileNotFound(sourceFileName);
+        }
+
+        if (!sourceFile.AllowedFileShare.HasFlag(FileShare.Delete))
+        {
+            throw CommonExceptions.ProcessCannotAccessFileInUse();
+        }
+
+        VerifyDirectoryExists(destFileName);
+
         if (mockFileDataAccessor.GetFile(destFileName) != null)
         {
             if (mockFileDataAccessor.StringOperations.Equals(destFileName, sourceFileName))
             {
+                if (XFS.IsWindowsPlatform())
+                {
+                    mockFileDataAccessor.RemoveFile(sourceFileName);
+                    mockFileDataAccessor.AddFile(destFileName, mockFileDataAccessor.AdjustTimes(new MockFileData(sourceFile), TimeAdjustments.LastAccessTime), false);
+                }
                 return;
             }
             else
@@ -533,18 +557,6 @@ public partial class MockFile : FileBase
                 throw new IOException("A file can not be created if it already exists.");
             }
         }
-
-        var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
-
-        if (sourceFile == null)
-        {
-            throw CommonExceptions.FileNotFound(sourceFileName);
-        }
-        if (!sourceFile.AllowedFileShare.HasFlag(FileShare.Delete))
-        {
-            throw CommonExceptions.ProcessCannotAccessFileInUse();
-        }
-        VerifyDirectoryExists(destFileName);
 
         mockFileDataAccessor.RemoveFile(sourceFileName, false);
         mockFileDataAccessor.AddFile(destFileName, mockFileDataAccessor.AdjustTimes(new MockFileData(sourceFile), TimeAdjustments.LastAccessTime), false);
@@ -822,6 +834,11 @@ public partial class MockFile : FileBase
             throw CommonExceptions.FileNotFound(destinationFileName);
         }
 
+        if (mockFileDataAccessor.StringOperations.Equals(sourceFileName, destinationFileName) && XFS.IsWindowsPlatform())
+        {
+            throw CommonExceptions.ProcessCannotAccessFileInUse();
+        }
+
         if (destinationBackupFileName != null)
         {
             Copy(destinationFileName, destinationBackupFileName, overwrite: true);
@@ -1066,7 +1083,7 @@ public partial class MockFile : FileBase
 
         mockFileDataAccessor.AddFile(path, mockFileDataAccessor.AdjustTimes(new MockFileData(bytes.ToArray()), TimeAdjustments.All));
     }
-        
+
 #if FEATURE_FILE_SPAN
         /// <inheritdoc cref="IFile.WriteAllBytes(string,ReadOnlySpan{byte})"/>
         public override void WriteAllBytes(string path, ReadOnlySpan<byte> bytes)
