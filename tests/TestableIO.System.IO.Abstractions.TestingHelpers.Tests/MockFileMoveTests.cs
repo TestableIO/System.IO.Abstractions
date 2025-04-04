@@ -250,6 +250,22 @@ public class MockFileMoveTests
     }
 
     [Test]
+    [WindowsOnly(WindowsSpecifics.Drives)]
+    public async Task MockFile_Move_CaseOnlyRename_ShouldChangeCase()
+    {
+        var fileSystem = new MockFileSystem();
+        string sourceFilePath = @"c:\temp\demo.txt";
+        string destFilePath = @"c:\temp\DEMO.TXT";
+        string sourceFileContent = "content";
+        fileSystem.File.WriteAllText(sourceFilePath, sourceFileContent);
+
+        fileSystem.File.Move(sourceFilePath, destFilePath);
+
+        await That(fileSystem.File.Exists(destFilePath)).IsTrue();
+        await That(fileSystem.File.ReadAllText(destFilePath)).IsEqualTo(sourceFileContent);
+    }
+
+    [Test]
     public async Task MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsEmpty_Message()
     {
         string destFilePath = XFS.Path(@"c:\something\demo.txt");
