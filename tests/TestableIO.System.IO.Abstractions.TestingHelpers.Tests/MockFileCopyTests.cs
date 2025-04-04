@@ -256,7 +256,10 @@ public class MockFileCopyTests
 
         fileSystem.File.WriteAllText(path, "Hello");
 
-        await That(() => fileSystem.File.Copy(path, pathUpper, true)).Throws<IOException>().HasMessage($"The process cannot access the file '{pathUpper}' because it is being used by another process.");
+        void Act() => fileSystem.File.Copy(path, pathUpper, true);
+
+        await That(Act).Throws<IOException>()
+            .WithMessage($"The process cannot access the file '{pathUpper}' because it is being used by another process.");
     }
 
     [Test]

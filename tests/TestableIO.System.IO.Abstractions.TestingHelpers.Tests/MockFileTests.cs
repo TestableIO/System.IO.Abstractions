@@ -733,17 +733,17 @@ public class MockFileTests
 
     [Test]
     [WindowsOnly(WindowsSpecifics.Drives)]
-    public async Task MockFile_Replace_SameSourceAndDestination_ShouldThrowIOException()
+    public async Task MockFile_Replace_SourceAndDestinationDifferOnlyInCasing_ShouldThrowIOException()
     {
-        string sourceFilePath = @"c:\something\demo.txt";
-        string destFilePath = @"c:\something\Demo.txt";
+        var fileSystem = new MockFileSystem();
+        string sourceFilePath = @"c:\temp\demo.txt";
+        string destFilePath = @"c:\temp\DEMO.txt";
         string fileContent = "content";
+        fileSystem.File.WriteAllText(sourceFilePath, fileContent);
 
-        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
-        {
-            { sourceFilePath, new MockFileData(fileContent) }
-        });
+        void Act() => fileSystem.File.Replace(sourceFilePath, destFilePath, null, true);
 
-        await That(() => fileSystem.File.Replace(sourceFilePath, destFilePath, null, true)).Throws<IOException>().HasMessage("The process cannot access the file because it is being used by another process.");
+        await That(Act).Throws<IOException>()
+            .HasMessage("The process cannot access the file because it is being used by another process.");
     }
 }
