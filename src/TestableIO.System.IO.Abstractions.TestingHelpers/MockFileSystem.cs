@@ -156,7 +156,12 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
 
             if (DirectoryExistsWithoutFixingPath(leftHalf))
             {
-                string baseDirectory = files[leftHalf].Path;
+                string baseDirectory;
+                lock (files)
+                {
+                    baseDirectory = files[leftHalf].Path;
+                }
+
                 return baseDirectory + Path.DirectorySeparatorChar + rightHalf;
             }
         }
