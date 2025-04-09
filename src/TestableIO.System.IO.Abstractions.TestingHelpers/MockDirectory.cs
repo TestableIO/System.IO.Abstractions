@@ -502,12 +502,7 @@ public class MockDirectory : DirectoryBase
     {
         var fullSourcePath = mockFileDataAccessor.Path.GetFullPath(sourceDirName).TrimSlashes();
         var fullDestPath = mockFileDataAccessor.Path.GetFullPath(destDirName).TrimSlashes();
-
-        if (mockFileDataAccessor.StringOperations.Equals(fullSourcePath, fullDestPath))
-        {
-            throw new IOException("Source and destination path must be different.");
-        }
-
+        
         //if we're moving a file, not a directory, call the appropriate file moving function.
         var fileData = mockFileDataAccessor.GetFile(fullSourcePath);
         if (fileData?.Attributes.HasFlag(FileAttributes.Directory) == false)
@@ -534,12 +529,7 @@ public class MockDirectory : DirectoryBase
         {
             throw CommonExceptions.CouldNotFindPartOfPath(destDirName);
         }
-
-        if (mockFileDataAccessor.Directory.Exists(fullDestPath) || mockFileDataAccessor.File.Exists(fullDestPath))
-        {
-            throw CommonExceptions.CannotCreateBecauseSameNameAlreadyExists(fullDestPath);
-        }
-
+        
         mockFileDataAccessor.MoveDirectory(fullSourcePath, fullDestPath);
     }
 
