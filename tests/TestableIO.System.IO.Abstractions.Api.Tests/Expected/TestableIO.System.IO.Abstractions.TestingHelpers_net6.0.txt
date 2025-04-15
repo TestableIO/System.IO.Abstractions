@@ -538,6 +538,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public bool EndsWith(string s, string suffix) { }
         public bool Equals(char x, char y) { }
         public bool Equals(string x, string y) { }
+        public bool Equals(string x, string y, System.StringComparison comparison) { }
         public int IndexOf(string s, string substring) { }
         public int IndexOf(string s, string substring, int startIndex) { }
         public string Replace(string s, string oldValue, string newValue) { }
