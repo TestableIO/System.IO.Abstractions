@@ -503,7 +503,8 @@ public class MockDirectory : DirectoryBase
         var fullSourcePath = mockFileDataAccessor.Path.GetFullPath(sourceDirName).TrimSlashes();
         var fullDestPath = mockFileDataAccessor.Path.GetFullPath(destDirName).TrimSlashes();
 
-        if (mockFileDataAccessor.StringOperations.Equals(fullSourcePath, fullDestPath))
+        if (XFS.IsUnixPlatform() ? mockFileDataAccessor.StringOperations.Equals(fullSourcePath, fullDestPath)
+            : mockFileDataAccessor.StringOperations.Equals(fullSourcePath, fullDestPath, StringComparison.Ordinal))
         {
             throw new IOException("Source and destination path must be different.");
         }
@@ -534,12 +535,21 @@ public class MockDirectory : DirectoryBase
         {
             throw CommonExceptions.CouldNotFindPartOfPath(destDirName);
         }
-
-        if (mockFileDataAccessor.Directory.Exists(fullDestPath) || mockFileDataAccessor.File.Exists(fullDestPath))
+        if (XFS.IsUnixPlatform())
         {
-            throw CommonExceptions.CannotCreateBecauseSameNameAlreadyExists(fullDestPath);
+            if (mockFileDataAccessor.Directory.Exists(fullDestPath) || mockFileDataAccessor.File.Exists(fullDestPath))
+            {
+                throw CommonExceptions.CannotCreateBecauseSameNameAlreadyExists(fullDestPath);
+            }
         }
-
+        else if (!mockFileDataAccessor.StringOperations.Equals(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase))
+        {
+            // In Windows, file/dir names are case case sensetive, src and SRC and treated different
+            if (mockFileDataAccessor.Directory.Exists(fullDestPath) || mockFileDataAccessor.File.Exists(fullDestPath))
+            {
+                throw CommonExceptions.CannotCreateBecauseSameNameAlreadyExists(fullDestPath);
+            }
+        }
         mockFileDataAccessor.MoveDirectory(fullSourcePath, fullDestPath);
     }
 
@@ -653,7 +663,7 @@ public class MockDirectory : DirectoryBase
             .Where(p => !mockFileDataAccessor.StringOperations.Equals(p, path))
             .Select(p => FixPrefix(p, originalPath));
     }
-        
+
     private string FixPrefix(string path, string originalPath)
     {
         var normalizedOriginalPath = mockFileDataAccessor.Path.GetFullPath(originalPath);
@@ -661,7 +671,7 @@ public class MockDirectory : DirectoryBase
             .TrimStart(mockFileDataAccessor.Path.DirectorySeparatorChar);
         return mockFileDataAccessor.Path.Combine(originalPath, pathWithoutOriginalPath);
     }
-        
+
 #if FEATURE_ENUMERATION_OPTIONS
         /// <inheritdoc />
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
