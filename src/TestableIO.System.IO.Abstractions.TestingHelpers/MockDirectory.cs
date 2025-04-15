@@ -544,7 +544,7 @@ public class MockDirectory : DirectoryBase
         }
         else if (!mockFileDataAccessor.StringOperations.Equals(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase))
         {
-            // In Windows, file/dir names are case case sensetive, src and SRC and treated different
+            // In Windows, file/dir names are case sensetive, C:\\temp\\src and C:\\temp\\SRC and treated different
             if (mockFileDataAccessor.Directory.Exists(fullDestPath) || mockFileDataAccessor.File.Exists(fullDestPath))
             {
                 throw CommonExceptions.CannotCreateBecauseSameNameAlreadyExists(fullDestPath);
