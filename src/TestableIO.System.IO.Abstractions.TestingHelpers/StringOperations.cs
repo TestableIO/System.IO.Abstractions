@@ -37,10 +37,6 @@ public class StringOperations
     /// </summary>
     public bool Equals(string x, string y) => string.Equals(x, y, comparison);
     /// <summary>
-    /// Determines whether the given strings are equal using the given comparison type.
-    /// </summary>
-    public bool Equals(string x, string y, StringComparison comparison) => string.Equals(x, y, comparison);
-    /// <summary>
     /// Determines whether the given characters are equal.
     /// </summary>
     public bool Equals(char x, char y) => caseSensitive ? x == y : char.ToUpper(x) == char.ToUpper(y);

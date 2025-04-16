@@ -504,7 +504,7 @@ public class MockDirectory : DirectoryBase
         var fullDestPath = mockFileDataAccessor.Path.GetFullPath(destDirName).TrimSlashes();
 
         if (XFS.IsUnixPlatform() ? mockFileDataAccessor.StringOperations.Equals(fullSourcePath, fullDestPath)
-            : mockFileDataAccessor.StringOperations.Equals(fullSourcePath, fullDestPath, StringComparison.Ordinal))
+            : string.Equals(fullSourcePath, fullDestPath, StringComparison.Ordinal))
         {
             throw new IOException("Source and destination path must be different.");
         }
@@ -542,7 +542,7 @@ public class MockDirectory : DirectoryBase
                 throw CommonExceptions.CannotCreateBecauseSameNameAlreadyExists(fullDestPath);
             }
         }
-        else if (!mockFileDataAccessor.StringOperations.Equals(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase))
+        else if (!string.Equals(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase))
         {
             // In Windows, file/dir names are case sensetive, C:\\temp\\src and C:\\temp\\SRC and treated different
             if (mockFileDataAccessor.Directory.Exists(fullDestPath) || mockFileDataAccessor.File.Exists(fullDestPath))
