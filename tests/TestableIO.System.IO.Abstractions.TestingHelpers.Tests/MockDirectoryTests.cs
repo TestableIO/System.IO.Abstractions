@@ -2204,4 +2204,19 @@ public class MockDirectoryTests
 
         await That(fileSystem.Directory.Exists("/")).IsEqualTo(true);
     }
+
+    [Test]
+    public static void MockDirectory_Move_ShouldNotThrowException_InWindows_When_SourceAndDestinationDifferOnlyInCasing()
+    {
+        // Arrange
+        MockFileSystem mockFs = new MockFileSystem();
+        string tempDir = mockFs.Path.GetTempPath();
+        string src = mockFs.Path.Combine(tempDir, "src");
+        string dest = mockFs.Path.Combine(tempDir, "SRC");
+        IDirectoryInfo srcDir = mockFs.DirectoryInfo.New(src);
+        srcDir.Create();
+        
+        // Act & Assert
+        Assert.DoesNotThrow(() => mockFs.Directory.Move(src, dest));
+    }
 }

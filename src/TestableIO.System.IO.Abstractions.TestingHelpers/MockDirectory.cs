@@ -503,7 +503,7 @@ public class MockDirectory : DirectoryBase
         var fullSourcePath = mockFileDataAccessor.Path.GetFullPath(sourceDirName).TrimSlashes();
         var fullDestPath = mockFileDataAccessor.Path.GetFullPath(destDirName).TrimSlashes();
 
-        if (mockFileDataAccessor.StringOperations.Equals(fullSourcePath, fullDestPath))
+        if (string.Equals(fullSourcePath, fullDestPath, StringComparison.Ordinal))
         {
             throw new IOException("Source and destination path must be different.");
         }
@@ -537,9 +537,13 @@ public class MockDirectory : DirectoryBase
 
         if (mockFileDataAccessor.Directory.Exists(fullDestPath) || mockFileDataAccessor.File.Exists(fullDestPath))
         {
-            throw CommonExceptions.CannotCreateBecauseSameNameAlreadyExists(fullDestPath);
+            // In Windows, file/dir names are case sensetive, C:\\temp\\src and C:\\temp\\SRC and treated different
+            if (XFS.IsUnixPlatform() ||
+                !string.Equals(fullSourcePath, fullDestPath, StringComparison.OrdinalIgnoreCase))
+            {
+                throw CommonExceptions.CannotCreateBecauseSameNameAlreadyExists(fullDestPath);
+            }
         }
-
         mockFileDataAccessor.MoveDirectory(fullSourcePath, fullDestPath);
     }
 
@@ -653,7 +657,7 @@ public class MockDirectory : DirectoryBase
             .Where(p => !mockFileDataAccessor.StringOperations.Equals(p, path))
             .Select(p => FixPrefix(p, originalPath));
     }
-        
+
     private string FixPrefix(string path, string originalPath)
     {
         var normalizedOriginalPath = mockFileDataAccessor.Path.GetFullPath(originalPath);
@@ -661,7 +665,7 @@ public class MockDirectory : DirectoryBase
             .TrimStart(mockFileDataAccessor.Path.DirectorySeparatorChar);
         return mockFileDataAccessor.Path.Combine(originalPath, pathWithoutOriginalPath);
     }
-        
+
 #if FEATURE_ENUMERATION_OPTIONS
         /// <inheritdoc />
         public override IEnumerable<string> EnumerateDirectories(string path, string searchPattern, EnumerationOptions enumerationOptions)
