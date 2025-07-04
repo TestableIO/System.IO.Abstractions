@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers;
 
@@ -97,6 +98,16 @@ public class PathVerifier
 
         if (checkAdditional)
         {
+            // AdditionalInvalidPathChars includes '?', but this character is allowed in extended-length
+            // windows path prefixes (`\\?\`). If we're dealing with such a path, check for invalid
+            // characters after the prefix.
+            // Ref: https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry
+            const string EXTENDED_LENGTH_PATH_PREFIX = @"\\?\";
+            if (XFS.IsWindowsPlatform() && path.StartsWith(EXTENDED_LENGTH_PATH_PREFIX))
+            {
+                path = path.Substring(EXTENDED_LENGTH_PATH_PREFIX.Length);
+            }
+
             return path.IndexOfAny(invalidPathChars.Concat(AdditionalInvalidPathChars).ToArray()) >= 0;
         }
 
