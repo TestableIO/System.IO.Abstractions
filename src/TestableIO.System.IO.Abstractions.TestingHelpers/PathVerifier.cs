@@ -65,6 +65,12 @@ public class PathVerifier
 
     private static bool IsValidUseOfVolumeSeparatorChar(string path)
     {
+        const string EXTENDED_LENGTH_PATH_PREFIX = @"\\?\";
+        if (path.StartsWith(EXTENDED_LENGTH_PATH_PREFIX))
+        {
+            path = path.Substring(EXTENDED_LENGTH_PATH_PREFIX.Length);
+        }
+
         var lastVolSepIndex = path.LastIndexOf(Path.VolumeSeparatorChar);
         return lastVolSepIndex == -1 || lastVolSepIndex == 1 && char.IsLetter(path[0]);
     }

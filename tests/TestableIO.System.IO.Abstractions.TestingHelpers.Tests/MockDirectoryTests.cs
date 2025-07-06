@@ -756,10 +756,14 @@ public class MockDirectoryTests
 
         // Act
         var directoryInfo = fileSystem.Directory.CreateDirectory(XFS.Path(@"\\?\c:\bar"));
+        fileSystem.File.WriteAllText(@"\\?\c:\bar\grok.txt", "hello world\n");
 
         // Assert
         await That(fileSystem.Directory.Exists(XFS.Path(@"\\?\c:\bar"))).IsTrue();
         await That(directoryInfo.FullName).IsEqualTo(@"\\?\c:\bar");
+        await That(fileSystem.File.ReadAllText(@"\\?\c:\bar\grok.txt")).IsEqualTo("hello world\n");
+        await That(fileSystem.Directory.GetFiles(@"\\?\c:\bar")).HasSingle()
+            .Which.IsEqualTo(@"\\?\c:\bar\grok.txt");
     }
 
     // Issue #210
