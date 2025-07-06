@@ -755,10 +755,11 @@ public class MockDirectoryTests
         var fileSystem = new MockFileSystem();
 
         // Act
-        fileSystem.Directory.CreateDirectory(XFS.Path(@"\\?\c:\bar"));
+        var directoryInfo = fileSystem.Directory.CreateDirectory(XFS.Path(@"\\?\c:\bar"));
 
         // Assert
         await That(fileSystem.Directory.Exists(XFS.Path(@"\\?\c:\bar"))).IsTrue();
+        await That(directoryInfo.FullName).IsEqualTo(@"\\?\c:\bar");
     }
 
     // Issue #210
