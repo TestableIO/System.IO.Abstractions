@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers;
 
@@ -14,6 +15,10 @@ public class PathVerifier
 {
     private static readonly char[] AdditionalInvalidPathChars = { '*', '?' };
     private readonly IMockFileDataAccessor _mockFileDataAccessor;
+
+    // Windows supports extended-length paths with a `\\?\` prefix, to work around low path length limits.
+    // Ref: https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry
+    private const string WINDOWS_EXTENDED_LENGTH_PATH_PREFIX = @"\\?\";
 
     /// <summary>
     /// Creates a new verifier instance.
@@ -64,6 +69,12 @@ public class PathVerifier
 
     private static bool IsValidUseOfVolumeSeparatorChar(string path)
     {
+        if (XFS.IsWindowsPlatform() && path.StartsWith(WINDOWS_EXTENDED_LENGTH_PATH_PREFIX))
+        {
+            // Skip over the `\\?\` prefix if there is one.
+            path = path.Substring(WINDOWS_EXTENDED_LENGTH_PATH_PREFIX.Length);
+        }
+
         var lastVolSepIndex = path.LastIndexOf(Path.VolumeSeparatorChar);
         return lastVolSepIndex == -1 || lastVolSepIndex == 1 && char.IsLetter(path[0]);
     }
@@ -97,6 +108,14 @@ public class PathVerifier
 
         if (checkAdditional)
         {
+            // AdditionalInvalidPathChars includes '?', but this character is allowed in extended-length
+            // windows path prefixes (`\\?\`). If we're dealing with such a path, check for invalid
+            // characters after the prefix.
+            if (XFS.IsWindowsPlatform() && path.StartsWith(WINDOWS_EXTENDED_LENGTH_PATH_PREFIX))
+            {
+                path = path.Substring(WINDOWS_EXTENDED_LENGTH_PATH_PREFIX.Length);
+            }
+
             return path.IndexOfAny(invalidPathChars.Concat(AdditionalInvalidPathChars).ToArray()) >= 0;
         }
 

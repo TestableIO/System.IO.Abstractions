@@ -747,6 +747,25 @@ public class MockDirectoryTests
         await That(createDelegate).Throws<ArgumentException>();
     }
 
+    [Test]
+    [WindowsOnly(WindowsSpecifics.UNCPaths)]
+    public async Task MockDirectory_CreateDirectory_ShouldSupportExtendedLengthPaths()
+    {
+        // Arrange
+        var fileSystem = new MockFileSystem();
+
+        // Act
+        var directoryInfo = fileSystem.Directory.CreateDirectory(XFS.Path(@"\\?\c:\bar"));
+        fileSystem.File.WriteAllText(@"\\?\c:\bar\grok.txt", "hello world\n");
+
+        // Assert
+        await That(fileSystem.Directory.Exists(XFS.Path(@"\\?\c:\bar"))).IsTrue();
+        await That(directoryInfo.FullName).IsEqualTo(@"\\?\c:\bar");
+        await That(fileSystem.File.ReadAllText(@"\\?\c:\bar\grok.txt")).IsEqualTo("hello world\n");
+        await That(fileSystem.Directory.GetFiles(@"\\?\c:\bar")).HasSingle()
+            .Which.IsEqualTo(@"\\?\c:\bar\grok.txt");
+    }
+
     // Issue #210
     [Test]
     public async Task MockDirectory_CreateDirectory_ShouldIgnoreExistingDirectoryRegardlessOfTrailingSlash()
