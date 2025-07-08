@@ -16,6 +16,10 @@ public class PathVerifier
     private static readonly char[] AdditionalInvalidPathChars = { '*', '?' };
     private readonly IMockFileDataAccessor _mockFileDataAccessor;
 
+    // Windows supports extended-length paths with a `\\?\` prefix, to work around low path length limits.
+    // Ref: https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry
+    private const string WINDOWS_EXTENDED_LENGTH_PATH_PREFIX = @"\\?\";
+
     /// <summary>
     /// Creates a new verifier instance.
     /// </summary>
@@ -65,10 +69,10 @@ public class PathVerifier
 
     private static bool IsValidUseOfVolumeSeparatorChar(string path)
     {
-        const string EXTENDED_LENGTH_PATH_PREFIX = @"\\?\";
-        if (path.StartsWith(EXTENDED_LENGTH_PATH_PREFIX))
+        if (XFS.IsWindowsPlatform() && path.StartsWith(WINDOWS_EXTENDED_LENGTH_PATH_PREFIX))
         {
-            path = path.Substring(EXTENDED_LENGTH_PATH_PREFIX.Length);
+            // Skip over the `\\?\` prefix if there is one.
+            path = path.Substring(WINDOWS_EXTENDED_LENGTH_PATH_PREFIX.Length);
         }
 
         var lastVolSepIndex = path.LastIndexOf(Path.VolumeSeparatorChar);
@@ -107,11 +111,9 @@ public class PathVerifier
             // AdditionalInvalidPathChars includes '?', but this character is allowed in extended-length
             // windows path prefixes (`\\?\`). If we're dealing with such a path, check for invalid
             // characters after the prefix.
-            // Ref: https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry
-            const string EXTENDED_LENGTH_PATH_PREFIX = @"\\?\";
-            if (XFS.IsWindowsPlatform() && path.StartsWith(EXTENDED_LENGTH_PATH_PREFIX))
+            if (XFS.IsWindowsPlatform() && path.StartsWith(WINDOWS_EXTENDED_LENGTH_PATH_PREFIX))
             {
-                path = path.Substring(EXTENDED_LENGTH_PATH_PREFIX.Length);
+                path = path.Substring(WINDOWS_EXTENDED_LENGTH_PATH_PREFIX.Length);
             }
 
             return path.IndexOfAny(invalidPathChars.Concat(AdditionalInvalidPathChars).ToArray()) >= 0;
