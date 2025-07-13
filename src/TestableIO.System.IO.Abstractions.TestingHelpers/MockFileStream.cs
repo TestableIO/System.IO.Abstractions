@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
+using System.Linq;
 
 namespace System.IO.Abstractions.TestingHelpers;
 
@@ -75,6 +76,13 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
 
             var timeAdjustments = GetTimeAdjustmentsForFileStreamWhenFileExists(mode, access);
             mockFileDataAccessor.AdjustTimes(fileData, timeAdjustments);
+            
+            // For Truncate mode, clear the file contents first
+            if (mode == FileMode.Truncate)
+            {
+                fileData.Contents = new byte[0];
+            }
+            
             var existingContents = fileData.Contents;
             var keepExistingContents =
                 existingContents?.Length > 0 &&
@@ -145,7 +153,6 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     {
         get
         {
-            // Only refresh if needed to see latest file size from other streams
             RefreshFromSharedContentIfNeeded();
             return base.Length;
         }
@@ -374,112 +381,22 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             // This prevents unnecessary work and maintains performance
             if (mockFileData.ContentVersion != lastKnownContentVersion)
             {
-                // If we have unflushed writes, we need to preserve them when refreshing
-                // This handles the case where:
-                // 1. Stream A writes data but hasn't flushed
-                // 2. Stream B writes and flushes, updating shared content
-                // 3. Stream A needs to refresh but preserve its unflushed changes
-                byte[] preservedContent = null;
-                long preservedLength = 0;
                 long currentPosition = Position;
                 
-                if (hasUnflushedWrites)
-                {
-                    // Save our current stream content to preserve unflushed writes
-                    preservedLength = base.Length;
-                    preservedContent = new byte[preservedLength];
-                    var originalPosition = Position;
-                    Position = 0;
-                    var totalBytesRead = 0;
-                    while (totalBytesRead < preservedLength)
-                    {
-                        var bytesRead = base.Read(preservedContent, totalBytesRead, (int)(preservedLength - totalBytesRead));
-                        if (bytesRead == 0)
-                        {
-                            break;
-                        }
-                        totalBytesRead += bytesRead;
-                    }
-                    Position = originalPosition;
-                }
+                // Preserve unflushed content if necessary
+                var (preservedContent, preservedLength) = PreserveUnflushedContent();
                 
                 var sharedContent = mockFileData.Contents;
                 
-                // Performance optimization: if we have no unflushed writes and the shared content
-                // is the same length as our current content, we might not need to do expensive copying
-                if (!hasUnflushedWrites && sharedContent?.Length == base.Length)
+                // Check if content is already the same (optimization for metadata-only changes)
+                if (IsContentIdentical(sharedContent))
                 {
-                    // Quick content comparison for common case where only metadata changed
-                    bool contentSame = true;
-                    if (sharedContent.Length > 0 && sharedContent.Length <= 4096) // Only check small files
-                    {
-                        var currentPos = Position;
-                        Position = 0;
-                        var currentContent = new byte[base.Length];
-                        var bytesRead = base.Read(currentContent, 0, (int)base.Length);
-                        Position = currentPos;
-                        
-                        if (bytesRead == sharedContent.Length)
-                        {
-                            for (int i = 0; i < bytesRead; i++)
-                            {
-                                if (currentContent[i] != sharedContent[i])
-                                {
-                                    contentSame = false;
-                                    break;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            contentSame = false;
-                        }
-                    }
-                    else
-                    {
-                        contentSame = false; // Don't compare large files
-                    }
-                    
-                    if (contentSame)
-                    {
-                        // Content is identical, just update version tracking and exit
-                        lastKnownContentVersion = mockFileData.ContentVersion;
-                        return;
-                    }
+                    lastKnownContentVersion = mockFileData.ContentVersion;
+                    return;
                 }
                 
-                // Start with shared content as the base - this gives us the latest changes from other streams
-                base.SetLength(0);
-                Position = 0;
-                if (sharedContent != null && sharedContent.Length > 0)
-                {
-                    base.Write(sharedContent, 0, sharedContent.Length);
-                }
-                
-                // If we had unflushed writes, we need to overlay them on the shared content
-                // This ensures our local changes take precedence over shared content
-                if (hasUnflushedWrites && preservedContent != null)
-                {
-                    // Optimization: if preserved content is same length or longer, just use it directly
-                    if (preservedLength >= (sharedContent?.Length ?? 0))
-                    {
-                        base.SetLength(0);
-                        Position = 0;
-                        base.Write(preservedContent, 0, (int)preservedLength);
-                    }
-                    else
-                    {
-                        // Need to merge: ensure stream is large enough
-                        if (base.Length < preservedLength)
-                        {
-                            base.SetLength(preservedLength);
-                        }
-                        
-                        // Apply our preserved content on top of the shared content
-                        Position = 0;
-                        base.Write(preservedContent, 0, (int)preservedLength);
-                    }
-                }
+                // Merge shared content with any preserved unflushed writes
+                MergeWithSharedContent(sharedContent, preservedContent, preservedLength);
                 
                 // Restore position, but ensure it's within bounds of the new content
                 Position = Math.Min(currentPosition, base.Length);
@@ -487,6 +404,109 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
                 // Update our version to match what we just synchronized with
                 // This prevents unnecessary refreshes until the shared content changes again
                 lastKnownContentVersion = mockFileData.ContentVersion;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Preserves unflushed content from the current stream before refreshing from shared content.
+    /// </summary>
+    /// <returns>A tuple containing the preserved content and its length.</returns>
+    private (byte[] content, long length) PreserveUnflushedContent()
+    {
+        if (!hasUnflushedWrites)
+        {
+            return (null, 0);
+        }
+
+        // Save our current stream content to preserve unflushed writes
+        var preservedLength = base.Length;
+        var preservedContent = new byte[preservedLength];
+        var originalPosition = Position;
+        Position = 0;
+        var totalBytesRead = 0;
+        while (totalBytesRead < preservedLength)
+        {
+            var bytesRead = base.Read(preservedContent, totalBytesRead, (int)(preservedLength - totalBytesRead));
+            if (bytesRead == 0)
+            {
+                break;
+            }
+            totalBytesRead += bytesRead;
+        }
+        Position = originalPosition;
+        
+        return (preservedContent, preservedLength);
+    }
+
+    /// <summary>
+    /// Checks if the current content is identical to the shared content (optimization).
+    /// </summary>
+    /// <param name="sharedContent">The shared content to compare against.</param>
+    /// <returns>True if the content is identical, false otherwise.</returns>
+    private bool IsContentIdentical(byte[] sharedContent)
+    {
+        // Performance optimization: if we have no unflushed writes and the shared content
+        // is the same length as our current content, we might not need to do expensive copying
+        if (hasUnflushedWrites || sharedContent?.Length != base.Length)
+        {
+            return false;
+        }
+
+        // Quick content comparison for common case where only metadata changed
+        if (sharedContent.Length > 0 && sharedContent.Length <= 4096) // Only check small files
+        {
+            var currentPos = Position;
+            Position = 0;
+            var currentContent = new byte[base.Length];
+            var bytesRead = base.Read(currentContent, 0, (int)base.Length);
+            Position = currentPos;
+            
+            return bytesRead == sharedContent.Length && 
+                   currentContent.Take(bytesRead).SequenceEqual(sharedContent);
+        }
+
+        return false; // Don't compare large files
+    }
+
+    /// <summary>
+    /// Merges the shared content with any preserved unflushed writes.
+    /// </summary>
+    /// <param name="sharedContent">The shared content from MockFileData.</param>
+    /// <param name="preservedContent">Any preserved unflushed content.</param>
+    /// <param name="preservedLength">The length of the preserved content.</param>
+    private void MergeWithSharedContent(byte[] sharedContent, byte[] preservedContent, long preservedLength)
+    {
+        // Start with shared content as the base - this gives us the latest changes from other streams
+        base.SetLength(0);
+        Position = 0;
+        if (sharedContent != null && sharedContent.Length > 0)
+        {
+            base.Write(sharedContent, 0, sharedContent.Length);
+        }
+        
+        // If we had unflushed writes, we need to overlay them on the shared content
+        // This ensures our local changes take precedence over shared content
+        if (hasUnflushedWrites && preservedContent != null)
+        {
+            // Optimization: if preserved content is same length or longer, just use it directly
+            if (preservedLength >= (sharedContent?.Length ?? 0))
+            {
+                base.SetLength(0);
+                Position = 0;
+                base.Write(preservedContent, 0, (int)preservedLength);
+            }
+            else
+            {
+                // Need to merge: ensure stream is large enough
+                if (base.Length < preservedLength)
+                {
+                    base.SetLength(preservedLength);
+                }
+                
+                // Apply our preserved content on top of the shared content
+                Position = 0;
+                base.Write(preservedContent, 0, (int)preservedLength);
             }
         }
     }

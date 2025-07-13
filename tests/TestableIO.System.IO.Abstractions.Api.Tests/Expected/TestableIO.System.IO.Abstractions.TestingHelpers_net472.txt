@@ -300,6 +300,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockFileStream(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string path, System.IO.FileMode mode, System.IO.FileAccess access = 3, System.IO.FileOptions options = 0) { }
         public override bool CanRead { get; }
         public override bool CanWrite { get; }
+        public override long Length { get; }
         public static System.IO.Abstractions.FileSystemStream Null { get; }
         protected override void Dispose(bool disposing) { }
         public override void EndWrite(System.IAsyncResult asyncResult) { }

@@ -93,7 +93,7 @@ public class MockFileStreamTests
     {
         // Reproduce issue #1131: The mock FileStream class does not handle shared file contents correctly
         var fileSystem = new MockFileSystem();
-        var filename = fileSystem.Path.GetTempFileName();
+        var filename = fileSystem.Path.Combine(fileSystem.Path.GetTempPath(), fileSystem.Path.GetRandomFileName());
         
         try
         {
@@ -110,7 +110,8 @@ public class MockFileStreamTests
 
                 file2.Position = 0;
                 file2.Flush();
-                file2.Read(buffer);
+                var bytesRead = file2.Read(buffer);
+                await That(bytesRead).IsEqualTo(4).Because("should read exactly 4 bytes");
                 int readValue = BitConverter.ToInt32(buffer);
                 
                 await That(readValue).IsEqualTo(ix)
@@ -127,7 +128,7 @@ public class MockFileStreamTests
     public async Task MockFileStream_SharedContent_SetLengthTruncation_ShouldBeVisible()
     {
         var fileSystem = new MockFileSystem();
-        var filename = fileSystem.Path.GetTempFileName();
+        var filename = fileSystem.Path.Combine(fileSystem.Path.GetTempPath(), fileSystem.Path.GetRandomFileName());
         
         try
         {
@@ -166,7 +167,7 @@ public class MockFileStreamTests
     public async Task MockFileStream_SharedContent_PositionBeyondFileBounds_ShouldHandleGracefully()
     {
         var fileSystem = new MockFileSystem();
-        var filename = fileSystem.Path.GetTempFileName();
+        var filename = fileSystem.Path.Combine(fileSystem.Path.GetTempPath(), fileSystem.Path.GetRandomFileName());
         
         try
         {
@@ -201,7 +202,7 @@ public class MockFileStreamTests
     public async Task MockFileStream_SharedContent_ConcurrentWritesToDifferentPositions()
     {
         var fileSystem = new MockFileSystem();
-        var filename = fileSystem.Path.GetTempFileName();
+        var filename = fileSystem.Path.Combine(fileSystem.Path.GetTempPath(), fileSystem.Path.GetRandomFileName());
         
         try
         {
@@ -299,7 +300,7 @@ public class MockFileStreamTests
     public async Task MockFileStream_SharedContent_PartialReadsAndWrites()
     {
         var fileSystem = new MockFileSystem();
-        var filename = fileSystem.Path.GetTempFileName();
+        var filename = fileSystem.Path.Combine(fileSystem.Path.GetTempPath(), fileSystem.Path.GetRandomFileName());
         
         try
         {
@@ -337,10 +338,10 @@ public class MockFileStreamTests
     }
 
     [Test]
-    public async Task MockFileStream_SharedContent_FileExtensionShouldBeVisible()
+    public async Task MockFileStream_SharedContent_FileLengthExtensionShouldBeVisible()
     {
         var fileSystem = new MockFileSystem();
-        var filename = fileSystem.Path.GetTempFileName();
+        var filename = fileSystem.Path.Combine(fileSystem.Path.GetTempPath(), fileSystem.Path.GetRandomFileName());
         
         try
         {
@@ -379,7 +380,7 @@ public class MockFileStreamTests
     public async Task MockFileStream_SharedContent_DisposedStreamsShouldNotAffectVersioning()
     {
         var fileSystem = new MockFileSystem();
-        var filename = fileSystem.Path.GetTempFileName();
+        var filename = fileSystem.Path.Combine(fileSystem.Path.GetTempPath(), fileSystem.Path.GetRandomFileName());
         
         try
         {
@@ -409,7 +410,7 @@ public class MockFileStreamTests
     public async Task MockFileStream_SharedContent_LargeFile_ShouldPerformCorrectly()
     {
         var fileSystem = new MockFileSystem();
-        var filename = fileSystem.Path.GetTempFileName();
+        var filename = fileSystem.Path.Combine(fileSystem.Path.GetTempPath(), fileSystem.Path.GetRandomFileName());
         
         try
         {
@@ -454,7 +455,7 @@ public class MockFileStreamTests
     public async Task MockFileStream_SharedContent_VersionOverflowHandling()
     {
         var fileSystem = new MockFileSystem();
-        var filename = fileSystem.Path.GetTempFileName();
+        var filename = fileSystem.Path.Combine(fileSystem.Path.GetTempPath(), fileSystem.Path.GetRandomFileName());
         
         try
         {
