@@ -1,8 +1,8 @@
 ﻿namespace System.IO.Abstractions.TestingHelpers.Tests;
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Collections.Generic;
+using Linq;
+using Threading.Tasks;
 
 using NUnit.Framework;
 
@@ -258,7 +258,8 @@ public class MockFileStreamTests
         
         // Write new content
         writeStream.Position = 0;
-        var updatedBytes = System.Text.Encoding.UTF8.GetBytes("updated"); writeStream.Write(updatedBytes, 0, updatedBytes.Length);
+        var updatedBytes = "updated"u8.ToArray();
+        writeStream.Write(updatedBytes, 0, updatedBytes.Length);
         writeStream.Flush();
         
         // Read-only stream should see updated content
@@ -285,7 +286,8 @@ public class MockFileStreamTests
         
         // Write to write-only stream
         writeStream.Position = 0;
-        var changedBytes = System.Text.Encoding.UTF8.GetBytes("changed"); writeStream.Write(changedBytes, 0, changedBytes.Length);
+        var changedBytes = "changed"u8.ToArray();
+        writeStream.Write(changedBytes, 0, changedBytes.Length);
         writeStream.Flush();
         
         // Read stream should see the change
