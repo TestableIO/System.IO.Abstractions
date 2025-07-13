@@ -88,6 +88,400 @@ public class MockFileStreamTests
     }
 
     [Test]
+    public async Task MockFileStream_SharedFileContents_ShouldBeVisible()
+    {
+        // Reproduce issue #1131: The mock FileStream class does not handle shared file contents correctly
+        var fileSystem = new MockFileSystem();
+        var filename = fileSystem.Path.GetTempFileName();
+        
+        try
+        {
+            using var file1 = fileSystem.FileStream.New(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            using var file2 = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+            
+            var buffer = new byte[4];
+
+            for (int ix = 0; ix < 3; ix++)
+            {
+                file1.Position = 0;
+                file1.Write(BitConverter.GetBytes(ix));
+                file1.Flush();
+
+                file2.Position = 0;
+                file2.Flush();
+                var bytesRead = file2.Read(buffer);
+                int readValue = BitConverter.ToInt32(buffer);
+                
+                await That(readValue).IsEqualTo(ix)
+                    .Because($"file2 should read the value {ix} that was written by file1, but got {readValue}");
+            }
+        }
+        finally
+        {
+            fileSystem.File.Delete(filename);
+        }
+    }
+
+    [Test]
+    public async Task MockFileStream_SharedContent_SetLengthTruncation_ShouldBeVisible()
+    {
+        var fileSystem = new MockFileSystem();
+        var filename = fileSystem.Path.GetTempFileName();
+        
+        try
+        {
+            using var file1 = fileSystem.FileStream.New(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            using var file2 = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+            
+            // Write initial data
+            file1.Write(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+            file1.Flush();
+            
+            // Verify file2 can see the data
+            file2.Position = 0;
+            var buffer = new byte[8];
+            var bytesRead = file2.Read(buffer);
+            await That(bytesRead).IsEqualTo(8);
+            
+            // Truncate file via file1
+            file1.SetLength(4);
+            file1.Flush();
+            
+            // Verify file2 sees the truncation
+            file2.Position = 0;
+            buffer = new byte[8];
+            bytesRead = file2.Read(buffer);
+            await That(bytesRead).IsEqualTo(4)
+                .Because("file2 should see truncated length");
+            await That(new byte[] { buffer[0], buffer[1], buffer[2], buffer[3] }).IsEquivalentTo(new byte[] { 1, 2, 3, 4 });
+        }
+        finally
+        {
+            fileSystem.File.Delete(filename);
+        }
+    }
+
+    [Test]
+    public async Task MockFileStream_SharedContent_PositionBeyondFileBounds_ShouldHandleGracefully()
+    {
+        var fileSystem = new MockFileSystem();
+        var filename = fileSystem.Path.GetTempFileName();
+        
+        try
+        {
+            using var file1 = fileSystem.FileStream.New(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            using var file2 = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+            
+            // Write some data and position file2 beyond it
+            file1.Write(new byte[] { 1, 2, 3, 4 });
+            file1.Flush();
+            
+            file2.Position = 10; // Beyond file end
+            
+            // Truncate file via file1
+            file1.SetLength(2);
+            file1.Flush();
+            
+            // file2 position should be adjusted
+            var buffer = new byte[4];
+            var bytesRead = file2.Read(buffer);
+            await That(bytesRead).IsEqualTo(0)
+                .Because("reading beyond file end should return 0 bytes");
+            await That(file2.Position).IsLessThanOrEqualTo(file2.Length)
+                .Because("position should be adjusted to file bounds");
+        }
+        finally
+        {
+            fileSystem.File.Delete(filename);
+        }
+    }
+
+    [Test]
+    public async Task MockFileStream_SharedContent_ConcurrentWritesToDifferentPositions()
+    {
+        var fileSystem = new MockFileSystem();
+        var filename = fileSystem.Path.GetTempFileName();
+        
+        try
+        {
+            using var file1 = fileSystem.FileStream.New(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            using var file2 = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+            
+            // Pre-allocate space
+            file1.SetLength(20);
+            file1.Flush();
+            
+            // Write to different positions
+            file1.Position = 0;
+            file1.Write(new byte[] { 1, 1, 1, 1 });
+            file1.Flush();
+            
+            file2.Position = 10;
+            file2.Write(new byte[] { 2, 2, 2, 2 });
+            file2.Flush();
+            
+            // Verify both writes are visible
+            file1.Position = 10;
+            var buffer1 = new byte[4];
+            var bytesRead1 = file1.Read(buffer1);
+            await That(bytesRead1).IsEqualTo(4);
+            await That(buffer1).IsEquivalentTo(new byte[] { 2, 2, 2, 2 });
+            
+            file2.Position = 0;
+            var buffer2 = new byte[4];
+            var bytesRead2 = file2.Read(buffer2);
+            await That(bytesRead2).IsEqualTo(4);
+            await That(buffer2).IsEquivalentTo(new byte[] { 1, 1, 1, 1 });
+        }
+        finally
+        {
+            fileSystem.File.Delete(filename);
+        }
+    }
+
+    [Test]
+    public async Task MockFileStream_SharedContent_ReadOnlyStreamShouldRefresh()
+    {
+        var fileSystem = new MockFileSystem();
+        fileSystem.AddFile("test.txt", new MockFileData("initial"));
+        
+        using var writeStream = fileSystem.FileStream.New("test.txt", FileMode.Open, FileAccess.Write, FileShare.ReadWrite);
+        using var readStream = fileSystem.FileStream.New("test.txt", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        
+        // Verify initial content
+        var buffer = new byte[7];
+        var bytesRead = readStream.Read(buffer);
+        await That(bytesRead).IsEqualTo(7);
+        await That(System.Text.Encoding.UTF8.GetString(buffer)).IsEqualTo("initial");
+        
+        // Write new content
+        writeStream.Position = 0;
+        writeStream.Write(System.Text.Encoding.UTF8.GetBytes("updated"));
+        writeStream.Flush();
+        
+        // Read-only stream should see updated content
+        readStream.Position = 0;
+        buffer = new byte[7];
+        bytesRead = readStream.Read(buffer);
+        await That(bytesRead).IsEqualTo(7);
+        await That(System.Text.Encoding.UTF8.GetString(buffer)).IsEqualTo("updated");
+    }
+
+    [Test]
+    public async Task MockFileStream_SharedContent_WriteOnlyStreamShouldNotUnnecessarilyRefresh()
+    {
+        var fileSystem = new MockFileSystem();
+        fileSystem.AddFile("test.txt", new MockFileData("initial"));
+        
+        using var readStream = fileSystem.FileStream.New("test.txt", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+        using var writeStream = fileSystem.FileStream.New("test.txt", FileMode.Open, FileAccess.Write, FileShare.ReadWrite);
+        
+        // Read initial content
+        var buffer = new byte[7];
+        var bytesRead = readStream.Read(buffer);
+        await That(bytesRead).IsEqualTo(7);
+        
+        // Write to write-only stream
+        writeStream.Position = 0;
+        writeStream.Write(System.Text.Encoding.UTF8.GetBytes("changed"));
+        writeStream.Flush();
+        
+        // Read stream should see the change
+        readStream.Position = 0;
+        buffer = new byte[7];
+        bytesRead = readStream.Read(buffer);
+        await That(bytesRead).IsEqualTo(7);
+        await That(System.Text.Encoding.UTF8.GetString(buffer)).IsEqualTo("changed");
+    }
+
+    [Test]
+    public async Task MockFileStream_SharedContent_PartialReadsAndWrites()
+    {
+        var fileSystem = new MockFileSystem();
+        var filename = fileSystem.Path.GetTempFileName();
+        
+        try
+        {
+            using var file1 = fileSystem.FileStream.New(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            using var file2 = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+            
+            // Write data in chunks
+            file1.Write(new byte[] { 1, 2, 3, 4 });
+            file1.Write(new byte[] { 5, 6, 7, 8 });
+            file1.Flush();
+            
+            // Read data in different chunk sizes from file2
+            var buffer = new byte[3];
+            
+            // First partial read
+            var bytesRead1 = file2.Read(buffer);
+            await That(bytesRead1).IsEqualTo(3);
+            await That(buffer).IsEquivalentTo(new byte[] { 1, 2, 3 });
+            
+            // Second partial read
+            var bytesRead2 = file2.Read(buffer);
+            await That(bytesRead2).IsEqualTo(3);
+            await That(buffer).IsEquivalentTo(new byte[] { 4, 5, 6 });
+            
+            // Final partial read
+            buffer = new byte[5];
+            var bytesRead3 = file2.Read(buffer);
+            await That(bytesRead3).IsEqualTo(2);
+            await That(new byte[] { buffer[0], buffer[1] }).IsEquivalentTo(new byte[] { 7, 8 });
+        }
+        finally
+        {
+            fileSystem.File.Delete(filename);
+        }
+    }
+
+    [Test]
+    public async Task MockFileStream_SharedContent_FileExtensionShouldBeVisible()
+    {
+        var fileSystem = new MockFileSystem();
+        var filename = fileSystem.Path.GetTempFileName();
+        
+        try
+        {
+            using var file1 = fileSystem.FileStream.New(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            using var file2 = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+            
+            // Write initial data
+            file1.Write(new byte[] { 1, 2, 3, 4 });
+            file1.Flush();
+            
+            // Verify file2 sees initial length
+            await That(file2.Length).IsEqualTo(4);
+            
+            // Extend file via file1
+            file1.SetLength(10);
+            file1.Position = 8;
+            file1.Write(new byte[] { 9, 10 });
+            file1.Flush();
+            
+            // file2 should see extended file
+            await That(file2.Length).IsEqualTo(10);
+            
+            file2.Position = 8;
+            var buffer = new byte[2];
+            var bytesRead = file2.Read(buffer);
+            await That(bytesRead).IsEqualTo(2);
+            await That(buffer).IsEquivalentTo(new byte[] { 9, 10 });
+        }
+        finally
+        {
+            fileSystem.File.Delete(filename);
+        }
+    }
+
+    [Test]
+    public async Task MockFileStream_SharedContent_DisposedStreamsShouldNotAffectVersioning()
+    {
+        var fileSystem = new MockFileSystem();
+        var filename = fileSystem.Path.GetTempFileName();
+        
+        try
+        {
+            using var persistentStream = fileSystem.FileStream.New(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            
+            // Create and dispose a stream that writes data
+            using (var tempStream = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.Write, FileShare.ReadWrite))
+            {
+                tempStream.Write(new byte[] { 1, 2, 3, 4 });
+                tempStream.Flush();
+            } // tempStream is disposed here
+            
+            // persistentStream should still see the data
+            persistentStream.Position = 0;
+            var buffer = new byte[4];
+            var bytesRead = persistentStream.Read(buffer);
+            await That(bytesRead).IsEqualTo(4);
+            await That(buffer).IsEquivalentTo(new byte[] { 1, 2, 3, 4 });
+        }
+        finally
+        {
+            fileSystem.File.Delete(filename);
+        }
+    }
+
+    [Test]
+    public async Task MockFileStream_SharedContent_LargeFile_ShouldPerformWell()
+    {
+        var fileSystem = new MockFileSystem();
+        var filename = fileSystem.Path.GetTempFileName();
+        
+        try
+        {
+            using var file1 = fileSystem.FileStream.New(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            using var file2 = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+            
+            // Write a reasonably large amount of data
+            var largeData = new byte[1024 * 100]; // 100KB
+            for (int i = 0; i < largeData.Length; i++)
+            {
+                largeData[i] = (byte)(i % 256);
+            }
+            
+            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            
+            file1.Write(largeData);
+            file1.Flush();
+            
+            // file2 should be able to read the large data efficiently
+            file2.Position = 0;
+            var readData = new byte[largeData.Length];
+            var bytesRead = file2.Read(readData);
+            
+            stopwatch.Stop();
+            
+            await That(bytesRead).IsEqualTo(largeData.Length);
+            await That(readData).IsEquivalentTo(largeData);
+            await That(stopwatch.ElapsedMilliseconds).IsLessThan(1000)
+                .Because("large file operations should be reasonably fast");
+        }
+        finally
+        {
+            fileSystem.File.Delete(filename);
+        }
+    }
+
+    [Test]
+    public async Task MockFileStream_SharedContent_VersionOverflowHandling()
+    {
+        var fileSystem = new MockFileSystem();
+        var filename = fileSystem.Path.GetTempFileName();
+        
+        try
+        {
+            using var file1 = fileSystem.FileStream.New(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+            using var file2 = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+            
+            // Get reference to file data to manipulate version directly
+            var fileData = fileSystem.GetFile(filename);
+            
+            // Simulate near-overflow condition
+            var reflection = typeof(MockFileData).GetField("contentVersion", 
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            reflection?.SetValue(fileData, long.MaxValue - 1);
+            
+            // Write data that will cause version to overflow
+            file1.Write(new byte[] { 1, 2, 3, 4 });
+            file1.Flush();
+            
+            // file2 should still be able to read the data despite version overflow
+            file2.Position = 0;
+            var buffer = new byte[4];
+            var bytesRead = file2.Read(buffer);
+            await That(bytesRead).IsEqualTo(4);
+            await That(buffer).IsEquivalentTo(new byte[] { 1, 2, 3, 4 });
+        }
+        finally
+        {
+            fileSystem.File.Delete(filename);
+        }
+    }
+
+    [Test]
     public async Task MockFileStream_Constructor_ReadTypeNotWritable()
     {
         // Arrange

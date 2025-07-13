@@ -57,6 +57,8 @@ public class MockFileData
         LastWriteTime = now;
         LastAccessTime = now;
         CreationTime = now;
+        contents = new byte[0];
+        contentVersion = 0;
     }
 
     /// <summary>
@@ -76,7 +78,8 @@ public class MockFileData
     public MockFileData(string textContents, Encoding encoding)
         : this()
     {
-        Contents = encoding.GetPreamble().Concat(encoding.GetBytes(textContents)).ToArray();
+        contents = encoding.GetPreamble().Concat(encoding.GetBytes(textContents)).ToArray();
+        contentVersion = 1;
     }
 
     /// <summary>
@@ -87,7 +90,8 @@ public class MockFileData
     public MockFileData(byte[] contents)
         : this()
     {
-        Contents = contents ?? throw new ArgumentNullException(nameof(contents));
+        this.contents = contents ?? throw new ArgumentNullException(nameof(contents));
+        contentVersion = 1;
     }
 
 
@@ -105,7 +109,8 @@ public class MockFileData
 
         accessControl = template.accessControl;
         Attributes = template.Attributes;
-        Contents = template.Contents.ToArray();
+        contents = template.contents?.ToArray();
+        contentVersion = template.contentVersion;
         CreationTime = template.CreationTime;
         LastAccessTime = template.LastAccessTime;
         LastWriteTime = template.LastWriteTime;
@@ -114,10 +119,26 @@ public class MockFileData
 #endif
     }
 
+    private byte[] contents;
+    private long contentVersion = 0;
+
     /// <summary>
     /// Gets or sets the byte contents of the <see cref="MockFileData"/>.
     /// </summary>
-    public byte[] Contents { get; set; }
+    public byte[] Contents 
+    { 
+        get => contents;
+        set
+        {
+            contents = value;
+            contentVersion++;
+        }
+    }
+
+    /// <summary>
+    /// Gets the current version of the file contents. This is incremented every time Contents is modified.
+    /// </summary>
+    internal long ContentVersion => contentVersion;
 
     /// <summary>
     /// Gets or sets the file version info of the <see cref="MockFileData"/>

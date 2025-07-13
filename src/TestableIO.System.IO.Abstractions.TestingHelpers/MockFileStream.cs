@@ -35,6 +35,15 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     private readonly FileOptions options;
     private readonly MockFileData fileData;
     private bool disposed;
+    
+    // Version-based content synchronization to support shared file access
+    // Tracks the version of shared content we last synchronized with
+    private long lastKnownContentVersion;
+    
+    // Tracks whether this stream has local modifications that haven't been flushed to shared storage
+    // This prevents us from overwriting shared content unnecessarily and helps preserve unflushed changes during refresh
+    private bool hasUnflushedWrites;
+    
 
     /// <inheritdoc />
     public MockFileStream(
@@ -77,6 +86,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
                     ? SeekOrigin.End
                     : SeekOrigin.Begin);
             }
+            lastKnownContentVersion = fileData.ContentVersion;
         }
         else
         {
@@ -95,6 +105,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             mockFileDataAccessor.AdjustTimes(fileData,
                 TimeAdjustments.CreationTime | TimeAdjustments.LastAccessTime);
             mockFileDataAccessor.AddFile(path, fileData);
+            lastKnownContentVersion = fileData.ContentVersion;
         }
 
         this.access = access;
@@ -130,12 +141,37 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     public override bool CanWrite => access.HasFlag(FileAccess.Write);
 
     /// <inheritdoc />
+    public override long Length
+    {
+        get
+        {
+            // Only refresh if needed to see latest file size from other streams
+            RefreshFromSharedContentIfNeeded();
+            return base.Length;
+        }
+    }
+
+    /// <inheritdoc />
     public override int Read(byte[] buffer, int offset, int count)
     {
         mockFileDataAccessor.AdjustTimes(fileData,
             TimeAdjustments.LastAccessTime);
-        return base.Read(buffer, offset, count);
+        RefreshFromSharedContentIfNeeded();
+        var result = base.Read(buffer, offset, count);
+        return result;
     }
+
+#if FEATURE_SPAN
+    /// <inheritdoc />
+    public override int Read(Span<byte> buffer)
+    {
+        mockFileDataAccessor.AdjustTimes(fileData,
+            TimeAdjustments.LastAccessTime);
+        RefreshFromSharedContentIfNeeded();
+        var result = base.Read(buffer);
+        return result;
+    }
+#endif
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
@@ -168,6 +204,8 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             throw new NotSupportedException("Stream does not support writing.");
         }
 
+        // Mark that we have changes that need to be flushed to shared storage
+        hasUnflushedWrites = true;
         base.SetLength(value);
     }
 
@@ -178,8 +216,11 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         {
             throw new NotSupportedException("Stream does not support writing.");
         }
+        RefreshFromSharedContentIfNeeded();
         mockFileDataAccessor.AdjustTimes(fileData,
             TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
+        // Mark that we now have local changes that need to be flushed
+        hasUnflushedWrites = true;
         base.Write(buffer, offset, count);
     }
 
@@ -191,8 +232,10 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             {
                 throw new NotSupportedException("Stream does not support writing.");
             }
+            RefreshFromSharedContentIfNeeded();
             mockFileDataAccessor.AdjustTimes(fileData,
                 TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
+            hasUnflushedWrites = true;
             base.Write(buffer);
         }
 #endif
@@ -205,8 +248,10 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         {
             throw new NotSupportedException("Stream does not support writing.");
         }
+        RefreshFromSharedContentIfNeeded();
         mockFileDataAccessor.AdjustTimes(fileData,
             TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
+        hasUnflushedWrites = true;
         return base.WriteAsync(buffer, offset, count, cancellationToken);
     }
 
@@ -219,8 +264,10 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             {
                 throw new NotSupportedException("Stream does not support writing.");
             }
+            RefreshFromSharedContentIfNeeded();
             mockFileDataAccessor.AdjustTimes(fileData,
                 TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
+            hasUnflushedWrites = true;
             return base.WriteAsync(buffer, cancellationToken);
         }
 #endif
@@ -232,8 +279,10 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         {
             throw new NotSupportedException("Stream does not support writing.");
         }
+        RefreshFromSharedContentIfNeeded();
         mockFileDataAccessor.AdjustTimes(fileData,
             TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
+        hasUnflushedWrites = true;
         base.WriteByte(value);
     }
 
@@ -281,21 +330,216 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
                ?? throw CommonExceptions.FileNotFound(path);
     }
 
-    private void InternalFlush()
+    /// <summary>
+    /// Fast path optimization: only refresh if the content version has actually changed.
+    /// This avoids expensive content synchronization when we're already up to date.
+    /// </summary>
+    private void RefreshFromSharedContentIfNeeded()
     {
         if (mockFileDataAccessor.FileExists(path))
         {
             var mockFileData = mockFileDataAccessor.GetFile(path);
-            /* reset back to the beginning .. */
+            
+            // Quick version check - if versions match, we're already synchronized
+            if (mockFileData.ContentVersion == lastKnownContentVersion)
+            {
+                return; // Fast exit - no work needed
+            }
+            
+            // Version changed, indicating another stream modified the file
+            RefreshFromSharedContent(mockFileData);
+        }
+    }
+
+    /// <summary>
+    /// Synchronizes this stream's content with the shared file data to support FileShare.ReadWrite scenarios.
+    /// 
+    /// When multiple MockFileStream instances open the same file with FileShare.ReadWrite, they need to see
+    /// each other's changes. This method implements a version-based synchronization mechanism where:
+    /// 
+    /// 1. Each MockFileData has a ContentVersion that increments when content changes
+    /// 2. Each stream tracks the lastKnownContentVersion it has synchronized with
+    /// 3. Before reads/writes/length checks, streams refresh to get the latest shared content
+    /// 4. During refresh, any unflushed local changes are preserved and merged with shared content
+    /// 
+    /// This solves GitHub issue #1131 where shared file content was not visible between streams.
+    /// </summary>
+    private void RefreshFromSharedContent(MockFileData mockFileData = null)
+    {
+        if (mockFileDataAccessor.FileExists(path))
+        {
+            mockFileData ??= mockFileDataAccessor.GetFile(path);
+            
+            // Only refresh if the shared content has been modified since we last synced
+            // This prevents unnecessary work and maintains performance
+            if (mockFileData.ContentVersion != lastKnownContentVersion)
+            {
+                // If we have unflushed writes, we need to preserve them when refreshing
+                // This handles the case where:
+                // 1. Stream A writes data but hasn't flushed
+                // 2. Stream B writes and flushes, updating shared content
+                // 3. Stream A needs to refresh but preserve its unflushed changes
+                byte[] preservedContent = null;
+                long preservedLength = 0;
+                long currentPosition = Position;
+                
+                if (hasUnflushedWrites)
+                {
+                    // Save our current stream content to preserve unflushed writes
+                    preservedLength = base.Length;
+                    preservedContent = new byte[preservedLength];
+                    var originalPosition = Position;
+                    Position = 0;
+                    var totalBytesRead = 0;
+                    while (totalBytesRead < preservedLength)
+                    {
+                        var bytesRead = base.Read(preservedContent, totalBytesRead, (int)(preservedLength - totalBytesRead));
+                        if (bytesRead == 0) break;
+                        totalBytesRead += bytesRead;
+                    }
+                    Position = originalPosition;
+                }
+                
+                var sharedContent = mockFileData.Contents;
+                
+                // Performance optimization: if we have no unflushed writes and the shared content
+                // is the same length as our current content, we might not need to do expensive copying
+                if (!hasUnflushedWrites && sharedContent?.Length == base.Length)
+                {
+                    // Quick content comparison for common case where only metadata changed
+                    bool contentSame = true;
+                    if (sharedContent.Length > 0 && sharedContent.Length <= 4096) // Only check small files
+                    {
+                        var currentPos = Position;
+                        Position = 0;
+                        var currentContent = new byte[base.Length];
+                        var bytesRead = base.Read(currentContent, 0, (int)base.Length);
+                        Position = currentPos;
+                        
+                        if (bytesRead == sharedContent.Length)
+                        {
+                            for (int i = 0; i < bytesRead; i++)
+                            {
+                                if (currentContent[i] != sharedContent[i])
+                                {
+                                    contentSame = false;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            contentSame = false;
+                        }
+                    }
+                    else
+                    {
+                        contentSame = false; // Don't compare large files
+                    }
+                    
+                    if (contentSame)
+                    {
+                        // Content is identical, just update version tracking and exit
+                        lastKnownContentVersion = mockFileData.ContentVersion;
+                        return;
+                    }
+                }
+                
+                // Start with shared content as the base - this gives us the latest changes from other streams
+                base.SetLength(0);
+                Position = 0;
+                if (sharedContent != null && sharedContent.Length > 0)
+                {
+                    base.Write(sharedContent, 0, sharedContent.Length);
+                }
+                
+                // If we had unflushed writes, we need to overlay them on the shared content
+                // This ensures our local changes take precedence over shared content
+                if (hasUnflushedWrites && preservedContent != null)
+                {
+                    // Optimization: if preserved content is same length or longer, just use it directly
+                    if (preservedLength >= (sharedContent?.Length ?? 0))
+                    {
+                        base.SetLength(0);
+                        Position = 0;
+                        base.Write(preservedContent, 0, (int)preservedLength);
+                    }
+                    else
+                    {
+                        // Need to merge: ensure stream is large enough
+                        if (base.Length < preservedLength)
+                        {
+                            base.SetLength(preservedLength);
+                        }
+                        
+                        // Apply our preserved content on top of the shared content
+                        Position = 0;
+                        base.Write(preservedContent, 0, (int)preservedLength);
+                    }
+                }
+                
+                // Restore position, but ensure it's within bounds of the new content
+                Position = Math.Min(currentPosition, base.Length);
+                
+                // Update our version to match what we just synchronized with
+                // This prevents unnecessary refreshes until the shared content changes again
+                lastKnownContentVersion = mockFileData.ContentVersion;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Flushes this stream's content to the shared file data, implementing proper synchronization for FileShare.ReadWrite.
+    /// 
+    /// This method is called by Flush(), FlushAsync(), and Dispose() to ensure local changes are persisted
+    /// to the shared MockFileData that other streams can see. Key aspects:
+    /// 
+    /// 1. Only flushes if we have unflushed writes (performance optimization)
+    /// 2. Refreshes from shared content first to merge any changes from other streams
+    /// 3. Reads the entire stream content and updates the shared MockFileData.Contents
+    /// 4. Updates version tracking to stay synchronized
+    /// 5. Clears the hasUnflushedWrites flag
+    /// 
+    /// This ensures that when multiple streams share a file, all changes are properly coordinated.
+    /// </summary>
+    private void InternalFlush()
+    {
+        if (mockFileDataAccessor.FileExists(path) && hasUnflushedWrites)
+        {
+            var mockFileData = mockFileDataAccessor.GetFile(path);
+            
+            // Before flushing, ensure we have the latest shared content merged with our unflushed writes
+            // This is critical to prevent overwriting changes made by other streams
+            RefreshFromSharedContentIfNeeded();
+            
+            // Save current position to restore later
             var position = Position;
+            
+            // Read the entire stream content to flush to shared storage
             Seek(0, SeekOrigin.Begin);
-            /* .. read everything out */
-            var data = new byte[Length];
-            _ = Read(data, 0, (int)Length);
-            /* restore to original position */
+            var data = new byte[base.Length];
+            var totalBytesRead = 0;
+            
+            // Use a loop to ensure we read everything (handles partial reads)
+            while (totalBytesRead < base.Length)
+            {
+                var bytesRead = base.Read(data, totalBytesRead, (int)(base.Length - totalBytesRead));
+                if (bytesRead == 0) break; // End of stream
+                totalBytesRead += bytesRead;
+            }
+            
+            // Restore original position
             Seek(position, SeekOrigin.Begin);
-            /* .. put it in the mock system */
+            
+            // Update the shared content - this is what makes changes visible to other streams
+            // Setting Contents will increment the ContentVersion, notifying other streams to refresh
             mockFileData.Contents = data;
+            
+            // Update our version tracking to match what we just wrote
+            lastKnownContentVersion = mockFileData.ContentVersion;
+            
+            // Clear the flag since we've now flushed all pending changes
+            hasUnflushedWrites = false;
         }
     }
 
