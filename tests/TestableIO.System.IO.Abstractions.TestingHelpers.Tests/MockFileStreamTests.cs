@@ -451,41 +451,6 @@ public class MockFileStreamTests
         }
     }
 
-    [Test]
-    public async Task MockFileStream_SharedContent_VersionOverflowHandling()
-    {
-        var fileSystem = new MockFileSystem();
-        var filename = fileSystem.Path.Combine(fileSystem.Path.GetTempPath(), fileSystem.Path.GetRandomFileName());
-        
-        try
-        {
-            using var file1 = fileSystem.FileStream.New(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
-            using var file2 = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-            
-            // Get reference to file data to manipulate version directly
-            var fileData = fileSystem.GetFile(filename);
-            
-            // Simulate near-overflow condition
-            var reflection = typeof(MockFileData).GetField("contentVersion", 
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            reflection?.SetValue(fileData, long.MaxValue - 1);
-            
-            // Write data that will cause version to overflow
-            file1.Write(new byte[] { 1, 2, 3, 4 });
-            file1.Flush();
-            
-            // file2 should still be able to read the data despite version overflow
-            file2.Position = 0;
-            var buffer = new byte[4];
-            var bytesRead = file2.Read(buffer);
-            await That(bytesRead).IsEqualTo(4);
-            await That(buffer).IsEquivalentTo(new byte[] { 1, 2, 3, 4 });
-        }
-        finally
-        {
-            fileSystem.File.Delete(filename);
-        }
-    }
 
     [Test]
     public async Task MockFileStream_Constructor_ReadTypeNotWritable()

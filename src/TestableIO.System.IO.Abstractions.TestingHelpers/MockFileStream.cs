@@ -45,6 +45,9 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     // This prevents us from overwriting shared content unnecessarily and helps preserve unflushed changes during refresh
     private bool hasUnflushedWrites;
     
+    // Maximum file size for content comparison optimization
+    private const int MaxContentComparisonSize = 4096;
+    
 
     /// <inheritdoc />
     public MockFileStream(
@@ -454,7 +457,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         }
 
         // Quick content comparison for common case where only metadata changed
-        if (sharedContent.Length > 0 && sharedContent.Length <= 4096) // Only check small files
+        if (sharedContent.Length > 0 && sharedContent.Length <= MaxContentComparisonSize) // Only check small files
         {
             var currentPos = Position;
             Position = 0;
