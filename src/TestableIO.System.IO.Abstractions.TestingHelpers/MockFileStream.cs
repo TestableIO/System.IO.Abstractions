@@ -394,7 +394,10 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
                     while (totalBytesRead < preservedLength)
                     {
                         var bytesRead = base.Read(preservedContent, totalBytesRead, (int)(preservedLength - totalBytesRead));
-                        if (bytesRead == 0) break;
+                        if (bytesRead == 0)
+                        {
+                            break;
+                        }
                         totalBytesRead += bytesRead;
                     }
                     Position = originalPosition;
@@ -524,7 +527,10 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             while (totalBytesRead < base.Length)
             {
                 var bytesRead = base.Read(data, totalBytesRead, (int)(base.Length - totalBytesRead));
-                if (bytesRead == 0) break; // End of stream
+                if (bytesRead == 0)
+                {
+                    break; // End of stream
+                }
                 totalBytesRead += bytesRead;
             }
             

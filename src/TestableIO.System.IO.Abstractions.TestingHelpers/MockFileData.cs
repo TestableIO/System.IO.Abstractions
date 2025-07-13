@@ -120,7 +120,7 @@ public class MockFileData
     }
 
     private byte[] contents;
-    private long contentVersion = 0;
+    private long contentVersion;
 
     /// <summary>
     /// Gets or sets the byte contents of the <see cref="MockFileData"/>.

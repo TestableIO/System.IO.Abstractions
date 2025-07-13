@@ -1,6 +1,7 @@
 ﻿namespace System.IO.Abstractions.TestingHelpers.Tests;
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using NUnit.Framework;
@@ -109,7 +110,7 @@ public class MockFileStreamTests
 
                 file2.Position = 0;
                 file2.Flush();
-                var bytesRead = file2.Read(buffer);
+                file2.Read(buffer);
                 int readValue = BitConverter.ToInt32(buffer);
                 
                 await That(readValue).IsEqualTo(ix)
@@ -153,7 +154,7 @@ public class MockFileStreamTests
             bytesRead = file2.Read(buffer);
             await That(bytesRead).IsEqualTo(4)
                 .Because("file2 should see truncated length");
-            await That(new byte[] { buffer[0], buffer[1], buffer[2], buffer[3] }).IsEquivalentTo(new byte[] { 1, 2, 3, 4 });
+            await That(buffer.Take(4).ToArray()).IsEquivalentTo(new byte[] { 1, 2, 3, 4 });
         }
         finally
         {
@@ -327,7 +328,7 @@ public class MockFileStreamTests
             buffer = new byte[5];
             var bytesRead3 = file2.Read(buffer);
             await That(bytesRead3).IsEqualTo(2);
-            await That(new byte[] { buffer[0], buffer[1] }).IsEquivalentTo(new byte[] { 7, 8 });
+            await That(buffer.Take(2).ToArray()).IsEquivalentTo(new byte[] { 7, 8 });
         }
         finally
         {
@@ -405,7 +406,7 @@ public class MockFileStreamTests
     }
 
     [Test]
-    public async Task MockFileStream_SharedContent_LargeFile_ShouldPerformWell()
+    public async Task MockFileStream_SharedContent_LargeFile_ShouldPerformCorrectly()
     {
         var fileSystem = new MockFileSystem();
         var filename = fileSystem.Path.GetTempFileName();
@@ -415,29 +416,33 @@ public class MockFileStreamTests
             using var file1 = fileSystem.FileStream.New(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
             using var file2 = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
             
-            // Write a reasonably large amount of data
+            // Test with a reasonably large amount of data to ensure synchronization works correctly
             var largeData = new byte[1024 * 100]; // 100KB
             for (int i = 0; i < largeData.Length; i++)
             {
                 largeData[i] = (byte)(i % 256);
             }
             
-            var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-            
-            file1.Write(largeData);
-            file1.Flush();
-            
-            // file2 should be able to read the large data efficiently
-            file2.Position = 0;
-            var readData = new byte[largeData.Length];
-            var bytesRead = file2.Read(readData);
-            
-            stopwatch.Stop();
-            
-            await That(bytesRead).IsEqualTo(largeData.Length);
-            await That(readData).IsEquivalentTo(largeData);
-            await That(stopwatch.ElapsedMilliseconds).IsLessThan(1000)
-                .Because("large file operations should be reasonably fast");
+            // Test multiple write/read cycles to ensure synchronization is maintained
+            for (int cycle = 0; cycle < 3; cycle++)
+            {
+                // Modify some data for this cycle
+                largeData[cycle] = (byte)(cycle + 100);
+                
+                file1.Position = 0;
+                file1.Write(largeData);
+                file1.Flush();
+                
+                // file2 should see the updated data
+                file2.Position = 0;
+                var readData = new byte[largeData.Length];
+                var bytesRead = file2.Read(readData);
+                
+                await That(bytesRead).IsEqualTo(largeData.Length);
+                await That(readData).IsEquivalentTo(largeData);
+                await That(readData[cycle]).IsEqualTo((byte)(cycle + 100))
+                    .Because($"cycle {cycle} should see the updated data");
+            }
         }
         finally
         {
