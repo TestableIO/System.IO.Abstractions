@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.IO.Abstractions.TestingHelpers.Events;
 
 namespace System.IO.Abstractions.TestingHelpers;
 
@@ -19,6 +20,7 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     private readonly IDictionary<string, FileSystemEntry> files;
     private readonly IDictionary<string, MockDriveData> drives;
     private readonly PathVerifier pathVerifier;
+    private readonly MockFileSystemEvents events = new MockFileSystemEvents();
 #if FEATURE_SERIALIZABLE
     [NonSerialized]
 #endif
@@ -60,6 +62,11 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
         pathVerifier = new PathVerifier(this);
         this.files = new Dictionary<string, FileSystemEntry>(StringOperations.Comparer);
         drives = new Dictionary<string, MockDriveData>(StringOperations.Comparer);
+        
+        if (options.EnableEvents)
+        {
+            events.Enable();
+        }
 
         Path = new MockPath(this, defaultTempDirectory);
         File = new MockFile(this);
@@ -114,6 +121,11 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     public IFileSystem FileSystem => this;
     /// <inheritdoc />
     public PathVerifier PathVerifier => pathVerifier;
+    
+    /// <summary>
+    /// Gets the event system for this MockFileSystem instance.
+    /// </summary>
+    public MockFileSystemEvents Events => events;
 
     /// <summary>
     /// Replaces the time provider with a mocked instance. This allows to influence the used time in tests.

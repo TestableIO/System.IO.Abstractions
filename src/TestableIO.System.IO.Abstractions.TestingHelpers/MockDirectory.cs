@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.IO.Abstractions.TestingHelpers.Events;
 
 namespace System.IO.Abstractions.TestingHelpers;
 
@@ -73,9 +74,41 @@ public class MockDirectory : DirectoryBase
         }
 
         var existingFile = mockFileDataAccessor.GetFile(path);
+        bool operationCompleted = false;
+        
+        // Fire Before event only if directory doesn't exist
         if (existingFile == null)
         {
-            mockFileDataAccessor.AddDirectory(path);
+            mockFileDataAccessor.Events.RaiseOperation(
+                path, 
+                FileOperation.Create, 
+                ResourceType.Directory, 
+                OperationPhase.Before);
+        
+            try
+            {
+                mockFileDataAccessor.AddDirectory(path);
+                operationCompleted = true;
+            }
+            finally
+            {
+                if (operationCompleted)
+                {
+                    try
+                    {
+                        // Fire After event
+                        mockFileDataAccessor.Events.RaiseOperation(
+                            path, 
+                            FileOperation.Create, 
+                            ResourceType.Directory, 
+                            OperationPhase.After);
+                    }
+                    catch
+                    {
+                        // Don't let After event exceptions mask the main operation
+                    }
+                }
+            }
         }
         else if (!existingFile.IsDirectory)
         {
@@ -137,36 +170,67 @@ public class MockDirectory : DirectoryBase
     public override void Delete(string path, bool recursive)
     {
         path = mockFileDataAccessor.Path.GetFullPath(path).TrimSlashes();
+        bool operationCompleted = false;
 
-        var stringOps = mockFileDataAccessor.StringOperations;
-        var pathWithDirectorySeparatorChar = $"{path}{Path.DirectorySeparatorChar}";
+        // Fire Before event
+        mockFileDataAccessor.Events.RaiseOperation(
+            path, 
+            FileOperation.Delete, 
+            ResourceType.Directory, 
+            OperationPhase.Before);
 
-        var affectedPaths = mockFileDataAccessor
-            .AllPaths
-            .Where(p => stringOps.Equals(p, path) || stringOps.StartsWith(p, pathWithDirectorySeparatorChar))
-            .ToList();
-
-        if (!affectedPaths.Any())
+        try
         {
-            throw CommonExceptions.PathDoesNotExistOrCouldNotBeFound(path);
+            var stringOps = mockFileDataAccessor.StringOperations;
+            var pathWithDirectorySeparatorChar = $"{path}{Path.DirectorySeparatorChar}";
+
+            var affectedPaths = mockFileDataAccessor
+                .AllPaths
+                .Where(p => stringOps.Equals(p, path) || stringOps.StartsWith(p, pathWithDirectorySeparatorChar))
+                .ToList();
+
+            if (!affectedPaths.Any())
+            {
+                throw CommonExceptions.PathDoesNotExistOrCouldNotBeFound(path);
+            }
+
+            if (!recursive && affectedPaths.Count > 1)
+            {
+                throw new IOException("The directory specified by " + path +
+                                      " is read-only, or recursive is false and " + path +
+                                      " is not an empty directory.");
+            }
+
+            bool isFile = !mockFileDataAccessor.GetFile(path).IsDirectory;
+            if (isFile)
+            {
+                throw new IOException("The directory name is invalid.");
+            }
+
+            foreach (var affectedPath in affectedPaths)
+            {
+                mockFileDataAccessor.RemoveFile(affectedPath);
+            }
+            operationCompleted = true;
         }
-
-        if (!recursive && affectedPaths.Count > 1)
+        finally
         {
-            throw new IOException("The directory specified by " + path +
-                                  " is read-only, or recursive is false and " + path +
-                                  " is not an empty directory.");
-        }
-
-        bool isFile = !mockFileDataAccessor.GetFile(path).IsDirectory;
-        if (isFile)
-        {
-            throw new IOException("The directory name is invalid.");
-        }
-
-        foreach (var affectedPath in affectedPaths)
-        {
-            mockFileDataAccessor.RemoveFile(affectedPath);
+            if (operationCompleted)
+            {
+                try
+                {
+                    // Fire After event
+                    mockFileDataAccessor.Events.RaiseOperation(
+                        path, 
+                        FileOperation.Delete, 
+                        ResourceType.Directory, 
+                        OperationPhase.After);
+                }
+                catch
+                {
+                    // Don't let After event exceptions mask the main operation
+                }
+            }
         }
     }
 
@@ -544,7 +608,12 @@ public class MockDirectory : DirectoryBase
                 throw CommonExceptions.CannotCreateBecauseSameNameAlreadyExists(fullDestPath);
             }
         }
-        mockFileDataAccessor.MoveDirectory(fullSourcePath, fullDestPath);
+        
+        // Fire Move events for directory move operation
+        mockFileDataAccessor.Events.WithEvents(fullSourcePath, FileOperation.Move, ResourceType.Directory, () =>
+        {
+            mockFileDataAccessor.MoveDirectory(fullSourcePath, fullDestPath);
+        });
     }
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -595,13 +664,23 @@ public class MockDirectory : DirectoryBase
     /// <inheritdoc />
     public override void SetCreationTime(string path, DateTime creationTime)
     {
-        mockFileDataAccessor.File.SetCreationTime(path, creationTime);
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.SetTimes, ResourceType.Directory, () =>
+        {
+            mockFileDataAccessor.GetFile(path).CreationTime = new DateTimeOffset(creationTime);
+        });
     }
 
     /// <inheritdoc />
     public override void SetCreationTimeUtc(string path, DateTime creationTimeUtc)
     {
-        mockFileDataAccessor.File.SetCreationTimeUtc(path, creationTimeUtc);
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.SetTimes, ResourceType.Directory, () =>
+        {
+            mockFileDataAccessor.GetFile(path).CreationTime = new DateTimeOffset(creationTimeUtc, TimeSpan.Zero);
+        });
     }
 
     /// <inheritdoc />
@@ -613,25 +692,45 @@ public class MockDirectory : DirectoryBase
     /// <inheritdoc />
     public override void SetLastAccessTime(string path, DateTime lastAccessTime)
     {
-        mockFileDataAccessor.File.SetLastAccessTime(path, lastAccessTime);
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.SetTimes, ResourceType.Directory, () =>
+        {
+            mockFileDataAccessor.GetFile(path).LastAccessTime = new DateTimeOffset(lastAccessTime);
+        });
     }
 
     /// <inheritdoc />
     public override void SetLastAccessTimeUtc(string path, DateTime lastAccessTimeUtc)
     {
-        mockFileDataAccessor.File.SetLastAccessTimeUtc(path, lastAccessTimeUtc);
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.SetTimes, ResourceType.Directory, () =>
+        {
+            mockFileDataAccessor.GetFile(path).LastAccessTime = new DateTimeOffset(lastAccessTimeUtc, TimeSpan.Zero);
+        });
     }
 
     /// <inheritdoc />
     public override void SetLastWriteTime(string path, DateTime lastWriteTime)
     {
-        mockFileDataAccessor.File.SetLastWriteTime(path, lastWriteTime);
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.SetTimes, ResourceType.Directory, () =>
+        {
+            mockFileDataAccessor.GetFile(path).LastWriteTime = new DateTimeOffset(lastWriteTime);
+        });
     }
 
     /// <inheritdoc />
     public override void SetLastWriteTimeUtc(string path, DateTime lastWriteTimeUtc)
     {
-        mockFileDataAccessor.File.SetLastWriteTimeUtc(path, lastWriteTimeUtc);
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.SetTimes, ResourceType.Directory, () =>
+        {
+            mockFileDataAccessor.GetFile(path).LastWriteTime = new DateTimeOffset(lastWriteTimeUtc, TimeSpan.Zero);
+        });
     }
 
     /// <inheritdoc />

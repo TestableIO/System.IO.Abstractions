@@ -14,4 +14,10 @@ public class MockFileSystemOptions
     /// Flag indicating, if a temporary directory should be created.
     /// </summary>
     public bool CreateDefaultTempDir { get; init; } = true;
+
+    /// <summary>
+    /// Flag indicating whether file system events should be enabled.
+    /// When false (default), the event system has zero overhead.
+    /// </summary>
+    public bool EnableEvents { get; init; } = false;
 }

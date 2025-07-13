@@ -150,6 +150,85 @@ public class SomeClassUsingFileSystemWatcher
 }
 ```
 
+### MockFileSystem Events
+
+The `MockFileSystem` in the testing helpers now supports an event system that allows you to observe file system operations and simulate errors:
+
+```csharp
+[Test]
+public void Test_SimulateDiskFullError()
+{
+    var fileSystem = new MockFileSystem(new MockFileSystemOptions { EnableEvents = true });
+    
+    using (fileSystem.Events.Subscribe(FileOperation.Write, args =>
+    {
+        if (args.Phase == OperationPhase.Before)
+        {
+            args.SetResponse(new OperationResponse 
+            { 
+                Exception = new IOException("There is not enough space on the disk.") 
+            });
+        }
+    }))
+    {
+        Assert.Throws<IOException>(() => fileSystem.File.WriteAllText(@"C:\test.txt", "content"));
+    }
+}
+
+[Test]
+public void Test_TrackFileOperations()
+{
+    var fileSystem = new MockFileSystem(new MockFileSystemOptions { EnableEvents = true });
+    var operations = new List<string>();
+    
+    using (fileSystem.Events.Subscribe(args =>
+    {
+        if (args.Phase == OperationPhase.After)
+        {
+            operations.Add($"{args.Operation} {args.Path}");
+        }
+    }))
+    {
+        fileSystem.File.Create(@"C:\test.txt").Dispose();
+        fileSystem.File.WriteAllText(@"C:\test.txt", "content");
+        fileSystem.File.Delete(@"C:\test.txt");
+        
+        Assert.That(operations, Is.EqualTo(new[] {
+            "Create C:\\test.txt",
+            "Write C:\\test.txt", 
+            "Delete C:\\test.txt"
+        }));
+    }
+}
+
+[Test]
+public void Test_SimulateFileInUse()
+{
+    var fileSystem = new MockFileSystem(new MockFileSystemOptions { EnableEvents = true });
+    fileSystem.AddFile(@"C:\locked.db", "data");
+    
+    // Simulate file locking for .db files
+    using (fileSystem.Events.Subscribe(args =>
+    {
+        if (args.Phase == OperationPhase.Before && 
+            args.Path.EndsWith(".db") && 
+            args.Operation == FileOperation.Delete)
+        {
+            args.SetResponse(new OperationResponse 
+            { 
+                Exception = new IOException("The file is in use.") 
+            });
+        }
+    }))
+    {
+        var exception = Assert.Throws<IOException>(() => fileSystem.File.Delete(@"C:\locked.db"));
+        Assert.That(exception.Message, Is.EqualTo("The file is in use."));
+    }
+}
+```
+
+The event system is opt-in and has almost zero overhead when not enabled. Enable it by setting `EnableEvents = true` in `MockFileSystemOptions`.
+
 ## Related projects
 
 -   [`System.IO.Abstractions.Extensions`](https://github.com/TestableIO/System.IO.Abstractions.Extensions)
