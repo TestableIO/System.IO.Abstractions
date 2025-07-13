@@ -105,14 +105,14 @@ public class MockFileStreamTests
             for (int ix = 0; ix < 3; ix++)
             {
                 file1.Position = 0;
-                file1.Write(BitConverter.GetBytes(ix));
+                file1.Write(BitConverter.GetBytes(ix), 0, 4);
                 file1.Flush();
 
                 file2.Position = 0;
                 file2.Flush();
-                var bytesRead = file2.Read(buffer);
+                var bytesRead = file2.Read(buffer, 0, buffer.Length);
                 await That(bytesRead).IsEqualTo(4).Because("should read exactly 4 bytes");
-                int readValue = BitConverter.ToInt32(buffer);
+                int readValue = BitConverter.ToInt32(buffer, 0);
                 
                 await That(readValue).IsEqualTo(ix)
                     .Because($"file2 should read the value {ix} that was written by file1, but got {readValue}");
@@ -136,13 +136,13 @@ public class MockFileStreamTests
             using var file2 = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
             
             // Write initial data
-            file1.Write(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+            file1.Write(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 0, 8);
             file1.Flush();
             
             // Verify file2 can see the data
             file2.Position = 0;
             var buffer = new byte[8];
-            var bytesRead = file2.Read(buffer);
+            var bytesRead = file2.Read(buffer, 0, buffer.Length);
             await That(bytesRead).IsEqualTo(8);
             
             // Truncate file via file1
@@ -152,7 +152,7 @@ public class MockFileStreamTests
             // Verify file2 sees the truncation
             file2.Position = 0;
             buffer = new byte[8];
-            bytesRead = file2.Read(buffer);
+            bytesRead = file2.Read(buffer, 0, buffer.Length);
             await That(bytesRead).IsEqualTo(4)
                 .Because("file2 should see truncated length");
             await That(buffer.Take(4).ToArray()).IsEquivalentTo(new byte[] { 1, 2, 3, 4 });
@@ -175,7 +175,7 @@ public class MockFileStreamTests
             using var file2 = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
             
             // Write some data and position file2 beyond it
-            file1.Write(new byte[] { 1, 2, 3, 4 });
+            file1.Write(new byte[] { 1, 2, 3, 4 }, 0, 4);
             file1.Flush();
             
             file2.Position = 10; // Beyond file end
@@ -186,7 +186,7 @@ public class MockFileStreamTests
             
             // file2 position should be adjusted
             var buffer = new byte[4];
-            var bytesRead = file2.Read(buffer);
+            var bytesRead = file2.Read(buffer, 0, buffer.Length);
             await That(bytesRead).IsEqualTo(0)
                 .Because("reading beyond file end should return 0 bytes");
             await That(file2.Position).IsLessThanOrEqualTo(file2.Length)
@@ -215,23 +215,23 @@ public class MockFileStreamTests
             
             // Write to different positions
             file1.Position = 0;
-            file1.Write(new byte[] { 1, 1, 1, 1 });
+            file1.Write(new byte[] { 1, 1, 1, 1 }, 0, 4);
             file1.Flush();
             
             file2.Position = 10;
-            file2.Write(new byte[] { 2, 2, 2, 2 });
+            file2.Write(new byte[] { 2, 2, 2, 2 }, 0, 4);
             file2.Flush();
             
             // Verify both writes are visible
             file1.Position = 10;
             var buffer1 = new byte[4];
-            var bytesRead1 = file1.Read(buffer1);
+            var bytesRead1 = file1.Read(buffer1, 0, buffer1.Length);
             await That(bytesRead1).IsEqualTo(4);
             await That(buffer1).IsEquivalentTo(new byte[] { 2, 2, 2, 2 });
             
             file2.Position = 0;
             var buffer2 = new byte[4];
-            var bytesRead2 = file2.Read(buffer2);
+            var bytesRead2 = file2.Read(buffer2, 0, buffer2.Length);
             await That(bytesRead2).IsEqualTo(4);
             await That(buffer2).IsEquivalentTo(new byte[] { 1, 1, 1, 1 });
         }
@@ -252,19 +252,19 @@ public class MockFileStreamTests
         
         // Verify initial content
         var buffer = new byte[7];
-        var bytesRead = readStream.Read(buffer);
+        var bytesRead = readStream.Read(buffer, 0, buffer.Length);
         await That(bytesRead).IsEqualTo(7);
         await That(System.Text.Encoding.UTF8.GetString(buffer)).IsEqualTo("initial");
         
         // Write new content
         writeStream.Position = 0;
-        writeStream.Write(System.Text.Encoding.UTF8.GetBytes("updated"));
+        var updatedBytes = System.Text.Encoding.UTF8.GetBytes("updated"); writeStream.Write(updatedBytes, 0, updatedBytes.Length);
         writeStream.Flush();
         
         // Read-only stream should see updated content
         readStream.Position = 0;
         buffer = new byte[7];
-        bytesRead = readStream.Read(buffer);
+        bytesRead = readStream.Read(buffer, 0, buffer.Length);
         await That(bytesRead).IsEqualTo(7);
         await That(System.Text.Encoding.UTF8.GetString(buffer)).IsEqualTo("updated");
     }
@@ -280,18 +280,18 @@ public class MockFileStreamTests
         
         // Read initial content
         var buffer = new byte[7];
-        var bytesRead = readStream.Read(buffer);
+        var bytesRead = readStream.Read(buffer, 0, buffer.Length);
         await That(bytesRead).IsEqualTo(7);
         
         // Write to write-only stream
         writeStream.Position = 0;
-        writeStream.Write(System.Text.Encoding.UTF8.GetBytes("changed"));
+        var changedBytes = System.Text.Encoding.UTF8.GetBytes("changed"); writeStream.Write(changedBytes, 0, changedBytes.Length);
         writeStream.Flush();
         
         // Read stream should see the change
         readStream.Position = 0;
         buffer = new byte[7];
-        bytesRead = readStream.Read(buffer);
+        bytesRead = readStream.Read(buffer, 0, buffer.Length);
         await That(bytesRead).IsEqualTo(7);
         await That(System.Text.Encoding.UTF8.GetString(buffer)).IsEqualTo("changed");
     }
@@ -308,26 +308,26 @@ public class MockFileStreamTests
             using var file2 = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
             
             // Write data in chunks
-            file1.Write(new byte[] { 1, 2, 3, 4 });
-            file1.Write(new byte[] { 5, 6, 7, 8 });
+            file1.Write(new byte[] { 1, 2, 3, 4 }, 0, 4);
+            file1.Write(new byte[] { 5, 6, 7, 8 }, 0, 4);
             file1.Flush();
             
             // Read data in different chunk sizes from file2
             var buffer = new byte[3];
             
             // First partial read
-            var bytesRead1 = file2.Read(buffer);
+            var bytesRead1 = file2.Read(buffer, 0, buffer.Length);
             await That(bytesRead1).IsEqualTo(3);
             await That(buffer).IsEquivalentTo(new byte[] { 1, 2, 3 });
             
             // Second partial read
-            var bytesRead2 = file2.Read(buffer);
+            var bytesRead2 = file2.Read(buffer, 0, buffer.Length);
             await That(bytesRead2).IsEqualTo(3);
             await That(buffer).IsEquivalentTo(new byte[] { 4, 5, 6 });
             
             // Final partial read
             buffer = new byte[5];
-            var bytesRead3 = file2.Read(buffer);
+            var bytesRead3 = file2.Read(buffer, 0, buffer.Length);
             await That(bytesRead3).IsEqualTo(2);
             await That(buffer.Take(2).ToArray()).IsEquivalentTo(new byte[] { 7, 8 });
         }
@@ -349,7 +349,7 @@ public class MockFileStreamTests
             using var file2 = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
             
             // Write initial data
-            file1.Write(new byte[] { 1, 2, 3, 4 });
+            file1.Write(new byte[] { 1, 2, 3, 4 }, 0, 4);
             file1.Flush();
             
             // Verify file2 sees initial length
@@ -358,7 +358,7 @@ public class MockFileStreamTests
             // Extend file via file1
             file1.SetLength(10);
             file1.Position = 8;
-            file1.Write(new byte[] { 9, 10 });
+            file1.Write(new byte[] { 9, 10 }, 0, 2);
             file1.Flush();
             
             // file2 should see extended file
@@ -366,7 +366,7 @@ public class MockFileStreamTests
             
             file2.Position = 8;
             var buffer = new byte[2];
-            var bytesRead = file2.Read(buffer);
+            var bytesRead = file2.Read(buffer, 0, buffer.Length);
             await That(bytesRead).IsEqualTo(2);
             await That(buffer).IsEquivalentTo(new byte[] { 9, 10 });
         }
@@ -389,14 +389,14 @@ public class MockFileStreamTests
             // Create and dispose a stream that writes data
             using (var tempStream = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.Write, FileShare.ReadWrite))
             {
-                tempStream.Write(new byte[] { 1, 2, 3, 4 });
+                tempStream.Write(new byte[] { 1, 2, 3, 4 }, 0, 4);
                 tempStream.Flush();
             } // tempStream is disposed here
             
             // persistentStream should still see the data
             persistentStream.Position = 0;
             var buffer = new byte[4];
-            var bytesRead = persistentStream.Read(buffer);
+            var bytesRead = persistentStream.Read(buffer, 0, buffer.Length);
             await That(bytesRead).IsEqualTo(4);
             await That(buffer).IsEquivalentTo(new byte[] { 1, 2, 3, 4 });
         }
@@ -431,13 +431,13 @@ public class MockFileStreamTests
                 largeData[cycle] = (byte)(cycle + 100);
                 
                 file1.Position = 0;
-                file1.Write(largeData);
+                file1.Write(largeData, 0, largeData.Length);
                 file1.Flush();
                 
                 // file2 should see the updated data
                 file2.Position = 0;
                 var readData = new byte[largeData.Length];
-                var bytesRead = file2.Read(readData);
+                var bytesRead = file2.Read(readData, 0, readData.Length);
                 
                 await That(bytesRead).IsEqualTo(largeData.Length);
                 await That(readData).IsEquivalentTo(largeData);
