@@ -116,8 +116,10 @@ public class MockFileSystemEvents
     /// <returns>A disposable that removes the subscription when disposed.</returns>
     public IDisposable Subscribe(FileOperation[] operations, Action<FileSystemOperationEventArgs> handler)
     {
-        if (handler == null)
+        if (handler == null) {
             throw new ArgumentNullException(nameof(handler));
+        }
+
         if (operations == null)
         {
             throw new ArgumentNullException(nameof(operations));
