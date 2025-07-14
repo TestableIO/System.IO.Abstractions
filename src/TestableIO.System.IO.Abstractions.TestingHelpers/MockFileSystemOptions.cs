@@ -19,5 +19,5 @@ public class MockFileSystemOptions
     /// Flag indicating whether file system events should be enabled.
     /// When false (default), the event system has zero overhead.
     /// </summary>
-    public bool EnableEvents { get; init; } = false;
+    public bool EnableEvents { get; init; }
 }

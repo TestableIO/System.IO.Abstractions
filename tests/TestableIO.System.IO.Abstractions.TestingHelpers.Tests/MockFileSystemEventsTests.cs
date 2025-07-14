@@ -480,11 +480,11 @@ public class MockFileSystemEventsTests
         var fileSystem = new MockFileSystem(new MockFileSystemOptions { EnableEvents = true });
         var handler2Called = false;
         
-        using (fileSystem.Events.Subscribe(args => throw new Exception("Handler 1 error")))
+        using (fileSystem.Events.Subscribe(args => throw new InvalidOperationException("Handler 1 error")))
         using (fileSystem.Events.Subscribe(args => handler2Called = true))
         {
             // The operation should throw the handler exception
-            Assert.Throws<Exception>(() => fileSystem.File.Create(XFS.Path(@"C:\test.txt")));
+            Assert.Throws<InvalidOperationException>(() => fileSystem.File.Create(XFS.Path(@"C:\test.txt")));
             
             // But handler2 should have been called
             Assert.That(handler2Called, Is.True);

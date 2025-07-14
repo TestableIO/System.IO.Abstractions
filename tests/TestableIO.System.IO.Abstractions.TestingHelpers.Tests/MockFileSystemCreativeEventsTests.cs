@@ -56,7 +56,10 @@ public class MockFileSystemCreativeEventsTests
 
         using (fileSystem.Events.Subscribe(args =>
                {
-                   if (args.Phase != OperationPhase.After) return;
+                   if (args.Phase != OperationPhase.After)
+                   {
+                       return;
+                   }
                    var logEntry = args.Operation switch
                    {
                        FileOperation.Create => $"Created new file at {args.Path}",
@@ -161,13 +164,19 @@ public class MockFileSystemCreativeEventsTests
                 // Milestone tracking
                 var opsPerformed = (int)playerStats["operations_performed"];
                 if (opsPerformed == 10 && !milestones.Contains("Completed 10 operations"))
+                {
                     milestones.Add("Completed 10 operations");
+                }
 
                 if (args.Operation == FileOperation.Delete && !milestones.Contains("First file deletion"))
+                {
                     milestones.Add("First file deletion");
+                }
 
                 if (args.Path.EndsWith(".exe") && !milestones.Contains("Handled executable file"))
+                {
                     milestones.Add("Handled executable file");
+                }
             }
         }))
         {
@@ -329,9 +338,15 @@ public class MockFileSystemCreativeEventsTests
 
         using (fileSystem.Events.Subscribe(args =>
                {
-                   if (args.Phase != OperationPhase.Before || args.Operation != FileOperation.Read) return;
+                   if (args.Phase != OperationPhase.Before || args.Operation != FileOperation.Read)
+                   {
+                       return;
+                   }
                    // Quantum files exist in superposition until observed (read)
-                   if (!args.Path.Contains("quantum") || quantumStates.ContainsKey(args.Path)) return;
+                   if (!args.Path.Contains("quantum") || quantumStates.ContainsKey(args.Path))
+                   {
+                       return;
+                   }
                    // Collapse the wave function deterministically
                    var exists = deterministicRandom.NextDouble() > 0.5;
                    quantumStates[args.Path] = exists;
@@ -420,7 +435,10 @@ public class MockFileSystemCreativeEventsTests
 
         using (fileSystem.Events.Subscribe(args =>
                {
-                   if (args.Phase != OperationPhase.Before || args.Operation != FileOperation.Create) return;
+                   if (args.Phase != OperationPhase.Before || args.Operation != FileOperation.Create)
+                   {
+                       return;
+                   }
                    var fileName = fileSystem.Path.GetFileNameWithoutExtension(args.Path);
 
                    // Check for potential typos
@@ -484,7 +502,10 @@ public class MockFileSystemCreativeEventsTests
 
         using (fileSystem.Events.Subscribe(args =>
                {
-                   if (args.Phase != OperationPhase.Before) return;
+                   if (args.Phase != OperationPhase.Before)
+                   {
+                       return;
+                   }
                    operationCount++;
 
                    // Simulate controlled failure scenarios
@@ -587,7 +608,10 @@ public class MockFileSystemCreativeEventsTests
 
         using (fileSystem.Events.Subscribe(args =>
                {
-                   if (args.Phase != OperationPhase.Before || args.Operation != FileOperation.Read) return;
+                   if (args.Phase != OperationPhase.Before || args.Operation != FileOperation.Read)
+                   {
+                       return;
+                   }
                    accessCounts[args.Path] = (accessCounts.TryGetValue(args.Path, out var count) ? count : 0) + 1;
                    var accesses = accessCounts[args.Path];
 
@@ -612,6 +636,9 @@ public class MockFileSystemCreativeEventsTests
                            {
                                Exception = new UnauthorizedAccessException("Access denied: Suspicious activity pattern detected")
                            });
+                           break;
+                       default:
+                           // No action for access counts > 4
                            break;
                    }
                }))
@@ -690,11 +717,16 @@ public class MockFileSystemCreativeEventsTests
             else if (args.Phase == OperationPhase.After)
             {
                 var beforeKey = key.Replace("_After", "_Before");
-                if (!operationTimestamps.TryGetValue(beforeKey, out var timestamp)) return;
+                if (!operationTimestamps.TryGetValue(beforeKey, out var timestamp))
+                {
+                    return;
+                }
                 var duration = (DateTime.UtcNow - timestamp).Ticks;
 
                 if (!performanceMetrics.ContainsKey(args.Operation))
+                {
                     performanceMetrics[args.Operation] = new List<long>();
+                }
 
                 performanceMetrics[args.Operation].Add(duration);
                 operationTimestamps.Remove(beforeKey);
@@ -759,7 +791,9 @@ public class MockFileSystemCreativeEventsTests
     private static bool IsLikelyTypo(string input, string target)
     {
         if (string.IsNullOrEmpty(input) || string.IsNullOrEmpty(target))
+        {
             return false;
+        }
             
         // Simple Levenshtein distance check for typo detection
         var distance = CalculateLevenshteinDistance(input.ToLowerInvariant(), target.ToLowerInvariant());
@@ -775,15 +809,25 @@ public class MockFileSystemCreativeEventsTests
     /// <returns>The Levenshtein distance as an integer, representing the number of edits required to transform the source string into the target string.</returns>
     private static int CalculateLevenshteinDistance(string source, string target)
     {
-        if (source.Length == 0) return target.Length;
-        if (target.Length == 0) return source.Length;
+        if (source.Length == 0)
+        {
+            return target.Length;
+        }
+        if (target.Length == 0)
+        {
+            return source.Length;
+        }
         
         var matrix = new int[source.Length + 1, target.Length + 1];
         
         for (var i = 0; i <= source.Length; i++)
+        {
             matrix[i, 0] = i;
+        }
         for (var j = 0; j <= target.Length; j++)
+        {
             matrix[0, j] = j;
+        }
             
         for (var i = 1; i <= source.Length; i++)
         {

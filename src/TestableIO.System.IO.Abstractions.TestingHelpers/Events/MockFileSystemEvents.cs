@@ -74,7 +74,9 @@ public class MockFileSystemEvents
     public IDisposable Subscribe(Action<FileSystemOperationEventArgs> handler)
     {
         if (handler == null)
+        {
             throw new ArgumentNullException(nameof(handler));
+        }
             
         lock (LockObject)
         {
@@ -116,7 +118,9 @@ public class MockFileSystemEvents
         if (handler == null)
             throw new ArgumentNullException(nameof(handler));
         if (operations == null)
+        {
             throw new ArgumentNullException(nameof(operations));
+        }
             
         lock (LockObject)
         {
@@ -144,7 +148,9 @@ public class MockFileSystemEvents
     public T WithEvents<T>(string path, FileOperation operation, ResourceType resourceType, Func<T> func)
     {
         if (!isEnabled)
+        {
             return func();
+        }
             
         RaiseOperation(path, operation, resourceType, OperationPhase.Before);
         
@@ -228,7 +234,9 @@ public class MockFileSystemEvents
         lock (LockObject)
         {
             if (subscriptions.Count == 0)
+            {
                 return;
+            }
             currentSubscriptions = subscriptions.ToArray();
         }
         
@@ -249,7 +257,9 @@ public class MockFileSystemEvents
         if (exceptions.Count > 0)
         {
             if (exceptions.Count == 1)
+            {
                 throw exceptions[0];
+            }
             throw new AggregateException(
                 $"One or more event handlers failed for {operation} operation on {path}", 
                 exceptions);
@@ -282,17 +292,15 @@ public class MockFileSystemEvents
     /// Removes the specified subscription from the list of active subscriptions.
     /// </summary>
     /// <param name="subscription">The subscription to be removed.</param>
-    /// <returns>True if the subscription was successfully removed; otherwise, false.</returns>
-    private bool RemoveSubscription(Subscription subscription)
+    private void RemoveSubscription(Subscription subscription)
     {
         lock (LockObject)
         {
             if (!subscriptions.Remove(subscription))
             {
-                return false;
+                return;
             }
             Interlocked.Increment(ref subscriptionVersion);
-            return true;
         }
     }
     
