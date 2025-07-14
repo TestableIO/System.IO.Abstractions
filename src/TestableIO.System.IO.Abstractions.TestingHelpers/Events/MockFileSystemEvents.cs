@@ -95,8 +95,9 @@ public class MockFileSystemEvents
     /// <returns>A disposable that removes the subscription when disposed.</returns>
     public IDisposable Subscribe(FileOperation operation, Action<FileSystemOperationEventArgs> handler)
     {
-        if (handler == null)
+        if (handler == null) {
             throw new ArgumentNullException(nameof(handler));
+        }
             
         lock (LockObject)
         {
@@ -225,8 +226,9 @@ public class MockFileSystemEvents
         ResourceType resourceType, 
         OperationPhase phase)
     {
-        if (!isEnabled) 
+        if (!isEnabled) {
             return;
+        }
             
         var args = new FileSystemOperationEventArgs(path, operation, resourceType, phase);
         Subscription[] currentSubscriptions;
