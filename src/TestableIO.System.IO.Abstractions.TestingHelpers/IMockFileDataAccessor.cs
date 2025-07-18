@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using System.IO.Abstractions.TestingHelpers.Events;
 
 namespace System.IO.Abstractions.TestingHelpers;
 
@@ -110,4 +111,9 @@ public interface IMockFileDataAccessor : IFileSystem
     /// Gets a reference to the underlying file system. 
     /// </summary>
     IFileSystem FileSystem { get; }
+    
+    /// <summary>
+    /// Gets the event system for this file system.
+    /// </summary>
+    MockFileSystemEvents Events { get; }
 }
