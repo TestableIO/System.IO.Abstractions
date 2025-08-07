@@ -1,5 +1,57 @@
 [assembly: System.Reflection.AssemblyMetadata("RepositoryUrl", "https://github.com/TestableIO/System.IO.Abstractions.git")]
 [assembly: System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.7.2", FrameworkDisplayName=".NET Framework 4.7.2")]
+namespace System.IO.Abstractions.TestingHelpers.Events
+{
+    public enum FileOperation
+    {
+        Create = 0,
+        Open = 1,
+        Write = 2,
+        Read = 3,
+        Delete = 4,
+        Move = 5,
+        Copy = 6,
+        SetAttributes = 7,
+        SetTimes = 8,
+        SetPermissions = 9,
+    }
+    public class FileSystemOperationEventArgs : System.EventArgs
+    {
+        public FileSystemOperationEventArgs(string path, System.IO.Abstractions.TestingHelpers.Events.FileOperation operation, System.IO.Abstractions.TestingHelpers.Events.ResourceType resourceType, System.IO.Abstractions.TestingHelpers.Events.OperationPhase phase) { }
+        public System.IO.Abstractions.TestingHelpers.Events.FileOperation Operation { get; }
+        public string Path { get; }
+        public System.IO.Abstractions.TestingHelpers.Events.OperationPhase Phase { get; }
+        public System.IO.Abstractions.TestingHelpers.Events.ResourceType ResourceType { get; }
+        public void SetResponse(System.IO.Abstractions.TestingHelpers.Events.OperationResponse response) { }
+    }
+    [System.Serializable]
+    public class MockFileSystemEvents
+    {
+        public MockFileSystemEvents() { }
+        public bool IsEnabled { get; }
+        public System.IDisposable Subscribe(System.Action<System.IO.Abstractions.TestingHelpers.Events.FileSystemOperationEventArgs> handler) { }
+        public System.IDisposable Subscribe(System.IO.Abstractions.TestingHelpers.Events.FileOperation operation, System.Action<System.IO.Abstractions.TestingHelpers.Events.FileSystemOperationEventArgs> handler) { }
+        public System.IDisposable Subscribe(System.IO.Abstractions.TestingHelpers.Events.FileOperation[] operations, System.Action<System.IO.Abstractions.TestingHelpers.Events.FileSystemOperationEventArgs> handler) { }
+        public void WithEvents(string path, System.IO.Abstractions.TestingHelpers.Events.FileOperation operation, System.IO.Abstractions.TestingHelpers.Events.ResourceType resourceType, System.Action action) { }
+        public T WithEvents<T>(string path, System.IO.Abstractions.TestingHelpers.Events.FileOperation operation, System.IO.Abstractions.TestingHelpers.Events.ResourceType resourceType, System.Func<T> func) { }
+    }
+    public enum OperationPhase
+    {
+        Before = 0,
+        After = 1,
+    }
+    public class OperationResponse
+    {
+        public OperationResponse() { }
+        public bool Cancel { get; set; }
+        public System.Exception Exception { get; set; }
+    }
+    public enum ResourceType
+    {
+        File = 0,
+        Directory = 1,
+    }
+}
 namespace System.IO.Abstractions.TestingHelpers
 {
     public interface IMockFileDataAccessor : System.IO.Abstractions.IFileSystem
@@ -8,6 +60,7 @@ namespace System.IO.Abstractions.TestingHelpers
         System.Collections.Generic.IEnumerable<string> AllDrives { get; }
         System.Collections.Generic.IEnumerable<string> AllFiles { get; }
         System.Collections.Generic.IEnumerable<string> AllPaths { get; }
+        System.IO.Abstractions.TestingHelpers.Events.MockFileSystemEvents Events { get; }
         System.IO.Abstractions.IFileSystem FileSystem { get; }
         System.IO.Abstractions.TestingHelpers.PathVerifier PathVerifier { get; }
         System.IO.Abstractions.TestingHelpers.StringOperations StringOperations { get; }
@@ -346,6 +399,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override System.IO.Abstractions.IDirectory Directory { get; }
         public override System.IO.Abstractions.IDirectoryInfoFactory DirectoryInfo { get; }
         public override System.IO.Abstractions.IDriveInfoFactory DriveInfo { get; }
+        public System.IO.Abstractions.TestingHelpers.Events.MockFileSystemEvents Events { get; }
         public override System.IO.Abstractions.IFile File { get; }
         public override System.IO.Abstractions.IFileInfoFactory FileInfo { get; }
         public override System.IO.Abstractions.IFileStreamFactory FileStream { get; }
@@ -378,6 +432,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockFileSystemOptions() { }
         public bool CreateDefaultTempDir { get; init; }
         public string CurrentDirectory { get; init; }
+        public bool EnableEvents { get; init; }
     }
     [System.Serializable]
     public class MockFileSystemWatcherFactory : System.IO.Abstractions.IFileSystemEntity, System.IO.Abstractions.IFileSystemWatcherFactory

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using Microsoft.Win32.SafeHandles;
+using System.IO.Abstractions.TestingHelpers.Events;
 
 namespace System.IO.Abstractions.TestingHelpers;
 
@@ -28,18 +29,23 @@ public partial class MockFile : FileBase
         {
             mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-            if (!mockFileDataAccessor.FileExists(path))
+            var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+            
+            mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.Write, ResourceType.File, () =>
             {
-                VerifyDirectoryExists(path);
-                mockFileDataAccessor.AddFile(path, mockFileDataAccessor.AdjustTimes(new MockFileData(bytes), TimeAdjustments.All));
-            }
-            else
-            {
-                var file = mockFileDataAccessor.GetFile(path);
-                file.CheckFileAccess(path, FileAccess.Write);
-                mockFileDataAccessor.AdjustTimes(file, TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
-                file.Contents = file.Contents.Concat(bytes).ToArray();
-            }
+                if (!mockFileDataAccessor.FileExists(path))
+                {
+                    VerifyDirectoryExists(path);
+                    mockFileDataAccessor.AddFile(path, mockFileDataAccessor.AdjustTimes(new MockFileData(bytes), TimeAdjustments.All));
+                }
+                else
+                {
+                    var file = mockFileDataAccessor.GetFile(path);
+                    file.CheckFileAccess(path, FileAccess.Write);
+                    mockFileDataAccessor.AdjustTimes(file, TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
+                    file.Contents = file.Contents.Concat(bytes).ToArray();
+                }
+            });
         }
 
         /// <inheritdoc cref="IFile.AppendAllBytes(string,ReadOnlySpan{byte})"/>
@@ -82,19 +88,24 @@ public partial class MockFile : FileBase
             throw new ArgumentNullException(nameof(encoding));
         }
 
-        if (!mockFileDataAccessor.FileExists(path))
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.Write, ResourceType.File, () =>
         {
-            VerifyDirectoryExists(path);
-            mockFileDataAccessor.AddFile(path, mockFileDataAccessor.AdjustTimes(new MockFileData(contents, encoding), TimeAdjustments.All));
-        }
-        else
-        {
-            var file = mockFileDataAccessor.GetFile(path);
-            file.CheckFileAccess(path, FileAccess.Write);
-            mockFileDataAccessor.AdjustTimes(file, TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
-            var bytesToAppend = encoding.GetBytes(contents);
-            file.Contents = file.Contents.Concat(bytesToAppend).ToArray();
-        }
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                VerifyDirectoryExists(path);
+                mockFileDataAccessor.AddFile(path, mockFileDataAccessor.AdjustTimes(new MockFileData(contents, encoding), TimeAdjustments.All));
+            }
+            else
+            {
+                var file = mockFileDataAccessor.GetFile(path);
+                file.CheckFileAccess(path, FileAccess.Write);
+                mockFileDataAccessor.AdjustTimes(file, TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
+                var bytesToAppend = encoding.GetBytes(contents);
+                file.Contents = file.Contents.Concat(bytesToAppend).ToArray();
+            }
+        });
     }
 
 #if FEATURE_FILE_SPAN
@@ -148,34 +159,39 @@ public partial class MockFile : FileBase
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, nameof(sourceFileName));
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(destFileName, nameof(destFileName));
 
-        if (!Exists(sourceFileName))
+        var fullDestPath = mockFileDataAccessor.Path.GetFullPath(destFileName);
+        
+        mockFileDataAccessor.Events.WithEvents(fullDestPath, FileOperation.Copy, ResourceType.File, () =>
         {
-            throw CommonExceptions.FileNotFound(sourceFileName);
-        }
-
-        VerifyDirectoryExists(destFileName);
-
-        var fileExists = mockFileDataAccessor.FileExists(destFileName);
-        if (fileExists)
-        {
-            if (!overwrite)
+            if (!Exists(sourceFileName))
             {
-                throw CommonExceptions.FileAlreadyExists(destFileName);
+                throw CommonExceptions.FileNotFound(sourceFileName);
             }
 
-            if (string.Equals(sourceFileName, destFileName, StringComparison.OrdinalIgnoreCase) && XFS.IsWindowsPlatform())
+            VerifyDirectoryExists(destFileName);
+
+            var fileExists = mockFileDataAccessor.FileExists(destFileName);
+            if (fileExists)
             {
-                throw CommonExceptions.ProcessCannotAccessFileInUse(destFileName);
+                if (!overwrite)
+                {
+                    throw CommonExceptions.FileAlreadyExists(destFileName);
+                }
+
+                if (string.Equals(sourceFileName, destFileName, StringComparison.OrdinalIgnoreCase) && XFS.IsWindowsPlatform())
+                {
+                    throw CommonExceptions.ProcessCannotAccessFileInUse(destFileName);
+                }
+
+                mockFileDataAccessor.RemoveFile(destFileName);
             }
 
-            mockFileDataAccessor.RemoveFile(destFileName);
-        }
-
-        var sourceFileData = mockFileDataAccessor.GetFile(sourceFileName);
-        sourceFileData.CheckFileAccess(sourceFileName, FileAccess.Read);
-        var destFileData = new MockFileData(sourceFileData);
-        mockFileDataAccessor.AdjustTimes(destFileData, TimeAdjustments.CreationTime | TimeAdjustments.LastAccessTime);
-        mockFileDataAccessor.AddFile(destFileName, destFileData);
+            var sourceFileData = mockFileDataAccessor.GetFile(sourceFileName);
+            sourceFileData.CheckFileAccess(sourceFileName, FileAccess.Read);
+            var destFileData = new MockFileData(sourceFileData);
+            mockFileDataAccessor.AdjustTimes(destFileData, TimeAdjustments.CreationTime | TimeAdjustments.LastAccessTime);
+            mockFileDataAccessor.AddFile(destFileName, destFileData);
+        });
     }
 
     /// <inheritdoc />
@@ -198,12 +214,19 @@ public partial class MockFile : FileBase
         }
 
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, nameof(path));
-        VerifyDirectoryExists(path);
+        
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        return mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.Create, ResourceType.File, () =>
+        {
+            VerifyDirectoryExists(path);
 
-        var mockFileData = new MockFileData(new byte[0]);
-        mockFileDataAccessor.AdjustTimes(mockFileData, TimeAdjustments.All);
-        mockFileDataAccessor.AddFile(path, mockFileData);
-        return OpenInternal(path, FileMode.Open, access, options);
+            var mockFileData = new MockFileData(new byte[0]);
+            mockFileDataAccessor.AdjustTimes(mockFileData, TimeAdjustments.All);
+            mockFileDataAccessor.AddFile(path, mockFileData);
+            
+            return OpenInternal(path, FileMode.Open, access, options);
+        });
     }
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -266,23 +289,36 @@ public partial class MockFile : FileBase
     {
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-        // We mimic exact behavior of the standard File.Delete() method
-        // which throws exception only if the folder does not exist,
-        // but silently returns if deleting a non-existing file in an existing folder.
-        VerifyDirectoryExists(path);
-
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
         var file = mockFileDataAccessor.GetFile(path);
-        if (file != null && !file.AllowedFileShare.HasFlag(FileShare.Delete))
+        if (file != null)
         {
-            throw CommonExceptions.ProcessCannotAccessFileInUse(path);
-        }
+            mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.Delete, ResourceType.File, () =>
+            {
+                // We mimic exact behavior of the standard File.Delete() method
+                // which throws exception only if the folder does not exist,
+                // but silently returns if deleting a non-existing file in an existing folder.
+                VerifyDirectoryExists(path);
 
-        if (file != null && file.IsDirectory)
+                if (!file.AllowedFileShare.HasFlag(FileShare.Delete))
+                {
+                    throw CommonExceptions.ProcessCannotAccessFileInUse(path);
+                }
+
+                if (file.IsDirectory)
+                {
+                    throw new UnauthorizedAccessException($"Access to the path '{path}' is denied.");
+                }
+
+                mockFileDataAccessor.RemoveFile(path);
+            });
+        }
+        else
         {
-            throw new UnauthorizedAccessException($"Access to the path '{path}' is denied.");
+            // Just verify directory exists when file doesn't exist (standard behavior)
+            VerifyDirectoryExists(path);
         }
-
-        mockFileDataAccessor.RemoveFile(path);
     }
 
     /// <inheritdoc />
@@ -527,39 +563,44 @@ public partial class MockFile : FileBase
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(sourceFileName, nameof(sourceFileName));
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(destFileName, nameof(destFileName));
 
-        var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
-
-        if (sourceFile == null)
+        var fullDestPath = mockFileDataAccessor.Path.GetFullPath(destFileName);
+        
+        mockFileDataAccessor.Events.WithEvents(fullDestPath, FileOperation.Move, ResourceType.File, () =>
         {
-            throw CommonExceptions.FileNotFound(sourceFileName);
-        }
+            var sourceFile = mockFileDataAccessor.GetFile(sourceFileName);
 
-        if (!sourceFile.AllowedFileShare.HasFlag(FileShare.Delete))
-        {
-            throw CommonExceptions.ProcessCannotAccessFileInUse();
-        }
-
-        VerifyDirectoryExists(destFileName);
-
-        if (mockFileDataAccessor.GetFile(destFileName) != null)
-        {
-            if (mockFileDataAccessor.StringOperations.Equals(destFileName, sourceFileName))
+            if (sourceFile == null)
             {
-                if (XFS.IsWindowsPlatform())
+                throw CommonExceptions.FileNotFound(sourceFileName);
+            }
+
+            if (!sourceFile.AllowedFileShare.HasFlag(FileShare.Delete))
+            {
+                throw CommonExceptions.ProcessCannotAccessFileInUse();
+            }
+
+            VerifyDirectoryExists(destFileName);
+
+            if (mockFileDataAccessor.GetFile(destFileName) != null)
+            {
+                if (mockFileDataAccessor.StringOperations.Equals(destFileName, sourceFileName))
                 {
-                    mockFileDataAccessor.RemoveFile(sourceFileName);
-                    mockFileDataAccessor.AddFile(destFileName, mockFileDataAccessor.AdjustTimes(new MockFileData(sourceFile), TimeAdjustments.LastAccessTime), false);
+                    if (XFS.IsWindowsPlatform())
+                    {
+                        mockFileDataAccessor.RemoveFile(sourceFileName);
+                        mockFileDataAccessor.AddFile(destFileName, mockFileDataAccessor.AdjustTimes(new MockFileData(sourceFile), TimeAdjustments.LastAccessTime), false);
+                    }
+                    return;
                 }
-                return;
+                else
+                {
+                    throw new IOException("A file can not be created if it already exists.");
+                }
             }
-            else
-            {
-                throw new IOException("A file can not be created if it already exists.");
-            }
-        }
 
-        mockFileDataAccessor.RemoveFile(sourceFileName, false);
-        mockFileDataAccessor.AddFile(destFileName, mockFileDataAccessor.AdjustTimes(new MockFileData(sourceFile), TimeAdjustments.LastAccessTime), false);
+            mockFileDataAccessor.RemoveFile(sourceFileName, false);
+            mockFileDataAccessor.AddFile(destFileName, mockFileDataAccessor.AdjustTimes(new MockFileData(sourceFile), TimeAdjustments.LastAccessTime), false);
+        });
     }
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
@@ -668,16 +709,21 @@ public partial class MockFile : FileBase
             return CreateInternal(path, access, options);
         }
 
-        var mockFileData = mockFileDataAccessor.GetFile(path);
-        mockFileData.CheckFileAccess(path, access);
-        var timeAdjustments = TimeAdjustments.LastAccessTime;
-        if (access.HasFlag(FileAccess.Write))
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        return mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.Open, ResourceType.File, () =>
         {
-            timeAdjustments |= TimeAdjustments.LastWriteTime;
-        }
-        mockFileDataAccessor.AdjustTimes(mockFileData, timeAdjustments);
+            var mockFileData = mockFileDataAccessor.GetFile(path);
+            mockFileData.CheckFileAccess(path, access);
+            var timeAdjustments = TimeAdjustments.LastAccessTime;
+            if (access.HasFlag(FileAccess.Write))
+            {
+                timeAdjustments |= TimeAdjustments.LastWriteTime;
+            }
+            mockFileDataAccessor.AdjustTimes(mockFileData, timeAdjustments);
 
-        return new MockFileStream(mockFileDataAccessor, path, mode, access, options);
+            return new MockFileStream(mockFileDataAccessor, path, mode, access, options);
+        });
     }
 
     /// <inheritdoc />
@@ -710,14 +756,19 @@ public partial class MockFile : FileBase
     {
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-        if (!mockFileDataAccessor.FileExists(path))
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        return mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.Read, ResourceType.File, () =>
         {
-            throw CommonExceptions.FileNotFound(path);
-        }
-        mockFileDataAccessor.GetFile(path).CheckFileAccess(path, FileAccess.Read);
-        var fileData = mockFileDataAccessor.GetFile(path);
-        mockFileDataAccessor.AdjustTimes(fileData, TimeAdjustments.LastAccessTime);
-        return fileData.Contents.ToArray();
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                throw CommonExceptions.FileNotFound(path);
+            }
+            mockFileDataAccessor.GetFile(path).CheckFileAccess(path, FileAccess.Read);
+            var fileData = mockFileDataAccessor.GetFile(path);
+            mockFileDataAccessor.AdjustTimes(fileData, TimeAdjustments.LastAccessTime);
+            return fileData.Contents.ToArray();
+        });
     }
 
     /// <inheritdoc />
@@ -725,17 +776,22 @@ public partial class MockFile : FileBase
     {
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-        if (!mockFileDataAccessor.FileExists(path))
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        return mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.Read, ResourceType.File, () =>
         {
-            throw CommonExceptions.FileNotFound(path);
-        }
-        var fileData = mockFileDataAccessor.GetFile(path);
-        fileData.CheckFileAccess(path, FileAccess.Read);
-        mockFileDataAccessor.AdjustTimes(fileData, TimeAdjustments.LastAccessTime);
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                throw CommonExceptions.FileNotFound(path);
+            }
+            var fileData = mockFileDataAccessor.GetFile(path);
+            fileData.CheckFileAccess(path, FileAccess.Read);
+            mockFileDataAccessor.AdjustTimes(fileData, TimeAdjustments.LastAccessTime);
 
-        return fileData
-            .TextContents
-            .SplitLines();
+            return fileData
+                .TextContents
+                .SplitLines();
+        });
     }
 
     /// <inheritdoc />
@@ -775,17 +831,22 @@ public partial class MockFile : FileBase
     {
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-        if (!mockFileDataAccessor.FileExists(path))
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        return mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.Read, ResourceType.File, () =>
         {
-            throw CommonExceptions.FileNotFound(path);
-        }
+            if (!mockFileDataAccessor.FileExists(path))
+            {
+                throw CommonExceptions.FileNotFound(path);
+            }
 
-        if (encoding == null)
-        {
-            throw new ArgumentNullException(nameof(encoding));
-        }
+            if (encoding == null)
+            {
+                throw new ArgumentNullException(nameof(encoding));
+            }
 
-        return ReadAllTextInternal(path, encoding);
+            return ReadAllTextInternal(path, encoding);
+        });
     }
 
     /// <inheritdoc />
@@ -897,24 +958,29 @@ public partial class MockFile : FileBase
     {
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-        var possibleFileData = mockFileDataAccessor.GetFile(path);
-        if (possibleFileData == null)
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.SetAttributes, ResourceType.File, () =>
         {
-            var directoryInfo = mockFileDataAccessor.DirectoryInfo.New(path);
-            if (directoryInfo.Exists)
+            var possibleFileData = mockFileDataAccessor.GetFile(path);
+            if (possibleFileData == null)
             {
-                directoryInfo.Attributes = fileAttributes;
+                var directoryInfo = mockFileDataAccessor.DirectoryInfo.New(path);
+                if (directoryInfo.Exists)
+                {
+                    directoryInfo.Attributes = fileAttributes;
+                }
+                else
+                {
+                    throw CommonExceptions.FileNotFound(path);
+                }
             }
             else
             {
-                throw CommonExceptions.FileNotFound(path);
+                mockFileDataAccessor.AdjustTimes(possibleFileData, TimeAdjustments.LastAccessTime);
+                possibleFileData.Attributes = fileAttributes;
             }
-        }
-        else
-        {
-            mockFileDataAccessor.AdjustTimes(possibleFileData, TimeAdjustments.LastAccessTime);
-            possibleFileData.Attributes = fileAttributes;
-        }
+        });
     }
 
 #if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
@@ -930,7 +996,12 @@ public partial class MockFile : FileBase
     {
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-        mockFileDataAccessor.GetFile(path).CreationTime = new DateTimeOffset(creationTime);
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.SetTimes, ResourceType.File, () =>
+        {
+            mockFileDataAccessor.GetFile(path).CreationTime = new DateTimeOffset(creationTime);
+        });
     }
 
 #if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
@@ -946,7 +1017,12 @@ public partial class MockFile : FileBase
     {
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-        mockFileDataAccessor.GetFile(path).CreationTime = new DateTimeOffset(creationTimeUtc, TimeSpan.Zero);
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.SetTimes, ResourceType.File, () =>
+        {
+            mockFileDataAccessor.GetFile(path).CreationTime = new DateTimeOffset(creationTimeUtc, TimeSpan.Zero);
+        });
     }
 
 #if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
@@ -962,7 +1038,12 @@ public partial class MockFile : FileBase
     {
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-        mockFileDataAccessor.GetFile(path).LastAccessTime = new DateTimeOffset(lastAccessTime);
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.SetTimes, ResourceType.File, () =>
+        {
+            mockFileDataAccessor.GetFile(path).LastAccessTime = new DateTimeOffset(lastAccessTime);
+        });
     }
 
 #if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
@@ -978,7 +1059,12 @@ public partial class MockFile : FileBase
     {
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-        mockFileDataAccessor.GetFile(path).LastAccessTime = new DateTimeOffset(lastAccessTimeUtc, TimeSpan.Zero);
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.SetTimes, ResourceType.File, () =>
+        {
+            mockFileDataAccessor.GetFile(path).LastAccessTime = new DateTimeOffset(lastAccessTimeUtc, TimeSpan.Zero);
+        });
     }
 
 #if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
@@ -994,7 +1080,12 @@ public partial class MockFile : FileBase
     {
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-        mockFileDataAccessor.GetFile(path).LastWriteTime = new DateTimeOffset(lastWriteTime);
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.SetTimes, ResourceType.File, () =>
+        {
+            mockFileDataAccessor.GetFile(path).LastWriteTime = new DateTimeOffset(lastWriteTime);
+        });
     }
 
 #if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
@@ -1010,7 +1101,12 @@ public partial class MockFile : FileBase
     {
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
 
-        mockFileDataAccessor.GetFile(path).LastWriteTime = new DateTimeOffset(lastWriteTimeUtc, TimeSpan.Zero);
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.SetTimes, ResourceType.File, () =>
+        {
+            mockFileDataAccessor.GetFile(path).LastWriteTime = new DateTimeOffset(lastWriteTimeUtc, TimeSpan.Zero);
+        });
     }
 
 #if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
@@ -1351,15 +1447,20 @@ public partial class MockFile : FileBase
         mockFileDataAccessor.PathVerifier.IsLegalAbsoluteOrRelative(path, "path");
         VerifyValueIsNotNull(path, "path");
 
-        if (mockFileDataAccessor.Directory.Exists(path))
+        var fullPath = mockFileDataAccessor.Path.GetFullPath(path);
+        
+        mockFileDataAccessor.Events.WithEvents(fullPath, FileOperation.Write, ResourceType.File, () =>
         {
-            throw CommonExceptions.AccessDenied(path);
-        }
+            if (mockFileDataAccessor.Directory.Exists(path))
+            {
+                throw CommonExceptions.AccessDenied(path);
+            }
 
-        VerifyDirectoryExists(path);
+            VerifyDirectoryExists(path);
 
-        MockFileData data = contents == null ? new MockFileData(new byte[0]) : new MockFileData(contents, encoding);
-        mockFileDataAccessor.AddFile(path, mockFileDataAccessor.AdjustTimes(data, TimeAdjustments.All));
+            MockFileData data = contents == null ? new MockFileData(new byte[0]) : new MockFileData(contents, encoding);
+            mockFileDataAccessor.AddFile(path, mockFileDataAccessor.AdjustTimes(data, TimeAdjustments.All));
+        });
     }
 
 #if FEATURE_FILE_SPAN
