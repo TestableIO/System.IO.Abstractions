@@ -153,6 +153,7 @@ public class SomeClassUsingFileSystemWatcher
 ## Relationship with Testably.Abstractions
 
 [`Testably.Abstractions`](https://github.com/Testably/Testably.Abstractions) is a complementary project that uses the same interfaces as TestableIO. This means **no changes to your production code are necessary** when switching between the testing libraries.
+
 Both projects share the same maintainer, but active development and new features are primarily focused on the Testably.Abstractions project. TestableIO.System.IO.Abstractions continues to be maintained for stability and compatibility, but significant new functionality is unlikely to be added.
 
 ### When to use Testably.Abstractions vs TestableIO
@@ -167,7 +168,6 @@ Both projects share the same maintainer, but active development and new features
   - Cross-platform file system simulation (Linux, MacOS, Windows)Expand commentComment on line R163ResolvedCode has comments. Press enter to view.
   - More extensive and consistent behavior validation
   - Active development and new features
-
 
 ### Migrating from TestableIO
 Switching from TestableIO to Testably only requires changes in your test projects:
