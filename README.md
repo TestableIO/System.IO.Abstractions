@@ -221,3 +221,13 @@ The main architectural difference lies in how the mock file systems handle state
 ### Maintenance and Development
 
 Both projects share the same maintainer, but active development and new features are primarily focused on the Testably.Abstractions project. TestableIO.System.IO.Abstractions continues to be maintained for stability and compatibility, but significant new functionality is unlikely to be added.
+
+## Contributing
+
+### Pull Request Title
+To communicate intent to the consumers of your library, the title of the pull requests is prefixed with one of the following elements:
+- `fix:`: patches a bug
+- `feat:`: introduces a new feature
+- `refactor:`: improves internal structure without changing the observable behavior
+- `docs:`: updates documentation or XML comments
+- `chore:`: updates to dependencies, build pipelines, ...
