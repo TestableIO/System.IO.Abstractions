@@ -150,17 +150,10 @@ public class SomeClassUsingFileSystemWatcher
 }
 ```
 
-## Related projects
-
--   [`System.IO.Abstractions.Extensions`](https://github.com/TestableIO/System.IO.Abstractions.Extensions)
-  provides convenience functionality on top of the core abstractions.
-
--   [`System.IO.Abstractions.Analyzers`](https://github.com/TestableIO/System.IO.Abstractions.Analyzers)
-  provides Roslyn analyzers to help use abstractions over static methods.
-
 ## Relationship with Testably.Abstractions
 
 [`Testably.Abstractions`](https://github.com/Testably/Testably.Abstractions) is a complementary project that uses the same interfaces as TestableIO. This means **no changes to your production code are necessary** when switching between the testing libraries.
+Both projects share the same maintainer, but active development and new features are primarily focused on the Testably.Abstractions project. TestableIO.System.IO.Abstractions continues to be maintained for stability and compatibility, but significant new functionality is unlikely to be added.
 
 ### When to use Testably.Abstractions vs TestableIO
 - **Use TestableIO.System.IO.Abstractions** if you need:
@@ -174,6 +167,7 @@ public class SomeClassUsingFileSystemWatcher
   - Cross-platform file system simulation (Linux, MacOS, Windows)Expand commentComment on line R163ResolvedCode has comments. Press enter to view.
   - More extensive and consistent behavior validation
   - Active development and new features
+
 
 ### Migrating from TestableIO
 Switching from TestableIO to Testably only requires changes in your test projects:
@@ -206,18 +200,10 @@ Switching from TestableIO to Testably only requires changes in your test project
 
 Your production code using `IFileSystem` remains unchanged.
 
-### Architectural Differences
+## Other related projects
 
-The main architectural difference lies in how the mock file systems handle state:
+-   [`System.IO.Abstractions.Extensions`](https://github.com/TestableIO/System.IO.Abstractions.Extensions)
+    provides convenience functionality on top of the core abstractions.
 
-- **TestableIO.System.IO.Abstractions** allows direct access to stored entities (`MockFileData` and `MockDirectoryData`), which can make maintaining consistent state challenging, especially for features like correct `LastAccessTime` and `LastWriteTime` updates.
-
-- **Testably.Abstractions** uses a more restrictive approach that only allows manipulation through normal file system operations, enabling advanced scenarios like consistent time updates, FileSystemWatcher support, and multi-drive simulation.
-
-### Testing and Compatibility
-
-`Testably.Abstractions` features a more extensive test suite that runs against real file systems on Linux, Windows, and macOS. This ensures that tested scenarios work identically on both the mock and real file systems.
-
-### Maintenance and Development
-
-Both projects share the same maintainer, but active development and new features are primarily focused on the Testably.Abstractions project. TestableIO.System.IO.Abstractions continues to be maintained for stability and compatibility, but significant new functionality is unlikely to be added.
+-   [`System.IO.Abstractions.Analyzers`](https://github.com/TestableIO/System.IO.Abstractions.Analyzers)
+    provides Roslyn analyzers to help use abstractions over static methods.
