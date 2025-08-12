@@ -150,13 +150,60 @@ public class SomeClassUsingFileSystemWatcher
 }
 ```
 
-## Related projects
+## Relationship with Testably.Abstractions
+
+[`Testably.Abstractions`](https://github.com/Testably/Testably.Abstractions) is a complementary project that uses the same interfaces as TestableIO. This means **no changes to your production code are necessary** when switching between the testing libraries.
+
+Both projects share the same maintainer, but active development and new features are primarily focused on the Testably.Abstractions project. TestableIO.System.IO.Abstractions continues to be maintained for stability and compatibility, but significant new functionality is unlikely to be added.
+
+### When to use Testably.Abstractions vs TestableIO
+- **Use TestableIO.System.IO.Abstractions** if you need:
+  - Basic file system mocking capabilities
+  - Direct manipulation of stored file entities (MockFileData, MockDirectoryData)
+  - Established codebase with existing TestableIO integration
+
+- **Use Testably.Abstractions** if you need:
+  - Advanced testing scenarios (FileSystemWatcher, SafeFileHandles, multiple drives)
+  - Additional abstractions (ITimeSystem, IRandomSystem)
+  - Cross-platform file system simulation (Linux, MacOS, Windows)Expand commentComment on line R163ResolvedCode has comments. Press enter to view.
+  - More extensive and consistent behavior validation
+  - Active development and new features
+
+### Migrating from TestableIO
+Switching from TestableIO to Testably only requires changes in your test projects:
+
+1. Replace the NuGet package reference in your test projects:
+   ```xml
+   <!-- Remove -->
+   <PackageReference Include="TestableIO.System.IO.Abstractions.TestingHelpers" />
+   <!-- Add -->
+   <PackageReference Include="Testably.Abstractions.Testing" />
+   ```
+
+2. Update your test code to use the new `MockFileSystem`:
+   ```csharp
+   // Before (TestableIO)
+   var fileSystem = new MockFileSystem();
+   fileSystem.AddDirectory("some-directory");
+   fileSystem.AddFile("some-file.txt", new MockFileData("content"));
+
+   // After (Testably)
+   var fileSystem = new MockFileSystem();
+   fileSystem.Directory.CreateDirectory("some-directory");
+   fileSystem.File.WriteAllText("some-file.txt", "content");
+   // or using fluent initialization:
+   fileSystem.Initialize()
+       .WithSubdirectory("some-directory")
+       .WithFile("some-file.txt").Which(f => f
+           .HasStringContent("content"));
+   ```
+
+Your production code using `IFileSystem` remains unchanged.
+
+## Other related projects
 
 -   [`System.IO.Abstractions.Extensions`](https://github.com/TestableIO/System.IO.Abstractions.Extensions)
-  provides convenience functionality on top of the core abstractions.
+    provides convenience functionality on top of the core abstractions.
 
 -   [`System.IO.Abstractions.Analyzers`](https://github.com/TestableIO/System.IO.Abstractions.Analyzers)
-  provides Roslyn analyzers to help use abstractions over static methods. 
-
--   [`Testably.Abstractions`](https://github.com/Testably/Testably.Abstractions)
-  provides alternative test helpers and additional abstractions.
+    provides Roslyn analyzers to help use abstractions over static methods.
