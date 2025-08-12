@@ -109,6 +109,16 @@ The CI pipeline (.github/workflows/ci.yml) requires:
 - NuGet source: nuget.org only (configured in nuget.config)
 - Package versioning uses Nerdbank.GitVersioning
 
+## Pull Request Guidelines
+
+### Pull Request Title
+To communicate intent to the consumers of your library, the title of the pull requests is prefixed with one of the following elements:
+- `fix:`: patches a bug
+- `feat:`: introduces a new feature
+- `refactor:`: improves internal structure without changing the observable behavior
+- `docs:`: updates documentation or XML comments
+- `chore:`: updates to dependencies, build pipelines, ...
+
 ## Performance Expectations
 
 ### Command Timing (with appropriate timeouts)
