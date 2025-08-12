@@ -19,7 +19,7 @@
     <PackageVersion Include="NUnit.Analyzers" Version="4.10.0" />
     <PackageVersion Include="NUnit3TestAdapter" Version="5.1.0" />
     <PackageVersion Include="PublicApiGenerator" Version="11.4.6"/>
-    <PackageVersion Include="aweXpect" Version="2.21.0"/>
+    <PackageVersion Include="aweXpect" Version="2.21.1"/>
     <PackageVersion Include="aweXpect.Testably" Version="0.11.0"/>
   </ItemGroup>
   <ItemGroup>
