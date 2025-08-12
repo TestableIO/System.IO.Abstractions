@@ -160,3 +160,42 @@ public class SomeClassUsingFileSystemWatcher
 
 -   [`Testably.Abstractions`](https://github.com/Testably/Testably.Abstractions)
   provides alternative test helpers and additional abstractions.
+
+## Relationship with Testably.Abstractions
+
+[`Testably.Abstractions`](https://github.com/Testably/Testably.Abstractions) is a complementary project that uses the same interfaces from [`TestableIO.System.IO.Abstractions`](https://www.nuget.org/packages/TestableIO.System.IO.Abstractions). This means **no changes to your production code are necessary** when switching between the testing libraries.
+
+### Key Differences and Features
+
+**Testably.Abstractions** offers more extensive testing helpers and features compared to this project:
+
+- **Advanced time handling** with `ITimeSystem` interface
+- **Random system abstractions** with `IRandomSystem` interface
+- **Drive management** with support for multiple drives and limited size simulation
+- **FileSystemWatcher** support for testing file system events
+- **SafeFileHandle** support for advanced file operations
+- **More comprehensive API** for complex testing scenarios
+
+### Migration Guide
+
+To switch from `TestableIO.System.IO.Abstractions.TestingHelpers` to `Testably.Abstractions.Testing`:
+
+1. **In your test projects**: Replace the reference to [`TestableIO.System.IO.Abstractions.TestingHelpers`](https://www.nuget.org/packages/TestableIO.System.IO.Abstractions.TestingHelpers) with [`Testably.Abstractions.Testing`](https://www.nuget.org/packages/Testably.Abstractions.Testing)
+2. **In your production code**: No changes needed! Both libraries use the same [`TestableIO.System.IO.Abstractions`](https://www.nuget.org/packages/TestableIO.System.IO.Abstractions) interfaces
+3. **In your tests**: Use the `MockFileSystem` from `Testably.Abstractions.Testing` instead
+
+### Architectural Differences
+
+The main architectural difference lies in how the mock file systems handle state:
+
+- **TestableIO.System.IO.Abstractions** allows direct access to stored entities (`MockFileData` and `MockDirectoryData`), which can make maintaining consistent state challenging, especially for features like correct `LastAccessTime` and `LastWriteTime` updates.
+
+- **Testably.Abstractions** uses a more restrictive approach that only allows manipulation through normal file system operations, enabling advanced scenarios like consistent time updates, FileSystemWatcher support, and multi-drive simulation.
+
+### Testing and Compatibility
+
+`Testably.Abstractions` features a more extensive test suite that runs against real file systems on Linux, Windows, and macOS. This ensures that tested scenarios work identically on both the mock and real file systems.
+
+### Maintenance and Development
+
+Both projects share the same maintainer, but active development and new features are primarily focused on the Testably.Abstractions project. TestableIO.System.IO.Abstractions continues to be maintained for stability and compatibility, but significant new functionality is unlikely to be added.
