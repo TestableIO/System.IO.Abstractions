@@ -1,4 +1,23 @@
 ﻿using System.IO.Abstractions;
 using System.Runtime.CompilerServices;
 
+[assembly: TypeForwardedTo(typeof(FileSystemStream))]
+[assembly: TypeForwardedTo(typeof(IDirectory))]
+[assembly: TypeForwardedTo(typeof(IDirectoryInfo))]
+[assembly: TypeForwardedTo(typeof(IDirectoryInfoFactory))]
+[assembly: TypeForwardedTo(typeof(IDriveInfo))]
+[assembly: TypeForwardedTo(typeof(IDriveInfoFactory))]
+[assembly: TypeForwardedTo(typeof(IFile))]
+[assembly: TypeForwardedTo(typeof(IFileInfo))]
+[assembly: TypeForwardedTo(typeof(IFileInfoFactory))]
+[assembly: TypeForwardedTo(typeof(IFileStreamFactory))]
 [assembly: TypeForwardedTo(typeof(IFileSystem))]
+[assembly: TypeForwardedTo(typeof(IFileSystemAclSupport))]
+[assembly: TypeForwardedTo(typeof(IFileSystemEntity))]
+[assembly: TypeForwardedTo(typeof(IFileSystemInfo))]
+[assembly: TypeForwardedTo(typeof(IFileSystemWatcher))]
+[assembly: TypeForwardedTo(typeof(IFileSystemWatcherFactory))]
+[assembly: TypeForwardedTo(typeof(IFileVersionInfo))]
+[assembly: TypeForwardedTo(typeof(IFileVersionInfoFactory))]
+[assembly: TypeForwardedTo(typeof(IPath))]
+[assembly: TypeForwardedTo(typeof(IWaitForChangedResult))]
