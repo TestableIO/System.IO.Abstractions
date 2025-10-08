@@ -165,7 +165,7 @@ Both projects share the same maintainer, but active development and new features
 - **Use Testably.Abstractions** if you need:
   - Advanced testing scenarios (FileSystemWatcher, SafeFileHandles, multiple drives)
   - Additional abstractions (ITimeSystem, IRandomSystem)
-  - Cross-platform file system simulation (Linux, MacOS, Windows)Expand commentComment on line R163ResolvedCode has comments. Press enter to view.
+  - Cross-platform file system simulation (Linux, MacOS, Windows)
   - More extensive and consistent behavior validation
   - Active development and new features
 
