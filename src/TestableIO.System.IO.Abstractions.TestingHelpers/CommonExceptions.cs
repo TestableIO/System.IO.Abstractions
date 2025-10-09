@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Runtime.InteropServices;
 
 namespace System.IO.Abstractions.TestingHelpers;
 
@@ -55,7 +56,9 @@ internal static class CommonExceptions
             : new ArgumentException(StringResources.Manager.GetString("ILLEGAL_CHARACTERS_IN_PATH_EXCEPTION"));
 
     public static ArgumentException InvalidUncPath(string paramName) =>
-        new ArgumentException(@"The UNC path should be of the form \\server\share.", paramName);
+        RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+            ? new ArgumentException(@"The UNC path should be of the form \\server\share.", paramName)
+            : new ArgumentException(@"The UNC path should be of the form //server/share.", paramName);
 
     public static IOException ProcessCannotAccessFileInUse(string paramName = null) =>
         paramName != null
