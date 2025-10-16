@@ -1,6 +1,6 @@
 {
     "name": "C# (.NET Core)",
-    "image": "mcr.microsoft.com/vscode/devcontainers/dotnet:9.0",
+    "image": "mcr.microsoft.com/vscode/devcontainers/dotnet:10.0",
     "settings": {
         "terminal.integrated.shell.linux": "/bin/bash"
     },
