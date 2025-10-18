@@ -41,25 +41,25 @@ public class MockFileStreamFactory : IFileStreamFactory
 
     /// <inheritdoc />
     public FileSystemStream New(string path, FileMode mode, FileAccess access, FileShare share)
-        => new MockFileStream(mockFileSystem, path, mode, access);
+        => new MockFileStream(mockFileSystem, path, mode, access, share);
 
     /// <inheritdoc />
     public FileSystemStream New(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize)
-        => new MockFileStream(mockFileSystem, path, mode, access);
+        => new MockFileStream(mockFileSystem, path, mode, access, share);
 
     /// <inheritdoc />
     public FileSystemStream New(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize, bool useAsync)
-        => new MockFileStream(mockFileSystem, path, mode, access);
+        => new MockFileStream(mockFileSystem, path, mode, access, share);
 
     /// <inheritdoc />
     public FileSystemStream New(string path, FileMode mode, FileAccess access, FileShare share, int bufferSize,
         FileOptions options)
-        => new MockFileStream(mockFileSystem, path, mode, access, options);
+        => new MockFileStream(mockFileSystem, path, mode, access, share, options);
 
 #if FEATURE_FILESTREAM_OPTIONS
     /// <inheritdoc />
     public FileSystemStream New(string path, FileStreamOptions options)
-        => new MockFileStream(mockFileSystem, path, options.Mode, options.Access, options.Options);
+        => new MockFileStream(mockFileSystem, path, options.Mode, options.Access, options: options.Options);
 #endif
 
     /// <inheritdoc />
