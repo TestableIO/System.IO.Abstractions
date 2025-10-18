@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
+using System.Collections.Generic;
 
 namespace System.IO.Abstractions.TestingHelpers;
 
@@ -32,9 +33,11 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     private readonly IMockFileDataAccessor mockFileDataAccessor;
     private readonly string path;
     private readonly FileAccess access = FileAccess.ReadWrite;
+    private readonly FileShare share = FileShare.Read;
     private readonly FileOptions options;
     private readonly MockFileData fileData;
     private bool disposed;
+    private static HashSet<string> _fileShareNoneStreams = [];
 
     /// <inheritdoc />
     public MockFileStream(
@@ -42,6 +45,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         string path,
         FileMode mode,
         FileAccess access = FileAccess.ReadWrite,
+        FileShare share = FileShare.Read,
         FileOptions options = FileOptions.None)
         : base(new MemoryStream(),
             path == null ? null : Path.GetFullPath(path),
@@ -53,6 +57,11 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
         this.path = path;
         this.options = options;
+
+        if (_fileShareNoneStreams.Contains(path)) 
+        {
+            throw new IOException($"The process cannot access the file '{path}' because it is being used by another process.");
+        }
 
         if (mockFileDataAccessor.FileExists(path))
         {
@@ -97,7 +106,12 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             mockFileDataAccessor.AddFile(path, fileData);
         }
 
+        if (share is FileShare.None) 
+        {
+            _fileShareNoneStreams.Add(path);
+        }
         this.access = access;
+        this.share = share;
     }
 
     private static void ThrowIfInvalidModeAccess(FileMode mode, FileAccess access)
@@ -143,6 +157,10 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         if (disposed)
         {
             return;
+        }
+        if (share is FileShare.None)
+        {
+            _fileShareNoneStreams.Remove(path);
         }
         InternalFlush();
         base.Dispose(disposing);
