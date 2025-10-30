@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace System.IO.Abstractions.TestingHelpers;
 
@@ -37,7 +37,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     private readonly FileOptions options;
     private readonly MockFileData fileData;
     private bool disposed;
-    private static HashSet<string> _fileShareNoneStreams = [];
+    private static ConcurrentDictionary<string, byte> _fileShareNoneStreams = [];
 
     /// <inheritdoc />
     public MockFileStream(
@@ -58,7 +58,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         this.path = path;
         this.options = options;
 
-        if (_fileShareNoneStreams.Contains(path)) 
+        if (_fileShareNoneStreams.ContainsKey(path)) 
         {
             throw new IOException($"The process cannot access the file '{path}' because it is being used by another process.");
         }
@@ -108,7 +108,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
 
         if (share is FileShare.None) 
         {
-            _fileShareNoneStreams.Add(path);
+            _fileShareNoneStreams.TryAdd(path, 0);
         }
         this.access = access;
         this.share = share;
@@ -160,7 +160,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         }
         if (share is FileShare.None)
         {
-            _fileShareNoneStreams.Remove(path);
+            _fileShareNoneStreams.TryRemove(path, out _);
         }
         InternalFlush();
         base.Dispose(disposing);
