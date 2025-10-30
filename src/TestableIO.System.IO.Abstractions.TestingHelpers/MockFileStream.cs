@@ -108,7 +108,10 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
 
         if (share is FileShare.None) 
         {
-            _fileShareNoneStreams.TryAdd(path, 0);
+            if (!_fileShareNoneStreams.TryAdd(path, 0))
+            {
+                throw CommonExceptions.ProcessCannotAccessFileInUse(path);
+            }
         }
         this.access = access;
         this.share = share;
