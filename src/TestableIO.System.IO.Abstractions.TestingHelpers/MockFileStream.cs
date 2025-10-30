@@ -60,7 +60,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
 
         if (_fileShareNoneStreams.ContainsKey(path)) 
         {
-            throw new IOException($"The process cannot access the file '{path}' because it is being used by another process.");
+            throw CommonExceptions.ProcessCannotAccessFileInUse(path);
         }
 
         if (mockFileDataAccessor.FileExists(path))
