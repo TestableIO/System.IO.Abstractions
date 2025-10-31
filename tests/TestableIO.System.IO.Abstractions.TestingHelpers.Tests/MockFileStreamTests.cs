@@ -390,4 +390,26 @@ public class MockFileStreamTests
             await source.CopyToAsync(destination);
         await That(Act).Throws<NotSupportedException>();
     }
+
+    [Test]
+    public async Task MockFileStream_WhenExclusiveStreamOpen_ShouldThrowIOException()
+    {
+        var fileSystem = new MockFileSystem();
+        fileSystem.File.WriteAllText("foo.txt", "");
+        using (new MockFileStream(fileSystem, "foo.txt", FileMode.Open, FileAccess.Read, FileShare.None))
+        {
+            await That(() => new MockFileStream(fileSystem, "foo.txt", FileMode.Open, FileAccess.Read)).Throws<IOException>();
+        }
+    }
+
+    [Test]
+    public async Task MockFileStream_WhenExclusiveStreamClosed_ShouldNotThrow()
+    {
+        var fileSystem = new MockFileSystem();
+        fileSystem.File.WriteAllText("foo.txt", "");
+        var stream = new MockFileStream(fileSystem, "foo.txt", FileMode.Open, FileAccess.Read, FileShare.None);
+        stream.Dispose();
+
+        await That(() => new MockFileStream(fileSystem, "foo.txt", FileMode.Open, FileAccess.Read)).DoesNotThrow();
+    }
 }

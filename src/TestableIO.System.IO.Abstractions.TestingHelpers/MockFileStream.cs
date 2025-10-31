@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
+using System.Collections.Concurrent;
 
 namespace System.IO.Abstractions.TestingHelpers;
 
@@ -32,9 +33,11 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     private readonly IMockFileDataAccessor mockFileDataAccessor;
     private readonly string path;
     private readonly FileAccess access = FileAccess.ReadWrite;
+    private readonly FileShare share = FileShare.Read;
     private readonly FileOptions options;
     private readonly MockFileData fileData;
     private bool disposed;
+    private static ConcurrentDictionary<string, byte> _fileShareNoneStreams = [];
 
     /// <inheritdoc />
     public MockFileStream(
@@ -42,6 +45,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         string path,
         FileMode mode,
         FileAccess access = FileAccess.ReadWrite,
+        FileShare share = FileShare.Read,
         FileOptions options = FileOptions.None)
         : base(new MemoryStream(),
             path == null ? null : Path.GetFullPath(path),
@@ -51,8 +55,14 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         ThrowIfInvalidModeAccess(mode, access);
 
         this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
+        path = NormalizePath(path);
         this.path = path;
         this.options = options;
+
+        if (_fileShareNoneStreams.ContainsKey(path)) 
+        {
+            throw CommonExceptions.ProcessCannotAccessFileInUse(path);
+        }
 
         if (mockFileDataAccessor.FileExists(path))
         {
@@ -97,7 +107,15 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             mockFileDataAccessor.AddFile(path, fileData);
         }
 
+        if (share is FileShare.None) 
+        {
+            if (!_fileShareNoneStreams.TryAdd(path, 0))
+            {
+                throw CommonExceptions.ProcessCannotAccessFileInUse(path);
+            }
+        }
         this.access = access;
+        this.share = share;
     }
 
     private static void ThrowIfInvalidModeAccess(FileMode mode, FileAccess access)
@@ -143,6 +161,10 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         if (disposed)
         {
             return;
+        }
+        if (share is FileShare.None)
+        {
+            _fileShareNoneStreams.TryRemove(path, out _);
         }
         InternalFlush();
         base.Dispose(disposing);
@@ -337,5 +359,16 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             default:
                 return TimeAdjustments.None;
         }
+    }
+
+    private string NormalizePath(string path)
+    {
+        var normalizedPath = path
+            .Replace(
+                mockFileDataAccessor.Path.AltDirectorySeparatorChar,
+                mockFileDataAccessor.Path.DirectorySeparatorChar)
+            .TrimSlashes();
+        normalizedPath = mockFileDataAccessor.Path.GetFullPath(normalizedPath);
+        return normalizedPath;
     }
 }
