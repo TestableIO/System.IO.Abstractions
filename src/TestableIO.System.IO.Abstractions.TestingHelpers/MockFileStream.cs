@@ -55,7 +55,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         ThrowIfInvalidModeAccess(mode, access);
 
         this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
-        path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar).TrimSlashes();
+        path = NormalizePath(path);
         this.path = path;
         this.options = options;
 
@@ -359,5 +359,16 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             default:
                 return TimeAdjustments.None;
         }
+    }
+
+    private string NormalizePath(string path)
+    {
+        var normalizedPath = path
+            .Replace(
+                mockFileDataAccessor.Path.AltDirectorySeparatorChar,
+                mockFileDataAccessor.Path.DirectorySeparatorChar)
+            .TrimSlashes();
+        normalizedPath = mockFileDataAccessor.Path.GetFullPath(normalizedPath);
+        return normalizedPath;
     }
 }
