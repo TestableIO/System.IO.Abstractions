@@ -55,6 +55,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         ThrowIfInvalidModeAccess(mode, access);
 
         this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
+        path = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar).TrimSlashes();
         this.path = path;
         this.options = options;
 
