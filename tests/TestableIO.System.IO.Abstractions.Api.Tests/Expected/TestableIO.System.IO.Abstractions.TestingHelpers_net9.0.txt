@@ -384,7 +384,7 @@ namespace System.IO.Abstractions.TestingHelpers
     [System.Serializable]
     public class MockFileStream : System.IO.Abstractions.FileSystemStream, System.IO.Abstractions.IFileSystemAclSupport
     {
-        public MockFileStream(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string path, System.IO.FileMode mode, System.IO.FileAccess access = 3, System.IO.FileOptions options = 0) { }
+        public MockFileStream(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string path, System.IO.FileMode mode, System.IO.FileAccess access = 3, System.IO.FileShare share = 1, System.IO.FileOptions options = 0) { }
         public override bool CanRead { get; }
         public override bool CanWrite { get; }
         public static System.IO.Abstractions.FileSystemStream Null { get; }
