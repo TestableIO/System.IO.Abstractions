@@ -59,7 +59,7 @@ public class MockFileStreamFactory : IFileStreamFactory
 #if FEATURE_FILESTREAM_OPTIONS
     /// <inheritdoc />
     public FileSystemStream New(string path, FileStreamOptions options)
-        => new MockFileStream(mockFileSystem, path, options.Mode, options.Access, options: options.Options);
+        => new MockFileStream(mockFileSystem, path, options.Mode, options.Access, options.Share, options.Options);
 #endif
 
     /// <inheritdoc />
