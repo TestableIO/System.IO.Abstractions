@@ -1,0 +1,15 @@
+{
+  "ExtraMembers": [
+    "Void Dispose(Boolean)"
+  ],
+  "MissingMembers": [
+    "System.EventHandler Disposed",
+    "System.Object GetLifetimeService()",
+    "System.Object InitializeLifetimeService()",
+    "Void .ctor()",
+    "Void .ctor(System.String)",
+    "Void .ctor(System.String, System.String)",
+    "Void add_Disposed(System.EventHandler)",
+    "Void remove_Disposed(System.EventHandler)"
+  ]
+}

@@ -4,7 +4,7 @@
             Condition="Exists('$(MSBuildThisFileDirectory)/../Directory.Build.props')"/>
 
     <PropertyGroup>
-        <TargetFrameworks>net9.0;net8.0;net6.0</TargetFrameworks>
+        <TargetFrameworks>net10.0;net9.0;net8.0;net6.0</TargetFrameworks>
         <TargetFrameworks Condition="!$([MSBuild]::IsOsUnixLike())">$(TargetFrameworks);net472</TargetFrameworks>
         <NoWarn>$(NoWarn);S2699</NoWarn>
         <IsPackable>false</IsPackable>

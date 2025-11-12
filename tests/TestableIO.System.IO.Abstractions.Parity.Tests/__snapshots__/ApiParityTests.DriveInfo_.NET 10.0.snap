@@ -1,0 +1,7 @@
+{
+  "ExtraMembers": [],
+  "MissingMembers": [
+    "System.IO.Abstractions.IDriveInfo[] GetDrives()",
+    "Void .ctor(System.String)"
+  ]
+}

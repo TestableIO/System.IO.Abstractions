@@ -4,7 +4,7 @@
             Condition="Exists('$(MSBuildThisFileDirectory)/../Directory.Build.props')"/>
 
     <PropertyGroup>
-        <TargetFrameworks>net472;netstandard2.0;netstandard2.1;net6.0;net8.0;net9.0</TargetFrameworks>
+        <TargetFrameworks>net472;netstandard2.0;netstandard2.1;net6.0;net8.0;net9.0;net10.0</TargetFrameworks>
     </PropertyGroup>
 
     <PropertyGroup>

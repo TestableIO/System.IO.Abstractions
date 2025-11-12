@@ -1,0 +1,598 @@
+[assembly: System.Reflection.AssemblyMetadata("RepositoryUrl", "https://github.com/TestableIO/System.IO.Abstractions.git")]
+[assembly: System.Runtime.Versioning.TargetFramework(".NETCoreApp,Version=v10.0", FrameworkDisplayName=".NET 10.0")]
+namespace System.IO.Abstractions.TestingHelpers
+{
+    public interface IMockFileDataAccessor : System.IO.Abstractions.IFileSystem
+    {
+        System.Collections.Generic.IEnumerable<string> AllDirectories { get; }
+        System.Collections.Generic.IEnumerable<string> AllDrives { get; }
+        System.Collections.Generic.IEnumerable<string> AllFiles { get; }
+        System.Collections.Generic.IEnumerable<string> AllPaths { get; }
+        System.IO.Abstractions.IFileSystem FileSystem { get; }
+        System.IO.Abstractions.TestingHelpers.PathVerifier PathVerifier { get; }
+        System.IO.Abstractions.TestingHelpers.StringOperations StringOperations { get; }
+        void AddDirectory(string path);
+        void AddDrive(string name, System.IO.Abstractions.TestingHelpers.MockDriveData mockDrive);
+        void AddFile(string path, System.IO.Abstractions.TestingHelpers.MockFileData mockFile, bool verifyAccess = true);
+        void AddFileFromEmbeddedResource(string path, System.Reflection.Assembly resourceAssembly, string embeddedResourcePath);
+        void AddFilesFromEmbeddedNamespace(string path, System.Reflection.Assembly resourceAssembly, string embeddedResourcePath);
+        System.IO.Abstractions.TestingHelpers.MockFileData AdjustTimes(System.IO.Abstractions.TestingHelpers.MockFileData fileData, System.IO.Abstractions.TestingHelpers.TimeAdjustments timeAdjustments);
+        bool FileExists(string path);
+        System.IO.Abstractions.TestingHelpers.MockDriveData GetDrive(string name);
+        System.IO.Abstractions.TestingHelpers.MockFileData GetFile(string path);
+        void MoveDirectory(string sourcePath, string destPath);
+        void RemoveFile(string path, bool verifyAccess = true);
+    }
+    [System.Serializable]
+    public class MockDirectory : System.IO.Abstractions.DirectoryBase
+    {
+        public MockDirectory(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string currentDirectory) { }
+        public MockDirectory(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, System.IO.Abstractions.FileBase fileBase, string currentDirectory) { }
+        public override System.IO.Abstractions.IDirectoryInfo CreateDirectory(string path) { }
+        public override System.IO.Abstractions.IDirectoryInfo CreateDirectory(string path, System.IO.UnixFileMode unixCreateMode) { }
+        public override System.IO.Abstractions.IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget) { }
+        public override System.IO.Abstractions.IDirectoryInfo CreateTempSubdirectory(string prefix = null) { }
+        public override void Delete(string path) { }
+        public override void Delete(string path, bool recursive) { }
+        public override System.Collections.Generic.IEnumerable<string> EnumerateDirectories(string path) { }
+        public override System.Collections.Generic.IEnumerable<string> EnumerateDirectories(string path, string searchPattern) { }
+        public override System.Collections.Generic.IEnumerable<string> EnumerateDirectories(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
+        public override System.Collections.Generic.IEnumerable<string> EnumerateDirectories(string path, string searchPattern, System.IO.SearchOption searchOption) { }
+        public override System.Collections.Generic.IEnumerable<string> EnumerateFileSystemEntries(string path) { }
+        public override System.Collections.Generic.IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern) { }
+        public override System.Collections.Generic.IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
+        public override System.Collections.Generic.IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, System.IO.SearchOption searchOption) { }
+        public override System.Collections.Generic.IEnumerable<string> EnumerateFiles(string path) { }
+        public override System.Collections.Generic.IEnumerable<string> EnumerateFiles(string path, string searchPattern) { }
+        public override System.Collections.Generic.IEnumerable<string> EnumerateFiles(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
+        public override System.Collections.Generic.IEnumerable<string> EnumerateFiles(string path, string searchPattern, System.IO.SearchOption searchOption) { }
+        public override bool Exists(string path) { }
+        public override System.DateTime GetCreationTime(string path) { }
+        public override System.DateTime GetCreationTimeUtc(string path) { }
+        public override string GetCurrentDirectory() { }
+        public override string[] GetDirectories(string path) { }
+        public override string[] GetDirectories(string path, string searchPattern) { }
+        public override string[] GetDirectories(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
+        public override string[] GetDirectories(string path, string searchPattern, System.IO.SearchOption searchOption) { }
+        public override string GetDirectoryRoot(string path) { }
+        public override string[] GetFileSystemEntries(string path) { }
+        public override string[] GetFileSystemEntries(string path, string searchPattern) { }
+        public override string[] GetFileSystemEntries(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
+        public override string[] GetFileSystemEntries(string path, string searchPattern, System.IO.SearchOption searchOption) { }
+        public override string[] GetFiles(string path) { }
+        public override string[] GetFiles(string path, string searchPattern) { }
+        public override string[] GetFiles(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
+        public override string[] GetFiles(string path, string searchPattern, System.IO.SearchOption searchOption) { }
+        public override System.DateTime GetLastAccessTime(string path) { }
+        public override System.DateTime GetLastAccessTimeUtc(string path) { }
+        public override System.DateTime GetLastWriteTime(string path) { }
+        public override System.DateTime GetLastWriteTimeUtc(string path) { }
+        public override string[] GetLogicalDrives() { }
+        public override System.IO.Abstractions.IDirectoryInfo GetParent(string path) { }
+        public override void Move(string sourceDirName, string destDirName) { }
+        public override System.IO.Abstractions.IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget) { }
+        public override void SetCreationTime(string path, System.DateTime creationTime) { }
+        public override void SetCreationTimeUtc(string path, System.DateTime creationTimeUtc) { }
+        public override void SetCurrentDirectory(string path) { }
+        public override void SetLastAccessTime(string path, System.DateTime lastAccessTime) { }
+        public override void SetLastAccessTimeUtc(string path, System.DateTime lastAccessTimeUtc) { }
+        public override void SetLastWriteTime(string path, System.DateTime lastWriteTime) { }
+        public override void SetLastWriteTimeUtc(string path, System.DateTime lastWriteTimeUtc) { }
+    }
+    [System.Serializable]
+    public class MockDirectoryData : System.IO.Abstractions.TestingHelpers.MockFileData
+    {
+        public MockDirectoryData() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+        public new System.Security.AccessControl.DirectorySecurity AccessControl { get; set; }
+    }
+    [System.Serializable]
+    public class MockDirectoryInfo : System.IO.Abstractions.DirectoryInfoBase, System.IO.Abstractions.IFileSystemAclSupport
+    {
+        public MockDirectoryInfo(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string directoryPath) { }
+        public override System.IO.FileAttributes Attributes { get; set; }
+        public override System.DateTime CreationTime { get; set; }
+        public override System.DateTime CreationTimeUtc { get; set; }
+        public override bool Exists { get; }
+        public override string Extension { get; }
+        public override string FullName { get; }
+        public override System.DateTime LastAccessTime { get; set; }
+        public override System.DateTime LastAccessTimeUtc { get; set; }
+        public override System.DateTime LastWriteTime { get; set; }
+        public override System.DateTime LastWriteTimeUtc { get; set; }
+        public override string LinkTarget { get; }
+        public override string Name { get; }
+        public override System.IO.Abstractions.IDirectoryInfo Parent { get; }
+        public override System.IO.Abstractions.IDirectoryInfo Root { get; }
+        public override void Create() { }
+        public override void CreateAsSymbolicLink(string pathToTarget) { }
+        public override System.IO.Abstractions.IDirectoryInfo CreateSubdirectory(string path) { }
+        public override void Delete() { }
+        public override void Delete(bool recursive) { }
+        public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IDirectoryInfo> EnumerateDirectories() { }
+        public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IDirectoryInfo> EnumerateDirectories(string searchPattern) { }
+        public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IDirectoryInfo> EnumerateDirectories(string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
+        public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IDirectoryInfo> EnumerateDirectories(string searchPattern, System.IO.SearchOption searchOption) { }
+        public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileSystemInfo> EnumerateFileSystemInfos() { }
+        public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern) { }
+        public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
+        public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, System.IO.SearchOption searchOption) { }
+        public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileInfo> EnumerateFiles() { }
+        public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileInfo> EnumerateFiles(string searchPattern) { }
+        public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileInfo> EnumerateFiles(string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
+        public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileInfo> EnumerateFiles(string searchPattern, System.IO.SearchOption searchOption) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+        public object GetAccessControl() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+        public object GetAccessControl(System.IO.Abstractions.IFileSystemAclSupport.AccessControlSections includeSections) { }
+        public override System.IO.Abstractions.IDirectoryInfo[] GetDirectories() { }
+        public override System.IO.Abstractions.IDirectoryInfo[] GetDirectories(string searchPattern) { }
+        public override System.IO.Abstractions.IDirectoryInfo[] GetDirectories(string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
+        public override System.IO.Abstractions.IDirectoryInfo[] GetDirectories(string searchPattern, System.IO.SearchOption searchOption) { }
+        public override System.IO.Abstractions.IFileSystemInfo[] GetFileSystemInfos() { }
+        public override System.IO.Abstractions.IFileSystemInfo[] GetFileSystemInfos(string searchPattern) { }
+        public override System.IO.Abstractions.IFileSystemInfo[] GetFileSystemInfos(string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
+        public override System.IO.Abstractions.IFileSystemInfo[] GetFileSystemInfos(string searchPattern, System.IO.SearchOption searchOption) { }
+        public override System.IO.Abstractions.IFileInfo[] GetFiles() { }
+        public override System.IO.Abstractions.IFileInfo[] GetFiles(string searchPattern) { }
+        public override System.IO.Abstractions.IFileInfo[] GetFiles(string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
+        public override System.IO.Abstractions.IFileInfo[] GetFiles(string searchPattern, System.IO.SearchOption searchOption) { }
+        public override void MoveTo(string destDirName) { }
+        public override void Refresh() { }
+        public override System.IO.Abstractions.IFileSystemInfo ResolveLinkTarget(bool returnFinalTarget) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+        public void SetAccessControl(object value) { }
+        public override string ToString() { }
+    }
+    [System.Serializable]
+    public class MockDirectoryInfoFactory : System.IO.Abstractions.IDirectoryInfoFactory, System.IO.Abstractions.IFileSystemEntity
+    {
+        public MockDirectoryInfoFactory(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileSystem) { }
+        public System.IO.Abstractions.IFileSystem FileSystem { get; }
+        public System.IO.Abstractions.IDirectoryInfo New(string path) { }
+        public System.IO.Abstractions.IDirectoryInfo Wrap(System.IO.DirectoryInfo directoryInfo) { }
+    }
+    [System.Serializable]
+    public class MockDriveData
+    {
+        public MockDriveData() { }
+        public MockDriveData(System.IO.Abstractions.TestingHelpers.MockDriveData template) { }
+        public long AvailableFreeSpace { get; set; }
+        public string DriveFormat { get; set; }
+        public System.IO.DriveType DriveType { get; set; }
+        public bool IsReady { get; set; }
+        public long TotalFreeSpace { get; set; }
+        public long TotalSize { get; set; }
+        public string VolumeLabel { get; set; }
+    }
+    [System.Serializable]
+    public class MockDriveInfo : System.IO.Abstractions.DriveInfoBase
+    {
+        public MockDriveInfo(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string name) { }
+        public override long AvailableFreeSpace { get; }
+        public override string DriveFormat { get; }
+        public override System.IO.DriveType DriveType { get; }
+        public override bool IsReady { get; }
+        public override string Name { get; }
+        public override System.IO.Abstractions.IDirectoryInfo RootDirectory { get; }
+        public override long TotalFreeSpace { get; }
+        public override long TotalSize { get; }
+        public override string VolumeLabel { get; set; }
+        public override string ToString() { }
+    }
+    [System.Serializable]
+    public class MockDriveInfoFactory : System.IO.Abstractions.IDriveInfoFactory, System.IO.Abstractions.IFileSystemEntity
+    {
+        public MockDriveInfoFactory(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileSystem) { }
+        public System.IO.Abstractions.IFileSystem FileSystem { get; }
+        public System.IO.Abstractions.IDriveInfo[] GetDrives() { }
+        public System.IO.Abstractions.IDriveInfo New(string driveName) { }
+        public System.IO.Abstractions.IDriveInfo Wrap(System.IO.DriveInfo driveInfo) { }
+    }
+    [System.Serializable]
+    public class MockFile : System.IO.Abstractions.FileBase
+    {
+        public MockFile(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor) { }
+        public override void AppendAllBytes(string path, System.ReadOnlySpan<byte> bytes) { }
+        public override void AppendAllBytes(string path, byte[] bytes) { }
+        public override System.Threading.Tasks.Task AppendAllBytesAsync(string path, System.ReadOnlyMemory<byte> bytes, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task AppendAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default) { }
+        public override void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents) { }
+        public override void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding) { }
+        public override System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override void AppendAllText(string path, System.ReadOnlySpan<char> contents) { }
+        public override void AppendAllText(string path, string contents) { }
+        public override void AppendAllText(string path, System.ReadOnlySpan<char> contents, System.Text.Encoding encoding) { }
+        public override void AppendAllText(string path, string contents, System.Text.Encoding encoding) { }
+        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, System.ReadOnlyMemory<char> contents, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, System.ReadOnlyMemory<char> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.IO.StreamWriter AppendText(string path) { }
+        public override void Copy(string sourceFileName, string destFileName) { }
+        public override void Copy(string sourceFileName, string destFileName, bool overwrite) { }
+        public override System.IO.Abstractions.FileSystemStream Create(string path) { }
+        public override System.IO.Abstractions.FileSystemStream Create(string path, int bufferSize) { }
+        public override System.IO.Abstractions.FileSystemStream Create(string path, int bufferSize, System.IO.FileOptions options) { }
+        public override System.IO.Abstractions.IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget) { }
+        public override System.IO.StreamWriter CreateText(string path) { }
+        public override void Decrypt(string path) { }
+        public override void Delete(string path) { }
+        public override void Encrypt(string path) { }
+        public override bool Exists(string path) { }
+        public override System.IO.FileAttributes GetAttributes(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle) { }
+        public override System.IO.FileAttributes GetAttributes(string path) { }
+        public override System.DateTime GetCreationTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle) { }
+        public override System.DateTime GetCreationTime(string path) { }
+        public override System.DateTime GetCreationTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle) { }
+        public override System.DateTime GetCreationTimeUtc(string path) { }
+        public override System.DateTime GetLastAccessTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle) { }
+        public override System.DateTime GetLastAccessTime(string path) { }
+        public override System.DateTime GetLastAccessTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle) { }
+        public override System.DateTime GetLastAccessTimeUtc(string path) { }
+        public override System.DateTime GetLastWriteTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle) { }
+        public override System.DateTime GetLastWriteTime(string path) { }
+        public override System.DateTime GetLastWriteTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle) { }
+        public override System.DateTime GetLastWriteTimeUtc(string path) { }
+        public override System.IO.UnixFileMode GetUnixFileMode(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle) { }
+        public override System.IO.UnixFileMode GetUnixFileMode(string path) { }
+        public override void Move(string sourceFileName, string destFileName) { }
+        public override void Move(string sourceFileName, string destFileName, bool overwrite) { }
+        public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode) { }
+        public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileStreamOptions options) { }
+        public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode, System.IO.FileAccess access) { }
+        public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share) { }
+        public override System.IO.Abstractions.FileSystemStream OpenRead(string path) { }
+        public override System.IO.StreamReader OpenText(string path) { }
+        public override System.IO.Abstractions.FileSystemStream OpenWrite(string path) { }
+        public override byte[] ReadAllBytes(string path) { }
+        public override System.Threading.Tasks.Task<byte[]> ReadAllBytesAsync(string path, System.Threading.CancellationToken cancellationToken = default) { }
+        public override string[] ReadAllLines(string path) { }
+        public override string[] ReadAllLines(string path, System.Text.Encoding encoding) { }
+        public override System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override string ReadAllText(string path) { }
+        public override string ReadAllText(string path, System.Text.Encoding encoding) { }
+        public override System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Collections.Generic.IEnumerable<string> ReadLines(string path) { }
+        public override System.Collections.Generic.IEnumerable<string> ReadLines(string path, System.Text.Encoding encoding) { }
+        public override System.Collections.Generic.IAsyncEnumerable<string> ReadLinesAsync(string path, System.Threading.CancellationToken cancellationToken = default) { }
+        [System.Runtime.CompilerServices.AsyncIteratorStateMachine(typeof(System.IO.Abstractions.TestingHelpers.MockFile.<ReadLinesAsync>d__14))]
+        public override System.Collections.Generic.IAsyncEnumerable<string> ReadLinesAsync(string path, System.Text.Encoding encoding, [System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken = default) { }
+        public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName) { }
+        public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors) { }
+        public override System.IO.Abstractions.IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget) { }
+        public override void SetAttributes(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.IO.FileAttributes fileAttributes) { }
+        public override void SetAttributes(string path, System.IO.FileAttributes fileAttributes) { }
+        public override void SetCreationTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime creationTime) { }
+        public override void SetCreationTime(string path, System.DateTime creationTime) { }
+        public override void SetCreationTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime creationTimeUtc) { }
+        public override void SetCreationTimeUtc(string path, System.DateTime creationTimeUtc) { }
+        public override void SetLastAccessTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime lastAccessTime) { }
+        public override void SetLastAccessTime(string path, System.DateTime lastAccessTime) { }
+        public override void SetLastAccessTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime lastAccessTimeUtc) { }
+        public override void SetLastAccessTimeUtc(string path, System.DateTime lastAccessTimeUtc) { }
+        public override void SetLastWriteTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime lastWriteTime) { }
+        public override void SetLastWriteTime(string path, System.DateTime lastWriteTime) { }
+        public override void SetLastWriteTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime lastWriteTimeUtc) { }
+        public override void SetLastWriteTimeUtc(string path, System.DateTime lastWriteTimeUtc) { }
+        public override void SetUnixFileMode(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.IO.UnixFileMode mode) { }
+        public override void SetUnixFileMode(string path, System.IO.UnixFileMode mode) { }
+        public override void WriteAllBytes(string path, System.ReadOnlySpan<byte> bytes) { }
+        public override void WriteAllBytes(string path, byte[] bytes) { }
+        public override System.Threading.Tasks.Task WriteAllBytesAsync(string path, System.ReadOnlyMemory<byte> bytes, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task WriteAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default) { }
+        public override void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents) { }
+        public override void WriteAllLines(string path, string[] contents) { }
+        public override void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding) { }
+        public override void WriteAllLines(string path, string[] contents, System.Text.Encoding encoding) { }
+        public override System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override void WriteAllText(string path, System.ReadOnlySpan<char> contents) { }
+        public override void WriteAllText(string path, string contents) { }
+        public override void WriteAllText(string path, System.ReadOnlySpan<char> contents, System.Text.Encoding encoding) { }
+        public override void WriteAllText(string path, string contents, System.Text.Encoding encoding) { }
+        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, System.ReadOnlyMemory<char> contents, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, System.ReadOnlyMemory<char> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+    }
+    [System.Serializable]
+    public class MockFileData
+    {
+        public static readonly System.DateTimeOffset DefaultDateTimeOffset;
+        public static readonly System.Text.Encoding DefaultEncoding;
+        public MockFileData(System.IO.Abstractions.TestingHelpers.MockFileData template) { }
+        public MockFileData(byte[] contents) { }
+        public MockFileData(string textContents) { }
+        public MockFileData(string textContents, System.Text.Encoding encoding) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+        public System.Security.AccessControl.FileSecurity AccessControl { get; set; }
+        public System.IO.FileShare AllowedFileShare { get; set; }
+        public System.IO.FileAttributes Attributes { get; set; }
+        public byte[] Contents { get; set; }
+        public System.DateTimeOffset CreationTime { get; set; }
+        public System.IO.Abstractions.IFileVersionInfo FileVersionInfo { get; set; }
+        public bool IsDirectory { get; }
+        public System.DateTimeOffset LastAccessTime { get; set; }
+        public System.DateTimeOffset LastWriteTime { get; set; }
+        public string LinkTarget { get; set; }
+        public string TextContents { get; set; }
+        public System.IO.UnixFileMode UnixMode { get; set; }
+        public static System.IO.Abstractions.TestingHelpers.MockFileData op_Implicit(string s) { }
+    }
+    [System.Serializable]
+    public class MockFileInfo : System.IO.Abstractions.FileInfoBase, System.IO.Abstractions.IFileSystemAclSupport
+    {
+        public MockFileInfo(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileSystem, string path) { }
+        public override System.IO.FileAttributes Attributes { get; set; }
+        public override System.DateTime CreationTime { get; set; }
+        public override System.DateTime CreationTimeUtc { get; set; }
+        public override System.IO.Abstractions.IDirectoryInfo Directory { get; }
+        public override string DirectoryName { get; }
+        public override bool Exists { get; }
+        public override string Extension { get; }
+        public override string FullName { get; }
+        public override bool IsReadOnly { get; set; }
+        public override System.DateTime LastAccessTime { get; set; }
+        public override System.DateTime LastAccessTimeUtc { get; set; }
+        public override System.DateTime LastWriteTime { get; set; }
+        public override System.DateTime LastWriteTimeUtc { get; set; }
+        public override long Length { get; }
+        public override string LinkTarget { get; }
+        public override string Name { get; }
+        public override System.IO.StreamWriter AppendText() { }
+        public override System.IO.Abstractions.IFileInfo CopyTo(string destFileName) { }
+        public override System.IO.Abstractions.IFileInfo CopyTo(string destFileName, bool overwrite) { }
+        public override System.IO.Abstractions.FileSystemStream Create() { }
+        public override void CreateAsSymbolicLink(string pathToTarget) { }
+        public override System.IO.StreamWriter CreateText() { }
+        public override void Decrypt() { }
+        public override void Delete() { }
+        public override void Encrypt() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+        public object GetAccessControl() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+        public object GetAccessControl(System.IO.Abstractions.IFileSystemAclSupport.AccessControlSections includeSections) { }
+        public override void MoveTo(string destFileName) { }
+        public override void MoveTo(string destFileName, bool overwrite) { }
+        public override System.IO.Abstractions.FileSystemStream Open(System.IO.FileMode mode) { }
+        public override System.IO.Abstractions.FileSystemStream Open(System.IO.FileStreamOptions options) { }
+        public override System.IO.Abstractions.FileSystemStream Open(System.IO.FileMode mode, System.IO.FileAccess access) { }
+        public override System.IO.Abstractions.FileSystemStream Open(System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share) { }
+        public override System.IO.Abstractions.FileSystemStream OpenRead() { }
+        public override System.IO.StreamReader OpenText() { }
+        public override System.IO.Abstractions.FileSystemStream OpenWrite() { }
+        public override void Refresh() { }
+        public override System.IO.Abstractions.IFileInfo Replace(string destinationFileName, string destinationBackupFileName) { }
+        public override System.IO.Abstractions.IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors) { }
+        public override System.IO.Abstractions.IFileSystemInfo ResolveLinkTarget(bool returnFinalTarget) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+        public void SetAccessControl(object value) { }
+        public override string ToString() { }
+    }
+    [System.Serializable]
+    public class MockFileInfoFactory : System.IO.Abstractions.IFileInfoFactory, System.IO.Abstractions.IFileSystemEntity
+    {
+        public MockFileInfoFactory(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileSystem) { }
+        public System.IO.Abstractions.IFileSystem FileSystem { get; }
+        public System.IO.Abstractions.IFileInfo New(string fileName) { }
+        public System.IO.Abstractions.IFileInfo Wrap(System.IO.FileInfo fileInfo) { }
+    }
+    [System.Serializable]
+    public class MockFileStream : System.IO.Abstractions.FileSystemStream, System.IO.Abstractions.IFileSystemAclSupport
+    {
+        public MockFileStream(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string path, System.IO.FileMode mode, System.IO.FileAccess access = 3, System.IO.FileOptions options = 0) { }
+        public override bool CanRead { get; }
+        public override bool CanWrite { get; }
+        public static System.IO.Abstractions.FileSystemStream Null { get; }
+        protected override void Dispose(bool disposing) { }
+        public override void EndWrite(System.IAsyncResult asyncResult) { }
+        public override void Flush() { }
+        public override void Flush(bool flushToDisk) { }
+        public override System.Threading.Tasks.Task FlushAsync(System.Threading.CancellationToken cancellationToken) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+        public object GetAccessControl() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+        public object GetAccessControl(System.IO.Abstractions.IFileSystemAclSupport.AccessControlSections includeSections) { }
+        public override int Read(byte[] buffer, int offset, int count) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+        public void SetAccessControl(object value) { }
+        public override void SetLength(long value) { }
+        public override void Write(System.ReadOnlySpan<byte> buffer) { }
+        public override void Write(byte[] buffer, int offset, int count) { }
+        public override System.Threading.Tasks.ValueTask WriteAsync(System.ReadOnlyMemory<byte> buffer, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task WriteAsync(byte[] buffer, int offset, int count, System.Threading.CancellationToken cancellationToken) { }
+        public override void WriteByte(byte value) { }
+    }
+    [System.Serializable]
+    public class MockFileStreamFactory : System.IO.Abstractions.IFileStreamFactory, System.IO.Abstractions.IFileSystemEntity
+    {
+        public MockFileStreamFactory(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileSystem) { }
+        public System.IO.Abstractions.IFileSystem FileSystem { get; }
+        public System.IO.Abstractions.FileSystemStream New(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.IO.FileAccess access) { }
+        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode) { }
+        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileStreamOptions options) { }
+        public System.IO.Abstractions.FileSystemStream New(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.IO.FileAccess access, int bufferSize) { }
+        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access) { }
+        public System.IO.Abstractions.FileSystemStream New(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.IO.FileAccess access, int bufferSize, bool isAsync) { }
+        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share) { }
+        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, int bufferSize) { }
+        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, int bufferSize, System.IO.FileOptions options) { }
+        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, int bufferSize, bool useAsync) { }
+        public System.IO.Abstractions.FileSystemStream Wrap(System.IO.FileStream fileStream) { }
+    }
+    [System.Serializable]
+    public class MockFileSystem : System.IO.Abstractions.FileSystemBase, System.IO.Abstractions.IFileSystem, System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor
+    {
+        public MockFileSystem() { }
+        public MockFileSystem(System.IO.Abstractions.TestingHelpers.MockFileSystemOptions options) { }
+        public MockFileSystem(System.Collections.Generic.IDictionary<string, System.IO.Abstractions.TestingHelpers.MockFileData> files, System.IO.Abstractions.TestingHelpers.MockFileSystemOptions options) { }
+        public MockFileSystem(System.Collections.Generic.IDictionary<string, System.IO.Abstractions.TestingHelpers.MockFileData> files, string currentDirectory = "") { }
+        public System.Collections.Generic.IEnumerable<string> AllDirectories { get; }
+        public System.Collections.Generic.IEnumerable<string> AllDrives { get; }
+        public System.Collections.Generic.IEnumerable<string> AllFiles { get; }
+        public System.Collections.Generic.IEnumerable<string> AllNodes { get; }
+        public System.Collections.Generic.IEnumerable<string> AllPaths { get; }
+        public override System.IO.Abstractions.IDirectory Directory { get; }
+        public override System.IO.Abstractions.IDirectoryInfoFactory DirectoryInfo { get; }
+        public override System.IO.Abstractions.IDriveInfoFactory DriveInfo { get; }
+        public override System.IO.Abstractions.IFile File { get; }
+        public override System.IO.Abstractions.IFileInfoFactory FileInfo { get; }
+        public override System.IO.Abstractions.IFileStreamFactory FileStream { get; }
+        public System.IO.Abstractions.IFileSystem FileSystem { get; }
+        public override System.IO.Abstractions.IFileSystemWatcherFactory FileSystemWatcher { get; }
+        public override System.IO.Abstractions.IFileVersionInfoFactory FileVersionInfo { get; }
+        public override System.IO.Abstractions.IPath Path { get; }
+        public System.IO.Abstractions.TestingHelpers.PathVerifier PathVerifier { get; }
+        public System.IO.Abstractions.TestingHelpers.StringOperations StringOperations { get; }
+        public void AddDirectory(System.IO.Abstractions.IDirectoryInfo path) { }
+        public void AddDirectory(string path) { }
+        public void AddDrive(string name, System.IO.Abstractions.TestingHelpers.MockDriveData mockDrive) { }
+        public void AddEmptyFile(System.IO.Abstractions.IFileInfo path) { }
+        public void AddEmptyFile(string path) { }
+        public void AddFile(System.IO.Abstractions.IFileInfo path, System.IO.Abstractions.TestingHelpers.MockFileData data, bool verifyAccess = true) { }
+        public void AddFile(string path, System.IO.Abstractions.TestingHelpers.MockFileData mockFile, bool verifyAccess = true) { }
+        public void AddFileFromEmbeddedResource(string path, System.Reflection.Assembly resourceAssembly, string embeddedResourcePath) { }
+        public void AddFilesFromEmbeddedNamespace(string path, System.Reflection.Assembly resourceAssembly, string embeddedResourcePath) { }
+        public System.IO.Abstractions.TestingHelpers.MockFileData AdjustTimes(System.IO.Abstractions.TestingHelpers.MockFileData fileData, System.IO.Abstractions.TestingHelpers.TimeAdjustments timeAdjustments) { }
+        public bool FileExists(string path) { }
+        public System.IO.Abstractions.TestingHelpers.MockDriveData GetDrive(string name) { }
+        public System.IO.Abstractions.TestingHelpers.MockFileData GetFile(System.IO.Abstractions.IFileInfo path) { }
+        public System.IO.Abstractions.TestingHelpers.MockFileData GetFile(string path) { }
+        public System.IO.Abstractions.TestingHelpers.MockFileSystem MockTime(System.Func<System.DateTime> dateTimeProvider) { }
+        public void MoveDirectory(string sourcePath, string destPath) { }
+        public void RemoveFile(string path, bool verifyAccess = true) { }
+    }
+    public class MockFileSystemOptions
+    {
+        public MockFileSystemOptions() { }
+        public bool CreateDefaultTempDir { get; init; }
+        public string CurrentDirectory { get; init; }
+    }
+    [System.Serializable]
+    public class MockFileSystemWatcherFactory : System.IO.Abstractions.IFileSystemEntity, System.IO.Abstractions.IFileSystemWatcherFactory
+    {
+        public MockFileSystemWatcherFactory(System.IO.Abstractions.TestingHelpers.MockFileSystem mockFileSystem) { }
+        public System.IO.Abstractions.IFileSystem FileSystem { get; }
+        public System.IO.Abstractions.IFileSystemWatcher New() { }
+        public System.IO.Abstractions.IFileSystemWatcher New(string path) { }
+        public System.IO.Abstractions.IFileSystemWatcher New(string path, string filter) { }
+        public System.IO.Abstractions.IFileSystemWatcher Wrap(System.IO.FileSystemWatcher fileSystemWatcher) { }
+    }
+    [System.Serializable]
+    public class MockFileVersionInfo : System.IO.Abstractions.FileVersionInfoBase
+    {
+        public MockFileVersionInfo(
+                    string fileName,
+                    string fileVersion = null,
+                    string productVersion = null,
+                    string fileDescription = null,
+                    string productName = null,
+                    string companyName = null,
+                    string comments = null,
+                    string internalName = null,
+                    bool isDebug = false,
+                    bool isPatched = false,
+                    bool isPrivateBuild = false,
+                    bool isPreRelease = false,
+                    bool isSpecialBuild = false,
+                    string language = null,
+                    string legalCopyright = null,
+                    string legalTrademarks = null,
+                    string originalFilename = null,
+                    string privateBuild = null,
+                    string specialBuild = null) { }
+        public override string Comments { get; }
+        public override string CompanyName { get; }
+        public override int FileBuildPart { get; }
+        public override string FileDescription { get; }
+        public override int FileMajorPart { get; }
+        public override int FileMinorPart { get; }
+        public override string FileName { get; }
+        public override int FilePrivatePart { get; }
+        public override string FileVersion { get; }
+        public override string InternalName { get; }
+        public override bool IsDebug { get; }
+        public override bool IsPatched { get; }
+        public override bool IsPreRelease { get; }
+        public override bool IsPrivateBuild { get; }
+        public override bool IsSpecialBuild { get; }
+        public override string Language { get; }
+        public override string LegalCopyright { get; }
+        public override string LegalTrademarks { get; }
+        public override string OriginalFilename { get; }
+        public override string PrivateBuild { get; }
+        public override int ProductBuildPart { get; }
+        public override int ProductMajorPart { get; }
+        public override int ProductMinorPart { get; }
+        public override string ProductName { get; }
+        public override int ProductPrivatePart { get; }
+        public override string ProductVersion { get; }
+        public override string SpecialBuild { get; }
+        public override string ToString() { }
+    }
+    [System.Serializable]
+    public class MockFileVersionInfoFactory : System.IO.Abstractions.IFileSystemEntity, System.IO.Abstractions.IFileVersionInfoFactory
+    {
+        public MockFileVersionInfoFactory(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileSystem) { }
+        public System.IO.Abstractions.IFileSystem FileSystem { get; }
+        public System.IO.Abstractions.IFileVersionInfo GetVersionInfo(string fileName) { }
+    }
+    [System.Serializable]
+    public class MockPath : System.IO.Abstractions.PathWrapper
+    {
+        public MockPath(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor) { }
+        public MockPath(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string defaultTempDirectory) { }
+        public override bool Exists(string path) { }
+        public override string GetFullPath(string path) { }
+        public override string GetRelativePath(string relativeTo, string path) { }
+        public override string GetTempFileName() { }
+        public override string GetTempPath() { }
+    }
+    public static class MockUnixSupport
+    {
+        public static bool IsUnixPlatform() { }
+        public static bool IsWindowsPlatform() { }
+        public static string Path(string path) { }
+    }
+    [System.Serializable]
+    public class PathVerifier
+    {
+        public PathVerifier(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor) { }
+        public void CheckInvalidPathChars(string path, bool checkAdditional = false) { }
+        public bool HasIllegalCharacters(string path, bool checkAdditional) { }
+        public void IsLegalAbsoluteOrRelative(string path, string paramName) { }
+        public string NormalizeDriveName(string name) { }
+        public bool TryNormalizeDriveName(string name, out string result) { }
+    }
+    [System.Serializable]
+    public class StringOperations
+    {
+        public StringOperations(bool caseSensitive) { }
+        public System.StringComparer Comparer { get; }
+        public bool Contains(string s, string substring) { }
+        public bool EndsWith(string s, string suffix) { }
+        public bool Equals(char x, char y) { }
+        public bool Equals(string x, string y) { }
+        public int IndexOf(string s, string substring) { }
+        public int IndexOf(string s, string substring, int startIndex) { }
+        public string Replace(string s, string oldValue, string newValue) { }
+        public bool StartsWith(string s, string prefix) { }
+        public char ToLower(char c) { }
+        public string ToLower(string s) { }
+        public char ToUpper(char c) { }
+        public string ToUpper(string s) { }
+    }
+    [System.Flags]
+    public enum TimeAdjustments
+    {
+        None = 0,
+        CreationTime = 1,
+        LastAccessTime = 2,
+        LastWriteTime = 4,
+        All = -1,
+    }
+}
