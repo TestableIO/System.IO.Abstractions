@@ -24,6 +24,7 @@ jobs:
             7.0.x
             8.0.x
             9.0.x
+            10.0.x
       - name: Run unit tests (windows)
         if: matrix.os == 'windows-latest'
         run: ./build.ps1 CodeCoverage
@@ -56,6 +57,7 @@ jobs:
             7.0.x
             8.0.x
             9.0.x
+            10.0.x
       - name: API checks
         run: ./build.sh ApiChecks
       - name: Upload artifacts
@@ -86,6 +88,7 @@ jobs:
             7.0.x
             8.0.x
             9.0.x
+            10.0.x
       - name: Run sonarcloud analysis
         run: ./build.sh CodeAnalysis
   
@@ -126,6 +129,7 @@ jobs:
             7.0.x
             8.0.x
             9.0.x
+            10.0.x
       - name: Pack nuget packages
         run: ./build.sh Pack
       - name: Upload packages
