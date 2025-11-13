@@ -32,12 +32,13 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
 
     private readonly IMockFileDataAccessor mockFileDataAccessor;
     private readonly string path;
+    private readonly Guid guid = new();
     private readonly FileAccess access = FileAccess.ReadWrite;
     private readonly FileShare share = FileShare.Read;
     private readonly FileOptions options;
     private readonly MockFileData fileData;
     private bool disposed;
-    private static ConcurrentDictionary<string, byte> _fileShareNoneStreams = [];
+    private static ConcurrentDictionary<string, ConcurrentDictionary<Guid, (FileAccess access, FileShare share)>> _fileHandles = new();
 
     /// <inheritdoc />
     public MockFileStream(
@@ -58,11 +59,6 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         path = mockFileDataAccessor.PathVerifier.FixPath(path);
         this.path = path;
         this.options = options;
-
-        if (_fileShareNoneStreams.ContainsKey(path)) 
-        {
-            throw CommonExceptions.ProcessCannotAccessFileInUse(path);
-        }
 
         if (mockFileDataAccessor.FileExists(path))
         {
@@ -107,13 +103,8 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             mockFileDataAccessor.AddFile(path, fileData);
         }
 
-        if (share is FileShare.None) 
-        {
-            if (!_fileShareNoneStreams.TryAdd(path, 0))
-            {
-                throw CommonExceptions.ProcessCannotAccessFileInUse(path);
-            }
-        }
+        var fileHandlesEntry = _fileHandles.GetOrAdd(path, _ => new ConcurrentDictionary<Guid, (FileAccess access, FileShare share)>());
+        fileHandlesEntry[guid] = (access, share);
         this.access = access;
         this.share = share;
     }
@@ -162,9 +153,13 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         {
             return;
         }
-        if (share is FileShare.None)
+        if (_fileHandles.TryGetValue(path, out var fileHandlesEntry))
         {
-            _fileShareNoneStreams.TryRemove(path, out _);
+            fileHandlesEntry.TryRemove(guid, out _);
+            if (fileHandlesEntry.IsEmpty)
+            {
+                _fileHandles.TryRemove(path, out _);
+            }
         }
         InternalFlush();
         base.Dispose(disposing);
