@@ -102,10 +102,39 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             mockFileDataAccessor.AddFile(path, fileData);
         }
 
-        var fileHandlesEntry = mockFileDataAccessor.FileHandles.GetOrAdd(path, _ => new ConcurrentDictionary<Guid, (FileAccess access, FileShare share)>());
+        var fileHandlesEntry = mockFileDataAccessor.FileHandles.GetOrAdd(
+            path, 
+            _ => new ConcurrentDictionary<Guid, (FileAccess access, FileShare share)>());
+
+        var requiredShare = AccessToShare(access);
+        foreach (var (existingAccess, existingShare) in fileHandlesEntry.Values)
+        {
+            var existingRequiredShare = AccessToShare(existingAccess);
+            var existingBlocksNew = (existingShare & requiredShare) != requiredShare;
+            var newBlocksExisting = (share & existingRequiredShare) != existingRequiredShare;
+            if (existingBlocksNew || newBlocksExisting)
+            {
+                throw CommonExceptions.ProcessCannotAccessFileInUse(path);
+            }
+        }
+        
         fileHandlesEntry[guid] = (access, share);
         this.access = access;
         this.share = share;
+    }
+
+    private static FileShare AccessToShare(FileAccess access)
+    {
+        var share = FileShare.None;
+        if (access.HasFlag(FileAccess.Read))
+        {
+            share |= FileShare.Read;
+        }
+        if (access.HasFlag(FileAccess.Write))
+        {
+            share |= FileShare.Write;
+        }
+        return share;
     }
 
     private static void ThrowIfInvalidModeAccess(FileMode mode, FileAccess access)
