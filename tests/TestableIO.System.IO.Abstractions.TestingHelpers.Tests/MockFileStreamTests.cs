@@ -392,24 +392,41 @@ public class MockFileStreamTests
     }
 
     [Test]
-    public async Task MockFileStream_WhenExclusiveStreamOpen_ShouldThrowIOException()
+    [TestCase(FileShare.None, FileAccess.Read)]
+    [TestCase(FileShare.None, FileAccess.ReadWrite)]
+    [TestCase(FileShare.None, FileAccess.Write)]
+    [TestCase(FileShare.Read, FileAccess.Write)]
+    [TestCase(FileShare.Read, FileAccess.ReadWrite)]
+    [TestCase(FileShare.Write, FileAccess.Read)]
+    public async Task MockFileStream_ConflictingShareOrAccess_ShouldThrowUntilHandleReleased(
+        FileShare share,
+        FileAccess access)
     {
         var fileSystem = new MockFileSystem();
         fileSystem.File.WriteAllText("foo.txt", "");
-        using (new MockFileStream(fileSystem, "foo.txt", FileMode.Open, FileAccess.Read, FileShare.None))
+        using (new MockFileStream(fileSystem, "foo.txt", FileMode.Open, FileAccess.Read, share))
         {
-            await That(() => new MockFileStream(fileSystem, "foo.txt", FileMode.Open, FileAccess.Read)).Throws<IOException>();
+            await That(() => new MockFileStream(fileSystem, "foo.txt", FileMode.Open, access)).Throws<IOException>();
         }
+        await That(() => new MockFileStream(fileSystem, "foo.txt", FileMode.Open, access)).DoesNotThrow();
     }
 
     [Test]
-    public async Task MockFileStream_WhenExclusiveStreamClosed_ShouldNotThrow()
+    [TestCase(FileShare.Read, FileAccess.Read)]
+    [TestCase(FileShare.Read | FileShare.Write, FileAccess.Read)]
+    [TestCase(FileShare.Read | FileShare.Write, FileAccess.ReadWrite)]
+    [TestCase(FileShare.ReadWrite, FileAccess.Read)]
+    [TestCase(FileShare.ReadWrite, FileAccess.ReadWrite)]
+    [TestCase(FileShare.ReadWrite, FileAccess.Write)]
+    public async Task MockFileStream_CompatibleShareOrAccess_ShouldNotThrow(
+        FileShare share,
+        FileAccess access)
     {
         var fileSystem = new MockFileSystem();
         fileSystem.File.WriteAllText("foo.txt", "");
-        var stream = new MockFileStream(fileSystem, "foo.txt", FileMode.Open, FileAccess.Read, FileShare.None);
-        stream.Dispose();
-
-        await That(() => new MockFileStream(fileSystem, "foo.txt", FileMode.Open, FileAccess.Read)).DoesNotThrow();
+        using (new MockFileStream(fileSystem, "foo.txt", FileMode.Open, FileAccess.Read, share))
+        {
+            await That(() => new MockFileStream(fileSystem, "foo.txt", FileMode.Open, access)).DoesNotThrow();
+        }
     }
 }
