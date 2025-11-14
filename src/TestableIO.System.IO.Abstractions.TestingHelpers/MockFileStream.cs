@@ -32,7 +32,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
 
     private readonly IMockFileDataAccessor mockFileDataAccessor;
     private readonly string path;
-    private readonly Guid guid = new();
+    private readonly Guid guid = Guid.NewGuid();
     private readonly FileAccess access = FileAccess.ReadWrite;
     private readonly FileShare share = FileShare.Read;
     private readonly FileOptions options;
