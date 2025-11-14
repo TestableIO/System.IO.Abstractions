@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
+using System.Collections.Concurrent;
 
 namespace System.IO.Abstractions.TestingHelpers;
 
@@ -31,7 +32,9 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
 
     private readonly IMockFileDataAccessor mockFileDataAccessor;
     private readonly string path;
+    private readonly Guid guid = Guid.NewGuid();
     private readonly FileAccess access = FileAccess.ReadWrite;
+    private readonly FileShare share = FileShare.Read;
     private readonly FileOptions options;
     private readonly MockFileData fileData;
     private bool disposed;
@@ -42,6 +45,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         string path,
         FileMode mode,
         FileAccess access = FileAccess.ReadWrite,
+        FileShare share = FileShare.Read,
         FileOptions options = FileOptions.None)
         : base(new MemoryStream(),
             path == null ? null : Path.GetFullPath(path),
@@ -51,6 +55,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         ThrowIfInvalidModeAccess(mode, access);
 
         this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
+        path = mockFileDataAccessor.PathVerifier.FixPath(path);
         this.path = path;
         this.options = options;
 
@@ -97,7 +102,39 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             mockFileDataAccessor.AddFile(path, fileData);
         }
 
+        var fileHandlesEntry = mockFileDataAccessor.FileHandles.GetOrAdd(
+            path, 
+            _ => new ConcurrentDictionary<Guid, (FileAccess access, FileShare share)>());
+
+        var requiredShare = AccessToShare(access);
+        foreach (var (existingAccess, existingShare) in fileHandlesEntry.Values)
+        {
+            var existingRequiredShare = AccessToShare(existingAccess);
+            var existingBlocksNew = (existingShare & requiredShare) != requiredShare;
+            var newBlocksExisting = (share & existingRequiredShare) != existingRequiredShare;
+            if (existingBlocksNew || newBlocksExisting)
+            {
+                throw CommonExceptions.ProcessCannotAccessFileInUse(path);
+            }
+        }
+        
+        fileHandlesEntry[guid] = (access, share);
         this.access = access;
+        this.share = share;
+    }
+
+    private static FileShare AccessToShare(FileAccess access)
+    {
+        var share = FileShare.None;
+        if (access.HasFlag(FileAccess.Read))
+        {
+            share |= FileShare.Read;
+        }
+        if (access.HasFlag(FileAccess.Write))
+        {
+            share |= FileShare.Write;
+        }
+        return share;
     }
 
     private static void ThrowIfInvalidModeAccess(FileMode mode, FileAccess access)
@@ -143,6 +180,14 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         if (disposed)
         {
             return;
+        }
+        if (mockFileDataAccessor.FileHandles.TryGetValue(path, out var fileHandlesEntry))
+        {
+            fileHandlesEntry.TryRemove(guid, out _);
+            if (fileHandlesEntry.IsEmpty)
+            {
+                mockFileDataAccessor.FileHandles.TryRemove(path, out _);
+            }
         }
         InternalFlush();
         base.Dispose(disposing);

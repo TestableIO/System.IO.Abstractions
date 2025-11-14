@@ -8,6 +8,7 @@ namespace System.IO.Abstractions.TestingHelpers
         System.Collections.Generic.IEnumerable<string> AllDrives { get; }
         System.Collections.Generic.IEnumerable<string> AllFiles { get; }
         System.Collections.Generic.IEnumerable<string> AllPaths { get; }
+        System.Collections.Concurrent.ConcurrentDictionary<string, System.Collections.Concurrent.ConcurrentDictionary<System.Guid, System.ValueTuple<System.IO.FileAccess, System.IO.FileShare>>> FileHandles { get; }
         System.IO.Abstractions.IFileSystem FileSystem { get; }
         System.IO.Abstractions.TestingHelpers.PathVerifier PathVerifier { get; }
         System.IO.Abstractions.TestingHelpers.StringOperations StringOperations { get; }
@@ -384,7 +385,7 @@ namespace System.IO.Abstractions.TestingHelpers
     [System.Serializable]
     public class MockFileStream : System.IO.Abstractions.FileSystemStream, System.IO.Abstractions.IFileSystemAclSupport
     {
-        public MockFileStream(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string path, System.IO.FileMode mode, System.IO.FileAccess access = 3, System.IO.FileOptions options = 0) { }
+        public MockFileStream(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string path, System.IO.FileMode mode, System.IO.FileAccess access = 3, System.IO.FileShare share = 1, System.IO.FileOptions options = 0) { }
         public override bool CanRead { get; }
         public override bool CanWrite { get; }
         public static System.IO.Abstractions.FileSystemStream Null { get; }
@@ -440,6 +441,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override System.IO.Abstractions.IDirectoryInfoFactory DirectoryInfo { get; }
         public override System.IO.Abstractions.IDriveInfoFactory DriveInfo { get; }
         public override System.IO.Abstractions.IFile File { get; }
+        public System.Collections.Concurrent.ConcurrentDictionary<string, System.Collections.Concurrent.ConcurrentDictionary<System.Guid, System.ValueTuple<System.IO.FileAccess, System.IO.FileShare>>> FileHandles { get; }
         public override System.IO.Abstractions.IFileInfoFactory FileInfo { get; }
         public override System.IO.Abstractions.IFileStreamFactory FileStream { get; }
         public System.IO.Abstractions.IFileSystem FileSystem { get; }
@@ -563,6 +565,7 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         public PathVerifier(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor) { }
         public void CheckInvalidPathChars(string path, bool checkAdditional = false) { }
+        public string FixPath(string path) { }
         public bool HasIllegalCharacters(string path, bool checkAdditional) { }
         public void IsLegalAbsoluteOrRelative(string path, string paramName) { }
         public string NormalizeDriveName(string name) { }

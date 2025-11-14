@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -19,6 +20,10 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     private readonly IDictionary<string, FileSystemEntry> files;
     private readonly IDictionary<string, MockDriveData> drives;
     private readonly PathVerifier pathVerifier;
+#if FEATURE_SERIALIZABLE
+    [NonSerialized]
+#endif
+    private readonly ConcurrentDictionary<string, ConcurrentDictionary<Guid, (FileAccess access, FileShare share)>> fileHandles = new();
 #if FEATURE_SERIALIZABLE
     [NonSerialized]
 #endif
@@ -114,6 +119,9 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     public IFileSystem FileSystem => this;
     /// <inheritdoc />
     public PathVerifier PathVerifier => pathVerifier;
+    /// <inheritdoc />
+    public ConcurrentDictionary<string, ConcurrentDictionary<Guid, (FileAccess, FileShare)>> FileHandles
+    => fileHandles;
 
     /// <summary>
     /// Replaces the time provider with a mocked instance. This allows to influence the used time in tests.
@@ -126,19 +134,6 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     {
         this.dateTimeProvider = dateTimeProvider ?? defaultDateTimeProvider;
         return this;
-    }
-
-    private string FixPath(string path, bool checkCaps = false)
-    {
-        if (path == null)
-        {
-            throw new ArgumentNullException(nameof(path), StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
-        }
-
-        var pathSeparatorFixed = path.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-        var fullPath = Path.GetFullPath(pathSeparatorFixed);
-
-        return checkCaps ? GetPathWithCorrectDirectoryCapitalization(fullPath) : fullPath;
     }
 
     //If C:\foo exists, ensures that trying to save a file to "C:\FOO\file.txt" instead saves it to "C:\foo\file.txt".
@@ -194,7 +189,7 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     /// <inheritdoc />
     public MockFileData GetFile(string path)
     {
-        path = FixPath(path).TrimSlashes();
+        path = pathVerifier.FixPath(path).TrimSlashes();
         return GetFileWithoutFixingPath(path);
     }
 
@@ -210,7 +205,9 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
 
     private void SetEntry(string path, MockFileData mockFile)
     {
-        path = FixPath(path, true).TrimSlashes();
+        path = GetPathWithCorrectDirectoryCapitalization(
+            pathVerifier.FixPath(path)
+        ).TrimSlashes();
 
         lock (files)
         {
@@ -232,7 +229,9 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     /// <inheritdoc />
     public void AddFile(string path, MockFileData mockFile, bool verifyAccess = true)
     {
-        var fixedPath = FixPath(path, true);
+        var fixedPath = GetPathWithCorrectDirectoryCapitalization(
+            pathVerifier.FixPath(path)
+        );
 
         mockFile ??= new MockFileData(string.Empty);
         var file = GetFile(fixedPath);
@@ -319,7 +318,9 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     /// <inheritdoc />
     public void AddDirectory(string path)
     {
-        var fixedPath = FixPath(path, true);
+        var fixedPath = GetPathWithCorrectDirectoryCapitalization(
+            pathVerifier.FixPath(path)
+        );
         var separator = Path.DirectorySeparatorChar.ToString();
 
         if (FileExists(fixedPath) && FileIsReadOnly(fixedPath))
@@ -408,8 +409,8 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     /// <inheritdoc />
     public void MoveDirectory(string sourcePath, string destPath)
     {
-        sourcePath = FixPath(sourcePath);
-        destPath = FixPath(destPath);
+        sourcePath = pathVerifier.FixPath(sourcePath);
+        destPath = pathVerifier.FixPath(destPath);
 
         var sourcePathSequence = sourcePath.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -452,7 +453,7 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     /// <inheritdoc />
     public void RemoveFile(string path, bool verifyAccess = true)
     {
-        path = FixPath(path);
+        path = pathVerifier.FixPath(path);
 
         lock (files)
         {
@@ -473,7 +474,7 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
             return false;
         }
 
-        path = FixPath(path).TrimSlashes();
+        path = pathVerifier.FixPath(path).TrimSlashes();
 
         lock (files)
         {
