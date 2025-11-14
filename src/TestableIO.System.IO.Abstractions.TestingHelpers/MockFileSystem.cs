@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -19,6 +20,10 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     private readonly IDictionary<string, FileSystemEntry> files;
     private readonly IDictionary<string, MockDriveData> drives;
     private readonly PathVerifier pathVerifier;
+#if FEATURE_SERIALIZABLE
+    [NonSerialized]
+#endif
+    private readonly ConcurrentDictionary<string, ConcurrentDictionary<Guid, (FileAccess access, FileShare share)>> fileHandles = new();
 #if FEATURE_SERIALIZABLE
     [NonSerialized]
 #endif
@@ -114,6 +119,9 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     public IFileSystem FileSystem => this;
     /// <inheritdoc />
     public PathVerifier PathVerifier => pathVerifier;
+    /// <inheritdoc />
+    public ConcurrentDictionary<string, ConcurrentDictionary<Guid, (FileAccess, FileShare)>> FileHandles
+    => fileHandles;
 
     /// <summary>
     /// Replaces the time provider with a mocked instance. This allows to influence the used time in tests.

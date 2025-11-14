@@ -38,7 +38,6 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     private readonly FileOptions options;
     private readonly MockFileData fileData;
     private bool disposed;
-    private static ConcurrentDictionary<string, ConcurrentDictionary<Guid, (FileAccess access, FileShare share)>> _fileHandles = new();
 
     /// <inheritdoc />
     public MockFileStream(
@@ -103,7 +102,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             mockFileDataAccessor.AddFile(path, fileData);
         }
 
-        var fileHandlesEntry = _fileHandles.GetOrAdd(path, _ => new ConcurrentDictionary<Guid, (FileAccess access, FileShare share)>());
+        var fileHandlesEntry = mockFileDataAccessor.FileHandles.GetOrAdd(path, _ => new ConcurrentDictionary<Guid, (FileAccess access, FileShare share)>());
         fileHandlesEntry[guid] = (access, share);
         this.access = access;
         this.share = share;
@@ -153,12 +152,12 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         {
             return;
         }
-        if (_fileHandles.TryGetValue(path, out var fileHandlesEntry))
+        if (mockFileDataAccessor.FileHandles.TryGetValue(path, out var fileHandlesEntry))
         {
             fileHandlesEntry.TryRemove(guid, out _);
             if (fileHandlesEntry.IsEmpty)
             {
-                _fileHandles.TryRemove(path, out _);
+                mockFileDataAccessor.FileHandles.TryRemove(path, out _);
             }
         }
         InternalFlush();
