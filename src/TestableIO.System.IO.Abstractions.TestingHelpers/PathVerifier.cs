@@ -187,7 +187,7 @@ public class PathVerifier
     /// <summary>
     /// Resolves and normalizes a path.
     /// </summary>
-    public string FixPath(string path)
+    internal string FixPath(string path)
     {
         if (path == null)
         {

@@ -551,7 +551,6 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         public PathVerifier(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor) { }
         public void CheckInvalidPathChars(string path, bool checkAdditional = false) { }
-        public string FixPath(string path) { }
         public bool HasIllegalCharacters(string path, bool checkAdditional) { }
         public void IsLegalAbsoluteOrRelative(string path, string paramName) { }
         public string NormalizeDriveName(string name) { }
