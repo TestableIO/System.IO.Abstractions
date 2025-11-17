@@ -1,5 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 
 namespace System.IO.Abstractions.TestingHelpers;
@@ -115,5 +114,5 @@ public interface IMockFileDataAccessor : IFileSystem
     /// <summary>
     /// Gets a reference to the open file handles.
     /// </summary>
-    ConcurrentDictionary<string, ConcurrentDictionary<Guid, (FileAccess, FileShare)>> FileHandles { get; }
+    FileHandles FileHandles { get; }
 }

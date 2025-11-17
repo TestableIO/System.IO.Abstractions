@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
-using System.Collections.Concurrent;
 
 namespace System.IO.Abstractions.TestingHelpers;
 
@@ -102,39 +101,9 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             mockFileDataAccessor.AddFile(path, fileData);
         }
 
-        var fileHandlesEntry = mockFileDataAccessor.FileHandles.GetOrAdd(
-            path, 
-            _ => new ConcurrentDictionary<Guid, (FileAccess access, FileShare share)>());
-
-        var requiredShare = AccessToShare(access);
-        foreach (var (existingAccess, existingShare) in fileHandlesEntry.Values)
-        {
-            var existingRequiredShare = AccessToShare(existingAccess);
-            var existingBlocksNew = (existingShare & requiredShare) != requiredShare;
-            var newBlocksExisting = (share & existingRequiredShare) != existingRequiredShare;
-            if (existingBlocksNew || newBlocksExisting)
-            {
-                throw CommonExceptions.ProcessCannotAccessFileInUse(path);
-            }
-        }
-        
-        fileHandlesEntry[guid] = (access, share);
+        mockFileDataAccessor.FileHandles.TryAddHandle(path, guid, access, share);
         this.access = access;
         this.share = share;
-    }
-
-    private static FileShare AccessToShare(FileAccess access)
-    {
-        var share = FileShare.None;
-        if (access.HasFlag(FileAccess.Read))
-        {
-            share |= FileShare.Read;
-        }
-        if (access.HasFlag(FileAccess.Write))
-        {
-            share |= FileShare.Write;
-        }
-        return share;
     }
 
     private static void ThrowIfInvalidModeAccess(FileMode mode, FileAccess access)
@@ -181,14 +150,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         {
             return;
         }
-        if (mockFileDataAccessor.FileHandles.TryGetValue(path, out var fileHandlesEntry))
-        {
-            fileHandlesEntry.TryRemove(guid, out _);
-            if (fileHandlesEntry.IsEmpty)
-            {
-                mockFileDataAccessor.FileHandles.TryRemove(path, out _);
-            }
-        }
+        mockFileDataAccessor.FileHandles.RemoveHandle(path, guid);
         InternalFlush();
         base.Dispose(disposing);
         OnClose();
