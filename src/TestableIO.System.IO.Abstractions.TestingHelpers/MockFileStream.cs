@@ -101,7 +101,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             mockFileDataAccessor.AddFile(path, fileData);
         }
 
-        mockFileDataAccessor.FileHandles.TryAddHandle(path, guid, access, share);
+        mockFileDataAccessor.FileHandles.AddHandle(path, guid, access, share);
         this.access = access;
         this.share = share;
     }

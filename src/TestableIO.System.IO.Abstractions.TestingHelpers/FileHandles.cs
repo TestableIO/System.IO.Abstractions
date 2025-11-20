@@ -7,7 +7,7 @@ public class FileHandles
 {
     private readonly ConcurrentDictionary<string, ConcurrentDictionary<Guid, (FileAccess access, FileShare share)>> handles = new();
 
-    public void TryAddHandle(string path, Guid guid, FileAccess access, FileShare share)
+    public void AddHandle(string path, Guid guid, FileAccess access, FileShare share)
     {
         var pathHandles = handles.GetOrAdd(
             path, 

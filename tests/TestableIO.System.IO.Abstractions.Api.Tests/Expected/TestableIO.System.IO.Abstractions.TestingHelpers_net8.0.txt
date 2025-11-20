@@ -3,8 +3,8 @@
 public class FileHandles
 {
     public FileHandles() { }
+    public void AddHandle(string path, System.Guid guid, System.IO.FileAccess access, System.IO.FileShare share) { }
     public void RemoveHandle(string path, System.Guid guid) { }
-    public void TryAddHandle(string path, System.Guid guid, System.IO.FileAccess access, System.IO.FileShare share) { }
 }
 namespace System.IO.Abstractions.TestingHelpers
 {
