@@ -183,4 +183,23 @@ public class PathVerifier
         result = name;
         return true;
     }
+
+    /// <summary>
+    /// Resolves and normalizes a path.
+    /// </summary>
+    internal string FixPath(string path)
+    {
+        if (path == null)
+        {
+            throw new ArgumentNullException(nameof(path), StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
+        }
+
+        var pathSeparatorFixed = path.Replace(
+            _mockFileDataAccessor.Path.AltDirectorySeparatorChar,
+            _mockFileDataAccessor.Path.DirectorySeparatorChar
+        );
+        var fullPath = _mockFileDataAccessor.Path.GetFullPath(pathSeparatorFixed);
+
+        return fullPath;
+    }
 }

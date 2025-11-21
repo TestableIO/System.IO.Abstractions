@@ -1,5 +1,11 @@
 [assembly: System.Reflection.AssemblyMetadata("RepositoryUrl", "https://github.com/TestableIO/System.IO.Abstractions.git")]
 [assembly: System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.7.2", FrameworkDisplayName=".NET Framework 4.7.2")]
+public class FileHandles
+{
+    public FileHandles() { }
+    public void AddHandle(string path, System.Guid guid, System.IO.FileAccess access, System.IO.FileShare share) { }
+    public void RemoveHandle(string path, System.Guid guid) { }
+}
 namespace System.IO.Abstractions.TestingHelpers
 {
     public interface IMockFileDataAccessor : System.IO.Abstractions.IFileSystem
@@ -8,6 +14,7 @@ namespace System.IO.Abstractions.TestingHelpers
         System.Collections.Generic.IEnumerable<string> AllDrives { get; }
         System.Collections.Generic.IEnumerable<string> AllFiles { get; }
         System.Collections.Generic.IEnumerable<string> AllPaths { get; }
+        FileHandles FileHandles { get; }
         System.IO.Abstractions.IFileSystem FileSystem { get; }
         System.IO.Abstractions.TestingHelpers.PathVerifier PathVerifier { get; }
         System.IO.Abstractions.TestingHelpers.StringOperations StringOperations { get; }
@@ -297,7 +304,7 @@ namespace System.IO.Abstractions.TestingHelpers
     [System.Serializable]
     public class MockFileStream : System.IO.Abstractions.FileSystemStream, System.IO.Abstractions.IFileSystemAclSupport
     {
-        public MockFileStream(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string path, System.IO.FileMode mode, System.IO.FileAccess access = 3, System.IO.FileOptions options = 0) { }
+        public MockFileStream(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string path, System.IO.FileMode mode, System.IO.FileAccess access = 3, System.IO.FileShare share = 1, System.IO.FileOptions options = 0) { }
         public override bool CanRead { get; }
         public override bool CanWrite { get; }
         public static System.IO.Abstractions.FileSystemStream Null { get; }
@@ -347,6 +354,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override System.IO.Abstractions.IDirectoryInfoFactory DirectoryInfo { get; }
         public override System.IO.Abstractions.IDriveInfoFactory DriveInfo { get; }
         public override System.IO.Abstractions.IFile File { get; }
+        public FileHandles FileHandles { get; }
         public override System.IO.Abstractions.IFileInfoFactory FileInfo { get; }
         public override System.IO.Abstractions.IFileStreamFactory FileStream { get; }
         public System.IO.Abstractions.IFileSystem FileSystem { get; }

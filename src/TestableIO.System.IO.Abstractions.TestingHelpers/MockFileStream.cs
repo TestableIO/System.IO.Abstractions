@@ -31,7 +31,9 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
 
     private readonly IMockFileDataAccessor mockFileDataAccessor;
     private readonly string path;
+    private readonly Guid guid = Guid.NewGuid();
     private readonly FileAccess access = FileAccess.ReadWrite;
+    private readonly FileShare share = FileShare.Read;
     private readonly FileOptions options;
     private readonly MockFileData fileData;
     private bool disposed;
@@ -42,6 +44,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         string path,
         FileMode mode,
         FileAccess access = FileAccess.ReadWrite,
+        FileShare share = FileShare.Read,
         FileOptions options = FileOptions.None)
         : base(new MemoryStream(),
             path == null ? null : Path.GetFullPath(path),
@@ -51,6 +54,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         ThrowIfInvalidModeAccess(mode, access);
 
         this.mockFileDataAccessor = mockFileDataAccessor ?? throw new ArgumentNullException(nameof(mockFileDataAccessor));
+        path = mockFileDataAccessor.PathVerifier.FixPath(path);
         this.path = path;
         this.options = options;
 
@@ -97,7 +101,9 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             mockFileDataAccessor.AddFile(path, fileData);
         }
 
+        mockFileDataAccessor.FileHandles.AddHandle(path, guid, access, share);
         this.access = access;
+        this.share = share;
     }
 
     private static void ThrowIfInvalidModeAccess(FileMode mode, FileAccess access)
@@ -144,6 +150,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         {
             return;
         }
+        mockFileDataAccessor.FileHandles.RemoveHandle(path, guid);
         InternalFlush();
         base.Dispose(disposing);
         OnClose();

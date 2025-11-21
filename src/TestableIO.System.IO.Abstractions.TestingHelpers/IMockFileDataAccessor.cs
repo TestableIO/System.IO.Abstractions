@@ -110,4 +110,9 @@ public interface IMockFileDataAccessor : IFileSystem
     /// Gets a reference to the underlying file system. 
     /// </summary>
     IFileSystem FileSystem { get; }
+
+    /// <summary>
+    /// Gets a reference to the open file handles.
+    /// </summary>
+    FileHandles FileHandles { get; }
 }

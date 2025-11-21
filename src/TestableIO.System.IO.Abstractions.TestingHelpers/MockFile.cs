@@ -677,7 +677,7 @@ public partial class MockFile : FileBase
         }
         mockFileDataAccessor.AdjustTimes(mockFileData, timeAdjustments);
 
-        return new MockFileStream(mockFileDataAccessor, path, mode, access, options);
+        return new MockFileStream(mockFileDataAccessor, path, mode, access, FileShare.Read, options);
     }
 
     /// <inheritdoc />
