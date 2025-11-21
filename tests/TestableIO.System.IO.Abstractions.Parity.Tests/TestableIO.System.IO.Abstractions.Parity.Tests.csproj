@@ -4,6 +4,7 @@
     <Description>The unit tests for our the parity checks</Description>
     <AssemblyName>System.IO.Abstractions.Parity.Tests</AssemblyName>
     <RootNamespace>System.IO.Abstractions.Parity.Tests</RootNamespace>
+    <TargetFrameworks>net10.0;net9.0;net8.0</TargetFrameworks>
   </PropertyGroup>
   
   <ItemGroup>
