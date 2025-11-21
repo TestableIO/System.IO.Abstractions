@@ -9,6 +9,7 @@
         <NoWarn>$(NoWarn);S2699</NoWarn>
         <IsPackable>false</IsPackable>
         <IsTestable>true</IsTestable>
+        <SuppressTfmSupportBuildErrors>true</SuppressTfmSupportBuildErrors>
     </PropertyGroup>
 
     <ItemGroup>
