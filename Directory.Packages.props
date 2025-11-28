@@ -34,6 +34,6 @@
     <PackageVersion Include="Nuke.Common" Version="9.0.4"/>
     <PackageVersion Include="Nuke.Components" Version="9.0.4"/>
     <PackageVersion Include="LibGit2Sharp" Version="0.31.0"/>
-    <PackageVersion Include="SharpCompress" Version="0.41.0"/>
+    <PackageVersion Include="SharpCompress" Version="0.42.0"/>
   </ItemGroup>
 </Project>
