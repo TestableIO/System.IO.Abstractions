@@ -33,7 +33,7 @@ jobs:
         run: ./build.sh CodeCoverage
       - name: Upload artifacts
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: ${{ runner.os }}-artifacts
           path: |
@@ -62,7 +62,7 @@ jobs:
         run: ./build.sh ApiChecks
       - name: Upload artifacts
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: API-tests
           path: |
@@ -102,7 +102,7 @@ jobs:
     if: always()
     steps:
       - name: Download Artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           path: artifacts
       - name: Publish Test Results
@@ -134,7 +134,7 @@ jobs:
         run: ./build.sh Pack
       - name: Upload packages
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           path: Artifacts/Packages
           name: Packages
@@ -149,7 +149,7 @@ jobs:
       contents: write
     steps:
       - name: Download packages
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: Packages
           path: Artifacts/Packages
