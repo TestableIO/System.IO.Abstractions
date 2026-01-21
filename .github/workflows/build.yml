@@ -202,7 +202,7 @@ jobs:
       - name: Comment relevant issues and pull requests
         if: steps.check-pre-release.outputs.release == 'true'
         continue-on-error: true
-        uses: apexskier/github-release-commenter@v1.3.6
+        uses: apexskier/github-release-commenter@v1.4.1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           comment-template: |
