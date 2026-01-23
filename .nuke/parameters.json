@@ -1,4 +1,4 @@
 {
   "$schema": "build.schema.json",
-  "Solution": "System.IO.Abstractions.sln"
+  "Solution": "System.IO.Abstractions.slnx"
 }

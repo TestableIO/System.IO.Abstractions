@@ -1,0 +1,41 @@
+<Solution>
+  <Folder Name="/Benchmarks/">
+    <Project Path="benchmarks/TestableIO.System.IO.Abstractions.Benchmarks/TestableIO.System.IO.Abstractions.Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/Meta/">
+    <Project Path="src/System.IO.Abstractions.TestingHelpers/System.IO.Abstractions.TestingHelpers.csproj" />
+    <Project Path="src/System.IO.Abstractions/System.IO.Abstractions.csproj" />
+    <Project Path="src/TestableIO.System.IO.Abstractions/TestableIO.System.IO.Abstractions.csproj" />
+  </Folder>
+  <Folder Name="/Pipeline/">
+    <Project Path="Pipeline/Build.csproj">
+      <Build Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="tests/TestableIO.System.IO.Abstractions.Api.Tests/TestableIO.System.IO.Abstractions.Api.Tests.csproj" />
+    <Project Path="tests/TestableIO.System.IO.Abstractions.Parity.Tests/TestableIO.System.IO.Abstractions.Parity.Tests.csproj" />
+    <Project Path="tests/TestableIO.System.IO.Abstractions.TestingHelpers.Tests/TestableIO.System.IO.Abstractions.TestingHelpers.Tests.csproj" />
+    <Project Path="tests/TestableIO.System.IO.Abstractions.Wrappers.Tests/TestableIO.System.IO.Abstractions.Wrappers.Tests.csproj" />
+  </Folder>
+  <Folder Name="/_/">
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/_/.github/" />
+  <Folder Name="/_/.github/workflows/">
+    <File Path=".github/workflows/build.yml" />
+    <File Path=".github/workflows/ci.yml" />
+  </Folder>
+  <Folder Name="/_/src/">
+    <File Path="src/Directory.Build.props" />
+  </Folder>
+  <Folder Name="/_/tests/">
+    <File Path="tests/Directory.Build.props" />
+  </Folder>
+  <Project Path="src/TestableIO.System.IO.Abstractions.TestingHelpers/TestableIO.System.IO.Abstractions.TestingHelpers.csproj" />
+  <Project Path="src/TestableIO.System.IO.Abstractions.Wrappers/TestableIO.System.IO.Abstractions.Wrappers.csproj" />
+</Solution>
