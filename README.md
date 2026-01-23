@@ -101,27 +101,27 @@ void MyFancyMethod()
 
 ### Mock support
 
-Since version 4.0 the top-level APIs expose interfaces instead of abstract base classes (these still exist, though), allowing you to completely mock the file system. Here's a small example, using [Moq](https://github.com/moq/moq4):
+Since version 4.0 the top-level APIs expose interfaces instead of abstract base classes (these still exist, though), allowing you to completely mock the file system. Here's a small example, using [Mockolate](https://github.com/aweXpect/Mockolate):
 
 ```csharp
 [Test]
 public void Test1()
 {
-    var watcher = Mock.Of<IFileSystemWatcher>();
-    var file = Mock.Of<IFile>();
+    var watcher = Mock.Create<IFileSystemWatcher>();
+    var file = Mock.Create<IFile>();
 
-    Mock.Get(file).Setup(f => f.Exists(It.IsAny<string>())).Returns(true);
-    Mock.Get(file).Setup(f => f.ReadAllText(It.IsAny<string>())).Throws<OutOfMemoryException>();
+    file.SetupMock.Method.Exists(It.IsAny<string>()).Returns(true);
+    file.SetupMock.Method.ReadAllText(It.IsAny<string>()).Throws<OutOfMemoryException>();
 
     var unitUnderTest = new SomeClassUsingFileSystemWatcher(watcher, file);
 
     Assert.Throws<OutOfMemoryException>(() => {
-        Mock.Get(watcher).Raise(w => w.Created += null, new System.IO.FileSystemEventArgs(System.IO.WatcherChangeTypes.Created, @"C:\Some\Directory", "Some.File"));
+        watcher.RaiseOnMock.Created(null, new System.IO.FileSystemEventArgs(System.IO.WatcherChangeTypes.Created, @"C:\Some\Directory", "Some.File"));
     });
 
-    Mock.Get(file).Verify(f => f.Exists(It.IsAny<string>()), Times.Once);
+    file.VerifyMock.Invoked.Exists(It.IsAny<string>()).Once();
 
-    Assert.True(unitUnderTest.FileWasCreated);
+    Assert.That(unitUnderTest.FileWasCreated, Is.True);
 }
 
 public class SomeClassUsingFileSystemWatcher

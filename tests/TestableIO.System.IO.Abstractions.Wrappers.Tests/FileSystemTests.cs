@@ -1,4 +1,7 @@
-﻿namespace System.IO.Abstractions.Tests;
+﻿#if !NET6_0
+using Mockolate;
+
+namespace System.IO.Abstractions.Tests;
 
 [TestFixture]
 public class FileSystemTests
@@ -24,80 +27,89 @@ public class FileSystemTests
     [Test]
     public async Task Mock_File_Succeeds()
     {
-        var fileSystemMock = new Moq.Mock<IFileSystem>();
+        var fileSystemMock = Mock.Create<IFileSystem>(fs =>
+            fs.Property.File.InitializeWith(Mock.Create<IFile>()));
 
         await That(() =>
-            fileSystemMock.Setup(x => x.File.ToString()).Returns("")
+            fileSystemMock.File.SetupMock.Method.ReadAllText(It.IsAny<string>()).Returns("")
         ).DoesNotThrow();
     }
 
     [Test]
     public async Task Mock_Directory_Succeeds()
     {
-        var fileSystemMock = new Moq.Mock<IFileSystem>();
+        var fileSystemMock = Mock.Create<IFileSystem>(fs =>
+            fs.Property.Directory.InitializeWith(Mock.Create<IDirectory>()));
 
         await That(() =>
-            fileSystemMock.Setup(x => x.Directory.ToString()).Returns("")
+            fileSystemMock.Directory.SetupMock.Method.CreateDirectory(It.IsAny<string>())
         ).DoesNotThrow();
     }
 
     [Test]
     public async Task Mock_FileInfo_Succeeds()
     {
-        var fileSystemMock = new Moq.Mock<IFileSystem>();
+        var fileSystemMock = Mock.Create<IFileSystem>(fs =>
+            fs.Property.FileInfo.InitializeWith(Mock.Create<IFileInfoFactory>()));
 
         await That(() =>
-            fileSystemMock.Setup(x => x.FileInfo.ToString()).Returns("")
+            fileSystemMock.FileInfo.SetupMock.Method.New(It.IsAny<string>())
         ).DoesNotThrow();
     }
 
     [Test]
     public async Task Mock_FileStream_Succeeds()
     {
-        var fileSystemMock = new Moq.Mock<IFileSystem>();
+        var fileSystemMock = Mock.Create<IFileSystem>(fs =>
+            fs.Property.FileStream.InitializeWith(Mock.Create<IFileStreamFactory>()));
 
         await That(() =>
-            fileSystemMock.Setup(x => x.FileStream.ToString()).Returns("")
+            fileSystemMock.FileStream.SetupMock.Method.New(It.IsAny<string>(), It.IsAny<FileMode>())
         ).DoesNotThrow();
     }
 
     [Test]
     public async Task Mock_Path_Succeeds()
     {
-        var fileSystemMock = new Moq.Mock<IFileSystem>();
+        var fileSystemMock = Mock.Create<IFileSystem>(fs =>
+            fs.Property.Path.InitializeWith(Mock.Create<IPath>()));
 
         await That(() =>
-            fileSystemMock.Setup(x => x.Path.ToString()).Returns("")
+            fileSystemMock.Path.SetupMock.Method.Combine(It.IsAny<string>(), It.IsAny<string>())
         ).DoesNotThrow();
     }
 
     [Test]
     public async Task Mock_DirectoryInfo_Succeeds()
     {
-        var fileSystemMock = new Moq.Mock<IFileSystem>();
+        var fileSystemMock = Mock.Create<IFileSystem>(fs =>
+            fs.Property.DirectoryInfo.InitializeWith(Mock.Create<IDirectoryInfoFactory>()));
 
         await That(() =>
-            fileSystemMock.Setup(x => x.DirectoryInfo.ToString()).Returns("")
+            fileSystemMock.DirectoryInfo.SetupMock.Method.New(It.IsAny<string>())
         ).DoesNotThrow();
     }
 
     [Test]
     public async Task Mock_DriveInfo_Succeeds()
     {
-        var fileSystemMock = new Moq.Mock<IFileSystem>();
+        var fileSystemMock = Mock.Create<IFileSystem>(fs =>
+            fs.Property.DriveInfo.InitializeWith(Mock.Create<IDriveInfoFactory>()));
 
         await That(() =>
-            fileSystemMock.Setup(x => x.DirectoryInfo.ToString()).Returns("")
+            fileSystemMock.DriveInfo.SetupMock.Method.New(It.IsAny<string>())
         ).DoesNotThrow();
     }
 
     [Test]
     public async Task Mock_FileSystemWatcher_Succeeds()
     {
-        var fileSystemMock = new Moq.Mock<IFileSystem>();
+        var fileSystemMock = Mock.Create<IFileSystem>(fs =>
+            fs.Property.FileSystemWatcher.InitializeWith(Mock.Create<IFileSystemWatcherFactory>()));
 
         await That(() =>
-            fileSystemMock.Setup(x => x.FileSystemWatcher.ToString()).Returns("")
+            fileSystemMock.FileSystemWatcher.SetupMock.Method.New(It.IsAny<string>())
         ).DoesNotThrow();
     }
 }
+#endif
