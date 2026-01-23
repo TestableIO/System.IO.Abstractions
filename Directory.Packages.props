@@ -31,8 +31,8 @@
     <PackageVersion Include="aweXpect.Testably" Version="0.13.0"/>
   </ItemGroup>
   <ItemGroup>
-    <PackageVersion Include="Nuke.Common" Version="9.0.4"/>
-    <PackageVersion Include="Nuke.Components" Version="9.0.4"/>
+    <PackageVersion Include="Nuke.Common" Version="10.1.0"/>
+    <PackageVersion Include="Nuke.Components" Version="10.1.0"/>
     <PackageVersion Include="LibGit2Sharp" Version="0.31.0"/>
     <PackageVersion Include="SharpCompress" Version="0.44.2"/>
   </ItemGroup>
