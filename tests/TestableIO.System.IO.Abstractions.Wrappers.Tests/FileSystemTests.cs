@@ -1,5 +1,4 @@
-﻿#if !NET6_0
-using Mockolate;
+﻿using Mockolate;
 
 namespace System.IO.Abstractions.Tests;
 
@@ -112,4 +111,3 @@ public class FileSystemTests
         ).DoesNotThrow();
     }
 }
-#endif
