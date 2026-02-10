@@ -9,7 +9,7 @@
         <PackageVersion Include="System.Text.Json" Version="[8.0.6]"/>
     </ItemGroup>
     <ItemGroup Condition=" '$(TargetFramework)' != 'net8.0' And '$(TargetFramework)' != 'net6.0' ">
-        <PackageVersion Include="System.Text.Json" Version="10.0.2"/>
+        <PackageVersion Include="System.Text.Json" Version="10.0.3"/>
     </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
