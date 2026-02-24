@@ -21,7 +21,7 @@
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="coverlet.collector" Version="8.0.0" />
     <PackageVersion Include="GitHubActionsTestLogger" Version="3.0.1" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
     <PackageVersion Include="Mockolate" Version="1.4.1" />
     <PackageVersion Include="NUnit" Version="4.5.0" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.11.2" />
