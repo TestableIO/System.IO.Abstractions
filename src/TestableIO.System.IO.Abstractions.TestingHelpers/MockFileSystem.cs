@@ -57,7 +57,9 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
             throw new ArgumentException("Current directory needs to be rooted.", nameof(currentDirectory));
         }
 
-        var defaultTempDirectory = System.IO.Path.GetTempPath();
+        var defaultTempDirectory = !string.IsNullOrEmpty(options.TemporaryDirectory)
+            ? options.TemporaryDirectory
+            : System.IO.Path.GetTempPath();
 
         StringOperations = new StringOperations(XFS.IsUnixPlatform());
         pathVerifier = new PathVerifier(this);
