@@ -14,7 +14,6 @@ using XFS = MockUnixSupport;
 public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
 {
     private const string DEFAULT_CURRENT_DIRECTORY = @"C:\";
-    private const string TEMP_DIRECTORY = @"C:\temp\";
 
     private readonly IDictionary<string, FileSystemEntry> files;
     private readonly IDictionary<string, MockDriveData> drives;
@@ -58,7 +57,7 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
             throw new ArgumentException("Current directory needs to be rooted.", nameof(currentDirectory));
         }
 
-        var defaultTempDirectory = XFS.Path(TEMP_DIRECTORY);
+        var defaultTempDirectory = System.IO.Path.GetTempPath();
 
         StringOperations = new StringOperations(XFS.IsUnixPlatform());
         pathVerifier = new PathVerifier(this);
