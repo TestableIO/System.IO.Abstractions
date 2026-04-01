@@ -19,5 +19,5 @@ public class MockFileSystemOptions
     ///     The temp directory returned by <see cref="System.IO.Path.GetTempPath()" /> on the <see cref="MockFileSystem" />.
     ///     Defaults to <see cref="System.IO.Path.GetTempPath()" /> when <see langword="null" /> or empty.
     /// </summary>
-    public string? TemporaryDirectory { get; init; }
+    public string TemporaryDirectory { get; init; }
 }
