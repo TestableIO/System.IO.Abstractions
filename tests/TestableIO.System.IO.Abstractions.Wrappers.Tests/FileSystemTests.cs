@@ -29,7 +29,7 @@ public class FileSystemTests
         var fileSystem = IFileSystem.CreateMock(fs =>
             fs.File.InitializeWith(IFile.CreateMock()));
         fileSystem.File.Mock.Setup.ReadAllText(It.IsAny<string>()).Returns("foo");
-        
+
         var result = fileSystem.File.ReadAllText("any path");
         
         await That(result).IsEqualTo("foo");
