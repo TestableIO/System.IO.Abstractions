@@ -26,12 +26,14 @@ public class FileSystemTests
     [Test]
     public async Task Mock_File_Succeeds()
     {
-        var fileSystemMock = IFileSystem.CreateMock(fs =>
+        var fileSystem = IFileSystem.CreateMock(fs =>
             fs.File.InitializeWith(IFile.CreateMock()));
-
-        await That(() =>
-            fileSystemMock.File.Mock.Setup.ReadAllText(It.IsAny<string>()).Returns("")
-        ).DoesNotThrow();
+        fileSystem.File.Mock.Setup.ReadAllText(It.IsAny<string>()).Returns("foo");
+        
+        var result = fileSystem.File.ReadAllText("any path");
+        
+        await That(result).IsEqualTo("foo");
+        await That(fileSystem.File.Mock.Verify.ReadAllText(It.Is("any path"))).Once();
     }
 
     [Test]
