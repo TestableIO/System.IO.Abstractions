@@ -39,77 +39,77 @@ public class FileSystemTests
     [Test]
     public async Task Mock_Directory_Succeeds()
     {
-        var fileSystemMock = IFileSystem.CreateMock(fs =>
+        var fileSystem = IFileSystem.CreateMock(fs =>
             fs.Directory.InitializeWith(IDirectory.CreateMock()));
 
         await That(() =>
-            fileSystemMock.Directory.Mock.Setup.CreateDirectory(It.IsAny<string>())
+            fileSystem.Directory.Mock.Setup.CreateDirectory(It.IsAny<string>())
         ).DoesNotThrow();
     }
 
     [Test]
     public async Task Mock_FileInfo_Succeeds()
     {
-        var fileSystemMock = IFileSystem.CreateMock(fs =>
+        var fileSystem = IFileSystem.CreateMock(fs =>
             fs.FileInfo.InitializeWith(IFileInfoFactory.CreateMock()));
 
         await That(() =>
-            fileSystemMock.FileInfo.Mock.Setup.New(It.IsAny<string>())
+            fileSystem.FileInfo.Mock.Setup.New(It.IsAny<string>())
         ).DoesNotThrow();
     }
 
     [Test]
     public async Task Mock_FileStream_Succeeds()
     {
-        var fileSystemMock = IFileSystem.CreateMock(fs =>
+        var fileSystem = IFileSystem.CreateMock(fs =>
             fs.FileStream.InitializeWith(IFileStreamFactory.CreateMock()));
 
         await That(() =>
-            fileSystemMock.FileStream.Mock.Setup.New(It.IsAny<string>(), It.IsAny<FileMode>())
+            fileSystem.FileStream.Mock.Setup.New(It.IsAny<string>(), It.IsAny<FileMode>())
         ).DoesNotThrow();
     }
 
     [Test]
     public async Task Mock_Path_Succeeds()
     {
-        var fileSystemMock = IFileSystem.CreateMock(fs =>
+        var fileSystem = IFileSystem.CreateMock(fs =>
             fs.Path.InitializeWith(IPath.CreateMock()));
 
         await That(() =>
-            fileSystemMock.Path.Mock.Setup.Combine(It.IsAny<string>(), It.IsAny<string>())
+            fileSystem.Path.Mock.Setup.Combine(It.IsAny<string>(), It.IsAny<string>())
         ).DoesNotThrow();
     }
 
     [Test]
     public async Task Mock_DirectoryInfo_Succeeds()
     {
-        var fileSystemMock = IFileSystem.CreateMock(fs =>
+        var fileSystem = IFileSystem.CreateMock(fs =>
             fs.DirectoryInfo.InitializeWith(IDirectoryInfoFactory.CreateMock()));
 
         await That(() =>
-            fileSystemMock.DirectoryInfo.Mock.Setup.New(It.IsAny<string>())
+            fileSystem.DirectoryInfo.Mock.Setup.New(It.IsAny<string>())
         ).DoesNotThrow();
     }
 
     [Test]
     public async Task Mock_DriveInfo_Succeeds()
     {
-        var fileSystemMock = IFileSystem.CreateMock(fs =>
+        var fileSystem = IFileSystem.CreateMock(fs =>
             fs.DriveInfo.InitializeWith(IDriveInfoFactory.CreateMock()));
 
         await That(() =>
-            fileSystemMock.DriveInfo.Mock.Setup.New(It.IsAny<string>())
+            fileSystem.DriveInfo.Mock.Setup.New(It.IsAny<string>())
         ).DoesNotThrow();
     }
 
     [Test]
     public async Task Mock_FileSystemWatcher_Succeeds()
     {
-        var fileSystemMock = IFileSystem.CreateMock(fs =>
+        var fileSystem = IFileSystem.CreateMock(fs =>
             fs.FileSystemWatcher.InitializeWith(IFileSystemWatcherFactory.CreateMock()));
 
         await That(() =>
-            fileSystemMock.FileSystemWatcher.Mock.Setup.New(It.IsAny<string>())
+            fileSystem.FileSystemWatcher.Mock.Setup.New(It.IsAny<string>())
         ).DoesNotThrow();
     }
 }
