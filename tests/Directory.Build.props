@@ -27,6 +27,7 @@
         <PackageReference Include="NUnit3TestAdapter" />
         <PackageReference Include="aweXpect"/>
         <PackageReference Include="aweXpect.Testably"/>
+        <PackageReference Include="aweXpect.Mockolate"/>
     </ItemGroup>
 
     <PropertyGroup>
