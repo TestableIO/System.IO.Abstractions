@@ -176,7 +176,7 @@ jobs:
       - name: Create GitHub release
         if: steps.check-pre-release.outputs.release == 'true'
         continue-on-error: true
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: ${{ steps.tag.outputs.release_version }}
           tag_name: ${{ steps.tag.outputs.release_version }}
