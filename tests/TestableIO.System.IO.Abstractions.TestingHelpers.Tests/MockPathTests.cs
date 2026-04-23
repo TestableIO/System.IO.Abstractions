@@ -413,6 +413,19 @@ public class MockPathTests
     }
 
     [Test]
+    public async Task GetTempPath_Default_MatchesRealOsTempPath()
+    {
+        //Arrange
+        var mockPath = new MockFileSystem().Path;
+
+        //Act
+        var result = mockPath.GetTempPath();
+
+        //Assert
+        await That(result).IsEqualTo(System.IO.Path.GetTempPath());
+    }
+
+    [Test]
     public async Task GetTempPath_Called_WithNonNullVirtualTempDirectory_ReturnsVirtualTempDirectory()
     {
         //Arrange
