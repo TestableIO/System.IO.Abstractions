@@ -20,7 +20,7 @@
   <ItemGroup>
     <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
     <PackageVersion Include="coverlet.collector" Version="10.0.0" />
-    <PackageVersion Include="GitHubActionsTestLogger" Version="3.0.3" />
+    <PackageVersion Include="GitHubActionsTestLogger" Version="3.0.4" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1" />
     <PackageVersion Include="Mockolate" Version="3.1.0" />
     <PackageVersion Include="NUnit" Version="4.5.1" />
