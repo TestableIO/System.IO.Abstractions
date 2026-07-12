@@ -1,8 +1,8 @@
-using Nuke.Common;
-using Nuke.Common.CI.GitHubActions;
-using Nuke.Common.IO;
-using Nuke.Common.ProjectModel;
-using Nuke.Common.Tools.GitVersion;
+using Fallout.Common;
+using Fallout.Common.CI.GitHubActions;
+using Fallout.Common.IO;
+using Fallout.Common.ProjectModel;
+using Fallout.Common.Tools.GitVersion;
 
 namespace Build;
 
@@ -12,7 +12,7 @@ namespace Build;
 	AutoGenerate = false,
 	ImportSecrets = [nameof(GithubToken),]
 )]
-partial class Build : NukeBuild
+partial class Build : FalloutBuild
 {
 	[Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
 	readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
