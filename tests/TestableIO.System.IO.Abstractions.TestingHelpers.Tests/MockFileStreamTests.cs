@@ -33,7 +33,8 @@ public class MockFileStreamTests
 
                 file2.Position = 0;
                 file2.Flush();
-                file2.Read(buffer, 0, buffer.Length);
+                var bytesRead = file2.Read(buffer, 0, buffer.Length);
+                await That(bytesRead).IsEqualTo(buffer.Length);
                 results.Add(BitConverter.ToInt32(buffer, 0));
             }
         }
