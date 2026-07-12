@@ -1,7 +1,7 @@
-﻿using System;
-using Nuke.Common.CI.GitHubActions;
-using Nuke.Common.Tools.GitVersion;
-using Nuke.Common.Tools.SonarScanner;
+using System;
+using Fallout.Common.CI.GitHubActions;
+using Fallout.Common.Tools.GitVersion;
+using Fallout.Common.Tools.SonarScanner;
 using Serilog;
 
 namespace Build;
