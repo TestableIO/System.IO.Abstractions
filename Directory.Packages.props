@@ -35,6 +35,6 @@
     <PackageVersion Include="Fallout.Common" Version="10.3.49"/>
     <PackageVersion Include="Fallout.Components" Version="10.3.49"/>
     <PackageVersion Include="LibGit2Sharp" Version="0.31.0"/>
-    <PackageVersion Include="SharpCompress" Version="0.49.1"/>
+    <PackageVersion Include="SharpCompress" Version="0.50.0"/>
   </ItemGroup>
 </Project>
