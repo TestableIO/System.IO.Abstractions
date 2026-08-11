@@ -1,5 +1,5 @@
-using Nuke.Common;
-using Nuke.Common.Tools.SonarScanner;
+using Fallout.Common;
+using Fallout.Common.Tools.SonarScanner;
 
 // ReSharper disable AllUnderscoreLocalParameterName
 

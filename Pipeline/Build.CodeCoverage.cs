@@ -1,7 +1,7 @@
-using Nuke.Common;
-using Nuke.Common.Tooling;
-using Nuke.Common.Tools.ReportGenerator;
-using static Nuke.Common.Tools.ReportGenerator.ReportGeneratorTasks;
+using Fallout.Common;
+using Fallout.Common.Tooling;
+using Fallout.Common.Tools.ReportGenerator;
+using static Fallout.Common.Tools.ReportGenerator.ReportGeneratorTasks;
 
 // ReSharper disable AllUnderscoreLocalParameterName
 

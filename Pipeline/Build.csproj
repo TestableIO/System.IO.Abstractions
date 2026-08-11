@@ -5,16 +5,16 @@
     <TargetFramework>net10.0</TargetFramework>
     <RootNamespace></RootNamespace>
     <NoWarn>CS0649;CS0169;CA1050;CA1822;CA2211;IDE1006</NoWarn>
-    <NukeRootDirectory>..</NukeRootDirectory>
-    <NukeScriptDirectory>..</NukeScriptDirectory>
-    <NukeTelemetryVersion>1</NukeTelemetryVersion>
+    <FalloutRootDirectory>..</FalloutRootDirectory>
+    <FalloutScriptDirectory>..</FalloutScriptDirectory>
+    <FalloutTelemetryVersion>1</FalloutTelemetryVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" />
-    <PackageReference Include="Nuke.Common" />
-    <PackageReference Include="Nuke.Components" />
+    <PackageReference Include="Fallout.Common" />
+    <PackageReference Include="Fallout.Components" />
     <PackageReference Include="SharpCompress" />
   </ItemGroup>
 

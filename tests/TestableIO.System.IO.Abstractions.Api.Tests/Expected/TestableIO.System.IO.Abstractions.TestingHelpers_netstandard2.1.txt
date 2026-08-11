@@ -341,7 +341,11 @@ namespace System.IO.Abstractions.TestingHelpers
         public override System.Threading.Tasks.Task FlushAsync(System.Threading.CancellationToken cancellationToken) { }
         public object GetAccessControl() { }
         public object GetAccessControl(System.IO.Abstractions.IFileSystemAclSupport.AccessControlSections includeSections) { }
+        public override int Read(System.Span<byte> buffer) { }
         public override int Read(byte[] buffer, int offset, int count) { }
+        public override System.Threading.Tasks.ValueTask<int> ReadAsync(System.Memory<byte> buffer, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task<int> ReadAsync(byte[] buffer, int offset, int count, System.Threading.CancellationToken cancellationToken) { }
+        public override int ReadByte() { }
         public void SetAccessControl(object value) { }
         public override void SetLength(long value) { }
         public override void Write(System.ReadOnlySpan<byte> buffer) { }

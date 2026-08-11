@@ -5,9 +5,9 @@ pull_request_rules:
     actions:
       merge:
         method: squash
-        commit_message_template: |-
-          {{ title }} (#{{ number }})
-          {{ body }}
+        commit_message_format:
+          title: pr-title
+          body: pr-body
   - name: Automatic merge for Renovate pull requests
     conditions:
       - author=renovate[bot]

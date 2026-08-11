@@ -654,6 +654,82 @@ public class MockFileInfoTests
         await That(action).Throws<FileNotFoundException>();
     }
 
+    [Test]
+    public async Task MockFileInfo_CopyTo_ShouldPreserveMockFileDataFileVersionInfo()
+    {
+        string sourcePath = XFS.Path(@"c:\temp\file.txt");
+        string destinationPath = XFS.Path(@"c:\temp\file2.txt");
+        var expectedFileVersionInfo = new MockFileVersionInfo(
+            sourcePath,
+            fileVersion: "1.2.3.4",
+            productVersion: "5.6.7-beta",
+            fileDescription: "Demo file");
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        {
+            { sourcePath, new MockFileData("Demo text content") { FileVersionInfo = expectedFileVersionInfo } }
+        });
+
+        fileSystem.FileInfo.New(sourcePath).CopyTo(destinationPath);
+
+        var fileVersionInfo = fileSystem.FileVersionInfo.GetVersionInfo(destinationPath);
+
+        await That(fileVersionInfo).IsEqualTo(expectedFileVersionInfo);
+        await That(fileVersionInfo.FileVersion).IsEqualTo("1.2.3.4");
+        await That(fileVersionInfo.ProductVersion).IsEqualTo("5.6.7-beta");
+        await That(fileVersionInfo.FileDescription).IsEqualTo("Demo file");
+    }
+
+    [Test]
+    public async Task MockFileInfo_MoveTo_ShouldPreserveMockFileDataFileVersionInfo()
+    {
+        string sourcePath = XFS.Path(@"c:\temp\file.txt");
+        string destinationPath = XFS.Path(@"c:\temp\file2.txt");
+        var expectedFileVersionInfo = new MockFileVersionInfo(
+            sourcePath,
+            fileVersion: "1.2.3.4",
+            productVersion: "5.6.7-beta",
+            fileDescription: "Demo file");
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        {
+            { sourcePath, new MockFileData("Demo text content") { FileVersionInfo = expectedFileVersionInfo } }
+        });
+
+        fileSystem.FileInfo.New(sourcePath).MoveTo(destinationPath);
+
+        var fileVersionInfo = fileSystem.FileVersionInfo.GetVersionInfo(destinationPath);
+
+        await That(fileVersionInfo).IsEqualTo(expectedFileVersionInfo);
+        await That(fileVersionInfo.FileVersion).IsEqualTo("1.2.3.4");
+        await That(fileVersionInfo.ProductVersion).IsEqualTo("5.6.7-beta");
+        await That(fileVersionInfo.FileDescription).IsEqualTo("Demo file");
+    }
+
+    [Test]
+    public async Task MockFileInfo_Replace_ShouldPreserveMockFileDataFileVersionInfo()
+    {
+        string sourcePath = XFS.Path(@"c:\temp\file.txt");
+        string destinationPath = XFS.Path(@"c:\temp\file2.txt");
+        var expectedFileVersionInfo = new MockFileVersionInfo(
+            sourcePath,
+            fileVersion: "1.2.3.4",
+            productVersion: "5.6.7-beta",
+            fileDescription: "Demo file");
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        {
+            { sourcePath, new MockFileData("Demo text content") { FileVersionInfo = expectedFileVersionInfo } },
+            { destinationPath, new MockFileData("Demo2 text content") }
+        });
+
+        fileSystem.FileInfo.New(sourcePath).Replace(destinationPath, null);
+
+        var fileVersionInfo = fileSystem.FileVersionInfo.GetVersionInfo(destinationPath);
+
+        await That(fileVersionInfo).IsEqualTo(expectedFileVersionInfo);
+        await That(fileVersionInfo.FileVersion).IsEqualTo("1.2.3.4");
+        await That(fileVersionInfo.ProductVersion).IsEqualTo("5.6.7-beta");
+        await That(fileVersionInfo.FileDescription).IsEqualTo("Demo file");
+    }
+
     [TestCase(@"..\..\..\c.txt")]
     [TestCase(@"c:\a\b\c.txt")]
     [TestCase(@"c:\a\c.txt")]

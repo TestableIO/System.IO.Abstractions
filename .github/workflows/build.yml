@@ -13,11 +13,11 @@ jobs:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Setup .NET SDKs
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: |
             6.0.x
@@ -46,11 +46,11 @@ jobs:
     env:
       DOTNET_NOLOGO: true
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Setup .NET SDKs
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: |
             6.0.x
@@ -77,11 +77,11 @@ jobs:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       DOTNET_NOLOGO: true
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Setup .NET SDKs
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: |
             6.0.x
@@ -118,11 +118,11 @@ jobs:
     env:
       DOTNET_NOLOGO: true
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Setup .NET SDKs
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: |
             6.0.x
@@ -154,7 +154,7 @@ jobs:
           name: Packages
           path: Artifacts/Packages
       - name: Setup .NET SDKs
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
       - name: Publish
         run: |
           echo "Found the following packages to push:"
@@ -176,7 +176,7 @@ jobs:
       - name: Create GitHub release
         if: steps.check-pre-release.outputs.release == 'true'
         continue-on-error: true
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: ${{ steps.tag.outputs.release_version }}
           tag_name: ${{ steps.tag.outputs.release_version }}

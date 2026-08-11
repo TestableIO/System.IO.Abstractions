@@ -38,6 +38,8 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     private readonly MockFileData fileData;
     private bool disposed;
 
+    private byte[] lastKnownContents;
+
     /// <inheritdoc />
     public MockFileStream(
         IMockFileDataAccessor mockFileDataAccessor,
@@ -104,6 +106,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         mockFileDataAccessor.FileHandles.AddHandle(path, guid, access, share);
         this.access = access;
         this.share = share;
+        lastKnownContents = fileData.Contents;
     }
 
     private static void ThrowIfInvalidModeAccess(FileMode mode, FileAccess access)
@@ -138,10 +141,45 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     /// <inheritdoc />
     public override int Read(byte[] buffer, int offset, int count)
     {
+        RefreshBufferFromSharedFileData();
         mockFileDataAccessor.AdjustTimes(fileData,
             TimeAdjustments.LastAccessTime);
         return base.Read(buffer, offset, count);
     }
+
+#if FEATURE_SPAN
+        /// <inheritdoc />
+        public override int Read(Span<byte> buffer)
+        {
+            RefreshBufferFromSharedFileData();
+            return base.Read(buffer);
+        }
+#endif
+
+    /// <inheritdoc />
+    public override int ReadByte()
+    {
+        RefreshBufferFromSharedFileData();
+        return base.ReadByte();
+    }
+
+    /// <inheritdoc />
+    public override Task<int> ReadAsync(byte[] buffer, int offset, int count,
+        CancellationToken cancellationToken)
+    {
+        RefreshBufferFromSharedFileData();
+        return base.ReadAsync(buffer, offset, count, cancellationToken);
+    }
+
+#if FEATURE_SPAN
+        /// <inheritdoc />
+        public override ValueTask<int> ReadAsync(Memory<byte> buffer,
+            CancellationToken cancellationToken = new())
+        {
+            RefreshBufferFromSharedFileData();
+            return base.ReadAsync(buffer, cancellationToken);
+        }
+#endif
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
@@ -296,14 +334,61 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             /* reset back to the beginning .. */
             var position = Position;
             Seek(0, SeekOrigin.Begin);
-            /* .. read everything out */
+            /* .. read everything out (bypassing the read-refresh, so we capture this handle's own buffer) */
             var data = new byte[Length];
-            _ = Read(data, 0, (int)Length);
+            _ = base.Read(data, 0, (int)Length);
             /* restore to original position */
             Seek(position, SeekOrigin.Begin);
-            /* .. put it in the mock system */
-            mockFileData.Contents = data;
+            /* .. put it in the mock system, but only if this handle actually changed the contents since it last synchronized. */
+            if (!ContentsEqual(data, lastKnownContents))
+            {
+                mockFileData.Contents = data;
+                lastKnownContents = data;
+            }
         }
+    }
+
+    private static bool ContentsEqual(byte[] left, byte[] right)
+    {
+        if (ReferenceEquals(left, right))
+        {
+            return true;
+        }
+
+        if (left == null || right == null || left.Length != right.Length)
+        {
+            return false;
+        }
+
+        for (var i = 0; i < left.Length; i++)
+        {
+            if (left[i] != right[i])
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void RefreshBufferFromSharedFileData()
+    {
+        var sharedContents = fileData.Contents;
+        if (ReferenceEquals(sharedContents, lastKnownContents))
+        {
+            return;
+        }
+
+        var position = base.Position;
+        base.Position = 0;
+        base.SetLength(sharedContents.Length);
+        if (sharedContents.Length > 0)
+        {
+            base.Write(sharedContents, 0, sharedContents.Length);
+        }
+
+        base.Position = position;
+        lastKnownContents = sharedContents;
     }
 
     private void OnClose()

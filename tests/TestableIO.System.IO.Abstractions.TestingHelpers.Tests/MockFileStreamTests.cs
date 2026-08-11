@@ -11,6 +11,39 @@ using XFS = MockUnixSupport;
 public class MockFileStreamTests
 {
     [Test]
+    public async Task MockFileStream_SharedReadWrite_SecondHandleSeesWritesFromFirstHandle()
+    {
+        // Arrange
+        var filename = XFS.Path(@"C:\temp\shared.bin");
+        var fileSystem = new MockFileSystem();
+        fileSystem.AddEmptyFile(filename);
+        var results = new List<int>();
+
+        // Act
+        using (var file1 = fileSystem.FileStream.New(filename, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite))
+        using (var file2 = fileSystem.FileStream.New(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
+        {
+            var buffer = new byte[4];
+            for (int ix = 0; ix < 10; ix++)
+            {
+                var bytes = BitConverter.GetBytes(ix);
+                file1.Position = 0;
+                file1.Write(bytes, 0, bytes.Length);
+                file1.Flush();
+
+                file2.Position = 0;
+                file2.Flush();
+                var bytesRead = file2.Read(buffer, 0, buffer.Length);
+                await That(bytesRead).IsEqualTo(buffer.Length);
+                results.Add(BitConverter.ToInt32(buffer, 0));
+            }
+        }
+
+        // Assert
+        await That(results).IsEqualTo(new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+    }
+
+    [Test]
     public async Task MockFileStream_Flush_WritesByteToFile()
     {
         // Arrange

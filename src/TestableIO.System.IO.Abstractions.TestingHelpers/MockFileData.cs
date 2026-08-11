@@ -107,6 +107,7 @@ public class MockFileData
         Attributes = template.Attributes;
         Contents = template.Contents.ToArray();
         CreationTime = template.CreationTime;
+        FileVersionInfo = template.FileVersionInfo;
         LastAccessTime = template.LastAccessTime;
         LastWriteTime = template.LastWriteTime;
 #if FEATURE_FILE_SYSTEM_INFO_LINK_TARGET
