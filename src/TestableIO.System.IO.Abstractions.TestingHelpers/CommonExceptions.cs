@@ -77,6 +77,9 @@ internal static class CommonExceptions
     public static NotImplementedException NotImplemented() =>
         new NotImplementedException(StringResources.Manager.GetString("NOT_IMPLEMENTED_EXCEPTION"));
 
+    public static NotSupportedException RandomAccessNotSupported() =>
+        new NotSupportedException(StringResources.Manager.GetString("RANDOM_ACCESS_NOT_SUPPORTED_EXCEPTION"));
+
     public static IOException CannotCreateBecauseSameNameAlreadyExists(string path) =>
         new IOException(
             string.Format(

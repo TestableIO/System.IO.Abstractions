@@ -637,6 +637,16 @@ public partial class MockFile : FileBase
         }
 #endif
 
+#if FEATURE_RANDOM_ACCESS
+    /// <inheritdoc />
+    public override SafeFileHandle OpenHandle(string path, FileMode mode = FileMode.Open,
+        FileAccess access = FileAccess.Read, FileShare share = FileShare.Read,
+        FileOptions options = FileOptions.None, long preallocationSize = 0)
+    {
+        throw CommonExceptions.RandomAccessNotSupported();
+    }
+#endif
+
     private FileSystemStream OpenInternal(
         string path,
         FileMode mode,
