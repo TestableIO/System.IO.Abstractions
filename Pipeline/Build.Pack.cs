@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Fallout.Common;
 using Fallout.Common.IO;
-using Fallout.Common.ProjectModel;
 using Fallout.Common.Utilities;
 using Fallout.Common.Utilities.Collections;
+using Fallout.Solutions;
 using static Serilog.Log;
 
 // ReSharper disable AllUnderscoreLocalParameterName

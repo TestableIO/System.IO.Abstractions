@@ -104,6 +104,13 @@
         "Verbosity": {
           "description": "Logging verbosity during build execution. Default is 'Normal'",
           "$ref": "#/definitions/Verbosity"
+        },
+        "BuildProjectFile": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Path to the build project (.csproj) relative to the repository root. Defaults to 'build/_build.csproj' when unset. Read by the Fallout global tool's in-tool runner."
         }
       }
     }
@@ -113,11 +120,11 @@
       "properties": {
         "Configuration": {
           "type": "string",
-          "description": "Configuration to build - Default is 'Debug' (local) or 'Release' (server)",
           "enum": [
             "Debug",
             "Release"
-          ]
+          ],
+          "description": "Configuration to build - Default is 'Debug' (local) or 'Release' (server)"
         },
         "GithubToken": {
           "type": "string",
@@ -130,7 +137,7 @@
         "SonarToken": {
           "type": "string",
           "description": "The key to push to sonarcloud",
-          "default": "Secrets must be entered via 'nuke :secrets [profile]'"
+          "default": "Secrets must be entered via 'fallout :secrets [profile]'"
         }
       }
     },
