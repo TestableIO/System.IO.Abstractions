@@ -179,6 +179,13 @@ public abstract partial class FileBase : IFile
     public abstract FileSystemStream Open(string path, FileStreamOptions options);
 #endif
 
+#if FEATURE_RANDOM_ACCESS
+    /// <inheritdoc cref="IFile.OpenHandle(string,FileMode,FileAccess,FileShare,FileOptions,long)"/>
+    public abstract SafeFileHandle OpenHandle(string path, FileMode mode = FileMode.Open,
+        FileAccess access = FileAccess.Read, FileShare share = FileShare.Read,
+        FileOptions options = FileOptions.None, long preallocationSize = 0);
+#endif
+
     /// <inheritdoc cref="IFile.OpenRead"/>
     public abstract FileSystemStream OpenRead(string path);
 
