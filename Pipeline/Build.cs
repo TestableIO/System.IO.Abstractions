@@ -1,8 +1,8 @@
 using Fallout.Common;
 using Fallout.Common.CI.GitHubActions;
 using Fallout.Common.IO;
-using Fallout.Common.ProjectModel;
 using Fallout.Common.Tools.GitVersion;
+using Fallout.Solutions;
 
 namespace Build;
 
