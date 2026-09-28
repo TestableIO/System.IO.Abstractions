@@ -302,6 +302,16 @@ public partial class FileWrapper : FileBase
         }
 #endif
 
+#if FEATURE_RANDOM_ACCESS
+    /// <inheritdoc />
+    public override SafeFileHandle OpenHandle(string path, FileMode mode = FileMode.Open,
+        FileAccess access = FileAccess.Read, FileShare share = FileShare.Read,
+        FileOptions options = FileOptions.None, long preallocationSize = 0)
+    {
+        return File.OpenHandle(path, mode, access, share, options, preallocationSize);
+    }
+#endif
+
     /// <inheritdoc />
     public override FileSystemStream OpenRead(string path)
     {

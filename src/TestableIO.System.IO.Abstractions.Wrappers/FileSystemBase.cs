@@ -32,4 +32,9 @@ public abstract class FileSystemBase : IFileSystem
 
     /// <inheritdoc />
     public abstract IFileSystemWatcherFactory FileSystemWatcher { get; }
+
+#if FEATURE_RANDOM_ACCESS
+    /// <inheritdoc />
+    public abstract IRandomAccess RandomAccess { get; }
+#endif
 }
