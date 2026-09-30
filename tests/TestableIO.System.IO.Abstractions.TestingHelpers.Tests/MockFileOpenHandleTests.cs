@@ -143,7 +143,9 @@ public class MockFileOpenHandleTests
             .Throws<ArgumentOutOfRangeException>().WithParamName("preallocationSize");
     }
 
+#if NET9_0_OR_GREATER
     [TestCase((FileOptions)0x02000000)]
+#endif
     [TestCase((FileOptions)0x20000000)]
     [TestCase(FileOptions.Asynchronous | FileOptions.WriteThrough)]
     public async Task OpenHandle_WithAnOptionTheRuntimeAccepts_ShouldOpen(FileOptions options)
@@ -158,6 +160,20 @@ public class MockFileOpenHandleTests
         }).DoesNotThrow();
     }
 
+#if !NET9_0_OR_GREATER
+    [Test]
+    public async Task OpenHandle_WithBackupOrRestoreBeforeNet9_ShouldThrowArgumentOutOfRangeException()
+    {
+        var fileSystem = new MockFileSystem();
+        fileSystem.AddFile(FilePath, new MockFileData("content"));
+
+        await That(() => fileSystem.File.OpenHandle(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read,
+                (FileOptions)0x02000000))
+            .Throws<ArgumentOutOfRangeException>().WithParamName("options")
+            .Because("the runtime accepts BackupOrRestore only since .NET 9");
+    }
+
+#endif
     [Test]
     public async Task OpenHandle_PreallocationSizeOnExistingFile_ShouldThrowArgumentException()
     {
