@@ -507,6 +507,7 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     {
         get
         {
+            ReleaseClosedHandles();
             lock (files)
             {
                 return files.Keys.ToArray();
@@ -531,6 +532,7 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     {
         get
         {
+            ReleaseClosedHandles();
             lock (files)
             {
                 return files.Where(f => !f.Value.Data.IsDirectory).Select(f => f.Key).ToArray();
@@ -543,6 +545,7 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     {
         get
         {
+            ReleaseClosedHandles();
             lock (files)
             {
                 return files.Where(f => f.Value.Data.IsDirectory).Select(f => f.Key).ToArray();
@@ -573,10 +576,20 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     /// and is deleted if it was opened with <see cref="FileOptions.DeleteOnClose"/>, before the file system answers
     /// whether a file exists.
     /// </summary>
+    /// <remarks>
+    /// The sweep runs under the lock on the files, so a thread that closed a handle never skips it because another
+    /// thread is sweeping at the same time. The files are the only lock taken before the registry's.
+    /// </remarks>
     private void ReleaseClosedHandles()
     {
 #if FEATURE_RANDOM_ACCESS
-        safeFileHandles?.ReleaseClosedHandles();
+        if (safeFileHandles is { HasEntries: true })
+        {
+            lock (files)
+            {
+                safeFileHandles.ReleaseClosedHandles();
+            }
+        }
 #endif
     }
 

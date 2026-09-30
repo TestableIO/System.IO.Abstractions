@@ -183,11 +183,17 @@
   <data name="FILE_TOO_LARGE" xml:space="preserve">
     <value>File too large : '{0}'</value>
   </data>
+  <data name="HANDLE_ASYNC_MISMATCH" xml:space="preserve">
+    <value>The handle was opened for synchronous access and the stream for asynchronous access, or the other way round.</value>
+  </data>
   <data name="HANDLE_IS_CLOSED" xml:space="preserve">
     <value>Cannot access a closed file.</value>
   </data>
   <data name="HANDLE_NOT_FROM_THIS_FILE_SYSTEM" xml:space="preserve">
     <value>The handle was not opened by this MockFileSystem.</value>
+  </data>
+  <data name="INVALID_ARGUMENT" xml:space="preserve">
+    <value>Invalid argument : '{0}'</value>
   </data>
   <data name="INVALID_HANDLE" xml:space="preserve">
     <value>Invalid handle.</value>
@@ -200,8 +206,5 @@
   </data>
   <data name="PREALLOCATION_REQUIRES_WRITE_ACCESS" xml:space="preserve">
     <value>Preallocation size can be requested only for write access. Access was '{0}'.</value>
-  </data>
-  <data name="INVALID_ARGUMENT" xml:space="preserve">
-    <value>Invalid argument : '{0}'</value>
   </data>
 </root>

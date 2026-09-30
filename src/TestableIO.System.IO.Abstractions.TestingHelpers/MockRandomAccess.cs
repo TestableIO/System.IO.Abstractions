@@ -259,7 +259,7 @@ public class MockRandomAccess : IRandomAccess
 
     /// <summary>
     /// Replaces the contents instead of changing them in place, so a <see cref="MockFileStream"/> open on the same
-    /// file notices the change.
+    /// file sees the change on its next read.
     /// </summary>
     private void Publish(MockSafeFileHandles.Entry entry, byte[] contents)
     {

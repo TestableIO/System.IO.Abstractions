@@ -137,6 +137,9 @@ internal static class CommonExceptions
     public static ArgumentException HandleNotFromThisFileSystem(string paramName) =>
         new ArgumentException(StringResources.Manager.GetString("HANDLE_NOT_FROM_THIS_FILE_SYSTEM"), paramName);
 
+    public static ArgumentException HandleAsyncMismatch(string paramName) =>
+        new ArgumentException(StringResources.Manager.GetString("HANDLE_ASYNC_MISMATCH"), paramName);
+
     public static IOException InvalidArgument(string path) =>
         new IOException(
             string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("INVALID_ARGUMENT"), path));

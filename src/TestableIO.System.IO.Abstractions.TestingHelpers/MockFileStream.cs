@@ -40,6 +40,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
 #pragma warning disable CS0649 // Only assigned on targets with FEATURE_RANDOM_ACCESS, which have handles to adopt.
     private readonly SafeFileHandle adoptedHandle;
 #pragma warning restore CS0649
+    private readonly FileAccess handleAccess = FileAccess.ReadWrite;
     private bool disposed;
 
     private byte[] lastKnownContents;
@@ -120,13 +121,22 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     /// again, takes no file share of its own, does not apply a <see cref="FileMode"/>, and closes the handle when it
     /// is disposed.
     /// </summary>
+    /// <param name="mockFileDataAccessor">The file system the handle belongs to.</param>
+    /// <param name="handle">The handle to adopt.</param>
+    /// <param name="access">The access the stream asks for.</param>
+    /// <param name="bufferSize">The buffer size, validated as the runtime does.</param>
+    /// <param name="isAsync">
+    /// Whether the stream is asynchronous. <see langword="null"/> takes it from the handle, as the overloads without
+    /// the parameter do; a value that differs from the handle's is rejected.
+    /// </param>
     internal MockFileStream(
         IMockFileDataAccessor mockFileDataAccessor,
         SafeFileHandle handle,
         FileAccess access,
-        bool isAsync)
+        int bufferSize,
+        bool? isAsync)
         : this(mockFileDataAccessor, MockSafeFileHandles.For(mockFileDataAccessor).Resolve(handle), handle,
-            access, isAsync)
+            access, bufferSize, isAsync)
     {
     }
 
@@ -135,6 +145,19 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         MockSafeFileHandles.Entry entry,
         SafeFileHandle handle,
         FileAccess access,
+        int bufferSize,
+        bool? isAsync)
+        : this(mockFileDataAccessor, entry, handle, access, bufferSize,
+            isAsync ?? entry.Options.HasFlag(FileOptions.Asynchronous))
+    {
+    }
+
+    private MockFileStream(
+        IMockFileDataAccessor mockFileDataAccessor,
+        MockSafeFileHandles.Entry entry,
+        SafeFileHandle handle,
+        FileAccess access,
+        int bufferSize,
         bool isAsync)
         : base(new MemoryStream(), entry.Path, isAsync)
     {
@@ -143,12 +166,23 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             throw CommonExceptions.EnumValueOutOfRange(nameof(access));
         }
 
+        if (bufferSize < 0)
+        {
+            throw CommonExceptions.NonNegativeNumberRequired(nameof(bufferSize));
+        }
+
+        if (isAsync != entry.Options.HasFlag(FileOptions.Asynchronous))
+        {
+            throw CommonExceptions.HandleAsyncMismatch(nameof(handle));
+        }
+
         this.mockFileDataAccessor = mockFileDataAccessor;
         path = entry.Path;
         this.access = access;
         share = FileShare.ReadWrite;
         fileData = entry.Data;
         adoptedHandle = handle;
+        handleAccess = entry.Access;
 
         var existingContents = fileData.Contents;
         if (existingContents.Length > 0)
@@ -272,6 +306,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             throw new NotSupportedException("Stream does not support writing.");
         }
 
+        ThrowIfHandleDenies(FileAccess.Write);
         base.SetLength(value);
     }
 
@@ -282,6 +317,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         {
             throw new NotSupportedException("Stream does not support writing.");
         }
+        ThrowIfHandleDenies(FileAccess.Write);
         mockFileDataAccessor.AdjustTimes(fileData,
             TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
         base.Write(buffer, offset, count);
@@ -295,6 +331,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             {
                 throw new NotSupportedException("Stream does not support writing.");
             }
+            ThrowIfHandleDenies(FileAccess.Write);
             mockFileDataAccessor.AdjustTimes(fileData,
                 TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
             base.Write(buffer);
@@ -309,6 +346,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         {
             throw new NotSupportedException("Stream does not support writing.");
         }
+        ThrowIfHandleDenies(FileAccess.Write);
         mockFileDataAccessor.AdjustTimes(fileData,
             TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
         return base.WriteAsync(buffer, offset, count, cancellationToken);
@@ -323,6 +361,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
             {
                 throw new NotSupportedException("Stream does not support writing.");
             }
+            ThrowIfHandleDenies(FileAccess.Write);
             mockFileDataAccessor.AdjustTimes(fileData,
                 TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
             return base.WriteAsync(buffer, cancellationToken);
@@ -336,6 +375,7 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         {
             throw new NotSupportedException("Stream does not support writing.");
         }
+        ThrowIfHandleDenies(FileAccess.Write);
         mockFileDataAccessor.AdjustTimes(fileData,
             TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
         base.WriteByte(value);
@@ -431,8 +471,31 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         return true;
     }
 
+    /// <summary>
+    /// A stream on a handle is limited by what the handle was opened for, whatever access the stream asked for, and
+    /// cannot be used once the handle has been closed.
+    /// </summary>
+    private void ThrowIfHandleDenies(FileAccess required)
+    {
+        if (adoptedHandle == null)
+        {
+            return;
+        }
+
+        if (adoptedHandle.IsClosed)
+        {
+            throw CommonExceptions.HandleIsClosed();
+        }
+
+        if (!handleAccess.HasFlag(required))
+        {
+            throw CommonExceptions.AccessDenied(path);
+        }
+    }
+
     private void RefreshBufferFromSharedFileData()
     {
+        ThrowIfHandleDenies(FileAccess.Read);
         var sharedContents = fileData.Contents;
         if (ReferenceEquals(sharedContents, lastKnownContents))
         {

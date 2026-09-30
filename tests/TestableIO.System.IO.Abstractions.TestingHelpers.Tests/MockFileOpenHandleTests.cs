@@ -242,6 +242,48 @@ public class MockFileOpenHandleTests
         await That(fileSystem.File.ReadAllText(FilePath)).IsEqualTo("a different file");
     }
 
+    [Test]
+    public async Task OpenHandle_WithDeleteOnClose_ShouldNoLongerBeListedOnceClosed()
+    {
+        var fileSystem = new MockFileSystem();
+        var directory = XFS.Path(@"C:\temp\listed");
+        fileSystem.AddDirectory(directory);
+        var path = fileSystem.Path.Combine(directory, "file.bin");
+
+        fileSystem.File.OpenHandle(path, FileMode.Create, FileAccess.Write, FileShare.None,
+            FileOptions.DeleteOnClose).Dispose();
+
+        await That(fileSystem.Directory.GetFiles(directory)).IsEmpty();
+        await That(() => fileSystem.Directory.Delete(directory)).DoesNotThrow()
+            .Because("the directory is empty once the handle is closed");
+    }
+
+    [Test]
+    public async Task OpenHandle_WithDeleteOnClose_ClosedByAStream_ShouldDeleteTheFile()
+    {
+        var fileSystem = new MockFileSystem();
+        fileSystem.AddDirectory(XFS.Path(@"C:\temp"));
+        var handle = fileSystem.File.OpenHandle(FilePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None,
+            FileOptions.DeleteOnClose);
+
+        fileSystem.FileStream.New(handle, FileAccess.ReadWrite).Dispose();
+
+        await That(fileSystem.File.Exists(FilePath)).IsFalse();
+    }
+
+    [Test]
+    public async Task OpenHandle_CreateOnAnExistingEmptyFile_ShouldUpdateTheLastWriteTime()
+    {
+        var fileSystem = new MockFileSystem();
+        fileSystem.AddFile(FilePath, new MockFileData(new byte[] { }));
+        var now = new DateTime(2030, 1, 2, 3, 4, 5, DateTimeKind.Utc);
+        fileSystem.MockTime(() => now);
+
+        using var handle = fileSystem.File.OpenHandle(FilePath, FileMode.Create, FileAccess.Write);
+
+        await That(fileSystem.File.GetLastWriteTimeUtc(FilePath)).IsEqualTo(now);
+    }
+
 #if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
     [Test]
     public async Task HandleOverloads_ShouldReadAndWriteTheAttributesOfTheOpenFile()

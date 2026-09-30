@@ -42,6 +42,11 @@ internal sealed class MockSafeFileHandles
     /// </summary>
     public object IoGate { get; } = new();
     private volatile bool hasEntries;
+
+    /// <summary>
+    /// Whether any handle is registered, so the file system can skip the sweep without taking a lock.
+    /// </summary>
+    public bool HasEntries => hasEntries;
     private bool sweeping;
 
     public MockSafeFileHandles(IMockFileDataAccessor mockFileDataAccessor)
@@ -64,6 +69,7 @@ internal sealed class MockSafeFileHandles
         path = mockFileDataAccessor.PathVerifier.FixPath(path);
 
         MockFileData fileData;
+        var created = false;
         if (mockFileDataAccessor.FileExists(path))
         {
             fileData = mockFileDataAccessor.GetFile(path);
@@ -96,12 +102,13 @@ internal sealed class MockSafeFileHandles
             mockFileDataAccessor.AdjustTimes(fileData,
                 TimeAdjustments.CreationTime | TimeAdjustments.LastAccessTime);
             mockFileDataAccessor.AddFile(path, fileData);
+            created = true;
         }
 
         var shareGuid = Guid.NewGuid();
         mockFileDataAccessor.FileHandles.AddHandle(path, shareGuid, access, share);
 
-        if (mode is FileMode.Create or FileMode.Truncate && fileData.Contents.Length > 0)
+        if (mode is FileMode.Create or FileMode.Truncate && !created)
         {
             fileData.Contents = new byte[] { };
             mockFileDataAccessor.AdjustTimes(fileData,
@@ -171,6 +178,8 @@ internal sealed class MockSafeFileHandles
         List<Entry> released = null;
         lock (gate)
         {
+            // Only this thread can be sweeping: the file system serialises the sweep. This is a reentrant call
+            // from the sweep itself, which removes a file and asks whether it exists.
             if (sweeping)
             {
                 return;

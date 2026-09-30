@@ -271,6 +271,18 @@ public class MockRandomAccessTests
     }
 
     [Test]
+    public async Task SetLength_ThroughAWriteOnlyHandle_ShouldResizeTheFile()
+    {
+        var (fileSystem, handle) = Arrange(new byte[] { 1, 2, 3 }, FileAccess.Write);
+        using (handle)
+        {
+            fileSystem.RandomAccess.SetLength(handle, 1);
+        }
+
+        await That(fileSystem.File.ReadAllBytes(FilePath)).IsEqualTo(new byte[] { 1 });
+    }
+
+    [Test]
     [WindowsOnly("Windows reports a resize through a read-only handle as access denied")]
     public async Task SetLength_ThroughAReadOnlyHandle_OnWindows_ShouldThrowUnauthorizedAccessException()
     {
@@ -399,6 +411,115 @@ public class MockRandomAccessTests
         var other = new MockFileSystem();
 
         await That(() => other.FileStream.New(handle, FileAccess.Read)).Throws<ArgumentException>();
+    }
+    [Test]
+    public async Task FileStreamNew_OnAReadOnlyHandle_ShouldNotWriteThroughIt()
+    {
+        var (fileSystem, handle) = Arrange(new byte[] { 1, 2, 3 }, FileAccess.Read);
+        using var stream = fileSystem.FileStream.New(handle, FileAccess.ReadWrite);
+
+        await That(() => stream.WriteByte(9)).Throws<UnauthorizedAccessException>()
+            .Because("the handle was opened for reading, whatever the stream asks for");
+        await That(fileSystem.File.ReadAllBytes(FilePath)).IsEqualTo(new byte[] { 1, 2, 3 });
+    }
+
+    [Test]
+    public async Task FileStreamNew_OnAWriteOnlyHandle_ShouldNotReadThroughIt()
+    {
+        var (fileSystem, handle) = Arrange(new byte[] { 1, 2, 3 }, FileAccess.Write);
+        using var stream = fileSystem.FileStream.New(handle, FileAccess.ReadWrite);
+
+        await That(() => stream.ReadByte()).Throws<UnauthorizedAccessException>();
+    }
+
+    [Test]
+    public async Task FileStreamNew_AfterTheHandleIsClosed_ShouldNotWrite()
+    {
+        var (fileSystem, handle) = Arrange(new byte[] { 1, 2, 3 });
+        var stream = fileSystem.FileStream.New(handle, FileAccess.ReadWrite);
+        handle.Dispose();
+
+        await That(() => stream.WriteByte(9)).Throws<ObjectDisposedException>();
+    }
+
+    [Test]
+    public async Task FileStreamNew_WithANegativeBufferSize_ShouldThrowArgumentOutOfRangeException()
+    {
+        var (fileSystem, handle) = Arrange(new byte[] { 1 });
+        using var open = handle;
+
+        await That(() => fileSystem.FileStream.New(handle, FileAccess.Read, -1))
+            .Throws<ArgumentOutOfRangeException>().WithParamName("bufferSize");
+    }
+
+    [Test]
+    public async Task FileStreamNew_AsynchronouslyOnASynchronousHandle_ShouldThrowArgumentException()
+    {
+        var (fileSystem, handle) = Arrange(new byte[] { 1 });
+        using var open = handle;
+
+        await That(() => fileSystem.FileStream.New(handle, FileAccess.Read, 4096, isAsync: true))
+            .Throws<ArgumentException>().WithParamName("handle");
+    }
+
+    [Test]
+    public async Task FileStreamNew_OnAnAsynchronousHandle_ShouldBeAsynchronous()
+    {
+        var fileSystem = new MockFileSystem();
+        fileSystem.AddFile(FilePath, new MockFileData(new byte[] { 1 }));
+        var handle = fileSystem.File.OpenHandle(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read,
+            FileOptions.Asynchronous);
+
+        using var stream = fileSystem.FileStream.New(handle, FileAccess.Read);
+
+        await That(stream.IsAsync).IsTrue();
+    }
+
+    [Test]
+    public async Task ReadAsync_IntoSeveralBuffers_ShouldFillThemInOrder()
+    {
+        var (fileSystem, handle) = Arrange(new byte[] { 1, 2, 3 });
+        using var open = handle;
+        var first = new byte[1];
+        var second = new byte[2];
+
+        var read = await fileSystem.RandomAccess.ReadAsync(handle, new List<Memory<byte>> { first, second }, 0);
+
+        await That(read).IsEqualTo(3);
+        await That(first).IsEqualTo(new byte[] { 1 });
+        await That(second).IsEqualTo(new byte[] { 2, 3 });
+    }
+
+    [Test]
+    public async Task WriteAsync_FromSeveralBuffers_ShouldWriteThemInOrder()
+    {
+        var (fileSystem, handle) = Arrange(new byte[] { });
+        using (handle)
+        {
+            await fileSystem.RandomAccess.WriteAsync(handle,
+                new List<ReadOnlyMemory<byte>> { new byte[] { 1 }, new byte[] { 2, 3 } }, 0);
+        }
+
+        await That(fileSystem.File.ReadAllBytes(FilePath)).IsEqualTo(new byte[] { 1, 2, 3 });
+    }
+
+    [Test]
+    public async Task Write_ConcurrentlyAtDistinctOffsets_ShouldKeepEveryWrite()
+    {
+        var (fileSystem, handle) = Arrange(new byte[64]);
+        using (handle)
+        {
+            Parallel.For(0, 64, i => fileSystem.RandomAccess.Write(handle, new[] { (byte)(i + 1) }, i));
+        }
+
+        var expected = new byte[64];
+        for (var i = 0; i < expected.Length; i++)
+        {
+            expected[i] = (byte)(i + 1);
+        }
+
+        await That(fileSystem.File.ReadAllBytes(FilePath)).IsEqualTo(expected)
+            .Because("RandomAccess permits concurrent writes at distinct offsets");
     }
 }
 #endif

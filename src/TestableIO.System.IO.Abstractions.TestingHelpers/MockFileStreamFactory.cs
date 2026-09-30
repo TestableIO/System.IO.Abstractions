@@ -22,15 +22,15 @@ public class MockFileStreamFactory : IFileStreamFactory
 #if FEATURE_RANDOM_ACCESS
     /// <inheritdoc />
     public FileSystemStream New(SafeFileHandle handle, FileAccess access)
-        => new MockFileStream(mockFileSystem, handle, access, isAsync: false);
+        => new MockFileStream(mockFileSystem, handle, access, 4096, isAsync: null);
 
     /// <inheritdoc />
     public FileSystemStream New(SafeFileHandle handle, FileAccess access, int bufferSize)
-        => new MockFileStream(mockFileSystem, handle, access, isAsync: false);
+        => new MockFileStream(mockFileSystem, handle, access, bufferSize, isAsync: null);
 
     /// <inheritdoc />
     public FileSystemStream New(SafeFileHandle handle, FileAccess access, int bufferSize, bool isAsync)
-        => new MockFileStream(mockFileSystem, handle, access, isAsync);
+        => new MockFileStream(mockFileSystem, handle, access, bufferSize, isAsync);
 #else
     /// <inheritdoc />
     public FileSystemStream New(SafeFileHandle handle, FileAccess access)
