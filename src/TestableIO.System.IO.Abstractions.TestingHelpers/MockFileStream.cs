@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Runtime.Versioning;
 using System.Security.AccessControl;
+using Microsoft.Win32.SafeHandles;
 
 namespace System.IO.Abstractions.TestingHelpers;
 
@@ -36,6 +37,9 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     private readonly FileShare share = FileShare.Read;
     private readonly FileOptions options;
     private readonly MockFileData fileData;
+#pragma warning disable CS0649 // Only assigned on targets with FEATURE_RANDOM_ACCESS, which have handles to adopt.
+    private readonly SafeFileHandle adoptedHandle;
+#pragma warning restore CS0649
     private bool disposed;
 
     private byte[] lastKnownContents;
@@ -108,6 +112,54 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         this.share = share;
         lastKnownContents = fileData.Contents;
     }
+
+#if FEATURE_RANDOM_ACCESS
+    /// <summary>
+    /// A stream on a handle from <see cref="MockFile.OpenHandle"/>. Like a <see cref="FileStream"/> constructed from a
+    /// <see cref="SafeFileHandle"/>, it wraps the file the handle already holds open: it does not open the path
+    /// again, takes no file share of its own, does not apply a <see cref="FileMode"/>, and closes the handle when it
+    /// is disposed.
+    /// </summary>
+    internal MockFileStream(
+        IMockFileDataAccessor mockFileDataAccessor,
+        SafeFileHandle handle,
+        FileAccess access,
+        bool isAsync)
+        : this(mockFileDataAccessor, MockSafeFileHandles.For(mockFileDataAccessor).Resolve(handle), handle,
+            access, isAsync)
+    {
+    }
+
+    private MockFileStream(
+        IMockFileDataAccessor mockFileDataAccessor,
+        MockSafeFileHandles.Entry entry,
+        SafeFileHandle handle,
+        FileAccess access,
+        bool isAsync)
+        : base(new MemoryStream(), entry.Path, isAsync)
+    {
+        if (access is < FileAccess.Read or > FileAccess.ReadWrite)
+        {
+            throw CommonExceptions.EnumValueOutOfRange(nameof(access));
+        }
+
+        this.mockFileDataAccessor = mockFileDataAccessor;
+        path = entry.Path;
+        this.access = access;
+        share = FileShare.ReadWrite;
+        fileData = entry.Data;
+        adoptedHandle = handle;
+
+        var existingContents = fileData.Contents;
+        if (existingContents.Length > 0)
+        {
+            base.Write(existingContents, 0, existingContents.Length);
+            base.Seek(0, SeekOrigin.Begin);
+        }
+
+        lastKnownContents = existingContents;
+    }
+#endif
 
     private static void ThrowIfInvalidModeAccess(FileMode mode, FileAccess access)
     {
@@ -191,7 +243,14 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
         mockFileDataAccessor.FileHandles.RemoveHandle(path, guid);
         InternalFlush();
         base.Dispose(disposing);
-        OnClose();
+        if (adoptedHandle != null)
+        {
+            adoptedHandle.Dispose();
+        }
+        else
+        {
+            OnClose();
+        }
         disposed = true;
     }
 
@@ -328,9 +387,10 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
 
     private void InternalFlush()
     {
-        if (mockFileDataAccessor.FileExists(path))
+        // A stream on a handle writes to the file the handle holds open, wherever its path now points.
+        if (adoptedHandle != null || mockFileDataAccessor.FileExists(path))
         {
-            var mockFileData = mockFileDataAccessor.GetFile(path);
+            var mockFileData = adoptedHandle != null ? fileData : mockFileDataAccessor.GetFile(path);
             /* reset back to the beginning .. */
             var position = Position;
             Seek(0, SeekOrigin.Begin);

@@ -371,7 +371,7 @@ public partial class MockFile : FileBase
         /// <inheritdoc />
         public override FileAttributes GetAttributes(SafeFileHandle fileHandle)
         {
-            throw CommonExceptions.NotImplemented();
+            return HandleData(fileHandle).Attributes;
         }
 #endif
 
@@ -387,7 +387,7 @@ public partial class MockFile : FileBase
         /// <inheritdoc />
         public override DateTime GetCreationTime(SafeFileHandle fileHandle)
         {
-            throw CommonExceptions.NotImplemented();
+            return HandleData(fileHandle).CreationTime.LocalDateTime;
         }
 #endif
 
@@ -403,7 +403,7 @@ public partial class MockFile : FileBase
         /// <inheritdoc />
         public override DateTime GetCreationTimeUtc(SafeFileHandle fileHandle)
         {
-            throw CommonExceptions.NotImplemented();
+            return HandleData(fileHandle).CreationTime.UtcDateTime;
         }
 #endif
 
@@ -419,7 +419,7 @@ public partial class MockFile : FileBase
         /// <inheritdoc />
         public override DateTime GetLastAccessTime(SafeFileHandle fileHandle)
         {
-            throw CommonExceptions.NotImplemented();
+            return HandleData(fileHandle).LastAccessTime.LocalDateTime;
         }
 #endif
 
@@ -435,7 +435,7 @@ public partial class MockFile : FileBase
         /// <inheritdoc />
         public override DateTime GetLastAccessTimeUtc(SafeFileHandle fileHandle)
         {
-            throw CommonExceptions.NotImplemented();
+            return HandleData(fileHandle).LastAccessTime.UtcDateTime;
         }
 #endif
 
@@ -451,7 +451,7 @@ public partial class MockFile : FileBase
         /// <inheritdoc />
         public override DateTime GetLastWriteTime(SafeFileHandle fileHandle)
         {
-            throw CommonExceptions.NotImplemented();
+            return HandleData(fileHandle).LastWriteTime.LocalDateTime;
         }
 #endif
 
@@ -467,7 +467,7 @@ public partial class MockFile : FileBase
         /// <inheritdoc />
         public override DateTime GetLastWriteTimeUtc(SafeFileHandle fileHandle)
         {
-            throw CommonExceptions.NotImplemented();
+            return HandleData(fileHandle).LastWriteTime.UtcDateTime;
         }
 #endif
 
@@ -491,7 +491,7 @@ public partial class MockFile : FileBase
         /// <inheritdoc />
         public override UnixFileMode GetUnixFileMode(SafeFileHandle fileHandle)
         {
-            throw CommonExceptions.NotImplemented();
+            return HandleData(fileHandle).UnixMode;
         }
 #endif
 
@@ -642,9 +642,13 @@ public partial class MockFile : FileBase
     public override SafeFileHandle OpenHandle(string path, FileMode mode = FileMode.Open,
         FileAccess access = FileAccess.Read, FileShare share = FileShare.Read,
         FileOptions options = FileOptions.None, long preallocationSize = 0)
-    {
-        throw CommonExceptions.RandomAccessNotSupported();
-    }
+        => MockSafeFileHandles.For(mockFileDataAccessor)
+            .Open(path, mode, access, share, options, preallocationSize);
+#endif
+
+#if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
+    private MockFileData HandleData(SafeFileHandle fileHandle)
+        => MockSafeFileHandles.For(mockFileDataAccessor).Resolve(fileHandle, nameof(fileHandle)).Data;
 #endif
 
     private FileSystemStream OpenInternal(
@@ -931,7 +935,9 @@ public partial class MockFile : FileBase
         /// <inheritdoc />
         public override void SetAttributes(SafeFileHandle fileHandle, FileAttributes fileAttributes)
         {
-            throw CommonExceptions.NotImplemented();
+            var fileData = HandleData(fileHandle);
+            mockFileDataAccessor.AdjustTimes(fileData, TimeAdjustments.LastAccessTime);
+            fileData.Attributes = fileAttributes;
         }
 #endif
 
@@ -947,7 +953,7 @@ public partial class MockFile : FileBase
         /// <inheritdoc />
         public override void SetCreationTime(SafeFileHandle fileHandle, DateTime creationTime)
         {
-            throw CommonExceptions.NotImplemented();
+            HandleData(fileHandle).CreationTime = new DateTimeOffset(creationTime);
         }
 #endif
 
@@ -963,7 +969,7 @@ public partial class MockFile : FileBase
         /// <inheritdoc />
         public override void SetCreationTimeUtc(SafeFileHandle fileHandle, DateTime creationTimeUtc)
         {
-            throw CommonExceptions.NotImplemented();
+            HandleData(fileHandle).CreationTime = new DateTimeOffset(creationTimeUtc, TimeSpan.Zero);
         }
 #endif
 
@@ -979,7 +985,7 @@ public partial class MockFile : FileBase
         /// <inheritdoc />
         public override void SetLastAccessTime(SafeFileHandle fileHandle, DateTime lastAccessTime)
         {
-            throw CommonExceptions.NotImplemented();
+            HandleData(fileHandle).LastAccessTime = new DateTimeOffset(lastAccessTime);
         }
 #endif
 
@@ -995,7 +1001,7 @@ public partial class MockFile : FileBase
         /// <inheritdoc />
         public override void SetLastAccessTimeUtc(SafeFileHandle fileHandle, DateTime lastAccessTimeUtc)
         {
-            throw CommonExceptions.NotImplemented();
+            HandleData(fileHandle).LastAccessTime = new DateTimeOffset(lastAccessTimeUtc, TimeSpan.Zero);
         }
 #endif
 
@@ -1011,7 +1017,7 @@ public partial class MockFile : FileBase
         /// <inheritdoc />
         public override void SetLastWriteTime(SafeFileHandle fileHandle, DateTime lastWriteTime)
         {
-            throw CommonExceptions.NotImplemented();
+            HandleData(fileHandle).LastWriteTime = new DateTimeOffset(lastWriteTime);
         }
 #endif
 
@@ -1027,7 +1033,7 @@ public partial class MockFile : FileBase
         /// <inheritdoc />
         public override void SetLastWriteTimeUtc(SafeFileHandle fileHandle, DateTime lastWriteTimeUtc)
         {
-            throw CommonExceptions.NotImplemented();
+            HandleData(fileHandle).LastWriteTime = new DateTimeOffset(lastWriteTimeUtc, TimeSpan.Zero);
         }
 #endif
 
@@ -1051,7 +1057,7 @@ public partial class MockFile : FileBase
         /// <inheritdoc />
         public override void SetUnixFileMode(SafeFileHandle fileHandle, UnixFileMode mode)
         {
-            throw CommonExceptions.NotImplemented();
+            HandleData(fileHandle).UnixMode = mode;
         }
 #endif
 

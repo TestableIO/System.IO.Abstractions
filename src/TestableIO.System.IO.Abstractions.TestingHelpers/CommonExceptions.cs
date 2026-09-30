@@ -106,4 +106,42 @@ internal static class CommonExceptions
                 path
             )
         );
+
+    public static ArgumentException PathIsEmpty(string paramName) =>
+        new ArgumentException(StringResources.Manager.GetString("EMPTY_STRING_NOT_ALLOWED"), paramName);
+
+    public static ArgumentOutOfRangeException EnumValueOutOfRange(string paramName) =>
+        new ArgumentOutOfRangeException(paramName, StringResources.Manager.GetString("ENUM_VALUE_OUT_OF_RANGE"));
+
+    public static ArgumentOutOfRangeException NonNegativeNumberRequired(string paramName) =>
+        new ArgumentOutOfRangeException(paramName, StringResources.Manager.GetString("NON_NEGATIVE_NUMBER_REQUIRED"));
+
+    public static ArgumentException PreallocationRequiresNewFile(FileMode mode) =>
+        new ArgumentException(
+            string.Format(CultureInfo.InvariantCulture,
+                StringResources.Manager.GetString("PREALLOCATION_REQUIRES_NEW_FILE"), mode),
+            "mode");
+
+    public static ArgumentException PreallocationRequiresWriteAccess(FileAccess access) =>
+        new ArgumentException(
+            string.Format(CultureInfo.InvariantCulture,
+                StringResources.Manager.GetString("PREALLOCATION_REQUIRES_WRITE_ACCESS"), access),
+            "access");
+
+    public static ArgumentException InvalidHandle(string paramName) =>
+        new ArgumentException(StringResources.Manager.GetString("INVALID_HANDLE"), paramName);
+
+    public static ObjectDisposedException HandleIsClosed() =>
+        new ObjectDisposedException(null, StringResources.Manager.GetString("HANDLE_IS_CLOSED"));
+
+    public static ArgumentException HandleNotFromThisFileSystem(string paramName) =>
+        new ArgumentException(StringResources.Manager.GetString("HANDLE_NOT_FROM_THIS_FILE_SYSTEM"), paramName);
+
+    public static IOException InvalidArgument(string path) =>
+        new IOException(
+            string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("INVALID_ARGUMENT"), path));
+
+    public static IOException FileTooLarge(string path) =>
+        new IOException(
+            string.Format(CultureInfo.InvariantCulture, StringResources.Manager.GetString("FILE_TOO_LARGE"), path));
 }
