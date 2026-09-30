@@ -306,6 +306,7 @@ namespace System.IO.Abstractions
         public abstract System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileStreamOptions options);
         public abstract System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode, System.IO.FileAccess access);
         public abstract System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share);
+        public abstract Microsoft.Win32.SafeHandles.SafeFileHandle OpenHandle(string path, System.IO.FileMode mode = 3, System.IO.FileAccess access = 1, System.IO.FileShare share = 1, System.IO.FileOptions options = 0, long preallocationSize = 0);
         public abstract System.IO.Abstractions.FileSystemStream OpenRead(string path);
         public abstract System.IO.StreamReader OpenText(string path);
         public abstract System.IO.Abstractions.FileSystemStream OpenWrite(string path);
@@ -453,6 +454,7 @@ namespace System.IO.Abstractions
         public override System.IO.Abstractions.IFileSystemWatcherFactory FileSystemWatcher { get; }
         public override System.IO.Abstractions.IFileVersionInfoFactory FileVersionInfo { get; }
         public override System.IO.Abstractions.IPath Path { get; }
+        public override System.IO.Abstractions.IRandomAccess RandomAccess { get; }
     }
     [System.Serializable]
     public abstract class FileSystemBase : System.IO.Abstractions.IFileSystem
@@ -467,6 +469,7 @@ namespace System.IO.Abstractions
         public abstract System.IO.Abstractions.IFileSystemWatcherFactory FileSystemWatcher { get; }
         public abstract System.IO.Abstractions.IFileVersionInfoFactory FileVersionInfo { get; }
         public abstract System.IO.Abstractions.IPath Path { get; }
+        public abstract System.IO.Abstractions.IRandomAccess RandomAccess { get; }
     }
     [System.Serializable]
     public abstract class FileSystemInfoBase : System.IO.Abstractions.IFileSystemInfo
@@ -663,6 +666,7 @@ namespace System.IO.Abstractions
         public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileStreamOptions options) { }
         public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode, System.IO.FileAccess access) { }
         public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share) { }
+        public override Microsoft.Win32.SafeHandles.SafeFileHandle OpenHandle(string path, System.IO.FileMode mode = 3, System.IO.FileAccess access = 1, System.IO.FileShare share = 1, System.IO.FileOptions options = 0, long preallocationSize = 0) { }
         public override System.IO.Abstractions.FileSystemStream OpenRead(string path) { }
         public override System.IO.StreamReader OpenText(string path) { }
         public override System.IO.Abstractions.FileSystemStream OpenWrite(string path) { }
@@ -807,5 +811,20 @@ namespace System.IO.Abstractions
         public override string TrimEndingDirectorySeparator(string path) { }
         public override bool TryJoin(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.Span<char> destination, out int charsWritten) { }
         public override bool TryJoin(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.ReadOnlySpan<char> path3, System.Span<char> destination, out int charsWritten) { }
+    }
+    [System.Serializable]
+    public class RandomAccessWrapper : System.IO.Abstractions.IFileSystemEntity, System.IO.Abstractions.IRandomAccess
+    {
+        public RandomAccessWrapper(System.IO.Abstractions.IFileSystem fileSystem) { }
+        public System.IO.Abstractions.IFileSystem FileSystem { get; }
+        public long GetLength(Microsoft.Win32.SafeHandles.SafeFileHandle handle) { }
+        public long Read(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.Memory<byte>> buffers, long fileOffset) { }
+        public int Read(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Span<byte> buffer, long fileOffset) { }
+        public System.Threading.Tasks.ValueTask<long> ReadAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.Memory<byte>> buffers, long fileOffset, System.Threading.CancellationToken cancellationToken = default) { }
+        public System.Threading.Tasks.ValueTask<int> ReadAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Memory<byte> buffer, long fileOffset, System.Threading.CancellationToken cancellationToken = default) { }
+        public void Write(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.ReadOnlyMemory<byte>> buffers, long fileOffset) { }
+        public void Write(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.ReadOnlySpan<byte> buffer, long fileOffset) { }
+        public System.Threading.Tasks.ValueTask WriteAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.ReadOnlyMemory<byte>> buffers, long fileOffset, System.Threading.CancellationToken cancellationToken = default) { }
+        public System.Threading.Tasks.ValueTask WriteAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.ReadOnlyMemory<byte> buffer, long fileOffset, System.Threading.CancellationToken cancellationToken = default) { }
     }
 }

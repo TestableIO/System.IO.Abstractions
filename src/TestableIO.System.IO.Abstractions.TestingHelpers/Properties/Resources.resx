@@ -171,4 +171,7 @@
   <data name="PATH_DOES_NOT_EXIST_OR_COULD_NOT_BE_FOUND" xml:space="preserve">
     <value>'{0}' does not exist or could not be found.</value>
   </data>
+  <data name="RANDOM_ACCESS_NOT_SUPPORTED_EXCEPTION" xml:space="preserve">
+    <value>MockFileSystem does not support File.OpenHandle or RandomAccess, because it cannot provide a SafeFileHandle for its in-memory files.</value>
+  </data>
 </root>

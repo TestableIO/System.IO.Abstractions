@@ -231,6 +231,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileStreamOptions options) { }
         public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode, System.IO.FileAccess access) { }
         public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share) { }
+        public override Microsoft.Win32.SafeHandles.SafeFileHandle OpenHandle(string path, System.IO.FileMode mode = 3, System.IO.FileAccess access = 1, System.IO.FileShare share = 1, System.IO.FileOptions options = 0, long preallocationSize = 0) { }
         public override System.IO.Abstractions.FileSystemStream OpenRead(string path) { }
         public override System.IO.StreamReader OpenText(string path) { }
         public override System.IO.Abstractions.FileSystemStream OpenWrite(string path) { }
@@ -421,6 +422,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override System.IO.Abstractions.IFileVersionInfoFactory FileVersionInfo { get; }
         public override System.IO.Abstractions.IPath Path { get; }
         public System.IO.Abstractions.TestingHelpers.PathVerifier PathVerifier { get; }
+        public override System.IO.Abstractions.IRandomAccess RandomAccess { get; }
         public System.IO.Abstractions.TestingHelpers.StringOperations StringOperations { get; }
         public void AddDirectory(System.IO.Abstractions.IDirectoryInfo path) { }
         public void AddDirectory(string path) { }
@@ -524,6 +526,21 @@ namespace System.IO.Abstractions.TestingHelpers
         public override string GetRelativePath(string relativeTo, string path) { }
         public override string GetTempFileName() { }
         public override string GetTempPath() { }
+    }
+    [System.Serializable]
+    public class MockRandomAccess : System.IO.Abstractions.IFileSystemEntity, System.IO.Abstractions.IRandomAccess
+    {
+        public MockRandomAccess(System.IO.Abstractions.IFileSystem fileSystem) { }
+        public System.IO.Abstractions.IFileSystem FileSystem { get; }
+        public long GetLength(Microsoft.Win32.SafeHandles.SafeFileHandle handle) { }
+        public long Read(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.Memory<byte>> buffers, long fileOffset) { }
+        public int Read(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Span<byte> buffer, long fileOffset) { }
+        public System.Threading.Tasks.ValueTask<long> ReadAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.Memory<byte>> buffers, long fileOffset, System.Threading.CancellationToken cancellationToken = default) { }
+        public System.Threading.Tasks.ValueTask<int> ReadAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Memory<byte> buffer, long fileOffset, System.Threading.CancellationToken cancellationToken = default) { }
+        public void Write(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.ReadOnlyMemory<byte>> buffers, long fileOffset) { }
+        public void Write(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.ReadOnlySpan<byte> buffer, long fileOffset) { }
+        public System.Threading.Tasks.ValueTask WriteAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.ReadOnlyMemory<byte>> buffers, long fileOffset, System.Threading.CancellationToken cancellationToken = default) { }
+        public System.Threading.Tasks.ValueTask WriteAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.ReadOnlyMemory<byte> buffer, long fileOffset, System.Threading.CancellationToken cancellationToken = default) { }
     }
     public static class MockUnixSupport
     {

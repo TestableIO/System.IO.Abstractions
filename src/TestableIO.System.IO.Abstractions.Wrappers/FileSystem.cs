@@ -18,6 +18,9 @@ public class FileSystem : FileSystemBase
         Directory = new DirectoryWrapper(this);
         FileStream = new FileStreamFactory(this);
         FileSystemWatcher = new FileSystemWatcherFactory(this);
+#if FEATURE_RANDOM_ACCESS
+        RandomAccess = new RandomAccessWrapper(this);
+#endif
     }
 
     /// <inheritdoc />
@@ -46,4 +49,9 @@ public class FileSystem : FileSystemBase
 
     /// <inheritdoc />
     public override IFileSystemWatcherFactory FileSystemWatcher { get; }
+
+#if FEATURE_RANDOM_ACCESS
+    /// <inheritdoc />
+    public override IRandomAccess RandomAccess { get; }
+#endif
 }

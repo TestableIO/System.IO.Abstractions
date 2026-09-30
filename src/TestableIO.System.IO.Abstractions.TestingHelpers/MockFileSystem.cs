@@ -75,6 +75,9 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
         DirectoryInfo = new MockDirectoryInfoFactory(this);
         DriveInfo = new MockDriveInfoFactory(this);
         FileSystemWatcher = new MockFileSystemWatcherFactory(this);
+#if FEATURE_RANDOM_ACCESS
+        RandomAccess = new MockRandomAccess(this);
+#endif
 
         if (files != null)
         {
@@ -115,6 +118,10 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     public override IDriveInfoFactory DriveInfo { get; }
     /// <inheritdoc />
     public override IFileSystemWatcherFactory FileSystemWatcher { get; }
+#if FEATURE_RANDOM_ACCESS
+    /// <inheritdoc />
+    public override IRandomAccess RandomAccess { get; }
+#endif
     /// <inheritdoc />
     public IFileSystem FileSystem => this;
     /// <inheritdoc />
