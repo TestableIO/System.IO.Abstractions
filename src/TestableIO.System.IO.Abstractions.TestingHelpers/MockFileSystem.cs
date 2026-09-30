@@ -138,7 +138,8 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     /// <summary>
     /// The handles handed out by <see cref="MockFile.OpenHandle"/>. Not serialized, since they stand for open files.
     /// </summary>
-    internal MockSafeFileHandles SafeFileHandles => safeFileHandles ??= new MockSafeFileHandles(this);
+    internal MockSafeFileHandles SafeFileHandles
+        => Threading.LazyInitializer.EnsureInitialized(ref safeFileHandles, () => new MockSafeFileHandles(this));
 #endif
 
     /// <summary>

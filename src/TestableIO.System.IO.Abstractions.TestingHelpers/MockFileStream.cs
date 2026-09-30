@@ -384,16 +384,21 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     /// <inheritdoc />
     public override void Flush()
     {
+        ThrowIfHandleClosed();
         InternalFlush();
     }
 
     /// <inheritdoc />
     public override void Flush(bool flushToDisk)
-        => InternalFlush();
+    {
+        ThrowIfHandleClosed();
+        InternalFlush();
+    }
 
     /// <inheritdoc />
     public override Task FlushAsync(CancellationToken cancellationToken)
     {
+        ThrowIfHandleClosed();
         InternalFlush();
         return Task.CompletedTask;
     }
@@ -477,19 +482,22 @@ public class MockFileStream : FileSystemStream, IFileSystemAclSupport
     /// </summary>
     private void ThrowIfHandleDenies(FileAccess required)
     {
-        if (adoptedHandle == null)
-        {
-            return;
-        }
-
-        if (adoptedHandle.IsClosed)
-        {
-            throw CommonExceptions.HandleIsClosed();
-        }
-
-        if (!handleAccess.HasFlag(required))
+        ThrowIfHandleClosed();
+        if (adoptedHandle != null && !handleAccess.HasFlag(required))
         {
             throw CommonExceptions.AccessDenied(path);
+        }
+    }
+
+    /// <summary>
+    /// Disposing the stream still succeeds once its handle is closed, so this is only checked by the operations the
+    /// caller invokes.
+    /// </summary>
+    private void ThrowIfHandleClosed()
+    {
+        if (adoptedHandle is { IsClosed: true })
+        {
+            throw CommonExceptions.HandleIsClosed();
         }
     }
 

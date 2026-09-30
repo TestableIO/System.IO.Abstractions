@@ -521,5 +521,43 @@ public class MockRandomAccessTests
         await That(fileSystem.File.ReadAllBytes(FilePath)).IsEqualTo(expected)
             .Because("RandomAccess permits concurrent writes at distinct offsets");
     }
+    [Test]
+    public async Task FileStreamNew_FlushAfterTheHandleIsClosed_ShouldThrowObjectDisposedException()
+    {
+        var (fileSystem, handle) = Arrange(new byte[] { 1 });
+        var stream = fileSystem.FileStream.New(handle, FileAccess.ReadWrite);
+        handle.Dispose();
+
+        await That(() => stream.Flush()).Throws<ObjectDisposedException>();
+        await That(() => stream.Flush(flushToDisk: true)).Throws<ObjectDisposedException>();
+        await That(() => stream.FlushAsync()).Throws<ObjectDisposedException>();
+        await That(() => stream.Dispose()).DoesNotThrow()
+            .Because("disposing a stream whose handle is already closed succeeds, as it does for FileStream");
+    }
+
+    [Test]
+    public async Task OpenHandle_FromManyThreadsAtOnce_ShouldResolveEveryHandle()
+    {
+        for (var attempt = 0; attempt < 20; attempt++)
+        {
+            var fileSystem = new MockFileSystem();
+            var paths = new string[16];
+            for (var i = 0; i < paths.Length; i++)
+            {
+                paths[i] = XFS.Path($@"C:\temp\file{i}.bin");
+                fileSystem.AddFile(paths[i], new MockFileData(new byte[] { (byte)i }));
+            }
+
+            var handles = new SafeFileHandle[paths.Length];
+            Parallel.For(0, paths.Length, i => handles[i] = fileSystem.File.OpenHandle(paths[i]));
+
+            for (var i = 0; i < handles.Length; i++)
+            {
+                using var open = handles[i];
+                await That(fileSystem.RandomAccess.GetLength(open)).IsEqualTo(1)
+                    .Because("every handle is registered with the one registry of its file system");
+            }
+        }
+    }
 }
 #endif

@@ -30,7 +30,8 @@ internal sealed class MockSafeFileHandles
                                                  FileOptions.DeleteOnClose |
                                                  FileOptions.SequentialScan |
                                                  FileOptions.Encrypted |
-                                                 (FileOptions)0x20000000; // NoBuffering
+                                                 (FileOptions)0x20000000 | // NoBuffering
+                                                 (FileOptions)0x02000000; // BackupOrRestore
 
     private readonly IMockFileDataAccessor mockFileDataAccessor;
     private readonly Dictionary<IntPtr, Entry> entries = new();

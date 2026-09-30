@@ -143,6 +143,21 @@ public class MockFileOpenHandleTests
             .Throws<ArgumentOutOfRangeException>().WithParamName("preallocationSize");
     }
 
+    [TestCase((FileOptions)0x02000000)]
+    [TestCase((FileOptions)0x20000000)]
+    [TestCase(FileOptions.Asynchronous | FileOptions.WriteThrough)]
+    public async Task OpenHandle_WithAnOptionTheRuntimeAccepts_ShouldOpen(FileOptions options)
+    {
+        var fileSystem = new MockFileSystem();
+        fileSystem.AddFile(FilePath, new MockFileData("content"));
+
+        await That(() =>
+        {
+            using var handle = fileSystem.File.OpenHandle(FilePath, FileMode.Open, FileAccess.Read, FileShare.Read,
+                options);
+        }).DoesNotThrow();
+    }
+
     [Test]
     public async Task OpenHandle_PreallocationSizeOnExistingFile_ShouldThrowArgumentException()
     {
