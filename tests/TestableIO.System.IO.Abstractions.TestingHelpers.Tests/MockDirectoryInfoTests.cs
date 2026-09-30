@@ -219,7 +219,7 @@ public class MockDirectoryInfoTests
             { XFS.Path(@"c:\temp\folder\file.txt"), new MockFileData("") },
             { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
             { XFS.Path(@"c:\temp\folder\older"), new MockDirectoryData() }
-        });
+        }, new MockFileSystemOptions { CreateDefaultTempDir = false });
 
         var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\"));
         var result = directoryInfo.EnumerateFileSystemInfos("*", SearchOption.AllDirectories).ToArray();
@@ -236,7 +236,7 @@ public class MockDirectoryInfoTests
                 { XFS.Path(@"c:\temp\folder\file.txt"), new MockFileData("") },
                 { XFS.Path(@"c:\temp\folder\folder"), new MockDirectoryData() },
                 { XFS.Path(@"c:\temp\folder\older"), new MockDirectoryData() }
-            });
+            }, new MockFileSystemOptions { CreateDefaultTempDir = false });
 
             var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\"));
 

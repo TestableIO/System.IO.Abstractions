@@ -396,7 +396,7 @@ public class MockFileSystemTests
             XFS.Path(@"c:\something\other.gif"),
             XFS.Path(@"d:\foobar"),
             XFS.Path(@"d:\foo\bar"),
-            XFS.Path(@"C:\temp")
+            fileSystem.Path.GetTempPath().TrimEnd(fileSystem.Path.DirectorySeparatorChar)
         };
 
         var result = fileSystem.AllNodes;
@@ -510,7 +510,7 @@ public class MockFileSystemTests
     [Test]
     public async Task MockFileSystem_DefaultState_DefaultTempDirectoryExists()
     {
-        var tempDirectory = XFS.Path(@"C:\temp");
+        var tempDirectory = System.IO.Path.GetTempPath();
 
         var mockFileSystem = new MockFileSystem();
         var mockFileSystemOverload = new MockFileSystem(null, string.Empty);
