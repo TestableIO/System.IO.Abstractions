@@ -172,6 +172,39 @@
     <value>'{0}' does not exist or could not be found.</value>
   </data>
   <data name="RANDOM_ACCESS_NOT_SUPPORTED_EXCEPTION" xml:space="preserve">
-    <value>MockFileSystem does not support File.OpenHandle or RandomAccess, because it cannot provide a SafeFileHandle for its in-memory files.</value>
+    <value>File.OpenHandle, RandomAccess and the SafeFileHandle overloads require the IMockFileDataAccessor to be a MockFileSystem.</value>
+  </data>
+  <data name="EMPTY_STRING_NOT_ALLOWED" xml:space="preserve">
+    <value>The value cannot be an empty string.</value>
+  </data>
+  <data name="ENUM_VALUE_OUT_OF_RANGE" xml:space="preserve">
+    <value>Enum value was out of legal range.</value>
+  </data>
+  <data name="FILE_TOO_LARGE" xml:space="preserve">
+    <value>File too large : '{0}'</value>
+  </data>
+  <data name="HANDLE_ASYNC_MISMATCH" xml:space="preserve">
+    <value>The handle was opened for synchronous access and the stream for asynchronous access, or the other way round.</value>
+  </data>
+  <data name="HANDLE_IS_CLOSED" xml:space="preserve">
+    <value>Cannot access a closed file.</value>
+  </data>
+  <data name="HANDLE_NOT_FROM_THIS_FILE_SYSTEM" xml:space="preserve">
+    <value>The handle was not opened by this MockFileSystem.</value>
+  </data>
+  <data name="INVALID_ARGUMENT" xml:space="preserve">
+    <value>Invalid argument : '{0}'</value>
+  </data>
+  <data name="INVALID_HANDLE" xml:space="preserve">
+    <value>Invalid handle.</value>
+  </data>
+  <data name="NON_NEGATIVE_NUMBER_REQUIRED" xml:space="preserve">
+    <value>Non-negative number required.</value>
+  </data>
+  <data name="PREALLOCATION_REQUIRES_NEW_FILE" xml:space="preserve">
+    <value>Preallocation size can be requested only for new files. Mode was '{0}'.</value>
+  </data>
+  <data name="PREALLOCATION_REQUIRES_WRITE_ACCESS" xml:space="preserve">
+    <value>Preallocation size can be requested only for write access. Access was '{0}'.</value>
   </data>
 </root>
