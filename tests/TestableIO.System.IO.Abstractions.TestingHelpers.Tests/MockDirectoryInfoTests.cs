@@ -466,12 +466,31 @@ public class MockDirectoryInfoTests
     }
 
     [Test]
+    public async Task MockDirectoryInfo_MoveTo_ShouldDiscardTheCachedData()
+    {
+        // Arrange
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\temp\folder");
+        fileSystem.AddDirectory(path);
+        var directoryInfo = fileSystem.DirectoryInfo.New(path);
+        _ = directoryInfo.Attributes;
+        fileSystem.File.SetAttributes(path, FileAttributes.Directory | FileAttributes.Hidden);
+
+        // Act
+        directoryInfo.MoveTo(XFS.Path(@"c:\temp\moved"));
+
+        // Assert
+        await That(directoryInfo.Attributes.HasFlag(FileAttributes.Hidden)).IsTrue();
+    }
+
+    [Test]
     public async Task MockDirectoryInfo_Exists_ShouldReturnCachedData()
     {
         // Arrange
         var fileSystem = new MockFileSystem();
         var path = XFS.Path(@"c:\abc");
         var directoryInfo = fileSystem.DirectoryInfo.New(path);
+        _ = directoryInfo.Exists;
 
         // Act
         fileSystem.AddDirectory(path);
@@ -721,4 +740,85 @@ public class MockDirectoryInfoTests
         await That(() => directoryInfo.LastWriteTime = newTime).Throws<DirectoryNotFoundException>();
     }
 
+    [Test]
+    public async Task MockDirectoryInfo_Exists_ShouldNotReadStateBeforeFirstAccess()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\abc");
+        var directoryInfo = fileSystem.DirectoryInfo.New(path);
+
+        fileSystem.Directory.CreateDirectory(path);
+
+        await That(directoryInfo.Exists).IsTrue();
+    }
+
+    [Test]
+    public async Task MockDirectoryInfo_Exists_ShouldBeFalseWhenDeletedBeforeFirstAccess()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\abc");
+        fileSystem.Directory.CreateDirectory(path);
+        var directoryInfo = fileSystem.DirectoryInfo.New(path);
+
+        fileSystem.Directory.Delete(path);
+
+        await That(directoryInfo.Exists).IsFalse();
+    }
+
+    [Test]
+    public async Task MockDirectoryInfo_Exists_ShouldStayTrueWhenDeletedAfterFirstAccess()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\abc");
+        fileSystem.Directory.CreateDirectory(path);
+        var directoryInfo = fileSystem.DirectoryInfo.New(path);
+        _ = directoryInfo.Exists;
+
+        fileSystem.Directory.Delete(path);
+
+        await That(directoryInfo.Exists).IsTrue();
+        directoryInfo.Refresh();
+        await That(directoryInfo.Exists).IsFalse();
+    }
+
+    [Test]
+    public async Task MockDirectoryInfo_LastWriteTime_ShouldReflectChangesBeforeFirstAccess()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\abc");
+        fileSystem.Directory.CreateDirectory(path);
+        var directoryInfo = fileSystem.DirectoryInfo.New(path);
+        var date = new DateTime(2020, 1, 2, 3, 4, 5, DateTimeKind.Local);
+
+        fileSystem.Directory.SetLastWriteTime(path, date);
+
+        await That(directoryInfo.LastWriteTime).IsEqualTo(date);
+    }
+
+    [Test]
+    public async Task MockDirectoryInfo_LastWriteTime_ShouldReturnCachedDataAfterFirstAccess()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\abc");
+        fileSystem.Directory.CreateDirectory(path);
+        var directoryInfo = fileSystem.DirectoryInfo.New(path);
+        var before = directoryInfo.LastWriteTime;
+
+        fileSystem.Directory.SetLastWriteTime(path, new DateTime(2020, 1, 2, 3, 4, 5, DateTimeKind.Local));
+
+        await That(directoryInfo.LastWriteTime).IsEqualTo(before);
+    }
+
+    [Test]
+    public async Task MockDirectoryInfo_FromEnumeration_ShouldHoldStateFromEnumeration()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\abc\sub");
+        fileSystem.Directory.CreateDirectory(path);
+        var directoryInfo = fileSystem.DirectoryInfo.New(XFS.Path(@"c:\abc")).GetDirectories()[0];
+
+        fileSystem.Directory.Delete(path);
+
+        await That(directoryInfo.Exists).IsTrue();
+    }
 }
