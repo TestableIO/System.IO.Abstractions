@@ -413,6 +413,34 @@ public class MockPathTests
     }
 
     [Test]
+    public async Task GetTempPath_Default_MatchesRealOsTempPath()
+    {
+        //Arrange
+        var mockPath = new MockFileSystem().Path;
+
+        //Act
+        var result = mockPath.GetTempPath();
+
+        //Assert
+        await That(result).IsEqualTo(System.IO.Path.GetTempPath());
+    }
+
+    [Test]
+    public async Task GetTempPath_WithTemporaryDirectoryOption_ReturnsAndCreatesIt()
+    {
+        //Arrange
+        var temporaryDirectory = XFS.Path(@"C:\custom\temp\");
+        var fileSystem = new MockFileSystem(new MockFileSystemOptions { TemporaryDirectory = temporaryDirectory });
+
+        //Act
+        var result = fileSystem.Path.GetTempPath();
+
+        //Assert
+        await That(result).IsEqualTo(temporaryDirectory);
+        await That(fileSystem.Directory.Exists(temporaryDirectory)).IsTrue();
+    }
+
+    [Test]
     public async Task GetTempPath_Called_WithNonNullVirtualTempDirectory_ReturnsVirtualTempDirectory()
     {
         //Arrange
