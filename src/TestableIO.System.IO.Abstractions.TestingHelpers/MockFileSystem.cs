@@ -23,6 +23,12 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     [NonSerialized]
 #endif
     private readonly FileHandles fileHandles = new();
+#if FEATURE_RANDOM_ACCESS
+#if FEATURE_SERIALIZABLE
+    [NonSerialized]
+#endif
+    private MockSafeFileHandles safeFileHandles;
+#endif
 #if FEATURE_SERIALIZABLE
     [NonSerialized]
 #endif
@@ -128,6 +134,14 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     /// <inheritdoc />
     public FileHandles FileHandles => fileHandles;
 
+#if FEATURE_RANDOM_ACCESS
+    /// <summary>
+    /// The handles handed out by <see cref="MockFile.OpenHandle"/>. Not serialized, since they stand for open files.
+    /// </summary>
+    internal MockSafeFileHandles SafeFileHandles
+        => Threading.LazyInitializer.EnsureInitialized(ref safeFileHandles, () => new MockSafeFileHandles(this));
+#endif
+
     /// <summary>
     /// Replaces the time provider with a mocked instance. This allows to influence the used time in tests.
     /// <para />
@@ -194,6 +208,7 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     /// <inheritdoc />
     public MockFileData GetFile(string path)
     {
+        ReleaseClosedHandles();
         path = pathVerifier.FixPath(path).TrimSlashes();
         return GetFileWithoutFixingPath(path);
     }
@@ -479,6 +494,7 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
             return false;
         }
 
+        ReleaseClosedHandles();
         path = pathVerifier.FixPath(path).TrimSlashes();
 
         lock (files)
@@ -492,6 +508,7 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     {
         get
         {
+            ReleaseClosedHandles();
             lock (files)
             {
                 return files.Keys.ToArray();
@@ -516,6 +533,7 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     {
         get
         {
+            ReleaseClosedHandles();
             lock (files)
             {
                 return files.Where(f => !f.Value.Data.IsDirectory).Select(f => f.Key).ToArray();
@@ -528,6 +546,7 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     {
         get
         {
+            ReleaseClosedHandles();
             lock (files)
             {
                 return files.Where(f => f.Value.Data.IsDirectory).Select(f => f.Key).ToArray();
@@ -551,6 +570,28 @@ public class MockFileSystem : FileSystemBase, IMockFileDataAccessor
     private void OnDeserializing(StreamingContext c)
     {
         dateTimeProvider = defaultDateTimeProvider;
+    }
+
+    /// <summary>
+    /// A handle from <c>File.OpenHandle</c> that was closed since the last call releases its file share,
+    /// and is deleted if it was opened with <see cref="FileOptions.DeleteOnClose"/>, before the file system answers
+    /// whether a file exists.
+    /// </summary>
+    /// <remarks>
+    /// The sweep runs under the lock on the files, so a thread that closed a handle never skips it because another
+    /// thread is sweeping at the same time. The files are the only lock taken before the registry's.
+    /// </remarks>
+    private void ReleaseClosedHandles()
+    {
+#if FEATURE_RANDOM_ACCESS
+        if (safeFileHandles is { HasEntries: true })
+        {
+            lock (files)
+            {
+                safeFileHandles.ReleaseClosedHandles();
+            }
+        }
+#endif
     }
 
     private bool AnyFileIsReadOnly(string path)
