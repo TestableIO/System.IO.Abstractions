@@ -39,7 +39,8 @@ public class MockDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport
         }
             
         SetDirectoryPath(directoryPath);
-        Refresh();
+        // Like the real FileSystemInfo, the state is read on first access, not on construction.
+        refreshOnNextRead = true;
     }
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -62,6 +63,7 @@ public class MockDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport
     {
         var mockFileData = mockFileDataAccessor.GetFile(directoryPath) ?? MockFileData.NullObject;
         cachedMockFileData = mockFileData.Clone();
+        refreshOnNextRead = false;
     }
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -304,7 +306,13 @@ public class MockDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport
     private DirectoryInfoBase[] ConvertStringsToDirectories(IEnumerable<string> paths)
     {
         return paths
-            .Select(path => new MockDirectoryInfo(mockFileDataAccessor, path))
+            .Select(path =>
+            {
+                // Enumeration results carry the state found while enumerating.
+                var directoryInfo = new MockDirectoryInfo(mockFileDataAccessor, path);
+                directoryInfo.Refresh();
+                return directoryInfo;
+            })
             .Cast<DirectoryInfoBase>()
             .ToArray();
     }
@@ -338,7 +346,13 @@ public class MockDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport
     IFileInfo[] ConvertStringsToFiles(IEnumerable<string> paths)
     {
         return paths
-            .Select(mockFileDataAccessor.FileInfo.New)
+            .Select(path =>
+            {
+                // Enumeration results carry the state found while enumerating.
+                var fileInfo = mockFileDataAccessor.FileInfo.New(path);
+                fileInfo.Refresh();
+                return fileInfo;
+            })
             .ToArray();
     }
 
@@ -373,6 +387,7 @@ public class MockDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport
     {
         mockFileDataAccessor.Directory.Move(directoryPath, destDirName);
         SetDirectoryPath(destDirName);
+        refreshOnNextRead = true;
     }
         
     /// <inheritdoc />
