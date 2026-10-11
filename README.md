@@ -170,7 +170,11 @@ Both projects share the same maintainer, but active development and new features
   - Active development and new features
 
 ### Migrating from TestableIO
-Switching from TestableIO to Testably only requires changes in your test projects:
+Switching from TestableIO to Testably only requires changes in your test projects.
+
+The [`Testably.Abstractions.Migration`](https://docs.testably.org/Abstractions/migration-from-testableio/Migration/) analyzer can automate most of this: it flags TestableIO usages in your tests and offers code fixes to rewrite them for Testably. Install it temporarily, apply the fixes (e.g. via `dotnet format analyzers`), then remove it again.
+
+To migrate manually:
 
 1. Replace the NuGet package reference in your test projects:
    ```xml
