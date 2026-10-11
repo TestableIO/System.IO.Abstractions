@@ -744,6 +744,6 @@ public class MockFileTests
         void Act() => fileSystem.File.Replace(sourceFilePath, destFilePath, null, true);
 
         await That(Act).Throws<IOException>()
-            .HasMessage("The process cannot access the file because it is being used by another process.");
+            .WithMessage("The process cannot access the file because it is being used by another process.");
     }
 }
