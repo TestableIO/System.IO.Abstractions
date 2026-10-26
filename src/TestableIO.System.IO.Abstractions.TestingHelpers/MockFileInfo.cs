@@ -24,7 +24,8 @@ public class MockFileInfo : FileInfoBase, IFileSystemAclSupport
         this.originalPath = path;
         this.path = mockFileSystem.Path.GetFullPath(path);
         this.mockFile = new MockFile(mockFileSystem);
-        Refresh();
+        // Like the real FileSystemInfo, the state is read on first access, not on construction.
+        refreshOnNextRead = true;
     }
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -47,6 +48,7 @@ public class MockFileInfo : FileInfoBase, IFileSystemAclSupport
     {
         var mockFileData = mockFileSystem.GetFile(path)?.Clone();
         cachedMockFileData = mockFileData ?? MockFileData.NullObject.Clone();
+        refreshOnNextRead = false;
     }
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -265,6 +267,7 @@ public class MockFileInfo : FileInfoBase, IFileSystemAclSupport
     {
         mockFile.Move(path, destFileName);
         path = mockFileSystem.Path.GetFullPath(destFileName);
+        refreshOnNextRead = true;
     }
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
@@ -273,6 +276,7 @@ public class MockFileInfo : FileInfoBase, IFileSystemAclSupport
     {
         mockFile.Move(path, destFileName, overwrite);
         path = mockFileSystem.Path.GetFullPath(destFileName);
+        refreshOnNextRead = true;
     }
 #endif
 
