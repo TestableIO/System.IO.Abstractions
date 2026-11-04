@@ -206,6 +206,14 @@ public partial class MockFile : FileBase
         return OpenInternal(path, FileMode.Open, access, options);
     }
 
+#if FEATURE_CREATE_HARD_LINK
+    /// <inheritdoc />
+    public override IFileSystemInfo CreateHardLink(string path, string pathToTarget)
+    {
+        throw CommonExceptions.HardLinkNotSupported();
+    }
+#endif
+
 #if FEATURE_CREATE_SYMBOLIC_LINK
         /// <inheritdoc />
         public override IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget)
@@ -644,6 +652,14 @@ public partial class MockFile : FileBase
         FileOptions options = FileOptions.None, long preallocationSize = 0)
     {
         throw CommonExceptions.RandomAccessNotSupported();
+    }
+#endif
+
+#if FEATURE_OPEN_NULL_HANDLE
+    /// <inheritdoc />
+    public override SafeFileHandle OpenNullHandle()
+    {
+        throw CommonExceptions.NullHandleNotSupported();
     }
 #endif
 

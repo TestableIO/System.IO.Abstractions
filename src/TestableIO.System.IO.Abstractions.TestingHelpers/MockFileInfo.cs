@@ -28,6 +28,14 @@ public class MockFileInfo : FileInfoBase, IFileSystemAclSupport
         refreshOnNextRead = true;
     }
 
+#if FEATURE_CREATE_HARD_LINK
+    /// <inheritdoc />
+    public override void CreateAsHardLink(string pathToTarget)
+    {
+        throw CommonExceptions.HardLinkNotSupported();
+    }
+#endif
+
 #if FEATURE_CREATE_SYMBOLIC_LINK
     /// <inheritdoc />
     public override void CreateAsSymbolicLink(string pathToTarget)

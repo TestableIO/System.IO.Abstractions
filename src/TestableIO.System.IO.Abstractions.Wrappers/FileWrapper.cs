@@ -105,6 +105,15 @@ public partial class FileWrapper : FileBase
         return new FileStreamWrapper(File.Create(path, bufferSize, options));
     }
 
+#if FEATURE_CREATE_HARD_LINK
+    /// <inheritdoc />
+    public override IFileSystemInfo CreateHardLink(string path, string pathToTarget)
+    {
+        return File.CreateHardLink(path, pathToTarget)
+            .WrapFileSystemInfo(FileSystem);
+    }
+#endif
+
 #if FEATURE_CREATE_SYMBOLIC_LINK
         /// <inheritdoc />
         public override IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget)
@@ -309,6 +318,14 @@ public partial class FileWrapper : FileBase
         FileOptions options = FileOptions.None, long preallocationSize = 0)
     {
         return File.OpenHandle(path, mode, access, share, options, preallocationSize);
+    }
+#endif
+
+#if FEATURE_OPEN_NULL_HANDLE
+    /// <inheritdoc />
+    public override SafeFileHandle OpenNullHandle()
+    {
+        return File.OpenNullHandle();
     }
 #endif
 
