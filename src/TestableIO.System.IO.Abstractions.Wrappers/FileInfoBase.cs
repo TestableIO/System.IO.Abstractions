@@ -28,6 +28,11 @@ public abstract class FileInfoBase : FileSystemInfoBase, IFileInfo
     /// <inheritdoc cref="IFileInfo.Create"/>
     public abstract FileSystemStream Create();
 
+#if FEATURE_CREATE_HARD_LINK
+    /// <inheritdoc cref="IFileInfo.CreateAsHardLink(string)"/>
+    public abstract void CreateAsHardLink(string pathToTarget);
+#endif
+
     /// <inheritdoc cref="IFileInfo.CreateText"/>
     public abstract StreamWriter CreateText();
 

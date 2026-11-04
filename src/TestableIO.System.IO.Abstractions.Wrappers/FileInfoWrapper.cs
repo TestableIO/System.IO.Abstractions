@@ -19,6 +19,14 @@ public class FileInfoWrapper : FileInfoBase, IFileSystemAclSupport
         this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
     }
 
+#if FEATURE_CREATE_HARD_LINK
+    /// <inheritdoc />
+    public override void CreateAsHardLink(string pathToTarget)
+    {
+        instance.CreateAsHardLink(pathToTarget);
+    }
+#endif
+
 #if FEATURE_CREATE_SYMBOLIC_LINK
     /// <inheritdoc />
     public override void CreateAsSymbolicLink(string pathToTarget)

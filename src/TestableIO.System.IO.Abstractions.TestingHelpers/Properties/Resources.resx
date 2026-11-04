@@ -174,4 +174,10 @@
   <data name="RANDOM_ACCESS_NOT_SUPPORTED_EXCEPTION" xml:space="preserve">
     <value>MockFileSystem does not support File.OpenHandle or RandomAccess, because it cannot provide a SafeFileHandle for its in-memory files.</value>
   </data>
+  <data name="HARD_LINK_NOT_SUPPORTED_EXCEPTION" xml:space="preserve">
+    <value>MockFileSystem does not support hard links.</value>
+  </data>
+  <data name="NULL_HANDLE_NOT_SUPPORTED_EXCEPTION" xml:space="preserve">
+    <value>MockFileSystem does not support File.OpenNullHandle, because it cannot provide a SafeFileHandle.</value>
+  </data>
 </root>

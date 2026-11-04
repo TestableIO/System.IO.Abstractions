@@ -80,6 +80,12 @@ internal static class CommonExceptions
     public static NotSupportedException RandomAccessNotSupported() =>
         new NotSupportedException(StringResources.Manager.GetString("RANDOM_ACCESS_NOT_SUPPORTED_EXCEPTION"));
 
+    public static NotSupportedException HardLinkNotSupported() =>
+        new NotSupportedException(StringResources.Manager.GetString("HARD_LINK_NOT_SUPPORTED_EXCEPTION"));
+
+    public static NotSupportedException NullHandleNotSupported() =>
+        new NotSupportedException(StringResources.Manager.GetString("NULL_HANDLE_NOT_SUPPORTED_EXCEPTION"));
+
     public static IOException CannotCreateBecauseSameNameAlreadyExists(string path) =>
         new IOException(
             string.Format(

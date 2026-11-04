@@ -131,6 +131,8 @@ public class ApiParityTests
         private const string snapshotSuffix = ".NET 9.0";
 #elif NET10_0
         private const string snapshotSuffix = ".NET 10.0";
+#elif NET11_0
+        private const string snapshotSuffix = ".NET 11.0";
 #else
 #error Unknown target framework.
 #endif

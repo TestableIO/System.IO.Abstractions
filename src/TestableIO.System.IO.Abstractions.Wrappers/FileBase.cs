@@ -72,6 +72,11 @@ public abstract partial class FileBase : IFile
     /// <inheritdoc cref="IFile.Create(string,int,FileOptions)"/>
     public abstract FileSystemStream Create(string path, int bufferSize, FileOptions options);
 
+#if FEATURE_CREATE_HARD_LINK
+    /// <inheritdoc cref="IFile.CreateHardLink(string, string)"/>
+    public abstract IFileSystemInfo CreateHardLink(string path, string pathToTarget);
+#endif
+
 #if FEATURE_CREATE_SYMBOLIC_LINK
     /// <inheritdoc cref="IFile.CreateSymbolicLink(string, string)"/>
     public abstract IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget);
@@ -184,6 +189,11 @@ public abstract partial class FileBase : IFile
     public abstract SafeFileHandle OpenHandle(string path, FileMode mode = FileMode.Open,
         FileAccess access = FileAccess.Read, FileShare share = FileShare.Read,
         FileOptions options = FileOptions.None, long preallocationSize = 0);
+#endif
+
+#if FEATURE_OPEN_NULL_HANDLE
+    /// <inheritdoc cref="IFile.OpenNullHandle()"/>
+    public abstract SafeFileHandle OpenNullHandle();
 #endif
 
     /// <inheritdoc cref="IFile.OpenRead"/>
