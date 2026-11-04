@@ -873,12 +873,31 @@ public class MockFileInfoTests
     }
 
     [Test]
+    public async Task MockFileInfo_MoveTo_ShouldDiscardTheCachedData()
+    {
+        // Arrange
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\temp\file1.txt");
+        fileSystem.AddFile(path, new MockFileData("abc"));
+        var fileInfo = fileSystem.FileInfo.New(path);
+        _ = fileInfo.Length;
+        fileSystem.File.WriteAllText(path, "abcdefghij");
+
+        // Act
+        fileInfo.MoveTo(XFS.Path(@"c:\temp\file2.txt"));
+
+        // Assert
+        await That(fileInfo.Length).IsEqualTo(10);
+    }
+
+    [Test]
     public async Task MockFileInfo_Exists_ShouldReturnCachedData()
     {
         // Arrange
         var fileSystem = new MockFileSystem();
         var path1 = XFS.Path(@"c:\temp\file1.txt");
         var fileInfo = fileSystem.FileInfo.New(path1);
+        _ = fileInfo.Exists;
 
         // Act
         fileSystem.AddFile(path1, new MockFileData("1"));
@@ -1053,5 +1072,168 @@ public class MockFileInfoTests
 
         await That(fileInfo.LastWriteTime).IsEqualTo(date);
         await That(fileInfo.LastWriteTime.Kind).IsNotEqualTo(DateTimeKind.Unspecified);
+    }
+
+    [Test]
+    public async Task MockFileInfo_Exists_ShouldNotReadStateBeforeFirstAccess()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\temp\file1.txt");
+        var fileInfo = fileSystem.FileInfo.New(path);
+
+        fileSystem.AddFile(path, new MockFileData("1"));
+
+        await That(fileInfo.Exists).IsTrue();
+    }
+
+    [Test]
+    public async Task MockFileInfo_Exists_ShouldBeFalseWhenDeletedBeforeFirstAccess()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\temp\file1.txt");
+        fileSystem.AddFile(path, new MockFileData("1"));
+        var fileInfo = fileSystem.FileInfo.New(path);
+
+        fileSystem.File.Delete(path);
+
+        await That(fileInfo.Exists).IsFalse();
+    }
+
+    [Test]
+    public async Task MockFileInfo_Exists_ShouldStayTrueWhenDeletedAfterFirstAccess()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\temp\file1.txt");
+        fileSystem.AddFile(path, new MockFileData("1"));
+        var fileInfo = fileSystem.FileInfo.New(path);
+        _ = fileInfo.Exists;
+
+        fileSystem.File.Delete(path);
+
+        await That(fileInfo.Exists).IsTrue();
+    }
+
+    [Test]
+    public async Task MockFileInfo_Length_ShouldReturnLengthWhenFileCreatedBeforeFirstAccess()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\temp\file1.txt");
+        var fileInfo = fileSystem.FileInfo.New(path);
+
+        fileSystem.AddFile(path, new MockFileData("abc"));
+
+        await That(fileInfo.Length).IsEqualTo(3);
+    }
+
+    [Test]
+    public async Task MockFileInfo_Length_ShouldThrowFileNotFoundWhenFileDeletedBeforeFirstAccess()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\temp\file1.txt");
+        fileSystem.AddFile(path, new MockFileData("abc"));
+        var fileInfo = fileSystem.FileInfo.New(path);
+
+        fileSystem.File.Delete(path);
+
+        await That(() => fileInfo.Length).Throws<FileNotFoundException>();
+    }
+
+    [Test]
+    public async Task MockFileInfo_Length_ShouldReflectChangesBeforeFirstAccess()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\temp\file1.txt");
+        fileSystem.AddFile(path, new MockFileData("abc"));
+        var fileInfo = fileSystem.FileInfo.New(path);
+
+        fileSystem.File.AppendAllText(path, "defg");
+
+        await That(fileInfo.Length).IsEqualTo(7);
+    }
+
+    [Test]
+    public async Task MockFileInfo_Length_ShouldReturnCachedDataAfterFirstAccess()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\temp\file1.txt");
+        fileSystem.AddFile(path, new MockFileData("abc"));
+        var fileInfo = fileSystem.FileInfo.New(path);
+        _ = fileInfo.Length;
+
+        fileSystem.File.AppendAllText(path, "defg");
+
+        await That(fileInfo.Length).IsEqualTo(3);
+        fileInfo.Refresh();
+        await That(fileInfo.Length).IsEqualTo(7);
+    }
+
+    [Test]
+    public async Task MockFileInfo_FirstAccess_ShouldSnapshotAllProperties()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\temp\file1.txt");
+        fileSystem.AddFile(path, new MockFileData("abc"));
+        var fileInfo = fileSystem.FileInfo.New(path);
+        _ = fileInfo.Exists;
+
+        fileSystem.File.AppendAllText(path, "defg");
+        fileSystem.File.SetAttributes(path, FileAttributes.Hidden);
+
+        await That(fileInfo.Length).IsEqualTo(3);
+        await That(fileInfo.Attributes).IsNotEqualTo(FileAttributes.Hidden);
+    }
+
+    [Test]
+    public async Task MockFileInfo_Attributes_ShouldReflectChangesBeforeFirstAccess()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\temp\file1.txt");
+        fileSystem.AddFile(path, new MockFileData("abc"));
+        var fileInfo = fileSystem.FileInfo.New(path);
+
+        fileSystem.File.SetAttributes(path, FileAttributes.Hidden);
+
+        await That(fileInfo.Attributes).IsEqualTo(FileAttributes.Hidden);
+    }
+
+    [Test]
+    public async Task MockFileInfo_LastWriteTime_ShouldReflectChangesBeforeFirstAccess()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\temp\file1.txt");
+        fileSystem.AddFile(path, new MockFileData("abc"));
+        var fileInfo = fileSystem.FileInfo.New(path);
+        var date = new DateTime(2020, 1, 2, 3, 4, 5, DateTimeKind.Local);
+
+        fileSystem.File.SetLastWriteTime(path, date);
+
+        await That(fileInfo.LastWriteTime).IsEqualTo(date);
+    }
+
+    [Test]
+    public async Task MockFileInfo_LastWriteTime_ShouldReturnCachedDataAfterFirstAccess()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\temp\file1.txt");
+        fileSystem.AddFile(path, new MockFileData("abc"));
+        var fileInfo = fileSystem.FileInfo.New(path);
+        var before = fileInfo.LastWriteTime;
+
+        fileSystem.File.SetLastWriteTime(path, new DateTime(2020, 1, 2, 3, 4, 5, DateTimeKind.Local));
+
+        await That(fileInfo.LastWriteTime).IsEqualTo(before);
+    }
+
+    [Test]
+    public async Task MockFileInfo_FromEnumeration_ShouldHoldStateFromEnumeration()
+    {
+        var fileSystem = new MockFileSystem();
+        var path = XFS.Path(@"c:\temp\file1.txt");
+        fileSystem.AddFile(path, new MockFileData("abc"));
+        var fileInfo = fileSystem.DirectoryInfo.New(XFS.Path(@"c:\temp")).GetFiles()[0];
+
+        fileSystem.File.AppendAllText(path, "defg");
+
+        await That(fileInfo.Length).IsEqualTo(3);
     }
 }
