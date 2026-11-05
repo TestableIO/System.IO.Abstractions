@@ -485,6 +485,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockFileSystemOptions() { }
         public bool CreateDefaultTempDir { get; init; }
         public string CurrentDirectory { get; init; }
+        public string TemporaryDirectory { get; init; }
     }
     [System.Serializable]
     public class MockFileSystemWatcherFactory : System.IO.Abstractions.IFileSystemEntity, System.IO.Abstractions.IFileSystemWatcherFactory

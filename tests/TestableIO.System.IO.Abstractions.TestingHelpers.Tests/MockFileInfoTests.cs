@@ -926,7 +926,7 @@ public class MockFileInfoTests
     public async Task MockFileInfo_Create_ShouldUpdateCachedDataAndReturnTrueForExists()
     {
         IFileSystem fileSystem = new MockFileSystem();
-        var path = XFS.Path(@"c:\temp\file1.txt");
+        var path = fileSystem.Path.Combine(fileSystem.Path.GetTempPath(), "file1.txt");
         IFileInfo fileInfo = fileSystem.FileInfo.New(path);
 
         // Act
@@ -941,7 +941,7 @@ public class MockFileInfoTests
     public async Task MockFileInfo_CreateText_ShouldUpdateCachedDataAndReturnTrueForExists()
     {
         IFileSystem fileSystem = new MockFileSystem();
-        var path = XFS.Path(@"c:\temp\file1.txt");
+        var path = fileSystem.Path.Combine(fileSystem.Path.GetTempPath(), "file1.txt");
         IFileInfo fileInfo = fileSystem.FileInfo.New(path);
 
         // Act
@@ -955,7 +955,7 @@ public class MockFileInfoTests
     public async Task MockFileInfo_Delete_ShouldUpdateCachedDataAndReturnFalseForExists()
     {
         var fileSystem = new MockFileSystem();
-        var path = XFS.Path(@"c:\temp\file1.txt");
+        var path = fileSystem.Path.Combine(fileSystem.Path.GetTempPath(), "file1.txt");
         IFileInfo fileInfo = fileSystem.FileInfo.New(path);
 
         // Act
