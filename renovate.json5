@@ -1,5 +1,5 @@
 {
-  extends: ["config:base"],
+  extends: ["config:base", "helpers:pinGitHubActionDigests"],
   ignorePaths: [
     // Clear the default list to enable Renovate for all files
   ],
