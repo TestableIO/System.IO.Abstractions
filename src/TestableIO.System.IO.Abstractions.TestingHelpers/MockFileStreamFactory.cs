@@ -19,6 +19,19 @@ public class MockFileStreamFactory : IFileStreamFactory
     public IFileSystem FileSystem
         => mockFileSystem;
 
+#if FEATURE_RANDOM_ACCESS
+    /// <inheritdoc />
+    public FileSystemStream New(SafeFileHandle handle, FileAccess access)
+        => new MockFileStream(mockFileSystem, handle, access, 4096, isAsync: null);
+
+    /// <inheritdoc />
+    public FileSystemStream New(SafeFileHandle handle, FileAccess access, int bufferSize)
+        => new MockFileStream(mockFileSystem, handle, access, bufferSize, isAsync: null);
+
+    /// <inheritdoc />
+    public FileSystemStream New(SafeFileHandle handle, FileAccess access, int bufferSize, bool isAsync)
+        => new MockFileStream(mockFileSystem, handle, access, bufferSize, isAsync);
+#else
     /// <inheritdoc />
     public FileSystemStream New(SafeFileHandle handle, FileAccess access)
         => new MockFileStream(mockFileSystem, handle.ToString(), FileMode.Open, access: access);
@@ -30,6 +43,7 @@ public class MockFileStreamFactory : IFileStreamFactory
     /// <inheritdoc />
     public FileSystemStream New(SafeFileHandle handle, FileAccess access, int bufferSize, bool isAsync)
         => new MockFileStream(mockFileSystem, handle.ToString(), FileMode.Open, access: access);
+#endif
 
     /// <inheritdoc />
     public FileSystemStream New(string path, FileMode mode)
