@@ -28,6 +28,7 @@
         <PackageReference Include="aweXpect"/>
         <PackageReference Include="aweXpect.Testably"/>
         <PackageReference Include="aweXpect.Mockolate"/>
+        <PackageReference Include="aweXpect.Chronology"/>
     </ItemGroup>
 
     <PropertyGroup>

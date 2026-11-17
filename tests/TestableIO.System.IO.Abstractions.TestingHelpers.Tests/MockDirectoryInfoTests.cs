@@ -597,7 +597,7 @@ public class MockDirectoryInfoTests
             { path, new MockDirectoryData() }
         });
         var directoryInfo = fileSystem.DirectoryInfo.New(path);
-        var lastAccessTime = new DateTime(2022, 1, 8);
+        DateTime lastAccessTime = 8.January(2022);
 
         // Act
         directoryInfo.LastAccessTime = lastAccessTime;
@@ -688,7 +688,7 @@ public class MockDirectoryInfoTests
 
     public async Task MockDirectoryInfo_CreationTime_SetterShouldThrowDirectoryNotFoundExceptionForNonExistingDirectory()
     {
-        var newTime = new DateTime(2022, 04, 06);
+        DateTime newTime = 6.April(2022);
         var fileSystem = new MockFileSystem();
         var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
 
@@ -697,7 +697,7 @@ public class MockDirectoryInfoTests
 
     public async Task MockDirectoryInfo_LastAccessTime_SetterShouldThrowDirectoryNotFoundExceptionForNonExistingDirectory()
     {
-        var newTime = new DateTime(2022, 04, 06);
+        DateTime newTime = 6.April(2022);
         var fileSystem = new MockFileSystem();
         var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
 
@@ -706,7 +706,7 @@ public class MockDirectoryInfoTests
 
     public async Task MockDirectoryInfo_LastWriteTime_SetterShouldThrowDirectoryNotFoundExceptionForNonExistingDirectory()
     {
-        var newTime = new DateTime(2022, 04, 06);
+        DateTime newTime = 6.April(2022);
         var fileSystem = new MockFileSystem();
         var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
 
@@ -715,7 +715,7 @@ public class MockDirectoryInfoTests
 
     public async Task MockDirectoryInfo_CreationTimeUtc_SetterShouldThrowDirectoryNotFoundExceptionForNonExistingDirectory()
     {
-        var newTime = new DateTime(2022, 04, 06);
+        DateTime newTime = 6.April(2022);
         var fileSystem = new MockFileSystem();
         var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
 
@@ -724,7 +724,7 @@ public class MockDirectoryInfoTests
 
     public async Task MockDirectoryInfo_LastAccessTimeUtc_SetterShouldThrowDirectoryNotFoundExceptionForNonExistingDirectory()
     {
-        var newTime = new DateTime(2022, 04, 06);
+        DateTime newTime = 6.April(2022);
         var fileSystem = new MockFileSystem();
         var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
 
@@ -733,7 +733,7 @@ public class MockDirectoryInfoTests
 
     public async Task MockDirectoryInfo_LastWriteTimeUtc_SetterShouldThrowDirectoryNotFoundExceptionForNonExistingDirectory()
     {
-        var newTime = new DateTime(2022, 04, 06);
+        DateTime newTime = 6.April(2022);
         var fileSystem = new MockFileSystem();
         var directoryInfo = new MockDirectoryInfo(fileSystem, XFS.Path(@"c:\non\existing"));
 
@@ -788,7 +788,7 @@ public class MockDirectoryInfoTests
         var path = XFS.Path(@"c:\abc");
         fileSystem.Directory.CreateDirectory(path);
         var directoryInfo = fileSystem.DirectoryInfo.New(path);
-        var date = new DateTime(2020, 1, 2, 3, 4, 5, DateTimeKind.Local);
+        DateTime date = 2.January(2020).At(3, 4, 5).AsLocal();
 
         fileSystem.Directory.SetLastWriteTime(path, date);
 
@@ -804,7 +804,7 @@ public class MockDirectoryInfoTests
         var directoryInfo = fileSystem.DirectoryInfo.New(path);
         var before = directoryInfo.LastWriteTime;
 
-        fileSystem.Directory.SetLastWriteTime(path, new DateTime(2020, 1, 2, 3, 4, 5, DateTimeKind.Local));
+        fileSystem.Directory.SetLastWriteTime(path, 2.January(2020).At(3, 4, 5).AsLocal());
 
         await That(directoryInfo.LastWriteTime).IsEqualTo(before);
     }

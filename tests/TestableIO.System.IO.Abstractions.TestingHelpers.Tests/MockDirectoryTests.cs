@@ -456,7 +456,7 @@ public class MockDirectoryTests
     public async Task MockDirectory_GetCreationTime_ShouldReturnCreationTimeFromFile()
     {
         await ExecuteTimeAttributeTest(
-            new DateTime(2010, 6, 4, 13, 26, 42),
+            4.June(2010).At(13, 26, 42),
             (fs, p, d) => fs.File.SetCreationTime(p, d),
             (fs, p) => fs.Directory.GetCreationTime(p));
     }
@@ -465,7 +465,7 @@ public class MockDirectoryTests
     public async Task MockDirectory_GetCreationTimeUtc_ShouldReturnCreationTimeUtcFromFile()
     {
         await ExecuteTimeAttributeTest(
-            new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
+            4.June(2010).At(13, 26, 42).AsUtc(),
             (fs, p, d) => fs.File.SetCreationTimeUtc(p, d),
             (fs, p) => fs.Directory.GetCreationTimeUtc(p));
     }
@@ -474,7 +474,7 @@ public class MockDirectoryTests
     public async Task MockDirectory_GetLastAccessTime_ShouldReturnLastAccessTimeFromFile()
     {
         await ExecuteTimeAttributeTest(
-            new DateTime(2010, 6, 4, 13, 26, 42),
+            4.June(2010).At(13, 26, 42),
             (fs, p, d) => fs.File.SetLastAccessTime(p, d),
             (fs, p) => fs.Directory.GetLastAccessTime(p));
     }
@@ -483,7 +483,7 @@ public class MockDirectoryTests
     public async Task MockDirectory_GetLastAccessTimeUtc_ShouldReturnLastAccessTimeUtcFromFile()
     {
         await ExecuteTimeAttributeTest(
-            new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
+            4.June(2010).At(13, 26, 42).AsUtc(),
             (fs, p, d) => fs.File.SetLastAccessTimeUtc(p, d),
             (fs, p) => fs.Directory.GetLastAccessTimeUtc(p));
     }
@@ -492,7 +492,7 @@ public class MockDirectoryTests
     public async Task MockDirectory_GetLastWriteTime_ShouldReturnLastWriteTimeFromFile()
     {
         await ExecuteTimeAttributeTest(
-            new DateTime(2010, 6, 4, 13, 26, 42),
+            4.June(2010).At(13, 26, 42),
             (fs, p, d) => fs.File.SetLastWriteTime(p, d),
             (fs, p) => fs.Directory.GetLastWriteTime(p));
     }
@@ -501,7 +501,7 @@ public class MockDirectoryTests
     public async Task MockDirectory_GetLastWriteTimeUtc_ShouldReturnLastWriteTimeUtcFromFile()
     {
         await ExecuteTimeAttributeTest(
-            new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
+            4.June(2010).At(13, 26, 42).AsUtc(),
             (fs, p, d) => fs.File.SetLastWriteTimeUtc(p, d),
             (fs, p) => fs.Directory.GetLastWriteTimeUtc(p));
     }
@@ -510,7 +510,7 @@ public class MockDirectoryTests
     public async Task MockDirectory_SetCreationTime_ShouldSetCreationTimeOnFile()
     {
         await ExecuteTimeAttributeTest(
-            new DateTime(2010, 6, 4, 13, 26, 42),
+            4.June(2010).At(13, 26, 42),
             (fs, p, d) => fs.Directory.SetCreationTime(p, d),
             (fs, p) => fs.File.GetCreationTime(p));
     }
@@ -519,7 +519,7 @@ public class MockDirectoryTests
     public async Task MockDirectory_SetCreationTimeUtc_ShouldSetCreationTimeUtcOnFile()
     {
         await ExecuteTimeAttributeTest(
-            new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
+            4.June(2010).At(13, 26, 42).AsUtc(),
             (fs, p, d) => fs.Directory.SetCreationTimeUtc(p, d),
             (fs, p) => fs.File.GetCreationTimeUtc(p));
     }
@@ -528,7 +528,7 @@ public class MockDirectoryTests
     public async Task MockDirectory_SetLastAccessTime_ShouldSetLastAccessTimeOnFile()
     {
         await ExecuteTimeAttributeTest(
-            new DateTime(2010, 6, 4, 13, 26, 42),
+            4.June(2010).At(13, 26, 42),
             (fs, p, d) => fs.Directory.SetLastAccessTime(p, d),
             (fs, p) => fs.File.GetLastAccessTime(p));
     }
@@ -537,7 +537,7 @@ public class MockDirectoryTests
     public async Task MockDirectory_SetLastAccessTimeUtc_ShouldSetLastAccessTimeUtcOnFile()
     {
         await ExecuteTimeAttributeTest(
-            new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
+            4.June(2010).At(13, 26, 42).AsUtc(),
             (fs, p, d) => fs.Directory.SetLastAccessTimeUtc(p, d),
             (fs, p) => fs.File.GetLastAccessTimeUtc(p));
     }
@@ -546,7 +546,7 @@ public class MockDirectoryTests
     public async Task MockDirectory_SetLastWriteTime_ShouldSetLastWriteTimeOnFile()
     {
         await ExecuteTimeAttributeTest(
-            new DateTime(2010, 6, 4, 13, 26, 42),
+            4.June(2010).At(13, 26, 42),
             (fs, p, d) => fs.Directory.SetLastWriteTime(p, d),
             (fs, p) => fs.File.GetLastWriteTime(p));
     }
@@ -555,7 +555,7 @@ public class MockDirectoryTests
     public async Task MockDirectory_SetLastWriteTimeUtc_ShouldSetLastWriteTimeUtcOnFile()
     {
         await ExecuteTimeAttributeTest(
-            new DateTime(2010, 6, 4, 13, 26, 42, DateTimeKind.Utc),
+            4.June(2010).At(13, 26, 42).AsUtc(),
             (fs, p, d) => fs.Directory.SetLastWriteTimeUtc(p, d),
             (fs, p) => fs.File.GetLastWriteTimeUtc(p));
     }

@@ -37,7 +37,7 @@ public class MockFileTests
         var file = new MockFile(fileSystem);
 
         // Act
-        var creationTime = new DateTime(2010, 6, 4, 13, 26, 42);
+        DateTime creationTime = 4.June(2010).At(13, 26, 42);
         file.SetCreationTime(path, creationTime);
         var result = file.GetCreationTime(path);
 
@@ -57,7 +57,7 @@ public class MockFileTests
         var file = new MockFile(fileSystem);
 
         // Act
-        var creationTime = new DateTime(2010, 6, 4, 13, 26, 42);
+        DateTime creationTime = 4.June(2010).At(13, 26, 42);
         file.SetCreationTimeUtc(path, creationTime.ToUniversalTime());
         var result = file.GetCreationTime(path);
 
@@ -77,7 +77,7 @@ public class MockFileTests
         var file = new MockFile(fileSystem);
 
         // Act
-        var creationTime = new DateTime(2010, 6, 4, 13, 26, 42);
+        DateTime creationTime = 4.June(2010).At(13, 26, 42);
         file.SetCreationTime(path, creationTime);
         var result = file.GetCreationTimeUtc(path);
 
@@ -97,7 +97,7 @@ public class MockFileTests
         var file = new MockFile(fileSystem);
 
         // Act
-        var lastAccessTime = new DateTime(2010, 6, 4, 13, 26, 42);
+        DateTime lastAccessTime = 4.June(2010).At(13, 26, 42);
         file.SetLastAccessTime(path, lastAccessTime);
         var result = file.GetLastAccessTime(path);
 
@@ -117,7 +117,7 @@ public class MockFileTests
         var file = new MockFile(fileSystem);
 
         // Act
-        var lastAccessTime = new DateTime(2010, 6, 4, 13, 26, 42);
+        DateTime lastAccessTime = 4.June(2010).At(13, 26, 42);
         file.SetLastAccessTimeUtc(path, lastAccessTime.ToUniversalTime());
         var result = file.GetLastAccessTime(path);
 
@@ -137,7 +137,7 @@ public class MockFileTests
         var file = new MockFile(fileSystem);
 
         // Act
-        var lastAccessTime = new DateTime(2010, 6, 4, 13, 26, 42);
+        DateTime lastAccessTime = 4.June(2010).At(13, 26, 42);
         file.SetLastAccessTime(path, lastAccessTime);
         var result = file.GetLastAccessTimeUtc(path);
 
@@ -157,7 +157,7 @@ public class MockFileTests
         var file = new MockFile(fileSystem);
 
         // Act
-        var lastWriteTime = new DateTime(2010, 6, 4, 13, 26, 42);
+        DateTime lastWriteTime = 4.June(2010).At(13, 26, 42);
         file.SetLastWriteTime(path, lastWriteTime);
         var result = file.GetLastWriteTime(path);
 
@@ -167,7 +167,7 @@ public class MockFileTests
 
     static async Task ExecuteDefaultValueTest(Func<MockFile, string, DateTime> getDateValue)
     {
-        var expected = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc);
+        DateTime expected = 1.January(1601).At(0, 0).AsUtc();
         string path = XFS.Path(@"c:\something\demo.txt");
         var fileSystem = new MockFileSystem();
         var file = new MockFile(fileSystem);
@@ -311,7 +311,7 @@ public class MockFileTests
         var file = new MockFile(fileSystem);
 
         // Act
-        var lastWriteTime = new DateTime(2010, 6, 4, 13, 26, 42);
+        DateTime lastWriteTime = 4.June(2010).At(13, 26, 42);
         file.SetLastWriteTimeUtc(path, lastWriteTime.ToUniversalTime());
         var result = file.GetLastWriteTime(path);
 
@@ -331,7 +331,7 @@ public class MockFileTests
         var file = new MockFile(fileSystem);
 
         // Act
-        var lastWriteTime = new DateTime(2010, 6, 4, 13, 26, 42);
+        DateTime lastWriteTime = 4.June(2010).At(13, 26, 42);
         file.SetLastWriteTime(path, lastWriteTime);
         var result = file.GetLastWriteTimeUtc(path);
 

@@ -29,7 +29,7 @@ public class MockFileGetLastWriteTimeUtcTests
         var actualLastWriteTime = fileSystem.File.GetLastWriteTimeUtc(@"c:\does\not\exist.txt");
 
         // Assert
-        await That(actualLastWriteTime).IsEqualTo(new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc));
+        await That(actualLastWriteTime).IsEqualTo(1.January(1601).At(0, 0).AsUtc());
     }
 
     [Test]

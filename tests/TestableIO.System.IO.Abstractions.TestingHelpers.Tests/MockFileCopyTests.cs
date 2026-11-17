@@ -40,7 +40,7 @@ public class MockFileCopyTests
         var sourceFileInfo = mockFileSystem.FileInfo.New(sourceFileName);
         var destFileInfo = mockFileSystem.FileInfo.New(destFileName);
         await That(destFileInfo.LastWriteTime).IsEqualTo(sourceFileInfo.LastWriteTime);
-        await That(DateTime.Now - destFileInfo.CreationTime).IsLessThanOrEqualTo( TimeSpan.FromSeconds(1));
+        await That(DateTime.Now - destFileInfo.CreationTime).IsLessThanOrEqualTo(1.Seconds());
         await That(destFileInfo.LastAccessTime).IsEqualTo(destFileInfo.CreationTime);
     }
 

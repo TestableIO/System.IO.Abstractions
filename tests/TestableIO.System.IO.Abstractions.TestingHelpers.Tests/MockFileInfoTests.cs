@@ -1203,7 +1203,7 @@ public class MockFileInfoTests
         var path = XFS.Path(@"c:\temp\file1.txt");
         fileSystem.AddFile(path, new MockFileData("abc"));
         var fileInfo = fileSystem.FileInfo.New(path);
-        var date = new DateTime(2020, 1, 2, 3, 4, 5, DateTimeKind.Local);
+        DateTime date = 2.January(2020).At(3, 4, 5).AsLocal();
 
         fileSystem.File.SetLastWriteTime(path, date);
 
@@ -1219,7 +1219,7 @@ public class MockFileInfoTests
         var fileInfo = fileSystem.FileInfo.New(path);
         var before = fileInfo.LastWriteTime;
 
-        fileSystem.File.SetLastWriteTime(path, new DateTime(2020, 1, 2, 3, 4, 5, DateTimeKind.Local));
+        fileSystem.File.SetLastWriteTime(path, 2.January(2020).At(3, 4, 5).AsLocal());
 
         await That(fileInfo.LastWriteTime).IsEqualTo(before);
     }
