@@ -1,7 +1,7 @@
 [assembly: System.CLSCompliant(true)]
 [assembly: System.Reflection.AssemblyMetadata("RepositoryUrl", "https://github.com/TestableIO/System.IO.Abstractions.git")]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo(@"DynamicProxyGenAssembly2, PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7")]
-[assembly: System.Runtime.Versioning.TargetFramework(".NETCoreApp,Version=v6.0", FrameworkDisplayName=".NET 6.0")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DynamicProxyGenAssembly2, PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7")]
+[assembly: System.Runtime.Versioning.TargetFramework(".NETCoreApp,Version=v8.0", FrameworkDisplayName = ".NET 8.0")]
 namespace System.IO.Abstractions
 {
     public static class DirectoryAclExtensions
@@ -21,7 +21,9 @@ namespace System.IO.Abstractions
         protected DirectoryBase(System.IO.Abstractions.IFileSystem fileSystem) { }
         public System.IO.Abstractions.IFileSystem FileSystem { get; }
         public abstract System.IO.Abstractions.IDirectoryInfo CreateDirectory(string path);
+        public abstract System.IO.Abstractions.IDirectoryInfo CreateDirectory(string path, System.IO.UnixFileMode unixCreateMode);
         public abstract System.IO.Abstractions.IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget);
+        public abstract System.IO.Abstractions.IDirectoryInfo CreateTempSubdirectory(string prefix = null);
         public abstract void Delete(string path);
         public abstract void Delete(string path, bool recursive);
         public abstract System.Collections.Generic.IEnumerable<string> EnumerateDirectories(string path);
@@ -114,7 +116,7 @@ namespace System.IO.Abstractions
         public abstract System.IO.Abstractions.IFileInfo[] GetFiles(string searchPattern, System.IO.EnumerationOptions enumerationOptions);
         public abstract System.IO.Abstractions.IFileInfo[] GetFiles(string searchPattern, System.IO.SearchOption searchOption);
         public abstract void MoveTo(string destDirName);
-        public static System.IO.Abstractions.DirectoryInfoBase op_Implicit(System.IO.DirectoryInfo directoryInfo) { }
+        public static implicit operator System.IO.Abstractions.DirectoryInfoBase(System.IO.DirectoryInfo directoryInfo) { }
     }
     [System.Serializable]
     public class DirectoryInfoWrapper : System.IO.Abstractions.DirectoryInfoBase, System.IO.Abstractions.IFileSystemAclSupport
@@ -179,7 +181,10 @@ namespace System.IO.Abstractions
     {
         public DirectoryWrapper(System.IO.Abstractions.IFileSystem fileSystem) { }
         public override System.IO.Abstractions.IDirectoryInfo CreateDirectory(string path) { }
+        [System.Runtime.Versioning.UnsupportedOSPlatform("windows")]
+        public override System.IO.Abstractions.IDirectoryInfo CreateDirectory(string path, System.IO.UnixFileMode unixCreateMode) { }
         public override System.IO.Abstractions.IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget) { }
+        public override System.IO.Abstractions.IDirectoryInfo CreateTempSubdirectory(string prefix = null) { }
         public override void Delete(string path) { }
         public override void Delete(string path, bool recursive) { }
         public override System.Collections.Generic.IEnumerable<string> EnumerateDirectories(string path) { }
@@ -241,7 +246,7 @@ namespace System.IO.Abstractions
         public abstract long TotalFreeSpace { get; }
         public abstract long TotalSize { get; }
         public abstract string VolumeLabel { get; set; }
-        public static System.IO.Abstractions.DriveInfoBase op_Implicit(System.IO.DriveInfo driveInfo) { }
+        public static implicit operator System.IO.Abstractions.DriveInfoBase(System.IO.DriveInfo driveInfo) { }
     }
     [System.Serializable]
     public class DriveInfoWrapper : System.IO.Abstractions.DriveInfoBase
@@ -255,8 +260,7 @@ namespace System.IO.Abstractions
         public override System.IO.Abstractions.IDirectoryInfo RootDirectory { get; }
         public override long TotalFreeSpace { get; }
         public override long TotalSize { get; }
-        [set: System.Runtime.Versioning.SupportedOSPlatform("windows")]
-        public override string VolumeLabel { get; set; }
+        public override string VolumeLabel { get; [System.Runtime.Versioning.SupportedOSPlatform("windows")] set; }
         public override string ToString() { }
     }
     public static class FileAclExtensions
@@ -275,12 +279,12 @@ namespace System.IO.Abstractions
         public System.IO.Abstractions.IFileSystem FileSystem { get; }
         public abstract void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents);
         public abstract void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding);
-        public abstract System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default);
-        public abstract System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default);
+        public abstract System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        public abstract System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
         public abstract void AppendAllText(string path, string contents);
         public abstract void AppendAllText(string path, string contents, System.Text.Encoding encoding);
-        public abstract System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default);
-        public abstract System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default);
+        public abstract System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        public abstract System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
         public abstract System.IO.StreamWriter AppendText(string path);
         public abstract void Copy(string sourceFileName, string destFileName);
         public abstract void Copy(string sourceFileName, string destFileName, bool overwrite);
@@ -293,57 +297,77 @@ namespace System.IO.Abstractions
         public abstract void Delete(string path);
         public abstract void Encrypt(string path);
         public abstract bool Exists(string path);
+        public abstract System.IO.FileAttributes GetAttributes(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle);
         public abstract System.IO.FileAttributes GetAttributes(string path);
+        public abstract System.DateTime GetCreationTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle);
         public abstract System.DateTime GetCreationTime(string path);
+        public abstract System.DateTime GetCreationTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle);
         public abstract System.DateTime GetCreationTimeUtc(string path);
+        public abstract System.DateTime GetLastAccessTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle);
         public abstract System.DateTime GetLastAccessTime(string path);
+        public abstract System.DateTime GetLastAccessTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle);
         public abstract System.DateTime GetLastAccessTimeUtc(string path);
+        public abstract System.DateTime GetLastWriteTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle);
         public abstract System.DateTime GetLastWriteTime(string path);
+        public abstract System.DateTime GetLastWriteTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle);
         public abstract System.DateTime GetLastWriteTimeUtc(string path);
+        public abstract System.IO.UnixFileMode GetUnixFileMode(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle);
+        public abstract System.IO.UnixFileMode GetUnixFileMode(string path);
         public abstract void Move(string sourceFileName, string destFileName);
         public abstract void Move(string sourceFileName, string destFileName, bool overwrite);
         public abstract System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode);
-        public abstract System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileStreamOptions options);
         public abstract System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode, System.IO.FileAccess access);
         public abstract System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share);
-        public abstract Microsoft.Win32.SafeHandles.SafeFileHandle OpenHandle(string path, System.IO.FileMode mode = 3, System.IO.FileAccess access = 1, System.IO.FileShare share = 1, System.IO.FileOptions options = 0, long preallocationSize = 0);
+        public abstract System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileStreamOptions options);
+        public abstract Microsoft.Win32.SafeHandles.SafeFileHandle OpenHandle(string path, System.IO.FileMode mode = System.IO.FileMode.Open, System.IO.FileAccess access = System.IO.FileAccess.Read, System.IO.FileShare share = System.IO.FileShare.Read, System.IO.FileOptions options = System.IO.FileOptions.None, long preallocationSize = 0);
         public abstract System.IO.Abstractions.FileSystemStream OpenRead(string path);
         public abstract System.IO.StreamReader OpenText(string path);
         public abstract System.IO.Abstractions.FileSystemStream OpenWrite(string path);
         public abstract byte[] ReadAllBytes(string path);
-        public abstract System.Threading.Tasks.Task<byte[]> ReadAllBytesAsync(string path, System.Threading.CancellationToken cancellationToken = default);
+        public abstract System.Threading.Tasks.Task<byte[]> ReadAllBytesAsync(string path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
         public abstract string[] ReadAllLines(string path);
         public abstract string[] ReadAllLines(string path, System.Text.Encoding encoding);
-        public abstract System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Threading.CancellationToken cancellationToken = default);
-        public abstract System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default);
+        public abstract System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        public abstract System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
         public abstract string ReadAllText(string path);
         public abstract string ReadAllText(string path, System.Text.Encoding encoding);
-        public abstract System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Threading.CancellationToken cancellationToken = default);
-        public abstract System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default);
+        public abstract System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        public abstract System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
         public abstract System.Collections.Generic.IEnumerable<string> ReadLines(string path);
         public abstract System.Collections.Generic.IEnumerable<string> ReadLines(string path, System.Text.Encoding encoding);
+        public abstract System.Collections.Generic.IAsyncEnumerable<string> ReadLinesAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        public abstract System.Collections.Generic.IAsyncEnumerable<string> ReadLinesAsync(string path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName);
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
         public abstract System.IO.Abstractions.IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget);
+        public abstract void SetAttributes(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.IO.FileAttributes fileAttributes);
         public abstract void SetAttributes(string path, System.IO.FileAttributes fileAttributes);
+        public abstract void SetCreationTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime creationTime);
         public abstract void SetCreationTime(string path, System.DateTime creationTime);
+        public abstract void SetCreationTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime creationTimeUtc);
         public abstract void SetCreationTimeUtc(string path, System.DateTime creationTimeUtc);
+        public abstract void SetLastAccessTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime lastAccessTime);
         public abstract void SetLastAccessTime(string path, System.DateTime lastAccessTime);
+        public abstract void SetLastAccessTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime lastAccessTimeUtc);
         public abstract void SetLastAccessTimeUtc(string path, System.DateTime lastAccessTimeUtc);
+        public abstract void SetLastWriteTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime lastWriteTime);
         public abstract void SetLastWriteTime(string path, System.DateTime lastWriteTime);
+        public abstract void SetLastWriteTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime lastWriteTimeUtc);
         public abstract void SetLastWriteTimeUtc(string path, System.DateTime lastWriteTimeUtc);
+        public abstract void SetUnixFileMode(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.IO.UnixFileMode mode);
+        public abstract void SetUnixFileMode(string path, System.IO.UnixFileMode mode);
         public abstract void WriteAllBytes(string path, byte[] bytes);
-        public abstract System.Threading.Tasks.Task WriteAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default);
+        public abstract System.Threading.Tasks.Task WriteAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
         public abstract void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents);
-        public abstract void WriteAllLines(string path, string[] contents);
         public abstract void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding);
+        public abstract void WriteAllLines(string path, string[] contents);
         public abstract void WriteAllLines(string path, string[] contents, System.Text.Encoding encoding);
-        public abstract System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default);
-        public abstract System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default);
+        public abstract System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        public abstract System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
         public abstract void WriteAllText(string path, string contents);
         public abstract void WriteAllText(string path, string contents, System.Text.Encoding encoding);
-        public abstract System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default);
-        public abstract System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default);
+        public abstract System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
+        public abstract System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken));
     }
     public static class FileInfoAclExtensions
     {
@@ -372,15 +396,15 @@ namespace System.IO.Abstractions
         public abstract void MoveTo(string destFileName);
         public abstract void MoveTo(string destFileName, bool overwrite);
         public abstract System.IO.Abstractions.FileSystemStream Open(System.IO.FileMode mode);
-        public abstract System.IO.Abstractions.FileSystemStream Open(System.IO.FileStreamOptions options);
         public abstract System.IO.Abstractions.FileSystemStream Open(System.IO.FileMode mode, System.IO.FileAccess access);
         public abstract System.IO.Abstractions.FileSystemStream Open(System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share);
+        public abstract System.IO.Abstractions.FileSystemStream Open(System.IO.FileStreamOptions options);
         public abstract System.IO.Abstractions.FileSystemStream OpenRead();
         public abstract System.IO.StreamReader OpenText();
         public abstract System.IO.Abstractions.FileSystemStream OpenWrite();
         public abstract System.IO.Abstractions.IFileInfo Replace(string destinationFileName, string destinationBackupFileName);
         public abstract System.IO.Abstractions.IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
-        public static System.IO.Abstractions.FileInfoBase op_Implicit(System.IO.FileInfo fileInfo) { }
+        public static implicit operator System.IO.Abstractions.FileInfoBase(System.IO.FileInfo fileInfo) { }
     }
     [System.Serializable]
     public class FileInfoWrapper : System.IO.Abstractions.FileInfoBase, System.IO.Abstractions.IFileSystemAclSupport
@@ -420,9 +444,9 @@ namespace System.IO.Abstractions
         public override void MoveTo(string destFileName) { }
         public override void MoveTo(string destFileName, bool overwrite) { }
         public override System.IO.Abstractions.FileSystemStream Open(System.IO.FileMode mode) { }
-        public override System.IO.Abstractions.FileSystemStream Open(System.IO.FileStreamOptions options) { }
         public override System.IO.Abstractions.FileSystemStream Open(System.IO.FileMode mode, System.IO.FileAccess access) { }
         public override System.IO.Abstractions.FileSystemStream Open(System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share) { }
+        public override System.IO.Abstractions.FileSystemStream Open(System.IO.FileStreamOptions options) { }
         public override System.IO.Abstractions.FileSystemStream OpenRead() { }
         public override System.IO.StreamReader OpenText() { }
         public override System.IO.Abstractions.FileSystemStream OpenWrite() { }
@@ -488,6 +512,7 @@ namespace System.IO.Abstractions
         public abstract System.DateTime LastWriteTimeUtc { get; set; }
         public abstract string LinkTarget { get; }
         public abstract string Name { get; }
+        public System.IO.UnixFileMode UnixFileMode { get; [System.Runtime.Versioning.UnsupportedOSPlatform("windows")] set; }
         public abstract void CreateAsSymbolicLink(string pathToTarget);
         public abstract void Delete();
         public abstract void Refresh();
@@ -514,8 +539,8 @@ namespace System.IO.Abstractions
         public virtual event System.IO.ErrorEventHandler Error;
         public virtual event System.IO.RenamedEventHandler Renamed;
         public abstract void BeginInit();
-        public void Dispose() { }
         public virtual void Dispose(bool disposing) { }
+        public void Dispose() { }
         public abstract void EndInit();
         protected void OnChanged(object sender, System.IO.FileSystemEventArgs args) { }
         protected void OnCreated(object sender, System.IO.FileSystemEventArgs args) { }
@@ -523,8 +548,9 @@ namespace System.IO.Abstractions
         protected void OnError(object sender, System.IO.ErrorEventArgs args) { }
         protected void OnRenamed(object sender, System.IO.RenamedEventArgs args) { }
         public abstract System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType);
+        public abstract System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, System.TimeSpan timeout);
         public abstract System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, int timeout);
-        public static System.IO.Abstractions.FileSystemWatcherBase op_Implicit(System.IO.FileSystemWatcher watcher) { }
+        public static implicit operator System.IO.Abstractions.FileSystemWatcherBase(System.IO.FileSystemWatcher watcher) { }
     }
     [System.Serializable]
     public class FileSystemWatcherFactory : System.IO.Abstractions.IFileSystemEntity, System.IO.Abstractions.IFileSystemWatcherFactory
@@ -558,6 +584,7 @@ namespace System.IO.Abstractions
         public override void Dispose(bool disposing) { }
         public override void EndInit() { }
         public override System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType) { }
+        public override System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, System.TimeSpan timeout) { }
         public override System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, int timeout) { }
     }
     [System.Serializable]
@@ -592,7 +619,7 @@ namespace System.IO.Abstractions
         public abstract string ProductVersion { get; }
         public abstract string SpecialBuild { get; }
         public abstract string ToString();
-        public static System.IO.Abstractions.FileVersionInfoBase op_Implicit(System.Diagnostics.FileVersionInfo fileVersionInfo) { }
+        public static implicit operator System.IO.Abstractions.FileVersionInfoBase(System.Diagnostics.FileVersionInfo fileVersionInfo) { }
     }
     [System.Serializable]
     public class FileVersionInfoWrapper : System.IO.Abstractions.FileVersionInfoBase
@@ -633,12 +660,12 @@ namespace System.IO.Abstractions
         public FileWrapper(System.IO.Abstractions.IFileSystem fileSystem) { }
         public override void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents) { }
         public override void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override void AppendAllText(string path, string contents) { }
         public override void AppendAllText(string path, string contents, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override System.IO.StreamWriter AppendText(string path) { }
         public override void Copy(string sourceFileName, string destFileName) { }
         public override void Copy(string sourceFileName, string destFileName, bool overwrite) { }
@@ -653,57 +680,81 @@ namespace System.IO.Abstractions
         [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public override void Encrypt(string path) { }
         public override bool Exists(string path) { }
+        public override System.IO.FileAttributes GetAttributes(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle) { }
         public override System.IO.FileAttributes GetAttributes(string path) { }
+        public override System.DateTime GetCreationTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle) { }
         public override System.DateTime GetCreationTime(string path) { }
+        public override System.DateTime GetCreationTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle) { }
         public override System.DateTime GetCreationTimeUtc(string path) { }
+        public override System.DateTime GetLastAccessTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle) { }
         public override System.DateTime GetLastAccessTime(string path) { }
+        public override System.DateTime GetLastAccessTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle) { }
         public override System.DateTime GetLastAccessTimeUtc(string path) { }
+        public override System.DateTime GetLastWriteTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle) { }
         public override System.DateTime GetLastWriteTime(string path) { }
+        public override System.DateTime GetLastWriteTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle) { }
         public override System.DateTime GetLastWriteTimeUtc(string path) { }
+        [System.Runtime.Versioning.UnsupportedOSPlatform("windows")]
+        public override System.IO.UnixFileMode GetUnixFileMode(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle) { }
+        [System.Runtime.Versioning.UnsupportedOSPlatform("windows")]
+        public override System.IO.UnixFileMode GetUnixFileMode(string path) { }
         public override void Move(string sourceFileName, string destFileName) { }
         public override void Move(string sourceFileName, string destFileName, bool overwrite) { }
         public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode) { }
-        public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileStreamOptions options) { }
         public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode, System.IO.FileAccess access) { }
         public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share) { }
-        public override Microsoft.Win32.SafeHandles.SafeFileHandle OpenHandle(string path, System.IO.FileMode mode = 3, System.IO.FileAccess access = 1, System.IO.FileShare share = 1, System.IO.FileOptions options = 0, long preallocationSize = 0) { }
+        public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileStreamOptions options) { }
+        public override Microsoft.Win32.SafeHandles.SafeFileHandle OpenHandle(string path, System.IO.FileMode mode = System.IO.FileMode.Open, System.IO.FileAccess access = System.IO.FileAccess.Read, System.IO.FileShare share = System.IO.FileShare.Read, System.IO.FileOptions options = System.IO.FileOptions.None, long preallocationSize = 0) { }
         public override System.IO.Abstractions.FileSystemStream OpenRead(string path) { }
         public override System.IO.StreamReader OpenText(string path) { }
         public override System.IO.Abstractions.FileSystemStream OpenWrite(string path) { }
         public override byte[] ReadAllBytes(string path) { }
-        public override System.Threading.Tasks.Task<byte[]> ReadAllBytesAsync(string path, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task<byte[]> ReadAllBytesAsync(string path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override string[] ReadAllLines(string path) { }
         public override string[] ReadAllLines(string path, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override string ReadAllText(string path) { }
         public override string ReadAllText(string path, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override System.Collections.Generic.IEnumerable<string> ReadLines(string path) { }
         public override System.Collections.Generic.IEnumerable<string> ReadLines(string path, System.Text.Encoding encoding) { }
+        public override System.Collections.Generic.IAsyncEnumerable<string> ReadLinesAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Collections.Generic.IAsyncEnumerable<string> ReadLinesAsync(string path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName) { }
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors) { }
         public override System.IO.Abstractions.IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget) { }
+        public override void SetAttributes(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.IO.FileAttributes fileAttributes) { }
         public override void SetAttributes(string path, System.IO.FileAttributes fileAttributes) { }
+        public override void SetCreationTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime creationTime) { }
         public override void SetCreationTime(string path, System.DateTime creationTime) { }
+        public override void SetCreationTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime creationTimeUtc) { }
         public override void SetCreationTimeUtc(string path, System.DateTime creationTimeUtc) { }
+        public override void SetLastAccessTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime lastAccessTime) { }
         public override void SetLastAccessTime(string path, System.DateTime lastAccessTime) { }
+        public override void SetLastAccessTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime lastAccessTimeUtc) { }
         public override void SetLastAccessTimeUtc(string path, System.DateTime lastAccessTimeUtc) { }
+        public override void SetLastWriteTime(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime lastWriteTime) { }
         public override void SetLastWriteTime(string path, System.DateTime lastWriteTime) { }
+        public override void SetLastWriteTimeUtc(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.DateTime lastWriteTimeUtc) { }
         public override void SetLastWriteTimeUtc(string path, System.DateTime lastWriteTimeUtc) { }
+        [System.Runtime.Versioning.UnsupportedOSPlatform("windows")]
+        public override void SetUnixFileMode(Microsoft.Win32.SafeHandles.SafeFileHandle fileHandle, System.IO.UnixFileMode mode) { }
+        [System.Runtime.Versioning.UnsupportedOSPlatform("windows")]
+        public override void SetUnixFileMode(string path, System.IO.UnixFileMode mode) { }
         public override void WriteAllBytes(string path, byte[] bytes) { }
-        public override System.Threading.Tasks.Task WriteAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task WriteAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents) { }
-        public override void WriteAllLines(string path, string[] contents) { }
         public override void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding) { }
+        public override void WriteAllLines(string path, string[] contents) { }
         public override void WriteAllLines(string path, string[] contents, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override void WriteAllText(string path, string contents) { }
         public override void WriteAllText(string path, string contents, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
     }
     [System.Serializable]
     public abstract class PathBase : System.IO.Abstractions.IFileSystemEntity, System.IO.Abstractions.IPath
@@ -723,6 +774,7 @@ namespace System.IO.Abstractions
         public abstract string Combine(string path1, string path2, string path3, string path4);
         public abstract bool EndsInDirectorySeparator(System.ReadOnlySpan<char> path);
         public abstract bool EndsInDirectorySeparator(string path);
+        public abstract bool Exists(string path);
         public abstract System.ReadOnlySpan<char> GetDirectoryName(System.ReadOnlySpan<char> path);
         public abstract string GetDirectoryName(string path);
         public abstract System.ReadOnlySpan<char> GetExtension(System.ReadOnlySpan<char> path);
@@ -747,17 +799,17 @@ namespace System.IO.Abstractions
         public abstract bool IsPathFullyQualified(string path);
         public abstract bool IsPathRooted(System.ReadOnlySpan<char> path);
         public abstract bool IsPathRooted(string path);
-        public abstract string Join(params string[] paths);
         public abstract string Join(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2);
-        public abstract string Join(string path1, string path2);
         public abstract string Join(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.ReadOnlySpan<char> path3);
-        public abstract string Join(string path1, string path2, string path3);
         public abstract string Join(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.ReadOnlySpan<char> path3, System.ReadOnlySpan<char> path4);
+        public abstract string Join(params string[] paths);
+        public abstract string Join(string path1, string path2);
+        public abstract string Join(string path1, string path2, string path3);
         public abstract string Join(string path1, string path2, string path3, string path4);
         public abstract System.ReadOnlySpan<char> TrimEndingDirectorySeparator(System.ReadOnlySpan<char> path);
         public abstract string TrimEndingDirectorySeparator(string path);
-        public abstract bool TryJoin(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.Span<char> destination, out int charsWritten);
         public abstract bool TryJoin(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.ReadOnlySpan<char> path3, System.Span<char> destination, out int charsWritten);
+        public abstract bool TryJoin(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.Span<char> destination, out int charsWritten);
     }
     [System.Serializable]
     public class PathWrapper : System.IO.Abstractions.PathBase
@@ -776,6 +828,7 @@ namespace System.IO.Abstractions
         public override string Combine(string path1, string path2, string path3, string path4) { }
         public override bool EndsInDirectorySeparator(System.ReadOnlySpan<char> path) { }
         public override bool EndsInDirectorySeparator(string path) { }
+        public override bool Exists(string path) { }
         public override System.ReadOnlySpan<char> GetDirectoryName(System.ReadOnlySpan<char> path) { }
         public override string GetDirectoryName(string path) { }
         public override System.ReadOnlySpan<char> GetExtension(System.ReadOnlySpan<char> path) { }
@@ -800,31 +853,34 @@ namespace System.IO.Abstractions
         public override bool IsPathFullyQualified(string path) { }
         public override bool IsPathRooted(System.ReadOnlySpan<char> path) { }
         public override bool IsPathRooted(string path) { }
-        public override string Join(params string[] paths) { }
         public override string Join(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2) { }
-        public override string Join(string path1, string path2) { }
         public override string Join(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.ReadOnlySpan<char> path3) { }
-        public override string Join(string path1, string path2, string path3) { }
         public override string Join(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.ReadOnlySpan<char> path3, System.ReadOnlySpan<char> path4) { }
+        public override string Join(params string[] paths) { }
+        public override string Join(string path1, string path2) { }
+        public override string Join(string path1, string path2, string path3) { }
         public override string Join(string path1, string path2, string path3, string path4) { }
         public override System.ReadOnlySpan<char> TrimEndingDirectorySeparator(System.ReadOnlySpan<char> path) { }
         public override string TrimEndingDirectorySeparator(string path) { }
-        public override bool TryJoin(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.Span<char> destination, out int charsWritten) { }
         public override bool TryJoin(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.ReadOnlySpan<char> path3, System.Span<char> destination, out int charsWritten) { }
+        public override bool TryJoin(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.Span<char> destination, out int charsWritten) { }
     }
     [System.Serializable]
     public class RandomAccessWrapper : System.IO.Abstractions.IFileSystemEntity, System.IO.Abstractions.IRandomAccess
     {
         public RandomAccessWrapper(System.IO.Abstractions.IFileSystem fileSystem) { }
         public System.IO.Abstractions.IFileSystem FileSystem { get; }
+        public void FlushToDisk(Microsoft.Win32.SafeHandles.SafeFileHandle handle) { }
         public long GetLength(Microsoft.Win32.SafeHandles.SafeFileHandle handle) { }
-        public long Read(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.Memory<byte>> buffers, long fileOffset) { }
         public int Read(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Span<byte> buffer, long fileOffset) { }
-        public System.Threading.Tasks.ValueTask<long> ReadAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.Memory<byte>> buffers, long fileOffset, System.Threading.CancellationToken cancellationToken = default) { }
-        public System.Threading.Tasks.ValueTask<int> ReadAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Memory<byte> buffer, long fileOffset, System.Threading.CancellationToken cancellationToken = default) { }
+        public long Read(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.Memory<byte>> buffers, long fileOffset) { }
+        public System.Threading.Tasks.ValueTask<int> ReadAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Memory<byte> buffer, long fileOffset, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public System.Threading.Tasks.ValueTask<long> ReadAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.Memory<byte>> buffers, long fileOffset, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public void SetLength(Microsoft.Win32.SafeHandles.SafeFileHandle handle, long length) { }
         public void Write(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.ReadOnlyMemory<byte>> buffers, long fileOffset) { }
         public void Write(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.ReadOnlySpan<byte> buffer, long fileOffset) { }
-        public System.Threading.Tasks.ValueTask WriteAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.ReadOnlyMemory<byte>> buffers, long fileOffset, System.Threading.CancellationToken cancellationToken = default) { }
-        public System.Threading.Tasks.ValueTask WriteAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.ReadOnlyMemory<byte> buffer, long fileOffset, System.Threading.CancellationToken cancellationToken = default) { }
+        public System.Threading.Tasks.ValueTask WriteAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.ReadOnlyMemory<byte>> buffers, long fileOffset, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public System.Threading.Tasks.ValueTask WriteAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.ReadOnlyMemory<byte> buffer, long fileOffset, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
     }
 }
+

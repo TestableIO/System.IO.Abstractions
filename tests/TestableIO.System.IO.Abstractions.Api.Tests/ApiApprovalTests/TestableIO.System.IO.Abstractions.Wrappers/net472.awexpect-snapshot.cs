@@ -1,14 +1,18 @@
 [assembly: System.CLSCompliant(true)]
 [assembly: System.Reflection.AssemblyMetadata("RepositoryUrl", "https://github.com/TestableIO/System.IO.Abstractions.git")]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo(@"DynamicProxyGenAssembly2, PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7")]
-[assembly: System.Runtime.Versioning.TargetFramework(".NETStandard,Version=v2.1", FrameworkDisplayName=".NET Standard 2.1")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("DynamicProxyGenAssembly2, PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7")]
+[assembly: System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.7.2", FrameworkDisplayName = ".NET Framework 4.7.2")]
 namespace System.IO.Abstractions
 {
     public static class DirectoryAclExtensions
     {
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static void CreateDirectory(this System.IO.Abstractions.IDirectory directory, string path, System.Security.AccessControl.DirectorySecurity directorySecurity) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static System.Security.AccessControl.DirectorySecurity GetAccessControl(this System.IO.Abstractions.IDirectory directory, string path) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static System.Security.AccessControl.DirectorySecurity GetAccessControl(this System.IO.Abstractions.IDirectory directory, string path, System.Security.AccessControl.AccessControlSections includeSections) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static void SetAccessControl(this System.IO.Abstractions.IDirectory directory, string path, System.Security.AccessControl.DirectorySecurity directorySecurity) { }
     }
     [System.Serializable]
@@ -21,15 +25,12 @@ namespace System.IO.Abstractions
         public abstract void Delete(string path, bool recursive);
         public abstract System.Collections.Generic.IEnumerable<string> EnumerateDirectories(string path);
         public abstract System.Collections.Generic.IEnumerable<string> EnumerateDirectories(string path, string searchPattern);
-        public abstract System.Collections.Generic.IEnumerable<string> EnumerateDirectories(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions);
         public abstract System.Collections.Generic.IEnumerable<string> EnumerateDirectories(string path, string searchPattern, System.IO.SearchOption searchOption);
         public abstract System.Collections.Generic.IEnumerable<string> EnumerateFileSystemEntries(string path);
         public abstract System.Collections.Generic.IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern);
-        public abstract System.Collections.Generic.IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions);
         public abstract System.Collections.Generic.IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, System.IO.SearchOption searchOption);
         public abstract System.Collections.Generic.IEnumerable<string> EnumerateFiles(string path);
         public abstract System.Collections.Generic.IEnumerable<string> EnumerateFiles(string path, string searchPattern);
-        public abstract System.Collections.Generic.IEnumerable<string> EnumerateFiles(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions);
         public abstract System.Collections.Generic.IEnumerable<string> EnumerateFiles(string path, string searchPattern, System.IO.SearchOption searchOption);
         public abstract bool Exists(string path);
         public abstract System.DateTime GetCreationTime(string path);
@@ -37,16 +38,13 @@ namespace System.IO.Abstractions
         public abstract string GetCurrentDirectory();
         public abstract string[] GetDirectories(string path);
         public abstract string[] GetDirectories(string path, string searchPattern);
-        public abstract string[] GetDirectories(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions);
         public abstract string[] GetDirectories(string path, string searchPattern, System.IO.SearchOption searchOption);
         public abstract string GetDirectoryRoot(string path);
         public abstract string[] GetFileSystemEntries(string path);
         public abstract string[] GetFileSystemEntries(string path, string searchPattern);
-        public abstract string[] GetFileSystemEntries(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions);
         public abstract string[] GetFileSystemEntries(string path, string searchPattern, System.IO.SearchOption searchOption);
         public abstract string[] GetFiles(string path);
         public abstract string[] GetFiles(string path, string searchPattern);
-        public abstract string[] GetFiles(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions);
         public abstract string[] GetFiles(string path, string searchPattern, System.IO.SearchOption searchOption);
         public abstract System.DateTime GetLastAccessTime(string path);
         public abstract System.DateTime GetLastAccessTimeUtc(string path);
@@ -65,9 +63,13 @@ namespace System.IO.Abstractions
     }
     public static class DirectoryInfoAclExtensions
     {
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static void Create(this System.IO.Abstractions.IDirectoryInfo directoryInfo, System.Security.AccessControl.DirectorySecurity directorySecurity) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static System.Security.AccessControl.DirectorySecurity GetAccessControl(this System.IO.Abstractions.IDirectoryInfo directoryInfo) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static System.Security.AccessControl.DirectorySecurity GetAccessControl(this System.IO.Abstractions.IDirectoryInfo directoryInfo, System.Security.AccessControl.AccessControlSections includeSections) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static void SetAccessControl(this System.IO.Abstractions.IDirectoryInfo directoryInfo, System.Security.AccessControl.DirectorySecurity directorySecurity) { }
     }
     [System.Serializable]
@@ -81,30 +83,24 @@ namespace System.IO.Abstractions
         public abstract void Delete(bool recursive);
         public abstract System.Collections.Generic.IEnumerable<System.IO.Abstractions.IDirectoryInfo> EnumerateDirectories();
         public abstract System.Collections.Generic.IEnumerable<System.IO.Abstractions.IDirectoryInfo> EnumerateDirectories(string searchPattern);
-        public abstract System.Collections.Generic.IEnumerable<System.IO.Abstractions.IDirectoryInfo> EnumerateDirectories(string searchPattern, System.IO.EnumerationOptions enumerationOptions);
         public abstract System.Collections.Generic.IEnumerable<System.IO.Abstractions.IDirectoryInfo> EnumerateDirectories(string searchPattern, System.IO.SearchOption searchOption);
         public abstract System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileSystemInfo> EnumerateFileSystemInfos();
         public abstract System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern);
-        public abstract System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, System.IO.EnumerationOptions enumerationOptions);
         public abstract System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, System.IO.SearchOption searchOption);
         public abstract System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileInfo> EnumerateFiles();
         public abstract System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileInfo> EnumerateFiles(string searchPattern);
-        public abstract System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileInfo> EnumerateFiles(string searchPattern, System.IO.EnumerationOptions enumerationOptions);
         public abstract System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileInfo> EnumerateFiles(string searchPattern, System.IO.SearchOption searchOption);
         public abstract System.IO.Abstractions.IDirectoryInfo[] GetDirectories();
         public abstract System.IO.Abstractions.IDirectoryInfo[] GetDirectories(string searchPattern);
-        public abstract System.IO.Abstractions.IDirectoryInfo[] GetDirectories(string searchPattern, System.IO.EnumerationOptions enumerationOptions);
         public abstract System.IO.Abstractions.IDirectoryInfo[] GetDirectories(string searchPattern, System.IO.SearchOption searchOption);
         public abstract System.IO.Abstractions.IFileSystemInfo[] GetFileSystemInfos();
         public abstract System.IO.Abstractions.IFileSystemInfo[] GetFileSystemInfos(string searchPattern);
-        public abstract System.IO.Abstractions.IFileSystemInfo[] GetFileSystemInfos(string searchPattern, System.IO.EnumerationOptions enumerationOptions);
         public abstract System.IO.Abstractions.IFileSystemInfo[] GetFileSystemInfos(string searchPattern, System.IO.SearchOption searchOption);
         public abstract System.IO.Abstractions.IFileInfo[] GetFiles();
         public abstract System.IO.Abstractions.IFileInfo[] GetFiles(string searchPattern);
-        public abstract System.IO.Abstractions.IFileInfo[] GetFiles(string searchPattern, System.IO.EnumerationOptions enumerationOptions);
         public abstract System.IO.Abstractions.IFileInfo[] GetFiles(string searchPattern, System.IO.SearchOption searchOption);
         public abstract void MoveTo(string destDirName);
-        public static System.IO.Abstractions.DirectoryInfoBase op_Implicit(System.IO.DirectoryInfo directoryInfo) { }
+        public static implicit operator System.IO.Abstractions.DirectoryInfoBase(System.IO.DirectoryInfo directoryInfo) { }
     }
     [System.Serializable]
     public class DirectoryInfoWrapper : System.IO.Abstractions.DirectoryInfoBase, System.IO.Abstractions.IFileSystemAclSupport
@@ -129,32 +125,29 @@ namespace System.IO.Abstractions
         public override void Delete(bool recursive) { }
         public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IDirectoryInfo> EnumerateDirectories() { }
         public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IDirectoryInfo> EnumerateDirectories(string searchPattern) { }
-        public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IDirectoryInfo> EnumerateDirectories(string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
         public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IDirectoryInfo> EnumerateDirectories(string searchPattern, System.IO.SearchOption searchOption) { }
         public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileSystemInfo> EnumerateFileSystemInfos() { }
         public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern) { }
-        public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
         public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileSystemInfo> EnumerateFileSystemInfos(string searchPattern, System.IO.SearchOption searchOption) { }
         public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileInfo> EnumerateFiles() { }
         public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileInfo> EnumerateFiles(string searchPattern) { }
-        public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileInfo> EnumerateFiles(string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
         public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileInfo> EnumerateFiles(string searchPattern, System.IO.SearchOption searchOption) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public object GetAccessControl() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public object GetAccessControl(System.IO.Abstractions.IFileSystemAclSupport.AccessControlSections includeSections) { }
         public override System.IO.Abstractions.IDirectoryInfo[] GetDirectories() { }
         public override System.IO.Abstractions.IDirectoryInfo[] GetDirectories(string searchPattern) { }
-        public override System.IO.Abstractions.IDirectoryInfo[] GetDirectories(string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
         public override System.IO.Abstractions.IDirectoryInfo[] GetDirectories(string searchPattern, System.IO.SearchOption searchOption) { }
         public override System.IO.Abstractions.IFileSystemInfo[] GetFileSystemInfos() { }
         public override System.IO.Abstractions.IFileSystemInfo[] GetFileSystemInfos(string searchPattern) { }
-        public override System.IO.Abstractions.IFileSystemInfo[] GetFileSystemInfos(string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
         public override System.IO.Abstractions.IFileSystemInfo[] GetFileSystemInfos(string searchPattern, System.IO.SearchOption searchOption) { }
         public override System.IO.Abstractions.IFileInfo[] GetFiles() { }
         public override System.IO.Abstractions.IFileInfo[] GetFiles(string searchPattern) { }
-        public override System.IO.Abstractions.IFileInfo[] GetFiles(string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
         public override System.IO.Abstractions.IFileInfo[] GetFiles(string searchPattern, System.IO.SearchOption searchOption) { }
         public override void MoveTo(string destDirName) { }
         public override void Refresh() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public void SetAccessControl(object value) { }
         public override string ToString() { }
     }
@@ -167,15 +160,12 @@ namespace System.IO.Abstractions
         public override void Delete(string path, bool recursive) { }
         public override System.Collections.Generic.IEnumerable<string> EnumerateDirectories(string path) { }
         public override System.Collections.Generic.IEnumerable<string> EnumerateDirectories(string path, string searchPattern) { }
-        public override System.Collections.Generic.IEnumerable<string> EnumerateDirectories(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
         public override System.Collections.Generic.IEnumerable<string> EnumerateDirectories(string path, string searchPattern, System.IO.SearchOption searchOption) { }
         public override System.Collections.Generic.IEnumerable<string> EnumerateFileSystemEntries(string path) { }
         public override System.Collections.Generic.IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern) { }
-        public override System.Collections.Generic.IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
         public override System.Collections.Generic.IEnumerable<string> EnumerateFileSystemEntries(string path, string searchPattern, System.IO.SearchOption searchOption) { }
         public override System.Collections.Generic.IEnumerable<string> EnumerateFiles(string path) { }
         public override System.Collections.Generic.IEnumerable<string> EnumerateFiles(string path, string searchPattern) { }
-        public override System.Collections.Generic.IEnumerable<string> EnumerateFiles(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
         public override System.Collections.Generic.IEnumerable<string> EnumerateFiles(string path, string searchPattern, System.IO.SearchOption searchOption) { }
         public override bool Exists(string path) { }
         public override System.DateTime GetCreationTime(string path) { }
@@ -183,16 +173,13 @@ namespace System.IO.Abstractions
         public override string GetCurrentDirectory() { }
         public override string[] GetDirectories(string path) { }
         public override string[] GetDirectories(string path, string searchPattern) { }
-        public override string[] GetDirectories(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
         public override string[] GetDirectories(string path, string searchPattern, System.IO.SearchOption searchOption) { }
         public override string GetDirectoryRoot(string path) { }
         public override string[] GetFileSystemEntries(string path) { }
         public override string[] GetFileSystemEntries(string path, string searchPattern) { }
-        public override string[] GetFileSystemEntries(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
         public override string[] GetFileSystemEntries(string path, string searchPattern, System.IO.SearchOption searchOption) { }
         public override string[] GetFiles(string path) { }
         public override string[] GetFiles(string path, string searchPattern) { }
-        public override string[] GetFiles(string path, string searchPattern, System.IO.EnumerationOptions enumerationOptions) { }
         public override string[] GetFiles(string path, string searchPattern, System.IO.SearchOption searchOption) { }
         public override System.DateTime GetLastAccessTime(string path) { }
         public override System.DateTime GetLastAccessTimeUtc(string path) { }
@@ -223,7 +210,7 @@ namespace System.IO.Abstractions
         public abstract long TotalFreeSpace { get; }
         public abstract long TotalSize { get; }
         public abstract string VolumeLabel { get; set; }
-        public static System.IO.Abstractions.DriveInfoBase op_Implicit(System.IO.DriveInfo driveInfo) { }
+        public static implicit operator System.IO.Abstractions.DriveInfoBase(System.IO.DriveInfo driveInfo) { }
     }
     [System.Serializable]
     public class DriveInfoWrapper : System.IO.Abstractions.DriveInfoBase
@@ -237,13 +224,16 @@ namespace System.IO.Abstractions
         public override System.IO.Abstractions.IDirectoryInfo RootDirectory { get; }
         public override long TotalFreeSpace { get; }
         public override long TotalSize { get; }
-        public override string VolumeLabel { get; set; }
+        public override string VolumeLabel { get; [System.Runtime.Versioning.SupportedOSPlatform("windows")] set; }
         public override string ToString() { }
     }
     public static class FileAclExtensions
     {
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static System.Security.AccessControl.FileSecurity GetAccessControl(this System.IO.Abstractions.IFile file, string path) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static System.Security.AccessControl.FileSecurity GetAccessControl(this System.IO.Abstractions.IFile file, string path, System.Security.AccessControl.AccessControlSections includeSections) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static void SetAccessControl(this System.IO.Abstractions.IFile file, string path, System.Security.AccessControl.FileSecurity fileSecurity) { }
     }
     [System.Serializable]
@@ -253,12 +243,8 @@ namespace System.IO.Abstractions
         public System.IO.Abstractions.IFileSystem FileSystem { get; }
         public abstract void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents);
         public abstract void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding);
-        public abstract System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default);
-        public abstract System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default);
         public abstract void AppendAllText(string path, string contents);
         public abstract void AppendAllText(string path, string contents, System.Text.Encoding encoding);
-        public abstract System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default);
-        public abstract System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default);
         public abstract System.IO.StreamWriter AppendText(string path);
         public abstract void Copy(string sourceFileName, string destFileName);
         public abstract void Copy(string sourceFileName, string destFileName, bool overwrite);
@@ -285,15 +271,10 @@ namespace System.IO.Abstractions
         public abstract System.IO.StreamReader OpenText(string path);
         public abstract System.IO.Abstractions.FileSystemStream OpenWrite(string path);
         public abstract byte[] ReadAllBytes(string path);
-        public abstract System.Threading.Tasks.Task<byte[]> ReadAllBytesAsync(string path, System.Threading.CancellationToken cancellationToken = default);
         public abstract string[] ReadAllLines(string path);
         public abstract string[] ReadAllLines(string path, System.Text.Encoding encoding);
-        public abstract System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Threading.CancellationToken cancellationToken = default);
-        public abstract System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default);
         public abstract string ReadAllText(string path);
         public abstract string ReadAllText(string path, System.Text.Encoding encoding);
-        public abstract System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Threading.CancellationToken cancellationToken = default);
-        public abstract System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default);
         public abstract System.Collections.Generic.IEnumerable<string> ReadLines(string path);
         public abstract System.Collections.Generic.IEnumerable<string> ReadLines(string path, System.Text.Encoding encoding);
         public abstract void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName);
@@ -306,22 +287,20 @@ namespace System.IO.Abstractions
         public abstract void SetLastWriteTime(string path, System.DateTime lastWriteTime);
         public abstract void SetLastWriteTimeUtc(string path, System.DateTime lastWriteTimeUtc);
         public abstract void WriteAllBytes(string path, byte[] bytes);
-        public abstract System.Threading.Tasks.Task WriteAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default);
         public abstract void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents);
-        public abstract void WriteAllLines(string path, string[] contents);
         public abstract void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding);
+        public abstract void WriteAllLines(string path, string[] contents);
         public abstract void WriteAllLines(string path, string[] contents, System.Text.Encoding encoding);
-        public abstract System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default);
-        public abstract System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default);
         public abstract void WriteAllText(string path, string contents);
         public abstract void WriteAllText(string path, string contents, System.Text.Encoding encoding);
-        public abstract System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default);
-        public abstract System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default);
     }
     public static class FileInfoAclExtensions
     {
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static System.Security.AccessControl.FileSecurity GetAccessControl(this System.IO.Abstractions.IFileInfo fileInfo) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static System.Security.AccessControl.FileSecurity GetAccessControl(this System.IO.Abstractions.IFileInfo fileInfo, System.Security.AccessControl.AccessControlSections includeSections) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static void SetAccessControl(this System.IO.Abstractions.IFileInfo fileInfo, System.Security.AccessControl.FileSecurity fileSecurity) { }
     }
     [System.Serializable]
@@ -348,7 +327,7 @@ namespace System.IO.Abstractions
         public abstract System.IO.Abstractions.FileSystemStream OpenWrite();
         public abstract System.IO.Abstractions.IFileInfo Replace(string destinationFileName, string destinationBackupFileName);
         public abstract System.IO.Abstractions.IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors);
-        public static System.IO.Abstractions.FileInfoBase op_Implicit(System.IO.FileInfo fileInfo) { }
+        public static implicit operator System.IO.Abstractions.FileInfoBase(System.IO.FileInfo fileInfo) { }
     }
     [System.Serializable]
     public class FileInfoWrapper : System.IO.Abstractions.FileInfoBase, System.IO.Abstractions.IFileSystemAclSupport
@@ -374,10 +353,14 @@ namespace System.IO.Abstractions
         public override System.IO.Abstractions.IFileInfo CopyTo(string destFileName, bool overwrite) { }
         public override System.IO.Abstractions.FileSystemStream Create() { }
         public override System.IO.StreamWriter CreateText() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public override void Decrypt() { }
         public override void Delete() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public override void Encrypt() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public object GetAccessControl() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public object GetAccessControl(System.IO.Abstractions.IFileSystemAclSupport.AccessControlSections includeSections) { }
         public override void MoveTo(string destFileName) { }
         public override System.IO.Abstractions.FileSystemStream Open(System.IO.FileMode mode) { }
@@ -389,12 +372,15 @@ namespace System.IO.Abstractions
         public override void Refresh() { }
         public override System.IO.Abstractions.IFileInfo Replace(string destinationFileName, string destinationBackupFileName) { }
         public override System.IO.Abstractions.IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public void SetAccessControl(object value) { }
         public override string ToString() { }
     }
     public static class FileStreamAclExtensions
     {
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static System.Security.AccessControl.FileSecurity GetAccessControl(this System.IO.Abstractions.FileSystemStream fileStream) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public static void SetAccessControl(this System.IO.Abstractions.FileSystemStream fileStream, System.Security.AccessControl.FileSecurity fileSecurity) { }
     }
     [System.Serializable]
@@ -464,8 +450,8 @@ namespace System.IO.Abstractions
         public virtual event System.IO.ErrorEventHandler Error;
         public virtual event System.IO.RenamedEventHandler Renamed;
         public abstract void BeginInit();
-        public void Dispose() { }
         public virtual void Dispose(bool disposing) { }
+        public void Dispose() { }
         public abstract void EndInit();
         protected void OnChanged(object sender, System.IO.FileSystemEventArgs args) { }
         protected void OnCreated(object sender, System.IO.FileSystemEventArgs args) { }
@@ -474,7 +460,7 @@ namespace System.IO.Abstractions
         protected void OnRenamed(object sender, System.IO.RenamedEventArgs args) { }
         public abstract System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType);
         public abstract System.IO.Abstractions.IWaitForChangedResult WaitForChanged(System.IO.WatcherChangeTypes changeType, int timeout);
-        public static System.IO.Abstractions.FileSystemWatcherBase op_Implicit(System.IO.FileSystemWatcher watcher) { }
+        public static implicit operator System.IO.Abstractions.FileSystemWatcherBase(System.IO.FileSystemWatcher watcher) { }
     }
     [System.Serializable]
     public class FileSystemWatcherFactory : System.IO.Abstractions.IFileSystemEntity, System.IO.Abstractions.IFileSystemWatcherFactory
@@ -541,7 +527,7 @@ namespace System.IO.Abstractions
         public abstract string ProductVersion { get; }
         public abstract string SpecialBuild { get; }
         public abstract string ToString();
-        public static System.IO.Abstractions.FileVersionInfoBase op_Implicit(System.Diagnostics.FileVersionInfo fileVersionInfo) { }
+        public static implicit operator System.IO.Abstractions.FileVersionInfoBase(System.Diagnostics.FileVersionInfo fileVersionInfo) { }
     }
     [System.Serializable]
     public class FileVersionInfoWrapper : System.IO.Abstractions.FileVersionInfoBase
@@ -582,12 +568,8 @@ namespace System.IO.Abstractions
         public FileWrapper(System.IO.Abstractions.IFileSystem fileSystem) { }
         public override void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents) { }
         public override void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
         public override void AppendAllText(string path, string contents) { }
         public override void AppendAllText(string path, string contents, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
         public override System.IO.StreamWriter AppendText(string path) { }
         public override void Copy(string sourceFileName, string destFileName) { }
         public override void Copy(string sourceFileName, string destFileName, bool overwrite) { }
@@ -595,8 +577,10 @@ namespace System.IO.Abstractions
         public override System.IO.Abstractions.FileSystemStream Create(string path, int bufferSize) { }
         public override System.IO.Abstractions.FileSystemStream Create(string path, int bufferSize, System.IO.FileOptions options) { }
         public override System.IO.StreamWriter CreateText(string path) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public override void Decrypt(string path) { }
         public override void Delete(string path) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public override void Encrypt(string path) { }
         public override bool Exists(string path) { }
         public override System.IO.FileAttributes GetAttributes(string path) { }
@@ -614,15 +598,10 @@ namespace System.IO.Abstractions
         public override System.IO.StreamReader OpenText(string path) { }
         public override System.IO.Abstractions.FileSystemStream OpenWrite(string path) { }
         public override byte[] ReadAllBytes(string path) { }
-        public override System.Threading.Tasks.Task<byte[]> ReadAllBytesAsync(string path, System.Threading.CancellationToken cancellationToken = default) { }
         public override string[] ReadAllLines(string path) { }
         public override string[] ReadAllLines(string path, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
         public override string ReadAllText(string path) { }
         public override string ReadAllText(string path, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
         public override System.Collections.Generic.IEnumerable<string> ReadLines(string path) { }
         public override System.Collections.Generic.IEnumerable<string> ReadLines(string path, System.Text.Encoding encoding) { }
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName) { }
@@ -635,17 +614,12 @@ namespace System.IO.Abstractions
         public override void SetLastWriteTime(string path, System.DateTime lastWriteTime) { }
         public override void SetLastWriteTimeUtc(string path, System.DateTime lastWriteTimeUtc) { }
         public override void WriteAllBytes(string path, byte[] bytes) { }
-        public override System.Threading.Tasks.Task WriteAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default) { }
         public override void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents) { }
-        public override void WriteAllLines(string path, string[] contents) { }
         public override void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding) { }
+        public override void WriteAllLines(string path, string[] contents) { }
         public override void WriteAllLines(string path, string[] contents, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
         public override void WriteAllText(string path, string contents) { }
         public override void WriteAllText(string path, string contents, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
     }
     [System.Serializable]
     public abstract class PathBase : System.IO.Abstractions.IFileSystemEntity, System.IO.Abstractions.IPath
@@ -663,34 +637,19 @@ namespace System.IO.Abstractions
         public abstract string Combine(string path1, string path2);
         public abstract string Combine(string path1, string path2, string path3);
         public abstract string Combine(string path1, string path2, string path3, string path4);
-        public abstract System.ReadOnlySpan<char> GetDirectoryName(System.ReadOnlySpan<char> path);
         public abstract string GetDirectoryName(string path);
-        public abstract System.ReadOnlySpan<char> GetExtension(System.ReadOnlySpan<char> path);
         public abstract string GetExtension(string path);
-        public abstract System.ReadOnlySpan<char> GetFileName(System.ReadOnlySpan<char> path);
         public abstract string GetFileName(string path);
-        public abstract System.ReadOnlySpan<char> GetFileNameWithoutExtension(System.ReadOnlySpan<char> path);
         public abstract string GetFileNameWithoutExtension(string path);
         public abstract string GetFullPath(string path);
-        public abstract string GetFullPath(string path, string basePath);
         public abstract char[] GetInvalidFileNameChars();
         public abstract char[] GetInvalidPathChars();
-        public abstract System.ReadOnlySpan<char> GetPathRoot(System.ReadOnlySpan<char> path);
         public abstract string GetPathRoot(string path);
         public abstract string GetRandomFileName();
-        public abstract string GetRelativePath(string relativeTo, string path);
         public abstract string GetTempFileName();
         public abstract string GetTempPath();
-        public abstract bool HasExtension(System.ReadOnlySpan<char> path);
         public abstract bool HasExtension(string path);
-        public abstract bool IsPathFullyQualified(System.ReadOnlySpan<char> path);
-        public abstract bool IsPathFullyQualified(string path);
-        public abstract bool IsPathRooted(System.ReadOnlySpan<char> path);
         public abstract bool IsPathRooted(string path);
-        public abstract string Join(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2);
-        public abstract string Join(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.ReadOnlySpan<char> path3);
-        public abstract bool TryJoin(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.Span<char> destination, out int charsWritten);
-        public abstract bool TryJoin(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.ReadOnlySpan<char> path3, System.Span<char> destination, out int charsWritten);
     }
     [System.Serializable]
     public class PathWrapper : System.IO.Abstractions.PathBase
@@ -707,33 +666,19 @@ namespace System.IO.Abstractions
         public override string Combine(string path1, string path2) { }
         public override string Combine(string path1, string path2, string path3) { }
         public override string Combine(string path1, string path2, string path3, string path4) { }
-        public override System.ReadOnlySpan<char> GetDirectoryName(System.ReadOnlySpan<char> path) { }
         public override string GetDirectoryName(string path) { }
-        public override System.ReadOnlySpan<char> GetExtension(System.ReadOnlySpan<char> path) { }
         public override string GetExtension(string path) { }
-        public override System.ReadOnlySpan<char> GetFileName(System.ReadOnlySpan<char> path) { }
         public override string GetFileName(string path) { }
-        public override System.ReadOnlySpan<char> GetFileNameWithoutExtension(System.ReadOnlySpan<char> path) { }
         public override string GetFileNameWithoutExtension(string path) { }
         public override string GetFullPath(string path) { }
-        public override string GetFullPath(string path, string basePath) { }
         public override char[] GetInvalidFileNameChars() { }
         public override char[] GetInvalidPathChars() { }
-        public override System.ReadOnlySpan<char> GetPathRoot(System.ReadOnlySpan<char> path) { }
         public override string GetPathRoot(string path) { }
         public override string GetRandomFileName() { }
-        public override string GetRelativePath(string relativeTo, string path) { }
         public override string GetTempFileName() { }
         public override string GetTempPath() { }
-        public override bool HasExtension(System.ReadOnlySpan<char> path) { }
         public override bool HasExtension(string path) { }
-        public override bool IsPathFullyQualified(System.ReadOnlySpan<char> path) { }
-        public override bool IsPathFullyQualified(string path) { }
-        public override bool IsPathRooted(System.ReadOnlySpan<char> path) { }
         public override bool IsPathRooted(string path) { }
-        public override string Join(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2) { }
-        public override string Join(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.ReadOnlySpan<char> path3) { }
-        public override bool TryJoin(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.Span<char> destination, out int charsWritten) { }
-        public override bool TryJoin(System.ReadOnlySpan<char> path1, System.ReadOnlySpan<char> path2, System.ReadOnlySpan<char> path3, System.Span<char> destination, out int charsWritten) { }
     }
 }
+

@@ -1,5 +1,5 @@
 [assembly: System.Reflection.AssemblyMetadata("RepositoryUrl", "https://github.com/TestableIO/System.IO.Abstractions.git")]
-[assembly: System.Runtime.Versioning.TargetFramework(".NETCoreApp,Version=v9.0", FrameworkDisplayName=".NET 9.0")]
+[assembly: System.Runtime.Versioning.TargetFramework(".NETCoreApp,Version=v11.0", FrameworkDisplayName = ".NET 11.0")]
 public class FileHandles
 {
     public FileHandles() { }
@@ -33,8 +33,8 @@ namespace System.IO.Abstractions.TestingHelpers
     [System.Serializable]
     public class MockDirectory : System.IO.Abstractions.DirectoryBase
     {
-        public MockDirectory(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string currentDirectory) { }
         public MockDirectory(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, System.IO.Abstractions.FileBase fileBase, string currentDirectory) { }
+        public MockDirectory(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string currentDirectory) { }
         public override System.IO.Abstractions.IDirectoryInfo CreateDirectory(string path) { }
         public override System.IO.Abstractions.IDirectoryInfo CreateDirectory(string path, System.IO.UnixFileMode unixCreateMode) { }
         public override System.IO.Abstractions.IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget) { }
@@ -91,7 +91,7 @@ namespace System.IO.Abstractions.TestingHelpers
     {
         public MockDirectoryData() { }
         [System.Runtime.Versioning.SupportedOSPlatform("windows")]
-        public new System.Security.AccessControl.DirectorySecurity AccessControl { get; set; }
+        public System.Security.AccessControl.DirectorySecurity AccessControl { get; set; }
     }
     [System.Serializable]
     public class MockDirectoryInfo : System.IO.Abstractions.DirectoryInfoBase, System.IO.Abstractions.IFileSystemAclSupport
@@ -202,26 +202,27 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockFile(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor) { }
         public override void AppendAllBytes(string path, System.ReadOnlySpan<byte> bytes) { }
         public override void AppendAllBytes(string path, byte[] bytes) { }
-        public override System.Threading.Tasks.Task AppendAllBytesAsync(string path, System.ReadOnlyMemory<byte> bytes, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task AppendAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task AppendAllBytesAsync(string path, System.ReadOnlyMemory<byte> bytes, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task AppendAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents) { }
         public override void AppendAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task AppendAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override void AppendAllText(string path, System.ReadOnlySpan<char> contents) { }
-        public override void AppendAllText(string path, string contents) { }
         public override void AppendAllText(string path, System.ReadOnlySpan<char> contents, System.Text.Encoding encoding) { }
+        public override void AppendAllText(string path, string contents) { }
         public override void AppendAllText(string path, string contents, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, System.ReadOnlyMemory<char> contents, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, System.ReadOnlyMemory<char> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, System.ReadOnlyMemory<char> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, System.ReadOnlyMemory<char> contents, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task AppendAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override System.IO.StreamWriter AppendText(string path) { }
         public override void Copy(string sourceFileName, string destFileName) { }
         public override void Copy(string sourceFileName, string destFileName, bool overwrite) { }
         public override System.IO.Abstractions.FileSystemStream Create(string path) { }
         public override System.IO.Abstractions.FileSystemStream Create(string path, int bufferSize) { }
         public override System.IO.Abstractions.FileSystemStream Create(string path, int bufferSize, System.IO.FileOptions options) { }
+        public override System.IO.Abstractions.IFileSystemInfo CreateHardLink(string path, string pathToTarget) { }
         public override System.IO.Abstractions.IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget) { }
         public override System.IO.StreamWriter CreateText(string path) { }
         public override void Decrypt(string path) { }
@@ -247,28 +248,28 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void Move(string sourceFileName, string destFileName) { }
         public override void Move(string sourceFileName, string destFileName, bool overwrite) { }
         public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode) { }
-        public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileStreamOptions options) { }
         public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode, System.IO.FileAccess access) { }
         public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share) { }
-        public override Microsoft.Win32.SafeHandles.SafeFileHandle OpenHandle(string path, System.IO.FileMode mode = 3, System.IO.FileAccess access = 1, System.IO.FileShare share = 1, System.IO.FileOptions options = 0, long preallocationSize = 0) { }
+        public override System.IO.Abstractions.FileSystemStream Open(string path, System.IO.FileStreamOptions options) { }
+        public override Microsoft.Win32.SafeHandles.SafeFileHandle OpenHandle(string path, System.IO.FileMode mode = System.IO.FileMode.Open, System.IO.FileAccess access = System.IO.FileAccess.Read, System.IO.FileShare share = System.IO.FileShare.Read, System.IO.FileOptions options = System.IO.FileOptions.None, long preallocationSize = 0) { }
+        public override Microsoft.Win32.SafeHandles.SafeFileHandle OpenNullHandle() { }
         public override System.IO.Abstractions.FileSystemStream OpenRead(string path) { }
         public override System.IO.StreamReader OpenText(string path) { }
         public override System.IO.Abstractions.FileSystemStream OpenWrite(string path) { }
         public override byte[] ReadAllBytes(string path) { }
-        public override System.Threading.Tasks.Task<byte[]> ReadAllBytesAsync(string path, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task<byte[]> ReadAllBytesAsync(string path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override string[] ReadAllLines(string path) { }
         public override string[] ReadAllLines(string path, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task<string[]> ReadAllLinesAsync(string path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override string ReadAllText(string path) { }
         public override string ReadAllText(string path, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task<string> ReadAllTextAsync(string path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override System.Collections.Generic.IEnumerable<string> ReadLines(string path) { }
         public override System.Collections.Generic.IEnumerable<string> ReadLines(string path, System.Text.Encoding encoding) { }
-        public override System.Collections.Generic.IAsyncEnumerable<string> ReadLinesAsync(string path, System.Threading.CancellationToken cancellationToken = default) { }
-        [System.Runtime.CompilerServices.AsyncIteratorStateMachine(typeof(System.IO.Abstractions.TestingHelpers.MockFile.<ReadLinesAsync>d__14))]
-        public override System.Collections.Generic.IAsyncEnumerable<string> ReadLinesAsync(string path, System.Text.Encoding encoding, [System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Collections.Generic.IAsyncEnumerable<string> ReadLinesAsync(string path, System.Text.Encoding encoding, [System.Runtime.CompilerServices.EnumeratorCancellation] System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Collections.Generic.IAsyncEnumerable<string> ReadLinesAsync(string path, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName) { }
         public override void Replace(string sourceFileName, string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors) { }
         public override System.IO.Abstractions.IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget) { }
@@ -290,22 +291,22 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void SetUnixFileMode(string path, System.IO.UnixFileMode mode) { }
         public override void WriteAllBytes(string path, System.ReadOnlySpan<byte> bytes) { }
         public override void WriteAllBytes(string path, byte[] bytes) { }
-        public override System.Threading.Tasks.Task WriteAllBytesAsync(string path, System.ReadOnlyMemory<byte> bytes, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task WriteAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task WriteAllBytesAsync(string path, System.ReadOnlyMemory<byte> bytes, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task WriteAllBytesAsync(string path, byte[] bytes, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents) { }
-        public override void WriteAllLines(string path, string[] contents) { }
         public override void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding) { }
+        public override void WriteAllLines(string path, string[] contents) { }
         public override void WriteAllLines(string path, string[] contents, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task WriteAllLinesAsync(string path, System.Collections.Generic.IEnumerable<string> contents, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override void WriteAllText(string path, System.ReadOnlySpan<char> contents) { }
-        public override void WriteAllText(string path, string contents) { }
         public override void WriteAllText(string path, System.ReadOnlySpan<char> contents, System.Text.Encoding encoding) { }
+        public override void WriteAllText(string path, string contents) { }
         public override void WriteAllText(string path, string contents, System.Text.Encoding encoding) { }
-        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, System.ReadOnlyMemory<char> contents, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, System.ReadOnlyMemory<char> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
-        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default) { }
+        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, System.ReadOnlyMemory<char> contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, System.ReadOnlyMemory<char> contents, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Text.Encoding encoding, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public override System.Threading.Tasks.Task WriteAllTextAsync(string path, string contents, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
     }
     [System.Serializable]
     public class MockFileData
@@ -329,7 +330,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public string LinkTarget { get; set; }
         public string TextContents { get; set; }
         public System.IO.UnixFileMode UnixMode { get; set; }
-        public static System.IO.Abstractions.TestingHelpers.MockFileData op_Implicit(string s) { }
+        public static implicit operator System.IO.Abstractions.TestingHelpers.MockFileData(string s) { }
     }
     [System.Serializable]
     public class MockFileInfo : System.IO.Abstractions.FileInfoBase, System.IO.Abstractions.IFileSystemAclSupport
@@ -355,6 +356,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override System.IO.Abstractions.IFileInfo CopyTo(string destFileName) { }
         public override System.IO.Abstractions.IFileInfo CopyTo(string destFileName, bool overwrite) { }
         public override System.IO.Abstractions.FileSystemStream Create() { }
+        public override void CreateAsHardLink(string pathToTarget) { }
         public override void CreateAsSymbolicLink(string pathToTarget) { }
         public override System.IO.StreamWriter CreateText() { }
         public override void Decrypt() { }
@@ -367,9 +369,9 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void MoveTo(string destFileName) { }
         public override void MoveTo(string destFileName, bool overwrite) { }
         public override System.IO.Abstractions.FileSystemStream Open(System.IO.FileMode mode) { }
-        public override System.IO.Abstractions.FileSystemStream Open(System.IO.FileStreamOptions options) { }
         public override System.IO.Abstractions.FileSystemStream Open(System.IO.FileMode mode, System.IO.FileAccess access) { }
         public override System.IO.Abstractions.FileSystemStream Open(System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share) { }
+        public override System.IO.Abstractions.FileSystemStream Open(System.IO.FileStreamOptions options) { }
         public override System.IO.Abstractions.FileSystemStream OpenRead() { }
         public override System.IO.StreamReader OpenText() { }
         public override System.IO.Abstractions.FileSystemStream OpenWrite() { }
@@ -392,7 +394,7 @@ namespace System.IO.Abstractions.TestingHelpers
     [System.Serializable]
     public class MockFileStream : System.IO.Abstractions.FileSystemStream, System.IO.Abstractions.IFileSystemAclSupport
     {
-        public MockFileStream(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string path, System.IO.FileMode mode, System.IO.FileAccess access = 3, System.IO.FileShare share = 1, System.IO.FileOptions options = 0) { }
+        public MockFileStream(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string path, System.IO.FileMode mode, System.IO.FileAccess access = System.IO.FileAccess.ReadWrite, System.IO.FileShare share = System.IO.FileShare.Read, System.IO.FileOptions options = System.IO.FileOptions.None) { }
         public override bool CanRead { get; }
         public override bool CanWrite { get; }
         public static System.IO.Abstractions.FileSystemStream Null { get; }
@@ -407,16 +409,16 @@ namespace System.IO.Abstractions.TestingHelpers
         public object GetAccessControl(System.IO.Abstractions.IFileSystemAclSupport.AccessControlSections includeSections) { }
         public override int Read(System.Span<byte> buffer) { }
         public override int Read(byte[] buffer, int offset, int count) { }
-        public override System.Threading.Tasks.ValueTask<int> ReadAsync(System.Memory<byte> buffer, System.Threading.CancellationToken cancellationToken = default) { }
         public override System.Threading.Tasks.Task<int> ReadAsync(byte[] buffer, int offset, int count, System.Threading.CancellationToken cancellationToken) { }
+        public override System.Threading.Tasks.ValueTask<int> ReadAsync(System.Memory<byte> buffer, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override int ReadByte() { }
         [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public void SetAccessControl(object value) { }
         public override void SetLength(long value) { }
         public override void Write(System.ReadOnlySpan<byte> buffer) { }
         public override void Write(byte[] buffer, int offset, int count) { }
-        public override System.Threading.Tasks.ValueTask WriteAsync(System.ReadOnlyMemory<byte> buffer, System.Threading.CancellationToken cancellationToken = default) { }
         public override System.Threading.Tasks.Task WriteAsync(byte[] buffer, int offset, int count, System.Threading.CancellationToken cancellationToken) { }
+        public override System.Threading.Tasks.ValueTask WriteAsync(System.ReadOnlyMemory<byte> buffer, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public override void WriteByte(byte value) { }
     }
     [System.Serializable]
@@ -425,24 +427,24 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockFileStreamFactory(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileSystem) { }
         public System.IO.Abstractions.IFileSystem FileSystem { get; }
         public System.IO.Abstractions.FileSystemStream New(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.IO.FileAccess access) { }
-        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode) { }
-        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileStreamOptions options) { }
         public System.IO.Abstractions.FileSystemStream New(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.IO.FileAccess access, int bufferSize) { }
-        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access) { }
         public System.IO.Abstractions.FileSystemStream New(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.IO.FileAccess access, int bufferSize, bool isAsync) { }
+        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode) { }
+        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access) { }
         public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share) { }
         public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, int bufferSize) { }
         public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, int bufferSize, System.IO.FileOptions options) { }
         public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, int bufferSize, bool useAsync) { }
+        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileStreamOptions options) { }
         public System.IO.Abstractions.FileSystemStream Wrap(System.IO.FileStream fileStream) { }
     }
     [System.Serializable]
     public class MockFileSystem : System.IO.Abstractions.FileSystemBase, System.IO.Abstractions.IFileSystem, System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor
     {
         public MockFileSystem() { }
-        public MockFileSystem(System.IO.Abstractions.TestingHelpers.MockFileSystemOptions options) { }
         public MockFileSystem(System.Collections.Generic.IDictionary<string, System.IO.Abstractions.TestingHelpers.MockFileData> files, System.IO.Abstractions.TestingHelpers.MockFileSystemOptions options) { }
         public MockFileSystem(System.Collections.Generic.IDictionary<string, System.IO.Abstractions.TestingHelpers.MockFileData> files, string currentDirectory = "") { }
+        public MockFileSystem(System.IO.Abstractions.TestingHelpers.MockFileSystemOptions options) { }
         public System.Collections.Generic.IEnumerable<string> AllDirectories { get; }
         public System.Collections.Generic.IEnumerable<string> AllDrives { get; }
         public System.Collections.Generic.IEnumerable<string> AllFiles { get; }
@@ -499,26 +501,7 @@ namespace System.IO.Abstractions.TestingHelpers
     [System.Serializable]
     public class MockFileVersionInfo : System.IO.Abstractions.FileVersionInfoBase
     {
-        public MockFileVersionInfo(
-                    string fileName,
-                    string fileVersion = null,
-                    string productVersion = null,
-                    string fileDescription = null,
-                    string productName = null,
-                    string companyName = null,
-                    string comments = null,
-                    string internalName = null,
-                    bool isDebug = false,
-                    bool isPatched = false,
-                    bool isPrivateBuild = false,
-                    bool isPreRelease = false,
-                    bool isSpecialBuild = false,
-                    string language = null,
-                    string legalCopyright = null,
-                    string legalTrademarks = null,
-                    string originalFilename = null,
-                    string privateBuild = null,
-                    string specialBuild = null) { }
+        public MockFileVersionInfo(string fileName, string fileVersion = null, string productVersion = null, string fileDescription = null, string productName = null, string companyName = null, string comments = null, string internalName = null, bool isDebug = false, bool isPatched = false, bool isPrivateBuild = false, bool isPreRelease = false, bool isSpecialBuild = false, string language = null, string legalCopyright = null, string legalTrademarks = null, string originalFilename = null, string privateBuild = null, string specialBuild = null) { }
         public override string Comments { get; }
         public override string CompanyName { get; }
         public override int FileBuildPart { get; }
@@ -573,15 +556,15 @@ namespace System.IO.Abstractions.TestingHelpers
         public System.IO.Abstractions.IFileSystem FileSystem { get; }
         public void FlushToDisk(Microsoft.Win32.SafeHandles.SafeFileHandle handle) { }
         public long GetLength(Microsoft.Win32.SafeHandles.SafeFileHandle handle) { }
-        public long Read(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.Memory<byte>> buffers, long fileOffset) { }
         public int Read(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Span<byte> buffer, long fileOffset) { }
-        public System.Threading.Tasks.ValueTask<long> ReadAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.Memory<byte>> buffers, long fileOffset, System.Threading.CancellationToken cancellationToken = default) { }
-        public System.Threading.Tasks.ValueTask<int> ReadAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Memory<byte> buffer, long fileOffset, System.Threading.CancellationToken cancellationToken = default) { }
+        public long Read(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.Memory<byte>> buffers, long fileOffset) { }
+        public System.Threading.Tasks.ValueTask<int> ReadAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Memory<byte> buffer, long fileOffset, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public System.Threading.Tasks.ValueTask<long> ReadAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.Memory<byte>> buffers, long fileOffset, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
         public void SetLength(Microsoft.Win32.SafeHandles.SafeFileHandle handle, long length) { }
         public void Write(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.ReadOnlyMemory<byte>> buffers, long fileOffset) { }
         public void Write(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.ReadOnlySpan<byte> buffer, long fileOffset) { }
-        public System.Threading.Tasks.ValueTask WriteAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.ReadOnlyMemory<byte>> buffers, long fileOffset, System.Threading.CancellationToken cancellationToken = default) { }
-        public System.Threading.Tasks.ValueTask WriteAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.ReadOnlyMemory<byte> buffer, long fileOffset, System.Threading.CancellationToken cancellationToken = default) { }
+        public System.Threading.Tasks.ValueTask WriteAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.Collections.Generic.IReadOnlyList<System.ReadOnlyMemory<byte>> buffers, long fileOffset, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
+        public System.Threading.Tasks.ValueTask WriteAsync(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.ReadOnlyMemory<byte> buffer, long fileOffset, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) { }
     }
     public static class MockUnixSupport
     {
@@ -620,10 +603,11 @@ namespace System.IO.Abstractions.TestingHelpers
     [System.Flags]
     public enum TimeAdjustments
     {
+        All = -1,
         None = 0,
         CreationTime = 1,
         LastAccessTime = 2,
         LastWriteTime = 4,
-        All = -1,
     }
 }
+

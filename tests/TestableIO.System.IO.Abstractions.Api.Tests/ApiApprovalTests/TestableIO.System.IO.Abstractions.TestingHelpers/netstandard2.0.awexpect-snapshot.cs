@@ -1,5 +1,5 @@
 [assembly: System.Reflection.AssemblyMetadata("RepositoryUrl", "https://github.com/TestableIO/System.IO.Abstractions.git")]
-[assembly: System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.7.2", FrameworkDisplayName=".NET Framework 4.7.2")]
+[assembly: System.Runtime.Versioning.TargetFramework(".NETStandard,Version=v2.0", FrameworkDisplayName = ".NET Standard 2.0")]
 public class FileHandles
 {
     public FileHandles() { }
@@ -33,8 +33,8 @@ namespace System.IO.Abstractions.TestingHelpers
     [System.Serializable]
     public class MockDirectory : System.IO.Abstractions.DirectoryBase
     {
-        public MockDirectory(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string currentDirectory) { }
         public MockDirectory(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, System.IO.Abstractions.FileBase fileBase, string currentDirectory) { }
+        public MockDirectory(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string currentDirectory) { }
         public override System.IO.Abstractions.IDirectoryInfo CreateDirectory(string path) { }
         public override void Delete(string path) { }
         public override void Delete(string path, bool recursive) { }
@@ -80,7 +80,8 @@ namespace System.IO.Abstractions.TestingHelpers
     public class MockDirectoryData : System.IO.Abstractions.TestingHelpers.MockFileData
     {
         public MockDirectoryData() { }
-        public new System.Security.AccessControl.DirectorySecurity AccessControl { get; set; }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+        public System.Security.AccessControl.DirectorySecurity AccessControl { get; set; }
     }
     [System.Serializable]
     public class MockDirectoryInfo : System.IO.Abstractions.DirectoryInfoBase, System.IO.Abstractions.IFileSystemAclSupport
@@ -112,7 +113,9 @@ namespace System.IO.Abstractions.TestingHelpers
         public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileInfo> EnumerateFiles() { }
         public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileInfo> EnumerateFiles(string searchPattern) { }
         public override System.Collections.Generic.IEnumerable<System.IO.Abstractions.IFileInfo> EnumerateFiles(string searchPattern, System.IO.SearchOption searchOption) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public object GetAccessControl() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public object GetAccessControl(System.IO.Abstractions.IFileSystemAclSupport.AccessControlSections includeSections) { }
         public override System.IO.Abstractions.IDirectoryInfo[] GetDirectories() { }
         public override System.IO.Abstractions.IDirectoryInfo[] GetDirectories(string searchPattern) { }
@@ -125,6 +128,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override System.IO.Abstractions.IFileInfo[] GetFiles(string searchPattern, System.IO.SearchOption searchOption) { }
         public override void MoveTo(string destDirName) { }
         public override void Refresh() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public void SetAccessControl(object value) { }
         public override string ToString() { }
     }
@@ -224,8 +228,8 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void SetLastWriteTimeUtc(string path, System.DateTime lastWriteTimeUtc) { }
         public override void WriteAllBytes(string path, byte[] bytes) { }
         public override void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents) { }
-        public override void WriteAllLines(string path, string[] contents) { }
         public override void WriteAllLines(string path, System.Collections.Generic.IEnumerable<string> contents, System.Text.Encoding encoding) { }
+        public override void WriteAllLines(string path, string[] contents) { }
         public override void WriteAllLines(string path, string[] contents, System.Text.Encoding encoding) { }
         public override void WriteAllText(string path, string contents) { }
         public override void WriteAllText(string path, string contents, System.Text.Encoding encoding) { }
@@ -239,6 +243,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockFileData(byte[] contents) { }
         public MockFileData(string textContents) { }
         public MockFileData(string textContents, System.Text.Encoding encoding) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public System.Security.AccessControl.FileSecurity AccessControl { get; set; }
         public System.IO.FileShare AllowedFileShare { get; set; }
         public System.IO.FileAttributes Attributes { get; set; }
@@ -249,7 +254,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public System.DateTimeOffset LastAccessTime { get; set; }
         public System.DateTimeOffset LastWriteTime { get; set; }
         public string TextContents { get; set; }
-        public static System.IO.Abstractions.TestingHelpers.MockFileData op_Implicit(string s) { }
+        public static implicit operator System.IO.Abstractions.TestingHelpers.MockFileData(string s) { }
     }
     [System.Serializable]
     public class MockFileInfo : System.IO.Abstractions.FileInfoBase, System.IO.Abstractions.IFileSystemAclSupport
@@ -278,7 +283,9 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void Decrypt() { }
         public override void Delete() { }
         public override void Encrypt() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public object GetAccessControl() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public object GetAccessControl(System.IO.Abstractions.IFileSystemAclSupport.AccessControlSections includeSections) { }
         public override void MoveTo(string destFileName) { }
         public override System.IO.Abstractions.FileSystemStream Open(System.IO.FileMode mode) { }
@@ -290,6 +297,7 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void Refresh() { }
         public override System.IO.Abstractions.IFileInfo Replace(string destinationFileName, string destinationBackupFileName) { }
         public override System.IO.Abstractions.IFileInfo Replace(string destinationFileName, string destinationBackupFileName, bool ignoreMetadataErrors) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public void SetAccessControl(object value) { }
         public override string ToString() { }
     }
@@ -304,7 +312,7 @@ namespace System.IO.Abstractions.TestingHelpers
     [System.Serializable]
     public class MockFileStream : System.IO.Abstractions.FileSystemStream, System.IO.Abstractions.IFileSystemAclSupport
     {
-        public MockFileStream(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string path, System.IO.FileMode mode, System.IO.FileAccess access = 3, System.IO.FileShare share = 1, System.IO.FileOptions options = 0) { }
+        public MockFileStream(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileDataAccessor, string path, System.IO.FileMode mode, System.IO.FileAccess access = System.IO.FileAccess.ReadWrite, System.IO.FileShare share = System.IO.FileShare.Read, System.IO.FileOptions options = System.IO.FileOptions.None) { }
         public override bool CanRead { get; }
         public override bool CanWrite { get; }
         public static System.IO.Abstractions.FileSystemStream Null { get; }
@@ -313,11 +321,14 @@ namespace System.IO.Abstractions.TestingHelpers
         public override void Flush() { }
         public override void Flush(bool flushToDisk) { }
         public override System.Threading.Tasks.Task FlushAsync(System.Threading.CancellationToken cancellationToken) { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public object GetAccessControl() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public object GetAccessControl(System.IO.Abstractions.IFileSystemAclSupport.AccessControlSections includeSections) { }
         public override int Read(byte[] buffer, int offset, int count) { }
         public override System.Threading.Tasks.Task<int> ReadAsync(byte[] buffer, int offset, int count, System.Threading.CancellationToken cancellationToken) { }
         public override int ReadByte() { }
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
         public void SetAccessControl(object value) { }
         public override void SetLength(long value) { }
         public override void Write(byte[] buffer, int offset, int count) { }
@@ -330,10 +341,10 @@ namespace System.IO.Abstractions.TestingHelpers
         public MockFileStreamFactory(System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor mockFileSystem) { }
         public System.IO.Abstractions.IFileSystem FileSystem { get; }
         public System.IO.Abstractions.FileSystemStream New(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.IO.FileAccess access) { }
-        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode) { }
         public System.IO.Abstractions.FileSystemStream New(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.IO.FileAccess access, int bufferSize) { }
-        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access) { }
         public System.IO.Abstractions.FileSystemStream New(Microsoft.Win32.SafeHandles.SafeFileHandle handle, System.IO.FileAccess access, int bufferSize, bool isAsync) { }
+        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode) { }
+        public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access) { }
         public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share) { }
         public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, int bufferSize) { }
         public System.IO.Abstractions.FileSystemStream New(string path, System.IO.FileMode mode, System.IO.FileAccess access, System.IO.FileShare share, int bufferSize, System.IO.FileOptions options) { }
@@ -344,9 +355,9 @@ namespace System.IO.Abstractions.TestingHelpers
     public class MockFileSystem : System.IO.Abstractions.FileSystemBase, System.IO.Abstractions.IFileSystem, System.IO.Abstractions.TestingHelpers.IMockFileDataAccessor
     {
         public MockFileSystem() { }
-        public MockFileSystem(System.IO.Abstractions.TestingHelpers.MockFileSystemOptions options) { }
         public MockFileSystem(System.Collections.Generic.IDictionary<string, System.IO.Abstractions.TestingHelpers.MockFileData> files, System.IO.Abstractions.TestingHelpers.MockFileSystemOptions options) { }
         public MockFileSystem(System.Collections.Generic.IDictionary<string, System.IO.Abstractions.TestingHelpers.MockFileData> files, string currentDirectory = "") { }
+        public MockFileSystem(System.IO.Abstractions.TestingHelpers.MockFileSystemOptions options) { }
         public System.Collections.Generic.IEnumerable<string> AllDirectories { get; }
         public System.Collections.Generic.IEnumerable<string> AllDrives { get; }
         public System.Collections.Generic.IEnumerable<string> AllFiles { get; }
@@ -402,26 +413,7 @@ namespace System.IO.Abstractions.TestingHelpers
     [System.Serializable]
     public class MockFileVersionInfo : System.IO.Abstractions.FileVersionInfoBase
     {
-        public MockFileVersionInfo(
-                    string fileName,
-                    string fileVersion = null,
-                    string productVersion = null,
-                    string fileDescription = null,
-                    string productName = null,
-                    string companyName = null,
-                    string comments = null,
-                    string internalName = null,
-                    bool isDebug = false,
-                    bool isPatched = false,
-                    bool isPrivateBuild = false,
-                    bool isPreRelease = false,
-                    bool isSpecialBuild = false,
-                    string language = null,
-                    string legalCopyright = null,
-                    string legalTrademarks = null,
-                    string originalFilename = null,
-                    string privateBuild = null,
-                    string specialBuild = null) { }
+        public MockFileVersionInfo(string fileName, string fileVersion = null, string productVersion = null, string fileDescription = null, string productName = null, string companyName = null, string comments = null, string internalName = null, bool isDebug = false, bool isPatched = false, bool isPrivateBuild = false, bool isPreRelease = false, bool isSpecialBuild = false, string language = null, string legalCopyright = null, string legalTrademarks = null, string originalFilename = null, string privateBuild = null, string specialBuild = null) { }
         public override string Comments { get; }
         public override string CompanyName { get; }
         public override int FileBuildPart { get; }
@@ -504,10 +496,11 @@ namespace System.IO.Abstractions.TestingHelpers
     [System.Flags]
     public enum TimeAdjustments
     {
+        All = -1,
         None = 0,
         CreationTime = 1,
         LastAccessTime = 2,
         LastWriteTime = 4,
-        All = -1,
     }
 }
+
