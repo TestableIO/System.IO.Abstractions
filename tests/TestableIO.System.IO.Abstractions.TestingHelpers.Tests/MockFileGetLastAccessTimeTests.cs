@@ -30,7 +30,7 @@ public class MockFileGetLastAccessTimeTests
         var actualLastAccessTime = fileSystem.File.GetLastAccessTime(@"c:\does\not\exist.txt");
 
         // Assert
-        await That(actualLastAccessTime).IsEqualTo(new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc).ToLocalTime());
+        await That(actualLastAccessTime).IsEqualTo(1.January(1601).At(0, 0).AsUtc().ToLocalTime());
     }
 
     [Test]

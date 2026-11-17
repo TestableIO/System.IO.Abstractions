@@ -30,7 +30,7 @@ public class MockFileGetCreationTimeTests
         var actualCreationTime = fileSystem.File.GetCreationTime(@"c:\does\not\exist.txt");
 
         // Assert
-        await That(actualCreationTime).IsEqualTo(new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc).ToLocalTime());
+        await That(actualCreationTime).IsEqualTo(1.January(1601).At(0, 0).AsUtc().ToLocalTime());
     }
 
     [Test]
