@@ -162,7 +162,7 @@ public class PathVerifier
 
         const string DRIVE_SEPARATOR = @":\";
 
-        if (name.Length == 1
+        if ((name.Length == 1 && char.IsLetter(name[0]))
             || (name.Length == 2 && name[1] == ':')
             || (name.Length == 3 && _mockFileDataAccessor.StringOperations.EndsWith(name, DRIVE_SEPARATOR)))
         {

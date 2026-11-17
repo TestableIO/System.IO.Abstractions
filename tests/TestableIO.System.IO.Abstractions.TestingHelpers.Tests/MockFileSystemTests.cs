@@ -508,6 +508,29 @@ public class MockFileSystemTests
     }
 
     [Test]
+    [UnixOnly(UnixSpecifics.SlashRoot)]
+    public async Task MockFileSystem_DriveInfo_GetDrives_ShouldReturnSlashRootOnce()
+    {
+        var fileSystem = new MockFileSystem();
+        fileSystem.AddFile("/foo/bar.txt", new MockFileData(string.Empty));
+
+        var driveNames = fileSystem.DriveInfo.GetDrives().Select(d => d.Name);
+
+        await That(driveNames).IsEqualTo(new[] { "/" });
+    }
+
+    [Test]
+    [UnixOnly(UnixSpecifics.SlashRoot)]
+    public async Task MockFileSystem_DriveInfo_New_WithSlash_ShouldReturnSlashRoot()
+    {
+        var fileSystem = new MockFileSystem();
+
+        var driveInfo = fileSystem.DriveInfo.New("/");
+
+        await That(driveInfo.Name).IsEqualTo("/");
+    }
+
+    [Test]
     public async Task MockFileSystem_DefaultState_DefaultTempDirectoryExists()
     {
         var tempDirectory = XFS.Path(@"C:\temp");
