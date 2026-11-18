@@ -30,7 +30,7 @@
     <PackageVersion Include="aweXpect.Snapshots.PublicApi" Version="4.2.0"/>
     <PackageVersion Include="aweXpect.Testably" Version="3.0.0"/>
     <PackageVersion Include="aweXpect.Mockolate" Version="4.0.0"/>
-    <PackageVersion Include="aweXpect.Chronology" Version="1.2.0"/>
+    <PackageVersion Include="aweXpect.Chronology" Version="1.3.0"/>
   </ItemGroup>
   <ItemGroup>
     <PackageVersion Include="Fallout.Common" Version="10.5.0"/>
