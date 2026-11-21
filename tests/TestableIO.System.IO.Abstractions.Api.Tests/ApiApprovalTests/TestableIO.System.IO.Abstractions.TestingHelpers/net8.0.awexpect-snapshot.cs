@@ -1,3 +1,4 @@
+[assembly: System.Reflection.AssemblyMetadata("IsTrimmable", "True")]
 [assembly: System.Reflection.AssemblyMetadata("RepositoryUrl", "https://github.com/TestableIO/System.IO.Abstractions.git")]
 [assembly: System.Runtime.Versioning.TargetFramework(".NETCoreApp,Version=v8.0", FrameworkDisplayName = ".NET 8.0")]
 public class FileHandles
