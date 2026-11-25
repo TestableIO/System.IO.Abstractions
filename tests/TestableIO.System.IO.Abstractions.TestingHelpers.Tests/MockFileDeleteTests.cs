@@ -25,6 +25,7 @@ public class MockFileDeleteTests
 
     [TestCase(" ")]
     [TestCase("   ")]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
     public async Task MockFile_Delete_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
     {
         // Arrange

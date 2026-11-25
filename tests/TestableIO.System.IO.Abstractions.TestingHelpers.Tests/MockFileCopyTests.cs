@@ -324,6 +324,7 @@ public class MockFileCopyTests
     }
 
     [Test]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
     public async Task MockFile_Copy_ShouldThrowArgumentExceptionWhenSourceIsStringOfBlanks()
     {
         string sourceFilePath = "   ";
@@ -358,6 +359,7 @@ public class MockFileCopyTests
     }
 
     [Test]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
     public async Task MockFile_Copy_ShouldThrowArgumentExceptionWhenTargetIsStringOfBlanks()
     {
         string sourceFilePath = XFS.Path(@"c:\something\demo.txt");

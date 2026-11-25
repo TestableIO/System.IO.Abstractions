@@ -43,7 +43,7 @@ public class PathVerifier
             throw new ArgumentException("Empty file name is not legal.", paramName);
         }
 
-        if (path.Trim() == string.Empty)
+        if (IsEffectivelyEmpty(path))
         {
             throw CommonExceptions.PathIsNotOfALegalForm(paramName);
         }
@@ -65,6 +65,15 @@ public class PathVerifier
         {
             throw CommonExceptions.IllegalCharactersInPath();
         }
+    }
+
+    /// <summary>
+    /// Determines whether the given path is effectively empty: empty on every platform,
+    /// and also whitespace-only on Windows. Other platforms accept whitespace-only names.
+    /// </summary>
+    internal static bool IsEffectivelyEmpty(string path)
+    {
+        return string.IsNullOrEmpty(path) || (XFS.IsWindowsPlatform() && string.IsNullOrWhiteSpace(path));
     }
 
     private static bool IsValidUseOfVolumeSeparatorChar(string path)

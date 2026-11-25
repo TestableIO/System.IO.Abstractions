@@ -39,8 +39,18 @@ public class MockFileSetAttributesTests
     }
 
     [Test]
-    [TestCase("", FileAttributes.Normal)]
+    public async Task MockFile_SetAttributes_ShouldThrowArgumentExceptionIfPathIsEmpty()
+    {
+        var fileSystem = new MockFileSystem();
+
+        Action action = () => fileSystem.File.SetAttributes("", FileAttributes.Normal);
+
+        await That(action).Throws<ArgumentException>();
+    }
+
+    [Test]
     [TestCase("   ", FileAttributes.Normal)]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
     public async Task MockFile_SetAttributes_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path, FileAttributes attributes)
     {
         var fileSystem = new MockFileSystem();

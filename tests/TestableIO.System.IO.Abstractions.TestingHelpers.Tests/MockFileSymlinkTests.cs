@@ -112,6 +112,7 @@ public class MockFileSymlinkTests
     }
 
     [Test]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
     public async Task MockFile_CreateSymbolicLink_ShouldFailWithIllegalPath()
     {
         // Arrange
@@ -128,6 +129,7 @@ public class MockFileSymlinkTests
     }
 
     [Test]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
     public async Task MockFile_CreateSymbolicLink_ShouldFailWithIllegalTarget()
     {
         // Arrange

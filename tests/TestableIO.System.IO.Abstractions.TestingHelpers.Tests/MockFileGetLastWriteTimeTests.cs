@@ -7,6 +7,7 @@ public class MockFileGetLastWriteTimeTests
 {
     [TestCase(" ")]
     [TestCase("   ")]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
     public async Task MockFile_GetLastWriteTime_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
     {
         // Arrange

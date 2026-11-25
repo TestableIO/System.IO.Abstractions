@@ -451,6 +451,22 @@ public class MockDirectoryInfoTests
         await That(exception.Message).StartsWith("The path is not of a legal form.");
     }
 
+    [Test]
+    [UnixOnly(UnixSpecifics.WhitespaceOnlyNames)]
+    public async Task MockDirectoryInfo_Constructor_ShouldAcceptWhitespaceOnlyNameOnUnix()
+    {
+        // Arrange
+        var fileSystem = new MockFileSystem();
+        var directoryInfo = fileSystem.DirectoryInfo.New("   ");
+
+        // Act
+        directoryInfo.Create();
+
+        // Assert
+        await That(directoryInfo.FullName).IsEqualTo(fileSystem.Path.Combine(fileSystem.Directory.GetCurrentDirectory(), "   "));
+        await That(fileSystem.Directory.Exists("   ")).IsTrue();
+    }
+
     [TestCase(@"c:\temp\folder\folder")]
     [TestCase(@"..\..\..\Desktop")]
     public async Task MockDirectoryInfo_ToString_ShouldReturnDirectoryName(string directoryName)

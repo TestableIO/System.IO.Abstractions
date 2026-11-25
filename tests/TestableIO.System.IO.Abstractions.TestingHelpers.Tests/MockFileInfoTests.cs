@@ -21,6 +21,35 @@ public class MockFileInfoTests
     }
 
     [Test]
+    [UnixOnly(UnixSpecifics.WhitespaceOnlyNames)]
+    public async Task MockFileInfo_WhitespaceOnlyName_ShouldBeLegalOnUnix()
+    {
+        var fileSystem = new MockFileSystem();
+        var currentDirectory = fileSystem.Directory.GetCurrentDirectory();
+        var fileInfo = fileSystem.FileInfo.New("   ");
+
+        fileSystem.File.WriteAllText("   ", "Demo text content");
+
+        await That(fileInfo.FullName).IsEqualTo(fileSystem.Path.Combine(currentDirectory, "   "));
+        await That(fileInfo.Exists).IsTrue();
+        await That(fileSystem.File.Exists("   ")).IsTrue();
+        await That(fileSystem.File.ReadAllText("   ")).IsEqualTo("Demo text content");
+        await That(fileSystem.Directory.GetFiles(currentDirectory)).Contains(fileInfo.FullName);
+    }
+
+    [Test]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
+    public async Task MockFileInfo_WhitespaceOnlyName_ShouldThrowArgumentExceptionOnWindows()
+    {
+        var fileSystem = new MockFileSystem();
+
+        Action action = () => fileSystem.FileInfo.New("   ");
+
+        var exception = await That(action).Throws<ArgumentException>();
+        await That(exception.Message).StartsWith("The path is not of a legal form.");
+    }
+
+    [Test]
     public async Task MockFileInfo_Exists_ShouldReturnTrueIfFileExistsInMemoryFileSystem()
     {
         var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>

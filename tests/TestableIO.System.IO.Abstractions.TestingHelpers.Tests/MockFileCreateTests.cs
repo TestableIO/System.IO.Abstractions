@@ -124,6 +124,7 @@ public class MockFileCreateTests
 
     [TestCase(" ")]
     [TestCase("   ")]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
     public async Task MockFile_Create_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
     {
         // Arrange

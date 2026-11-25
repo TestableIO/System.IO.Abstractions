@@ -7,6 +7,7 @@ public class MockFileGetCreationTimeUtcTests
 {
     [TestCase(" ")]
     [TestCase("   ")]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
     public async Task MockFile_GetCreationTimeUtc_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
     {
         // Arrange

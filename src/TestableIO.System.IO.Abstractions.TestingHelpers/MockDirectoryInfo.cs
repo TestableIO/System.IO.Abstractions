@@ -33,7 +33,7 @@ public class MockDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport
         {
             throw new ArgumentNullException("path", StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
         }
-        if (directoryPath.Trim() == string.Empty)
+        if (PathVerifier.IsEffectivelyEmpty(directoryPath))
         {
             throw CommonExceptions.PathIsNotOfALegalForm("path");
         }
