@@ -166,6 +166,15 @@ public class MockDirectory : DirectoryBase
 
         foreach (var affectedPath in affectedPaths)
         {
+            var file = mockFileDataAccessor.GetFile(affectedPath);
+            if (file != null && !file.IsDirectory && !file.AllowedFileShare.HasFlag(FileShare.Delete))
+            {
+                throw CommonExceptions.ProcessCannotAccessFileInUse(affectedPath);
+            }
+        }
+
+        foreach (var affectedPath in affectedPaths)
+        {
             mockFileDataAccessor.RemoveFile(affectedPath);
         }
     }

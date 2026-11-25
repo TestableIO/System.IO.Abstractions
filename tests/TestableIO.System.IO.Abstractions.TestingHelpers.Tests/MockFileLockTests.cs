@@ -185,6 +185,50 @@ class MockFileLockTests
 
         await That(() => filesystem.File.Delete(filepath)).DoesNotThrow();
     }
+    [Test]
+    public async Task MockFile_Lock_FileShareNoneThrowsRecursiveDirectoryDelete()
+    {
+        string directoryPath = XFS.Path(@"c:\something\does");
+        string lockedFilePath = XFS.Path(@"c:\something\does\exist.txt");
+        string otherFilePath = XFS.Path(@"c:\something\does\other.txt");
+        var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        {
+            { otherFilePath, new MockFileData("I'm here too") },
+            { lockedFilePath, new MockFileData("I'm here") { AllowedFileShare = FileShare.None }}
+        });
+
+        var exception = await That(() => filesystem.Directory.Delete(directoryPath, true)).Throws<IOException>();
+        await That(exception.Message).IsEqualTo($"The process cannot access the file '{lockedFilePath}' because it is being used by another process.");
+        await That(filesystem.File.Exists(lockedFilePath)).IsTrue();
+        await That(filesystem.File.Exists(otherFilePath)).IsTrue();
+    }
+    [Test]
+    public async Task MockFile_Lock_FileShareNoneInSubdirectoryThrowsRecursiveDirectoryInfoDelete()
+    {
+        string directoryPath = XFS.Path(@"c:\something");
+        string lockedFilePath = XFS.Path(@"c:\something\does\exist\here.txt");
+        var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        {
+            { lockedFilePath, new MockFileData("I'm here") { AllowedFileShare = FileShare.None }}
+        });
+
+        var exception = await That(() => filesystem.DirectoryInfo.New(directoryPath).Delete(true)).Throws<IOException>();
+        await That(exception.Message).IsEqualTo($"The process cannot access the file '{lockedFilePath}' because it is being used by another process.");
+        await That(filesystem.File.Exists(lockedFilePath)).IsTrue();
+    }
+    [Test]
+    public async Task MockFile_Lock_FileShareDeleteDoesNotThrowRecursiveDirectoryDelete()
+    {
+        string directoryPath = XFS.Path(@"c:\something\does");
+        string filepath = XFS.Path(@"c:\something\does\exist.txt");
+        var filesystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        {
+            { filepath, new MockFileData("I'm here") { AllowedFileShare = FileShare.Delete }}
+        });
+
+        await That(() => filesystem.Directory.Delete(directoryPath, true)).DoesNotThrow();
+        await That(filesystem.Directory.Exists(directoryPath)).IsFalse();
+    }
 
     private static IResolveConstraint IOException() => Is.TypeOf<IOException>().And.Property("HResult").EqualTo(unchecked((int)0x80070020));
 }
