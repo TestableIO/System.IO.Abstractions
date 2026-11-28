@@ -288,6 +288,7 @@ public class MockFileMoveTests
     }
 
     [Test]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
     public async Task MockFile_Move_ShouldThrowArgumentExceptionWhenSourceIsStringOfBlanks()
     {
         string sourceFilePath = "   ";
@@ -322,6 +323,7 @@ public class MockFileMoveTests
     }
 
     [Test]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
     public async Task MockFile_Move_ShouldThrowArgumentExceptionWhenTargetIsStringOfBlanks()
     {
         string sourceFilePath = XFS.Path(@"c:\something\demo.txt");

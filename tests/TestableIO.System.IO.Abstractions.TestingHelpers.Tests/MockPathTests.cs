@@ -267,6 +267,7 @@ public class MockPathTests
     }
 
     [Test]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
     public async Task GetFullPath_WithWhiteSpace_ShouldThrowArgumentException()
     {
         var mockFileSystem = new MockFileSystem();
@@ -535,6 +536,7 @@ public class MockPathTests
     }
 
     [Test]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
     public async Task GetRelativePath_WhenPathIsWhitespace_ShouldThrowArgumentException()
     {
         var mockPath = new MockFileSystem().Path;
@@ -561,6 +563,7 @@ public class MockPathTests
     }
 
     [Test]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
     public async Task GetRelativePath_WhenRelativeToIsWhitespace_ShouldThrowArgumentException()
     {
         var mockPath = new MockFileSystem().Path;
@@ -571,6 +574,18 @@ public class MockPathTests
         }).Throws<ArgumentException>();
 
         await That(exception.ParamName).IsEqualTo("relativeTo");
+    }
+
+    [TestCase(" ", "foo", "../foo")]
+    [TestCase("foo", " ", "../ ")]
+    [UnixOnly(UnixSpecifics.WhitespaceOnlyNames)]
+    public async Task GetRelativePath_WithWhitespaceOnlyName_ShouldWorkOnUnix(string relativeTo, string path, string expected)
+    {
+        var mockPath = new MockFileSystem().Path;
+
+        var result = mockPath.GetRelativePath(relativeTo, path);
+
+        await That(result).IsEqualTo(expected);
     }
 #endif
 

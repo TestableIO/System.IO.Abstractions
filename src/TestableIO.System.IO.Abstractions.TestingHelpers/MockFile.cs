@@ -309,7 +309,7 @@ public partial class MockFile : FileBase
             return false;
         }
 
-        if (path.Trim() == string.Empty)
+        if (PathVerifier.IsEffectivelyEmpty(path))
         {
             return false;
         }

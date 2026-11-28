@@ -62,6 +62,7 @@ public class MockFileAppendAllLinesTests
 
     [TestCase(" ")]
     [TestCase("   ")]
+    [WindowsOnly(WindowsSpecifics.StrictPathRules)]
     public async Task MockFile_AppendAllLines_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
     {
         // Arrange
@@ -196,6 +197,7 @@ public class MockFileAppendAllLinesTests
 
         [TestCase(" ")]
         [TestCase("   ")]
+        [WindowsOnly(WindowsSpecifics.StrictPathRules)]
         public async Task MockFile_AppendAllLinesAsync_ShouldThrowArgumentExceptionIfPathContainsOnlyWhitespaces(string path)
         {
             // Arrange

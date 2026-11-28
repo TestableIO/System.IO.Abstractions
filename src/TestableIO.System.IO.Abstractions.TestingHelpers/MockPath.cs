@@ -41,7 +41,7 @@ public class MockPath : PathWrapper
             throw new ArgumentNullException(nameof(path), StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
         }
 
-        if (string.IsNullOrWhiteSpace(path))
+        if (PathVerifier.IsEffectivelyEmpty(path))
         {
             throw CommonExceptions.PathIsNotOfALegalForm(nameof(path));
         }
@@ -167,7 +167,7 @@ public class MockPath : PathWrapper
             throw new ArgumentNullException(nameof(relativeTo), StringResources.Manager.GetString("VALUE_CANNOT_BE_NULL"));
         }
 
-        if (string.IsNullOrWhiteSpace(relativeTo))
+        if (PathVerifier.IsEffectivelyEmpty(relativeTo))
         {
             throw CommonExceptions.PathIsNotOfALegalForm(nameof(relativeTo));
         }
