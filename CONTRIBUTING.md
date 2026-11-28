@@ -2,16 +2,16 @@
 
 ## Versioning
 
-This library uses [Nerdbank.GitVersioning](https://github.com/AArnott/Nerdbank.GitVersioning) for generating stable and reproducible version numbers.
+This library follows [Semantic Versioning](https://semver.org). The version is calculated by [GitVersion](https://gitversion.net) in the build pipeline from the Git history and tags, so there is no version file to update and a PR doesn't need to change any version number.
 
-The base version is manually maintained in [the version config](version.json). Every build calculates its final version number based on the base version and the number of changes that occured since the last change to the version config.
+Releases are made by pushing a tag of the form `vMAJOR.MINOR.PATCH` (for example `v23.0.1`), optionally with a pre-release suffix (for example `v23.1.0-beta.1`). The build for that tag packs the packages with that version and publishes them to `nuget.org`.
 
-The base version represents the MAJOR and MINOR parts of [SemVer](https://semver.org). If a PR contains breaking changes or new features the base version has to be changed accordingly. If a PR solely contains minor changes (bug fixes, code improvements) nothing needs to be done as the PATCH number will automatically increment with each commit.
+Please still mark breaking changes and new features in the PR title (see below), so the next release can be versioned accordingly.
 
 ## Branches / tags
 
-- `main` contains the latest sources. Each merge there triggers a deploy to `nuget.org`.
-- All versions on `nuget.org` have a matching GitHub release/tag.
+- `main` contains the latest sources.
+- Each `v*` release tag triggers a deploy to `nuget.org`, so all versions on `nuget.org` have a matching GitHub tag. Tags without a pre-release suffix also get a GitHub release.
 
 ## Commits and PR title
 
