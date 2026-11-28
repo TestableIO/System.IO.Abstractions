@@ -3,6 +3,7 @@ pull_request_rules:
     conditions:
       - "#approved-reviews-by>=1"
     actions:
+      update:
       merge:
         method: squash
         commit_message_format:
